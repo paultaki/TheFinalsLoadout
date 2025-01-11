@@ -1,104 +1,112 @@
+/* General Styling */
 body {
     font-family: Arial, sans-serif;
     background-color: #1e1e1e;
-    color: #fff;
+    color: #ffffff;
     text-align: center;
     margin: 0;
     padding: 0;
 }
 
 header {
-    margin-top: 20px;
+    margin: 20px 0;
 }
 
-.logo {
-    width: 300px;
+.finals-logo {
+    max-width: 200px;
+    height: auto;
     margin-bottom: 10px;
 }
 
 h1 {
-    font-size: 24px;
-    margin: 0;
+    font-size: 2rem;
+    margin-bottom: 5px;
 }
 
-.season {
-    color: #fdd835;
-    font-weight: bold;
+h2 {
+    font-size: 1.5rem;
+    margin-top: 20px;
 }
 
-.randomize-box {
-    margin: 20px auto;
-    padding: 20px;
-    border: 2px solid #4caf50;
-    display: inline-block;
-    border-radius: 10px;
-    background-color: #4caf50;
-    color: white;
+p {
+    font-size: 1rem;
+    margin: 5px 0;
 }
 
-.randomize-class-button {
-    padding: 10px 30px;
-    font-size: 18px;
-    font-weight: bold;
-    background-color: white;
-    color: #4caf50;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.class-buttons {
+/* Buttons */
+.buttons {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 15px;
     margin: 20px 0;
 }
 
-.class-button {
-    border: none;
+.buttons button {
     padding: 10px 20px;
-    font-size: 18px;
-    border-radius: 50%;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+    background-color: #28a745;
+    color: #ffffff;
     font-weight: bold;
-    width: 100px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    transition: background-color 0.3s ease;
 }
 
-.light {
-    background-color: #e53935;
-    color: white;
+.buttons button:hover {
+    background-color: #218838;
 }
 
-.medium {
-    background-color: #757575;
-    color: white;
+.buttons button:nth-child(2),
+.buttons button:nth-child(3),
+.buttons button:nth-child(4) {
+    background-color: #6c757d;
 }
 
-.heavy {
-    background-color: #3f51b5;
-    color: white;
+.buttons button:nth-child(2):hover,
+.buttons button:nth-child(3):hover,
+.buttons button:nth-child(4):hover {
+    background-color: #5a6268;
 }
 
-.output-container {
+/* Output Section */
+#output {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #292b2c;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    display: inline-block;
+}
+
+/* Gadgets Styling */
+.gadgets-container {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    gap: 15px;
     margin-top: 20px;
-    gap: 20px;
 }
 
-.output-container img {
+.gadget-item {
+    text-align: center;
+}
+
+.gadget-item img {
     width: 100px;
     height: auto;
+    border-radius: 5px;
     display: block;
-    margin: 0 auto;
+    margin: 0 auto 5px;
 }
 
+/* Footer */
 footer {
-    margin-top: 50px;
-    font-size: 14px;
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #a9a9a9;
+}
+
+footer p {
+    margin: 5px 0;
 }

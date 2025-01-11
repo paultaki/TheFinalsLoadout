@@ -3,27 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Finals Loadout Randomizer</title>
-    <link rel="stylesheet" href="style.css">
+    <title>The Finals Loadout Generator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <img src="images/the-finals.png" alt="The Finals Logo" class="logo">
-        <h1>LOADOUT RANDOMIZER - <span class="season">SEASON 5 READY!</span></h1>
+        <img src="images/the-finals.png" alt="The Finals Logo" class="finals-logo">
+        <h1>Loadout Randomizer - SEASON 5 READY!</h1>
+        <p>Get a random loadout for Light, Medium, or Heavy Builds!</p>
     </header>
     <main>
-        <div class="randomize-box">
-            <button id="randomizeClass" class="randomize-class-button">RANDOM CLASS AND LOADOUT</button>
+        <div class="buttons">
+            <button onclick="generateRandomLoadout()">Random Class and Loadout</button>
+            <button onclick="generateLightLoadout()">Light Loadout</button>
+            <button onclick="generateMediumLoadout()">Medium Loadout</button>
+            <button onclick="generateHeavyLoadout()">Heavy Loadout</button>
         </div>
-        <div class="class-buttons">
-            <button id="lightButton" class="class-button light">LIGHT</button>
-            <button id="mediumButton" class="class-button medium">MEDIUM</button>
-            <button id="heavyButton" class="class-button heavy">HEAVY</button>
-        </div>
-        <div id="output" class="output-container"></div>
+        <div id="output"></div>
     </main>
     <footer>
-        <p>&copy; 2025 TheFinalsLoadout.com</p>
+        <p>© 2025 TheFinalsLoadout.com</p>
         <p>1-800-FAT-MOMS Production</p>
     </footer>
     <script src="app.js"></script>
