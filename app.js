@@ -74,17 +74,28 @@ Gadgets: ${loadout.gadgets.join(", ")}
     };
 
     const generateLoadout = (classType, loadouts) => {
+        // Copy the gadgets array to avoid modifying the original
+        const availableGadgets = [...loadouts.gadgets];
+    
+        // Function to select and remove a random item from the array
+        const selectUniqueItem = (array) => {
+            const index = Math.floor(Math.random() * array.length);
+            return array.splice(index, 1)[0]; // Removes and returns the selected item
+        };
+    
         const loadout = {
             weapon: randomItem(loadouts.weapons),
             specialization: randomItem(loadouts.specializations),
             gadgets: [
-                randomItem(loadouts.gadgets),
-                randomItem(loadouts.gadgets),
-                randomItem(loadouts.gadgets)
+                selectUniqueItem(availableGadgets),
+                selectUniqueItem(availableGadgets),
+                selectUniqueItem(availableGadgets)
             ]
         };
+    
         displayLoadout(classType, loadout);
     };
+    
 
     randomLoadoutButton.onclick = () => {
         const classes = Object.keys(loadouts).filter((key) => key !== "Common");
