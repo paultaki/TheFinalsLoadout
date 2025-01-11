@@ -1,48 +1,62 @@
 body {
     font-family: Arial, sans-serif;
+    margin: 0;
     background-color: #1e1e1e;
     color: #fff;
     text-align: center;
-  }
-  
-  h3 {
-    margin-top: 20px;
-    font-size: 1.5rem;
-  }
-  
-  button {
-    margin: 10px;
+}
+
+header {
+    margin-bottom: 20px;
+}
+
+.buttons {
+    margin: 20px 0;
+}
+
+.btn {
     padding: 10px 20px;
-    font-size: 1rem;
-    color: #fff;
-    background-color: #007bff;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  .gadgets-container {
+    color: #fff;
+    background-color: #444;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #555;
+}
+
+.btn-random {
+    background-color: #28a745;
+}
+
+.btn-random:hover {
+    background-color: #218838;
+}
+
+.gadgets-container {
     display: flex;
     justify-content: center;
     gap: 20px;
-  }
-  
-  .gadget {
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.gadget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-  }
-  
-  .gadget img {
+}
+
+.gadget img {
     width: 100px;
     height: auto;
-    display: block;
-    margin: 0 auto;
-  }
-  
-  .gadget p {
-    margin: 10px 0 0;
-  }
-  
+    border: 2px solid #444;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
