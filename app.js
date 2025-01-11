@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const lightLoadoutButton = document.getElementById("lightLoadoutButton");
     const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
     const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
-    const punishmentLoadoutButton = document.getElementById("punishmentLoadoutButton"); // New button
+    const punishmentLoadoutButton = document.getElementById("punishmentLoadoutButton");
     const outputDiv = document.getElementById("output");
 
     const loadouts = {
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
 
-    const displayLoadout = (classType, loadout) => {
+    const displayLoadout = (classType, loadout, isPunishment = false) => {
         const gadgetImages = loadout.gadgets
             .map((gadget) => {
                 const formattedGadget = gadget.replaceAll(" ", "_");
@@ -47,6 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .join("");
 
+        const classHeader = isPunishment
+            ? `<img src="images/punishment.png" alt="Punishment" class="punishment-header">`
+            : `<div class="class">${classType}</div>`;
+
         const shareableLoadout = `
 Class: ${classType}
 Weapon: ${loadout.weapon}
@@ -55,7 +59,7 @@ Gadgets: ${loadout.gadgets.join(", ")}
         `.trim();
 
         outputDiv.innerHTML = `
-            <div class="class">${classType}</div>
+            ${classHeader}
             <div class="items-container">
                 <div class="item-container">
                     <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}">
@@ -79,7 +83,7 @@ Gadgets: ${loadout.gadgets.join(", ")}
         });
     };
 
-    const generateLoadout = (classType, loadouts) => {
+    const generateLoadout = (classType, loadouts, isPunishment = false) => {
         const loadout = {
             weapon: randomItem(loadouts.weapons),
             specialization: randomItem(loadouts.specializations),
@@ -89,7 +93,7 @@ Gadgets: ${loadout.gadgets.join(", ")}
                 randomItem(loadouts.gadgets)
             ]
         };
-        displayLoadout(classType, loadout);
+        displayLoadout(classType, loadout, isPunishment);
     };
 
     randomLoadoutButton.onclick = () => {
@@ -101,5 +105,5 @@ Gadgets: ${loadout.gadgets.join(", ")}
     lightLoadoutButton.onclick = () => generateLoadout("Light", loadouts.Light);
     mediumLoadoutButton.onclick = () => generateLoadout("Medium", loadouts.Medium);
     heavyLoadoutButton.onclick = () => generateLoadout("Heavy", loadouts.Heavy);
-    punishmentLoadoutButton.onclick = () => generateLoadout("Punishment", punishmentLoadout); // New punishment loadout
+    punishmentLoadoutButton.onclick = () => generateLoadout("Punishment", punishmentLoadout, true); // Use punishment logic
 });
