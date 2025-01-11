@@ -12,7 +12,7 @@ const loadouts = {
   Heavy: {
       weapons: ["Sledgehammer", "Flamethrower", "SA1216", ".50 Akimbo", "KS-23", "M60", "MGL32", "MG32", "ShAK-50", "Spear", "RPG-7", "Pyro Mine"],
       specializations: ["Mesh Shield", "Charge 'N Slam", "Goo Gun"],
-      gadgets: ["Lockbolt Launcher", "Dome Shield", "Proximity Sensor", "C4", "Barricade", "Explosive Mine", "Anti-Gravity Cube"]
+      gadgets: ["Lockbolt Launcher", "Dome Shield", "Motion Sensor", "C4", "Barricade", "Explosive Mine", "Anti-Gravity Cube"]
   }
 };
 
