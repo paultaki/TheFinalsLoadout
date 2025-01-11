@@ -1,49 +1,55 @@
-// Define loadouts for each class
+// Loadout data
 const loadouts = {
     Light: {
       weapons: [
-        "93R", "Dagger", "LHI", "M26 Matter", "Recurve Bow", "SH9000", "SR-84", "Sword",
-        "Throwing Knives", "V95", "XP-54"
+        "93R", "Dagger", "L1H", "M26 Matter", "Recurve Bow", "SH900", "SR-84",
+        "Sword", "V95", "XP-54", "Throwing Knives"
       ],
       specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
       gadgets: [
         "Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade",
-        "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb",
-        "Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"
+        "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb"
       ],
     },
     Medium: {
       weapons: [
-        "AKM", "Cerberus 126A", "CL-40", "Dual Blades", "FAMAS", "FCAR", "Model 1887",
-        "Pike-556", "R357", "Riot Shield"
+        "AKM", "Cerberus 126A", "CL-40", "Dual Blades", "FAMAS", "FCAR",
+        "Model 1887", "Pike-556", "R-357", "Riot Shield"
       ],
       specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
       gadgets: [
         "APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine",
-        "Glitch Trap", "Jump Pad", "Zipline", "Proximity Sensor",
-        "Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"
+        "Glitch Trap", "Jump Pad", "Zipline", "Proximity Sensor"
       ],
     },
     Heavy: {
       weapons: [
-        ".50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MG32",
-        "SA1216", "SHAK-50", "Sledgehammer", "Spear"
+        "50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MG32",
+        "SA1216", "Shak-50", "Sledgehammer", "Spear"
       ],
-      specializations: ["Charge 'n' Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+      specializations: ["Charge 'N' Slam", "Goo Gun", "Mesh Shield"],
       gadgets: [
         "Anti-Gravity Cube", "Barricade", "C4", "Dome Shield", "Explosive Mine",
-        "Proximity Sensor", "Lockbolt Launcher", "Pyro Mine", "RPG-7",
-        "Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"
+        "Lockbolt Launcher", "Proximity Sensor", "Pyro Mine", "RPG-7"
       ],
     },
   };
   
+  // Gadgets available to all builds
+  const allBuildGadgets = [
+    "Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"
+  ];
   
-  // Utility function to get unique gadgets
+  // Utility function to randomly select an item from an array
+  function randomItem(array) {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+  
+  // Function to generate unique gadgets
   function getUniqueGadgets(gadgetPool, count) {
     const uniqueGadgets = [];
     while (uniqueGadgets.length < count) {
-      const gadget = randomItem(gadgetPool);
+      const gadget = randomItem([...gadgetPool, ...allBuildGadgets]);
       if (!uniqueGadgets.includes(gadget)) {
         uniqueGadgets.push(gadget);
       }
@@ -51,59 +57,44 @@ const loadouts = {
     return uniqueGadgets;
   }
   
-  // Generate a general random loadout
-  function generateLoadout() {
-    generateClassLoadout(randomItem(Object.keys(loadouts)));
-  }
-  
-  // Generate a Light loadout
-  function generateLightLoadout() {
-    generateClassLoadout("Light");
-  }
-  
-  // Generate a Medium loadout
-  function generateMediumLoadout() {
-    generateClassLoadout("Medium");
-  }
-  
-  // Generate a Heavy loadout
-  function generateHeavyLoadout() {
-    generateClassLoadout("Heavy");
-  }
-  
-  // Shared function for generating a specific class loadout
-  function generateClassLoadout(classType) {
+  // Function to generate loadout
+  function generateLoadout(classType = null) {
     const outputDiv = document.getElementById("output");
     outputDiv.innerHTML = ""; // Clear previous loadout
   
     let animationInterval = setInterval(() => {
-      const data = loadouts[classType];
+      const tempClass = classType || randomItem(Object.keys(loadouts));
+      const tempData = loadouts[tempClass];
       const tempLoadout = {
-        class: classType,
-        weapon: randomItem(data.weapons),
-        specialization: randomItem(data.specializations),
-        gadgets: getUniqueGadgets(data.gadgets, 3),
+        class: tempClass,
+        weapon: randomItem(tempData.weapons),
+        specialization: randomItem(tempData.specializations),
+        gadgets: getUniqueGadgets(tempData.gadgets, 3),
       };
   
+      // Display temporary loadout during animation
       outputDiv.innerHTML = `
         <p>Class: ${tempLoadout.class}</p>
         <p>Weapon: ${tempLoadout.weapon}</p>
         <p>Specialization: ${tempLoadout.specialization}</p>
         <p>Gadgets: ${tempLoadout.gadgets.join(", ")}</p>
       `;
-    }, 100); // Change every 100ms for quick cycling
+    }, 150); // Change every 150ms for quick cycling
   
     setTimeout(() => {
       clearInterval(animationInterval);
   
-      const data = loadouts[classType];
+      // Generate the final loadout
+      const finalClass = classType || randomItem(Object.keys(loadouts));
+      const finalData = loadouts[finalClass];
       const finalLoadout = {
-        class: classType,
-        weapon: randomItem(data.weapons),
-        specialization: randomItem(data.specializations),
-        gadgets: getUniqueGadgets(data.gadgets, 3),
+        class: finalClass,
+        weapon: randomItem(finalData.weapons),
+        specialization: randomItem(finalData.specializations),
+        gadgets: getUniqueGadgets(finalData.gadgets, 3),
       };
   
+      // Display the final loadout
       outputDiv.innerHTML = `
         <h3>Final Loadout:</h3>
         <p>Class: ${finalLoadout.class}</p>
@@ -111,6 +102,6 @@ const loadouts = {
         <p>Specialization: ${finalLoadout.specialization}</p>
         <p>Gadgets: ${finalLoadout.gadgets.join(", ")}</p>
       `;
-    }, 4000); // Cycle for 4 seconds
+    }, 1500); // Total spin duration is 1.5 seconds
   }
   
