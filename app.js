@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const loadouts = {
         Light: {
-            weapons: ["93R", "Dagger", "LHI", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
+            weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
             specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
             gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb"]
         },
@@ -32,12 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
   
     const displayLoadout = (classType, loadout) => {
-        // Display Class
-        const classNameDiv = `<p class="class-name">${classType}</p>`;
-  
-        // Display Specialization, Weapon, and Gadgets with images
         outputContainer.innerHTML = `
-            ${classNameDiv}
+            <div class="class-name">${classType}</div>
             <div class="output-container">
                 <div>
                     <img src="images/${loadout.specialization.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.specialization}" />

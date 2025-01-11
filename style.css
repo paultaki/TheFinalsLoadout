@@ -29,23 +29,29 @@ h1 {
     margin: 20px 0;
 }
 
-/* Class Name displayed above the images */
-.class-name {
-    font-size: 1.6rem;
-    color: red; /* Class Name in red */
-    margin-bottom: 20px;  /* Space below the class name */
+h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+p, .class {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-top: 10px;
 }
 
 /* Flex container to arrange images side by side */
 .output-container {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;  /* Distribute evenly across the page */
     align-items: center;
-    gap: 20px;
+    gap: 20px;                      /* Add space between elements */
     margin-top: 20px;
     width: 100%;
+    flex-wrap: wrap;                /* Allow wrapping on small screens */
 }
 
+/* Ensure the class section takes a little more space */
 .output-container > div {
     display: flex;
     flex-direction: column;
@@ -60,21 +66,15 @@ h1 {
     text-align: center;
 }
 
-/* Styling for Gadget and Weapon images */
-.output-container .image-container {
-    width: 100%;
-    height: auto;
-}
-
 /* Flex container for gadgets (Gadget 1, Gadget 2, Gadget 3) */
 .gadgets-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between;  /* Space gadgets evenly */
     gap: 10px;
     width: 100%;
 }
 
-/* Make gadget images smaller for consistent look */
+/* Adjust gadget images size */
 .gadgets-container img {
     width: 50px;
     height: 50px;
@@ -83,11 +83,20 @@ h1 {
 /* Media Query for mobile responsiveness */
 @media (max-width: 768px) {
     .output-container {
-        flex-direction: column;
-        align-items: center;
+        flex-direction: column;  /* Stack vertically on small screens */
     }
 
     .output-container > div {
-        width: 100%;
+        width: 100%;  /* Make each section full width */
+        margin-bottom: 10px;
+    }
+
+    .buttons {
+        flex-direction: column;  /* Stack buttons vertically on small screens */
+    }
+
+    .buttons button {
+        width: 100%;  /* Make buttons full-width on small screens */
+        margin-bottom: 10px;
     }
 }
