@@ -28,20 +28,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const displayLoadout = (classType, loadout) => {
         const gadgetImages = loadout.gadgets
-            .map(
-                (gadget) => {
-                    const formattedGadget = gadget.replaceAll(" ", "_");
-                    const imageFile = `${formattedGadget}_Rank_1.png`;
-                    return `
-                        <div class="item-container">
-                            <img src="images/${imageFile}" alt="${gadget}">
-                            <p>${gadget}</p>
-                        </div>
-                    `;
-                }
-            )
+            .map((gadget) => {
+                const formattedGadget = gadget.replaceAll(" ", "_");
+                const imageFile = `${formattedGadget}_Rank_1.png`;
+                return `
+                    <div class="item-container">
+                        <img src="images/${imageFile}" alt="${gadget}">
+                        <p>${gadget}</p>
+                    </div>
+                `;
+            })
             .join("");
-
+    
         outputDiv.innerHTML = `
             <div class="item-container">
                 <h3>Weapon</h3>
@@ -56,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ${gadgetImages}
         `;
     };
+    
 
     const generateLoadout = (classType) => {
         const classLoadouts = loadouts[classType];
