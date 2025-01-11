@@ -1,66 +1,84 @@
-const loadouts = {
-  light: {
-      weapons: ["M11", "V9S", "Throwing Knives", "Recurve Bow", "LH1"],
-      specializations: ["Cloak", "Evasive Dash", "Grappling Hook"],
-      gadgets: ["Smoke Grenade", "Sonar Grenade", "Gateway", "Tracking Dart", "Breach Charge"]
-  },
-  medium: {
-      weapons: ["AKM", "FAMAS", "Cerberus 12GA", "Dual Blades", "R357", "Model 1887"],
-      specializations: ["Guardian Turret", "Healing Beam", "Dematerializer"],
-      gadgets: ["Gas Mine", "Explosive Mine", "APS Turret", "Defibrillator", "Zipline"]
-  },
-  heavy: {
-      weapons: ["SHAK-50", "MGL32", "Flamethrower", "Sledgehammer", "KS-23", "Spear"],
-      specializations: ["Mesh Shield", "Charge 'N Slam", "Goo Gun"],
-      gadgets: ["Motion Sensor", "Dome Shield", "C4", "Pyro Mine", "Lockbolt Launcher"]
-  }
-};
-
-function randomItem(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
-function displayLoadout(classType, weapon, specialization, gadgets) {
+document.addEventListener("DOMContentLoaded", () => {
+  const randomLoadoutButton = document.getElementById("randomLoadoutButton");
+  const lightLoadoutButton = document.getElementById("lightLoadoutButton");
+  const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
+  const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
   const outputDiv = document.getElementById("output");
-  outputDiv.innerHTML = `
-      <h2>${classType} Loadout</h2>
-      <p><strong>Weapon:</strong> ${weapon}</p>
-      <p><strong>Specialization:</strong> ${specialization}</p>
-      <div class="gadgets">
-          <h3>Gadgets:</h3>
-          ${gadgets.map(gadget => `<div>${gadget}</div>`).join("")}
-      </div>
-  `;
-}
 
-function generateRandomLoadout() {
-  const classes = Object.keys(loadouts);
-  const randomClass = randomItem(classes);
-  generateLoadout(randomClass);
-}
-
-function generateLightLoadout() {
-  generateLoadout("light");
-}
-
-function generateMediumLoadout() {
-  generateLoadout("medium");
-}
-
-function generateHeavyLoadout() {
-  generateLoadout("heavy");
-}
-
-function generateLoadout(classType) {
-  const loadout = loadouts[classType];
-  const weapon = randomItem(loadout.weapons);
-  const specialization = randomItem(loadout.specializations);
-  const gadgets = [];
-  while (gadgets.length < 3) {
-      const gadget = randomItem(loadout.gadgets);
-      if (!gadgets.includes(gadget)) {
-          gadgets.push(gadget);
-      }
+  if (!randomLoadoutButton || !lightLoadoutButton || !mediumLoadoutButton || !heavyLoadoutButton) {
+      console.error("One or more buttons not found!");
+      return;
   }
-  displayLoadout(classType, weapon, specialization, gadgets);
-}
+
+  const loadouts = {
+      Light: {
+          weapons: ["93R", "Dagger", "LHI", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
+          specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
+          gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb"]
+      },
+      Medium: {
+          weapons: ["AKM", "Cerberus 12GA", "Dual Blades", "FAMAS", "FCAR", "Model 1887", "Pike-556", "R.357"],
+          specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
+          gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline"]
+      },
+      Heavy: {
+          weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "RPG-7", "Sledgehammer", "SHAK-50", "Spear"],
+          specializations: ["Charge 'N' Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+          gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Motion Sensor"]
+      },
+      Common: ["Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"]
+  };
+
+  const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
+
+  const displayLoadout = (classType, loadout) => {
+      const gadgetImages = loadout.gadgets
+          .map(
+              (gadget) =>
+                  `<div class="gadget">
+                      <img src="images/${gadget.replaceAll(" ", "_")}_Rank_1.png" alt="${gadget}">
+                      <p>${gadget}</p>
+                  </div>`
+          )
+          .join("");
+
+      outputDiv.innerHTML = `
+          <h3>Class:</h3>
+          <p>${classType}</p>
+          <h3>Weapon:</h3>
+          <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}">
+          <p>${loadout.weapon}</p>
+          <h3>Specialization:</h3>
+          <img src="images/${loadout.specialization.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.specialization}">
+          <p>${loadout.specialization}</p>
+          <h3>Gadgets:</h3>
+          <div class="gadgets-container">
+              ${gadgetImages}
+          </div>
+      `;
+  };
+
+  const generateLoadout = (classType) => {
+      const classLoadouts = loadouts[classType];
+      const loadout = {
+          weapon: randomItem(classLoadouts.weapons),
+          specialization: randomItem(classLoadouts.specializations),
+          gadgets: [
+              randomItem(classLoadouts.gadgets),
+              randomItem(loadouts.Common),
+              randomItem(loadouts.Common)
+          ]
+      };
+      displayLoadout(classType, loadout);
+  };
+
+  randomLoadoutButton.onclick = () => {
+      const classes = Object.keys(loadouts).filter((key) => key !== "Common");
+      const randomClass = randomItem(classes);
+      generateLoadout(randomClass);
+  };
+
+  lightLoadoutButton.onclick = () => generateLoadout("Light");
+  mediumLoadoutButton.onclick = () => generateLoadout("Medium");
+  heavyLoadoutButton.onclick = () => generateLoadout("Heavy");
+});

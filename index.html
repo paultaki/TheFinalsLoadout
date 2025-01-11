@@ -4,20 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Finals Loadout Generator</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <img src="images/The Finals.png" alt="The Finals Logo" class="finals-logo">
-        <h1>Loadout Randomizer - SEASON 5 READY!</h1>
+        <h1>The Finals Loadout Generator</h1>
         <p>Get a random loadout for Light, Medium, or Heavy Builds!</p>
     </header>
     <main>
         <div class="buttons">
-            <button onclick="generateRandomLoadout()">Random Class and Loadout</button>
-            <button onclick="generateLightLoadout()">Light Loadout</button>
-            <button onclick="generateMediumLoadout()">Medium Loadout</button>
-            <button onclick="generateHeavyLoadout()">Heavy Loadout</button>
+            <button id="randomLoadoutButton" class="random">Random Class and Loadout</button>
+            <button id="lightLoadoutButton">Light Loadout</button>
+            <button id="mediumLoadoutButton">Medium Loadout</button>
+            <button id="heavyLoadoutButton">Heavy Loadout</button>
         </div>
         <div id="output"></div>
     </main>
