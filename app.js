@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const lightLoadoutButton = document.getElementById("lightLoadoutButton");
     const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
     const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
-    const punishmentLoadoutButton = document.getElementById("punishmentLoadoutButton");
+    const punishmentLoadoutButton = document.getElementById("punishmentLoadoutButton"); // Keep the button for now
     const outputDiv = document.getElementById("output");
 
     const loadouts = {
@@ -25,15 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
         Common: ["Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"]
     };
 
-    const punishmentLoadout = {
-        weapons: ["Dagger", "Recurve Bow", "Sword"],
-        specializations: ["Cloaking Device"],
-        gadgets: ["Breach Charge", "Gravity Vortex", "Thermal Vision", "Tracking Dart", "Thermal Bore"]
-    };
-
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
 
-    const displayLoadout = (classType, loadout, isPunishment = false) => {
+    const displayLoadout = (classType, loadout) => {
         const gadgetImages = loadout.gadgets
             .map((gadget) => {
                 const formattedGadget = gadget.replaceAll(" ", "_");
@@ -47,10 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .join("");
 
-        const classHeader = isPunishment
-            ? `<img src="images/punishment.png" alt="Punishment" class="punishment-header">`
-            : `<div class="class">${classType}</div>`;
-
         const shareableLoadout = `
 Class: ${classType}
 Weapon: ${loadout.weapon}
@@ -59,7 +49,7 @@ Gadgets: ${loadout.gadgets.join(", ")}
         `.trim();
 
         outputDiv.innerHTML = `
-            ${classHeader}
+            <div class="class">${classType}</div>
             <div class="items-container">
                 <div class="item-container">
                     <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}">
@@ -83,7 +73,7 @@ Gadgets: ${loadout.gadgets.join(", ")}
         });
     };
 
-    const generateLoadout = (classType, loadouts, isPunishment = false) => {
+    const generateLoadout = (classType, loadouts) => {
         const loadout = {
             weapon: randomItem(loadouts.weapons),
             specialization: randomItem(loadouts.specializations),
@@ -93,7 +83,7 @@ Gadgets: ${loadout.gadgets.join(", ")}
                 randomItem(loadouts.gadgets)
             ]
         };
-        displayLoadout(classType, loadout, isPunishment);
+        displayLoadout(classType, loadout);
     };
 
     randomLoadoutButton.onclick = () => {
@@ -105,5 +95,7 @@ Gadgets: ${loadout.gadgets.join(", ")}
     lightLoadoutButton.onclick = () => generateLoadout("Light", loadouts.Light);
     mediumLoadoutButton.onclick = () => generateLoadout("Medium", loadouts.Medium);
     heavyLoadoutButton.onclick = () => generateLoadout("Heavy", loadouts.Heavy);
-    punishmentLoadoutButton.onclick = () => generateLoadout("Punishment", punishmentLoadout, true); // Use punishment logic
+
+    // Commenting out Punishment Loadout functionality for now
+    // punishmentLoadoutButton.onclick = () => generateLoadout("Punishment", punishmentLoadout);
 });
