@@ -33,8 +33,8 @@ function getUniqueGadgets(gadgetPool, count) {
     return uniqueGadgets;
 }
 
-// Function to generate loadouts with animation
-function generateLoadout(spins) {
+// Function to generate a single loadout with animation
+function generateLoadout() {
     const outputDiv = document.getElementById("output");
     outputDiv.innerHTML = ""; // Clear previous loadout
 
@@ -77,5 +77,5 @@ function generateLoadout(spins) {
             <p>Specialization: ${finalLoadout.specialization}</p>
             <p>Gadgets: ${finalLoadout.gadgets.join(", ")}</p>
         `;
-    }, spins * 1000); // Cycle for the duration (e.g., 4 spins = 4 seconds)
+    }, 2000); // Animation runs for 2 seconds
 }
