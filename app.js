@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
     const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
     const outputDiv = document.getElementById("output");
+    const loading = document.getElementById("loading");
   
     if (!randomLoadoutButton || !lightLoadoutButton || !mediumLoadoutButton || !heavyLoadoutButton) {
         console.error("One or more buttons not found!");
@@ -12,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const loadouts = {
         Light: {
-            weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
+            weapons: ["93R", "Dagger", "LHI", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
             specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
             gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb"]
         },
@@ -32,11 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
   
     const displayLoadout = (classType, loadout) => {
+        loading.style.display = "none";  // Hide the loading spinner once the loadout is displayed
         const gadgetImages = loadout.gadgets
             .map(
               (gadget) => {
-                  const formattedGadget = gadget.replaceAll(" ", "_"); // Replace spaces with underscores
-                  const imageFile = `${formattedGadget}_Rank_1.png`; // Correct image file format
+                  const formattedGadget = gadget.replaceAll(" ", "_");
+                  const imageFile = `${formattedGadget}_Rank_1.png`;
                   return `
                       <div class="gadget">
                           <img src="images/${imageFile}" alt="${gadget}">
@@ -49,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
         outputDiv.innerHTML = `
             <h3>Class:</h3>
-            <div class="class">${classType}</div> <!-- Added class styling here -->
+            <div class="class">${classType}</div>
             <h3>Weapon:</h3>
             <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}">
             <p>${loadout.weapon}</p>
@@ -64,6 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   
     const generateLoadout = (classType) => {
+        loading.style.display = "block";  // Show the loading spinner while generating loadout
         const classLoadouts = loadouts[classType];
         const loadout = {
             weapon: randomItem(classLoadouts.weapons),
