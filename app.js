@@ -44,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       outputDiv.innerHTML = `
           <h3>Class:</h3>
-          <img src="images/${classType}_Rank_1.png" alt="${classType}">
           <p>${classType}</p>
           <h3>Weapon:</h3>
           <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}">
