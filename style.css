@@ -8,13 +8,13 @@ body {
 }
 
 header {
-    margin: 60px 0 30px; /* Increased space between the logo and text */
+    margin: 60px 0 20px;
 }
 
 .finals-logo {
     max-width: 150px;
     display: block;
-    margin: 0 auto 20px; /* Added extra space at the bottom of the logo */
+    margin: 0 auto 20px;
 }
 
 h1 {
@@ -36,6 +36,31 @@ h1 {
 
 .buttons button:hover {
     background-color: #555;
+}
+
+/* Custom styles for the Random Class and Loadout button */
+#randomLoadoutButton {
+    background-color: #d62e1f; /* A red color matching 'The Finals' theme */
+    border: 2px solid #c72c1f;
+}
+
+#randomLoadoutButton:hover {
+    background-color: #c72c1f; /* Darker red on hover */
+}
+
+/* Custom styling for the class output to make it stand out */
+#output .class {
+    background-color: #ffb6b6; /* Light red background for class */
+    color: #8b0000; /* Dark red text for better contrast */
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+/* Style for weapons, specializations, and gadgets */
+#output .weapon, #output .specialization, #output .gadget {
+    margin-top: 10px;
 }
 
 #output {
