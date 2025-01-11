@@ -41,19 +41,21 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("");
     
         outputDiv.innerHTML = `
-            <div class="item-container">
-                <h3>Weapon</h3>
-                <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}">
-                <p>${loadout.weapon}</p>
+            <div class="class">${classType}</div>
+            <div class="items-container">
+                <div class="item-container">
+                    <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}">
+                    <p>${loadout.weapon}</p>
+                </div>
+                <div class="item-container">
+                    <img src="images/${loadout.specialization.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.specialization}">
+                    <p>${loadout.specialization}</p>
+                </div>
+                ${gadgetImages}
             </div>
-            <div class="item-container">
-                <h3>Specialization</h3>
-                <img src="images/${loadout.specialization.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.specialization}">
-                <p>${loadout.specialization}</p>
-            </div>
-            ${gadgetImages}
         `;
     };
+    
     
 
     const generateLoadout = (classType) => {

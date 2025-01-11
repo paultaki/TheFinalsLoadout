@@ -50,34 +50,43 @@ h1 {
 #output {
     margin-top: 20px;
     display: flex;
+    flex-direction: column; /* Add column direction to include the class on top */
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Space between class name and images */
+}
+
+#output .class {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffb700; /* Distinct color for the class */
+    margin-bottom: 10px;
+}
+
+.items-container {
+    display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 30px; /* Space between the items */
-    flex-wrap: nowrap; /* Ensure items stay in one row */
+    gap: 30px; /* Space between the images */
 }
 
 .item-container {
     text-align: center;
-    max-width: 150px; /* Optional: Adjust width to fit images */
+    max-width: 150px; /* Adjust size if needed */
 }
 
 .item-container img {
-    max-width: 100%; /* Scale images to fit within container */
+    max-width: 100%; /* Ensure images fit within their container */
     display: block;
     margin: 0 auto;
-}
-
-.item-container h3 {
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-    color: #fff;
 }
 
 .item-container p {
     margin-top: 5px;
     font-size: 1rem;
-    color: #fff; /* Match the theme */
+    color: #fff; /* Match theme */
 }
+
 
 
 footer {
