@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loadout Generator</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <header>
@@ -12,19 +12,17 @@
     </header>
     <main>
         <div class="buttons">
-            <button id="randomLoadoutButton">Random Class and Loadout</button>
+            <button id="spinButton">Spin</button>
         </div>
-        <div id="output">
-            <div class="slot-container">
-                <div class="slot" id="weaponSlot"></div>
-                <div class="slot" id="specializationSlot"></div>
-                <div class="slot" id="gadgetsSlot"></div>
-            </div>
+        <div id="slotContainer">
+            <div class="slot" id="weaponSlot"></div>
+            <div class="slot" id="specializationSlot"></div>
+            <div class="slot" id="gadgetSlot"></div>
         </div>
     </main>
     <footer>
         <p>© 2025 Loadout Generator</p>
     </footer>
-    <script src="app.js"></script>
+    <script src="./app.js"></script>
 </body>
 </html>
