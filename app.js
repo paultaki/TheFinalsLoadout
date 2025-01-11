@@ -32,27 +32,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
   
     const displayLoadout = (classType, loadout) => {
+        // Display Class
+        const classNameDiv = `<p class="class-name">${classType}</p>`;
+  
+        // Display Specialization, Weapon, and Gadgets with images
         outputContainer.innerHTML = `
+            ${classNameDiv}
             <div class="output-container">
                 <div>
-                    <h3>Class:</h3>
-                    <p class="class">${classType}</p>
-                </div>
-                <div>
-                    <h3>Specialization</h3>
+                    <img src="images/${loadout.specialization.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.specialization}" />
                     <p>${loadout.specialization}</p>
                 </div>
                 <div>
-                    <h3>Weapon</h3>
+                    <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}" />
                     <p>${loadout.weapon}</p>
                 </div>
-                <div>
-                    <h3>Gadgets</h3>
-                    <div class="gadgets-container">
-                        ${loadout.gadgets.map(gadget => `<img src="images/${gadget.replaceAll(" ", "_")}_Rank_1.png" alt="${gadget}" />`).join("")}
-                    </div>
-                    <p>${loadout.gadgets.join(", ")}</p>
+                <div class="gadgets-container">
+                    ${loadout.gadgets.map(gadget => `<img src="images/${gadget.replaceAll(" ", "_")}_Rank_1.png" alt="${gadget}" />`).join("")}
                 </div>
+                <p>${loadout.gadgets.join(", ")}</p>
             </div>
         `;
     };
