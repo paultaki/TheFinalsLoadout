@@ -33,7 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
   
     const displayLoadout = (classType, loadout) => {
-        loading.style.display = "none";  // Hide the loading spinner once the loadout is displayed
+        // Hide the loading spinner once the loadout is displayed
+        loading.style.display = "none";  
+        
         const gadgetImages = loadout.gadgets
             .map(
               (gadget) => {
@@ -66,7 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   
     const generateLoadout = (classType) => {
-        loading.style.display = "block";  // Show the loading spinner while generating loadout
+        // Show the loading spinner while generating the loadout
+        loading.style.display = "block";  
+        
         const classLoadouts = loadouts[classType];
         const loadout = {
             weapon: randomItem(classLoadouts.weapons),
