@@ -1,5 +1,5 @@
 // Importing the Analytics component from Vercel
-import { Analytics } from "@vercel/analytics";
+import { Analytics } from "@vercel/analytics/react";  // Correct import
 
 document.addEventListener("DOMContentLoaded", () => {
   const randomLoadoutButton = document.getElementById("randomLoadoutButton");
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const loadouts = {
       Light: {
-          weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
+          weapons: ["93R", "Dagger", "LHI", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
           specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
           gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb"]
       },
