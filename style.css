@@ -37,7 +37,7 @@ p {
 
 .output-container {
     display: flex;
-    justify-content: space-between;  /* Distribute evenly across the page */
+    justify-content: space-evenly;  /* Distribute items evenly across the page */
     align-items: center;
     gap: 20px;                      /* Add space between elements */
     margin-top: 20px;
@@ -52,9 +52,12 @@ p {
     justify-content: center;
     background-color: transparent;  /* Transparent background */
     padding: 0;  /* Remove padding */
-    width: auto;  /* Adjust width */
-    height: auto;  /* Adjust height */
     text-align: center;
+}
+
+.output-container img {
+    width: 100px;  /* All images will be the same size */
+    height: 100px;  /* Same height as width to maintain square aspect ratio */
 }
 
 .gadgets-container {
@@ -65,8 +68,8 @@ p {
 }
 
 .gadgets-container img {
-    width: 50px;
-    height: 50px;
+    width: 100px;  /* Same size as other images */
+    height: 100px;
 }
 
 @media (max-width: 768px) {
