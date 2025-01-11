@@ -1,112 +1,65 @@
-/* General Page Styling */
 body {
     font-family: Arial, sans-serif;
-    background-color: #1e1e1e; /* Dark background for contrast */
-    color: #fff; /* White text for readability */
-    text-align: center;
+    background-color: #121212;
+    color: #ffffff;
     margin: 0;
-    padding: 0;
+    text-align: center;
 }
 
 header {
-    margin: 20px 0;
-    text-align: center;
+    margin: 20px;
 }
 
 .finals-logo {
-    width: 200px;
-    margin-bottom: 15px;
+    max-width: 200px;
+    margin: 0 auto;
+    display: block;
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: 2em;
     margin: 10px 0;
-    color: #fff;
-    font-weight: bold;
 }
 
-p {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-    color: #bbb; /* Slightly lighter text for subtext */
-}
-
-/* Button Styling */
 .buttons {
     margin: 20px 0;
 }
 
 button {
-    background-color: #007BFF; /* Primary blue color */
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    margin: 10px;
-    border-radius: 50px;
-    font-size: 1rem;
-    font-weight: bold;
+    background-color: #333;
+    color: #fff;
+    border: 2px solid #555;
+    padding: 10px 20px;
+    font-size: 1em;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
+    border-radius: 5px;
+    margin: 5px;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    transform: scale(1.05); /* Slight scale for hover effect */
+    background-color: #444;
 }
 
-button:active {
-    transform: scale(1);
-}
-
-/* Output Section */
 #output {
-    margin: 30px 0;
+    margin-top: 20px;
+    padding: 20px;
+    text-align: center;
 }
 
-#output img {
-    max-width: 150px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-}
-
-#output h2 {
-    font-size: 1.5rem;
-    color: #fff;
-    margin: 10px 0;
-}
-
-/* Gadgets Styling */
-.gadgets {
+.gadget-list {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
-.gadgets img {
-    width: 80px;
-    height: auto;
-    margin: 10px;
-    display: inline-block;
-    border: 2px solid #007BFF;
-    border-radius: 10px;
-    transition: all 0.3s ease;
+.gadget-item {
+    text-align: center;
+    max-width: 100px;
 }
 
-.gadgets img:hover {
-    transform: scale(1.1);
-    border-color: #0056b3;
-}
-
-/* Footer Styling */
 footer {
-    margin: 30px 0;
-    color: #777; /* Dimmed color for footer */
-    font-size: 0.9rem;
+    margin-top: 30px;
+    font-size: 0.9em;
 }
-
-footer p {
-    margin: 5px 0;
-}
-
