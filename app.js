@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM fully loaded and parsed");
+
   // Function to randomly select an item from an array
   function randomItem(array) {
       return array[Math.floor(Math.random() * array.length)];
@@ -28,7 +30,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to generate a random loadout
   function generateRandomLoadout() {
+      console.log("Generating random loadout...");
       const outputDiv = document.getElementById("output");
+      if (!outputDiv) {
+          console.error("Output div not found!");
+          return;
+      }
       outputDiv.innerHTML = ""; // Clear previous loadout
 
       const classType = randomItem(Object.keys(loadouts));
@@ -45,7 +52,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to generate loadout for a specific class
   function generateClassLoadout(classType) {
+      console.log(`Generating ${classType} loadout...`);
       const outputDiv = document.getElementById("output");
+      if (!outputDiv) {
+          console.error("Output div not found!");
+          return;
+      }
       outputDiv.innerHTML = ""; // Clear previous loadout
 
       const data = loadouts[classType];
@@ -74,6 +86,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to display the generated loadout
   function displayLoadout(loadout) {
       const outputDiv = document.getElementById("output");
+      if (!outputDiv) {
+          console.error("Output div not found for display!");
+          return;
+      }
       outputDiv.innerHTML = `
           <h3>Class:</h3>
           <img src="images/${loadout.class}_Rank_1.png" alt="${loadout.class}">
@@ -96,9 +112,32 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
   }
 
-  // Button event listeners
-  document.getElementById("randomLoadoutButton").onclick = generateRandomLoadout;
-  document.getElementById("lightLoadoutButton").onclick = () => generateClassLoadout("Light");
-  document.getElementById("mediumLoadoutButton").onclick = () => generateClassLoadout("Medium");
-  document.getElementById("heavyLoadoutButton").onclick = () => generateClassLoadout("Heavy");
+  // Attach event listeners to buttons
+  const randomLoadoutButton = document.getElementById("randomLoadoutButton");
+  if (randomLoadoutButton) {
+      randomLoadoutButton.onclick = generateRandomLoadout;
+  } else {
+      console.error("Random loadout button not found!");
+  }
+
+  const lightLoadoutButton = document.getElementById("lightLoadoutButton");
+  if (lightLoadoutButton) {
+      lightLoadoutButton.onclick = () => generateClassLoadout("Light");
+  } else {
+      console.error("Light loadout button not found!");
+  }
+
+  const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
+  if (mediumLoadoutButton) {
+      mediumLoadoutButton.onclick = () => generateClassLoadout("Medium");
+  } else {
+      console.error("Medium loadout button not found!");
+  }
+
+  const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
+  if (heavyLoadoutButton) {
+      heavyLoadoutButton.onclick = () => generateClassLoadout("Heavy");
+  } else {
+      console.error("Heavy loadout button not found!");
+  }
 });
