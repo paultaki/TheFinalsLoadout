@@ -3,8 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const lightLoadoutButton = document.getElementById("lightLoadoutButton");
     const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
     const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
-    const outputDiv = document.getElementById("output");
-    const loading = document.getElementById("loading");
+    const outputContainer = document.getElementById("output");
   
     if (!randomLoadoutButton || !lightLoadoutButton || !mediumLoadoutButton || !heavyLoadoutButton) {
         console.error("One or more buttons not found!");
@@ -13,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const loadouts = {
         Light: {
-            weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
+            weapons: ["93R", "Dagger", "LHI", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
             specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
             gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb"]
         },
@@ -33,44 +32,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
   
     const displayLoadout = (classType, loadout) => {
-        // Hide the loading spinner once the loadout is displayed
-        loading.style.display = "none";  
-        
-        const gadgetImages = loadout.gadgets
-            .map(
-              (gadget) => {
-                  const formattedGadget = gadget.replaceAll(" ", "_");
-                  const imageFile = `${formattedGadget}_Rank_1.png`;
-                  return `
-                      <div class="gadget">
-                          <img src="images/${imageFile}" alt="${gadget}">
-                          <p>${gadget}</p>
-                      </div>
-                  `;
-              }
-          )
-          .join("");
-  
-        outputDiv.innerHTML = `
-            <h3>Class:</h3>
-            <div class="class">${classType}</div>
-            <h3>Weapon:</h3>
-            <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}">
-            <p>${loadout.weapon}</p>
-            <h3>Specialization:</h3>
-            <img src="images/${loadout.specialization.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.specialization}">
-            <p>${loadout.specialization}</p>
-            <h3>Gadgets:</h3>
-            <div class="gadgets-container">
-                ${gadgetImages}
+        // Create output container with the loadout details
+        outputContainer.innerHTML = `
+            <div class="output-container">
+                <div>
+                    <h3>Class:</h3>
+                    <p class="class">${classType}</p>
+                </div>
+                <div>
+                    <h3>Specialization</h3>
+                    <p>${loadout.specialization}</p>
+                </div>
+                <div>
+                    <h3>Weapon</h3>
+                    <p>${loadout.weapon}</p>
+                </div>
+                <div>
+                    <h3>Gadgets</h3>
+                    <p>${loadout.gadgets.join(", ")}</p>
+                </div>
             </div>
         `;
     };
   
     const generateLoadout = (classType) => {
-        // Show the loading spinner while generating the loadout
-        loading.style.display = "block";  
-        
+        loading.style.display = "block";  // Show the loading spinner while generating loadout
         const classLoadouts = loadouts[classType];
         const loadout = {
             weapon: randomItem(classLoadouts.weapons),

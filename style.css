@@ -43,12 +43,12 @@ p, .class {
 /* Flex container to arrange Class Name, Specialization, Weapon, and Gadgets */
 .output-container {
     display: flex;
-    justify-content: space-around;  /* Distribute evenly */
+    justify-content: space-between;  /* Distribute evenly across the page */
     align-items: center;
-    gap: 20px;  /* Add space between elements */
+    gap: 20px;                      /* Add space between elements */
     margin-top: 20px;
     width: 100%;
-    flex-wrap: wrap;  /* Allow wrapping on small screens */
+    flex-wrap: wrap;                /* Allow wrapping on small screens */
 }
 
 .output-container > div {
@@ -59,8 +59,8 @@ p, .class {
     background-color: #2a3a42;  /* Darker background for boxes */
     border: 2px solid #444;
     padding: 20px;
-    width: 150px;
-    height: 150px;
+    width: 150px;  /* Fixed width for each section */
+    height: 150px;  /* Fixed height for each section */
     border-radius: 8px;
 }
 
