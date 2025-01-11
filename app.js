@@ -43,8 +43,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}" />
                     <p>${loadout.weapon}</p>
                 </div>
-                <div class="gadgets-container">
-                    ${loadout.gadgets.map(gadget => `<img src="images/${gadget.replaceAll(" ", "_")}_Rank_1.png" alt="${gadget}" />`).join("")}
+                <div>
+                    <img src="images/${loadout.gadgets[0].replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.gadgets[0]}" />
+                    <p>${loadout.gadgets[0]}</p>
+                </div>
+                <div>
+                    <img src="images/${loadout.gadgets[1].replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.gadgets[1]}" />
+                    <p>${loadout.gadgets[1]}</p>
+                </div>
+                <div>
+                    <img src="images/${loadout.gadgets[2].replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.gadgets[2]}" />
+                    <p>${loadout.gadgets[2]}</p>
                 </div>
             </div>
         `;
