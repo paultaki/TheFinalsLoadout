@@ -9,14 +9,14 @@
 <body>
   <header>
     <h1>The Finals Loadout Generator</h1>
-    <p>Generate random loadouts for Light, Medium, or Heavy builds!</p>
+    <p>Get a random loadout for Light, Medium, or Heavy Builds!</p>
   </header>
   <main>
     <div class="buttons">
-      <button class="random-loadout" onclick="generateLoadout('Random')">Random Class and Loadout</button>
-      <button onclick="generateLightLoadout()">Light Loadout</button>
-      <button onclick="generateMediumLoadout()">Medium Loadout</button>
-      <button onclick="generateHeavyLoadout()">Heavy Loadout</button>
+      <button id="randomLoadoutBtn" class="random-button">Random Class and Loadout</button>
+      <button id="lightLoadoutBtn">Light Loadout</button>
+      <button id="mediumLoadoutBtn">Medium Loadout</button>
+      <button id="heavyLoadoutBtn">Heavy Loadout</button>
     </div>
     <div id="output"></div>
   </main>
