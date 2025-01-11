@@ -38,111 +38,27 @@ h1 {
     background-color: #555;
 }
 
-#randomLoadoutButton {
-    background-color: #d62e1f;
-    border: 2px solid #c72c1f;
-}
-
-#randomLoadoutButton:hover {
-    background-color: #b5291c;
-}
-
-.punishment {
-    background-color: #880000; /* Dark red */
-    color: #fff;
-    border: 2px solid #aa0000;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.punishment:hover {
-    background-color: #cc0000; /* Bright red */
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.8); /* Glowing red */
-}
-
-#output {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px; /* Space between loadout and button */
-    margin-top: 20px;
-}
-
-#output .class {
+.slot {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #ffb700;
-    margin-bottom: 10px;
+    animation: spin 0.5s infinite;
+}
+
+@keyframes spin {
+    0% { transform: translateY(0); }
+    25% { transform: translateY(-25px); }
+    50% { transform: translateY(-50px); }
+    75% { transform: translateY(-75px); }
+    100% { transform: translateY(0); }
 }
 
 .items-container {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    gap: 30px;
+    gap: 20px;
+    margin-top: 20px;
 }
 
 .item-container {
     text-align: center;
-    max-width: 150px;
-}
-
-.item-container img {
-    max-width: 100%;
-    display: block;
-    margin: 0 auto;
-}
-
-.item-container p {
-    margin-top: 5px;
-    font-size: 1rem;
-    color: #fff;
-}
-
-#output .class {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffb700;
-    margin-bottom: 10px;
-}
-
-.items-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 30px;
-}
-
-/* Add the punishment header styling below */
-.punishment-header {
-    max-width: 150px;
-    display: block;
-    margin: 0 auto 10px;
-}
-
-.copy-button {
-    background-color: #555;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    margin-top: 15px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.copy-button:hover {
-    background-color: #ffb700;
-    box-shadow: 0 0 10px rgba(255, 183, 0, 0.8);
-}
-
-footer {
-    margin-top: 20px;
-    font-size: 0.8rem;
-    color: #888;
 }
