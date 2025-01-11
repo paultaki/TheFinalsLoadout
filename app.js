@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
   
     const displayLoadout = (classType, loadout) => {
-        // Create output container with the loadout details
         outputContainer.innerHTML = `
             <div class="output-container">
                 <div>
