@@ -1,26 +1,43 @@
 // Define loadouts for each class
 const loadouts = {
     Light: {
-      weapons: ["SR-84", "Recurve Bow", "Throwing Knives", "XP-54"],
+      weapons: [
+        "93R", "Dagger", "LHI", "M26 Matter", "Recurve Bow", "SH9000", "SR-84", "Sword",
+        "Throwing Knives", "V95", "XP-54"
+      ],
       specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
-      gadgets: ["Flashbang", "Gravity Vortex", "Smoke Grenade", "Goo Grenade"],
+      gadgets: [
+        "Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade",
+        "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb",
+        "Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"
+      ],
     },
     Medium: {
-      weapons: ["AKM", "FAMAS", "Riot Shield", "Healing Beam"],
-      specializations: ["Guardian Turret", "Healing Beam", "Dematerializer"],
-      gadgets: ["Frag Grenade", "Motion Sensor", "Gas Grenade"],
+      weapons: [
+        "AKM", "Cerberus 126A", "CL-40", "Dual Blades", "FAMAS", "FCAR", "Model 1887",
+        "Pike-556", "R357", "Riot Shield"
+      ],
+      specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
+      gadgets: [
+        "APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine",
+        "Glitch Trap", "Jump Pad", "Zipline", "Proximity Sensor",
+        "Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"
+      ],
     },
     Heavy: {
-      weapons: ["MG36", "Sledgehammer", "SA1216", "SHAK-50"],
-      specializations: ["Shield", "Explosive Armor", "Deployable Cover"],
-      gadgets: ["Anti-Gravity Cube", "Barricade", "Goo Grenade"],
+      weapons: [
+        ".50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MG32",
+        "SA1216", "SHAK-50", "Sledgehammer", "Spear"
+      ],
+      specializations: ["Charge 'n' Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+      gadgets: [
+        "Anti-Gravity Cube", "Barricade", "C4", "Dome Shield", "Explosive Mine",
+        "Proximity Sensor", "Lockbolt Launcher", "Pyro Mine", "RPG-7",
+        "Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"
+      ],
     },
   };
   
-  // Utility function to select a random item from an array
-  function randomItem(array) {
-    return array[Math.floor(Math.random() * array.length)];
-  }
   
   // Utility function to get unique gadgets
   function getUniqueGadgets(gadgetPool, count) {
