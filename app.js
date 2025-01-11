@@ -3,13 +3,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const lightLoadoutButton = document.getElementById("lightLoadoutButton");
     const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
     const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
-    const outputContainer = document.getElementById("output");
-
+    const outputDiv = document.getElementById("output");
+  
     if (!randomLoadoutButton || !lightLoadoutButton || !mediumLoadoutButton || !heavyLoadoutButton) {
         console.error("One or more buttons not found!");
         return;
     }
-
+  
     const loadouts = {
         Light: {
             weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
@@ -28,37 +28,41 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         Common: ["Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"]
     };
-
+  
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
-
+  
     const displayLoadout = (classType, loadout) => {
-        outputContainer.innerHTML = `
-            <div class="class-name">${classType}</div>
-            <div class="output-container">
-                <div>
-                    <img src="images/${loadout.specialization.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.specialization}" />
-                    <p>${loadout.specialization}</p>
-                </div>
-                <div>
-                    <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}" />
-                    <p>${loadout.weapon}</p>
-                </div>
-                <div>
-                    <img src="images/${loadout.gadgets[0].replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.gadgets[0]}" />
-                    <p>${loadout.gadgets[0]}</p>
-                </div>
-                <div>
-                    <img src="images/${loadout.gadgets[1].replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.gadgets[1]}" />
-                    <p>${loadout.gadgets[1]}</p>
-                </div>
-                <div>
-                    <img src="images/${loadout.gadgets[2].replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.gadgets[2]}" />
-                    <p>${loadout.gadgets[2]}</p>
-                </div>
+        const gadgetImages = loadout.gadgets
+            .map(
+              (gadget) => {
+                  const formattedGadget = gadget.replaceAll(" ", "_"); // Replace spaces with underscores
+                  const imageFile = `${formattedGadget}_Rank_1.png`; // Correct image file format
+                  return `
+                      <div class="gadget">
+                          <img src="images/${imageFile}" alt="${gadget}">
+                          <p>${gadget}</p>
+                      </div>
+                  `;
+              }
+          )
+          .join("");
+  
+        outputDiv.innerHTML = `
+            <h3>Class:</h3>
+            <div class="class">${classType}</div> <!-- Added class styling here -->
+            <h3>Weapon:</h3>
+            <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}">
+            <p>${loadout.weapon}</p>
+            <h3>Specialization:</h3>
+            <img src="images/${loadout.specialization.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.specialization}">
+            <p>${loadout.specialization}</p>
+            <h3>Gadgets:</h3>
+            <div class="gadgets-container">
+                ${gadgetImages}
             </div>
         `;
     };
-
+  
     const generateLoadout = (classType) => {
         const classLoadouts = loadouts[classType];
         const loadout = {
@@ -72,14 +76,15 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         displayLoadout(classType, loadout);
     };
-
+  
     randomLoadoutButton.onclick = () => {
         const classes = Object.keys(loadouts).filter((key) => key !== "Common");
         const randomClass = randomItem(classes);
         generateLoadout(randomClass);
     };
-
+  
     lightLoadoutButton.onclick = () => generateLoadout("Light");
     mediumLoadoutButton.onclick = () => generateLoadout("Medium");
     heavyLoadoutButton.onclick = () => generateLoadout("Heavy");
-});
+  });
+  
