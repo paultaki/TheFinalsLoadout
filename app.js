@@ -1,7 +1,39 @@
+const loadouts = {
+    Light: {
+        weapons: ["G3R", "Dagger", "LIH", "M11", "M26 Matter", "Recurve Bow", "SH900", "SR-84", "Sword", "V95", "XP-54", "Throwing Knives"],
+        specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
+        gadgets: ["Breach Charge", "Flashbang", "Frag Grenade", "Gas Grenade", "Gateway", "Glitch Grenade", "Goo Grenade", "Gravity Vortex", "Jump Pad", "Motion Sensor", "Pyro Grenade", "Smoke Grenade"]
+    },
+    Medium: {
+        weapons: ["AXM", "Cerberus 12GA", "CL-40", "Dual Blades", "FAMAS", "FCLAR", "Model 1887", "Pike-556", "R-357", "Riot Shield"],
+        specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
+        gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Jump Pad", "Motion Sensor", "Pyro Grenade", "Smoke Grenade"]
+    },
+    Heavy: {
+        weapons: ["ES-06 Akimbo", "Flamethrower", "IS-23", "Lewis Gun", "MG32K", "M69", "SA1216", "SHAK-50", "Sledgehammer", "Spear"],
+        specializations: ["Charge 'n Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+        gadgets: ["Anti-Gravity Cube", "Barricade", "C4", "Dome Shield", "Explosive Mine", "Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Jump Pad", "Motion Sensor", "Pyro Grenade", "Smoke Grenade"]
+    }
+};
+
+// Function to randomly select an item from an array
 function randomItem(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
 
+// Function to generate unique gadgets
+function getUniqueGadgets(gadgetPool, count) {
+    const uniqueGadgets = [];
+    while (uniqueGadgets.length < count) {
+        const gadget = randomItem(gadgetPool);
+        if (!uniqueGadgets.includes(gadget)) {
+            uniqueGadgets.push(gadget);
+        }
+    }
+    return uniqueGadgets;
+}
+
+// Function to generate loadouts with animation
 function generateLoadout(spins) {
     const outputDiv = document.getElementById("output");
     outputDiv.innerHTML = ""; // Clear previous loadout
