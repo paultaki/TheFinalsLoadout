@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
             })
             .join("");
-    
+
         outputDiv.innerHTML = `
             <div class="class">${classType}</div>
             <div class="items-container">
@@ -55,8 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
     };
-    
-    
 
     const generateLoadout = (classType) => {
         const classLoadouts = loadouts[classType];

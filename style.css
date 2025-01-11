@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #1e1e1e;
+    background: linear-gradient(180deg, #1e1e1e, #121212); /* Subtle gradient background */
     color: #fff;
     text-align: center;
     margin: 0;
@@ -31,11 +31,12 @@ h1 {
     margin: 5px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .buttons button:hover {
-    background-color: #555;
+    background-color: #d62e1f;
+    box-shadow: 0 0 10px rgba(214, 46, 31, 0.8); /* Glowing red effect */
 }
 
 #randomLoadoutButton {
@@ -50,10 +51,10 @@ h1 {
 #output {
     margin-top: 20px;
     display: flex;
-    flex-direction: column; /* Add column direction to include the class on top */
+    flex-direction: column; /* Display class name on top */
     justify-content: center;
     align-items: center;
-    gap: 20px; /* Space between class name and images */
+    gap: 20px; /* Space between class and items */
 }
 
 #output .class {
@@ -61,24 +62,32 @@ h1 {
     font-weight: bold;
     color: #ffb700; /* Distinct color for the class */
     margin-bottom: 10px;
+    text-transform: uppercase; /* Optional: Make class uppercase */
+    animation: fadeIn 0.5s ease; /* Add animation */
 }
 
 .items-container {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 30px; /* Space between the images */
+    gap: 30px; /* Space between images */
 }
 
 .item-container {
     text-align: center;
-    max-width: 150px; /* Adjust size if needed */
+    max-width: 150px;
 }
 
 .item-container img {
-    max-width: 100%; /* Ensure images fit within their container */
+    max-width: 100%; /* Ensure images fit */
     display: block;
     margin: 0 auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hover effects */
+}
+
+.item-container img:hover {
+    transform: scale(1.1); /* Zoom effect */
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3); /* Glow */
 }
 
 .item-container p {
@@ -87,10 +96,38 @@ h1 {
     color: #fff; /* Match theme */
 }
 
-
-
 footer {
     margin-top: 20px;
+    text-align: center;
     font-size: 0.8rem;
     color: #888;
+    line-height: 1.5;
+}
+
+/* Animation for the class name */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .items-container {
+        flex-wrap: wrap; /* Allow wrapping for smaller screens */
+        gap: 20px;
+    }
+
+    .item-container {
+        max-width: 100px; /* Scale down */
+    }
+
+    #output .class {
+        font-size: 1.2rem; /* Adjust class font size */
+    }
 }
