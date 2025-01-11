@@ -13,12 +13,13 @@
   </header>
   <main>
     <div class="buttons">
-      <button onclick="generateLoadout()">Spin for Loadout</button>
-      <button onclick="generateLightLoadout()">Spin Light Loadout</button>
-      <button onclick="generateMediumLoadout()">Spin Medium Loadout</button>
-      <button onclick="generateHeavyLoadout()">Spin Heavy Loadout</button>
+      <button onclick="generateLightLoadout()">Spin for Light Loadout</button>
+      <button onclick="generateMediumLoadout()">Spin for Medium Loadout</button>
+      <button onclick="generateHeavyLoadout()">Spin for Heavy Loadout</button>
+      <button onclick="generateLoadout(randomItem(Object.keys(loadouts)))">Spin for Random Loadout</button>
     </div>
     <div id="output"></div>
+    
   </main>
   <footer>
     <p>© 2025 TheFinalsLoadout.com</p>
