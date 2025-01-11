@@ -3,34 +3,46 @@ body {
     background-color: #1e1e1e;
     color: #fff;
     text-align: center;
-    margin: 0;
   }
   
-  header {
-    padding: 20px;
-  }
-  
-  .buttons {
-    margin: 20px 0;
+  h3 {
+    margin-top: 20px;
+    font-size: 1.5rem;
   }
   
   button {
-    padding: 10px 20px;
     margin: 10px;
-    font-size: 16px;
-    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #007bff;
     border: none;
     border-radius: 5px;
+    cursor: pointer;
   }
   
-  .random-button {
-    background-color: #1db954;
-    color: #fff;
+  button:hover {
+    background-color: #0056b3;
   }
   
-  #output img {
-    border: 1px solid #fff;
-    border-radius: 5px;
-    margin-bottom: 10px;
+  .gadgets-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .gadget {
+    text-align: center;
+  }
+  
+  .gadget img {
+    width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .gadget p {
+    margin: 10px 0 0;
   }
   

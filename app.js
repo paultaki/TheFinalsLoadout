@@ -1,8 +1,8 @@
 const loadouts = {
   Light: {
     weapons: [
-      "93R", "Dagger", "LH1", "M11", "M26 Matter", "Recurve Bow", "SH1900",
-      "SR-84", "Sword", "V9S", "XP-54", "Throwing Knives"
+      "93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "SH1900", "SR-84", "Sword", 
+      "V95", "XP-54", "Throwing Knives"
     ],
     specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
     gadgets: [
@@ -12,8 +12,8 @@ const loadouts = {
   },
   Medium: {
     weapons: [
-      "AKM", "Cerberus 12GA", "CL-40", "Dual Blades", "FAMAS", "FCAR", 
-      "Model 1887", "Pike-556", "R.357", "Riot Shield"
+      "AKM", "Cerberus 12GA", "CL-40", "Dual Blades", "FAMAS", "FCAR", "Model 1887",
+      "Pike-556", "R-357", "Riot Shield"
     ],
     specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
     gadgets: [
@@ -23,84 +23,74 @@ const loadouts = {
   },
   Heavy: {
     weapons: [
-      ".50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", 
-      "SA1216", "SHAK-50", "Sledgehammer", "Spear"
+      ".50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MG132", "SA1216",
+      "Shak-50", "Sledgehammer", "Spear"
     ],
-    specializations: ["Charge 'N Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+    specializations: ["Charge 'n Slam", "Mesh Shield", "Winch Claw"],
     gadgets: [
-      "Anti-Gravity Cube", "Barricade", "C4", "Dome Shield", "Lockbolt Launcher", 
-      "Pyro Mine", "Proximity Sensor", "RPG-7"
+      "Anti-Gravity Cube", "Barricade", "C4", "Dome Shield", "Explosive Mine", 
+      "Lockbolt Launcher", "Pyro Mine", "Proximity Sensor", "RPG-7"
     ]
   },
-  All: [
-    "Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", 
-    "Smoke Grenade"
-  ]
+  All: ["Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"]
 };
 
-// Function to get a random item from an array
+// Random item function
 function randomItem(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-// Function to get the image path for an item
-function getImagePath(itemName) {
-  // Replace spaces with underscores for filenames
-  const formattedName = itemName.replace(/ /g, "_"); 
-  return `images/${formattedName}_Rank_1.png`;
-}
-
-// Function to generate a loadout
-function generateLoadout(classType) {
+// Generate a loadout
+function generateLoadout(classType = null) {
   const outputDiv = document.getElementById("output");
   outputDiv.innerHTML = ""; // Clear previous loadout
 
-  const data = loadouts[classType];
+  // Determine class
+  const selectedClass = classType || randomItem(Object.keys(loadouts));
+  const data = loadouts[selectedClass];
+
   const finalLoadout = {
-    class: classType,
+    class: selectedClass,
     weapon: randomItem(data.weapons),
     specialization: randomItem(data.specializations),
-    gadgets: [
-      randomItem([...data.gadgets, ...loadouts.All]),
-      randomItem([...data.gadgets, ...loadouts.All]),
-      randomItem([...data.gadgets, ...loadouts.All])
-    ]
+    gadgets: getUniqueGadgets([...data.gadgets, ...loadouts.All], 3)
   };
 
   // Display the loadout
   outputDiv.innerHTML = `
     <h3>Class:</h3>
-    <img src="${getImagePath(finalLoadout.class)}" alt="${finalLoadout.class}" />
+    <img src="images/${finalLoadout.class.replace(/\s+/g, '_')}_Rank_1.png" alt="${finalLoadout.class}">
     <p>${finalLoadout.class}</p>
     <h3>Weapon:</h3>
-    <img src="${getImagePath(finalLoadout.weapon)}" alt="${finalLoadout.weapon}" />
+    <img src="images/${finalLoadout.weapon.replace(/\s+/g, '_')}_Rank_1.png" alt="${finalLoadout.weapon}">
     <p>${finalLoadout.weapon}</p>
     <h3>Specialization:</h3>
-    <img src="${getImagePath(finalLoadout.specialization)}" alt="${finalLoadout.specialization}" />
+    <img src="images/${finalLoadout.specialization.replace(/\s+/g, '_')}_Rank_1.png" alt="${finalLoadout.specialization}">
     <p>${finalLoadout.specialization}</p>
     <h3>Gadgets:</h3>
-    <div>
-      ${finalLoadout.gadgets
-        .map(
-          (gadget) =>
-            `<div>
-              <img src="${getImagePath(gadget)}" alt="${gadget}" />
-              <p>${gadget}</p>
-            </div>`
-        )
-        .join("")}
+    <div class="gadgets-container">
+      ${finalLoadout.gadgets.map(gadget => `
+        <div class="gadget">
+          <img src="images/${gadget.replace(/\s+/g, '_')}_Rank_1.png" alt="${gadget}">
+          <p>${gadget}</p>
+        </div>
+      `).join('')}
     </div>
   `;
 }
 
-// Function for generating a random class and loadout
-function generateRandomLoadout() {
-  const classType = randomItem(Object.keys(loadouts).filter((key) => key !== "All"));
-  generateLoadout(classType);
+// Get unique gadgets
+function getUniqueGadgets(gadgetPool, count) {
+  const uniqueGadgets = [];
+  while (uniqueGadgets.length < count) {
+    const gadget = randomItem(gadgetPool);
+    if (!uniqueGadgets.includes(gadget)) uniqueGadgets.push(gadget);
+  }
+  return uniqueGadgets;
 }
 
-// Add event listeners for buttons
-document.getElementById("randomButton").onclick = generateRandomLoadout;
-document.getElementById("lightButton").onclick = () => generateLoadout("Light");
-document.getElementById("mediumButton").onclick = () => generateLoadout("Medium");
-document.getElementById("heavyButton").onclick = () => generateLoadout("Heavy");
+// Button event listeners
+document.getElementById("randomLoadout").onclick = () => generateLoadout();
+document.getElementById("lightLoadout").onclick = () => generateLoadout("Light");
+document.getElementById("mediumLoadout").onclick = () => generateLoadout("Medium");
+document.getElementById("heavyLoadout").onclick = () => generateLoadout("Heavy");
