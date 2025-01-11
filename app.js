@@ -55,7 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   
     const generateLoadout = (classType) => {
-        loading.style.display = "block";  // Show the loading spinner while generating loadout
         const classLoadouts = loadouts[classType];
         const loadout = {
             weapon: randomItem(classLoadouts.weapons),

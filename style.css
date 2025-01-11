@@ -62,31 +62,12 @@ p, .class {
     width: 150px;  /* Fixed width for each section */
     height: 150px;  /* Fixed height for each section */
     border-radius: 8px;
+    flex: 1;           /* Allow sections to resize as necessary */
 }
 
 .output-container h3 {
     color: red;  /* Class name color */
     margin-top: 10px;
-}
-
-/* Loading Spinner */
-#loading {
-    font-size: 2rem;
-    color: #fff;
-    margin-top: 20px;
-    text-align: center;
-    font-weight: bold;
-    animation: spin 1s infinite linear;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-/* Spinner animation */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
 }
 
 footer {
