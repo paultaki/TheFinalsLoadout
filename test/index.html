@@ -3,29 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Finals Loadout Generator | Random Loadouts for The Finals Game</title>
-
-    <link rel="stylesheet" href="./style.css">
+    <title>Loadout Generator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <img src="./images/the-finals.png" alt="The Finals Logo" class="finals-logo">
-        <h1>The Finals Loadout Generator (Season 5 Ready)</h1>
-        <p>Get a random loadout for Light, Medium, or Heavy Builds!</p>
+        <h1>Random Loadout Generator</h1>
     </header>
     <main>
         <div class="buttons">
-            <button id="randomLoadoutButton" class="random">Random Class and Loadout</button>
-            <button id="lightLoadoutButton">Light Loadout</button>
-            <button id="mediumLoadoutButton">Medium Loadout</button>
-            <button id="heavyLoadoutButton">Heavy Loadout</button>
-        </div>        
-        <div id="output"></div>
+            <button id="randomLoadoutButton">Random Class and Loadout</button>
+        </div>
+        <div id="output">
+            <div class="slot-container">
+                <div class="slot" id="weaponSlot"></div>
+                <div class="slot" id="specializationSlot"></div>
+                <div class="slot" id="gadgetsSlot"></div>
+            </div>
+        </div>
     </main>
     <footer>
-        <p>© 2025 TheFinalsLoadout.com</p>
-        <p>1-800-FAT-MOMS Production</p>
+        <p>© 2025 Loadout Generator</p>
     </footer>
-    <script src="./app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
