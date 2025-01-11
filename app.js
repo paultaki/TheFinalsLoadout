@@ -40,6 +40,13 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .join("");
 
+        const shareableLoadout = `
+Class: ${classType}
+Weapon: ${loadout.weapon}
+Specialization: ${loadout.specialization}
+Gadgets: ${loadout.gadgets.join(", ")}
+        `.trim();
+
         outputDiv.innerHTML = `
             <div class="class">${classType}</div>
             <div class="items-container">
@@ -53,7 +60,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 ${gadgetImages}
             </div>
+            <button class="copy-button" onclick="copyToClipboard('${shareableLoadout.replace(/\n/g, "\\n").replace(/'/g, "\\'")}')">Copy Loadout</button>
         `;
+    };
+
+    window.copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Loadout copied to clipboard!");
+        }).catch((err) => {
+            console.error("Could not copy text: ", err);
+        });
     };
 
     const generateLoadout = (classType) => {
