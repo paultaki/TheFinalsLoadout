@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const lightLoadoutButton = document.getElementById("lightLoadoutButton");
     const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
     const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
+    const punishmentLoadoutButton = document.getElementById("punishmentLoadoutButton"); // New button
     const outputDiv = document.getElementById("output");
 
     const loadouts = {
@@ -22,6 +23,12 @@ document.addEventListener("DOMContentLoaded", () => {
             gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Motion Sensor"]
         },
         Common: ["Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"]
+    };
+
+    const punishmentLoadout = {
+        weapons: ["Dagger", "Recurve Bow", "Sword"],
+        specializations: ["Cloaking Device"],
+        gadgets: ["Breach Charge", "Gravity Vortex", "Thermal Vision", "Tracking Dart", "Thermal Bore"]
     };
 
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
@@ -72,15 +79,14 @@ Gadgets: ${loadout.gadgets.join(", ")}
         });
     };
 
-    const generateLoadout = (classType) => {
-        const classLoadouts = loadouts[classType];
+    const generateLoadout = (classType, loadouts) => {
         const loadout = {
-            weapon: randomItem(classLoadouts.weapons),
-            specialization: randomItem(classLoadouts.specializations),
+            weapon: randomItem(loadouts.weapons),
+            specialization: randomItem(loadouts.specializations),
             gadgets: [
-                randomItem(classLoadouts.gadgets),
-                randomItem(loadouts.Common),
-                randomItem(loadouts.Common)
+                randomItem(loadouts.gadgets),
+                randomItem(loadouts.gadgets),
+                randomItem(loadouts.gadgets)
             ]
         };
         displayLoadout(classType, loadout);
@@ -89,10 +95,11 @@ Gadgets: ${loadout.gadgets.join(", ")}
     randomLoadoutButton.onclick = () => {
         const classes = Object.keys(loadouts).filter((key) => key !== "Common");
         const randomClass = randomItem(classes);
-        generateLoadout(randomClass);
+        generateLoadout(randomClass, loadouts[randomClass]);
     };
 
-    lightLoadoutButton.onclick = () => generateLoadout("Light");
-    mediumLoadoutButton.onclick = () => generateLoadout("Medium");
-    heavyLoadoutButton.onclick = () => generateLoadout("Heavy");
+    lightLoadoutButton.onclick = () => generateLoadout("Light", loadouts.Light);
+    mediumLoadoutButton.onclick = () => generateLoadout("Medium", loadouts.Medium);
+    heavyLoadoutButton.onclick = () => generateLoadout("Heavy", loadouts.Heavy);
+    punishmentLoadoutButton.onclick = () => generateLoadout("Punishment", punishmentLoadout); // New punishment loadout
 });
