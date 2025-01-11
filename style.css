@@ -1,62 +1,104 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
     background-color: #1e1e1e;
     color: #fff;
     text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
 header {
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
-.buttons {
+.logo {
+    width: 300px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.season {
+    color: #fdd835;
+    font-weight: bold;
+}
+
+.randomize-box {
+    margin: 20px auto;
+    padding: 20px;
+    border: 2px solid #4caf50;
+    display: inline-block;
+    border-radius: 10px;
+    background-color: #4caf50;
+    color: white;
+}
+
+.randomize-class-button {
+    padding: 10px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: white;
+    color: #4caf50;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.class-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
     margin: 20px 0;
 }
 
-.btn {
-    padding: 10px 20px;
-    margin: 5px;
-    font-size: 16px;
-    cursor: pointer;
+.class-button {
     border: none;
-    border-radius: 5px;
-    color: #fff;
-    background-color: #444;
-    transition: background-color 0.3s ease;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.btn:hover {
-    background-color: #555;
+.light {
+    background-color: #e53935;
+    color: white;
 }
 
-.btn-random {
-    background-color: #28a745;
+.medium {
+    background-color: #757575;
+    color: white;
 }
 
-.btn-random:hover {
-    background-color: #218838;
+.heavy {
+    background-color: #3f51b5;
+    color: white;
 }
 
-.gadgets-container {
+.output-container {
     display: flex;
     justify-content: center;
-    gap: 20px;
     flex-wrap: wrap;
-    margin-top: 10px;
+    margin-top: 20px;
+    gap: 20px;
 }
 
-.gadget {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.gadget img {
+.output-container img {
     width: 100px;
     height: auto;
-    border: 2px solid #444;
-    border-radius: 8px;
-    margin-bottom: 5px;
+    display: block;
+    margin: 0 auto;
+}
+
+footer {
+    margin-top: 50px;
+    font-size: 14px;
 }
