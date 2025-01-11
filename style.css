@@ -8,13 +8,13 @@ body {
 }
 
 header {
-    margin: 40px 0 20px; /* Increased space between the logo and text */
+    margin: 60px 0 30px; /* Increased space between the logo and text */
 }
 
 .finals-logo {
     max-width: 150px;
     display: block;
-    margin: 0 auto 10px;
+    margin: 0 auto 20px; /* Added extra space at the bottom of the logo */
 }
 
 h1 {

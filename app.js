@@ -34,13 +34,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const displayLoadout = (classType, loadout) => {
       const gadgetImages = loadout.gadgets
           .map(
-              (gadget) =>
-                  `<div class="gadget">
-                      <img src="images/${gadget.replaceAll(" ", "_")}_Rank_1.png" alt="${gadget}">
-                      <p>${gadget}</p>
-                  </div>`
-          )
-          .join("");
+            (gadget) => {
+                const formattedGadget = gadget.replaceAll(" ", "_"); // Replace spaces with underscores
+                const imageFile = `${formattedGadget}_Rank_1.png`; // Correct image file format
+                return `
+                    <div class="gadget">
+                        <img src="images/${imageFile}" alt="${gadget}">
+                        <p>${gadget}</p>
+                    </div>
+                `;
+            }
+        )
+        .join("");
 
       outputDiv.innerHTML = `
           <h3>Class:</h3>
