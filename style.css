@@ -1,61 +1,90 @@
 body {
-    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
     background-color: #1e1e1e;
     color: #fff;
-    text-align: center;
     margin: 0;
-    padding: 0;
+    padding: 20px;
 }
 
 header {
-    margin: 20px 0 20px;
-}
-
-.finals-logo {
-    max-width: 150px;
-    display: block;
-    margin: 0 auto 20px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 h1 {
-    font-size: 2rem;
-    margin: 10px 0;
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin: 20px 0;
+}
+
+h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+p, .class {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-top: 10px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .buttons button {
     background-color: #333;
     color: #fff;
     border: 2px solid #444;
-    border-radius: 5px;
-    padding: 10px 20px;
-    margin: 5px;
+    border-radius: 8px;
+    padding: 12px 25px;
+    margin: 8px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .buttons button:hover {
     background-color: #555;
+    transform: scale(1.05);
 }
 
-/* Custom styles for the Random Class and Loadout button */
-#randomLoadoutButton {
-    background-color: #d62e1f;
-    border: 2px solid #c72c1f;
+.buttons button:active {
+    transform: scale(0.98);
 }
 
-#randomLoadoutButton:hover {
-    background-color: #b5291c;
-}
-
-/* Custom styling for the class output to make it stand out */
-#output .class {
-    background-color: #ffb6b6;
-    color: #8b0000;
-    padding: 10px;
-    border-radius: 5px;
+#loading {
+    font-size: 2rem;
+    color: #fff;
+    margin-top: 20px;
+    text-align: center;
     font-weight: bold;
-    margin: 10px 0;
+    animation: spin 1s infinite linear;
+    padding: 20px;
+}
+
+/* Spinner animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+footer {
+    text-align: center;
+    font-size: 1rem;
+    margin-top: 40px;
+    color: #888;
+}
+
+footer p {
+    margin: 5px 0;
 }
 
 /* Social Media Share Buttons */
@@ -70,48 +99,6 @@ h1 {
 
 #socialShare a:hover {
     background-color: #0056b3;
-}
-
-/* Loading Spinner */
-#loading {
-    font-size: 1.5rem;
-    color: #fff;
-    margin-top: 20px;
-    text-align: center;
-    font-weight: bold;
-    animation: spin 1s infinite linear;
-}
-
-/* Spinner animation */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Style for weapons, specializations, and gadgets */
-#output .weapon, #output .specialization, #output .gadget {
-    margin-top: 10px;
-}
-
-#output {
-    margin-top: 20px;
-}
-
-.gadgets-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.gadgets-container .gadget {
-    text-align: center;
-}
-
-footer {
-    margin-top: 20px;
-    font-size: 0.8rem;
-    color: #888;
 }
 
 /* Media Query for mobile responsiveness */
