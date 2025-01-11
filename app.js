@@ -16,12 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
       Medium: {
           weapons: ["AKM", "Cerberus 12GA", "CL-40", "Dual Blades", "FAMAS", "FCAR", "Model 1887", "Pike-556", "R.357", "Riot Shield"],
           specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
-          gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline", "Proximity Sensor"]
+          gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline"]
       },
       Heavy: {
           weapons: [".50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "SA1216", "SHAK-50", "Sledgehammer", "Spear"],
           specializations: ["Charge 'N Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
-          gadgets: ["Anti-Gravity Cube", "Barricade", "C4", "Dome Shield", "Explosive Mine", "Lockbolt Launcher", "Proximity Sensor", "Pyro Mine", "RPG-7"]
+          gadgets: ["Anti-Gravity Cube", "Barricade", "C4", "Dome Shield", "Explosive Mine", "Lockbolt Launcher", "Motion Sensor", "Pyro Mine", "RPG-7"]
       },
       All: {
           gadgets: ["Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"]
