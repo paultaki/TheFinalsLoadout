@@ -29,18 +29,12 @@ h1 {
     margin: 20px 0;
 }
 
-h3 {
-    font-size: 1.4rem;
-    margin-bottom: 10px;
-}
-
-p, .class {
+p {
     font-size: 1.2rem;
     line-height: 1.5;
     margin-top: 10px;
 }
 
-/* Flex container to arrange images side by side */
 .output-container {
     display: flex;
     justify-content: space-between;  /* Distribute evenly across the page */
@@ -51,36 +45,30 @@ p, .class {
     flex-wrap: wrap;                /* Allow wrapping on small screens */
 }
 
-/* Ensure the class section takes a little more space */
 .output-container > div {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: transparent;  /* Transparent background */
-    border: 2px solid #444;
-    padding: 15px;
-    width: 150px;
-    height: 150px;
-    border-radius: 8px;
+    padding: 0;  /* Remove padding */
+    width: auto;  /* Adjust width */
+    height: auto;  /* Adjust height */
     text-align: center;
 }
 
-/* Flex container for gadgets (Gadget 1, Gadget 2, Gadget 3) */
 .gadgets-container {
     display: flex;
-    justify-content: space-between;  /* Space gadgets evenly */
+    justify-content: space-between;
     gap: 10px;
     width: 100%;
 }
 
-/* Adjust gadget images size */
 .gadgets-container img {
     width: 50px;
     height: 50px;
 }
 
-/* Media Query for mobile responsiveness */
 @media (max-width: 768px) {
     .output-container {
         flex-direction: column;  /* Stack vertically on small screens */

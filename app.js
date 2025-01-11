@@ -4,12 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
     const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
     const outputContainer = document.getElementById("output");
-  
+
     if (!randomLoadoutButton || !lightLoadoutButton || !mediumLoadoutButton || !heavyLoadoutButton) {
         console.error("One or more buttons not found!");
         return;
     }
-  
+
     const loadouts = {
         Light: {
             weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
@@ -28,9 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         Common: ["Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"]
     };
-  
+
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
-  
+
     const displayLoadout = (classType, loadout) => {
         outputContainer.innerHTML = `
             <div class="class-name">${classType}</div>
@@ -46,11 +46,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="gadgets-container">
                     ${loadout.gadgets.map(gadget => `<img src="images/${gadget.replaceAll(" ", "_")}_Rank_1.png" alt="${gadget}" />`).join("")}
                 </div>
-                <p>${loadout.gadgets.join(", ")}</p>
             </div>
         `;
     };
-  
+
     const generateLoadout = (classType) => {
         const classLoadouts = loadouts[classType];
         const loadout = {
@@ -64,15 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         displayLoadout(classType, loadout);
     };
-  
+
     randomLoadoutButton.onclick = () => {
         const classes = Object.keys(loadouts).filter((key) => key !== "Common");
         const randomClass = randomItem(classes);
         generateLoadout(randomClass);
     };
-  
+
     lightLoadoutButton.onclick = () => generateLoadout("Light");
     mediumLoadoutButton.onclick = () => generateLoadout("Medium");
     heavyLoadoutButton.onclick = () => generateLoadout("Heavy");
-  });
-  
+});
