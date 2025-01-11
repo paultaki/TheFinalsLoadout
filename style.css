@@ -20,7 +20,7 @@ header {
     width: 100%;       /* Allow it to scale */
     height: auto;      /* Maintain aspect ratio */
     display: block;    /* Center it */
-    margin: 0 auto 20px;  /* Add space below */
+    margin: 0 auto 20px;
 }
 
 h1 {
@@ -41,9 +41,9 @@ p, .class {
 }
 
 .buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex;               /* Use flexbox for horizontal layout */
+    justify-content: center;      /* Center buttons horizontally */
+    gap: 10px;                    /* Add some space between buttons */
     margin-bottom: 20px;
 }
 
@@ -57,6 +57,7 @@ p, .class {
     cursor: pointer;
     font-size: 1.1rem;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    flex: 1;                      /* Allow buttons to grow and shrink if necessary */
 }
 
 .buttons button:hover {
@@ -68,6 +69,7 @@ p, .class {
     transform: scale(0.98);
 }
 
+/* Loading Spinner */
 #loading {
     font-size: 2rem;
     color: #fff;
@@ -87,6 +89,22 @@ p, .class {
     100% { transform: rotate(360deg); }
 }
 
+#output {
+    margin-top: 20px;
+}
+
+/* Gadgets layout */
+.gadgets-container {
+    display: flex;                  /* Use flexbox for horizontal layout */
+    justify-content: center;         /* Center gadgets horizontally */
+    gap: 15px;                       /* Add space between gadgets */
+    flex-wrap: wrap;                 /* Allow wrapping if necessary */
+}
+
+.gadgets-container .gadget {
+    text-align: center;
+}
+
 footer {
     text-align: center;
     font-size: 1rem;
@@ -98,31 +116,28 @@ footer p {
     margin: 5px 0;
 }
 
-/* Social Media Share Buttons */
-#socialShare a {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 5px;
-    text-decoration: none;
-}
-
-#socialShare a:hover {
-    background-color: #0056b3;
-}
-
 /* Media Query for mobile responsiveness */
 @media (max-width: 768px) {
     .buttons {
-        width: 100%;
+        flex-direction: column;  /* Stack buttons vertically on small screens */
     }
+
     .buttons button {
-        width: 100%;
+        width: 100%;  /* Make buttons full-width on small screens */
         margin-bottom: 10px;
     }
+
     header {
         text-align: center;
         margin-bottom: 30px;
+    }
+
+    .gadgets-container {
+        flex-direction: column;  /* Stack gadgets vertically on small screens */
+    }
+
+    .gadgets-container .gadget {
+        width: 100%;  /* Make gadgets full-width on small screens */
+        margin-bottom: 10px;
     }
 }
