@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const loadouts = {
         Light: {
-            weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
+            weapons: ["93R", "Dagger", "LHI", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
             specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
             gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb"]
         },
@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
   
     const displayLoadout = (classType, loadout) => {
-        // Generate HTML for displaying the loadout with images
         outputContainer.innerHTML = `
             <div class="output-container">
                 <div>
@@ -41,12 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div>
                     <h3>Specialization</h3>
-                    <img src="images/${loadout.specialization.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.specialization}" />
                     <p>${loadout.specialization}</p>
                 </div>
                 <div>
                     <h3>Weapon</h3>
-                    <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}" />
                     <p>${loadout.weapon}</p>
                 </div>
                 <div>
@@ -75,5 +72,13 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   
     randomLoadoutButton.onclick = () => {
-        const
+        const classes = Object.keys(loadouts).filter((key) => key !== "Common");
+        const randomClass = randomItem(classes);
+        generateLoadout(randomClass);
+    };
+  
+    lightLoadoutButton.onclick = () => generateLoadout("Light");
+    mediumLoadoutButton.onclick = () => generateLoadout("Medium");
+    heavyLoadoutButton.onclick = () => generateLoadout("Heavy");
+  });
   
