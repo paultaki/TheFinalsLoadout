@@ -43,11 +43,12 @@ p, .class {
 /* Flex container to arrange Class Name, Specialization, Weapon, and Gadgets */
 .output-container {
     display: flex;
-    flex-direction: row;  /* Arrange horizontally */
-    justify-content: center;
+    justify-content: space-around;  /* Distribute evenly */
     align-items: center;
     gap: 20px;  /* Add space between elements */
     margin-top: 20px;
+    width: 100%;
+    flex-wrap: wrap;  /* Allow wrapping on small screens */
 }
 
 .output-container > div {
@@ -63,12 +64,43 @@ p, .class {
     border-radius: 8px;
 }
 
-h3 {
+.output-container h3 {
     color: red;  /* Class name color */
     margin-top: 10px;
 }
 
-/* Ensure responsiveness for mobile */
+/* Loading Spinner */
+#loading {
+    font-size: 2rem;
+    color: #fff;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+    animation: spin 1s infinite linear;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Spinner animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+footer {
+    text-align: center;
+    font-size: 1rem;
+    margin-top: 40px;
+    color: #888;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+/* Media Query for mobile responsiveness */
 @media (max-width: 768px) {
     .output-container {
         flex-direction: column;  /* Stack vertically on small screens */
@@ -76,6 +108,15 @@ h3 {
 
     .output-container > div {
         width: 100%;  /* Make each section full width */
+        margin-bottom: 10px;
+    }
+
+    .buttons {
+        flex-direction: column;  /* Stack buttons vertically on small screens */
+    }
+
+    .buttons button {
+        width: 100%;  /* Make buttons full-width on small screens */
         margin-bottom: 10px;
     }
 }
