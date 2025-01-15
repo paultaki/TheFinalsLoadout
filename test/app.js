@@ -1,41 +1,80 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const spinButton = document.getElementById("spinButton");
-    const weaponSlot = document.getElementById("weaponSlot");
-    const specializationSlot = document.getElementById("specializationSlot");
-    const gadgetSlot = document.getElementById("gadgetSlot");
+    const randomLoadoutButton = document.getElementById("randomLoadoutButton");
+    const lightLoadoutButton = document.getElementById("lightLoadoutButton");
+    const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
+    const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
+    const outputDiv = document.getElementById("output");
 
     const loadouts = {
-        weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
-        specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
-        gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade"]
+        Light: {
+            weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
+            specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
+            gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb"]
+        },
+        Medium: {
+            weapons: ["AKM", "Cerberus 12GA", "Dual Blades", "FAMAS", "FCAR", "Model 1887", "Pike-556", "R.357"],
+            specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
+            gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline"]
+        },
+        Heavy: {
+            weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
+            specializations: ["Charge 'N' Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+            gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Motion Sensor", "RPG-7"]
+        },
+        Common: ["Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"]
     };
 
-    const createSlotImages = (slot, items) => {
-        slot.innerHTML = items
-            .map(item => `<img src="./images/${item.replaceAll(" ", "_")}.png" alt="${item}">`)
-            .join("");
+    const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
+
+    const displayLoadout = (classType, loadout) => {
+        outputDiv.innerHTML = `<div class="class">${classType}</div><div class="items-container"></div>`;
+        const itemsContainer = outputDiv.querySelector(".items-container");
+
+        const createItemHTML = (itemName) => `
+            <div class="item-container spinning">
+                <img src="images/${itemName.replaceAll(" ", "_")}_Rank_1.png" alt="${itemName}">
+                <p>${itemName}</p>
+            </div>
+        `;
+
+        const allItems = [
+            loadout.weapon,
+            loadout.specialization,
+            ...loadout.gadgets
+        ];
+
+        allItems.forEach((item, index) => {
+            const itemHTML = createItemHTML(item);
+            const itemElement = document.createElement("div");
+            itemElement.innerHTML = itemHTML;
+            itemsContainer.appendChild(itemElement.firstChild);
+
+            setTimeout(() => {
+                itemsContainer.children[index].classList.remove("spinning");
+            }, index * 500); // Delay for each item
+        });
     };
 
-    const spinSlot = (slot, items, delay) => {
-        createSlotImages(slot, items);
-
-        const images = slot.querySelectorAll("img");
-        let counter = 0;
-
-        const spin = setInterval(() => {
-            slot.scrollTop = (slot.scrollTop + 100) % (images.length * 100);
-            counter++;
-            if (counter > 20 + delay) {
-                clearInterval(spin);
-                const randomItem = items[Math.floor(Math.random() * items.length)];
-                slot.innerHTML = `<img src="./images/${randomItem.replaceAll(" ", "_")}.png" alt="${randomItem}">`;
-            }
-        }, 50);
+    const generateLoadout = (classType, loadouts) => {
+        const loadout = {
+            weapon: randomItem(loadouts.weapons),
+            specialization: randomItem(loadouts.specializations),
+            gadgets: [
+                randomItem(loadouts.gadgets),
+                randomItem(loadouts.gadgets),
+                randomItem(loadouts.gadgets)
+            ]
+        };
+        displayLoadout(classType, loadout);
     };
 
-    spinButton.addEventListener("click", () => {
-        spinSlot(weaponSlot, loadouts.weapons, 0);
-        spinSlot(specializationSlot, loadouts.specializations, 10);
-        spinSlot(gadgetSlot, loadouts.gadgets, 20);
-    });
+    randomLoadoutButton.onclick = () => {
+        const classes = Object.keys(loadouts).filter((key) => key !== "Common");
+        const randomClass = randomItem(classes);
+        generateLoadout(randomClass, loadouts[randomClass]);
+    };
+
+    lightLoadoutButton.onclick = () => generateLoadout("Light", loadouts.Light);
+    mediumLoadoutButton.onclick = () => generateLoadout("Medium", loadouts.Medium);
+    heavyLoadoutButton.onclick = () => generateLoadout("Heavy", loadouts.Heavy);
 });
