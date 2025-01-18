@@ -89,7 +89,7 @@ footer {
 
 /* Center "Buy Me a Coffee" Button */
 .bmc-button-container {
-    transform: scale(0.66); /* Scale the button to 2/3 size */
+    transform: scale(0.33); /* Scale the button to 2/3 size */
     transform-origin: center; /* Ensure scaling aligns properly */
     position: relative; /* Position it relative to its container */
     margin: 20px auto; /* Center it horizontally */
