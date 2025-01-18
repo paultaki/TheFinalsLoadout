@@ -103,27 +103,6 @@ h1 {
     color: #fff;
 }
 
-#output .class {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffb700;
-    margin-bottom: 10px;
-}
-
-.items-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 30px;
-}
-
-/* Add the punishment header styling below */
-.punishment-header {
-    max-width: 150px;
-    display: block;
-    margin: 0 auto 10px;
-}
-
 .copy-button {
     background-color: #555;
     color: #fff;
@@ -145,4 +124,12 @@ footer {
     margin-top: 20px;
     font-size: 0.8rem;
     color: #888;
+}
+
+/* Buy Me a Coffee Button Styling */
+.bmc-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
 }
