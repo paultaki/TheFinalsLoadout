@@ -28,14 +28,6 @@
     <meta property="og:url" content="https://yourwebsite.com">
 
     <link rel="stylesheet" href="style.css">
-
-    <style>
-        /* Reduce the size of the Buy Me a Coffee button to 2/3 */
-        .bmc-button-container {
-            transform: scale(0.66); /* Scale down to 66% */
-            transform-origin: bottom right; /* Keep it aligned to the bottom-right corner */
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -55,35 +47,22 @@
     <footer>
         <p>© 2025 TheFinalsLoadout.com</p>
         <p>1-800-FAT-MOMS Production</p>
+
+        <!-- Buy Me a Coffee Button -->
+        <div class="bmc-button-container">
+            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" 
+                data-name="bmc-button" 
+                data-slug="dismiss3d" 
+                data-color="#FFDD00" 
+                data-emoji=""  
+                data-font="Cookie" 
+                data-text="Buy me a coffee" 
+                data-outline-color="#000000" 
+                data-font-color="#000000" 
+                data-coffee-color="#ffffff">
+            </script>
+        </div>
     </footer>
-
-    <!-- Buy Me a Coffee Script -->
-    <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" 
-        data-name="bmc-button" 
-        data-slug="dismiss3d" 
-        data-color="#FFDD00" 
-        data-emoji=""  
-        data-font="Cookie" 
-        data-text="Buy me a coffee" 
-        data-outline-color="#000000" 
-        data-font-color="#000000" 
-        data-coffee-color="#ffffff">
-    </script>
-
-    <!-- Apply scaling after the script loads -->
-    <script>
-        // Wait for the Buy Me a Coffee button to load
-        window.addEventListener('load', function() {
-            const bmcButton = document.querySelector('[data-name="bmc-button"]');
-            if (bmcButton) {
-                // Wrap the button in a container to apply scaling
-                const container = document.createElement('div');
-                container.classList.add('bmc-button-container');
-                bmcButton.parentNode.insertBefore(container, bmcButton);
-                container.appendChild(bmcButton);
-            }
-        });
-    </script>
 
     <script src="app.js"></script>
 </body>

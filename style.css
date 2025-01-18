@@ -87,20 +87,10 @@ footer {
     color: #aaa;
 }
 
-/* Center "Buy Me a Coffee" Button */
+/* "Buy Me a Coffee" Button Styling */
 .bmc-button-container {
-    transform: scale(0.33); /* Scale the button to 2/3 size */
-    transform-origin: center; /* Ensure scaling aligns properly */
-    position: relative; /* Position it relative to its container */
-    margin: 20px auto; /* Center it horizontally */
-    display: inline-block; /* Ensure it takes only the space it needs */
-}
-
-
-/* Ensure container does not disrupt page layout */
-.bmc-button-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
+    transform: scale(0.66); /* Reduce button size to 2/3 */
+    transform-origin: center; /* Scale down evenly */
+    margin: 20px auto; /* Center horizontally */
+    display: inline-block; /* Keep button inline */
 }
