@@ -43,10 +43,11 @@ header p {
     gap: 30px; /* Add spacing between buttons */
 }
 
-.buttons button {
-    width: 250px; /* Explicit width */
-    height: 80px; /* Explicit height */
-    font-size: 2rem; /* Increase font size */
+.horizontal-buttons button,
+button#randomLoadoutButton {
+    width: 250px; /* Unified width */
+    height: 80px; /* Unified height */
+    font-size: 1.8rem; /* Unified font size */
     border: none;
     cursor: pointer;
     border-radius: 12px; /* Rounder buttons */
@@ -57,14 +58,7 @@ header p {
 
 button#randomLoadoutButton {
     background-color: #ff4f4f;
-    margin-top: 30px; /* Space below the horizontal buttons */
-    width: 250px; /* Match size with other buttons */
-    height: 80px; /* Match size with other buttons */
-    font-size: 2rem; /* Match other buttons */
-    border-radius: 12px;
-    color: #fff;
-    border: none;
-    cursor: pointer;
+    margin-top: 20px; /* Space below the horizontal buttons */
 }
 
 button#randomLoadoutButton:hover {
@@ -83,7 +77,7 @@ button#heavyLoadoutButton {
     background-color: #ff7b00;
 }
 
-.buttons button:hover {
+.horizontal-buttons button:hover {
     opacity: 0.9;
 }
 
