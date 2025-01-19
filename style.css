@@ -40,27 +40,20 @@ header p {
 .horizontal-buttons {
     display: flex;
     justify-content: center; /* Align buttons horizontally */
-    gap: 30px; /* Add spacing between buttons */
+    gap: 20px; /* Add spacing between buttons */
 }
 
 .horizontal-buttons button,
 button#randomLoadoutButton {
-    width: 250px; /* Unified width */
-    height: 80px; /* Unified height */
-    font-size: 1.8rem; /* Unified font size */
+    width: 250px; /* Consistent width */
+    height: 80px; /* Consistent height */
+    font-size: 1.8rem; /* Consistent font size */
     border: none;
     cursor: pointer;
-    border-radius: 12px; /* Rounder buttons */
+    border-radius: 10px; /* Slightly rounder buttons */
     color: #fff;
-    padding: 10px; /* Adjust padding */
-    box-sizing: border-box; /* Ensure padding doesn't affect size */
-}
-
-button#randomLoadoutButton,
-button#lightLoadoutButton,
-button#mediumLoadoutButton,
-button#heavyLoadoutButton {
-    background-color: #6fa8dc;
+    padding: 10px; /* Padding inside the buttons */
+    box-sizing: border-box; /* Ensure padding doesn't affect dimensions */
 }
 
 button#randomLoadoutButton {
@@ -80,7 +73,8 @@ button#heavyLoadoutButton {
     background-color: #ff7b00;
 }
 
-button:hover {
+.horizontal-buttons button:hover,
+button#randomLoadoutButton:hover {
     opacity: 0.9;
 }
 
