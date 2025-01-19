@@ -34,10 +34,13 @@ header p {
 
 /* Main Button Styles */
 .buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center buttons */
     margin: 20px 0;
+}
+
+.horizontal-buttons {
+    display: flex;
+    justify-content: center; /* Align buttons horizontally */
+    gap: 10px; /* Add spacing between buttons */
 }
 
 .buttons button {
@@ -52,7 +55,7 @@ header p {
 
 button#randomLoadoutButton {
     background-color: #ff4f4f;
-    margin-top: 20px; /* Space below the three buttons */
+    margin-top: 20px; /* Space below the horizontal buttons */
     font-size: 1rem;
     border-radius: 5px;
     color: #fff;
