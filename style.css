@@ -40,25 +40,35 @@ header p {
 .horizontal-buttons {
     display: flex;
     justify-content: center; /* Align buttons horizontally */
-    gap: 20px; /* Add spacing between buttons */
+    gap: 30px; /* Add spacing between buttons */
 }
 
-.horizontal-buttons button,
-button#randomLoadoutButton {
-    width: 250px; /* Consistent width */
-    height: 80px; /* Consistent height */
-    font-size: 1.8rem; /* Consistent font size */
+.buttons button {
+    width: 250px; /* Explicit width */
+    height: 80px; /* Explicit height */
+    font-size: 2rem; /* Increase font size */
     border: none;
     cursor: pointer;
-    border-radius: 10px; /* Slightly rounder buttons */
+    border-radius: 12px; /* Rounder buttons */
     color: #fff;
-    padding: 10px; /* Padding inside the buttons */
-    box-sizing: border-box; /* Ensure padding doesn't affect dimensions */
+    padding: 10px; /* Adjust padding */
+    box-sizing: border-box; /* Ensure padding doesn't affect size */
 }
 
 button#randomLoadoutButton {
     background-color: #ff4f4f;
-    margin-top: 20px; /* Space below the horizontal buttons */
+    margin-top: 30px; /* Space below the horizontal buttons */
+    width: 250px; /* Match size with other buttons */
+    height: 80px; /* Match size with other buttons */
+    font-size: 2rem; /* Match other buttons */
+    border-radius: 12px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button#randomLoadoutButton:hover {
+    opacity: 0.9;
 }
 
 button#lightLoadoutButton {
@@ -73,8 +83,7 @@ button#heavyLoadoutButton {
     background-color: #ff7b00;
 }
 
-.horizontal-buttons button:hover,
-button#randomLoadoutButton:hover {
+.buttons button:hover {
     opacity: 0.9;
 }
 
