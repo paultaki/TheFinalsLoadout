@@ -77,6 +77,24 @@ button#heavyLoadoutButton {
     min-height: 200px;
 }
 
+.items-container {
+    display: flex;
+    justify-content: center; /* Centers items horizontally */
+    gap: 20px; /* Adds space between items */
+    flex-wrap: wrap; /* Allows wrapping to the next line if needed */
+}
+
+.item-container {
+    text-align: center;
+    width: 150px; /* Adjust width as needed */
+}
+
+.item-container img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
 /* Footer Styles */
 footer {
     margin-top: 20px;
