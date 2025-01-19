@@ -1,136 +1,75 @@
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #1e1e1e;
-    color: #fff;
-    text-align: center;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Finals Loadout Generator | Random Loadouts for The Finals Game</title>
+    
+    <!-- Google Analytics Code (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-/* Header Styles */
-header {
-    padding: 20px;
-    background-color: #292929;
-    border-bottom: 2px solid #444;
-}
+      gtag('config', 'G-GVGKYFGZ1Z');
+    </script>
 
-header .finals-logo {
-    width: 150px;
-    margin-bottom: 10px;
-}
+    <!-- Meta Description for SEO -->
+    <meta name="description" content="Generate random loadouts for The Finals game. Get random classes, weapons, and gadgets for Light, Medium, or Heavy builds.">
 
-header h1 {
-    font-size: 2rem;
-    margin: 10px 0;
-    color: #ffdd00;
-}
+    <!-- Meta Keywords for SEO -->
+    <meta name="keywords" content="The Finals, Loadout Generator, Randomizer, Loadout Randomizer, Light Loadout, Medium Loadout, Heavy Loadout, The Finals Game, Random Loadouts">
 
-header p {
-    margin: 5px 0;
-    font-size: 1.2rem;
-    color: #ccc;
-}
+    <!-- Open Graph for Social Media Sharing -->
+    <meta property="og:title" content="The Finals Loadout Generator | Random Loadouts for The Finals Game">
+    <meta property="og:description" content="Generate random loadouts for The Finals game. Get random classes, weapons, and gadgets for Light, Medium, or Heavy builds.">
+    <meta property="og:image" content="images/the-finals.png">
+    <meta property="og:url" content="https://yourwebsite.com">
 
-/* Main Button Styles */
-.buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center buttons */
-    margin: 20px 0;
-}
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <img src="images/the-finals.png" alt="The Finals Logo" class="finals-logo">
+        <h1>The Finals Loadout Generator (Season 5 Ready)</h1>
+        <p>Get a random loadout for Light, Medium, or Heavy Builds!</p>
+    </header>
+    <main>
+        <div class="buttons">
+            <button id="lightLoadoutButton">Light Loadout</button>
+            <button id="mediumLoadoutButton">Medium Loadout</button>
+            <button id="heavyLoadoutButton">Heavy Loadout</button>
+        </div>
+        <div class="buttons">
+            <button id="randomLoadoutButton" class="random">Random Contestant and Loadout</button>
+        </div>        
+        <div id="output">
+            <div class="items-container">
+                <!-- Loadout items will be dynamically injected here -->
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>© 2025 TheFinalsLoadout.com</p>
+        <p>1-800-FAT-MOMS Production</p>
 
-.buttons button {
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 1rem;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    color: #fff;
-}
+        <!-- Buy Me a Coffee Button -->
+        <div class="bmc-button-container">
+            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" 
+                data-name="bmc-button" 
+                data-slug="dismiss3d" 
+                data-color="#FFDD00" 
+                data-emoji=""  
+                data-font="Cookie" 
+                data-text="Buy me a coffee" 
+                data-outline-color="#000000" 
+                data-font-color="#000000" 
+                data-coffee-color="#ffffff">
+            </script>
+        </div>
+    </footer>
 
-button#randomLoadoutButton {
-    background-color: #ff4f4f;
-    margin-top: 20px; /* Space below the three buttons */
-    font-size: 1rem;
-    border-radius: 5px;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-}
-
-button#randomLoadoutButton:hover {
-    opacity: 0.9;
-}
-
-button#lightLoadoutButton {
-    background-color: #f8d775;
-}
-
-button#mediumLoadoutButton {
-    background-color: #6fa8dc;
-}
-
-button#heavyLoadoutButton {
-    background-color: #ff7b00;
-}
-
-.buttons button:hover {
-    opacity: 0.9;
-}
-
-/* Output Section */
-#output {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #292929;
-    border: 1px solid #444;
-    border-radius: 8px;
-    min-height: 200px;
-}
-
-#output .class {
-    font-size: 3rem; /* Even larger font size */
-    font-weight: bold; /* Bold text */
-    color: #ffdd00; /* Bright yellow color */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Add shadow for better visibility */
-    margin-bottom: 20px; /* Add spacing below */
-}
-
-.items-container {
-    display: flex;
-    justify-content: center; /* Centers items horizontally */
-    gap: 20px; /* Adds space between items */
-    flex-wrap: wrap; /* Allows wrapping to the next line if needed */
-}
-
-.item-container {
-    text-align: center;
-    width: 150px; /* Adjust width as needed */
-}
-
-.item-container img {
-    max-width: 100%;
-    border-radius: 8px;
-    margin-bottom: 5px;
-}
-
-/* Footer Styles */
-footer {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #292929;
-    border-top: 2px solid #444;
-    font-size: 0.9rem;
-    color: #aaa;
-}
-
-/* "Buy Me a Coffee" Button Styling */
-.bmc-button-container {
-    transform: scale(0.66); /* Reduce button size to 2/3 */
-    transform-origin: center; /* Scale down evenly */
-    margin: 20px auto; /* Center horizontally */
-    display: inline-block; /* Keep button inline */
-}
+    <script src="app.js"></script>
+</body>
+</html>

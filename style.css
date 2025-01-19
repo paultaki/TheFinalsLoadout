@@ -92,7 +92,7 @@ button#heavyLoadoutButton {
 }
 
 #output .class {
-    font-size: 2.5rem; /* Larger font size */
+    font-size: 3rem; /* Even larger font size */
     font-weight: bold; /* Bold text */
     color: #ffdd00; /* Bright yellow color */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Add shadow for better visibility */
