@@ -40,26 +40,26 @@ header p {
 .horizontal-buttons {
     display: flex;
     justify-content: center; /* Align buttons horizontally */
-    gap: 15px; /* Add spacing between buttons */
+    gap: 20px; /* Add spacing between buttons */
 }
 
 .buttons button {
-    padding: 15px 30px; /* Increase button size */
+    padding: 20px 40px; /* Increase button size */
     margin: 10px;
-    font-size: 1.2rem; /* Larger font size */
+    font-size: 1.5rem; /* Larger font size */
     border: none;
     cursor: pointer;
-    border-radius: 8px; /* Slightly rounder buttons */
+    border-radius: 10px; /* Slightly rounder buttons */
     color: #fff;
 }
 
 button#randomLoadoutButton {
     background-color: #ff4f4f;
     margin-top: 20px; /* Space below the horizontal buttons */
-    font-size: 1.2rem; /* Match other buttons */
-    border-radius: 8px;
+    font-size: 1.5rem; /* Match other buttons */
+    border-radius: 10px;
     color: #fff;
-    padding: 15px 30px; /* Match size with other buttons */
+    padding: 20px 40px; /* Match size with other buttons */
     border: none;
     cursor: pointer;
 }
