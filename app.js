@@ -38,13 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
         }).join("");
-
+    
         const shareableLoadout = `
-Class: ${classType}\nWeapon: ${loadout.weapon}\nSpecialization: ${loadout.specialization}\nGadgets: ${loadout.gadgets.join(", ")}
+    Class: ${classType}
+    Weapon: ${loadout.weapon}
+    Specialization: ${loadout.specialization}
+    Gadgets: ${loadout.gadgets.join(", ")}
         `.trim();
-
+    
         outputDiv.innerHTML = `
-            <div class="class">${classType}</div>
+            <div class="class"><span class="selected-class">${classType}</span></div>
             <div class="items-container">
                 <div class="item-container">
                     <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}">
@@ -56,9 +59,10 @@ Class: ${classType}\nWeapon: ${loadout.weapon}\nSpecialization: ${loadout.specia
                 </div>
                 ${gadgetImages}
             </div>
-            <button class="copy-button" onclick="copyToClipboard('${shareableLoadout.replace(/\n/g, "\\n").replace(/'/g, "\\'")}")">Copy Loadout</button>
+            <button class="copy-button" onclick="copyToClipboard('${shareableLoadout.replace(/\n/g, "\\n").replace(/'/g, "\\'")}')">Copy Loadout</button>
         `;
     };
+    
 
     window.copyToClipboard = (text) => {
         navigator.clipboard.writeText(text).then(() => {
