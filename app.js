@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Button Elements
     const randomLoadoutButton = document.getElementById("randomLoadoutButton");
     const lightLoadoutButton = document.getElementById("lightLoadoutButton");
     const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
     const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
-    const punishmentLoadoutButton = document.getElementById("punishmentLoadoutButton"); // Keep the button for now
     const outputDiv = document.getElementById("output");
 
+    // Loadout Data
     const loadouts = {
         Light: {
             weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
@@ -21,31 +22,25 @@ document.addEventListener("DOMContentLoaded", () => {
             weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
             specializations: ["Charge 'N' Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
             gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Motion Sensor", "RPG-7"]
-        },
-        Common: ["Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"]
+        }
     };
 
     const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
 
     const displayLoadout = (classType, loadout) => {
-        const gadgetImages = loadout.gadgets
-            .map((gadget) => {
-                const formattedGadget = gadget.replaceAll(" ", "_");
-                const imageFile = `${formattedGadget}_Rank_1.png`;
-                return `
-                    <div class="item-container">
-                        <img src="images/${imageFile}" alt="${gadget}">
-                        <p>${gadget}</p>
-                    </div>
-                `;
-            })
-            .join("");
+        const gadgetImages = loadout.gadgets.map((gadget) => {
+            const formattedGadget = gadget.replaceAll(" ", "_");
+            const imageFile = `images/${formattedGadget}_Rank_1.png`;
+            return `
+                <div class="item-container">
+                    <img src="${imageFile}" alt="${gadget}">
+                    <p>${gadget}</p>
+                </div>
+            `;
+        }).join("");
 
         const shareableLoadout = `
-Class: ${classType}
-Weapon: ${loadout.weapon}
-Specialization: ${loadout.specialization}
-Gadgets: ${loadout.gadgets.join(", ")}
+Class: ${classType}\nWeapon: ${loadout.weapon}\nSpecialization: ${loadout.specialization}\nGadgets: ${loadout.gadgets.join(", ")}
         `.trim();
 
         outputDiv.innerHTML = `
@@ -61,7 +56,7 @@ Gadgets: ${loadout.gadgets.join(", ")}
                 </div>
                 ${gadgetImages}
             </div>
-            <button class="copy-button" onclick="copyToClipboard('${shareableLoadout.replace(/\n/g, "\\n").replace(/'/g, "\\'")}')">Copy Loadout</button>
+            <button class="copy-button" onclick="copyToClipboard('${shareableLoadout.replace(/\n/g, "\\n").replace(/'/g, "\\'")}")">Copy Loadout</button>
         `;
     };
 
@@ -74,15 +69,13 @@ Gadgets: ${loadout.gadgets.join(", ")}
     };
 
     const generateLoadout = (classType, loadouts) => {
-        // Copy the gadgets array to avoid modifying the original
         const availableGadgets = [...loadouts.gadgets];
-    
-        // Function to select and remove a random item from the array
+
         const selectUniqueItem = (array) => {
             const index = Math.floor(Math.random() * array.length);
             return array.splice(index, 1)[0]; // Removes and returns the selected item
         };
-    
+
         const loadout = {
             weapon: randomItem(loadouts.weapons),
             specialization: randomItem(loadouts.specializations),
@@ -92,13 +85,12 @@ Gadgets: ${loadout.gadgets.join(", ")}
                 selectUniqueItem(availableGadgets)
             ]
         };
-    
+
         displayLoadout(classType, loadout);
     };
-    
 
     randomLoadoutButton.onclick = () => {
-        const classes = Object.keys(loadouts).filter((key) => key !== "Common");
+        const classes = Object.keys(loadouts);
         const randomClass = randomItem(classes);
         generateLoadout(randomClass, loadouts[randomClass]);
     };
@@ -106,7 +98,4 @@ Gadgets: ${loadout.gadgets.join(", ")}
     lightLoadoutButton.onclick = () => generateLoadout("Light", loadouts.Light);
     mediumLoadoutButton.onclick = () => generateLoadout("Medium", loadouts.Medium);
     heavyLoadoutButton.onclick = () => generateLoadout("Heavy", loadouts.Heavy);
-
-    // Commenting out Punishment Loadout functionality for now
-    // punishmentLoadoutButton.onclick = () => generateLoadout("Punishment", punishmentLoadout);
 });
