@@ -112,3 +112,11 @@ footer {
     margin: 20px auto; /* Center horizontally */
     display: inline-block; /* Keep button inline */
 }
+/* Styling for the generated contestant type */
+.class {
+    font-size: 2.5rem; /* Larger font size */
+    font-weight: bold; /* Bold text for emphasis */
+    color: #ffdd00; /* Bright yellow color */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Optional shadow for better visibility */
+    margin-bottom: 20px; /* Space below the text */
+}
