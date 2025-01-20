@@ -37,38 +37,18 @@ header p {
     margin: 20px 0;
 }
 
-.horizontal-buttons {
-    display: flex;
-    justify-content: center; /* Align buttons horizontally */
-    gap: 30px; /* Add spacing between buttons */
-}
-
 .buttons button {
-    width: 250px; /* Explicit width */
-    height: 80px; /* Explicit height */
-    font-size: 2rem; /* Increase font size */
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 1rem;
     border: none;
     cursor: pointer;
-    border-radius: 12px; /* Rounder buttons */
+    border-radius: 5px;
     color: #fff;
-    padding: 10px; /* Adjust padding */
-    box-sizing: border-box; /* Ensure padding doesn't affect size */
 }
 
 button#randomLoadoutButton {
     background-color: #ff4f4f;
-    margin-top: 30px; /* Space below the horizontal buttons */
-    width: 250px; /* Match size with other buttons */
-    height: 80px; /* Match size with other buttons */
-    font-size: 2rem; /* Match other buttons */
-    border-radius: 12px;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-button#randomLoadoutButton:hover {
-    opacity: 0.9;
 }
 
 button#lightLoadoutButton {
@@ -95,14 +75,6 @@ button#heavyLoadoutButton {
     border: 1px solid #444;
     border-radius: 8px;
     min-height: 200px;
-}
-
-#output .class {
-    font-size: 4rem; /* Larger font size */
-    font-weight: bold; /* Bold text */
-    color: #ffdd00; /* Bright yellow color */
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8); /* Add stronger shadow */
-    margin-bottom: 20px; /* Add spacing below */
 }
 
 .items-container {
