@@ -1,104 +1,114 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const randomLoadoutButton = document.getElementById("randomLoadoutButton");
-    const lightLoadoutButton = document.getElementById("lightLoadoutButton");
-    const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
-    const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
-    const outputDiv = document.getElementById("output");
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1e1e1e;
+    color: #fff;
+    text-align: center;
+}
 
-    const loadouts = {
-        Light: {
-            weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
-            specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
-            gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb"]
-        },
-        Medium: {
-            weapons: ["AKM", "Cerberus 12GA", "Dual Blades", "FAMAS", "FCAR", "Model 1887", "Pike-556", "R.357"],
-            specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
-            gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline"]
-        },
-        Heavy: {
-            weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
-            specializations: ["Charge 'N' Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
-            gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Motion Sensor", "RPG-7"]
-        },
-        Common: ["Flashbang", "Frag Grenade", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade"]
-    };
+/* Header Styles */
+header {
+    padding: 20px;
+    background-color: #292929;
+    border-bottom: 2px solid #444;
+}
 
-    const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
+header .finals-logo {
+    width: 150px;
+    margin-bottom: 10px;
+}
 
-    const displayLoadout = (classType, loadout) => {
-        const gadgetImages = loadout.gadgets
-            .map((gadget) => {
-                const formattedGadget = gadget.replaceAll(" ", "_");
-                const imageFile = `${formattedGadget}_Rank_1.png`;
-                return `
-                    <div class="item-container">
-                        <img src="images/${imageFile}" alt="${gadget}">
-                        <p>${gadget}</p>
-                    </div>
-                `;
-            })
-            .join("");
+header h1 {
+    font-size: 2rem;
+    margin: 10px 0;
+    color: #ffdd00;
+}
 
-        const shareableLoadout = `
-Class: ${classType}
-Weapon: ${loadout.weapon}
-Specialization: ${loadout.specialization}
-Gadgets: ${loadout.gadgets.join(", ")}
-        `.trim();
+header p {
+    margin: 5px 0;
+    font-size: 1.2rem;
+    color: #ccc;
+}
 
-        outputDiv.innerHTML = `
-            <div class="class">${classType}</div>
-            <div class="items-container">
-                <div class="item-container">
-                    <img src="images/${loadout.weapon.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.weapon}">
-                    <p>${loadout.weapon}</p>
-                </div>
-                <div class="item-container">
-                    <img src="images/${loadout.specialization.replaceAll(" ", "_")}_Rank_1.png" alt="${loadout.specialization}">
-                    <p>${loadout.specialization}</p>
-                </div>
-                ${gadgetImages}
-            </div>
-            <button class="copy-button" onclick="copyToClipboard('${shareableLoadout.replace(/\n/g, "\\n").replace(/'/g, "\\'")}')">Copy Loadout</button>
-        `;
-    };
+/* Main Button Styles */
+.buttons {
+    margin: 20px 0;
+}
 
-    window.copyToClipboard = (text) => {
-        navigator.clipboard.writeText(text).then(() => {
-            alert("Loadout copied to clipboard!");
-        }).catch((err) => {
-            console.error("Could not copy text: ", err);
-        });
-    };
+.buttons button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #fff;
+}
 
-    const generateLoadout = (classType, loadouts) => {
-        const availableGadgets = [...loadouts.gadgets];
-        const selectUniqueItem = (array) => {
-            const index = Math.floor(Math.random() * array.length);
-            return array.splice(index, 1)[0];
-        };
+button#randomLoadoutButton {
+    background-color: #ff4f4f;
+}
 
-        const loadout = {
-            weapon: randomItem(loadouts.weapons),
-            specialization: randomItem(loadouts.specializations),
-            gadgets: [
-                selectUniqueItem(availableGadgets),
-                selectUniqueItem(availableGadgets),
-                selectUniqueItem(availableGadgets)
-            ]
-        };
+button#lightLoadoutButton {
+    background-color: #f8d775;
+}
 
-        displayLoadout(classType, loadout);
-    };
+button#mediumLoadoutButton {
+    background-color: #6fa8dc;
+}
 
-    randomLoadoutButton.onclick = () => {
-        const classes = Object.keys(loadouts).filter((key) => key !== "Common");
-        const randomClass = randomItem(classes);
-        generateLoadout(randomClass, loadouts[randomClass]);
-    };
+button#heavyLoadoutButton {
+    background-color: #ff7b00;
+}
 
-    lightLoadoutButton.onclick = () => generateLoadout("Light", loadouts.Light);
-    mediumLoadoutButton.onclick = () => generateLoadout("Medium", loadouts.Medium);
-    heavyLoadoutButton.onclick = () => generateLoadout("Heavy", loadouts.Heavy);
-});
+.buttons button:hover {
+    opacity: 0.9;
+}
+
+/* Output Section */
+#output {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #292929;
+    border: 1px solid #444;
+    border-radius: 8px;
+    min-height: 200px;
+}
+
+.items-container {
+    display: flex;
+    justify-content: center; /* Centers items horizontally */
+    gap: 20px; /* Adds space between items */
+    flex-wrap: wrap; /* Allows wrapping to the next line if needed */
+}
+
+.item-container {
+    text-align: center;
+    width: 150px; /* Adjust width as needed */
+}
+
+.item-container img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+/* Footer Styles */
+footer {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #292929;
+    border-top: 2px solid #444;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+/* "Buy Me a Coffee" Button Styling */
+.bmc-button-container {
+    transform: scale(0.66); /* Reduce button size to 2/3 */
+    transform-origin: center; /* Scale down evenly */
+    margin: 20px auto; /* Center horizontally */
+    display: inline-block; /* Keep button inline */
+}
