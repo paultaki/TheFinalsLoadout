@@ -105,6 +105,21 @@ button#heavyLoadoutButton {
     display: inline-block; /* Ensure spacing and alignment */
 }
 
+/* Copy Button Styling */
+.copy-button {
+    font-size: 1.2rem; /* Slightly larger font size */
+    padding: 10px 15px; /* Adjust padding for a bigger button */
+    background-color: #444; /* Dark background */
+    color: #ffdd00; /* Yellow text */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background-color: #555; /* Slightly lighter on hover */
+}
+
 /* Footer Styles */
 footer {
     margin-top: 20px;
