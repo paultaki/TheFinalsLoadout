@@ -292,3 +292,39 @@ body.flexStyle {
         font-size: 14px;
     }
 }
+
+/* FAQ Section */
+.faqSection {
+    background-color: #292929;
+    padding: 20px 30px;
+    border-radius: 8px;
+    margin: 40px auto;
+    width: 80%;
+    text-align: left;
+}
+
+.faqSection h2 {
+    font-size: 1.8rem;
+    color: #ffb700;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.faqSection h3 {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.faqSection p {
+    font-size: 1rem;
+    color: #cccccc;
+    margin-bottom: 20px;
+}
+
+/* Adjust FAQ Section for Smaller Screens */
+@media (max-width: 768px) {
+    .faqSection {
+        width: 95%;
+    }
+}
