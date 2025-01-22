@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<!-- Mirrored from harsol.com/testing/2025/the-finals/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 22 Jan 2025 11:19:35 GMT -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Finals Loadout Generator | Random Loadouts for The Finals Game</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     
     <!-- Google Analytics Code (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-      gtag('config', 'G-GVGKYFGZ1Z');
+        gtag('config', 'G-GVGKYFGZ1Z');
     </script>
 
     <!-- Meta Description for SEO -->
@@ -29,45 +32,39 @@
 
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <header>
-        <img src="images/the-finals.png" alt="The Finals Logo" class="finals-logo">
-        <h1>The Finals Loadout Generator (Season 5 Ready)</h1>
-        <p>Get a random loadout for Light, Medium, or Heavy Builds!</p>
+<body class="flexStyle">
+    <header class="headerSection">
+        <div class="container">
+            <img src="images/the-finals.png" alt="The Finals Logo" class="finals-logo">
+            <h1 class="mainTitle">The Finals Loadout Generator (Season 5 Ready)</h1>
+            <p>Get a random loadout for Light, Medium, or Heavy Builds!</p>
+        </div>
     </header>
-    <main>
-        <div class="buttons">
-            <button id="randomLoadoutButton" class="random">Random Class and Loadout</button>
-            <button id="lightLoadoutButton">Light Loadout</button>
-            <button id="mediumLoadoutButton">Medium Loadout</button>
-            <button id="heavyLoadoutButton">Heavy Loadout</button>
-        </div>        
-        <div id="output">
-            <div class="items-container">
-                <!-- Loadout items will be dynamically injected here -->
-            </div>
+    <main class="mainConetnt">
+        <div class="container">
+            <div class="buttons">
+                <div class="btnRow">
+                    <button id="lightLoadoutButton" class="outlineCircleBtn">Light</button>
+                    <button id="mediumLoadoutButton" class="outlineCircleBtn">Medium</button>
+                    <button id="heavyLoadoutButton" class="outlineCircleBtn">Heavy</button>
+                </div>
+                <div class="btnRow">
+                    <button id="randomLoadoutButton" class="random outlineBtnStyle">Random Contestant and Loadout</button>
+                </div>
+            </div>        
+            <div id="output"></div>
         </div>
     </main>
-    <footer>
-        <p>© 2025 TheFinalsLoadout.com</p>
-        <p>1-800-FAT-MOMS Production</p>
-
-        <!-- Buy Me a Coffee Button -->
-        <div class="bmc-button-container">
-            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" 
-                data-name="bmc-button" 
-                data-slug="dismiss3d" 
-                data-color="#FFDD00" 
-                data-emoji=""  
-                data-font="Cookie" 
-                data-text="Buy me a coffee" 
-                data-outline-color="#000000" 
-                data-font-color="#000000" 
-                data-coffee-color="#ffffff">
-            </script>
+    <footer class="footerSection">
+        <div class="container">
+            <div class="footerRow">
+                <p class="text-start">© 2025 TheFinalsLoadout.com</p>
+                <p class="text-end">1-800-FAT-MOMS Production</p>
+            </div>
         </div>
     </footer>
-
-    <script src="app.js"></script>
+    <script src="app.js"></script> 
 </body>
+
+<!-- Mirrored from harsol.com/testing/2025/the-finals/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 22 Jan 2025 11:19:36 GMT -->
 </html>
