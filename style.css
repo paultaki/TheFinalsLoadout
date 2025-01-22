@@ -298,7 +298,7 @@ body.flexStyle {
     background-color: #292929;
     padding: 20px 30px;
     border-radius: 8px;
-    margin: 40px auto;
+    margin: 60px auto 40px; /* Added 60px top margin for more space */
     width: 80%;
     text-align: left;
 }
