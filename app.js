@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Shuffle array
     const shuffleArray = (array) => {
         const shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
@@ -40,13 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const createItemContainer = (items) => {
-        // Ensure there are at least 8 items by duplicating items if needed
         let repeatedItems = [...items];
         while (repeatedItems.length < 8) {
             repeatedItems.push(...items);
         }
-        repeatedItems = shuffleArray(repeatedItems); // Shuffle items for randomness
-        repeatedItems.length = 8; // Trim to exactly 8 items
+        repeatedItems = shuffleArray(repeatedItems);
+        repeatedItems.length = 8;
 
         return repeatedItems
         .map(
@@ -61,55 +59,55 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const startSpinAnimation = (columns, callback) => {
-        const itemHeight = 188; // Height of each item
-        const stopOffsets = columns.map((_, index) => itemHeight * (1 + index)); // Stop each column progressively later
-    
-        let allStopped = new Array(columns.length).fill(false);
-    
-        // Disable buttons at the start of the animation
-        document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.setAttribute("disabled", "true"));
-    
-        const animate = () => {
-            let animationRunning = false;
-    
-            columns.forEach((column, index) => {
-                if (!allStopped[index]) {
-                    animationRunning = true;
-    
-                    // Increment the translateY value for smooth scrolling
-                    const currentOffset = parseFloat(column.style.transform.replace("translateY(", "").replace("px)", "")) || 0;
-                    const newOffset = currentOffset + 7; // Increment scrolling by 10px
-                    column.style.transform = `translateY(${newOffset}px)`;
-    
-                    if (newOffset >= stopOffsets[index]) {
-                        allStopped[index] = true; // Mark column as stopped
-    
-                        // Set consistent transition for all columns
-                        // column.style.transition = `transform 0.4s ease-in`;
-                        column.style.transform = `translateY(${stopOffsets[index]}px)`; // Align to exact position
-    
-                        // Highlight the selected item (stopOffsets determines the visible item)
-                        const selectedIndex = (7 - ((stopOffsets[index] / itemHeight) % 8)) % 8; // Calculate the item index based on the offset
-                        const selectedItem = column.children[selectedIndex];
-                        selectedItem.classList.add("selected");
-                    }
-                }
-            });
-    
-            if (animationRunning) {
-                requestAnimationFrame(animate);
-            } else {
-                // Re-enable buttons after the animation stops
-                document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.removeAttribute("disabled"));
-    
-                // Pass selected items' text content to the callback
-                callback(columns.map((col) => col.querySelector(".selected").innerText.trim()));
-            }
-        };
-    
-        animate();
-    };
+        const itemHeight = 188;
+        const totalDuration = 1000;
+        const stopDelay = 500;
 
+        const stopOffsets = columns.map((_, index) => itemHeight * (1 + index));
+
+        let allStopped = new Array(columns.length).fill(false);
+
+        document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.setAttribute("disabled", "true"));
+
+        const animateColumn = (column, index) => {
+            const startTime = performance.now();
+            let animationRunning = true;
+
+            const spin = (currentTime) => {
+                if (!animationRunning) return;
+
+                const elapsedTime = currentTime - startTime;
+                const currentOffset = parseFloat(column.style.transform.replace("translateY(", "").replace("px)", "")) || 0;
+                const newOffset = currentOffset + 20;
+
+                column.style.transform = `translateY(${newOffset}px)`;
+
+                if (elapsedTime >= totalDuration && elapsedTime >= index * stopDelay) {
+                    animationRunning = false;
+                    column.style.transform = `translateY(${stopOffsets[index]}px)`;
+
+                    const selectedIndex = (7 - Math.floor(stopOffsets[index] / itemHeight) % 8) % 8;
+                    const selectedItem = column.children[selectedIndex];
+                    selectedItem.classList.add("selected");
+
+                    allStopped[index] = true;
+                    if (allStopped.every(Boolean)) {
+                        document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.removeAttribute("disabled"));
+                        callback(columns.map((col) => col.querySelector(".selected").innerText.trim()));
+                    }
+                    return;
+                }
+
+                requestAnimationFrame(spin);
+            };
+
+            requestAnimationFrame(spin);
+        };
+
+        columns.forEach((column, index) => {
+            setTimeout(() => animateColumn(column, index), index * stopDelay);
+        });
+    };
 
     const displayLoadout = ({ weapons, specializations, gadgets1, gadgets2, gadgets3 }) => {
         const loadoutHTML = `
@@ -149,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const generateLoadout = (classType, button) => {
-        setActiveButton(button); // Set active class to the clicked button
+        setActiveButton(button);
         const loadout = loadouts[classType];
         displayLoadout(loadout);
     };
@@ -177,24 +175,21 @@ document.addEventListener("DOMContentLoaded", () => {
         generateLoadout(randomClass, buttonMap[randomClass]);
     };
 
-    lightLoadoutButton.onclick(); // Default selection: Light
+    lightLoadoutButton.onclick();
 });
 
 window.copyLoadout = () => {
-    const columns = Array.from(document.querySelectorAll(".scroll-container")); // Get all columns
+    const columns = Array.from(document.querySelectorAll(".scroll-container"));
     const selectedItems = columns.map(
-        (col) => col.querySelector(".selected").innerText.trim() // Get selected item from each column
+        (col) => col.querySelector(".selected").innerText.trim()
     );
 
-    // Format the data
     const copyText = `
         Weapon: ${selectedItems[0]}, Specialization: ${selectedItems[1]}, Gadgets: ${selectedItems[2]}, ${selectedItems[3]}, ${selectedItems[4]}
     `.trim();
 
-    // Copy to clipboard
     navigator.clipboard
         .writeText(copyText)
         .then(() => alert("Loadout copied to clipboard!"))
         .catch((err) => console.error("Could not copy text: ", err));
 };
-
