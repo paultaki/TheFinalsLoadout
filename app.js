@@ -40,54 +40,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const createItemContainer = (items) => {
         let repeatedItems = [...items];
-        while (repeatedItems.length < 8) {
+        while (repeatedItems.length < 20) { // Increase repetitions
             repeatedItems.push(...items);
         }
-        repeatedItems = shuffleArray(repeatedItems);
-        repeatedItems.length = 8;
-
+        repeatedItems = shuffleArray(repeatedItems); // Randomize order
+        repeatedItems.length = 20; // Trim to exactly 20 items
+    
         return repeatedItems
-        .map(
-            (item) => `
-                <div class="itemCol">
-                    <img src="images/${item.replaceAll(" ", "_")}_Rank_1.png" alt="${item}">
-                    <p>${item}</p>
-                </div>
-            `
-        )
-        .join("");
+            .map(
+                (item) => `
+                    <div class="itemCol">
+                        <img src="images/${item.replaceAll(" ", "_")}_Rank_1.png" alt="${item}">
+                        <p>${item}</p>
+                    </div>
+                `
+            )
+            .join("");
     };
+    
 
     const startSpinAnimation = (columns, callback) => {
         const itemHeight = 188; // Height of each item
         const totalSpinTime = 3000; // Total time all columns spin
         const stopDelay = 500; // Delay between stopping each column
-
+    
         let allStopped = new Array(columns.length).fill(false);
-
+    
         // Disable buttons during animation
         document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.setAttribute("disabled", "true"));
-
+    
         const animateColumn = (column, index) => {
             const startTime = performance.now();
-
+    
             const spin = () => {
                 const elapsed = performance.now() - startTime;
-                const offset = (elapsed * 2) % (itemHeight * 8); // Adjust speed by changing multiplier
+                const offset = (elapsed * 2) % (itemHeight * 20); // Adjust for increased items
                 column.style.transform = `translateY(-${offset}px)`;
-
+    
                 if (elapsed < totalSpinTime + index * stopDelay) {
                     requestAnimationFrame(spin);
                 } else {
-                    // Snap to nearest item and stop
+                    // Snap to the nearest item and stop
                     const finalOffset = Math.round(offset / itemHeight) * itemHeight;
                     column.style.transform = `translateY(-${finalOffset}px)`;
-
+    
                     // Highlight the selected item
-                    const selectedIndex = Math.floor(finalOffset / itemHeight) % 8;
+                    const selectedIndex = Math.floor(finalOffset / itemHeight) % 20;
                     const selectedItem = column.children[selectedIndex];
                     selectedItem.classList.add("selected");
-
+    
                     allStopped[index] = true;
                     if (allStopped.every(Boolean)) {
                         // Re-enable buttons after all animations complete
@@ -96,6 +97,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
             };
+    
+            spin();
+        };
+    
+        // Start spinning all columns
+        columns.forEach((column, index) => {
+            setTimeout(() => animateColumn(column, index), index * stopDelay);
+        });
+    };
+    
 
             spin();
         };
