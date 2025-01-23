@@ -60,56 +60,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const startSpinAnimation = (columns, callback) => {
         const itemHeight = 188; // Height of each item
-        const totalSpinTime = 2000; // Total time all columns spin together
-        const stopDelay = 500; // Delay between each column stopping
-    
+        const totalSpinTime = 3000; // Total time all columns spin
+        const stopDelay = 500; // Delay between stopping each column
+
+        let allStopped = new Array(columns.length).fill(false);
+
         // Disable buttons during animation
         document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.setAttribute("disabled", "true"));
-    
-        // Function to animate each column
+
         const animateColumn = (column, index) => {
-            let startTime = null;
-    
-            const spin = (timestamp) => {
-                if (!startTime) startTime = timestamp;
-                const elapsed = timestamp - startTime;
-    
-                // Calculate the current offset
-                const currentOffset = (elapsed * 0.5) % (itemHeight * 8); // Adjust speed as needed
-                column.style.transform = `translateY(-${currentOffset}px)`;
-    
+            const startTime = performance.now();
+
+            const spin = () => {
+                const elapsed = performance.now() - startTime;
+                const offset = (elapsed * 2) % (itemHeight * 8); // Adjust speed by changing multiplier
+                column.style.transform = `translateY(-${offset}px)`;
+
                 if (elapsed < totalSpinTime + index * stopDelay) {
                     requestAnimationFrame(spin);
                 } else {
-                    // Snap to the nearest item
-                    const finalOffset = Math.round(currentOffset / itemHeight) * itemHeight;
+                    // Snap to nearest item and stop
+                    const finalOffset = Math.round(offset / itemHeight) * itemHeight;
                     column.style.transform = `translateY(-${finalOffset}px)`;
-    
+
                     // Highlight the selected item
                     const selectedIndex = Math.floor(finalOffset / itemHeight) % 8;
                     const selectedItem = column.children[selectedIndex];
                     selectedItem.classList.add("selected");
-    
-                    // Check if all columns have stopped
-                    if (index === columns.length - 1) {
-                        // Re-enable buttons after all animations are complete
+
+                    allStopped[index] = true;
+                    if (allStopped.every(Boolean)) {
+                        // Re-enable buttons after all animations complete
                         document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.removeAttribute("disabled"));
-                        // Execute callback with selected items
                         callback(columns.map((col) => col.querySelector(".selected").innerText.trim()));
                     }
                 }
             };
-    
-            // Start the animation
-            requestAnimationFrame(spin);
+
+            spin();
         };
-    
-        // Start all columns spinning simultaneously
+
+        // Start spinning all columns
         columns.forEach((column, index) => {
-            animateColumn(column, index);
+            setTimeout(() => animateColumn(column, index), index * stopDelay);
         });
     };
-    
 
     const displayLoadout = ({ weapons, specializations, gadgets1, gadgets2, gadgets3 }) => {
         const loadoutHTML = `
