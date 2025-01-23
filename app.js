@@ -66,43 +66,57 @@ document.addEventListener("DOMContentLoaded", () => {
     
 
     const startSpinAnimation = (columns, callback) => {
-        const itemHeight = 188; // Height of each item
-        const totalSpinTime = 3000; // Total time all columns spin
-        const stopDelay = 500; // Delay between stopping each column
-    
-        let allStopped = new Array(columns.length).fill(false);
+        const itemHeight = 188; // Ensure this matches the CSS height
+        const totalSpinTime = 3000; // Duration for spinning
+        const stopDelay = 500; // Delay between each column stopping
     
         // Disable buttons during animation
         document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.setAttribute("disabled", "true"));
     
         const animateColumn = (column, index) => {
-            const startTime = performance.now();
+            let spinTime = 0;
+            const spinSpeed = 20; // Pixels per frame
+            let offset = 0;
     
             const spin = () => {
-                const elapsed = performance.now() - startTime;
-                const offset = (elapsed * 2) % (itemHeight * 20); // Adjust for increased items
+                spinTime += 16; // Approx. 60fps
+                offset += spinSpeed;
+    
+                // Reset offset to avoid large values (loop effect)
+                if (offset >= itemHeight * column.children.length) {
+                    offset = 0;
+                }
+    
                 column.style.transform = `translateY(-${offset}px)`;
     
-                if (elapsed < totalSpinTime + index * stopDelay) {
+                if (spinTime < totalSpinTime + index * stopDelay) {
                     requestAnimationFrame(spin);
                 } else {
-                    // Snap to the nearest item and stop
+                    // Snap to nearest item
                     const finalOffset = Math.round(offset / itemHeight) * itemHeight;
                     column.style.transform = `translateY(-${finalOffset}px)`;
     
                     // Highlight the selected item
-                    const selectedIndex = Math.floor(finalOffset / itemHeight) % 20;
+                    const selectedIndex = (finalOffset / itemHeight) % column.children.length;
                     const selectedItem = column.children[selectedIndex];
                     selectedItem.classList.add("selected");
     
-                    allStopped[index] = true;
-                    if (allStopped.every(Boolean)) {
-                        // Re-enable buttons after all animations complete
+                    // Check if all columns are stopped
+                    if (index === columns.length - 1) {
                         document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.removeAttribute("disabled"));
                         callback(columns.map((col) => col.querySelector(".selected").innerText.trim()));
                     }
                 }
             };
+    
+            spin();
+        };
+    
+        columns.forEach((column, index) => {
+            setTimeout(() => animateColumn(column, index), index * stopDelay);
+        });
+    };
+    
     
             spin();
         };

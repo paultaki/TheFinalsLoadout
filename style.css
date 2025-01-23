@@ -328,3 +328,19 @@ body.flexStyle {
         width: 95%;
     }
 }
+
+.scroll-container {
+    height: 188px; /* Match itemHeight in JavaScript */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.itemCol {
+    height: 188px; /* Ensure each item matches JavaScript height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Prevent items from shrinking */
+}
