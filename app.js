@@ -22,10 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         Heavy: {
             weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
-            specializations: ["Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
-            gadgets1: ["Anti-Gravity Cube", "Barricade"],
-            gadgets2: ["Dome Shield", "Lockbolt Launcher"],
-            gadgets3: ["Pyro Mine", "Motion Sensor", "RPG-7"]
+            specializations: ["Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw", "Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+            gadgets1: ["Anti-Gravity Cube", "Barricade", "Anti-Gravity Cube", "Barricade"],
+            gadgets2: ["Dome Shield", "Lockbolt Launcher", "Dome Shield", "Lockbolt Launcher"],
+            gadgets3: ["Pyro Mine", "Motion Sensor", "RPG-7", "Pyro Mine", "Motion Sensor", "RPG-7"]
         }
     };
 
