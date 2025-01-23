@@ -60,8 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const startSpinAnimation = (columns, callback) => {
         const itemHeight = 188;
-        const totalDuration = 1000;
-        const stopDelay = 500;
+        const spinDuration = 1000; // Duration for all spinning
+        const stopDelay = 500; // Delay between stops
 
         const stopOffsets = columns.map((_, index) => itemHeight * (1 + index));
 
@@ -70,23 +70,19 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.setAttribute("disabled", "true"));
 
         const animateColumn = (column, index) => {
-            const startTime = performance.now();
-            let animationRunning = true;
-
-            const spin = (currentTime) => {
-                if (!animationRunning) return;
-
-                const elapsedTime = currentTime - startTime;
+            let spinTime = 0;
+            const spinInterval = setInterval(() => {
                 const currentOffset = parseFloat(column.style.transform.replace("translateY(", "").replace("px)", "")) || 0;
-                const newOffset = currentOffset + 20;
-
+                const newOffset = currentOffset + 20; // Increment for spin
                 column.style.transform = `translateY(${newOffset}px)`;
+                spinTime += 16; // Approximate time for each frame (60fps)
 
-                if (elapsedTime >= totalDuration && elapsedTime >= index * stopDelay) {
-                    animationRunning = false;
-                    column.style.transform = `translateY(${stopOffsets[index]}px)`;
+                if (spinTime >= spinDuration + index * stopDelay) {
+                    clearInterval(spinInterval);
+                    const stopOffset = stopOffsets[index];
+                    column.style.transform = `translateY(${stopOffset}px)`;
 
-                    const selectedIndex = (7 - Math.floor(stopOffsets[index] / itemHeight) % 8) % 8;
+                    const selectedIndex = (7 - Math.floor(stopOffset / itemHeight) % 8) % 8;
                     const selectedItem = column.children[selectedIndex];
                     selectedItem.classList.add("selected");
 
@@ -95,13 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.removeAttribute("disabled"));
                         callback(columns.map((col) => col.querySelector(".selected").innerText.trim()));
                     }
-                    return;
                 }
-
-                requestAnimationFrame(spin);
-            };
-
-            requestAnimationFrame(spin);
+            }, 16); // Roughly 60fps
         };
 
         columns.forEach((column, index) => {
