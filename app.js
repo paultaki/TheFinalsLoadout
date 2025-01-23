@@ -59,46 +59,57 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const startSpinAnimation = (columns, callback) => {
-        const itemHeight = 188;
-        const spinDuration = 1000; // Duration for all spinning
-        const stopDelay = 500; // Delay between stops
-
-        const stopOffsets = columns.map((_, index) => itemHeight * (1 + index));
-
-        let allStopped = new Array(columns.length).fill(false);
-
+        const itemHeight = 188; // Height of each item
+        const totalSpinTime = 2000; // Total time all columns spin together
+        const stopDelay = 500; // Delay between each column stopping
+    
+        // Disable buttons during animation
         document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.setAttribute("disabled", "true"));
-
+    
+        // Function to animate each column
         const animateColumn = (column, index) => {
-            let spinTime = 0;
-            const spinInterval = setInterval(() => {
-                const currentOffset = parseFloat(column.style.transform.replace("translateY(", "").replace("px)", "")) || 0;
-                const newOffset = currentOffset + 20; // Increment for spin
-                column.style.transform = `translateY(${newOffset}px)`;
-                spinTime += 16; // Approximate time for each frame (60fps)
-
-                if (spinTime >= spinDuration + index * stopDelay) {
-                    clearInterval(spinInterval);
-                    const stopOffset = stopOffsets[index];
-                    column.style.transform = `translateY(${stopOffset}px)`;
-
-                    const selectedIndex = (7 - Math.floor(stopOffset / itemHeight) % 8) % 8;
+            let startTime = null;
+    
+            const spin = (timestamp) => {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+    
+                // Calculate the current offset
+                const currentOffset = (elapsed * 0.5) % (itemHeight * 8); // Adjust speed as needed
+                column.style.transform = `translateY(-${currentOffset}px)`;
+    
+                if (elapsed < totalSpinTime + index * stopDelay) {
+                    requestAnimationFrame(spin);
+                } else {
+                    // Snap to the nearest item
+                    const finalOffset = Math.round(currentOffset / itemHeight) * itemHeight;
+                    column.style.transform = `translateY(-${finalOffset}px)`;
+    
+                    // Highlight the selected item
+                    const selectedIndex = Math.floor(finalOffset / itemHeight) % 8;
                     const selectedItem = column.children[selectedIndex];
                     selectedItem.classList.add("selected");
-
-                    allStopped[index] = true;
-                    if (allStopped.every(Boolean)) {
+    
+                    // Check if all columns have stopped
+                    if (index === columns.length - 1) {
+                        // Re-enable buttons after all animations are complete
                         document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.removeAttribute("disabled"));
+                        // Execute callback with selected items
                         callback(columns.map((col) => col.querySelector(".selected").innerText.trim()));
                     }
                 }
-            }, 16); // Roughly 60fps
+            };
+    
+            // Start the animation
+            requestAnimationFrame(spin);
         };
-
+    
+        // Start all columns spinning simultaneously
         columns.forEach((column, index) => {
-            setTimeout(() => animateColumn(column, index), index * stopDelay);
+            animateColumn(column, index);
         });
     };
+    
 
     const displayLoadout = ({ weapons, specializations, gadgets1, gadgets2, gadgets3 }) => {
         const loadoutHTML = `
