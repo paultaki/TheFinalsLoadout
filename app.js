@@ -20,14 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
             gadgets2: ["Defibrillator", "Explosive Mine", "Gas Mine"],
             gadgets3: ["Glitch Trap", "Jump Pad", "Zipline"]
         },
-        Heavy: {
-            weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
-            specializations: ["Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw", "Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
-            gadgets1: ["Anti-Gravity Cube", "Barricade", "Anti-Gravity Cube", "Barricade"],
-            gadgets2: ["Dome Shield", "Lockbolt Launcher", "Dome Shield", "Lockbolt Launcher"],
-            gadgets3: ["Pyro Mine", "Motion Sensor", "RPG-7", "Pyro Mine", "Motion Sensor", "RPG-7"]
-        }
-    };
+        const loadouts = {
+            Heavy: {
+                weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
+                specializations: ["Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+                gadgets1: ["Anti-Gravity Cube", "Barricade"],
+                gadgets2: ["Dome Shield", "Lockbolt Launcher"],
+                gadgets3: ["Pyro Mine", "Motion Sensor", "RPG-7"]
+            }
+        };
+        
 
     const shuffleArray = (array) => {
         const shuffled = [...array];
@@ -39,12 +41,15 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const createItemContainer = (items) => {
+        const maxItems = 20; // Ensure at least 20 items
         let repeatedItems = [...items];
-        while (repeatedItems.length < 20) { // Increase repetitions
+    
+        // Repeat items until we reach the required count
+        while (repeatedItems.length < maxItems) {
             repeatedItems.push(...items);
         }
-        repeatedItems = shuffleArray(repeatedItems); // Randomize order
-        repeatedItems.length = 20; // Trim to exactly 20 items
+    
+        repeatedItems.length = maxItems; // Trim to exactly maxItems
     
         return repeatedItems
             .map(
@@ -57,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
             )
             .join("");
     };
+    
     
 
     const startSpinAnimation = (columns, callback) => {
