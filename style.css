@@ -329,7 +329,7 @@ body.flexStyle {
     }
 }
 
-.scroll-container {
+..scroll-container {
     height: 188px; /* Match itemHeight in JavaScript */
     overflow: hidden;
     display: flex;
@@ -338,9 +338,17 @@ body.flexStyle {
 }
 
 .itemCol {
-    height: 188px; /* Ensure each item matches JavaScript height */
+    height: 188px; /* Match itemHeight exactly */
     display: flex;
     justify-content: center;
     align-items: center;
     flex-shrink: 0; /* Prevent items from shrinking */
+}
+
+.itemCol img {
+    max-width: 100%;
+    width: 140px; /* Adjust for consistent sizing */
+    height: 144px;
+    object-fit: cover;
+    border-radius: 5px;
 }

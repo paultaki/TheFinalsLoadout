@@ -20,16 +20,14 @@ document.addEventListener("DOMContentLoaded", () => {
             gadgets2: ["Defibrillator", "Explosive Mine", "Gas Mine"],
             gadgets3: ["Glitch Trap", "Jump Pad", "Zipline"]
         },
-        const loadouts = {
-            Heavy: {
-                weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
-                specializations: ["Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
-                gadgets1: ["Anti-Gravity Cube", "Barricade"],
-                gadgets2: ["Dome Shield", "Lockbolt Launcher"],
-                gadgets3: ["Pyro Mine", "Motion Sensor", "RPG-7"]
-            }
-        };
-        
+        Heavy: {
+            weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
+            specializations: ["Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+            gadgets1: ["Anti-Gravity Cube", "Barricade"],
+            gadgets2: ["Dome Shield", "Lockbolt Launcher"],
+            gadgets3: ["Pyro Mine", "Motion Sensor", "RPG-7"]
+        }
+    };
 
     const shuffleArray = (array) => {
         const shuffled = [...array];
@@ -43,14 +41,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const createItemContainer = (items) => {
         const maxItems = 20; // Ensure at least 20 items
         let repeatedItems = [...items];
-    
+
         // Repeat items until we reach the required count
         while (repeatedItems.length < maxItems) {
             repeatedItems.push(...items);
         }
-    
+
         repeatedItems.length = maxItems; // Trim to exactly maxItems
-    
+
         return repeatedItems
             .map(
                 (item) => `
@@ -62,45 +60,43 @@ document.addEventListener("DOMContentLoaded", () => {
             )
             .join("");
     };
-    
-    
 
     const startSpinAnimation = (columns, callback) => {
         const itemHeight = 188; // Ensure this matches the CSS height
         const totalSpinTime = 3000; // Duration for spinning
         const stopDelay = 500; // Delay between each column stopping
-    
+
         // Disable buttons during animation
         document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.setAttribute("disabled", "true"));
-    
+
         const animateColumn = (column, index) => {
             let spinTime = 0;
             const spinSpeed = 20; // Pixels per frame
             let offset = 0;
-    
+
             const spin = () => {
                 spinTime += 16; // Approx. 60fps
                 offset += spinSpeed;
-    
+
                 // Reset offset to avoid large values (loop effect)
                 if (offset >= itemHeight * column.children.length) {
                     offset = 0;
                 }
-    
+
                 column.style.transform = `translateY(-${offset}px)`;
-    
+
                 if (spinTime < totalSpinTime + index * stopDelay) {
                     requestAnimationFrame(spin);
                 } else {
                     // Snap to nearest item
                     const finalOffset = Math.round(offset / itemHeight) * itemHeight;
                     column.style.transform = `translateY(-${finalOffset}px)`;
-    
+
                     // Highlight the selected item
                     const selectedIndex = (finalOffset / itemHeight) % column.children.length;
                     const selectedItem = column.children[selectedIndex];
                     selectedItem.classList.add("selected");
-    
+
                     // Check if all columns are stopped
                     if (index === columns.length - 1) {
                         document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.removeAttribute("disabled"));
@@ -108,30 +104,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
             };
-    
-            spin();
-        };
-    
-        columns.forEach((column, index) => {
-            setTimeout(() => animateColumn(column, index), index * stopDelay);
-        });
-    };
-    
-    
-            spin();
-        };
-    
-        // Start spinning all columns
-        columns.forEach((column, index) => {
-            setTimeout(() => animateColumn(column, index), index * stopDelay);
-        });
-    };
-    
 
             spin();
         };
 
-        // Start spinning all columns
         columns.forEach((column, index) => {
             setTimeout(() => animateColumn(column, index), index * stopDelay);
         });
