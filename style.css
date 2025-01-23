@@ -187,20 +187,22 @@ body.flexStyle {
 }
 
 .copy-button {
-	background-color: #555;
-	color: #fff;
-	border: none;
-	border-radius: 5px;
-	padding: 10px 20px;
-	cursor: pointer;
-	font-size: 14px;
-	transition: background-color 0.3s ease, box-shadow 0.3s ease;
-	font-family: inherit;
-	text-transform: uppercase;
-	letter-spacing: 2px;
-	position: absolute;
-	bottom: 15px;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative; /* Changed from absolute to relative */
+    margin: 20px auto 50px; /* Centered horizontally with margin below */
+    display: inline-block; /* Keeps it within the layout flow */
 }
+
 .copy-button:hover {
     background-color: #ffb700;
     box-shadow: 0 0 10px rgba(255, 183, 0, 0.8);
@@ -291,6 +293,11 @@ body.flexStyle {
         padding: 14px 20px;
         font-size: 14px;
     }
+}
+
+/* Add space below Copy Loadout button */
+.copy-button {
+    margin-bottom: 50px; /* Larger gap below Copy Loadout */
 }
 
 /* FAQ Section */
