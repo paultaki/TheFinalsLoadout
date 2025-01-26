@@ -303,30 +303,6 @@ body.flexStyle {
     text-align: right;
 }
 
-/* Back to Sanity Button */
-.back-to-sanity {
-    background-color: #292929;
-    border: 2px solid #ffb700;
-    color: #ffb700;
-    padding: 14px 24px;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: inherit;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s ease;
-    margin-bottom: 20px;
-}
-
-.back-to-sanity:hover {
-    background-color: #ffb700;
-    color: #292929;
-    box-shadow: 0 0 10px rgba(255, 183, 0, 0.4);
-}
-
 /* FAQ Section */
 .faqSection {
     background-color: #292929;
@@ -437,10 +413,6 @@ body.flexStyle {
 @media (max-width: 575px) {
     .btnRow {
         gap: 8px;
-    }
-    .back-to-sanity {
-        font-size: 14px;
-        padding: 12px 20px;
     }
 }
 
