@@ -6,7 +6,7 @@
     box-sizing: border-box;
 }
 html, body {
-    background-color: #1d1a21;
+    background: linear-gradient(180deg, #1d1a21 0%, #151318 100%);
 }
 body {
     font-family: var(--baseFont);
@@ -21,22 +21,17 @@ body.flexStyle {
     min-height: 100vh;
 }
 .headerSection {
-    padding: 20px 0 30px;
+    padding: 40px 0 50px;
 }
-.header-with-crossbones {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-.crossbones {
-    width: 50px;
-    height: auto;
+.finals-logo {
+    max-width: 100px;
+    display: block;
+    margin: 0 auto 30px;
 }
 .mainTitle {
     font-size: 2rem;
-    margin: 10px 0;
-    color: #ff0000;
+    margin: 20px 0;
+    color: #ffb700;
     font-weight: 500;
 }
 .headerSection p {
@@ -49,17 +44,10 @@ body.flexStyle {
 .btnRow {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    position: relative;
+    gap: 30px;
 }
 .btnRow + .btnRow {
     margin-top: 20px;
-}
-#randomLoadoutButton {
-    position: relative;
-    z-index: 1;
-    width: 150px;
-    height: 50px;
 }
 .outlineCircleBtn {
     --circleBtnSize: 100px;
@@ -69,21 +57,52 @@ body.flexStyle {
     background-color: var(--bgColor);
     color: var(--textColor);
     border: 2px solid var(--borderColor);
-    border-radius: 5px;
+    border-radius: 50%;
     padding: 10px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     width: var(--circleBtnSize);
     height: var(--circleBtnSize);
-    border-radius: 50%;
     text-transform: uppercase;
     font-weight: 500;
     font-family: inherit;
     letter-spacing: 2px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+#heavyLoadoutButton {
+    --bgColor: transparent;
+    --textColor: white;
+    --borderColor: #ff7b00;
+}
+#mediumLoadoutButton {
+    --bgColor: transparent;
+    --textColor: white;
+    --borderColor: #6fa8dc;
+}
+#lightLoadoutButton {
+    --bgColor: transparent;
+    --textColor: white;
+    --borderColor: #ffb700;
+}
+.outlineCircleBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+#heavyLoadoutButton.outlineCircleBtn:hover, #heavyLoadoutButton.outlineCircleBtn.active {
+    --bgColor: #ff7b00;
+    --textColor: white;
+}
+#mediumLoadoutButton.outlineCircleBtn:hover, #mediumLoadoutButton.outlineCircleBtn.active {
+    --bgColor: #6fa8dc;
+    --textColor: white;
+}
+#lightLoadoutButton.outlineCircleBtn:hover, #lightLoadoutButton.outlineCircleBtn.active {
+    --bgColor: #ffb700;
+    --textColor: black;
 }
 .outlineBtnStyle {
     background-color: transparent;
@@ -96,105 +115,59 @@ body.flexStyle {
     font-family: inherit;
     text-transform: uppercase;
     letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 .outlineBtnStyle:hover {
     background-color: #ff4f4f;
     color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
 .outlineCircleBtn, .outlineBtnStyle {
-    transition: background-color 300ms ease-in-out 0s, color 300ms ease-in-out 0s;
+    transition: all 300ms ease-in-out;
 }
 #output {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 30px;
     padding: 40px 0 80px;
     position: relative;
 }
-.failure-stamp {
+#output .class {
     font-size: 1.5rem;
     font-weight: bold;
-    color: red;
-    text-transform: uppercase;
-    transform: rotate(-10deg);
-    border: 2px solid red;
-    padding: 10px 20px;
-    display: inline-block;
-    margin-top: 20px;
-    animation: stamp 0.5s ease-in-out;
-}
-.funny-joke-container {
-    height: 32px;
-    margin: 20px 0;
-    min-height: 32px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.funny-joke-container.visible {
-    opacity: 1;
-}
-
-.funny-joke {
-    margin: 0;
-    color: #888;
-    font-size: 18px;
-}
-@keyframes stamp {
-    0% {
-        transform: scale(0) rotate(-10deg);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1) rotate(-10deg);
-        opacity: 1;
-    }
-}
-.skeleton-overlay {
-    position: relative;
-    overflow: hidden;
-}
-.skeleton-overlay::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('images/skeleton.png') no-repeat center;
-    background-size: cover;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-.skeleton-overlay:hover::after {
-    opacity: 1;
+    color: #ffb700;
+    margin-bottom: 10px;
 }
 .items-container {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 20px;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
 .item-container {
     text-align: center;
     width: 154px;
     border: 2px solid rgba(255,255,255,0.1);
     padding: 0 5px;
-    border-radius: 5px;
+    border-radius: 8px;
     height: 191px;
     overflow: hidden;
     display: flex;
     align-items: flex-end;
     background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
 }
-.items-container {
-    display: flex;
-    gap: 30px;
-    justify-content: center;
-    align-items: center;
-    min-height: 191px;
+.item-container:hover {
+    transform: translateY(-5px);
 }
 .itemCol {
     padding-top: 5px;
@@ -209,41 +182,67 @@ body.flexStyle {
     object-fit: cover;
 }
 .itemCol p {
-    color: #fff;
+    color: #000;
     padding: 8px 0 10px;
     font-size: 14px;
     margin: 0;
     white-space: nowrap;
-    color: #000;
 }
 .selected + .itemCol {
     opacity: 0;
 }
+
+#punishmentLoadoutButton {
+    margin: 20px auto 50px;
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #ff4f4f, #ff7b00);
+    border: none;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+#punishmentLoadoutButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    background: linear-gradient(45deg, #ff7b00, #ff4f4f);
+}
+
+.skull-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
 .copy-button {
     background-color: #555;
     color: #fff;
     border: none;
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 12px 24px;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
     font-family: inherit;
     text-transform: uppercase;
     letter-spacing: 2px;
-    position: relative;
-    margin: 20px auto 50px;
+    margin: 30px auto 20px;
     display: inline-block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 .copy-button:hover {
     background-color: #ffb700;
-    box-shadow: 0 0 10px rgba(255, 183, 0, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
 .footerSection {
-    margin-top: 20px;
+    margin-top: auto;
     font-size: 0.8rem;
     color: #888;
-    margin-top: auto;
     padding: 20px 0;
 }
 .container {
@@ -277,13 +276,47 @@ body.flexStyle {
 .text-end {
     text-align: right;
 }
+
+/* FAQ Section */
+.faqSection {
+    background-color: #292929;
+    padding: 20px 25px;
+    border-radius: 8px;
+    margin: 50px auto;
+    width: 770px;
+    max-width: 100%;
+    font-size: 0.8rem;
+    text-align: left;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    border: 1px solid #444;
+}
+.faqSection h2 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #ffb700;
+    text-align: center;
+}
+.faqSection h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+.faqSection p {
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    color: #cccccc;
+    line-height: 1.6;
+}
+
+/* Media Queries */
 @media (max-width:991px) {
     .items-container {
         gap: 8px;
+        padding: 20px;
     }
     .item-container {
         width: 140px;
-        padding: 0 2px; 
+        padding: 0 2px;
     }
     .itemCol p {
         white-space: nowrap;
@@ -305,45 +338,16 @@ body.flexStyle {
         flex-wrap: wrap;
     }
 }
+
 @media (max-width: 575px) {
     .btnRow {
         gap: 8px;
     }
 }
+
 @media (max-width:359px) {
     .outlineBtnStyle {
         padding: 14px 20px;
         font-size: 14px;
     }
-}
-.copy-button {
-    margin-bottom: 50px;
-}
-.faqSection {
-    background-color: #292929;
-    padding: 5px 15px;
-    border-radius: 8px;
-    margin: 50px auto;
-    width: 770px;
-    max-width: 100%;
-    font-size: 0.8rem;
-    text-align: left;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-    border: 1px solid #444;
-}
-.faqSection h2 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: #ffb700;
-    text-align: center;
-}
-.faqSection h3 {
-    font-size: 1rem;
-    margin-bottom: 5px;
-    color: #ffffff;
-}
-.faqSection p {
-    font-size: 0.85rem;
-    margin-bottom: 8px;
-    color: #cccccc;
 }

@@ -3,47 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Finals Random Loadout Generator</title>
-    <meta name="description" content="Generate random punishment loadouts for The Finals game.">
+    <title>The Finals Random Loadout Generator | Random Loadouts for The Finals Game</title>
+    <meta name="description" content="Generate random loadouts for The Finals game. Explore optimized builds for light, medium, and heavy playstyles.">
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+
+    <!-- Google Analytics Code -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GVGKYFGZ1Z');
+    </script>
+
+    <!-- Meta Description -->
+    <meta name="description" content="The best tool to generate random loadouts for The Finals game. Explore light, medium, and heavy builds with ease.">
+    
+    <!-- Meta Keywords -->
+    <meta name="keywords" content="The Finals, Loadout Generator, Random Loadouts, Gaming Tools, The Finals Builds">
+    
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="Generate the Best Loadouts for The Finals Game | Randomizer Tool">
+    <meta property="og:description" content="Generate random loadouts for The Finals game with optimized builds for every playstyle.">
+    <meta property="og:image" content="images/the-finals.png">
+    <meta property="og:url" content="https://yourwebsite.com">
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": "https://yourwebsite.com",
+        "name": "The Finals Loadout Generator",
+        "description": "Generate random loadouts for The Finals game with light, medium, and heavy builds.",
+        "author": {
+            "@type": "Person",
+            "name": "1-800-FAT-MOMS Production"
+        }
+    }
+    </script>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="flexStyle">
     <header class="headerSection">
         <div class="container">
-            <img src="images/the-finals.png" alt="The Finals Logo" class="finals-logo" style="max-width: 200px; height: auto;">
-            <div class="header-with-crossbones">
-                <img src="images/punishment.png" alt="Crossbones" class="crossbones">
-                <h1 class="mainTitle blood-red">Generate Your Punishment</h1>
-                <img src="images/punishment.png" alt="Crossbones" class="crossbones">
-            </div>
-            <p class="headerSubtext">The Ultimate Test: Can You Survive This Loadout?</p>
+            <img src="images/the-finals.png" alt="Random Loadout Generator for The Finals Game" class="finals-logo">
+            <h1 class="mainTitle">Loadout Roulette: Spin the Wheel and Play the Hand You're Dealt!</h1>
+            <p>The Ultimate Test: Can You Win with a Random Loadout?</p>
         </div>
     </header>
     <main class="mainConetnt">
         <div class="container">
             <div class="buttons">
                 <div class="btnRow">
-                    <button id="randomLoadoutButton" class="random outlineBtnStyle skeleton-overlay" title="Good luck. You'll need it." style="display: flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; font-size: 1rem; line-height: 1.5;">Generate Your Punishment</button>
+                    <button id="lightLoadoutButton" class="outlineCircleBtn">Light</button>
+                    <button id="mediumLoadoutButton" class="outlineCircleBtn">Medium</button>
+                    <button id="heavyLoadoutButton" class="outlineCircleBtn">Heavy</button>
+                </div>
+                <div class="btnRow">
+                    <button id="randomLoadoutButton" class="random outlineBtnStyle">Random Contestant and Loadout</button>
                 </div>
             </div>        
-            <div id="output">
-                <div class="failure-stamp">Failure Guaranteed</div>
-            </div>
+            <div id="output"></div>
         </div>
     </main>
+    
+    <!-- FAQ Section -->
+    <section id="faq" class="faqSection">
+        <h2>Frequently Asked Questions</h2>
+        <div>
+            <h3>Are Season 5 weapons included?</h3>
+            <p>Yes, this loadout randomizer is fully updated with all Season 5 weapons, builds, and gear, ensuring you can randomly generate the most current options available in The Finals.</p>
+        </div>
+        <div>
+            <h3>How do I use this tool?</h3>
+            <p>Using this loadout randomizer is simple! Click on <strong>Light</strong>, <strong>Medium</strong>, or <strong>Heavy</strong> to generate a loadout tailored to a specific class, or select <strong>Random</strong> to embrace the chaos with a completely unpredictable loadout.</p>
+            <p>Want to share your randomized loadout with teammates? Just hit <strong>'Copy Loadout'</strong> and send it to them.</p>
+        </div>
+    </section>
+    
     <footer class="footerSection">
         <div class="container">
-            <div class="footer">
-                <span class="left">&copy; 2025 TheFinalsLoadout.com | <a href="#">Legal Disclaimer</a></span>
-                <span class="separator"> | </span>
-                <span class="center">Randomly generated for maximum chaos&trade;. Play responsibly!</span>
-                <span class="separator"> | </span>
-                <span class="right">1-800-FAT-MOMS Production</span>
+            <div class="footerRow">
+                <p class="text-start">© 2025 TheFinalsLoadout.com | <a href="legal/legal.html">Legal Disclaimer</a></p>
+                <p class="text-end">1-800-FAT-MOMS Production</p>
             </div>
-            <a href="../index.html" class="home-button">I've Had Enough, Take Me Home</a>
         </div>
     </footer>
+    
     <script src="app.js"></script>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"906dd89d0aaf1035","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}' crossorigin="anonymous"></script>
 </body>
 </html>

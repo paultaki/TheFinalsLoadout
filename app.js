@@ -123,6 +123,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     .join("")}
             </div>
             <button class="copy-button" onclick="copyLoadout()">Copy Loadout</button>
+            <a href="/punishment-loadout/" id="punishmentLoadoutButton" class="outlineBtnStyle">
+                <img src="images/punishment.png" class="skull-icon" alt="skull">
+                The Punishment Loadout
+                <img src="images/punishment.png" class="skull-icon" alt="skull">
+            </a>
         `;
 
         outputDiv.innerHTML = loadoutHTML;
@@ -178,9 +183,7 @@ window.copyLoadout = () => {
         (col) => col.querySelector(".selected").innerText.trim()
     );
 
-    const copyText = `
-        Class: ${selectedItems[0]}, Weapon: ${selectedItems[1]}, Specialization: ${selectedItems[2]}, Gadgets: ${selectedItems[3]}, ${selectedItems[4]}, ${selectedItems[5]}
-    `.trim();
+    const copyText = `Class: ${selectedItems[0]}, Weapon: ${selectedItems[1]}, Specialization: ${selectedItems[2]}, Gadgets: ${selectedItems[3]}, ${selectedItems[4]}, ${selectedItems[5]}`.trim();
 
     navigator.clipboard
         .writeText(copyText)
