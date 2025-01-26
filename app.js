@@ -9,17 +9,17 @@ document.addEventListener("DOMContentLoaded", () => {
         Light: {
             weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
             specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
-            gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb"]
+            gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb", "Pyro Grenade", "Goo Grenade", "Smoke Grenade", "Gas Grenade", "Flashbang", "Frag Grenade" ]
         },
         Medium: {
             weapons: ["AKM", "Cerberus 12GA", "Dual Blades", "FAMAS", "FCAR", "Model 1887", "Pike-556", "R.357", "Riot Shield"],
             specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
-            gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline"]
+            gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline", "Proximity Sensor", "Smoke Grenade", "Gas Grenade", "Goo Grenade", "Frag Grenade", "Pyro Grenade"]
         },
         Heavy: {
             weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
             specializations: ["Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
-            gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Motion Sensor", "RPG-7"]
+            gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Proximity Sensor", "RPG-7", "Flashbang", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Explosive Mine", "Smoke Grendade"], 
         }
     };
 
