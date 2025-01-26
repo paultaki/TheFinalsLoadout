@@ -7,19 +7,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const loadouts = {
         Light: {
-            weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54"],
+            weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54", "Throwing Knives"],
             specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
-            gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb", "Pyro Grenade", "Goo Grenade", "Smoke Grenade", "Gas Grenade", "Flashbang", "Frag Grenade" ]
+            gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun", "Thermal Bore", "Thermal Vision", "Tracking Dart", "Vanishing Bomb", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade", "Flashbang"]
         },
         Medium: {
             weapons: ["AKM", "Cerberus 12GA", "Dual Blades", "FAMAS", "FCAR", "Model 1887", "Pike-556", "R.357", "Riot Shield"],
             specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
-            gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline", "Proximity Sensor", "Smoke Grenade", "Gas Grenade", "Goo Grenade", "Frag Grenade", "Pyro Grenade"]
+            gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade","Flashbang", "Proximity Sensor"]
         },
         Heavy: {
             weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
             specializations: ["Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
-            gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Proximity Sensor", "RPG-7", "Flashbang", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Explosive Mine", "Smoke Grendade"], 
+            gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Proximity Sensor", "RPG-7", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Grenade", "Flashbang", "Explosive Mine", "Frag Grenade", "Gas Grenade"]
         }
     };
 
@@ -97,11 +97,14 @@ document.addEventListener("DOMContentLoaded", () => {
         animate();
     };
 
-    const displayLoadout = ({ weapons, specializations, gadgets }) => {
+    const displayLoadout = ({ weapons, specializations, gadgets }, classType) => {
         const selectedGadgets = getRandomUniqueItems(gadgets, 3);
 
         const loadoutHTML = `
             <div class="items-container">
+                <div class="item-container">
+                    <div class="scroll-container">${createItemContainer([classType])}</div>
+                </div>
                 <div class="item-container">
                     <div class="scroll-container">${createItemContainer(weapons)}</div>
                 </div>
@@ -140,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const generateLoadout = (classType, button) => {
         setActiveButton(button);
         const loadout = loadouts[classType];
-        displayLoadout(loadout);
+        displayLoadout(loadout, classType);
     };
 
     lightLoadoutButton.onclick = () => {
@@ -176,7 +179,7 @@ window.copyLoadout = () => {
     );
 
     const copyText = `
-        Weapon: ${selectedItems[0]}, Specialization: ${selectedItems[1]}, Gadgets: ${selectedItems[2]}, ${selectedItems[3]}, ${selectedItems[4]}
+        Class: ${selectedItems[0]}, Weapon: ${selectedItems[1]}, Specialization: ${selectedItems[2]}, Gadgets: ${selectedItems[3]}, ${selectedItems[4]}, ${selectedItems[5]}
     `.trim();
 
     navigator.clipboard
