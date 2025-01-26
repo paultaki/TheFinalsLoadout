@@ -133,6 +133,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Good luck surviving this chaos.",
                 "Your enemies are laughing already.",
                 "Is it bad? Yes. Is it fun? Absolutely.",
+                "This loadout is scientifically engineered to trigger your teammates.",
+                "Fun fact: This setup has a 0.01% win rate. But hey, stats are overrated.",
+                "Your enemies called—they’re requesting this exact loadout to play against.",
+                "Think of it as a learning experience. For your enemies.",
+                "Your enemies might win, but at least you’re memorable.",
+                "You’re not losing, you’re just building character!",
+                "Is it sabotage or genius? It’s definitely sabotage.",
+                "The only thing deadlier than this loadout is your decision-making.",
                 "Brought to you by the RNG gods."
             ];
             const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
