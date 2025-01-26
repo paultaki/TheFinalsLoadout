@@ -46,7 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
             .map(
                 (item) => `
                     <div class="itemCol">
-                        <img src="images/${item.replaceAll(" ", "_")}_Rank_1.png" alt="${item}">
+                        <img src="images/${item.replaceAll(" ", "_")}_Rank_1.png" 
+                             alt="The Finals ${item} - Random Loadout Item" 
+                             title="The Finals ${item}"
+                             width="140" 
+                             height="144">
                         <p>${item}</p>
                     </div>
                 `
@@ -135,11 +139,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Is it bad? Yes. Is it fun? Absolutely.",
                 "This loadout is scientifically engineered to trigger your teammates.",
                 "Fun fact: This setup has a 0.01% win rate. But hey, stats are overrated.",
-                "Your enemies called—they’re requesting this exact loadout to play against.",
+                "Your enemies called—they're requesting this exact loadout to play against.",
                 "Think of it as a learning experience. For your enemies.",
-                "Your enemies might win, but at least you’re memorable.",
-                "You’re not losing, you’re just building character!",
-                "Is it sabotage or genius? It’s definitely sabotage.",
+                "Your enemies might win, but at least you're memorable.",
+                "You're not losing, you're just building character!",
+                "Is it sabotage or genius? It's definitely sabotage.",
                 "The only thing deadlier than this loadout is your decision-making.",
                 "Brought to you by the RNG gods."
             ];
