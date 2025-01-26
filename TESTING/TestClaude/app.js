@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     .join("")}
             </div>
             <button class="copy-button" onclick="copyLoadout()">Copy Loadout</button>
-            <a href="/punishment-loadout/" id="punishmentLoadoutButton" class="outlineBtnStyle">
+            <a href="./punishment-loadout/" id="punishmentLoadoutButton" class="outlineBtnStyle">
                 <img src="images/punishment.png" class="skull-icon" alt="skull">
                 The Punishment Loadout
                 <img src="images/punishment.png" class="skull-icon" alt="skull">
