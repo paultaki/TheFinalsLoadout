@@ -193,14 +193,14 @@ body.flexStyle {
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;
-    gap: 30px;
+    gap: 12px; /* Further reduced from 15px */
     background: rgba(255, 255, 255, 0.05);
-    padding: 30px;
+    padding: 15px; /* Further reduced from 20px */
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     flex-wrap: nowrap;
     width: 100%;
-    max-width: 1100px;
+    max-width: 960px; /* Further adjusted from 1000px */
     margin: 0 auto;
     position: relative;
     left: 50%;
@@ -209,9 +209,9 @@ body.flexStyle {
 
 .item-container {
     text-align: center;
-    width: 154px;
+    width: 140px; /* Further adjusted from 145px */
     border: 2px solid rgba(255,255,255,0.1);
-    padding: 0 5px;
+    padding: 0 2px;
     border-radius: 8px;
     height: 191px;
     overflow: hidden;
@@ -227,6 +227,33 @@ body.flexStyle {
     perspective: 1000px;
     transition: all 0.3s ease;
     flex-shrink: 0;
+}
+
+.itemCol img {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+    width: 132px; /* Further adjusted from 135px */
+    height: 144px;
+    object-fit: cover;
+}
+
+/* Media query adjustments */
+@media (max-width: 991px) {
+    .items-container {
+        gap: 8px;
+        padding: 12px;
+        max-width: 95%;
+    }
+    
+    .item-container {
+        width: 135px;
+    }
+    
+    .itemCol img {
+        width: 128px;
+    }
 }
 
 .item-container:hover {
@@ -264,6 +291,7 @@ body.flexStyle {
 
 /* Copy Button */
 .copy-button {
+    margin: 15px auto 10px;
     background-color: #555;
     color: #fff;
     border: none;
@@ -275,7 +303,6 @@ body.flexStyle {
     font-family: inherit;
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin: 20px auto 0;
     display: block;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
@@ -288,7 +315,7 @@ body.flexStyle {
 
 /* Punishment Button */
 #punishmentLoadoutButton {
-    margin: 10px auto 50px;
+    margin: 10px auto 15px; /* Further reduced bottom margin from 25px to 15px */
     padding: 15px 30px;
     background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
     border: none;
@@ -318,7 +345,7 @@ body.flexStyle {
     background-color: #292929;
     padding: 20px 25px;
     border-radius: 8px;
-    margin: 50px auto;
+    margin: 15px auto;
     width: 770px;
     max-width: 100%;
     font-size: 0.8rem;
@@ -326,6 +353,7 @@ body.flexStyle {
     box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     border: 1px solid #444;
 }
+
 
 .faqSection h2 {
     font-size: 1.2rem;
@@ -440,4 +468,75 @@ body.flexStyle {
         padding: 14px 20px;
         font-size: 14px;
     }
+}
+@keyframes subtlePulse {
+    0% {
+        transform: scale(1);
+        background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        transform: scale(1.02); /* Slight pulse */
+        background: linear-gradient(45deg, var(--neon-red), var(--neon-orange, 0.9));
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.3); /* Slight glow */
+    }
+    100% {
+        transform: scale(1);
+        background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+}
+
+#punishmentLoadoutButton {
+    animation: subtlePulse 2.5s ease-in-out infinite; /* Slow and smooth pulse */
+}
+.recentBuffsSection {
+    background-color: #292929;
+    padding: 30px 15px;
+    border-radius: 10px;
+    margin: 50px auto;
+    width: 80%;
+    max-width: 1000px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    text-align: left;
+}
+
+.recentBuffsSection h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: var(--neon-yellow);
+    margin-bottom: 20px;
+}
+
+.buffs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.buff-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.buff-item .patch-date {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.buff-item strong {
+    color: var(--neon-yellow);
+}
+
+.read-more {
+    color: var(--neon-blue);
+    text-decoration: underline;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-top: 10px;
 }

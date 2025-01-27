@@ -190,3 +190,53 @@ window.copyLoadout = () => {
         .then(() => alert("Loadout copied to clipboard!"))
         .catch((err) => console.error("Could not copy text: ", err));
 };
+document.addEventListener("DOMContentLoaded", () => {
+    const recentBuffsSection = document.querySelector(".recentBuffsSection .buffs-container");
+
+    // Latest patch notes: Weapon-Only Changes
+    const latestPatch = {
+        date: "January 22, 2025",
+        changes: {
+            buffs: [
+                { weapon: "Lewis and M60", description: "Reduced visual recoil on Red Dot sights to align with other weapons." }
+            ],
+            nerfs: [], // Empty nerfs array for N/A
+            fixes: [
+                { weapon: "Spear", description: "Fixed an issue allowing sliding while performing the secondary spin attack." },
+                { weapon: "Sword", description: "Jump Pad secondary attack now launches players the intended (longer) distance." },
+                { weapon: "Dual Blades", description: "Resolved bug causing Dual Blades to get stuck swinging only once after swapping from a deployable." },
+                { weapon: "Dagger", description: "Fixed backstab charge-up not re-triggering after a vault if input was held." }
+            ]
+        }
+    };
+
+    if (recentBuffsSection) {
+        recentBuffsSection.innerHTML = `
+            <div class="buff-item">
+                <p class="patch-date">Patch Date: ${latestPatch.date}</p>
+                <div class="changes-category">
+                    <h3>Buffs</h3>
+                    <ul>
+                        ${latestPatch.changes.buffs.map(buff => `<li><strong>${buff.weapon}:</strong> ${buff.description}</li>`).join("")}
+                    </ul>
+                </div>
+                <div class="changes-category">
+                    <h3>Nerfs</h3>
+                    <ul>
+                        ${
+                            latestPatch.changes.nerfs.length
+                                ? latestPatch.changes.nerfs.map(nerf => `<li><strong>${nerf.mode}:</strong> ${nerf.description}</li>`).join("")
+                                : "<li>N/A</li>"
+                        }
+                    </ul>
+                </div>
+                <div class="changes-category">
+                    <h3>Fixes</h3>
+                    <ul>
+                        ${latestPatch.changes.fixes.map(fix => `<li><strong>${fix.weapon}:</strong> ${fix.description}</li>`).join("")}
+                    </ul>
+                </div>
+            </div>
+        `;
+    }
+});
