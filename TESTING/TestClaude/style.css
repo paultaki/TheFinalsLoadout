@@ -1,13 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
 :root {
     --baseFont: "Oswald", serif;
+    --neon-yellow: #ffb700;
+    --neon-orange: #ff7b00;
+    --neon-red: #ff4f4f;
+    --neon-blue: #00f3ff;
+    --bg-dark: #1d1a21;
+    --bg-darker: #151318;
 }
+
+/* Base Styles */
 * {
     box-sizing: border-box;
 }
-html, body {
-    background: linear-gradient(180deg, #1d1a21 0%, #151318 100%);
+
+html {
+    min-height: 100%;
+    background: linear-gradient(-45deg, 
+        #1d1a21,    /* Original dark */
+        #2a1f2d,    /* Slightly purple */
+        #1f2a2d,    /* Slightly blue-ish */
+        #201c24     /* Back to dark */
+    );
+    background-size: 400% 400%;
+    animation: gradientShift 20s ease infinite;
 }
+
+body {
+    font-family: var(--baseFont);
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 body {
     font-family: var(--baseFont);
     color: #fff;
@@ -15,25 +55,31 @@ body {
     margin: 0;
     padding: 0;
 }
+
 body.flexStyle {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
+
+/* Header Section */
 .headerSection {
     padding: 40px 0 50px;
 }
+
 .finals-logo {
-    max-width: 100px;
+    max-width: 200px;
     display: block;
     margin: 0 auto 30px;
 }
+
 .mainTitle {
     font-size: 2rem;
     margin: 20px 0;
-    color: #ffb700;
+    color: var(--neon-yellow);
     font-weight: 500;
 }
+
 .headerSection p {
     font-size: 18px;
     line-height: 1.2;
@@ -41,22 +87,23 @@ body.flexStyle {
     letter-spacing: 1px;
     margin: 0;
 }
+
+/* Button Styles */
 .btnRow {
     display: flex;
     justify-content: center;
     gap: 30px;
 }
+
 .btnRow + .btnRow {
     margin-top: 20px;
 }
+
 .outlineCircleBtn {
     --circleBtnSize: 100px;
-    --bgColor: transparent;
-    --textColor: white;
-    --borderColor: white;
-    background-color: var(--bgColor);
-    color: var(--textColor);
-    border: 2px solid var(--borderColor);
+    background-color: transparent;
+    color: white;
+    border: 2px solid;
     border-radius: 50%;
     padding: 10px;
     cursor: pointer;
@@ -71,43 +118,47 @@ body.flexStyle {
     font-weight: 500;
     font-family: inherit;
     letter-spacing: 2px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2),
+                inset 0 1px 1px rgba(255,255,255,0.1);
+    transform-style: preserve-3d;
+    perspective: 1000px;
 }
+
 #heavyLoadoutButton {
-    --bgColor: transparent;
-    --textColor: white;
-    --borderColor: #ff7b00;
+    border-color: var(--neon-orange);
 }
+
 #mediumLoadoutButton {
-    --bgColor: transparent;
-    --textColor: white;
-    --borderColor: #6fa8dc;
+    border-color: var(--neon-blue);
 }
+
 #lightLoadoutButton {
-    --bgColor: transparent;
-    --textColor: white;
-    --borderColor: #ffb700;
+    border-color: var(--neon-yellow);
 }
+
 .outlineCircleBtn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    transform: translateY(-2px) translateZ(10px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3),
+                inset 0 1px 1px rgba(255,255,255,0.2);
 }
-#heavyLoadoutButton.outlineCircleBtn:hover, #heavyLoadoutButton.outlineCircleBtn.active {
-    --bgColor: #ff7b00;
-    --textColor: white;
+
+#heavyLoadoutButton:hover, #heavyLoadoutButton.active {
+    background-color: var(--neon-orange);
 }
-#mediumLoadoutButton.outlineCircleBtn:hover, #mediumLoadoutButton.outlineCircleBtn.active {
-    --bgColor: #6fa8dc;
-    --textColor: white;
+
+#mediumLoadoutButton:hover, #mediumLoadoutButton.active {
+    background-color: var(--neon-blue);
 }
-#lightLoadoutButton.outlineCircleBtn:hover, #lightLoadoutButton.outlineCircleBtn.active {
-    --bgColor: #ffb700;
-    --textColor: black;
+
+#lightLoadoutButton:hover, #lightLoadoutButton.active {
+    background-color: var(--neon-yellow);
+    color: black;
 }
+
 .outlineBtnStyle {
     background-color: transparent;
     color: #fff;
-    border: 2px solid #ff4f4f;
+    border: 2px solid var(--neon-red);
     padding: 14px 24px;
     font-size: 16px;
     border-radius: 4px;
@@ -118,32 +169,28 @@ body.flexStyle {
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+
 .outlineBtnStyle:hover {
-    background-color: #ff4f4f;
-    color: #fff;
+    background-color: var(--neon-red);
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
-.outlineCircleBtn, .outlineBtnStyle {
-    transition: all 300ms ease-in-out;
-}
+
+/* Output Styles */
 #output {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 30px;
-    padding: 40px 0 80px;
+    gap: 20px;
+    padding: 40px 20px 80px;
     position: relative;
+    width: 100%;
 }
-#output .class {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffb700;
-    margin-bottom: 10px;
-}
+
 .items-container {
     display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: flex-start;
     gap: 30px;
@@ -151,7 +198,15 @@ body.flexStyle {
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
 }
+
 .item-container {
     text-align: center;
     width: 154px;
@@ -161,17 +216,30 @@ body.flexStyle {
     height: 191px;
     overflow: hidden;
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
     background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2),
+                inset 0 1px 1px rgba(255,255,255,0.9),
+                inset 0 -1px 1px rgba(0,0,0,0.1);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
 }
+
 .item-container:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) translateZ(20px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3),
+                inset 0 1px 1px rgba(255,255,255,0.9),
+                inset 0 -1px 1px rgba(0,0,0,0.1);
 }
+
 .itemCol {
     padding-top: 5px;
 }
+
 .itemCol img {
     max-width: 100%;
     display: block;
@@ -181,6 +249,7 @@ body.flexStyle {
     height: 144px;
     object-fit: cover;
 }
+
 .itemCol p {
     color: #000;
     padding: 8px 0 10px;
@@ -188,36 +257,12 @@ body.flexStyle {
     margin: 0;
     white-space: nowrap;
 }
+
 .selected + .itemCol {
     opacity: 0;
 }
 
-#punishmentLoadoutButton {
-    margin: 20px auto 50px;
-    padding: 15px 30px;
-    background: linear-gradient(45deg, #ff4f4f, #ff7b00);
-    border: none;
-    font-size: 1.1rem;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-#punishmentLoadoutButton:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    background: linear-gradient(45deg, #ff7b00, #ff4f4f);
-}
-
-.skull-icon {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
-}
-
+/* Copy Button */
 .copy-button {
     background-color: #555;
     color: #fff;
@@ -230,51 +275,42 @@ body.flexStyle {
     font-family: inherit;
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin: 30px auto 20px;
-    display: inline-block;
+    margin: 20px auto 0;
+    display: block;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+
 .copy-button:hover {
-    background-color: #ffb700;
+    background-color: var(--neon-yellow);
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
-.footerSection {
-    margin-top: auto;
-    font-size: 0.8rem;
-    color: #888;
-    padding: 20px 0;
-}
-.container {
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    max-width: 1000px;
-    padding-left: 15px;
-    padding-right: 15px;
-}
-.footerRow {
-    display: flex;
+
+/* Punishment Button */
+#punishmentLoadoutButton {
+    margin: 10px auto 50px;
+    padding: 15px 30px;
+    background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+    border: none;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: block;
     align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255,255,255,0.2);
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
-.footerRow p {
-    margin: 0;
+
+#punishmentLoadoutButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    background: linear-gradient(45deg, var(--neon-orange), var(--neon-red));
 }
-.mainConetnt {
-    margin: auto;
-}
-[disabled="true"] {
-    cursor: not-allowed;
-}
-.text-start {
-    text-align: left;
-}
-.text-end {
-    text-align: right;
+
+.skull-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
 }
 
 /* FAQ Section */
@@ -290,17 +326,20 @@ body.flexStyle {
     box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     border: 1px solid #444;
 }
+
 .faqSection h2 {
     font-size: 1.2rem;
     margin-bottom: 20px;
-    color: #ffb700;
+    color: var(--neon-yellow);
     text-align: center;
 }
+
 .faqSection h3 {
     font-size: 1rem;
     margin-bottom: 10px;
     color: #ffffff;
 }
+
 .faqSection p {
     font-size: 0.85rem;
     margin-bottom: 15px;
@@ -308,34 +347,76 @@ body.flexStyle {
     line-height: 1.6;
 }
 
+/* Footer Section */
+.footerSection {
+    margin-top: auto;
+    font-size: 0.8rem;
+    color: #888;
+    padding: 20px 0;
+}
+
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 1000px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.footerRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.footerRow p {
+    margin: 0;
+}
+
+/* Utility Classes */
+.text-start {
+    text-align: left;
+}
+
+.text-end {
+    text-align: right;
+}
+
+[disabled="true"] {
+    cursor: not-allowed;
+}
+
 /* Media Queries */
-@media (max-width:991px) {
-    .items-container {
-        gap: 8px;
-        padding: 20px;
-    }
-    .item-container {
-        width: 140px;
-        padding: 0 2px;
-    }
-    .itemCol p {
-        white-space: nowrap;
-    }
+@media (max-width: 991px) {
     .mainTitle {
         font-size: 1.6rem;
     }
-    #output {
-        padding: 25px 0 72px;
+    
+    .items-container {
+        flex-wrap: wrap;
+        padding: 20px;
+        gap: 8px;
     }
+    
+    .item-container {
+        width: 140px;
+    }
+    
     .btnRow {
         gap: 10px;
     }
+    
     .outlineCircleBtn {
-        font-size: 14px;
         --circleBtnSize: 90px;
+        font-size: 14px;
     }
-    .items-container {
-        flex-wrap: wrap;
+    
+    #output {
+        padding: 25px 0 72px;
     }
 }
 
@@ -343,9 +424,18 @@ body.flexStyle {
     .btnRow {
         gap: 8px;
     }
+    
+    .mainTitle {
+        font-size: 1.4rem;
+    }
+    
+    .outlineCircleBtn {
+        --circleBtnSize: 80px;
+        font-size: 0.9rem;
+    }
 }
 
-@media (max-width:359px) {
+@media (max-width: 359px) {
     .outlineBtnStyle {
         padding: 14px 20px;
         font-size: 14px;

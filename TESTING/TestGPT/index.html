@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<!-- Mirrored from thefinalsloadout.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 Jan 2025 06:07:56 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,65 +48,90 @@
 <body class="flexStyle">
     <header class="headerSection">
         <div class="container">
-            <img src="images/the-finals.png" alt="Random Loadout Generator for The Finals Game" class="finals-logo">
+            <div class="logo-container">
+                <img src="images/the-finals.png" alt="Random Loadout Generator for The Finals Game" class="finals-logo">
+                <div class="logo-glow"></div>
+            </div>
             <h1 class="mainTitle">Loadout Roulette: Spin the Wheel and Play the Hand You're Dealt!</h1>
-            <p>The Ultimate Test: Can You Win with a Random Loadout?</p>
+            <p class="subtitle">The Ultimate Test: Can You Win with a Random Loadout?</p>
         </div>
     </header>
-    <main class="mainConetnt">
+
+    <main class="mainContent">
         <div class="container">
             <div class="buttons">
                 <div class="btnRow">
-                    <button id="lightLoadoutButton" class="outlineCircleBtn">Light</button>
-                    <button id="mediumLoadoutButton" class="outlineCircleBtn">Medium</button>
-                    <button id="heavyLoadoutButton" class="outlineCircleBtn">Heavy</button>
+                    <button id="lightLoadoutButton" class="outlineCircleBtn" data-type="light">
+                        <span class="btn-content">Light</span>
+                    </button>
+                    <button id="mediumLoadoutButton" class="outlineCircleBtn" data-type="medium">
+                        <span class="btn-content">Medium</span>
+                    </button>
+                    <button id="heavyLoadoutButton" class="outlineCircleBtn" data-type="heavy">
+                        <span class="btn-content">Heavy</span>
+                    </button>
                 </div>
                 <div class="btnRow">
-                    <button id="randomLoadoutButton" class="random outlineBtnStyle">Random Contestant and Loadout</button>
+                    <button id="randomLoadoutButton" class="random outlineBtnStyle">
+                        <span class="btn-content">Random Contestant and Loadout</span>
+                    </button>
                 </div>
-                <div class="btnRow">
-                    <a href="punishment-loadout.html" id="punishmentLoadoutButton" class="outlineBtnStyle">The Punishment Loadout</a>
-                </div>
-            </div>        
-            <div id="output"></div>
+            </div>
+            
+            <div id="output" class="output-container"></div>
+
+            <a href="./punishment-loadout/" id="punishmentLoadoutButton" class="outlineBtnStyle" style="
+                padding: 15px 30px;
+                margin: 20px auto 50px;
+                background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+                border: none;
+                font-size: 1.1rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                animation: pulse 1.5s infinite alternate;">
+                <img src="images/punishment.png" class="skull-icon" alt="skull">
+                Take the Punishment Challenge!
+                <img src="images/punishment.png" class="skull-icon" alt="skull">
+            </a>
         </div>
     </main>
     
-    <!-- Moved FAQ Section Below Main Content -->
+    <!-- FAQ Section -->
     <section id="faq" class="faqSection">
-        <h2>Frequently Asked Questions</h2>
-        <div>
-            <h3>Are Season 5 weapons included?</h3>
-            <p>Yes, this loadout randomizer is fully updated with all Season 5 weapons, builds, and gear, ensuring you can randomly generate the most current options available in The Finals.</p>
-        </div>
-        <div>
-            <h3>How do I use this tool?</h3>
-            <p>
-                Using this loadout randomizer is simple! Click on <strong>Light</strong>, <strong>Medium</strong>, or <strong>Heavy</strong> to generate a loadout tailored to a specific class, or select <strong>Random</strong> to embrace the chaos with a completely unpredictable loadout.
-              </p>
-              <p>
-                Want to share your randomized loadout with teammates? Just hit <strong>‘Copy Loadout’</strong> and send it to them.
-              </p>
+        <div class="container">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>Are Season 5 weapons included?</h3>
+                    <p>Yes, this loadout randomizer is fully updated with all Season 5 weapons, builds, and gear, ensuring you can randomly generate the most current options available in The Finals.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How do I use this tool?</h3>
+                    <p>Using this loadout randomizer is simple! Click on <strong>Light</strong>, <strong>Medium</strong>, or <strong>Heavy</strong> to generate a loadout tailored to a specific class, or select <strong>Random</strong> to embrace the chaos with a completely unpredictable loadout.</p>
+                    <p>Want to share your randomized loadout with teammates? Just hit <strong>'Copy Loadout'</strong> and send it to them.</p>
+                </div>
+            </div>
         </div>
     </section>
-     
-    </main>
+    
     <footer class="footerSection">
         <div class="container">
             <div class="footerRow">
-                <p class="text-start">
-                    © 2025 TheFinalsLoadout.com | 
-                    <a href="legal/legal.html">Legal Disclaimer</a>
-                </p>
+                <p class="text-start">© 2025 TheFinalsLoadout.com | <a href="legal/legal.html">Legal Disclaimer</a></p>
                 <p class="text-end">1-800-FAT-MOMS Production</p>
             </div>
         </div>
     </footer>
-    
-    
-    <script src="app.js"></script> 
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"906dd89d0aaf1035","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}' crossorigin="anonymous"></script>
-</body>
 
-<!-- Mirrored from thefinalsloadout.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 Jan 2025 06:07:57 GMT -->
+    <!-- Cloudflare Analytics -->
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" 
+        integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" 
+        data-cf-beacon='{"rayId":"906dd89d0aaf1035","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}' 
+        crossorigin="anonymous">
+    </script>
+    
+    <script src="app.js"></script>
+</body>
 </html>

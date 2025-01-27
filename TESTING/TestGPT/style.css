@@ -1,220 +1,370 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
 :root {
     --baseFont: "Oswald", serif;
+    --neon-yellow: #ffb700;
+    --neon-orange: #ff7b00;
+    --neon-red: #ff4f4f;
+    --neon-blue: #00f3ff;
+    --bg-dark: #1d1a21;
+    --bg-darker: #151318;
 }
+
+/* Base Styles */
 * {
     box-sizing: border-box;
 }
-html, body {
-    background-color: #1d1a21;
+
+html {
+    min-height: 100%;
+    background: linear-gradient(-45deg, 
+        #1d1a21,    /* Original dark */
+        #2a1f2d,    /* Slightly purple */
+        #1f2a2d,    /* Slightly blue-ish */
+        #201c24     /* Back to dark */
+    );
+    background-size: 400% 400%;
+    animation: gradientShift 20s ease infinite;
 }
+
+/* Animations */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    100% {
+        transform: scale(1.05);
+        box-shadow: 0 6px 15px rgba(255, 0, 0, 0.5);
+    }
+}
+
 body {
     font-family: var(--baseFont);
     color: #fff;
     text-align: center;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
 }
+
 body.flexStyle {
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
+
+/* Header Section */
 .headerSection {
-	padding: 20px 0 30px;
+    padding: 40px 0 50px;
 }
+
 .finals-logo {
-    max-width: 100px;
+    max-width: 200px;
     display: block;
-    margin: 0 auto 20px;
+    margin: 0 auto 30px;
 }
+
 .mainTitle {
-	font-size: 2rem;
-	margin: 10px 0;
-	color: #ffb700;
-	font-weight: 500;
+    font-size: 2rem;
+    margin: 20px 0;
+    color: var(--neon-yellow);
+    font-weight: 500;
 }
+
 .headerSection p {
-	font-size: 18px;
-	line-height: 1.2;
-	font-weight: 300;
-	letter-spacing: 1px;
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight: 300;
+    letter-spacing: 1px;
     margin: 0;
 }
+
+/* Button Styles */
 .btnRow {
-	display: flex;
-	justify-content: center;
-	gap: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
 }
+
 .btnRow + .btnRow {
     margin-top: 20px;
 }
+
+.pulsing-button {
+    animation: pulse 1.5s infinite alternate;
+}
+
 .outlineCircleBtn {
-	--circleBtnSize: 100px;
-	--bgColor: transparent;
-	--textColor: white;
-	--borderColor: white;
-	background-color: var(--bgColor);
-	color: var(--textColor);
-	border: 2px solid var(--borderColor);
-	border-radius: 5px;
-	padding: 10px;
-	cursor: pointer;
-	font-size: 1rem;
-	transition: background-color 0.3s ease, color 0.3s ease;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: var(--circleBtnSize);
-	height: var(--circleBtnSize);
-	border-radius: 50%;
-	text-transform: uppercase;
-	font-weight: 500;
-	font-family: inherit;
-	letter-spacing: 2px;
+    --circleBtnSize: 100px;
+    background-color: transparent;
+    color: white;
+    border: 2px solid;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--circleBtnSize);
+    height: var(--circleBtnSize);
+    text-transform: uppercase;
+    font-weight: 500;
+    font-family: inherit;
+    letter-spacing: 2px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2),
+                inset 0 1px 1px rgba(255,255,255,0.1);
+    transform-style: preserve-3d;
+    perspective: 1000px;
 }
+
 #heavyLoadoutButton {
-    --bgColor: transparent;
-    --textColor: white;
-    --borderColor: #ff7b00;
+    border-color: var(--neon-orange);
 }
+
 #mediumLoadoutButton {
-    --bgColor: #transparent;
-    --textColor: white;
-    --borderColor: #6fa8dc;
+    border-color: var(--neon-blue);
 }
+
 #lightLoadoutButton {
-    --bgColor: #transparent;
-    --textColor: white;
-    --borderColor: #ffb700;
+    border-color: var(--neon-yellow);
 }
-#heavyLoadoutButton.outlineCircleBtn:hover, #heavyLoadoutButton.outlineCircleBtn.active {
-    --bgColor: #ff7b00;
-    --textColor: white;
-    --borderColor: #ff7b00;
+
+.outlineCircleBtn:hover {
+    transform: translateY(-2px) translateZ(10px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3),
+                inset 0 1px 1px rgba(255,255,255,0.2);
 }
-#mediumLoadoutButton.outlineCircleBtn:hover, #mediumLoadoutButton.outlineCircleBtn.active {
-    --bgColor: #6fa8dc;
-    --textColor: white;
-    --borderColor: #6fa8dc;
+
+#heavyLoadoutButton:hover, #heavyLoadoutButton.active {
+    background-color: var(--neon-orange);
 }
-#lightLoadoutButton.outlineCircleBtn:hover, #lightLoadoutButton.outlineCircleBtn.active {
-    --bgColor: #ffb700;
-    --textColor: black;
-    --borderColor: #ffb700;
+
+#mediumLoadoutButton:hover, #mediumLoadoutButton.active {
+    background-color: var(--neon-blue);
 }
+
+#lightLoadoutButton:hover, #lightLoadoutButton.active {
+    background-color: var(--neon-yellow);
+    color: black;
+}
+
 .outlineBtnStyle {
-	background-color: transparent;
-	color: #fff;
-	border: 2px solid #ff4f4f;
-	padding: 14px 24px;
-	font-size: 16px;
-	border-radius: 4px;
-	cursor: pointer;
-	font-family: inherit;
-	text-transform: uppercase;
-	letter-spacing: 1px;
+    background-color: transparent;
+    color: #fff;
+    border: 2px solid var(--neon-red);
+    padding: 14px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+
 .outlineBtnStyle:hover {
-    background-color: #ff4f4f;
+    background-color: var(--neon-red);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+/* Punishment Button */
+#punishmentLoadoutButton {
+    margin: 10px auto 50px;
+    padding: 15px 30px;
+    background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+    border: none;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: block;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: pulse 1.5s infinite alternate;
     color: #fff;
 }
-.outlineCircleBtn, .outlineBtnStyle {
-    transition: background-color 300ms ease-in-out 0s, color 300ms ease-in-out 0s;
+
+#punishmentLoadoutButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    background: linear-gradient(45deg, var(--neon-orange), var(--neon-red));
 }
+
+/* Output Styles */
 #output {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	gap: 20px;
-	padding: 40px 0 80px;
-	position: relative;
-}
-#output .class {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffb700;
-    margin-bottom: 10px;
-}
-.items-container {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 20px;
-}
-.item-container {
-	text-align: center;
-	width: 154px;
-	border: 2px solid rgba(255,255,255,0.1);
-	padding: 0 5px;
-	border-radius: 5px;
-	height: 191px;
-	overflow: hidden;
-	display: flex;
-	align-items: flex-end;
-    background-color: #fff;
-}
-.items-container {
-    display: flex;
-    gap: 30px;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 191px;
+    gap: 20px;
+    padding: 40px 20px 80px;
+    position: relative;
+    width: 100%;
 }
+
+.items-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.item-container {
+    text-align: center;
+    width: 154px;
+    border: 2px solid rgba(255,255,255,0.1);
+    padding: 0 5px;
+    border-radius: 8px;
+    height: 191px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #fff;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2),
+                inset 0 1px 1px rgba(255,255,255,0.9),
+                inset 0 -1px 1px rgba(0,0,0,0.1);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.item-container:hover {
+    transform: translateY(-5px) translateZ(20px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3),
+                inset 0 1px 1px rgba(255,255,255,0.9),
+                inset 0 -1px 1px rgba(0,0,0,0.1);
+}
+
 .itemCol {
     padding-top: 5px;
 }
+
 .itemCol img {
-	max-width: 100%;
-	display: block;
-	margin: 0 auto;
-	border-radius: 5px;
-	width: 140px;
-	height: 144px;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+    width: 140px;
+    height: 144px;
     object-fit: cover;
 }
+
 .itemCol p {
-	color: #fff;
-	padding: 8px 0 10px;
-	font-size: 14px;
-	margin: 0;
-    white-space: nowrap;
     color: #000;
-}
-.selected + .itemCol {
-	opacity: 0;
+    padding: 8px 0 10px;
+    font-size: 14px;
+    margin: 0;
+    white-space: nowrap;
 }
 
+.selected + .itemCol {
+    opacity: 0;
+}
+
+/* Copy Button */
 .copy-button {
     background-color: #555;
     color: #fff;
     border: none;
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 12px 24px;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
     font-family: inherit;
     text-transform: uppercase;
     letter-spacing: 2px;
-    position: relative; /* Changed from absolute to relative */
-    margin: 20px auto 50px; /* Centered horizontally with margin below */
-    display: inline-block; /* Keeps it within the layout flow */
+    margin: 20px auto 0;
+    display: block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .copy-button:hover {
-    background-color: #ffb700;
-    box-shadow: 0 0 10px rgba(255, 183, 0, 0.8);
+    background-color: var(--neon-yellow);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
 
-.footerSection {
-	margin-top: 20px;
-	font-size: 0.8rem;
-	color: #888;
-	margin-top: auto;
-	padding: 20px 0;
+.skull-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
 }
+
+/* FAQ Section */
+.faqSection {
+    background-color: #292929;
+    padding: 20px 25px;
+    border-radius: 8px;
+    margin: 50px auto;
+    width: 770px;
+    max-width: 100%;
+    font-size: 0.8rem;
+    text-align: left;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    border: 1px solid #444;
+}
+
+.faqSection h2 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--neon-yellow);
+    text-align: center;
+}
+
+.faqSection h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.faqSection p {
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    color: #cccccc;
+    line-height: 1.6;
+}
+
+/* Footer Section */
+.footerSection {
+    margin-top: auto;
+    font-size: 0.8rem;
+    color: #888;
+    padding: 20px 0;
+}
+
 .container {
     margin-left: auto;
     margin-right: auto;
@@ -223,113 +373,81 @@ body.flexStyle {
     padding-left: 15px;
     padding-right: 15px;
 }
+
 .footerRow {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 20px;
-	padding-top: 15px;
-	border-top: 1px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.2);
 }
+
 .footerRow p {
     margin: 0;
 }
-.mainConetnt {
-    margin: auto;
-}
 
-/* .outlineCircleBtn.disabled, .random.disabled {
-    
-} */
-[disabled="true"] {
-    cursor: not-allowed;
-}
+/* Utility Classes */
 .text-start {
     text-align: left;
 }
+
 .text-end {
     text-align: right;
 }
 
-/* Media start */
-@media (max-width:991px) {
-    .items-container {
-        gap: 8px;
-    }
-    .item-container {
-        width: 140px;
-        padding: 0 2px; 
-    }
-    .itemCol p {
-        white-space: nowrap;
-    }
+[disabled="true"] {
+    cursor: not-allowed;
+}
+
+/* Media Queries */
+@media (max-width: 991px) {
     .mainTitle {
         font-size: 1.6rem;
     }
-    #output {
-        padding: 25px 0 72px;
+    
+    .items-container {
+        flex-wrap: wrap;
+        padding: 20px;
+        gap: 8px;
     }
+    
+    .item-container {
+        width: 140px;
+    }
+    
     .btnRow {
         gap: 10px;
     }
+    
     .outlineCircleBtn {
-        font-size: 14px;
         --circleBtnSize: 90px;
+        font-size: 14px;
     }
-    .items-container {
-        flex-wrap: wrap;
+    
+    #output {
+        padding: 25px 0 72px;
     }
-
 }
 
 @media (max-width: 575px) {
     .btnRow {
         gap: 8px;
     }
+    
+    .mainTitle {
+        font-size: 1.4rem;
+    }
+    
+    .outlineCircleBtn {
+        --circleBtnSize: 80px;
+        font-size: 0.9rem;
+    }
 }
 
-@media (max-width:359px) {
+@media (max-width: 359px) {
     .outlineBtnStyle {
         padding: 14px 20px;
         font-size: 14px;
     }
-}
-
-/* Add space below Copy Loadout button */
-.copy-button {
-    margin-bottom: 50px; /* Larger gap below Copy Loadout */
-}
-
-/* FAQ Section */
-.faqSection {
-    background-color: #292929;
-    padding: 5px 15px;
-    border-radius: 8px;
-    margin: 50px auto;
-    width: 770px; /* Matches the width of the 5 boxes */
-    max-width: 100%;
-    font-size: 0.8rem;
-    text-align: left;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-    border: 1px solid #444;
-}
-
-
-.faqSection h2 {
-    font-size: 1.2rem; /* Refined title size */
-    margin-bottom: 10px;
-    color: #ffb700;
-    text-align: center;
-}
-
-.faqSection h3 {
-    font-size: 1rem; /* Smaller subheader */
-    margin-bottom: 5px;
-    color: #ffffff;
-}
-
-.faqSection p {
-    font-size: 0.85rem; /* Compact paragraph text */
-    margin-bottom: 8px;
-    color: #cccccc;
 }

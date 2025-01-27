@@ -344,29 +344,41 @@ body.flexStyle {
     margin: 30px auto;
     width: 770px;
     max-width: 100%;
+    text-align: center;
 }
 
 .warningSection h3 {
     color: #ffb700;
     margin-top: 0;
+    text-align: center;
 }
 
 .warningSection ul {
     list-style-type: none;
     padding: 0;
-    text-align: left;
+    text-align: center;
+    margin: 20px 0;
 }
 
 .warningSection li {
     margin: 10px 0;
-    padding-left: 20px;
+    padding: 0;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .warningSection li:before {
     content: "⚠️";
-    position: absolute;
-    left: 0;
+    position: relative;
+    display: inline-block;
+}
+
+.warningSection p {
+    text-align: center;
+    margin: 10px 0;
 }
 
 .buttons {

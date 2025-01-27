@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Initialize UI elements
     const randomLoadoutButton = document.getElementById("randomLoadoutButton");
     const lightLoadoutButton = document.getElementById("lightLoadoutButton");
     const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
     const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
     const outputDiv = document.getElementById("output");
+    
 
+    // Loadout data
     const loadouts = {
         Light: {
             weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54", "Throwing Knives"],
@@ -14,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         Medium: {
             weapons: ["AKM", "Cerberus 12GA", "Dual Blades", "FAMAS", "FCAR", "Model 1887", "Pike-556", "R.357", "Riot Shield"],
             specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
-            gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade","Flashbang", "Proximity Sensor"]
+            gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade", "Flashbang", "Proximity Sensor"]
         },
         Heavy: {
             weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
@@ -23,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Utility functions
     const shuffleArray = (array) => {
         const shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
@@ -46,24 +50,24 @@ document.addEventListener("DOMContentLoaded", () => {
         repeatedItems.length = 8;
 
         return repeatedItems
-            .map(
-                (item) => `
-                    <div class="itemCol">
-                        <img src="images/${item.replaceAll(" ", "_")}_Rank_1.png" alt="${item}">
-                        <p>${item}</p>
-                    </div>
-                `
-            )
+            .map(item => `
+                <div class="itemCol">
+                    <img src="images/${item.replaceAll(" ", "_")}_Rank_1.png" alt="${item}">
+                    <p>${item}</p>
+                </div>
+            `)
             .join("");
     };
 
     const startSpinAnimation = (columns, callback) => {
         const itemHeight = 188;
         const stopOffsets = columns.map((_, index) => itemHeight * (1 + index));
-
         let allStopped = new Array(columns.length).fill(false);
 
-        document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.setAttribute("disabled", "true"));
+        // Disable buttons during animation
+        document.querySelectorAll(".outlineCircleBtn, .random").forEach(btn => 
+            btn.setAttribute("disabled", "true")
+        );
 
         const animate = () => {
             let animationRunning = false;
@@ -74,6 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     const currentOffset = parseFloat(column.style.transform.replace("translateY(", "").replace("px)", "")) || 0;
                     const newOffset = currentOffset + 7;
+                    
                     column.style.transform = `translateY(${newOffset}px)`;
 
                     if (newOffset >= stopOffsets[index]) {
@@ -82,6 +87,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         const selectedIndex = (7 - ((stopOffsets[index] / itemHeight) % 8)) % 8;
                         const selectedItem = column.children[selectedIndex];
                         selectedItem.classList.add("selected");
+
+                        // Add 3D effect on selection
+                        selectedItem.style.transform = "translateZ(30px) scale(1.05)";
                     }
                 }
             });
@@ -89,8 +97,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (animationRunning) {
                 requestAnimationFrame(animate);
             } else {
-                document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.removeAttribute("disabled"));
-                callback(columns.map((col) => col.querySelector(".selected").innerText.trim()));
+                // Re-enable buttons after animation
+                document.querySelectorAll(".outlineCircleBtn, .random").forEach(btn => 
+                    btn.removeAttribute("disabled")
+                );
+                callback(columns.map(col => col.querySelector(".selected").innerText.trim()));
             }
         };
 
@@ -112,14 +123,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="scroll-container">${createItemContainer(specializations)}</div>
                 </div>
                 ${shuffleArray(selectedGadgets)
-                    .map(
-                        (gadget) => `
+                    .map(gadget => `
                         <div class="item-container">
                             <div class="scroll-container">
                                 ${createItemContainer([gadget])}
                             </div>
-                        </div>`
-                    )
+                        </div>`)
                     .join("")}
             </div>
             <button class="copy-button" onclick="copyLoadout()">Copy Loadout</button>
@@ -139,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const setActiveButton = (button) => {
-        [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton].forEach((btn) =>
+        [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton].forEach(btn =>
             btn.classList.remove("active")
         );
         button.classList.add("active");
@@ -151,18 +160,10 @@ document.addEventListener("DOMContentLoaded", () => {
         displayLoadout(loadout, classType);
     };
 
-    lightLoadoutButton.onclick = () => {
-        generateLoadout("Light", lightLoadoutButton);
-    };
-
-    mediumLoadoutButton.onclick = () => {
-        generateLoadout("Medium", mediumLoadoutButton);
-    };
-
-    heavyLoadoutButton.onclick = () => {
-        generateLoadout("Heavy", heavyLoadoutButton);
-    };
-
+    // Event listeners
+    lightLoadoutButton.onclick = () => generateLoadout("Light", lightLoadoutButton);
+    mediumLoadoutButton.onclick = () => generateLoadout("Medium", mediumLoadoutButton);
+    heavyLoadoutButton.onclick = () => generateLoadout("Heavy", heavyLoadoutButton);
     randomLoadoutButton.onclick = () => {
         const classes = ["Light", "Medium", "Heavy"];
         const randomClass = classes[Math.floor(Math.random() * classes.length)];
@@ -174,13 +175,15 @@ document.addEventListener("DOMContentLoaded", () => {
         generateLoadout(randomClass, buttonMap[randomClass]);
     };
 
+    // Initialize with Light loadout
     lightLoadoutButton.onclick();
 });
 
+// Copy loadout functionality
 window.copyLoadout = () => {
     const columns = Array.from(document.querySelectorAll(".scroll-container"));
     const selectedItems = columns.map(
-        (col) => col.querySelector(".selected").innerText.trim()
+        col => col.querySelector(".selected").innerText.trim()
     );
 
     const copyText = `Class: ${selectedItems[0]}, Weapon: ${selectedItems[1]}, Specialization: ${selectedItems[2]}, Gadgets: ${selectedItems[3]}, ${selectedItems[4]}, ${selectedItems[5]}`.trim();
