@@ -190,6 +190,7 @@ window.copyLoadout = () => {
         .then(() => alert("Loadout copied to clipboard!"))
         .catch((err) => console.error("Could not copy text: ", err));
 };
+
 document.addEventListener("DOMContentLoaded", () => {
     const recentBuffsSection = document.querySelector(".recentBuffsSection .buffs-container");
 

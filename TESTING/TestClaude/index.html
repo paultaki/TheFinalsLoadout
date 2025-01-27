@@ -75,19 +75,6 @@
         </div>
     </main>
 
-    <section id="faq" class="faqSection">
-        <h2>Frequently Asked Questions</h2>
-        <div>
-            <h3>Are Season 5 weapons included?</h3>
-            <p>Yes, this loadout randomizer is fully updated with all Season 5 weapons, builds, and gear, ensuring you can randomly generate the most current options available in The Finals.</p>
-        </div>
-        <div>
-            <h3>How do I use this tool?</h3>
-            <p>Using this loadout randomizer is simple! Click on <strong>Light</strong>, <strong>Medium</strong>, or <strong>Heavy</strong> to generate a loadout tailored to a specific class, or select <strong>Random</strong> to embrace the chaos with a completely unpredictable loadout.</p>
-            <p>Want to share your randomized loadout with teammates? Just hit <strong>'Copy Loadout'</strong> and send it to them.</p>
-        </div>
-    </section>
-    
     <section id="recent-buffs" class="recentBuffsSection">
         <div class="container">
             <h2>Recent Buffs and Nerfs</h2>
@@ -98,11 +85,13 @@
                     <p><strong>Change:</strong> Increased recoil control (buffed) and reduced damage at range.</p>
                     <a href="https://example.com/patch-notes" target="_blank" class="read-more">Read Full Patch Notes</a>
                 </div>
-                <!-- Additional Buff Items -->
             </div>
         </div>
     </section>
     
+    <!-- Replace old FAQ section with this div -->
+    <div id="faq-root"></div>
+
     <footer class="footerSection">
         <div class="container">
             <div class="footerRow">
@@ -112,7 +101,10 @@
         </div>
     </footer>
 
+    <!-- Scripts - Keep these in exactly this order -->
     <script src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="FAQSection.js"></script>
 </body>
-
 </html>
