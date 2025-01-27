@@ -27,7 +27,15 @@ html {
     animation: gradientShift 20s ease infinite;
 }
 
-/* Animations */
+body {
+    font-family: var(--baseFont);
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
 @keyframes gradientShift {
     0% {
         background-position: 0% 50%;
@@ -40,24 +48,12 @@ html {
     }
 }
 
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-    100% {
-        transform: scale(1.05);
-        box-shadow: 0 6px 15px rgba(255, 0, 0, 0.5);
-    }
-}
-
 body {
     font-family: var(--baseFont);
     color: #fff;
     text-align: center;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
 }
 
 body.flexStyle {
@@ -101,10 +97,6 @@ body.flexStyle {
 
 .btnRow + .btnRow {
     margin-top: 20px;
-}
-
-.pulsing-button {
-    animation: pulse 1.5s infinite alternate;
 }
 
 .outlineCircleBtn {
@@ -182,28 +174,6 @@ body.flexStyle {
     background-color: var(--neon-red);
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-}
-
-/* Punishment Button */
-#punishmentLoadoutButton {
-    margin: 10px auto 50px;
-    padding: 15px 30px;
-    background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
-    border: none;
-    font-size: 1.1rem;
-    text-decoration: none;
-    display: block;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    animation: pulse 1.5s infinite alternate;
-    color: #fff;
-}
-
-#punishmentLoadoutButton:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    background: linear-gradient(45deg, var(--neon-orange), var(--neon-red));
 }
 
 /* Output Styles */
@@ -314,6 +284,26 @@ body.flexStyle {
     background-color: var(--neon-yellow);
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+/* Punishment Button */
+#punishmentLoadoutButton {
+    margin: 10px auto 50px;
+    padding: 15px 30px;
+    background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+    border: none;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: block;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+#punishmentLoadoutButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    background: linear-gradient(45deg, var(--neon-orange), var(--neon-red));
 }
 
 .skull-icon {
