@@ -441,3 +441,24 @@ body.flexStyle {
         font-size: 14px;
     }
 }
+@keyframes subtlePulse {
+    0% {
+        transform: scale(1);
+        background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        transform: scale(1.02); /* Slight pulse */
+        background: linear-gradient(45deg, var(--neon-red), var(--neon-orange, 0.9));
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.3); /* Slight glow */
+    }
+    100% {
+        transform: scale(1);
+        background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+}
+
+#punishmentLoadoutButton {
+    animation: subtlePulse 2.5s ease-in-out infinite; /* Slow and smooth pulse */
+}
