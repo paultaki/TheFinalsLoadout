@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const mediumLoadoutButton = document.getElementById("mediumLoadoutButton");
     const heavyLoadoutButton = document.getElementById("heavyLoadoutButton");
     const outputDiv = document.getElementById("output");
+    const recentBuffsSection = document.querySelector(".recentBuffsSection .buffs-container");
 
     const loadouts = {
         Light: {
@@ -19,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         Heavy: {
             weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
             specializations: ["Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
-            gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Proximity Sensor", "RPG-7", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Grenade", "Flashbang", "Explosive Mine", "Frag Grenade", "Gas Grenade"]
+            gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Proximity Sensor", "RPG-7", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade", "Flashbang", "Explosive Mine", "Gas Grenade"]
         }
     };
 
@@ -40,60 +41,86 @@ document.addEventListener("DOMContentLoaded", () => {
     const createItemContainer = (items) => {
         let repeatedItems = [...items];
         while (repeatedItems.length < 8) {
-            repeatedItems.push(...items);
+            repeatedItems = [...repeatedItems, ...items];
         }
         repeatedItems = shuffleArray(repeatedItems);
-        repeatedItems.length = 8;
+        repeatedItems = repeatedItems.slice(0, 8);
 
         return repeatedItems
-            .map(
-                (item) => `
-                    <div class="itemCol">
-                        <img src="images/${item.replaceAll(" ", "_")}_Rank_1.png" alt="${item}">
-                        <p>${item}</p>
-                    </div>
-                `
-            )
+            .map((item) => `
+                <div class="itemCol">
+                    <img src="images/${item.replaceAll(" ", "_")}_Rank_1.png" alt="${item}">
+                    <p>${item}</p>
+                </div>
+            `)
             .join("");
     };
 
     const startSpinAnimation = (columns, callback) => {
         const itemHeight = 188;
-        const stopOffsets = columns.map((_, index) => itemHeight * (1 + index));
-
+        const baseSpeed = 12;
+        
+        const stopTimes = columns.map((_, index) => {
+            return 800 + (index * 500);
+        });
+        
         let allStopped = new Array(columns.length).fill(false);
-
-        document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.setAttribute("disabled", "true"));
-
+        const startTime = Date.now();
+    
+        document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => 
+            btn.setAttribute("disabled", "true")
+        );
+    
+        columns.forEach(column => {
+            const originalContent = column.innerHTML;
+            column.innerHTML = originalContent + originalContent;
+        });
+    
         const animate = () => {
+            const currentTime = Date.now();
             let animationRunning = false;
-
+    
             columns.forEach((column, index) => {
                 if (!allStopped[index]) {
                     animationRunning = true;
-
-                    const currentOffset = parseFloat(column.style.transform.replace("translateY(", "").replace("px)", "")) || 0;
-                    const newOffset = currentOffset + 7;
-                    column.style.transform = `translateY(${newOffset}px)`;
-
-                    if (newOffset >= stopOffsets[index]) {
+                    
+                    const shouldStop = currentTime - startTime >= stopTimes[index];
+                    const currentOffset = parseFloat(column.style.transform?.replace("translateY(", "").replace("px)", "")) || 0;
+                    
+                    let newOffset = currentOffset + baseSpeed;
+    
+                    if (newOffset >= itemHeight * 8) {
+                        newOffset = 0;
+                    }
+                    
+                    if (shouldStop) {
                         allStopped[index] = true;
-                        column.style.transform = `translateY(${stopOffsets[index]}px)`;
-                        const selectedIndex = (7 - ((stopOffsets[index] / itemHeight) % 8)) % 8;
-                        const selectedItem = column.children[selectedIndex];
-                        selectedItem.classList.add("selected");
+                        newOffset = itemHeight; // Just stop at one full height
+                    }
+                    
+                    column.style.transform = `translateY(${newOffset}px)`;
+                    
+                    if (shouldStop) {
+                        const selectedItem = column.children[0];
+                        if (selectedItem) {
+                            selectedItem.classList.add("selected");
+                        }
                     }
                 }
             });
-
+    
             if (animationRunning) {
                 requestAnimationFrame(animate);
             } else {
-                document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.removeAttribute("disabled"));
-                callback(columns.map((col) => col.querySelector(".selected").innerText.trim()));
+                document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => 
+                    btn.removeAttribute("disabled")
+                );
+                callback(columns.map((col) => 
+                    col.querySelector(".selected").innerText.trim()
+                ));
             }
         };
-
+    
         animate();
     };
 
@@ -103,24 +130,27 @@ document.addEventListener("DOMContentLoaded", () => {
         const loadoutHTML = `
             <div class="items-container">
                 <div class="item-container">
-                    <div class="scroll-container">${createItemContainer([classType])}</div>
+                    <div class="scroll-container">
+                        ${createItemContainer([classType])}
+                    </div>
                 </div>
                 <div class="item-container">
-                    <div class="scroll-container">${createItemContainer(weapons)}</div>
+                    <div class="scroll-container">
+                        ${createItemContainer(weapons)}
+                    </div>
                 </div>
                 <div class="item-container">
-                    <div class="scroll-container">${createItemContainer(specializations)}</div>
+                    <div class="scroll-container">
+                        ${createItemContainer(specializations)}
+                    </div>
                 </div>
-                ${shuffleArray(selectedGadgets)
-                    .map(
-                        (gadget) => `
-                        <div class="item-container">
-                            <div class="scroll-container">
-                                ${createItemContainer([gadget])}
-                            </div>
-                        </div>`
-                    )
-                    .join("")}
+                ${selectedGadgets.map(gadget => `
+                    <div class="item-container">
+                        <div class="scroll-container">
+                            ${createItemContainer([gadget])}
+                        </div>
+                    </div>
+                `).join("")}
             </div>
             <button class="copy-button" onclick="copyLoadout()">Copy Loadout</button>
             <a href="./punishment-loadout/" id="punishmentLoadoutButton" class="outlineBtnStyle">
@@ -151,18 +181,11 @@ document.addEventListener("DOMContentLoaded", () => {
         displayLoadout(loadout, classType);
     };
 
-    lightLoadoutButton.onclick = () => {
-        generateLoadout("Light", lightLoadoutButton);
-    };
-
-    mediumLoadoutButton.onclick = () => {
-        generateLoadout("Medium", mediumLoadoutButton);
-    };
-
-    heavyLoadoutButton.onclick = () => {
-        generateLoadout("Heavy", heavyLoadoutButton);
-    };
-
+    // Button click handlers
+    lightLoadoutButton.onclick = () => generateLoadout("Light", lightLoadoutButton);
+    mediumLoadoutButton.onclick = () => generateLoadout("Medium", mediumLoadoutButton);
+    heavyLoadoutButton.onclick = () => generateLoadout("Heavy", heavyLoadoutButton);
+    
     randomLoadoutButton.onclick = () => {
         const classes = ["Light", "Medium", "Heavy"];
         const randomClass = classes[Math.floor(Math.random() * classes.length)];
@@ -174,44 +197,39 @@ document.addEventListener("DOMContentLoaded", () => {
         generateLoadout(randomClass, buttonMap[randomClass]);
     };
 
-    lightLoadoutButton.onclick();
-});
+    // Copy loadout function
+    window.copyLoadout = () => {
+        const columns = Array.from(document.querySelectorAll(".scroll-container"));
+        const selectedItems = columns.map(
+            (col) => col.querySelector(".selected").innerText.trim()
+        );
 
-window.copyLoadout = () => {
-    const columns = Array.from(document.querySelectorAll(".scroll-container"));
-    const selectedItems = columns.map(
-        (col) => col.querySelector(".selected").innerText.trim()
-    );
+        const copyText = `Class: ${selectedItems[0]}, Weapon: ${selectedItems[1]}, Specialization: ${selectedItems[2]}, Gadgets: ${selectedItems[3]}, ${selectedItems[4]}, ${selectedItems[5]}`.trim();
 
-    const copyText = `Class: ${selectedItems[0]}, Weapon: ${selectedItems[1]}, Specialization: ${selectedItems[2]}, Gadgets: ${selectedItems[3]}, ${selectedItems[4]}, ${selectedItems[5]}`.trim();
-
-    navigator.clipboard
-        .writeText(copyText)
-        .then(() => alert("Loadout copied to clipboard!"))
-        .catch((err) => console.error("Could not copy text: ", err));
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-    const recentBuffsSection = document.querySelector(".recentBuffsSection .buffs-container");
-
-    // Latest patch notes: Weapon-Only Changes
-    const latestPatch = {
-        date: "January 22, 2025",
-        changes: {
-            buffs: [
-                { weapon: "Lewis and M60", description: "Reduced visual recoil on Red Dot sights to align with other weapons." }
-            ],
-            nerfs: [], // Empty nerfs array for N/A
-            fixes: [
-                { weapon: "Spear", description: "Fixed an issue allowing sliding while performing the secondary spin attack." },
-                { weapon: "Sword", description: "Jump Pad secondary attack now launches players the intended (longer) distance." },
-                { weapon: "Dual Blades", description: "Resolved bug causing Dual Blades to get stuck swinging only once after swapping from a deployable." },
-                { weapon: "Dagger", description: "Fixed backstab charge-up not re-triggering after a vault if input was held." }
-            ]
-        }
+        navigator.clipboard
+            .writeText(copyText)
+            .then(() => alert("Loadout copied to clipboard!"))
+            .catch((err) => console.error("Could not copy text: ", err));
     };
 
+    // Set up recent buffs section
     if (recentBuffsSection) {
+        const latestPatch = {
+            date: "January 22, 2025",
+            changes: {
+                buffs: [
+                    { weapon: "Lewis and M60", description: "Reduced visual recoil on Red Dot sights to align with other weapons." }
+                ],
+                nerfs: [],
+                fixes: [
+                    { weapon: "Spear", description: "Fixed an issue allowing sliding while performing the secondary spin attack." },
+                    { weapon: "Sword", description: "Jump Pad secondary attack now launches players the intended (longer) distance." },
+                    { weapon: "Dual Blades", description: "Resolved bug causing Dual Blades to get stuck swinging only once after swapping from a deployable." },
+                    { weapon: "Dagger", description: "Fixed backstab charge-up not re-triggering after a vault if input was held." }
+                ]
+            }
+        };
+
         recentBuffsSection.innerHTML = `
             <div class="buff-item">
                 <p class="patch-date">Patch Date: ${latestPatch.date}</p>
@@ -224,11 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="changes-category">
                     <h3>Nerfs</h3>
                     <ul>
-                        ${
-                            latestPatch.changes.nerfs.length
-                                ? latestPatch.changes.nerfs.map(nerf => `<li><strong>${nerf.mode}:</strong> ${nerf.description}</li>`).join("")
-                                : "<li>N/A</li>"
-                        }
+                        ${latestPatch.changes.nerfs.length ? latestPatch.changes.nerfs.map(nerf => `<li><strong>${nerf.mode}:</strong> ${nerf.description}</li>`).join("") : "<li>N/A</li>"}
                     </ul>
                 </div>
                 <div class="changes-category">
@@ -240,4 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
     }
+
+    // Initial load
+    lightLoadoutButton.onclick();
 });

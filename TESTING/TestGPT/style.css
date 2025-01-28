@@ -379,10 +379,15 @@ body.flexStyle {
 .footerSection {
     margin-top: auto;
     font-size: 0.8rem;
-    color: #888;
+    color: #aaa;  /* Updated from #888 to #aaa for better readability */
     padding: 20px 0;
 }
 
+.footerSection a {
+    color: #ffb700;  /* Using your theme's yellow */
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
 .container {
     margin-left: auto;
     margin-right: auto;
@@ -539,4 +544,64 @@ body.flexStyle {
     font-size: 0.9rem;
     display: inline-block;
     margin-top: 10px;
+}
+.faq-section {
+    background-color: #292929;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 16px auto;
+    max-width: 48rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.faq-button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.faq-title {
+    color: #ffb700;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.faq-toggle {
+    color: #ffb700;
+    font-size: 24px;
+    transform-origin: center;
+    transition: transform 0.2s;
+}
+
+.faq-toggle.open {
+    transform: rotate(45deg);
+}
+
+.faq-content {
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.faq-content-inner {
+    margin-top: 24px;
+    color: #ccc;
+}
+
+.faq-content-inner h3 {
+    color: white;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.faq-content-inner p {
+    margin-bottom: 16px;
+}
+
+.faq-content-inner strong {
+    color: white;
 }

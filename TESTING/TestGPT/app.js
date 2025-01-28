@@ -56,47 +56,110 @@ document.addEventListener("DOMContentLoaded", () => {
             )
             .join("");
     };
-
     const startSpinAnimation = (columns, callback) => {
         const itemHeight = 188;
+        const baseSpeed = -5; // NEGATIVE value to spin UP instead of down
         const stopOffsets = columns.map((_, index) => itemHeight * (1 + index));
-
+    
+        // Different stopping times for each column (first stops sooner)
+        const stopTimes = columns.map((_, index) => 750 + (index * 500));
+    
         let allStopped = new Array(columns.length).fill(false);
-
-        document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.setAttribute("disabled", "true"));
-
+        const startTime = Date.now();
+    
+        // Disable buttons during spin
+        document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) =>
+            btn.setAttribute("disabled", "true")
+        );
+    
+        // **Ensure columns have enough items to prevent blanks**
+        columns.forEach((column) => {
+            const items = Array.from(column.children);
+    
+            while (column.children.length < 8) {
+                items.forEach((item) => {
+                    if (column.children.length < 8) {
+                        column.appendChild(item.cloneNode(true));
+                    }
+                });
+            }
+        });
+    
         const animate = () => {
+            const currentTime = Date.now();
             let animationRunning = false;
-
+    
             columns.forEach((column, index) => {
                 if (!allStopped[index]) {
                     animationRunning = true;
-
-                    const currentOffset = parseFloat(column.style.transform.replace("translateY(", "").replace("px)", "")) || 0;
-                    const newOffset = currentOffset + 7;
+    
+                    const shouldStop = currentTime - startTime >= stopTimes[index];
+    
+                    let currentOffset =
+                        parseFloat(column.style.transform.replace("translateY(", "").replace("px)", "")) || 0;
+    
+                    // Gradually slow down when approaching stop time
+                    let speed = baseSpeed;
+                    if (shouldStop) {
+                        const timeOverStop = currentTime - (startTime + stopTimes[index]);
+                        if (timeOverStop < 500) {
+                            speed = baseSpeed * (1 - timeOverStop / 500);
+                        }
+                    }
+    
+                    let newOffset = currentOffset + speed;
+    
+                    // **Infinite Scroll Fix**: Reset position when reaching the top
+                    if (newOffset <= -itemHeight * 8) {
+                        newOffset = 0;
+                    }
+    
                     column.style.transform = `translateY(${newOffset}px)`;
-
-                    if (newOffset >= stopOffsets[index]) {
+    
+                    // **Stopping Logic**
+                    if (shouldStop && newOffset <= stopOffsets[index]) {
                         allStopped[index] = true;
-                        column.style.transform = `translateY(${stopOffsets[index]}px)`;
-                        const selectedIndex = (7 - ((stopOffsets[index] / itemHeight) % 8)) % 8;
+    
+                        // Snap to the closest valid item
+                        const finalOffset = Math.round(newOffset / itemHeight) * itemHeight;
+                        column.style.transform = `translateY(${finalOffset}px)`;
+    
+                        // **Select the correct item**
+                        const selectedIndex = Math.abs((finalOffset / itemHeight) % 8);
+    
+                        // Remove previous selections
+                        column.querySelectorAll(".selected").forEach((el) => el.classList.remove("selected"));
+    
+                        // Add selection class to correct item
                         const selectedItem = column.children[selectedIndex];
-                        selectedItem.classList.add("selected");
+                        if (selectedItem) {
+                            selectedItem.classList.add("selected");
+                        }
+    
+                        // If all columns have stopped, re-enable buttons
+                        if (allStopped.every((stopped) => stopped)) {
+                            document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) =>
+                                btn.removeAttribute("disabled")
+                            );
+                            callback(columns.map((col) => col.querySelector(".selected").innerText.trim()));
+                        }
                     }
                 }
             });
-
+    
             if (animationRunning) {
                 requestAnimationFrame(animate);
-            } else {
-                document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => btn.removeAttribute("disabled"));
-                callback(columns.map((col) => col.querySelector(".selected").innerText.trim()));
             }
         };
-
+    
         animate();
     };
-
+    
+    
+    
+    
+    
+    
     const displayLoadout = ({ weapons, specializations, gadgets }, classType) => {
         const selectedGadgets = getRandomUniqueItems(gadgets, 3);
 
@@ -190,6 +253,7 @@ window.copyLoadout = () => {
         .then(() => alert("Loadout copied to clipboard!"))
         .catch((err) => console.error("Could not copy text: ", err));
 };
+
 document.addEventListener("DOMContentLoaded", () => {
     const recentBuffsSection = document.querySelector(".recentBuffsSection .buffs-container");
 
