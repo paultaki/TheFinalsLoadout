@@ -125,8 +125,17 @@ document.addEventListener("DOMContentLoaded", () => {
     
         columns.forEach(column => {
             const originalContent = column.innerHTML;
-            column.innerHTML = originalContent + originalContent;
+        
+            // Generate a sequence of random images for the "spinning effect"
+            let tempImages = [];
+            for (let i = 0; i < 10; i++) {  // Increase iterations for a better effect
+                const randomItem = column.children[Math.floor(Math.random() * column.children.length)];
+                tempImages.push(`<div class="itemCol">${randomItem.innerHTML}</div>`);
+            }
+        
+            column.innerHTML = tempImages.join("");  // Replace with randomized sequence
         });
+        
     
         const animate = () => {
             const currentTime = Date.now();
@@ -146,9 +155,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                     
                     if (shouldStop) {
-                        allStopped[index] = true;
-                        newOffset = itemHeight; // Just stop at one full height
-                    }
+    allStopped[index] = true;
+    newOffset = itemHeight; // Just stop at one full height
+}
+
                     
                     column.style.transform = `translateY(${newOffset}px)`;
                     
@@ -227,11 +237,26 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 // Final spin completed
                 progressDiv.textContent = '🎉 Final Loadout Locked In! 🎉';
-                isSpinning = false;
-                currentSpin = 1;
-                document.querySelectorAll(".spin-count-btn").forEach(btn => 
-                    btn.removeAttribute("disabled")
-                );
+isSpinning = false;
+currentSpin = 1;
+
+// ✅ Reset spin count buttons (1-5)
+document.querySelectorAll(".spin-count-btn").forEach(btn => {
+    btn.classList.remove("active");
+    btn.removeAttribute("disabled"); // Make sure they are clickable
+});
+
+// ✅ Reset Light/Medium/Heavy buttons **without removing instructions**
+[lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton].forEach(btn => {
+    btn.classList.remove("active");
+    btn.disabled = false; // Ensure they are re-enabled
+});
+
+// ✅ Ensure the Random Contestant button is also re-enabled
+randomLoadoutButton.disabled = false;
+
+// ❌ Do NOT touch the instruction text, so it stays visible!
+
             }
         });
     };
