@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         Heavy: {
             weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
             specializations: ["Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
-            gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Proximity Sensor", "RPG-7", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Grenade", "Flashbang", "Explosive Mine", "Frag Grenade", "Gas Grenade"]
+            gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Proximity Sensor", "RPG-7", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade", "Flashbang", "Explosive Mine", "Gas Grenade"]
         }
     };
 
@@ -46,17 +46,16 @@ document.addEventListener("DOMContentLoaded", () => {
         repeatedItems = shuffleArray(repeatedItems);
         repeatedItems = repeatedItems.slice(0, 8);
     
-        return `
-            <div class="scroll-items">
-                ${repeatedItems.map((item) => `
-                    <div class="itemCol">
-                        <img src="images/${item.replaceAll(" ", "_")}_Rank_1.png" alt="${item}">
-                        <p>${item}</p>
-                    </div>
-                `).join("")}
-            </div>
-        `;
+        return repeatedItems
+            .map((item) => `
+                <div class="itemCol">
+                    <img src="images/${item.replaceAll(" ", "_")}.png" alt="${item}">
+                    <p>${item}</p>  <!-- This line ensures names appear -->
+                </div>
+            `)
+            .join("");
     };
+    
 
     const startSpinAnimation = (columns, callback) => {
         const itemHeight = 188;
@@ -73,7 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.setAttribute("disabled", "true")
         );
     
-        // Create duplicate sets of items for infinite scroll effect
         columns.forEach(column => {
             const originalContent = column.innerHTML;
             column.innerHTML = originalContent + originalContent;
@@ -92,14 +90,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     let newOffset = currentOffset + baseSpeed;
     
-                    // Reset for infinite scroll
                     if (newOffset >= itemHeight * 8) {
                         newOffset = 0;
                     }
                     
                     if (shouldStop) {
                         allStopped[index] = true;
-                        newOffset = itemHeight;
+                        newOffset = itemHeight; // Just stop at one full height
                     }
                     
                     column.style.transform = `translateY(${newOffset}px)`;
@@ -130,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const displayLoadout = ({ weapons, specializations, gadgets }, classType) => {
         const selectedGadgets = getRandomUniqueItems(gadgets, 3);
-
+    
         const loadoutHTML = `
             <div class="items-container">
                 <div class="item-container">
@@ -156,21 +153,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 `).join("")}
             </div>
-            <button class="copy-button" onclick="copyLoadout()">Copy Loadout</button>
-            <a href="./punishment-loadout/" id="punishmentLoadoutButton" class="outlineBtnStyle">
-                <img src="images/punishment.png" class="skull-icon" alt="skull">
-                The Punishment Loadout
-                <img src="images/punishment.png" class="skull-icon" alt="skull">
-            </a>
         `;
-
+    
         outputDiv.innerHTML = loadoutHTML;
-
+    
+        // Start the spinning animation again!
         const scrollContainers = Array.from(outputDiv.querySelectorAll(".scroll-container"));
         startSpinAnimation(scrollContainers, (selectedItems) => {
             console.log("Selected Items:", selectedItems);
         });
     };
+    
+    
 
     const setActiveButton = (button) => {
         [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton].forEach((btn) =>
@@ -260,5 +254,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Initial load
-    lightLoadoutButton.onclick();
-});
+
+}); 

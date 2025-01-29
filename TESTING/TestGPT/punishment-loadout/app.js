@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .map(
                 (item) => `
                     <div class="itemCol">
-                        <img src="images/${item.replaceAll(" ", "_")}_Rank_1.png" alt="${item}">
+                        <img src="images/${item.replaceAll(" ", "_")}_Rank_1.webp" alt="${item}">
                         <p>${item}</p>
                     </div>
                 `

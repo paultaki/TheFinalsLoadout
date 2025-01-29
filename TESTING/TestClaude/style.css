@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap');
 
 :root {
     --baseFont: "Oswald", serif;
@@ -193,55 +193,45 @@ body.flexStyle {
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;
-    gap: 12px;
+    gap: 12px; /* Further reduced from 15px */
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px; /* Further reduced from 20px */
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    flex-wrap: nowrap;
     width: 100%;
+    max-width: 960px; /* Further adjusted from 1000px */
+    margin: 0 auto;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .item-container {
+    text-align: center;
     width: 140px;
+    border: 2px solid rgba(255,255,255,0.1);
+    padding: 0 2px;
     border-radius: 8px;
     height: 191px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
     background-color: #fff;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2),
+                inset 0 1px 1px rgba(255,255,255,0.9),
+                inset 0 -1px 1px rgba(0,0,0,0.1);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    flex-shrink: 0;
+    /* Remove transition */
 }
 
 .scroll-container {
     position: relative;
-    overflow: hidden;
-    height: 188px;
-}
-
-.scroll-items {
-    position: absolute;
-    width: 100%;
-}
-
-.itemCol {
-    height: 188px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.itemCol img {
-    width: 132px;
-    height: 144px;
-    object-fit: cover;
-}
-
-.itemCol p {
-    color: #000;
-    padding: 8px 0;
-    margin: 0;
-    font-size: 14px;
-}
-
-.item-container {
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    width: 140px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    /* Remove transition */
 }
 
 .itemCol img {
