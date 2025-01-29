@@ -209,6 +209,15 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(() => alert("Loadout copied to clipboard!"))
             .catch((err) => console.error("Could not copy text: ", err));
     };
+    
+// Punishment Loadout Button Functionality
+const punishmentLoadoutButton = document.getElementById("punishmentLoadoutButton");
+
+if (punishmentLoadoutButton) {
+    punishmentLoadoutButton.onclick = () => {
+        window.location.href = "/punishment-loadout"; // Redirect to the punishment loadout page
+    };
+}
 
     // Set up recent buffs section
     if (recentBuffsSection) {

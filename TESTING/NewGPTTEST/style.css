@@ -646,22 +646,3 @@ body.flexStyle {
     50% { transform: rotate(45deg) translateX(30%); }
     100% { transform: rotate(0deg) translateX(-30%); }
 }
-.blurry {
-    filter: blur(10px);
-    transition: filter 1s ease-in-out;
-}
-
-.revealed {
-    filter: blur(0);
-}
-@keyframes rollingAnimation {
-    0% { content: url('images/placeholder1.webp'); }
-    25% { content: url('images/placeholder2.webp'); }
-    50% { content: url('images/placeholder3.webp'); }
-    75% { content: url('images/placeholder4.webp'); }
-    100% { content: url('images/placeholder1.webp'); }
-}
-
-.rolling {
-    animation: rollingAnimation 0.1s infinite linear;
-}

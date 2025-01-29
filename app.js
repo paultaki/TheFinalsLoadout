@@ -6,6 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const outputDiv = document.getElementById("output");
     const recentBuffsSection = document.querySelector(".recentBuffsSection .buffs-container");
 
+    // New variables for spin functionality
+    let selectedSpinCount = 1;
+    let isSpinning = false;
+    let currentSpin = 1;
+
     const loadouts = {
         Light: {
             weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54", "Throwing Knives"],
@@ -24,6 +29,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Initialize spin selector
+    const initSpinSelector = () => {
+        const spinSelector = document.createElement('div');
+        spinSelector.className = 'spin-selector';
+    
+        // Create step indicators (Updated Order)
+        const step1 = document.createElement('div');
+        step1.className = 'step active';
+        step1.innerHTML = "Step 1️⃣: Choose number of spins";
+    
+        const step2 = document.createElement('div');
+        step2.className = 'step';
+        step2.innerHTML = "Step 2️⃣: Pick your contestant";
+    
+        // Create spin buttons (1-5)
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'spin-button-container';
+    
+        for (let i = 1; i <= 5; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'spin-count-btn' + (i === 1 ? ' active' : '');
+            btn.textContent = i;
+            btn.onclick = () => {
+                if (isSpinning) return;
+                document.querySelectorAll('.spin-count-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedSpinCount = i;
+            };
+            buttonContainer.appendChild(btn);
+        }
+    
+        // Insert elements in the correct order
+        const buttonsContainer = document.querySelector('.buttons');
+        buttonsContainer.parentNode.insertBefore(step1, buttonsContainer);
+        buttonsContainer.parentNode.insertBefore(buttonContainer, buttonsContainer);
+        buttonsContainer.parentNode.insertBefore(step2, buttonsContainer);
+    };
+    
     const shuffleArray = (array) => {
         const shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
@@ -50,25 +93,33 @@ document.addEventListener("DOMContentLoaded", () => {
             .map((item) => `
                 <div class="itemCol">
                     <img src="images/${item.replaceAll(" ", "_")}.webp" alt="${item}">
-                    <p>${item}</p>  <!-- This line ensures names appear -->
+                    <p>${item}</p>
                 </div>
             `)
             .join("");
     };
-    
 
     const startSpinAnimation = (columns, callback) => {
         const itemHeight = 188;
         const baseSpeed = 12;
         
+        // First box always stops quickly, later boxes have varying delays based on spin number
         const stopTimes = columns.map((_, index) => {
-            return 800 + (index * 500);
+            if (index === 0) {
+                return 700; // First box stops faster (reduced from 1000ms)
+            } else if (currentSpin === selectedSpinCount) {
+                // On final spin, add increasing delays between boxes
+                return 700 + (index * 500); // Keep dramatic pacing for final spin
+            } else {
+                // For initial spins, boxes stop more quickly
+                return 700 + (index * 130); // Reduced from 200ms to 130ms for faster pacing
+            }
         });
         
         let allStopped = new Array(columns.length).fill(false);
         const startTime = Date.now();
     
-        document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => 
+        document.querySelectorAll(".outlineCircleBtn, .random, .spin-count-btn").forEach((btn) => 
             btn.setAttribute("disabled", "true")
         );
     
@@ -126,6 +177,14 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const displayLoadout = ({ weapons, specializations, gadgets }, classType) => {
+        const isFinalSpin = currentSpin === selectedSpinCount;
+        
+        // Add spin progress indicator
+        const progressDiv = document.createElement('div');
+        progressDiv.className = `spin-progress ${isFinalSpin ? 'final-spin' : ''}`;
+        progressDiv.textContent = isFinalSpin ? 'Final Spin!' : `Spin ${currentSpin} of ${selectedSpinCount}`;
+        outputDiv.insertBefore(progressDiv, outputDiv.firstChild);
+
         const selectedGadgets = getRandomUniqueItems(gadgets, 3);
     
         const loadoutHTML = `
@@ -157,14 +216,25 @@ document.addEventListener("DOMContentLoaded", () => {
     
         outputDiv.innerHTML = loadoutHTML;
     
-        // Start the spinning animation again!
         const scrollContainers = Array.from(outputDiv.querySelectorAll(".scroll-container"));
         startSpinAnimation(scrollContainers, (selectedItems) => {
-            console.log("Selected Items:", selectedItems);
+            if (currentSpin < selectedSpinCount) {
+                // Start next spin after a brief pause
+                setTimeout(() => {
+                    currentSpin++;
+                    displayLoadout({ weapons, specializations, gadgets }, classType);
+                }, 500); // Reduced from 1000 to 500 for quicker transitions between spins
+            } else {
+                // Final spin completed
+                progressDiv.textContent = '🎉 Final Loadout Locked In! 🎉';
+                isSpinning = false;
+                currentSpin = 1;
+                document.querySelectorAll(".spin-count-btn").forEach(btn => 
+                    btn.removeAttribute("disabled")
+                );
+            }
         });
     };
-    
-    
 
     const setActiveButton = (button) => {
         [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton].forEach((btn) =>
@@ -174,6 +244,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const generateLoadout = (classType, button) => {
+        if (isSpinning) return;
+        isSpinning = true;
+        currentSpin = 1;
         setActiveButton(button);
         const loadout = loadouts[classType];
         displayLoadout(loadout, classType);
@@ -209,6 +282,16 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(() => alert("Loadout copied to clipboard!"))
             .catch((err) => console.error("Could not copy text: ", err));
     };
+
+// Punishment Loadout Button Functionality
+const punishmentLoadoutButton = document.getElementById("punishmentLoadoutButton");
+
+if (punishmentLoadoutButton) {
+    punishmentLoadoutButton.onclick = () => {
+        window.location.href = "/punishment-loadout"; // Redirect to Punishment Loadout page
+    };
+}
+
 
     // Set up recent buffs section
     if (recentBuffsSection) {
@@ -253,6 +336,6 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
-    // Initial load
-
-}); 
+    // Initialize spin selector
+    initSpinSelector();
+});
