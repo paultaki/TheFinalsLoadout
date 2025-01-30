@@ -295,18 +295,50 @@ randomLoadoutButton.disabled = false;
 
     // Copy loadout function
     window.copyLoadout = () => {
-        const columns = Array.from(document.querySelectorAll(".scroll-container"));
-        const selectedItems = columns.map(
-            (col) => col.querySelector(".selected").innerText.trim()
-        );
-
-        const copyText = `Class: ${selectedItems[0]}, Weapon: ${selectedItems[1]}, Specialization: ${selectedItems[2]}, Gadgets: ${selectedItems[3]}, ${selectedItems[4]}, ${selectedItems[5]}`.trim();
-
-        navigator.clipboard
-            .writeText(copyText)
-            .then(() => alert("Loadout copied to clipboard!"))
-            .catch((err) => console.error("Could not copy text: ", err));
+        setTimeout(() => {
+            const itemsContainer = document.querySelector(".items-container");
+    
+            if (!itemsContainer) {
+                alert("❌ No loadout found! Spin the wheel first.");
+                console.error("❌ ERROR: .items-container not found.");
+                return;
+            }
+    
+            // Select all text elements inside the loadout display
+            const items = itemsContainer.querySelectorAll(".itemCol p");
+    
+            console.log("🔍 Found Loadout Items:", items); // Log what is found
+    
+            if (items.length < 6) {
+                alert("❌ No valid loadout found! Spin the wheel first.");
+                console.error(`❌ ERROR: Only ${items.length} items found. Expected at least 6.`);
+                return;
+            }
+    
+            // Properly format the copied loadout text
+            const loadoutText = `
+    Character: ${items[0].innerText}
+    Weapon: ${items[1].innerText}
+    Specialization: ${items[2].innerText}
+    Gadget 1: ${items[3].innerText}
+    Gadget 2: ${items[4].innerText}
+    Gadget 3: ${items[5].innerText}
+            `.trim();
+    
+            console.log("✅ Extracted Loadout:", loadoutText); // Debugging output
+    
+            // Copy the formatted text to the clipboard
+            navigator.clipboard.writeText(loadoutText)
+                .then(() => {
+                    alert("✅ Loadout copied to clipboard!\n\n" + loadoutText);
+                    console.log("✅ Copied Successfully!");
+                })
+                .catch(err => console.error("❌ Clipboard Copy Failed: ", err));
+        }, 200);
     };
+    
+    
+    
 
 
     // Set up recent buffs section
