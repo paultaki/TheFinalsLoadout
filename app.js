@@ -308,15 +308,6 @@ randomLoadoutButton.disabled = false;
             .catch((err) => console.error("Could not copy text: ", err));
     };
 
-// Punishment Loadout Button Functionality
-const punishmentLoadoutButton = document.getElementById("punishmentLoadoutButton");
-
-if (punishmentLoadoutButton) {
-    punishmentLoadoutButton.onclick = () => {
-        window.location.href = "/punishment-loadout"; // Redirect to Punishment Loadout page
-    };
-}
-
 
     // Set up recent buffs section
     if (recentBuffsSection) {
