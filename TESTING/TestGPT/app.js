@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
         for (let i = 1; i <= 5; i++) {
             const btn = document.createElement('button');
-            btn.className = 'spin-count-btn' + (i === 1 ? ' active' : '');
+            btn.className = 'spin-count-btn';  // No active class at start
             btn.textContent = i;
             btn.onclick = () => {
                 if (isSpinning) return;
@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
             buttonContainer.appendChild(btn);
         }
     
+        
         // Insert elements in the correct order
         const buttonsContainer = document.querySelector('.buttons');
         buttonsContainer.parentNode.insertBefore(step1, buttonsContainer);
@@ -99,47 +100,36 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("");
     };
 
-    const startSpinAnimation = (columns, callback, selectedSpinCount = 1) => {
+    const startSpinAnimation = (columns, callback) => {
         const itemHeight = 188;
-        const spinSpeed = 25;
-        const totalSpinTime = selectedSpinCount * 1500; // Adjust spin time based on user selection
-    
-        let allStopped = new Array(columns.length).fill(false);
-        let startTime = Date.now();
-    
-        // 🔹 Disable buttons during spin
-        document.querySelectorAll(".outlineCircleBtn, .random, .spin-count-btn").forEach((btn) => {
-            btn.setAttribute("disabled", "true");
-        });
-    
-        // 🔹 Step 1: Pre-fill each column with a rotating set of images
-        columns.forEach((column) => {
-            const allItems = Array.from(column.children);
-            let tempImages = "";
-    
-            // Fill the column with multiple random images
-            for (let i = 0; i < 20; i++) {
-                const randomItem = allItems[Math.floor(Math.random() * allItems.length)];
-                tempImages += `<div class="itemCol">${randomItem.innerHTML}</div>`;
+        const baseSpeed = 12;
+        
+        const stopTimes = columns.map((_, index) => {
+            if (index === 0) {
+                return 700;
+            } else if (currentSpin === selectedSpinCount) {
+                return 700 + (index * 500);
+            } else {
+                return 700 + (index * 130);
             }
-    
-            column.innerHTML = tempImages;
         });
+        
+        let allStopped = new Array(columns.length).fill(false);
+        const startTime = Date.now();
     
-        // 🔹 Step 2: Function to cycle images dynamically while spinning
-        const cycleImages = () => {
-            columns.forEach((column, index) => {
-                if (!allStopped[index]) {
-                    const allItems = Array.from(column.children);
-                    const randomItem = allItems[Math.floor(Math.random() * allItems.length)];
+        document.querySelectorAll(".outlineCircleBtn, .random, .spin-count-btn").forEach((btn) => 
+            btn.setAttribute("disabled", "true")
+        );
     
-                    // Ensure images update dynamically while spinning
-                    column.innerHTML = `<div class="itemCol">${randomItem.innerHTML}</div>`;
-                }
-            });
-        };
-    
-        // 🔹 Step 3: Function to animate the spinning motion
+        columns.forEach(column => {
+            let tempImages = [];
+            for (let i = 0; i < 10; i++) {
+                const randomItem = column.children[Math.floor(Math.random() * column.children.length)];
+                tempImages.push(`<div class="itemCol">${randomItem.innerHTML}</div>`);
+            }
+            column.innerHTML = tempImages.join("");
+        });
+        
         const animate = () => {
             const currentTime = Date.now();
             let animationRunning = false;
@@ -147,34 +137,28 @@ document.addEventListener("DOMContentLoaded", () => {
             columns.forEach((column, index) => {
                 if (!allStopped[index]) {
                     animationRunning = true;
+                    
+                    const shouldStop = currentTime - startTime >= stopTimes[index];
+                    const currentOffset = parseFloat(column.style.transform?.replace("translateY(", "").replace("px)", "")) || 0;
+                    
+                    let newOffset = currentOffset + baseSpeed;
     
-                    let elapsedTime = currentTime - startTime;
-                    let shouldStop = elapsedTime >= (totalSpinTime + index * 300); // Staggered stopping
-    
-                    // 🔹 Move column downward continuously
-                    let currentOffset = parseFloat(column.style.transform?.replace("translateY(", "").replace("px)", "")) || 0;
-                    let newOffset = currentOffset + spinSpeed;
-    
-                    if (newOffset >= itemHeight * 20) {
+                    if (newOffset >= itemHeight * 8) {
                         newOffset = 0;
                     }
-    
-                    column.style.transform = `translateY(${newOffset}px)`;
-    
-                    // 🔹 Ensure images rotate while spinning
-                    cycleImages();
-    
-                    // 🔹 Stop the column when time is up
+                    
                     if (shouldStop) {
                         allStopped[index] = true;
-    
-                        setTimeout(() => {
-                            const allItems = Array.from(column.children);
-                            const finalItem = allItems[Math.floor(Math.random() * allItems.length)];
-    
-                            column.innerHTML = `<div class="itemCol selected">${finalItem.innerHTML}</div>`;
-                            column.style.transform = `translateY(0px)`;
-                        }, 200);
+                        newOffset = itemHeight;
+                    }
+                    
+                    column.style.transform = `translateY(${newOffset}px)`;
+                    
+                    if (shouldStop) {
+                        const selectedItem = column.children[0];
+                        if (selectedItem) {
+                            selectedItem.classList.add("selected");
+                        }
                     }
                 }
             });
@@ -182,12 +166,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (animationRunning) {
                 requestAnimationFrame(animate);
             } else {
-                // 🔹 Step 4: Re-enable buttons after spin completes
-                document.querySelectorAll(".outlineCircleBtn, .random, .spin-count-btn").forEach((btn) => {
-                    btn.removeAttribute("disabled");
-                });
-    
-                callback(columns.map((col) =>
+                document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => 
+                    btn.removeAttribute("disabled")
+                );
+                callback(columns.map((col) => 
                     col.querySelector(".selected").innerText.trim()
                 ));
             }
@@ -195,10 +177,29 @@ document.addEventListener("DOMContentLoaded", () => {
     
         animate();
     };
-    
-    
 
-    const displayLoadout = ({ weapons, specializations, gadgets }, classType) => {
+    const setActiveButton = (button) => {
+        [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton].forEach((btn) =>
+            btn.classList.remove("active")
+        );
+        button.classList.add("active");
+    };
+
+    const generateLoadout = (classType, button) => {
+        if (isSpinning) return;
+        isSpinning = true;
+        currentSpin = 1;
+        setActiveButton(button);
+        
+        if (classType === "Random") {
+            const classes = ["Light", "Medium", "Heavy"];
+            classType = classes[Math.floor(Math.random() * classes.length)];
+        }
+        displayLoadout(null, "Random");
+
+    };
+
+    const displayLoadout = (loadout, classType) => {
         const isFinalSpin = currentSpin === selectedSpinCount;
         
         // Add spin progress indicator
@@ -206,24 +207,32 @@ document.addEventListener("DOMContentLoaded", () => {
         progressDiv.className = `spin-progress ${isFinalSpin ? 'final-spin' : ''}`;
         progressDiv.textContent = isFinalSpin ? 'Final Spin!' : `Spin ${currentSpin} of ${selectedSpinCount}`;
         outputDiv.insertBefore(progressDiv, outputDiv.firstChild);
-
-        const selectedGadgets = getRandomUniqueItems(gadgets, 3);
     
+        // If this is a random selection or loadout is null, pick a random class for this spin
+        let actualClass = classType;
+        if (classType === "Random" || !loadout) {
+            const classes = ["Light", "Medium", "Heavy"];
+            actualClass = classes[Math.floor(Math.random() * classes.length)];
+            loadout = loadouts[actualClass];
+        }
+    
+        const selectedGadgets = getRandomUniqueItems(loadout.gadgets, 3);
+        
         const loadoutHTML = `
             <div class="items-container">
                 <div class="item-container">
                     <div class="scroll-container">
-                        ${createItemContainer([classType])}
+                        ${createItemContainer([actualClass])}
                     </div>
                 </div>
                 <div class="item-container">
                     <div class="scroll-container">
-                        ${createItemContainer(weapons)}
+                        ${createItemContainer(loadout.weapons)}
                     </div>
                 </div>
                 <div class="item-container">
                     <div class="scroll-container">
-                        ${createItemContainer(specializations)}
+                        ${createItemContainer(loadout.specializations)}
                     </div>
                 </div>
                 ${selectedGadgets.map(gadget => `
@@ -241,94 +250,89 @@ document.addEventListener("DOMContentLoaded", () => {
         const scrollContainers = Array.from(outputDiv.querySelectorAll(".scroll-container"));
         startSpinAnimation(scrollContainers, (selectedItems) => {
             if (currentSpin < selectedSpinCount) {
-                // Start next spin after a brief pause
                 setTimeout(() => {
                     currentSpin++;
-                    displayLoadout({ weapons, specializations, gadgets }, classType);
-                }, 500); // Reduced from 1000 to 500 for quicker transitions between spins
+                    // Update the active spin button to show remaining spins
+                    document.querySelectorAll('.spin-count-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    // Highlight the button that represents remaining spins
+                    const remainingSpins = selectedSpinCount - currentSpin + 1;
+                    const nextButton = document.querySelector(`.spin-count-btn:nth-child(${remainingSpins})`);
+                    if (nextButton) {
+                        nextButton.classList.add('active');
+                    }
+                    // For random button, always pass null to force new random selection
+                    displayLoadout(null, "Random"); // Always randomize class for each spin
+
+                }, 500);
             } else {
-                // Final spin completed
                 progressDiv.textContent = '🎉 Final Loadout Locked In! 🎉';
-isSpinning = false;
-currentSpin = 1;
-
-// ✅ Reset spin count buttons (1-5)
-document.querySelectorAll(".spin-count-btn").forEach(btn => {
-    btn.classList.remove("active");
-    btn.removeAttribute("disabled"); // Make sure they are clickable
-});
-
-// ✅ Reset Light/Medium/Heavy buttons **without removing instructions**
-[lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton].forEach(btn => {
-    btn.classList.remove("active");
-    btn.disabled = false; // Ensure they are re-enabled
-});
-
-// ✅ Ensure the Random Contestant button is also re-enabled
-randomLoadoutButton.disabled = false;
-
-// ❌ Do NOT touch the instruction text, so it stays visible!
-
+                isSpinning = false;
+                currentSpin = 1;
+            
+                // Reset all buttons without adding active to any
+                document.querySelectorAll(".spin-count-btn").forEach(btn => {
+                    btn.classList.remove("active");
+                    btn.removeAttribute("disabled");
+                });
+            
+                [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton, randomLoadoutButton].forEach(btn => {
+                    btn.classList.remove("active");
+                    btn.disabled = false;
+                });
+            
+                selectedSpinCount = 1;
             }
         });
-    };
-
-    const setActiveButton = (button) => {
-        [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton].forEach((btn) =>
-            btn.classList.remove("active")
-        );
-        button.classList.add("active");
-    };
-
-    const generateLoadout = (classType, button) => {
-        if (isSpinning) return;
-        isSpinning = true;
-        currentSpin = 1;
-        setActiveButton(button);
-        const loadout = loadouts[classType];
-        displayLoadout(loadout, classType);
     };
 
     // Button click handlers
     lightLoadoutButton.onclick = () => generateLoadout("Light", lightLoadoutButton);
     mediumLoadoutButton.onclick = () => generateLoadout("Medium", mediumLoadoutButton);
     heavyLoadoutButton.onclick = () => generateLoadout("Heavy", heavyLoadoutButton);
-    
-    randomLoadoutButton.onclick = () => {
-        const classes = ["Light", "Medium", "Heavy"];
-        const randomClass = classes[Math.floor(Math.random() * classes.length)];
-        const buttonMap = {
-            Light: lightLoadoutButton,
-            Medium: mediumLoadoutButton,
-            Heavy: heavyLoadoutButton
-        };
-        generateLoadout(randomClass, buttonMap[randomClass]);
-    };
+    randomLoadoutButton.onclick = () => generateLoadout("Random", randomLoadoutButton);
 
     // Copy loadout function
     window.copyLoadout = () => {
-        const columns = Array.from(document.querySelectorAll(".scroll-container"));
-        const selectedItems = columns.map(
-            (col) => col.querySelector(".selected").innerText.trim()
-        );
-
-        const copyText = `Class: ${selectedItems[0]}, Weapon: ${selectedItems[1]}, Specialization: ${selectedItems[2]}, Gadgets: ${selectedItems[3]}, ${selectedItems[4]}, ${selectedItems[5]}`.trim();
-
-        navigator.clipboard
-            .writeText(copyText)
-            .then(() => alert("Loadout copied to clipboard!"))
-            .catch((err) => console.error("Could not copy text: ", err));
+        setTimeout(() => {
+            const itemsContainer = document.querySelector(".items-container");
+    
+            if (!itemsContainer) {
+                alert("❌ No loadout found! Spin the wheel first.");
+                console.error("❌ ERROR: .items-container not found.");
+                return;
+            }
+    
+            const items = itemsContainer.querySelectorAll(".itemCol p");
+    
+            console.log("🔍 Found Loadout Items:", items);
+    
+            if (items.length < 6) {
+                alert("❌ No valid loadout found! Spin the wheel first.");
+                console.error(`❌ ERROR: Only ${items.length} items found. Expected at least 6.`);
+                return;
+            }
+    
+            const loadoutText = `
+    Character: ${items[0].innerText}
+    Weapon: ${items[1].innerText}
+    Specialization: ${items[2].innerText}
+    Gadget 1: ${items[3].innerText}
+    Gadget 2: ${items[4].innerText}
+    Gadget 3: ${items[5].innerText}
+            `.trim();
+    
+            console.log("✅ Extracted Loadout:", loadoutText);
+    
+            navigator.clipboard.writeText(loadoutText)
+                .then(() => {
+                    alert("✅ Loadout copied to clipboard!\n\n" + loadoutText);
+                    console.log("✅ Copied Successfully!");
+                })
+                .catch(err => console.error("❌ Clipboard Copy Failed: ", err));
+        }, 200);
     };
-
-// Punishment Loadout Button Functionality
-const punishmentLoadoutButton = document.getElementById("punishmentLoadoutButton");
-
-if (punishmentLoadoutButton) {
-    punishmentLoadoutButton.onclick = () => {
-        window.location.href = "/punishment-loadout"; // Redirect to Punishment Loadout page
-    };
-}
-
 
     // Set up recent buffs section
     if (recentBuffsSection) {

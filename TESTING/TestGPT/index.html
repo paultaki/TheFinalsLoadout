@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-<!-- Mirrored from thefinalsloadout.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 29 Jan 2025 08:17:38 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,8 +8,11 @@
     <meta name="description" content="Generate random loadouts for The Finals game. Explore optimized builds for light, medium, and heavy playstyles.">
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 
-    <!-- Fonts -->
-    <style type="text/css">@font-face {font-family:Oswald;font-style:normal;font-weight:200 700;src:url(cf-fonts/v/oswald/5.0.18/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Oswald;font-style:normal;font-weight:200 700;src:url(cf-fonts/v/oswald/5.0.18/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Oswald;font-style:normal;font-weight:200 700;src:url(cf-fonts/v/oswald/5.0.18/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Oswald;font-style:normal;font-weight:200 700;src:url(cf-fonts/v/oswald/5.0.18/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Oswald;font-style:normal;font-weight:200 700;src:url(cf-fonts/v/oswald/5.0.18/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}</style>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap">
+    </noscript>
+    <link rel="preload" as="image" href="images/the-finals.webp" type="image/webp">
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
@@ -68,34 +68,51 @@
                     <button id="lightLoadoutButton" class="outlineCircleBtn">Light</button>
                     <button id="mediumLoadoutButton" class="outlineCircleBtn">Medium</button>
                     <button id="heavyLoadoutButton" class="outlineCircleBtn">Heavy</button>
-                </div>
-                <div class="btnRow">
-                    <button id="randomLoadoutButton" class="random outlineBtnStyle">Random Contestant</button>
+                    <button id="randomLoadoutButton" class="outlineCircleBtn random">?</button>
                 </div>
             </div>        
             <div id="output">
+                <!-- Placeholder Images (Lazy Loaded) -->
                 <div class="items-container">
-                    <div class="placeholder-container"><img src="images/placeholder.webp" alt="?" /><p>Contestant</p></div>
-                    <div class="placeholder-container"><img src="images/placeholder.webp" alt="?" /><p>Weapon</p></div>
-                    <div class="placeholder-container"><img src="images/placeholder.webp" alt="?" /><p>Specialization</p></div>
-                    <div class="placeholder-container"><img src="images/placeholder.webp" alt="?" /><p>Gadget 1</p></div>
-                    <div class="placeholder-container"><img src="images/placeholder.webp" alt="?" /><p>Gadget 2</p></div>
-                    <div class="placeholder-container"><img src="images/placeholder.webp" alt="?" /><p>Gadget 3</p></div>
+                    <div class="placeholder-container">
+                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                        <p>Contestant</p>
+                    </div>
+                    <div class="placeholder-container">
+                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                        <p>Weapon</p>
+                    </div>
+                    <div class="placeholder-container">
+                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                        <p>Specialization</p>
+                    </div>
+                    <div class="placeholder-container">
+                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                        <p>Gadget 1</p>
+                    </div>
+                    <div class="placeholder-container">
+                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                        <p>Gadget 2</p>
+                    </div>
+                    <div class="placeholder-container">
+                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                        <p>Gadget 3</p>
+                    </div>
                 </div>
             </div>
+            
             <!-- ADD COPY AND PUNISHMENT LOADOUT BUTTONS HERE -->
             <div class="btnRow">
                 <button id="copyLoadoutButton" class="copy-button">Copy Loadout</button>
             </div>
 
             <div class="btnRow">
-                <button id="punishmentLoadoutButton" class="outlineBtnStyle">
+                <a href="punishment-loadout" class="outlineBtnStyle">
                     <img src="images/punishment.webp" class="skull-icon" alt="💀">
                     Punishment Loadout
                     <img src="images/punishment.webp" class="skull-icon" alt="💀">
-                </button>
+                </a>
             </div>
-                                
         </div>
     </main>
 
@@ -125,16 +142,12 @@
         </div>
     </footer>
 
-  <!-- Load React and ReactDOM first -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <!-- Load React and ReactDOM first -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 
-<!-- Then load app.js and FAQSection.js -->
-<script src="app.js"></script>
-<script src="FAQSection.js"></script>
-
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"9097c976ebd583f2","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}' crossorigin="anonymous"></script>
+    <!-- Then load app.js and FAQSection.js -->
+    <script defer src="app.js"></script>
+    <script defer src="FAQSection.js"></script>
 </body>
-
-<!-- Mirrored from thefinalsloadout.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 29 Jan 2025 08:17:41 GMT -->
 </html>
