@@ -48,13 +48,6 @@ body {
     }
 }
 
-body {
-    font-family: var(--baseFont);
-    color: #fff;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-}
 
 body.flexStyle {
     display: flex;
@@ -122,14 +115,6 @@ body.flexStyle {
     white-space: nowrap;
     padding: 0 2px; /* Adds slight spacing */
 }
-
-
-/* Ensure equal spacing inside each button */
-.outlineCircleBtn span {
-    white-space: nowrap;
-    padding: 0 2px; /* Slight padding tweak */
-}
-
 
 
 /* Hover effect */
@@ -571,23 +556,6 @@ body.flexStyle {
     .outlineBtnStyle {
         padding: 14px 20px;
         font-size: 14px;
-    }
-}
-@keyframes subtlePulse {
-    0% {
-        transform: scale(1);
-        background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-    50% {
-        transform: scale(1.02);
-        background: linear-gradient(45deg, var(--neon-red), var(--neon-orange, 0.9));
-        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.3);
-    }
-    100% {
-        transform: scale(1);
-        background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 }
 
