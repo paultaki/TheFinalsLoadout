@@ -188,7 +188,7 @@ body.flexStyle {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('images/skeleton.png') no-repeat center;
+    background: url('images/skeleton.webp') no-repeat center;
     background-size: cover;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -433,4 +433,82 @@ body.flexStyle {
         padding: 14px 20px;
         font-size: 14px;
     }
+}
+/* Punishment FAQ Section */
+.faq-section {
+    background-color: var(--bg-darker); /* Use your site's dark theme */
+    padding: 20px;
+    border-radius: 8px;
+    margin: 40px auto;
+    max-width: 770px;
+    text-align: left;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+}
+
+/* FAQ Title */
+.faq-title {
+    font-size: 1.5rem;
+    text-align: center;
+    color: var(--neon-yellow); /* Matches your site theme */
+    margin-bottom: 10px;
+    padding: 10px;
+    background: none; /* Remove the white box */
+    border-radius: 5px;
+}
+
+/* FAQ Item */
+.faq-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 0;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+/* FAQ Question (Collapsible Button) */
+.faq-question {
+    width: 100%;
+    text-align: left;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+    border-radius: 4px;
+}
+
+.faq-question:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* FAQ Toggle Icon */
+.faq-toggle {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+    color: var(--neon-yellow);
+}
+
+.faq-toggle.open {
+    transform: rotate(180deg);
+}
+
+/* FAQ Answer (Hidden by Default) */
+.faq-answer {
+    display: none;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ccc;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    margin-top: 5px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }

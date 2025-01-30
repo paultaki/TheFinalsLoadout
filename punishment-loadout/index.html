@@ -21,11 +21,11 @@
     </div>
     <header class="headerSection">
         <div class="container">
-            <img src="images/the-finals.png" alt="The Finals Logo" class="finals-logo" style="max-width: 200px; height: auto;">
+            <img src="images/the-finals.webp" alt="The Finals Logo" class="finals-logo" style="max-width: 200px; height: auto;">
             <div class="header-with-crossbones">
-                <img src="images/punishment.png" alt="Crossbones" class="crossbones">
+                <img src="images/punishment.webp" alt="Crossbones" class="crossbones">
                 <h1 class="mainTitle blood-red">Generate Your Punishment</h1>
-                <img src="images/punishment.png" alt="Crossbones" class="crossbones">
+                <img src="images/punishment.webp" alt="Crossbones" class="crossbones">
             </div>
             <p class="headerSubtext">The Ultimate Test: Can You Survive This Loadout?</p>
         </div>
@@ -47,39 +47,27 @@
                 <ul>
                     <li>Strategic disadvantages</li>
                     <li>Unexpected deaths</li>
-                    <li>Confused teammates</li>
                     <li>ALT+F4 Spamming</li>
-                    <li>Keyboard yeeting</li>
                     <li>Uncontrollable urge to blame lag.</li>
                     <li>Potential ban from teammates' friend lists.</li>
                 </ul>
                 <p>Use at your own risk. Results may vary. Fun is guaranteed*</p>
                 <p><small>*Fun not actually guaranteed</small></p>
             </section>
+            
+            <!-- ✅ ADD THIS HERE -->
+            <!-- Add React Mount Point Where FAQ Should Appear -->
+<div id="punishment-faq-root"></div>
 
-            <section class="faqSection">
-                <h2>Frequently Asked Questions</h2>
-                
-                <h3>What is this generator?</h3>
-                <p>This is a randomizer that creates unique loadouts for The Finals game, combining different weapons, specializations, and gadgets across all three weight classes.</p>
-                
-                <h3>How does it work?</h3>
-                <p>Click the "Generate Your Punishment" button and watch as it randomly selects a class, weapon, specialization, and three gadgets. The spinning animation adds suspense to your impending doom.</p>
-                
-                <h3>Are these loadouts viable?</h3>
-                <p>Absolutely not! That's part of the fun. These combinations are designed to be challenging and possibly hilarious. Success with these loadouts is not guaranteed (or likely).</p>
-                
-                <h3>Can I share my loadout?</h3>
-                <p>Yes! Click the "Copy Loadout" button after generation to copy the loadout to your clipboard. Share your suffering with friends!</p>
-                
-                <h3>Why would I use this?</h3>
-                <p>Because sometimes you want chaos. Sometimes you want to challenge yourself. Sometimes you just want to make your teammates question your life choices.</p>
-                
-                <h3>Is this an official The Finals tool?</h3>
-                <p>No, this is a fan-made tool created for entertainment purposes. All game content and properties belong to Embark Studios.</p>
-            </section>
-        </div>
-    </main>
+<!-- Load React first -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+
+<!-- Load the Punishment FAQ Component -->
+<script src="PunishmentFAQ.js"></script>
+
+            
+
     <footer class="footerSection">
         <div class="container">
             <div class="footer">

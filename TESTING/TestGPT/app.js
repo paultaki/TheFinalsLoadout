@@ -99,44 +99,47 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("");
     };
 
-    const startSpinAnimation = (columns, callback) => {
+    const startSpinAnimation = (columns, callback, selectedSpinCount = 1) => {
         const itemHeight = 188;
-        const baseSpeed = 12;
-        
-        // First box always stops quickly, later boxes have varying delays based on spin number
-        const stopTimes = columns.map((_, index) => {
-            if (index === 0) {
-                return 700; // First box stops faster (reduced from 1000ms)
-            } else if (currentSpin === selectedSpinCount) {
-                // On final spin, add increasing delays between boxes
-                return 700 + (index * 500); // Keep dramatic pacing for final spin
-            } else {
-                // For initial spins, boxes stop more quickly
-                return 700 + (index * 130); // Reduced from 200ms to 130ms for faster pacing
-            }
-        });
-        
+        const spinSpeed = 25;
+        const totalSpinTime = selectedSpinCount * 1500; // Adjust spin time based on user selection
+    
         let allStopped = new Array(columns.length).fill(false);
-        const startTime = Date.now();
+        let startTime = Date.now();
     
-        document.querySelectorAll(".outlineCircleBtn, .random, .spin-count-btn").forEach((btn) => 
-            btn.setAttribute("disabled", "true")
-        );
-    
-        columns.forEach(column => {
-            const originalContent = column.innerHTML;
-        
-            // Generate a sequence of random images for the "spinning effect"
-            let tempImages = [];
-            for (let i = 0; i < 10; i++) {  // Increase iterations for a better effect
-                const randomItem = column.children[Math.floor(Math.random() * column.children.length)];
-                tempImages.push(`<div class="itemCol">${randomItem.innerHTML}</div>`);
-            }
-        
-            column.innerHTML = tempImages.join("");  // Replace with randomized sequence
+        // 🔹 Disable buttons during spin
+        document.querySelectorAll(".outlineCircleBtn, .random, .spin-count-btn").forEach((btn) => {
+            btn.setAttribute("disabled", "true");
         });
-        
     
+        // 🔹 Step 1: Pre-fill each column with a rotating set of images
+        columns.forEach((column) => {
+            const allItems = Array.from(column.children);
+            let tempImages = "";
+    
+            // Fill the column with multiple random images
+            for (let i = 0; i < 20; i++) {
+                const randomItem = allItems[Math.floor(Math.random() * allItems.length)];
+                tempImages += `<div class="itemCol">${randomItem.innerHTML}</div>`;
+            }
+    
+            column.innerHTML = tempImages;
+        });
+    
+        // 🔹 Step 2: Function to cycle images dynamically while spinning
+        const cycleImages = () => {
+            columns.forEach((column, index) => {
+                if (!allStopped[index]) {
+                    const allItems = Array.from(column.children);
+                    const randomItem = allItems[Math.floor(Math.random() * allItems.length)];
+    
+                    // Ensure images update dynamically while spinning
+                    column.innerHTML = `<div class="itemCol">${randomItem.innerHTML}</div>`;
+                }
+            });
+        };
+    
+        // 🔹 Step 3: Function to animate the spinning motion
         const animate = () => {
             const currentTime = Date.now();
             let animationRunning = false;
@@ -144,29 +147,34 @@ document.addEventListener("DOMContentLoaded", () => {
             columns.forEach((column, index) => {
                 if (!allStopped[index]) {
                     animationRunning = true;
-                    
-                    const shouldStop = currentTime - startTime >= stopTimes[index];
-                    const currentOffset = parseFloat(column.style.transform?.replace("translateY(", "").replace("px)", "")) || 0;
-                    
-                    let newOffset = currentOffset + baseSpeed;
     
-                    if (newOffset >= itemHeight * 8) {
+                    let elapsedTime = currentTime - startTime;
+                    let shouldStop = elapsedTime >= (totalSpinTime + index * 300); // Staggered stopping
+    
+                    // 🔹 Move column downward continuously
+                    let currentOffset = parseFloat(column.style.transform?.replace("translateY(", "").replace("px)", "")) || 0;
+                    let newOffset = currentOffset + spinSpeed;
+    
+                    if (newOffset >= itemHeight * 20) {
                         newOffset = 0;
                     }
-                    
-                    if (shouldStop) {
-    allStopped[index] = true;
-    newOffset = itemHeight; // Just stop at one full height
-}
-
-                    
+    
                     column.style.transform = `translateY(${newOffset}px)`;
-                    
+    
+                    // 🔹 Ensure images rotate while spinning
+                    cycleImages();
+    
+                    // 🔹 Stop the column when time is up
                     if (shouldStop) {
-                        const selectedItem = column.children[0];
-                        if (selectedItem) {
-                            selectedItem.classList.add("selected");
-                        }
+                        allStopped[index] = true;
+    
+                        setTimeout(() => {
+                            const allItems = Array.from(column.children);
+                            const finalItem = allItems[Math.floor(Math.random() * allItems.length)];
+    
+                            column.innerHTML = `<div class="itemCol selected">${finalItem.innerHTML}</div>`;
+                            column.style.transform = `translateY(0px)`;
+                        }, 200);
                     }
                 }
             });
@@ -174,10 +182,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (animationRunning) {
                 requestAnimationFrame(animate);
             } else {
-                document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => 
-                    btn.removeAttribute("disabled")
-                );
-                callback(columns.map((col) => 
+                // 🔹 Step 4: Re-enable buttons after spin completes
+                document.querySelectorAll(".outlineCircleBtn, .random, .spin-count-btn").forEach((btn) => {
+                    btn.removeAttribute("disabled");
+                });
+    
+                callback(columns.map((col) =>
                     col.querySelector(".selected").innerText.trim()
                 ));
             }
@@ -185,6 +195,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
         animate();
     };
+    
+    
 
     const displayLoadout = ({ weapons, specializations, gadgets }, classType) => {
         const isFinalSpin = currentSpin === selectedSpinCount;

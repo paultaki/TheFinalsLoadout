@@ -36,17 +36,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const createItemContainer = (items) => {
         let repeatedItems = [...items];
-        while (repeatedItems.length < 8) {
+    
+        // Ensure we have enough items to prevent blank spaces
+        while (repeatedItems.length < 100) {  // Increased to 100 for longer spins
             repeatedItems.push(...items);
         }
+    
+        // Shuffle for randomness
         repeatedItems = shuffleArray(repeatedItems);
-        repeatedItems.length = 8;
-
+    
+        // Limit the total count if necessary
+        repeatedItems.length = 100;  // Match the number above
+    
+        // Generate HTML for items
         return repeatedItems
             .map(
                 (item) => `
                     <div class="itemCol">
-                        <img src="images/${item.replaceAll(" ", "_")}_Rank_1.png" 
+                        <img src="images/${item.replaceAll(" ", "_")}.webp" 
                              alt="The Finals ${item} - Random Loadout Item" 
                              title="The Finals ${item}"
                              width="140" 
@@ -57,46 +64,65 @@ document.addEventListener("DOMContentLoaded", () => {
             )
             .join("");
     };
+    
+    
+    
 
     const startSpinAnimation = (columns, callback) => {
         const itemHeight = 188;
-        const stopOffsets = columns.map((_, index) => itemHeight * (1 + index));
-
+        const totalSpinTime = 3000; // 3 seconds total spin time
+        const firstStopTime = 500; // First column stops at 0.5 seconds
+        const subsequentStopDelay = 400; // Following columns stop every 0.4s
+    
         let allStopped = new Array(columns.length).fill(false);
-
         document.querySelectorAll(".random").forEach((btn) => btn.setAttribute("disabled", "true"));
-
-        const animate = () => {
+    
+        const startTime = performance.now();
+    
+        // Start spinning all at once
+        const animate = (timestamp) => {
+            const elapsed = timestamp - startTime;
             let animationRunning = false;
-
+    
             columns.forEach((column, index) => {
                 if (!allStopped[index]) {
                     animationRunning = true;
-
+    
+                    // Move the column down for the spinning effect
                     const currentOffset = parseFloat(column.style.transform.replace("translateY(", "").replace("px)", "")) || 0;
-                    const newOffset = currentOffset + 7;
-                    column.style.transform = `translateY(${newOffset}px)`;
-
-                    if (newOffset >= stopOffsets[index]) {
+                    column.style.transform = `translateY(${currentOffset + 40}px)`; // Adjust speed
+    
+                    // Stop first column at 0.5s, others every 0.4s after
+                    const stopTime = index === 0 ? firstStopTime : firstStopTime + index * subsequentStopDelay;
+    
+                    if (elapsed >= stopTime) {
                         allStopped[index] = true;
-                        column.style.transform = `translateY(${stopOffsets[index]}px)`;
-                        const selectedIndex = (7 - ((stopOffsets[index] / itemHeight) % 8)) % 8;
+                        column.style.transform = `translateY(${itemHeight * (1 + index)}px)`;
+    
+                        // Select the final item at the stopping position
+                        const selectedIndex = (7 - ((itemHeight * (1 + index)) / itemHeight) % 8) % 8;
                         const selectedItem = column.children[selectedIndex];
                         selectedItem.classList.add("selected");
                     }
                 }
             });
-
+    
             if (animationRunning) {
                 requestAnimationFrame(animate);
             } else {
+                // Enable the button again after spinning stops
                 document.querySelectorAll(".random").forEach((btn) => btn.removeAttribute("disabled"));
-                callback(columns.map((col) => col.querySelector(".selected").innerText.trim()));
+                callback(columns.map(col => col.querySelector(".selected").innerText.trim()));
             }
         };
-
-        animate();
+    
+        requestAnimationFrame(animate);
     };
+    
+    
+    
+    
+    
 
     const displayLoadout = (loadout, className) => {
         const { weapons, specializations, gadgets } = loadout;

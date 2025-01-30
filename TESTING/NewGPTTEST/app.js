@@ -6,6 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const outputDiv = document.getElementById("output");
     const recentBuffsSection = document.querySelector(".recentBuffsSection .buffs-container");
 
+    // New variables for spin functionality
+    let selectedSpinCount = 1;
+    let isSpinning = false;
+    let currentSpin = 1;
+
     const loadouts = {
         Light: {
             weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54", "Throwing Knives"],
@@ -24,6 +29,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Initialize spin selector
+    const initSpinSelector = () => {
+        const spinSelector = document.createElement('div');
+        spinSelector.className = 'spin-selector';
+    
+        // Create step indicators (Updated Order)
+        const step1 = document.createElement('div');
+        step1.className = 'step active';
+        step1.innerHTML = "Step 1️⃣: Choose number of spins";
+    
+        const step2 = document.createElement('div');
+        step2.className = 'step';
+        step2.innerHTML = "Step 2️⃣: Pick your contestant";
+    
+        // Create spin buttons (1-5)
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'spin-button-container';
+    
+        for (let i = 1; i <= 5; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'spin-count-btn' + (i === 1 ? ' active' : '');
+            btn.textContent = i;
+            btn.onclick = () => {
+                if (isSpinning) return;
+                document.querySelectorAll('.spin-count-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedSpinCount = i;
+            };
+            buttonContainer.appendChild(btn);
+        }
+    
+        // Insert elements in the correct order
+        const buttonsContainer = document.querySelector('.buttons');
+        buttonsContainer.parentNode.insertBefore(step1, buttonsContainer);
+        buttonsContainer.parentNode.insertBefore(buttonContainer, buttonsContainer);
+        buttonsContainer.parentNode.insertBefore(step2, buttonsContainer);
+    };
+    
     const shuffleArray = (array) => {
         const shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
@@ -40,92 +83,151 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const createItemContainer = (items) => {
         let repeatedItems = [...items];
-        while (repeatedItems.length < 8) {
-            repeatedItems = [...repeatedItems, ...items];
-        }
-        repeatedItems = shuffleArray(repeatedItems);
-        repeatedItems = repeatedItems.slice(0, 8);
     
+        // Ensure we have an enormous number of items for long spinning sessions
+        while (repeatedItems.length < 20) {  // Ensure a longer scrolling effect
+            repeatedItems.push(items[Math.floor(Math.random() * items.length)]);
+        }
+        
+        
+        
+    
+        // Shuffle the items to maintain randomness
+        repeatedItems = shuffleArray(repeatedItems);
+    
+        // Ensure a minimum of 150 items to prevent gaps
+        repeatedItems.length = 150;
+    
+        // Generate the HTML for each item
         return repeatedItems
-            .map((item) => `
-                <div class="itemCol">
-                    <img src="images/${item.replaceAll(" ", "_")}.webp" alt="${item}">
-                    <p>${item}</p>  <!-- This line ensures names appear -->
-                </div>
-            `)
+            .map(
+                (item) => `
+                    <div class="itemCol">
+                        <img src="images/${item.replaceAll(" ", "_")}.webp" 
+                             alt="The Finals ${item} - Random Loadout Item" 
+                             title="The Finals ${item}"
+                             width="140" 
+                             height="144">
+                        <p>${item}</p>
+                    </div>
+                `
+            )
             .join("");
     };
     
+    
 
     const startSpinAnimation = (columns, callback) => {
-        const itemHeight = 188;
-        const baseSpeed = 12;
-        
-        const stopTimes = columns.map((_, index) => {
-            return 800 + (index * 500);
+        const spinDuration = 3000;  // Total spin time (3s)
+        const stopDelay = 500;  // Delay before stopping each column
+        const intervalSpeed = 75;  // Speed of image cycling (lower is faster)
+    
+        let stopTimes = columns.map((_, i) => spinDuration + i * stopDelay);  // Staggered stops
+        let startTime = performance.now();
+    
+        // Store interval IDs for each column
+        let intervalIDs = [];
+    
+        // Start cycling images rapidly for each column
+        columns.forEach((column, index) => {
+            let items = Array.from(column.children);
+            
+            // Create an interval that swaps images in real time
+            let interval = setInterval(() => {
+                let randomIndex = Math.floor(Math.random() * items.length);
+                column.innerHTML = "";
+                column.appendChild(items[randomIndex].cloneNode(true));
+            }, intervalSpeed);
+    
+            intervalIDs.push(interval);
         });
+    
+        // Function to stop spinning each column one by one
+        const stopColumn = (index) => {
+            clearInterval(intervalIDs[index]);  // Stop cycling images
+            
+            let items = Array.from(columns[index].children);
+            let selectedItem = items[Math.floor(items.length / 2)];  // Pick an item from the middle
+            columns[index].innerHTML = "";
+            columns[index].appendChild(selectedItem.cloneNode(true));
+        };
+    
+        // Stop each column sequentially
+        let stopIndex = 0;
+        const stopIntervals = setInterval(() => {
+            if (stopIndex < columns.length) {
+                stopColumn(stopIndex);
+                stopIndex++;
+            } else {
+                clearInterval(stopIntervals);
+                callback(columns.map(col => col.querySelector(".itemCol").innerText.trim()));
+            }
+        }, stopDelay);
+    };
+    
         
-        let allStopped = new Array(columns.length).fill(false);
-        const startTime = Date.now();
+        
     
-        document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => 
-            btn.setAttribute("disabled", "true")
-        );
-    
-        columns.forEach(column => {
-            const originalContent = column.innerHTML;
-            column.innerHTML = originalContent + originalContent;
-        });
-    
-        const animate = () => {
-            const currentTime = Date.now();
+        // 🎰 Animate the spinning effect
+        const animate = (timestamp) => {
+            const elapsed = timestamp - startTime;
             let animationRunning = false;
     
             columns.forEach((column, index) => {
                 if (!allStopped[index]) {
                     animationRunning = true;
-                    
-                    const shouldStop = currentTime - startTime >= stopTimes[index];
-                    const currentOffset = parseFloat(column.style.transform?.replace("translateY(", "").replace("px)", "")) || 0;
-                    
-                    let newOffset = currentOffset + baseSpeed;
     
-                    if (newOffset >= itemHeight * 8) {
-                        newOffset = 0;
-                    }
-                    
-                    if (shouldStop) {
+                    // Move the column down for the spinning effect
+                    const currentOffset = parseFloat(column.style.transform.replace("translateY(", "").replace("px)", "")) || 0;
+                    column.style.transform = `translateY(${currentOffset + spinSpeed}px)`;
+    
+                    // Stop first column at 0.5s, others every 0.4s after
+                    const stopTime = index === 0 ? firstStopTime : firstStopTime + index * subsequentStopDelay;
+    
+                    if (elapsed >= stopTime) {
                         allStopped[index] = true;
-                        newOffset = itemHeight; // Just stop at one full height
-                    }
+                        clearInterval(column.dataset.intervalId); // Stop the cycling of images
                     
-                    column.style.transform = `translateY(${newOffset}px)`;
                     
-                    if (shouldStop) {
-                        const selectedItem = column.children[0];
+                        // Ensure the final stopping position is properly aligned
+                        column.style.transform = `translateY(${itemHeight * Math.floor(column.children.length / 2)}px)`;
+                    
+                        // Select a visible item from the middle
+                        const selectedIndex = Math.floor(column.children.length / 2);
+                        const selectedItem = column.children[selectedIndex];
+                    
                         if (selectedItem) {
                             selectedItem.classList.add("selected");
                         }
                     }
+                    
                 }
             });
     
             if (animationRunning) {
                 requestAnimationFrame(animate);
             } else {
+                // ✅ Enable the button again after spinning stops
                 document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => 
                     btn.removeAttribute("disabled")
                 );
-                callback(columns.map((col) => 
-                    col.querySelector(".selected").innerText.trim()
-                ));
+                callback(columns.map(col => col.querySelector(".selected").innerText.trim()));
             }
         };
     
-        animate();
+        requestAnimationFrame(animate);
     };
+    
 
     const displayLoadout = ({ weapons, specializations, gadgets }, classType) => {
+        const isFinalSpin = currentSpin === selectedSpinCount;
+        
+        // Add spin progress indicator
+        const progressDiv = document.createElement('div');
+        progressDiv.className = `spin-progress ${isFinalSpin ? 'final-spin' : ''}`;
+        progressDiv.textContent = isFinalSpin ? 'Final Spin!' : `Spin ${currentSpin} of ${selectedSpinCount}`;
+        outputDiv.insertBefore(progressDiv, outputDiv.firstChild);
+
         const selectedGadgets = getRandomUniqueItems(gadgets, 3);
     
         const loadoutHTML = `
@@ -157,14 +259,40 @@ document.addEventListener("DOMContentLoaded", () => {
     
         outputDiv.innerHTML = loadoutHTML;
     
-        // Start the spinning animation again!
         const scrollContainers = Array.from(outputDiv.querySelectorAll(".scroll-container"));
         startSpinAnimation(scrollContainers, (selectedItems) => {
-            console.log("Selected Items:", selectedItems);
+            if (currentSpin < selectedSpinCount) {
+                // Start next spin after a brief pause
+                setTimeout(() => {
+                    currentSpin++;
+                    displayLoadout({ weapons, specializations, gadgets }, classType);
+                }, 500); // Reduced from 1000 to 500 for quicker transitions between spins
+            } else {
+                // Final spin completed
+                progressDiv.textContent = '🎉 Final Loadout Locked In! 🎉';
+isSpinning = false;
+currentSpin = 1;
+
+// ✅ Reset spin count buttons (1-5)
+document.querySelectorAll(".spin-count-btn").forEach(btn => {
+    btn.classList.remove("active");
+    btn.removeAttribute("disabled"); // Make sure they are clickable
+});
+
+// ✅ Reset Light/Medium/Heavy buttons **without removing instructions**
+[lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton].forEach(btn => {
+    btn.classList.remove("active");
+    btn.disabled = false; // Ensure they are re-enabled
+});
+
+// ✅ Ensure the Random Contestant button is also re-enabled
+randomLoadoutButton.disabled = false;
+
+// ❌ Do NOT touch the instruction text, so it stays visible!
+
+            }
         });
     };
-    
-    
 
     const setActiveButton = (button) => {
         [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton].forEach((btn) =>
@@ -174,6 +302,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const generateLoadout = (classType, button) => {
+        if (isSpinning) return;
+        isSpinning = true;
+        currentSpin = 1;
         setActiveButton(button);
         const loadout = loadouts[classType];
         displayLoadout(loadout, classType);
@@ -209,15 +340,16 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(() => alert("Loadout copied to clipboard!"))
             .catch((err) => console.error("Could not copy text: ", err));
     };
-    
+
 // Punishment Loadout Button Functionality
 const punishmentLoadoutButton = document.getElementById("punishmentLoadoutButton");
 
 if (punishmentLoadoutButton) {
     punishmentLoadoutButton.onclick = () => {
-        window.location.href = "/punishment-loadout"; // Redirect to the punishment loadout page
+        window.location.href = "/punishment-loadout"; // Redirect to Punishment Loadout page
     };
 }
+
 
     // Set up recent buffs section
     if (recentBuffsSection) {
@@ -262,6 +394,6 @@ if (punishmentLoadoutButton) {
         `;
     }
 
-    // Initial load
-
-}); 
+    // Initialize spin selector
+    initSpinSelector();
+});

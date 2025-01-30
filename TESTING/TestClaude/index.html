@@ -56,9 +56,8 @@
 <body class="flexStyle">
     <header class="headerSection">
         <div class="container">
-            <img src="images/the-finals.png" alt="Random Loadout Generator for The Finals Game" class="finals-logo">
+            <img src="images/the-finals.webp" alt="Random Loadout Generator for The Finals Game" class="finals-logo">
             <h1 class="mainTitle">Loadout Roulette: Spin the Wheel and Play the Hand You're Dealt!</h1>
-            <p>The Ultimate Test: Can You Win with a Random Loadout?</p>
         </div>
     </header>
 
@@ -71,21 +70,32 @@
                     <button id="heavyLoadoutButton" class="outlineCircleBtn">Heavy</button>
                 </div>
                 <div class="btnRow">
-                    <button id="randomLoadoutButton" class="random outlineBtnStyle">Random Contestant and Loadout</button>
+                    <button id="randomLoadoutButton" class="random outlineBtnStyle">Random Contestant</button>
                 </div>
             </div>        
             <div id="output">
                 <div class="items-container">
-                    <div class="item-container"><img src="images/placeholder.png" alt="?" /><p>Class</p></div>
-                    <div class="item-container"><img src="images/placeholder.png" alt="?" /><p>Weapon</p></div>
-                    <div class="item-container"><img src="images/placeholder.png" alt="?" /><p>Specialization</p></div>
-                    <div class="item-container"><img src="images/placeholder.png" alt="?" /><p>Gadget</p></div>
-                    <div class="item-container"><img src="images/placeholder.png" alt="?" /><p>Gadget</p></div>
-                    <div class="item-container"><img src="images/placeholder.png" alt="?" /><p>Gadget</p></div>
+                    <div class="placeholder-container"><img src="images/placeholder.webp" alt="?" /><p>Contestant</p></div>
+                    <div class="placeholder-container"><img src="images/placeholder.webp" alt="?" /><p>Weapon</p></div>
+                    <div class="placeholder-container"><img src="images/placeholder.webp" alt="?" /><p>Specialization</p></div>
+                    <div class="placeholder-container"><img src="images/placeholder.webp" alt="?" /><p>Gadget 1</p></div>
+                    <div class="placeholder-container"><img src="images/placeholder.webp" alt="?" /><p>Gadget 2</p></div>
+                    <div class="placeholder-container"><img src="images/placeholder.webp" alt="?" /><p>Gadget 3</p></div>
                 </div>
             </div>
-            
-            
+            <!-- ADD COPY AND PUNISHMENT LOADOUT BUTTONS HERE -->
+            <div class="btnRow">
+                <button id="copyLoadoutButton" class="copy-button">Copy Loadout</button>
+            </div>
+
+            <div class="btnRow">
+                <button id="punishmentLoadoutButton" class="outlineBtnStyle">
+                    <img src="images/punishment.webp" class="skull-icon" alt="💀">
+                    Punishment Loadout
+                    <img src="images/punishment.webp" class="skull-icon" alt="💀">
+                </button>
+            </div>
+                                
         </div>
     </main>
 
@@ -115,11 +125,14 @@
         </div>
     </footer>
 
-    <!-- Scripts - Keep these in exactly this order -->
-    <script src="app.js"></script>
-    <script src="../cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="../cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="FAQSection.js"></script>
+  <!-- Load React and ReactDOM first -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+
+<!-- Then load app.js and FAQSection.js -->
+<script src="app.js"></script>
+<script src="FAQSection.js"></script>
+
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"9097c976ebd583f2","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}' crossorigin="anonymous"></script>
 </body>
 

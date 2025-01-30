@@ -99,29 +99,51 @@ body.flexStyle {
     margin-top: 20px;
 }
 
+/* Resize Light, Medium, and Heavy buttons */
 .outlineCircleBtn {
-    --circleBtnSize: 100px;
-    background-color: transparent;
-    color: white;
-    border: 2px solid;
-    border-radius: 50%;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.3s ease;
+    width: 70px;  /* Slightly larger */
+    height: 70px; /* Keep proportional */
+    font-size: 1rem; /* Keeps text readable */
+    font-weight: bold;
+    border-radius: 50%; /* Ensure circular shape */
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--circleBtnSize);
-    height: var(--circleBtnSize);
+    border: 2px solid var(--neon-yellow);
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
     text-transform: uppercase;
-    font-weight: 500;
-    font-family: inherit;
-    letter-spacing: 2px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2),
-                inset 0 1px 1px rgba(255,255,255,0.1);
-    transform-style: preserve-3d;
-    perspective: 1000px;
+}
+
+/* Ensure equal spacing inside each button */
+.outlineCircleBtn span {
+    white-space: nowrap;
+    padding: 0 2px; /* Adds slight spacing */
+}
+
+
+/* Ensure equal spacing inside each button */
+.outlineCircleBtn span {
+    white-space: nowrap;
+    padding: 0 2px; /* Slight padding tweak */
+}
+
+
+
+/* Hover effect */
+.outlineCircleBtn:hover {
+    background: var(--neon-yellow);
+    color: black;
+    transform: scale(1.1);
+}
+
+/* Active/Selected effect */
+.outlineCircleBtn.active {
+    background: var(--neon-orange);
+    color: black;
+    border-color: var(--neon-red);
 }
 
 #heavyLoadoutButton {
@@ -142,19 +164,6 @@ body.flexStyle {
                 inset 0 1px 1px rgba(255,255,255,0.2);
 }
 
-#heavyLoadoutButton:hover, #heavyLoadoutButton.active {
-    background-color: var(--neon-orange);
-}
-
-#mediumLoadoutButton:hover, #mediumLoadoutButton.active {
-    background-color: var(--neon-blue);
-}
-
-#lightLoadoutButton:hover, #lightLoadoutButton.active {
-    background-color: var(--neon-yellow);
-    color: black;
-}
-
 .outlineBtnStyle {
     background-color: transparent;
     color: #fff;
@@ -168,6 +177,12 @@ body.flexStyle {
     letter-spacing: 1px;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+/* Increase spacing above the Random Contestant button */
+#randomLoadoutButton {
+    margin-top: 25px; /* Moves it slightly higher */
+    margin-bottom: 25px; /* Pushes it down */
+}
+
 }
 
 .outlineBtnStyle:hover {
@@ -182,11 +197,13 @@ body.flexStyle {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    padding: 40px 20px 80px;
-    position: relative;
-    width: 100%;
+    gap: 15px; /* Reduce space between items */
+    padding-bottom: 10px; /* Moves Copy Loadout button up */
+    margin-top: 40px; /* Pushes output section further down */
+
+
 }
+
 
 .items-container {
     display: flex;
@@ -296,7 +313,8 @@ body.flexStyle {
 
 /* Copy Button */
 .copy-button {
-    margin: 15px auto 10px;
+    margin-top: 10px; /* Brings it closer to the loadout boxes */
+    margin-bottom: 15px; /* Keeps small spacing before Punishment button */
     background-color: #555;
     color: #fff;
     border: none;
@@ -312,31 +330,57 @@ body.flexStyle {
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+
+
+
+/* Hover effect */
 .copy-button:hover {
     background-color: var(--neon-yellow);
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
 
+
 /* Punishment Button */
 #punishmentLoadoutButton {
-    margin: 10px auto 15px; /* Further reduced bottom margin from 25px to 15px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Space between skulls and text */
     padding: 15px 30px;
     background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
     border: none;
     font-size: 1.1rem;
-    text-decoration: none;
-    display: block;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: subtlePulse 2.5s ease-in-out infinite; /* Already added pulse */
 }
 
 #punishmentLoadoutButton:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
     background: linear-gradient(45deg, var(--neon-orange), var(--neon-red));
 }
+
+@keyframes subtlePulse {
+    0% {
+        transform: scale(1);
+        background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        transform: scale(1.02);
+        background: linear-gradient(45deg, var(--neon-red), var(--neon-orange, 0.9));
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.3);
+    }
+    100% {
+        transform: scale(1);
+        background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+}
+
 
 .skull-icon {
     width: 20px;
@@ -457,6 +501,56 @@ body.flexStyle {
         padding: 25px 0 72px;
     }
 }
+/* Spin Selection Buttons */
+/* Space between the Step 1 instructions and spin buttons */
+.spin-button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Space between buttons */
+    margin-top: 5px; /* Add slight spacing above */
+    margin-bottom: 20px; /* More space before Step 2 */
+}
+
+/* Increase instruction font size for better readability */
+.step {
+    font-size: 1.3rem; /* Increased from 1.1rem */
+    font-weight: bold;
+    margin-bottom: 12px; /* Adds slight spacing below each step */
+}
+
+
+/* Space out Step 2 from class buttons */
+.step + .btnRow {
+    margin-top: 15px; /* Creates better separation */
+}
+
+
+.spin-count-btn {
+    width: 60px;  /* Twice the original size */
+    height: 60px; /* Twice the original size */
+    font-size: 1.5rem; /* Bigger text */
+    font-weight: bold;
+    border-radius: 50%; /* Circular buttons */
+    border: 2px solid var(--neon-yellow);
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.spin-count-btn:hover {
+    background: var(--neon-yellow);
+    color: black;
+    transform: scale(1.1); /* Slightly bigger on hover */
+}
+
+/* Selected button effect */
+.spin-count-btn.active {
+    background: var(--neon-orange); /* Change color when selected */
+    color: black;
+    border-color: var(--neon-red);
+}
 
 @media (max-width: 575px) {
     .btnRow {
@@ -486,9 +580,9 @@ body.flexStyle {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     50% {
-        transform: scale(1.02); /* Slight pulse */
+        transform: scale(1.02);
         background: linear-gradient(45deg, var(--neon-red), var(--neon-orange, 0.9));
-        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.3); /* Slight glow */
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.3);
     }
     100% {
         transform: scale(1);
@@ -498,8 +592,9 @@ body.flexStyle {
 }
 
 #punishmentLoadoutButton {
-    animation: subtlePulse 2.5s ease-in-out infinite; /* Slow and smooth pulse */
+    animation: subtlePulse 2.5s ease-in-out infinite; /* Keeps pulsing effect */
 }
+
 .recentBuffsSection {
     background-color: #292929;
     padding: 30px 15px;
@@ -609,4 +704,58 @@ body.flexStyle {
 
 .faq-content-inner strong {
     color: white;
+}
+/* Mystery Placeholder Styling */
+.placeholder-container {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #444, #222); /* Dark gradient */
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;  /* Stack image and text */
+    justify-content: center;
+    align-items: center;
+    height: 190px;
+    width: 140px;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.placeholder-container img {
+    width: 80px;
+    opacity: 0.7;
+    margin-bottom: 8px; /* Space between image and text */
+}
+
+.placeholder-container p {
+    font-size: 14px;
+    color: #fff;
+    margin: 0;
+}
+
+/* Shine Effect */
+.placeholder-container::after {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0) 70%);
+    animation: shineEffect 3s infinite linear;
+}
+
+@keyframes shineEffect {
+    0% { transform: rotate(0deg) translateX(-30%); }
+    50% { transform: rotate(45deg) translateX(30%); }
+    100% { transform: rotate(0deg) translateX(-30%); }
+}
+
+
+@keyframes shineEffect {
+    0% { transform: rotate(0deg) translateX(-30%); }
+    50% { transform: rotate(45deg) translateX(30%); }
+    100% { transform: rotate(0deg) translateX(-30%); }
 }
