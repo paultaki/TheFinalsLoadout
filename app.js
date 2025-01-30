@@ -284,6 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
                 selectedSpinCount = 1;
             }
+            document.getElementById("copyLoadoutButton").addEventListener("click", copyLoadout);
         });
     };
 
@@ -295,44 +296,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Copy loadout function
     window.copyLoadout = () => {
-        setTimeout(() => {
-            const itemsContainer = document.querySelector(".items-container");
+        const columns = Array.from(document.querySelectorAll(".scroll-container"));
+        const selectedItems = columns.map(col => col.querySelector(".selected")?.innerText?.trim() || "Unknown");
     
-            if (!itemsContainer) {
-                alert("❌ No loadout found! Spin the wheel first.");
-                console.error("❌ ERROR: .items-container not found.");
-                return;
-            }
+        if (selectedItems.includes("Unknown")) {
+            alert("Error: Not all items were selected. Try spinning again.");
+            return;
+        }
     
-            const items = itemsContainer.querySelectorAll(".itemCol p");
+        // Create the formatted text with NO indentation issues
+        const copyText = 
+    "Class: " + selectedItems[0] + "\n" +
+    "Weapon: " + selectedItems[1] + "\n" +
+    "Specialization: " + selectedItems[2] + "\n" +
+    "Gadget 1: " + selectedItems[3] + "\n" +
+    "Gadget 2: " + selectedItems[4] + "\n" +
+    "Gadget 3: " + selectedItems[5];
     
-            console.log("🔍 Found Loadout Items:", items);
-    
-            if (items.length < 6) {
-                alert("❌ No valid loadout found! Spin the wheel first.");
-                console.error(`❌ ERROR: Only ${items.length} items found. Expected at least 6.`);
-                return;
-            }
-    
-            const loadoutText = `
-    Character: ${items[0].innerText}
-    Weapon: ${items[1].innerText}
-    Specialization: ${items[2].innerText}
-    Gadget 1: ${items[3].innerText}
-    Gadget 2: ${items[4].innerText}
-    Gadget 3: ${items[5].innerText}
-            `.trim();
-    
-            console.log("✅ Extracted Loadout:", loadoutText);
-    
-            navigator.clipboard.writeText(loadoutText)
-                .then(() => {
-                    alert("✅ Loadout copied to clipboard!\n\n" + loadoutText);
-                    console.log("✅ Copied Successfully!");
-                })
-                .catch(err => console.error("❌ Clipboard Copy Failed: ", err));
-        }, 200);
+        navigator.clipboard.writeText(copyText)
+            .then(() => alert("Loadout copied to clipboard!"))
+            .catch(err => console.error("Could not copy text: ", err));
     };
+    
 
     // Set up recent buffs section
     if (recentBuffsSection) {
