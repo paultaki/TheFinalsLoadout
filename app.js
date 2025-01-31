@@ -193,114 +193,172 @@ document.addEventListener("DOMContentLoaded", () => {
         button.classList.add("active");
     };
 
-    const generateLoadout = (classType, button) => {
-        if (isSpinning) return;
-        isSpinning = true;
-        currentSpin = 1;
-        setActiveButton(button);
-        
-        if (classType === "Random") {
-            const classes = ["Light", "Medium", "Heavy"];
-            classType = classes[Math.floor(Math.random() * classes.length)];
-        }
-        displayLoadout(null, "Random");
-
-    };
-
-    const displayLoadout = (loadout, classType) => {
-        const isFinalSpin = currentSpin === selectedSpinCount;
-        
-        // Add spin progress indicator
-        const progressDiv = document.createElement('div');
-        progressDiv.className = `spin-progress ${isFinalSpin ? 'final-spin' : ''}`;
-        progressDiv.textContent = isFinalSpin ? 'Final Spin!' : `Spin ${currentSpin} of ${selectedSpinCount}`;
-        outputDiv.insertBefore(progressDiv, outputDiv.firstChild);
+// Separate logic for random and manual spins
+const generateLoadout = (classType, button) => {
+    if (isSpinning) return;
+    isSpinning = true;
+    currentSpin = 1;
+    setActiveButton(button);
     
-        // If this is a random selection or loadout is null, pick a random class for this spin
-        let actualClass = classType;
-        if (classType === "Random" || !loadout) {
-            const classes = ["Light", "Medium", "Heavy"];
-            actualClass = classes[Math.floor(Math.random() * classes.length)];
-            loadout = loadouts[actualClass];
-        }
+    if (classType === "Random") {
+        displayRandomLoadout();
+    } else {
+        displayManualLoadout(classType);
+    }
+};
+
+// Handle fully random loadouts (new class each spin)
+const displayRandomLoadout = () => {
+    const isFinalSpin = currentSpin === selectedSpinCount;
     
-        const selectedGadgets = getRandomUniqueItems(loadout.gadgets, 3);
-        
-        const loadoutHTML = `
-            <div class="items-container">
-                <div class="item-container">
-                    <div class="scroll-container">
-                        ${createItemContainer([actualClass])}
-                    </div>
+    // Add spin progress indicator
+    const progressDiv = document.createElement('div');
+    progressDiv.className = `spin-progress ${isFinalSpin ? 'final-spin' : ''}`;
+    progressDiv.textContent = isFinalSpin ? 'Final Spin!' : `Spin ${currentSpin} of ${selectedSpinCount}`;
+    outputDiv.insertBefore(progressDiv, outputDiv.firstChild);
+
+    // Select a random class for this specific spin
+    const classes = ["Light", "Medium", "Heavy"];
+    const randomClass = classes[Math.floor(Math.random() * classes.length)];
+    const loadout = loadouts[randomClass];
+    
+    const selectedGadgets = getRandomUniqueItems(loadout.gadgets, 3);
+    
+    const loadoutHTML = `
+        <div class="items-container">
+            <div class="item-container">
+                <div class="scroll-container">
+                    ${createItemContainer([randomClass])}
                 </div>
-                <div class="item-container">
-                    <div class="scroll-container">
-                        ${createItemContainer(loadout.weapons)}
-                    </div>
-                </div>
-                <div class="item-container">
-                    <div class="scroll-container">
-                        ${createItemContainer(loadout.specializations)}
-                    </div>
-                </div>
-                ${selectedGadgets.map(gadget => `
-                    <div class="item-container">
-                        <div class="scroll-container">
-                            ${createItemContainer([gadget])}
-                        </div>
-                    </div>
-                `).join("")}
             </div>
-        `;
+            <div class="item-container">
+                <div class="scroll-container">
+                    ${createItemContainer(loadout.weapons)}
+                </div>
+            </div>
+            <div class="item-container">
+                <div class="scroll-container">
+                    ${createItemContainer(loadout.specializations)}
+                </div>
+            </div>
+            ${selectedGadgets.map(gadget => `
+                <div class="item-container">
+                    <div class="scroll-container">
+                        ${createItemContainer([gadget])}
+                    </div>
+                </div>
+            `).join("")}
+        </div>
+    `;
     
-        outputDiv.innerHTML = loadoutHTML;
+    outputDiv.innerHTML = loadoutHTML;
     
-        const scrollContainers = Array.from(outputDiv.querySelectorAll(".scroll-container"));
-        startSpinAnimation(scrollContainers, (selectedItems) => {
-            if (currentSpin < selectedSpinCount) {
-                setTimeout(() => {
-                    currentSpin++;
-                    // Update the active spin button to show remaining spins
-                    document.querySelectorAll('.spin-count-btn').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    // Highlight the button that represents remaining spins
-                    const remainingSpins = selectedSpinCount - currentSpin + 1;
-                    const nextButton = document.querySelector(`.spin-count-btn:nth-child(${remainingSpins})`);
-                    if (nextButton) {
-                        nextButton.classList.add('active');
-                    }
-                    // For random button, always pass null to force new random selection
-                    displayLoadout(null, "Random"); // Always randomize class for each spin
+    const scrollContainers = Array.from(outputDiv.querySelectorAll(".scroll-container"));
+    startSpinAnimation(scrollContainers, (selectedItems) => {
+        handleSpinComplete(progressDiv, true);
+    });
+};
 
-                }, 500);
-            } else {
-                progressDiv.textContent = '🎉 Final Loadout Locked In! 🎉';
-                isSpinning = false;
-                currentSpin = 1;
-            
-                // Reset all buttons without adding active to any
-                document.querySelectorAll(".spin-count-btn").forEach(btn => {
-                    btn.classList.remove("active");
-                    btn.removeAttribute("disabled");
-                });
-            
-                [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton, randomLoadoutButton].forEach(btn => {
-                    btn.classList.remove("active");
-                    btn.disabled = false;
-                });
-            
-                selectedSpinCount = 1;
-            }
-            const copyButton = document.getElementById("copyLoadoutButton");
-            if (copyButton) {
-                copyButton.addEventListener("click", copyLoadout);
-            } else {
-                console.error("Error: copyLoadoutButton not found.");
-            }
-                    });
-    };
+// Handle manual class selection loadouts (fixed class)
+const displayManualLoadout = (classType) => {
+    const isFinalSpin = currentSpin === selectedSpinCount;
+    
+    const progressDiv = document.createElement('div');
+    progressDiv.className = `spin-progress ${isFinalSpin ? 'final-spin' : ''}`;
+    progressDiv.textContent = isFinalSpin ? 'Final Spin!' : `Spin ${currentSpin} of ${selectedSpinCount}`;
+    outputDiv.insertBefore(progressDiv, outputDiv.firstChild);
 
+    const loadout = loadouts[classType];
+    const selectedGadgets = getRandomUniqueItems(loadout.gadgets, 3);
+    
+    const loadoutHTML = `
+        <div class="items-container">
+            <div class="item-container">
+                <div class="scroll-container">
+                    ${createItemContainer([classType])}
+                </div>
+            </div>
+            <div class="item-container">
+                <div class="scroll-container">
+                    ${createItemContainer(loadout.weapons)}
+                </div>
+            </div>
+            <div class="item-container">
+                <div class="scroll-container">
+                    ${createItemContainer(loadout.specializations)}
+                </div>
+            </div>
+            ${selectedGadgets.map(gadget => `
+                <div class="item-container">
+                    <div class="scroll-container">
+                        ${createItemContainer([gadget])}
+                    </div>
+                </div>
+            `).join("")}
+        </div>
+    `;
+    
+    outputDiv.innerHTML = loadoutHTML;
+    
+    const scrollContainers = Array.from(outputDiv.querySelectorAll(".scroll-container"));
+    startSpinAnimation(scrollContainers, (selectedItems) => {
+        handleSpinComplete(progressDiv, false);
+    });
+};
+
+// Unified spin completion handler
+const handleSpinComplete = (progressDiv, isRandom) => {
+    if (currentSpin < selectedSpinCount) {
+        setTimeout(() => {
+            currentSpin++;
+            // Update spin count buttons
+            document.querySelectorAll('.spin-count-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const remainingSpins = selectedSpinCount - currentSpin + 1;
+            const nextButton = document.querySelector(`.spin-count-btn:nth-child(${remainingSpins})`);
+            if (nextButton) {
+                nextButton.classList.add('active');
+            }
+            
+            // For random selection, generate new random loadout
+            // For manual selection, keep the same class
+            if (isRandom) {
+                displayRandomLoadout();
+            } else {
+                const activeButton = document.querySelector('.outlineCircleBtn.active');
+                const classType = activeButton.textContent;
+                displayManualLoadout(classType);
+            }
+        }, 500);
+    } else {
+        progressDiv.textContent = '🎉 Final Loadout Locked In! 🎉';
+        isSpinning = false;
+        currentSpin = 1;
+        
+        // Reset UI state
+        document.querySelectorAll(".spin-count-btn").forEach(btn => {
+            btn.classList.remove("active");
+            btn.removeAttribute("disabled");
+        });
+        
+        // Only reset active state if it was a random selection
+        if (isRandom) {
+            [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton, randomLoadoutButton].forEach(btn => {
+                btn.classList.remove("active");
+                btn.disabled = false;
+            });
+        }
+        
+        selectedSpinCount = 1;
+    }
+    
+    // Ensure copy button functionality
+    const copyButton = document.getElementById("copyLoadoutButton");
+    if (copyButton) {
+        copyButton.addEventListener("click", copyLoadout);
+    }
+};
     // Button click handlers
     lightLoadoutButton.onclick = () => generateLoadout("Light", lightLoadoutButton);
     mediumLoadoutButton.onclick = () => generateLoadout("Medium", mediumLoadoutButton);
