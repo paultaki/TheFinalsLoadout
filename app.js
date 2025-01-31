@@ -63,9 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Insert elements in the correct order
         const buttonsContainer = document.querySelector('.buttons');
-        buttonsContainer.parentNode.insertBefore(step1, buttonsContainer);
-        buttonsContainer.parentNode.insertBefore(buttonContainer, buttonsContainer);
-        buttonsContainer.parentNode.insertBefore(step2, buttonsContainer);
+        if (buttonsContainer && buttonsContainer.parentNode) {
+            buttonsContainer.parentNode.insertBefore(step1, buttonsContainer);
+            buttonsContainer.parentNode.insertBefore(buttonContainer, buttonsContainer);
+            buttonsContainer.parentNode.insertBefore(step2, buttonsContainer);
+        } else {
+            console.error("Error: .buttons container not found in the DOM.");
+        }
+        
     };
     
     const shuffleArray = (array) => {
@@ -93,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return repeatedItems
             .map((item) => `
                 <div class="itemCol">
-                    <img src="images/${item.replaceAll(" ", "_")}.webp" alt="${item}">
+                    <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
                     <p>${item}</p>
                 </div>
             `)
@@ -169,19 +174,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => 
                     btn.removeAttribute("disabled")
                 );
-                callback(columns.map((col) => 
-                    col.querySelector(".selected").innerText.trim()
-                ));
+                callback(columns.map((col) => {
+                    const selectedItem = col.querySelector(".selected");
+                    return selectedItem ? selectedItem.innerText.trim() : "Unknown";
+                }));
             }
+            
         };
     
         animate();
     };
 
     const setActiveButton = (button) => {
-        [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton].forEach((btn) =>
-            btn.classList.remove("active")
-        );
+        [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton, randomLoadoutButton].forEach(btn => {
+            if (btn) btn.classList.remove("active");
+        });
+   
         button.classList.add("active");
     };
 
@@ -284,8 +292,13 @@ document.addEventListener("DOMContentLoaded", () => {
             
                 selectedSpinCount = 1;
             }
-            document.getElementById("copyLoadoutButton").addEventListener("click", copyLoadout);
-        });
+            const copyButton = document.getElementById("copyLoadoutButton");
+            if (copyButton) {
+                copyButton.addEventListener("click", copyLoadout);
+            } else {
+                console.error("Error: copyLoadoutButton not found.");
+            }
+                    });
     };
 
     // Button click handlers
@@ -297,8 +310,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Copy loadout function
     window.copyLoadout = () => {
         const columns = Array.from(document.querySelectorAll(".scroll-container"));
-        const selectedItems = columns.map(col => col.querySelector(".selected")?.innerText?.trim() || "Unknown");
-    
+        const selectedItems = columns.map(col => {
+            const selectedItem = col.querySelector(".selected");
+            return selectedItem ? selectedItem.innerText.trim() : "Unknown";
+        });
+            
         if (selectedItems.includes("Unknown")) {
             alert("Error: Not all items were selected. Try spinning again.");
             return;
