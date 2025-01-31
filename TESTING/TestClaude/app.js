@@ -29,6 +29,89 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    const createItemContainer = (items) => {
+        let repeatedItems = [];
+        if (items.length === 1) {
+            repeatedItems = Array(12).fill(items[0]);
+        } else {
+            repeatedItems = shuffleArray([...items, ...items, ...items]).slice(0, 12);
+        }
+    
+        return `<div class="scroll-container">${
+            repeatedItems.map(item => `
+                <div class="itemCol" data-item="${item}">
+                    <img src="images/${item.replace(/ /g, '_')}.webp" alt="${item}">
+                    <p>${item}</p>
+                </div>
+            `).join('')
+        }</div>`;
+    };
+    
+    const startSpinAnimation = (columns, callback) => {
+        const itemHeight = 188;
+        const baseSpeed = 25;
+        const stopTimes = columns.map((_, index) => 2000 + (index * 600));
+        const startTime = Date.now();
+        let allStopped = new Array(columns.length).fill(false);
+        
+        document.querySelectorAll(".outlineCircleBtn, .random, .spin-count-btn")
+            .forEach(btn => btn.setAttribute("disabled", "true"));
+    
+        columns.forEach(column => {
+            column.style.transition = 'none';
+            column.style.transform = 'translateY(0)';
+        });
+    
+        const animate = () => {
+            const currentTime = Date.now();
+            let animationRunning = false;
+    
+            columns.forEach((column, index) => {
+                if (!allStopped[index]) {
+                    animationRunning = true;
+                    const elapsedTime = currentTime - startTime;
+                    const shouldStop = elapsedTime >= stopTimes[index];
+    
+                    if (!shouldStop) {
+                        let currentOffset = parseFloat(column.style.transform?.replace("translateY(", "").replace("px)", "")) || 0;
+                        let newOffset = currentOffset - baseSpeed;
+    
+                        if (Math.abs(newOffset) >= itemHeight * 12) {
+                            newOffset = 0;
+                        }
+    
+                        column.style.transform = `translateY(${newOffset}px)`;
+                    } else {
+                        allStopped[index] = true;
+                        const finalPosition = -Math.floor(Math.random() * 8 + 2) * itemHeight;
+                        
+                        column.style.transition = 'transform 0.5s ease-out';
+                        column.style.transform = `translateY(${finalPosition}px)`;
+                        
+                        setTimeout(() => {
+                            const selectedIndex = Math.abs(Math.round(finalPosition / itemHeight));
+                            column.children[selectedIndex]?.classList.add("selected");
+                        }, 500);
+                    }
+                }
+            });
+    
+            if (animationRunning) {
+                requestAnimationFrame(animate);
+            } else {
+                setTimeout(() => {
+                    document.querySelectorAll(".outlineCircleBtn, .random")
+                        .forEach(btn => btn.removeAttribute("disabled"));
+                    callback(columns.map(col => 
+                        col.querySelector(".selected")?.getAttribute("data-item") || "Unknown"
+                    ));
+                }, 600);
+            }
+        };
+    
+        animate();
+    };
+
     // Initialize spin selector
     const initSpinSelector = () => {
         const spinSelector = document.createElement('div');
@@ -87,103 +170,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return shuffled.slice(0, n);
     };
 
-    const createItemContainer = (items) => {
-        let repeatedItems = [...items];
-        while (repeatedItems.length < 8) {
-            repeatedItems = [...repeatedItems, ...items];
-        }
-        repeatedItems = shuffleArray(repeatedItems);
-        repeatedItems = repeatedItems.slice(0, 8);
     
-        return repeatedItems
-            .map((item) => `
-                <div class="itemCol">
-                    <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
-                    <p>${item}</p>
-                </div>
-            `)
-            .join("");
-    };
-
-    const startSpinAnimation = (columns, callback) => {
-        const itemHeight = 188;
-        const baseSpeed = 12;
-        
-        const stopTimes = columns.map((_, index) => {
-            if (index === 0) {
-                return 700;
-            } else if (currentSpin === selectedSpinCount) {
-                return 700 + (index * 500);
-            } else {
-                return 700 + (index * 130);
-            }
-        });
-        
-        let allStopped = new Array(columns.length).fill(false);
-        const startTime = Date.now();
     
-        document.querySelectorAll(".outlineCircleBtn, .random, .spin-count-btn").forEach((btn) => 
-            btn.setAttribute("disabled", "true")
-        );
-    
-        columns.forEach(column => {
-            let tempImages = [];
-            for (let i = 0; i < 10; i++) {
-                const randomItem = column.children[Math.floor(Math.random() * column.children.length)];
-                tempImages.push(`<div class="itemCol">${randomItem.innerHTML}</div>`);
-            }
-            column.innerHTML = tempImages.join("");
-        });
-        
-        const animate = () => {
-            const currentTime = Date.now();
-            let animationRunning = false;
-    
-            columns.forEach((column, index) => {
-                if (!allStopped[index]) {
-                    animationRunning = true;
-                    
-                    const shouldStop = currentTime - startTime >= stopTimes[index];
-                    const currentOffset = parseFloat(column.style.transform?.replace("translateY(", "").replace("px)", "")) || 0;
-                    
-                    let newOffset = currentOffset + baseSpeed;
-    
-                    if (newOffset >= itemHeight * 8) {
-                        newOffset = 0;
-                    }
-                    
-                    if (shouldStop) {
-                        allStopped[index] = true;
-                        newOffset = itemHeight;
-                    }
-                    
-                    column.style.transform = `translateY(${newOffset}px)`;
-                    
-                    if (shouldStop) {
-                        const selectedItem = column.children[0];
-                        if (selectedItem) {
-                            selectedItem.classList.add("selected");
-                        }
-                    }
-                }
-            });
-    
-            if (animationRunning) {
-                requestAnimationFrame(animate);
-            } else {
-                document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => 
-                    btn.removeAttribute("disabled")
-                );
-                callback(columns.map((col) => {
-                    const selectedItem = col.querySelector(".selected");
-                    return selectedItem ? selectedItem.innerText.trim() : "Unknown";
-                }));
-            }
-            
-        };
-    
-        animate();
-    };
 
     const setActiveButton = (button) => {
         [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton, randomLoadoutButton].forEach(btn => {
@@ -343,14 +331,22 @@ const handleSpinComplete = (progressDiv, isRandom) => {
         });
         
         // Only reset active state if it was a random selection
-        if (isRandom) {
-            [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton, randomLoadoutButton].forEach(btn => {
-                btn.classList.remove("active");
-                btn.disabled = false;
-            });
-        }
-        
-        selectedSpinCount = 1;
+        // Reset the selected class for ALL spins (manual + random)
+[lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton, randomLoadoutButton].forEach(btn => {
+    btn.classList.remove("active"); // Clear active class
+    btn.removeAttribute("disabled"); // Ensure buttons are re-enabled
+});
+
+// Reset any tracking variable for the selected class
+selectedClass = null;
+
+// Reset other state variables
+selectedSpinCount = 1;
+isSpinning = false;
+currentSpin = 1;
+
+                
+
     }
     
     // Ensure copy button functionality

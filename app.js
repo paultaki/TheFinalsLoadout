@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (currentSpin === selectedSpinCount) {
                 return 700 + (index * 500);
             } else {
-                return 700 + (index * 130);
+                return 700 + (index * 110);
             }
         });
         
@@ -343,14 +343,22 @@ const handleSpinComplete = (progressDiv, isRandom) => {
         });
         
         // Only reset active state if it was a random selection
-        if (isRandom) {
-            [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton, randomLoadoutButton].forEach(btn => {
-                btn.classList.remove("active");
-                btn.disabled = false;
-            });
-        }
-        
-        selectedSpinCount = 1;
+        // Reset the selected class for ALL spins (manual + random)
+[lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton, randomLoadoutButton].forEach(btn => {
+    btn.classList.remove("active"); // Clear active class
+    btn.removeAttribute("disabled"); // Ensure buttons are re-enabled
+});
+
+// Reset any tracking variable for the selected class
+selectedClass = null;
+
+// Reset other state variables
+selectedSpinCount = 1;
+isSpinning = false;
+currentSpin = 1;
+
+                
+
     }
     
     // Ensure copy button functionality

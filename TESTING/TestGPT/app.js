@@ -6,12 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const outputDiv = document.getElementById("output");
     const recentBuffsSection = document.querySelector(".recentBuffsSection .buffs-container");
 
-// New variables for spin functionality
-let selectedSpinCount = 1;
-let isSpinning = false;
-let currentSpin = 1;
-let selectedClass = null;  // NEW VARIABLE to persist class selection
-
+    // New variables for spin functionality
+    let selectedSpinCount = 1;
+    let isSpinning = false;
+    let currentSpin = 1;
 
     const loadouts = {
         Light: {
@@ -90,38 +88,35 @@ let selectedClass = null;  // NEW VARIABLE to persist class selection
     };
 
     const createItemContainer = (items) => {
-        let repeatedItems = [...items];
-        while (repeatedItems.length < 8) {
-            repeatedItems = [...repeatedItems, ...items];
-        }
-        repeatedItems = shuffleArray(repeatedItems);
-        repeatedItems = repeatedItems.slice(0, 8);
+        let repeatedItems = [];
     
-        return repeatedItems
-            .map((item) => `
-                <div class="itemCol">
-                    <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
-                    <p>${item}</p>
-                </div>
-            `)
-            .join("");
+        // Ensure we have at least 20 images to prevent blank spots
+        while (repeatedItems.length < 20) {
+            repeatedItems.push(...shuffleArray(items));
+        }
+    
+        repeatedItems = repeatedItems.slice(0, 20); // Limit to 20 for consistency
+    
+        return `
+            <div class="scrolling-wrapper">
+                ${repeatedItems.map(item => `
+                    <div class="itemCol">
+                        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+                        <p>${item}</p>
+                    </div>
+                `).join("")}
+            </div>
+        `;
     };
+    
 
     const startSpinAnimation = (columns, callback) => {
-        const itemHeight = 188;
-        const baseSpeed = 12;
-        
-        const stopTimes = columns.map((_, index) => {
-            if (index === 0) {
-                return 700;
-            } else if (currentSpin === selectedSpinCount) {
-                return 700 + (index * 500);
-            } else {
-                return 700 + (index * 130);
-            }
-        });
-        
+        const itemHeight = 188; // Height of each item
+        const totalItems = 20;  // Matches the number in createItemContainer()
+        const baseSpeed = 25;   // Adjust speed as needed
         let allStopped = new Array(columns.length).fill(false);
+        
+        const stopTimes = columns.map((_, index) => 1200 + (index * 500)); // Delayed stop for each column
         const startTime = Date.now();
     
         document.querySelectorAll(".outlineCircleBtn, .random, .spin-count-btn").forEach((btn) => 
@@ -129,12 +124,14 @@ let selectedClass = null;  // NEW VARIABLE to persist class selection
         );
     
         columns.forEach(column => {
-            let tempImages = [];
-            for (let i = 0; i < 10; i++) {
-                const randomItem = column.children[Math.floor(Math.random() * column.children.length)];
-                tempImages.push(`<div class="itemCol">${randomItem.innerHTML}</div>`);
+            const wrapper = column.querySelector('.scrolling-wrapper');
+            if (!wrapper) {
+                console.error("Error: .scrolling-wrapper not found in column", column);
+                return;
             }
-            column.innerHTML = tempImages.join("");
+    
+            wrapper.style.transition = "none"; 
+            wrapper.style.transform = `translateY(0px)`; // Reset to start position
         });
     
         const animate = () => {
@@ -142,56 +139,60 @@ let selectedClass = null;  // NEW VARIABLE to persist class selection
             let animationRunning = false;
     
             columns.forEach((column, index) => {
+                const wrapper = column.querySelector('.scrolling-wrapper');
+                if (!wrapper) return;
+    
                 if (!allStopped[index]) {
                     animationRunning = true;
-                    
                     const shouldStop = currentTime - startTime >= stopTimes[index];
-                    const currentOffset = parseFloat(column.style.transform?.replace("translateY(", "").replace("px)", "")) || 0;
-                    
-                    let newOffset = currentOffset + baseSpeed;
     
-                    if (newOffset >= itemHeight * 8) {
-                        newOffset = 0;
+                    let currentOffset = parseFloat(wrapper.style.transform.replace("translateY(", "").replace("px)", "")) || 0;
+                    let newOffset = currentOffset - baseSpeed;
+    
+                    // Make it loop infinitely
+                    if (newOffset <= -itemHeight * totalItems) {
+                        newOffset += itemHeight * totalItems; // Reset to the start smoothly
                     }
-                    
+    
+                    wrapper.style.transform = `translateY(${newOffset}px)`;
+    
                     if (shouldStop) {
                         allStopped[index] = true;
-                        newOffset = itemHeight;
-                    }
-                    
-                    column.style.transform = `translateY(${newOffset}px)`;
-                    
-                    if (shouldStop) {
-                        const selectedItem = column.children[0];
-                        if (selectedItem) {
-                            selectedItem.classList.add("selected");
-                        }
+    
+                        // Select a final position randomly
+                        const finalIndex = Math.floor(Math.random() * totalItems - 5) + 3; // Avoid extreme positions
+                        const finalOffset = -finalIndex * itemHeight;
+    
+                        setTimeout(() => {
+                            wrapper.style.transition = "transform 0.5s ease-out";
+                            wrapper.style.transform = `translateY(${finalOffset}px)`;
+    
+                            setTimeout(() => {
+                                const selectedItem = wrapper.children[finalIndex];
+                                if (selectedItem) {
+                                    selectedItem.classList.add("selected");
+                                }
+                            }, 500);
+                        }, 200);
                     }
                 }
             });
-    
             if (animationRunning) {
                 requestAnimationFrame(animate);
             } else {
                 document.querySelectorAll(".outlineCircleBtn, .random").forEach((btn) => 
                     btn.removeAttribute("disabled")
                 );
-    
-                // ✅ FIX: Ensure callback triggers correctly for multiple spins
-                if (callback) {
-                    setTimeout(() => {
-                        callback();
-                    }, 500);
-                } else {
-                    finishSpin(); // ✅ Ensure last spin resets everything
-                }
+                callback(columns.map((col) => {
+                    const selectedItem = col.querySelector(".selected");
+                    return selectedItem ? selectedItem.innerText.trim() : "Unknown";
+                }));
             }
-        };
+            
+            // ✅ Add this closing bracket to properly close startSpinAnimation()
+            };
+            
     
-        animate();
-    };
-    
-
     const setActiveButton = (button) => {
         [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton, randomLoadoutButton].forEach(btn => {
             if (btn) btn.classList.remove("active");
@@ -200,141 +201,182 @@ let selectedClass = null;  // NEW VARIABLE to persist class selection
         button.classList.add("active");
     };
 
-    const generateLoadout = (classType, button) => {
-        if (isSpinning) return;
-        isSpinning = true;
-        currentSpin = 1;
-        setActiveButton(button);
+// Separate logic for random and manual spins
+const generateLoadout = (classType, button) => {
+    if (isSpinning) return;
+    isSpinning = true;
+    currentSpin = 1;
+    setActiveButton(button);
     
-        if (classType === "Random") {
-            spinRandomClass();  // ✅ Use separate function for "Random"
-        } else {
-            selectedClass = classType;
-            spinManualClass();  // ✅ Ensure multi-spin works for manual selections
-        }
-    };
-    
-    
-    
-    const spinRandomClass = () => {
-        if (currentSpin < selectedSpinCount) {
-            setTimeout(() => {
-                const classes = ["Light", "Medium", "Heavy"];
-                const randomClass = classes[Math.floor(Math.random() * classes.length)];
-    
-                displayLoadout(loadouts[randomClass], randomClass, () => {
-                    if (currentSpin + 1 <= selectedSpinCount) {  // ✅ FIX: Proper last-spin condition
-                        currentSpin++;
-                        spinRandomClass();  // 🔄 Keep spinning until the last spin is reached
-                    } else {
-                        finishSpin();  // ✅ Properly reset after last spin
-                    }
-                });
-            }, 2000); // Match timing with normal spins
-        } else {
-            finishSpin(); // ✅ Ensure `finishSpin()` runs at the end
-        }
-    };
-    
-    
+    if (classType === "Random") {
+        displayRandomLoadout();
+    } else {
+        displayManualLoadout(classType);
+    }
+};
 
-        
-      
-    const spinManualClass = () => {
-        if (currentSpin < selectedSpinCount) {
-            setTimeout(() => {
-                displayLoadout(loadouts[selectedClass], selectedClass, () => {
-                    currentSpin++; // ✅ Increment at the right place
-                    if (currentSpin < selectedSpinCount) {
-                        spinManualClass();  // 🔄 Keep spinning
-                    } else {
-                        finishSpin();  // ✅ Ensure final spin calls `finishSpin()`
-                    }
-                });
-            }, 2000);
-        } else {
-            finishSpin(); // ✅ Ensure `finishSpin()` is reached
-        }
-    };
+// Handle fully random loadouts (new class each spin)
+const displayRandomLoadout = () => {
+    const isFinalSpin = currentSpin === selectedSpinCount;
     
+    // Add spin progress indicator
+    const progressDiv = document.createElement('div');
+    progressDiv.className = `spin-progress ${isFinalSpin ? 'final-spin' : ''}`;
+    progressDiv.textContent = isFinalSpin ? 'Final Spin!' : `Spin ${currentSpin} of ${selectedSpinCount}`;
+    outputDiv.insertBefore(progressDiv, outputDiv.firstChild);
+
+    // Select a random class for this specific spin
+    const classes = ["Light", "Medium", "Heavy"];
+    const randomClass = classes[Math.floor(Math.random() * classes.length)];
+    const loadout = loadouts[randomClass];
     
+    const selectedGadgets = getRandomUniqueItems(loadout.gadgets, 3);
     
-    const displayLoadout = (loadout, actualClass, callback = null) => {
-        const isFinalSpin = currentSpin === selectedSpinCount;
-    
-        const progressDiv = document.createElement('div');
-        progressDiv.className = `spin-progress ${isFinalSpin ? 'final-spin' : ''}`;
-        progressDiv.textContent = isFinalSpin ? 'Final Spin!' : `Spin ${currentSpin + 1} of ${selectedSpinCount}`;
-        outputDiv.insertBefore(progressDiv, outputDiv.firstChild);
-    
-        loadout = loadouts[actualClass];
-    
-        const selectedGadgets = getRandomUniqueItems(loadout.gadgets, 3);
-    
-        const loadoutHTML = `
-            <div class="items-container">
-                <div class="item-container">
-                    <div class="scroll-container">
-                        ${createItemContainer([actualClass])}
-                    </div>
+    const loadoutHTML = `
+        <div class="items-container">
+            <div class="item-container">
+                <div class="scroll-container">
+                    ${createItemContainer([randomClass])}
                 </div>
-                <div class="item-container">
-                    <div class="scroll-container">
-                        ${createItemContainer(loadout.weapons)}
-                    </div>
-                </div>
-                <div class="item-container">
-                    <div class="scroll-container">
-                        ${createItemContainer(loadout.specializations)}
-                    </div>
-                </div>
-                ${selectedGadgets.map(gadget => `
-                    <div class="item-container">
-                        <div class="scroll-container">
-                            ${createItemContainer([gadget])}
-                        </div>
-                    </div>
-                `).join("")}
             </div>
-        `;
+            <div class="item-container">
+                <div class="scroll-container">
+                    ${createItemContainer(loadout.weapons)}
+                </div>
+            </div>
+            <div class="item-container">
+                <div class="scroll-container">
+                    ${createItemContainer(loadout.specializations)}
+                </div>
+            </div>
+            ${selectedGadgets.map(gadget => `
+                <div class="item-container">
+                    <div class="scroll-container">
+                        ${createItemContainer([gadget])}
+                    </div>
+                </div>
+            `).join("")}
+        </div>
+    `;
     
-        outputDiv.innerHTML = loadoutHTML;
+    outputDiv.innerHTML = loadoutHTML;
     
-        const scrollContainers = Array.from(outputDiv.querySelectorAll(".scroll-container"));
-        startSpinAnimation(scrollContainers, () => {
-            if (currentSpin < selectedSpinCount) {
-                setTimeout(() => {
-                    if (callback) callback(); // ✅ Ensure callback is properly triggered
-                }, 500);
-            } else {
-                finishSpin(); // ✅ Ensure last spin properly resets everything
+    const scrollContainers = Array.from(outputDiv.querySelectorAll(".scroll-container"));
+    startSpinAnimation(scrollContainers, (selectedItems) => {
+        handleSpinComplete(progressDiv, true);
+    });
+};
+
+// Handle manual class selection loadouts (fixed class)
+const displayManualLoadout = (classType) => {
+    const isFinalSpin = currentSpin === selectedSpinCount;
+    
+    const progressDiv = document.createElement('div');
+    progressDiv.className = `spin-progress ${isFinalSpin ? 'final-spin' : ''}`;
+    progressDiv.textContent = isFinalSpin ? 'Final Spin!' : `Spin ${currentSpin} of ${selectedSpinCount}`;
+    outputDiv.insertBefore(progressDiv, outputDiv.firstChild);
+
+    const loadout = loadouts[classType];
+    const selectedGadgets = getRandomUniqueItems(loadout.gadgets, 3);
+    
+    const loadoutHTML = `
+        <div class="items-container">
+            <div class="item-container">
+                <div class="scroll-container">
+                    ${createItemContainer([classType])}
+                </div>
+            </div>
+            <div class="item-container">
+                <div class="scroll-container">
+                    ${createItemContainer(loadout.weapons)}
+                </div>
+            </div>
+            <div class="item-container">
+                <div class="scroll-container">
+                    ${createItemContainer(loadout.specializations)}
+                </div>
+            </div>
+            ${selectedGadgets.map(gadget => `
+                <div class="item-container">
+                    <div class="scroll-container">
+                        ${createItemContainer([gadget])}
+                    </div>
+                </div>
+            `).join("")}
+        </div>
+    `;
+    
+    outputDiv.innerHTML = loadoutHTML;
+    
+    const scrollContainers = Array.from(outputDiv.querySelectorAll(".scroll-container"));
+    startSpinAnimation(scrollContainers, (selectedItems) => {
+        handleSpinComplete(progressDiv, false);
+    });
+};
+
+// Unified spin completion handler
+const handleSpinComplete = (progressDiv, isRandom) => {
+    if (currentSpin < selectedSpinCount) {
+        setTimeout(() => {
+            currentSpin++;
+            // Update spin count buttons
+            document.querySelectorAll('.spin-count-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const remainingSpins = selectedSpinCount - currentSpin + 1;
+            const nextButton = document.querySelector(`.spin-count-btn:nth-child(${remainingSpins})`);
+            if (nextButton) {
+                nextButton.classList.add('active');
             }
-        });
-    };
-    
-    
-    
-    const finishSpin = () => {
+            
+            // For random selection, generate new random loadout
+            // For manual selection, keep the same class
+            if (isRandom) {
+                displayRandomLoadout();
+            } else {
+                const activeButton = document.querySelector('.outlineCircleBtn.active');
+                const classType = activeButton.textContent;
+                displayManualLoadout(classType);
+            }
+        }, 500);
+    } else {
+        progressDiv.textContent = '🎉 Final Loadout Locked In! 🎉';
         isSpinning = false;
         currentSpin = 1;
-        selectedSpinCount = 1;
-    
+        
+        // Reset UI state
         document.querySelectorAll(".spin-count-btn").forEach(btn => {
             btn.classList.remove("active");
             btn.removeAttribute("disabled");
         });
-    
-        [lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton, randomLoadoutButton].forEach(btn => {
-            btn.classList.remove("active");
-            btn.disabled = false;
-        });
-    
-        selectedClass = null; // Reset selection for "Random"
-    };
-    
-    
         
+        // Only reset active state if it was a random selection
+        // Reset the selected class for ALL spins (manual + random)
+// Reset the selected class for ALL spins (manual + random)
+[lightLoadoutButton, mediumLoadoutButton, heavyLoadoutButton, randomLoadoutButton].forEach(btn => {
+    btn.classList.remove("active"); // Clear active class
+    btn.removeAttribute("disabled"); // Ensure buttons are re-enabled
+});
 
+
+// Reset any tracking variable for the selected class
+selectedClass = null;
+
+// Reset other state variables
+selectedSpinCount = 1;
+isSpinning = false;
+currentSpin = 1;
+
+                
+
+    }
+    
+    // Ensure copy button functionality
+    const copyButton = document.getElementById("copyLoadoutButton");
+    if (copyButton) {
+        copyButton.addEventListener("click", copyLoadout);
+    }
+};
     // Button click handlers
     lightLoadoutButton.onclick = () => generateLoadout("Light", lightLoadoutButton);
     mediumLoadoutButton.onclick = () => generateLoadout("Medium", mediumLoadoutButton);
