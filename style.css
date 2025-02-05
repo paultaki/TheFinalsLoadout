@@ -764,3 +764,65 @@ body.flexStyle {
     color: #fff;
     margin-bottom: 15px;
 }
+
+/* Buffs, Nerfs, and QoL Adjustments Styling */
+.buff-item .buff {
+    color: #00FF7F; /* Bright Green for Buffs */
+    font-weight: bold;
+}
+
+.buff-item .nerf {
+    color: #FF4F4F; /* Bright Red for Nerfs */
+    font-weight: bold;
+}
+
+.buff-item .qol {
+    color: #FFB700; /* Neon Yellow for QoL Adjustments */
+    font-weight: bold;
+}
+
+/* Background Highlights */
+.buff-item .buff-section {
+    background: rgba(0, 255, 127, 0.1); /* Light green background */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.buff-item .nerf-section {
+    background: rgba(255, 79, 79, 0.1); /* Light red background */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.buff-item .qol-section {
+    background: rgba(255, 183, 0, 0.1); /* Light yellow background */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Section Headings */
+.buff-item h4 {
+    font-size: 1.3rem;
+    color: var(--neon-yellow);
+    margin-top: 15px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 5px;
+}
+
+/* List Styling Improvements */
+.buff-item ul {
+    list-style-type: none;
+    padding-left: 15px;
+}
+
+.buff-item ul li::before {
+    content: "•";
+    color: var(--neon-yellow);
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}

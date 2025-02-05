@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #222;
+    color: white;
+}
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+.controls {
+    margin-bottom: 20px;
+}
+.spinner-area {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.spinner-column {
+    width: 100px;
+    height: 150px;
+    overflow: hidden;
+    border: 2px solid white;
+    background-color: black;
+    position: relative;
+}
+.spinner {
+    position: absolute;
+    width: 100%;
+    animation: spin-animation 2s linear infinite;
+}
+.highlight {
+    background-color: yellow;
+    color: black;
+    font-weight: bold;
+}
+@keyframes spin-animation {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-100%); }
+}
