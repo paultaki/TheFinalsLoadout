@@ -78,24 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return shuffled.slice(0, n);
     };
 
-    // Helper function to preload images
-    const preloadImages = (items) => {
-        const images = items.map(item => {
-            const img = new Image();
-            img.src = `images/${item.replace(/ /g, "_")}.webp`;
-            return img;
-        });
-        return Promise.all(images.map(img => {
-            return new Promise((resolve) => {
-                if (img.complete) {
-                    resolve();
-                } else {
-                    img.onload = resolve;
-                }
-            });
-        }));
-    };
-
     // Helper function to create item container HTML
     const createItemContainer = (items) => {
         let repeatedItems = [...items];
@@ -129,78 +111,57 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Animation function with slot machine effect
+    // Animation function
     const startSpinAnimation = (columns) => {
-        const itemHeight = 188; // Height of each item
-        const spinDuration = 2000; // Base duration for spin
-        const minSpins = 2; // Minimum number of full rotations
+        const itemHeight = 188;
+        const baseSpeed = 12;
         
-        // Prepare the columns for spinning
-        columns.forEach((column, columnIndex) => {
-            // Create a pool of items for smooth spinning
-            const items = column.children;
-            const itemCount = items.length;
-            
-            // Clone items to create a smooth loop
-            for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < itemCount; j++) {
-                    const clone = items[j].cloneNode(true);
-                    column.appendChild(clone);
-                }
-            }
-    
-            // Position for instant spin start
-            column.style.transform = 'translateY(0)';
-            
-            // Calculate unique timing for each column
-            const delay = columnIndex * 220; // Stagger column start times
-            const extraSpins = Math.random() * 2; // Random additional spins
-            const totalSpins = minSpins + extraSpins;
-            const finalPosition = itemHeight; // Final stopping position
-            
-            // Create keyframes for smooth acceleration and deceleration
-            const keyframes = [
-                { transform: 'translateY(0)', offset: 0 },
-                { transform: `translateY(-${itemHeight * itemCount * totalSpins}px)`, offset: 0.7 },
-                { transform: `translateY(-${itemHeight * itemCount * totalSpins + finalPosition}px)`, offset: 1 }
-            ];
-    
-            const timing = {
-                duration: spinDuration + delay,
-                easing: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
-                iterations: 1,
-                delay: delay,
-                fill: 'forwards'
-            };
-    
-            // Start the animation
-            const animation = column.animate(keyframes, timing);
-    
-            // Handle animation completion
-            animation.onfinish = () => {
-                // Clean up cloned elements after animation
-                while (column.children.length > itemCount) {
-                    column.removeChild(column.lastChild);
-                }
-                
-                // Set final position
-                column.style.transform = `translateY(${finalPosition}px)`;
-                
-                // Add selected class to the chosen item
-                const selectedItem = column.children[0];
-                if (selectedItem) {
-                    selectedItem.classList.add("selected");
-                }
-    
-                // Check if all columns are done
-                if (columnIndex === columns.length - 1) {
-                    // Small delay before callback to ensure smooth finish
-                    setTimeout(() => {
-                        handleSpinComplete(columns);
-                    }, 200);
-                }
-            };
+        const stopTimes = columns.map((_, index) => {
+            if (index === 0) return 700;
+            return 700 + (index * (state.currentSpin === state.totalSpins ? 500 : 110));
         });
+        
+        let allStopped = new Array(columns.length).fill(false);
+        const startTime = Date.now();
+    
+        // Disable buttons during spin
+        document.querySelectorAll(".class-button, .spin-button").forEach(btn => 
+            btn.setAttribute("disabled", "true")
+        );
+    
+        const animate = () => {
+            const currentTime = Date.now();
+            let animationRunning = false;
+    
+            columns.forEach((column, index) => {
+                if (!allStopped[index]) {
+                    animationRunning = true;
+                    
+                    const shouldStop = currentTime - startTime >= stopTimes[index];
+                    const currentOffset = parseFloat(column.style.transform?.replace("translateY(", "").replace("px)", "")) || 0;
+                    
+                    let newOffset = currentOffset + baseSpeed;
+                    if (newOffset >= itemHeight * 8) newOffset = 0;
+                    
+                    if (shouldStop) {
+                        allStopped[index] = true;
+                        newOffset = itemHeight;
+                        const selectedItem = column.children[0];
+                        if (selectedItem) selectedItem.classList.add("selected");
+                    }
+                    
+                    column.style.transform = `translateY(${newOffset}px)`;
+                }
+            });
+    
+            if (animationRunning) {
+                requestAnimationFrame(animate);
+            } else {
+                handleSpinComplete(columns);
+            }
+        };
+    
+        animate();
     };
 
     // Display functions for loadouts
@@ -216,16 +177,8 @@ document.addEventListener("DOMContentLoaded", () => {
         displayLoadout(classType, loadout);
     };
 
-    const displayLoadout = async (classType, loadout) => {
+    const displayLoadout = (classType, loadout) => {
         const selectedGadgets = getRandomUniqueItems(loadout.gadgets, 3);
-        
-        // Preload all images that will be used in the spin
-        await Promise.all([
-            preloadImages([classType]),
-            preloadImages(loadout.weapons),
-            preloadImages(loadout.specializations),
-            preloadImages(selectedGadgets)
-        ]);
         
         const loadoutHTML = `
             <div class="items-container">
@@ -293,7 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Copy loadout functionality
     document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
-        const columns = Array.from(outputDiv.querySelectorAll(".scroll-container"));
+        const columns = Array.from(document.querySelectorAll(".scroll-container"));
         const selectedItems = columns.map(col => {
             const selectedItem = col.querySelector(".selected");
             return selectedItem ? selectedItem.innerText.trim() : "Unknown";
@@ -305,12 +258,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     
         const copyText = 
-            "Class: " + selectedItems[0] + "\n" +
-            "Weapon: " + selectedItems[1] + "\n" +
-            "Specialization: " + selectedItems[2] + "\n" +
-            "Gadget 1: " + selectedItems[3] + "\n" +
-            "Gadget 2: " + selectedItems[4] + "\n" +
-            "Gadget 3: " + selectedItems[5];
+    "Class: " + selectedItems[0] + "\n" +
+    "Weapon: " + selectedItems[1] + "\n" +
+    "Specialization: " + selectedItems[2] + "\n" +
+    "Gadget 1: " + selectedItems[3] + "\n" +
+    "Gadget 2: " + selectedItems[4] + "\n" +
+    "Gadget 3: " + selectedItems[5];
     
         navigator.clipboard.writeText(copyText)
             .then(() => alert("Loadout copied to clipboard!"))
