@@ -1,191 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Finals Random Loadout Generator - Have Fun and Be Challenged!</title>
-    <meta name="description" content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles.">
-
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          "name": "The Finals Loadout Generator",
-          "description": "A random loadout generator for The Finals game with optimized weapons and gadgets for different playstyles.",
-          "url": "https://www.thefinalsloadout.com",
-          "image": "https://www.thefinalsloadout.com/images/the-finals.webp",
-          "author": {
-            "@type": "Organization",
-            "name": "1-800-FAT-MOMS"
-          }
-        }
-        </script>
-        
-
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap">
-    </noscript>
-    <link rel="preload" as="image" href="images/the-finals.webp" type="image/webp">
-
-    <!-- Stylesheet -->
+    <title>Loadout Spinner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-
-    <style>
-        html {
-            min-height: 100%;
-            background: linear-gradient(-45deg, 
-                #1d1a21,    /* Original dark */
-                #2a1f2d,    /* Slightly purple */
-                #1f2a2d,    /* Slightly blue-ish */
-                #201c24     /* Back to dark */
-            );
-            background-size: 400% 400%;
-            animation: gradientShift 20s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        body {
-            font-family: 'Oswald', sans-serif;
-            color: #fff;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
-    </style>
-
-
-
 </head>
-
 <body class="flexStyle">
     <header class="headerSection">
-        <div class="container">
-            <img src="images/the-finals.webp" alt="Random Loadout Generator for The Finals Game" class="finals-logo">
-            <h1 class="mainTitle">The Finals Loadout Generator - Spin for Random Builds!</h1>
-        </div>
+        <h1 class="mainTitle">Loadout Spinner</h1>
+        <p>Select your class and spin to get your loadout!</p>
     </header>
 
     <main class="mainContent">
-        <div class="container">
-            <div class="buttons">
-                <!-- Step 1: Class Selection -->
-                <div class="buttons">
-                    <!-- Step 1: Class Selection -->
-                    <div id="classSelection" class="step">
-                        <h2>Choose Your Class</h2>
-                        <div class="btnRow">
-                            <button class="class-button outlineCircleBtn" data-class="Light">LIGHT</button>
-                            <button class="class-button outlineCircleBtn" data-class="Medium">MEDIUM</button>
-                            <button class="class-button outlineCircleBtn" data-class="Heavy">HEAVY</button>
-                            <button class="class-button outlineCircleBtn random" data-class="random">?</button>
-                        </div>
-                    </div>
-                
-                    <!-- Step 2: Spin Count -->
-                    <div id="spinSelection" class="step disabled">
-                        <h2>How Many Spins?</h2>
-                        <div class="btnRow">
-                            <button class="spin-button outlineCircleBtn" data-spins="1">1</button>
-                            <button class="spin-button outlineCircleBtn" data-spins="2">2</button>
-                            <button class="spin-button outlineCircleBtn" data-spins="3">3</button>
-                            <button class="spin-button outlineCircleBtn" data-spins="4">4</button>
-                            <button class="spin-button outlineCircleBtn" data-spins="5">5</button>
-                        </div>
-                    </div>
-                </div>
-            <div id="output">
-                <!-- Placeholder Images (Lazy Loaded) -->
-                <div class="items-container">
-                    <div class="placeholder-container">
-                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
-                        <p>Contestant</p>
-                    </div>
-                    <div class="placeholder-container">
-                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
-                        <p>Weapon</p>
-                    </div>
-                    <div class="placeholder-container">
-                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
-                        <p>Specialization</p>
-                    </div>
-                    <div class="placeholder-container">
-                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
-                        <p>Gadget 1</p>
-                    </div>
-                    <div class="placeholder-container">
-                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
-                        <p>Gadget 2</p>
-                    </div>
-                    <div class="placeholder-container">
-                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
-                        <p>Gadget 3</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- ADD COPY AND PUNISHMENT LOADOUT BUTTONS HERE -->
+        <!-- Step 1: Class Selection -->
+        <div class="step" id="classSelection">
+            <h2>Step 1: Choose Your Class</h2>
             <div class="btnRow">
-                <button id="copyLoadoutButton" class="copy-button">Copy Loadout</button>
+                <button class="class-button outlineCircleBtn" data-class="Light" id="lightLoadoutButton">
+                    <span>Light</span>
+                </button>
+                <button class="class-button outlineCircleBtn" data-class="Medium" id="mediumLoadoutButton">
+                    <span>Medium</span>
+                </button>
+                <button class="class-button outlineCircleBtn" data-class="Heavy" id="heavyLoadoutButton">
+                    <span>Heavy</span>
+                </button>
             </div>
+            <button class="class-button outlineBtnStyle" data-class="random" id="randomLoadoutButton">
+                Random Contestant
+            </button>
+        </div>
 
-            <div class="btnRow">
-                <a href="punishment-loadout" class="outlineBtnStyle">
-                    <img src="images/punishment.webp" class="skull-icon" alt="💀">
-                    Punishment Loadout
-                    <img src="images/punishment.webp" class="skull-icon" alt="💀">
-                </a>
+        <!-- Step 2: Spin Selection -->
+        <div class="step disabled" id="spinSelection">
+            <h2>Step 2: Choose Spin Count</h2>
+            <div class="spin-button-container">
+                <button class="spin-button spin-count-btn" data-spins="1">1</button>
+                <button class="spin-button spin-count-btn" data-spins="2">2</button>
+                <button class="spin-button spin-count-btn" data-spins="3">3</button>
+                <button class="spin-button spin-count-btn" data-spins="4">4</button>
+                <button class="spin-button spin-count-btn" data-spins="5">5</button>
             </div>
+        </div>
+
+        <!-- Spinner Output -->
+        <div id="output" class="spinner-output">
+            <!-- Dynamic content will be inserted here -->
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="control-buttons">
+            <button id="copyLoadoutButton" class="copy-button">
+                Copy Loadout
+            </button>
+            <button id="punishmentLoadoutButton" class="punishment-button">
+                <img src="images/punishment.webp"=skukk-icon">
+                Punishment Mode
+                <img src="images/punishment.webp"=skukk-icon">
+            </button>
         </div>
     </main>
-
-    <section id="recent-buffs" class="recentBuffsSection">
-        <div class="container">
-            <h2>Recent Buffs and Nerfs</h2>
-            <div class="buffs-container">
-                <div class="buff-item">
-                    <p class="patch-date">Patch Date: January 25, 2025</p>
-                    <p><strong>Weapon:</strong> AKM</p>
-                    <p><strong>Change:</strong> Increased recoil control (buffed) and reduced damage at range.</p>
-                    <a href="https://example.com/patch-notes" target="_blank" class="read-more">Read Full Patch Notes</a>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Replace old FAQ section with this div -->
-    <div id="faq-root"></div>
 
     <footer class="footerSection">
         <div class="container">
             <div class="footerRow">
-                <p class="text-start">© 2025 TheFinalsLoadout.com | <a href="legal/legal.html">Legal Disclaimer</a></p>
-                <p class="text-end">1-800-FAT-MOMS Production</p>
+                <p>© 2025 Loadout Spinner</p>
+                <p>Created with ❤️ for the community</p>
             </div>
         </div>
     </footer>
 
-    <!-- Load React and ReactDOM first -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-
-    <!-- Then load app.js and FAQSection.js -->
-    <script defer src="app.js"></script>
-    <script defer src="FAQSection.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
