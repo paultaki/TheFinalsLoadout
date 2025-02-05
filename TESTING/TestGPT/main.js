@@ -106,6 +106,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Helper function to create scrolling items
     const createScrollContainer = (items) => {
+        if (!items || items.length === 0) {
+            console.error("Error: items array is empty or undefined in createScrollContainer()");
+            return "";
+        }
+    
         let sequence = [];
         const repetitions = 12;
     
@@ -118,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
         // Add final selection multiple times so it stops in the middle
         const finalItem = items[Math.floor(Math.random() * items.length)];
-        sequence.push(finalItem, finalItem, finalItem); // ✅ This is correct, no need for another declaration.
+        sequence.push(finalItem, finalItem, finalItem);
     
         return `
             <div class="viewport">
@@ -135,125 +140,81 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     
 
-
-// Ensure the final selection is added multiple times to force it to stop in the middle
-const finalItem = items[0]; 
-sequence.push(finalItem, finalItem, finalItem);
-
-    
-        return `
-    <div class="viewport">
-        <div class="scroll-items">
-            ${sequence.map(item => {
-                return `
-                <div class="scroll-item">
-                    <img src="images/${normalizeItemName(item)}.webp" alt="${item}" loading="lazy">
-                    <p>${item.replace(/_/g, " ")}</p>
-                </div>
-                `;
-            }).join("")}
-        </div>
-    </div>
-`;
-
-    
     
 
     // Animation function
     const startSpinAnimation = (containers) => {
         const isFinalSpin = state.currentSpin === state.totalSpins;
-        const baseDelay = isFinalSpin ? 500 : 200;
-        const baseDuration = isFinalSpin ? 2000 : 1000;
-        
+        const baseDuration = 2000; // Consistent duration for all columns
+
+    
         containers.forEach((container, index) => {
-            // Reset container position
-            container.style.transform = 'translateY(0px)';
-            
+            // Reset container position - start high to move downward
             const items = Array.from(container.children);
             const itemHeight = items[0].offsetHeight;
             const totalHeight = itemHeight * items.length;
-            
+            container.style.transform = `translateY(-${itemHeight * 5}px)`; // Start above viewport
+
+
+            const baseDelay = index * 100; // Slight delay for staggered effect
+
+    
             // Select random stopping point
-            const selectedIndex = Math.floor(items.length / 2); // Forces final selection to land in the middle row
-
-            const finalOffset = -(totalHeight - (selectedIndex * itemHeight));
-
+            const selectedIndex = Math.floor(items.length / 2); // Ensures final selection lands in middle row
+            const finalOffset = -selectedIndex * itemHeight + (itemHeight / 2);
 
 
 
 
-
-
-
-
-
-
+    
             // Create animation
             const startTime = Date.now() + (index * baseDelay);
             const animate = () => {
                 const now = Date.now();
                 const elapsed = now - startTime;
-                
+    
                 if (elapsed < 0) {
                     requestAnimationFrame(animate);
                     return;
                 }
-                
+    
                 if (elapsed >= baseDuration) {
                     container.style.transition = "transform 1.5s ease-out";
-
-
                     container.style.transform = `translateY(${finalOffset}px)`;
-                
+    
                     setTimeout(() => {
-                        requestAnimationFrame(() => {
-                            items.forEach(item => item.classList.remove('selected'));
-                            const selectedItem = items[selectedIndex];
+                        items.forEach(item => item.classList.remove('selected'));
+                        const selectedItem = items[selectedIndex];
                     
-                            if (selectedItem) {
-                                selectedItem.classList.add('selected');
-                                selectedItem.style.border = "3px solid yellow";
-                                selectedItem.style.boxShadow = "0 0 10px yellow";
-                                state.selectedItems.add(selectedItem.querySelector('p')?.textContent);
-                            }
-                        });
-                    }, baseDuration + 500); // Ensure highlight only happens after animation is finished
-                    
-                    
-                    
-                    
-                    
-                    
-                
-                    if (index === containers.length - 1) {
-                        if (!isFinalSpin) {
-                            setTimeout(() => {
-                                state.currentSpin++;
-                                if (state.selectedClass === 'random') {
-                                    displayRandomLoadout();
-                                } else {
-                                    displayManualLoadout(state.selectedClass);
-                                }
-                            }, 300);
-                        } else {
-                            handleSpinComplete();
+                        if (selectedItem) {
+                            selectedItem.classList.add('selected');
+                            selectedItem.style.border = "3px solid yellow";
+                            selectedItem.style.boxShadow = "0 0 10px yellow";
+                            selectedItem.scrollIntoView({ behavior: "smooth", block: "center" }); // Ensures visibility
+                            state.selectedItems.add(selectedItem.querySelector('p')?.textContent);
                         }
-                    }
-                    return; // Ensure the function stops here
-                }
-                
-                
+                    }, baseDuration); // Highlights exactly when spin stops
+                    
+    
+                // Smooth downward movement
                 const progress = elapsed / baseDuration;
-                const easeProgress = 1 - Math.pow(1 - progress, 3); // Cubic ease-out
-                const currentOffset = -(totalHeight * easeProgress);
+                const easeProgress = Math.pow(progress, 3); // Smooth acceleration
+                const currentOffset = -(easeProgress * (totalHeight - itemHeight));
 
-                container.style.transform = `translateY(${currentOffset}px)`;
+
+container.style.transform = `translateY(${currentOffset}px)`;
+
+                
+
+    
                 requestAnimationFrame(animate);
             };
-            
+    
             requestAnimationFrame(animate);
         });
     };
+    
+    
     // Display functions for loadouts
     const displayRandomLoadout = async () => {
         const classes = ["Light", "Medium", "Heavy"];
@@ -295,9 +256,10 @@ sequence.push(finalItem, finalItem, finalItem);
                     </div>
                     ${finalUniqueGadgets.map(gadget => `
                         <div class="scroll-column">
-                            ${createScrollContainer([gadget])}
+                            ${createScrollContainer(loadout.gadgets)} 
                         </div>
-                    `).join("")}
+                    `).join("")}aw
+                    
                 </div>
             `;
     
@@ -340,12 +302,10 @@ sequence.push(finalItem, finalItem, finalItem);
         if (state.currentSpin < state.totalSpins) {
             setTimeout(() => {
                 state.currentSpin++;
-                if (state.selectedClass === 'random') {
-                    displayRandomLoadout();
-                } else {
-                    displayManualLoadout(state.selectedClass);
-                }
+                startSpinAnimation(Array.from(elements.outputDiv.querySelectorAll('.viewport > .scroll-items')));
             }, 500);
+        
+        
         } else {
             state.isSpinning = false;
             state.currentSpin = 1;
