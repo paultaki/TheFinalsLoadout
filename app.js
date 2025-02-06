@@ -146,10 +146,24 @@ const startSpinAnimation = (columns) => {
     const itemHeight = 188;
     const baseSpeed = 12;
     
+    // Configure stop times based on whether it's the final spin
+    const isFinalSpin = state.currentSpin === 1;
+    
     const stopTimes = columns.map((_, index) => {
-        if (index === 0) return 700;
-        // Use slower timing (500ms) only when it's the last spin (currentSpin === 1)
-        return 700 + (index * (state.currentSpin === 1 ? 500 : 110));
+        if (!isFinalSpin) {
+            // Regular timing for non-final spins
+            return 700 + (index * 110);
+        }
+        
+        // Special timing for final spin
+        switch(index) {
+            case 0: return 700;  // First box
+            case 1: return 1200; // +0.5s
+            case 2: return 1700; // +0.5s
+            case 3: return 2200; // +0.5s
+            case 4: return 2900; // +0.7s
+            case 5: return 3900; // +1.0s
+        }
     });
     
     let allStopped = new Array(columns.length).fill(false);
@@ -163,17 +177,36 @@ const startSpinAnimation = (columns) => {
             if (!allStopped[index]) {
                 animationRunning = true;
                 
-                const shouldStop = currentTime - startTime >= stopTimes[index];
+                const timeElapsed = currentTime - startTime;
+                const shouldStop = timeElapsed >= stopTimes[index];
                 const currentOffset = parseFloat(column.style.transform?.replace("translateY(", "").replace("px)", "")) || 0;
                 
-                let newOffset = currentOffset + baseSpeed;
+                // Calculate speed reduction for final spin only
+                let speed = baseSpeed;
+                if (isFinalSpin) {
+                    if (index === columns.length - 2 && timeElapsed > stopTimes[index] - 500) {
+                        // Gradually slow down second to last column
+                        speed = baseSpeed * Math.max(0.3, (stopTimes[index] - timeElapsed) / 500);
+                    } else if (index === columns.length - 1 && timeElapsed > stopTimes[index] - 800) {
+                        // Gradually slow down last column even more
+                        speed = baseSpeed * Math.max(0.2, (stopTimes[index] - timeElapsed) / 800);
+                    }
+                }
+                
+                let newOffset = currentOffset + speed;
                 if (newOffset >= itemHeight * 8) newOffset = 0;
                 
                 if (shouldStop) {
                     allStopped[index] = true;
                     newOffset = itemHeight;
                     const selectedItem = column.children[0];
-                    if (selectedItem) selectedItem.classList.add("selected");
+                    if (selectedItem) {
+                        selectedItem.classList.add("selected");
+                        // Only add glow effect on final spin
+                        if (isFinalSpin) {
+                            column.closest('.item-container').classList.add('final-glow');
+                        }
+                    }
                 }
                 
                 column.style.transform = `translateY(${newOffset}px)`;
