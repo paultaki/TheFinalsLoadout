@@ -498,15 +498,6 @@ body.flexStyle {
         padding: 25px 0 72px;
     }
 }
-/* Spin Selection Buttons */
-/* Space between the Step 1 instructions and spin buttons */
-.spin-button-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px; /* Space between buttons */
-    margin-top: 5px; /* Add slight spacing above */
-    margin-bottom: 20px; /* More space before Step 2 */
-}
 
 /* Increase instruction font size for better readability */
 .step {
@@ -519,34 +510,6 @@ body.flexStyle {
 /* Space out Step 2 from class buttons */
 .step + .btnRow {
     margin-top: 15px; /* Creates better separation */
-}
-
-
-.spin-count-btn {
-    width: 60px;  /* Twice the original size */
-    height: 60px; /* Twice the original size */
-    font-size: 1.5rem; /* Bigger text */
-    font-weight: bold;
-    border-radius: 50%; /* Circular buttons */
-    border: 2px solid var(--neon-yellow);
-    background: transparent;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-/* Hover effect */
-.spin-count-btn:hover {
-    background: var(--neon-yellow);
-    color: black;
-    transform: scale(1.1); /* Slightly bigger on hover */
-}
-
-/* Selected button effect */
-.spin-count-btn.active {
-    background: var(--neon-orange); /* Change color when selected */
-    color: black;
-    border-color: var(--neon-red);
 }
 
 @media (max-width: 575px) {
@@ -1025,37 +988,6 @@ img:hover {
     box-shadow: 0 0 10px var(--neon-blue);
 }
         if (animationRunning) {
-.locked-tag {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: linear-gradient(45deg, var(--neon-yellow), var(--neon-orange));
-    color: black;
-    padding: 4px 8px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: bold;
-    transform: scale(0);
-    opacity: 0;
-    z-index: 10;
-    white-space: nowrap;
-}
 
-.locked-tag.show {
-    animation: tagPop 0.3s ease-out forwards;
-}
 
-@keyframes tagPop {
-    0% {
-        transform: scale(0) rotate(-10deg);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.2) rotate(5deg);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
-    }
 }
