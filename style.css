@@ -826,3 +826,62 @@ body.flexStyle {
     width: 1em;
     margin-left: -1em;
 }
+/* Style for Major Section Headers */
+.buff-item h3 {
+    font-size: 2rem;  /* Larger for better visibility */
+    font-weight: bold;
+    text-align: center;  /* Center the text */
+    margin-top: 30px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.15); /* Subtle highlight */
+    border-radius: 8px;
+    border-bottom: 4px solid var(--neon-yellow);
+    text-transform: uppercase;
+}
+.faqSection {
+    background-color: #292929;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 16px auto;
+    max-width: 48rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.faq-button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px 0;
+    font-size: 1.1rem;
+    color: var(--neon-yellow);
+    font-weight: bold;
+}
+
+.faq-title {
+    font-size: 1.2rem;
+}
+
+.faq-toggle {
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+}
+
+.faq-toggle.open {
+    transform: rotate(45deg);
+}
+
+.faq-content {
+    display: none;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.faq-content.open {
+    display: block;
+}

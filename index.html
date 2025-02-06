@@ -211,6 +211,42 @@
                         </ul>
                     </div>
     
+                    <div class="nerf-section">
+                        <p class="nerf"><strong>LH1 (Nerf)</strong></p>
+                        <p class="funny-description">From Lethal Hit 1-shot to Lightly Hugs 1-shot. Weak.</p>
+                        <ul>
+                            <li>Reduced damage (48 → 46)</li>
+                            <li>Reduced fire rate (280 → 270 RPM)</li>
+                        </ul>
+                    </div>
+    
+                    <div class="nerf-section">
+                        <p class="nerf"><strong>Model 1887 (Nerf)</strong></p>
+                        <p class="funny-description">Shotgunners were clapping too hard, so we nerfed their cheeks.</p>
+                        <ul>
+                            <li>Reduced damage (13 → 11 per pellet)</li>
+                            <li>Min damage falloff multiplier increased (0.6 → 0.7), keeping same max-range damage as in 5.7</li>
+                        </ul>
+                    </div>
+    
+                    <h4>Quality of Life Adjustments</h4>
+                    <div class="qol-section">
+                        <p class="qol"><strong>CL-40 (QoL Buff)</strong></p>
+                        <p class="funny-description">Less self-damage because y’all kept blowing yourselves too soon.</p>
+                        <ul>
+                            <li>Reduced projectile radius (10cm → 5cm) to prevent accidental surface hits</li>
+                            <li>Lowered self-damage multiplier (1.6 → 1.25)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="qol-section">
+                        <p class="qol"><strong>Dagger (QoL Adjustment)</strong></p>
+                        <p class="funny-description">Buffed for Back Shots History Month—now hits deeper from behind.</p>
+                        <ul>
+                            <li>Added FoV change during secondary attack charge-up for better clarity</li>
+                        </ul>
+                    </div>
+    
                     <h3>Gadgets</h3>
                     <h4>Buffs</h4>
                     <div class="buff-section">
@@ -218,6 +254,15 @@
                         <p class="funny-description">Explodes faster—because sometimes you just can't hold it in.</p>
                         <ul>
                             <li>Reduced throw delay (0.9s → 0.6s)</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>Nerfs</h4>
+                    <div class="nerf-section">
+                        <p class="nerf"><strong>Winch Claw (Nerf)</strong></p>
+                        <p class="funny-description">Nerfed because Spider-Daddies were getting too freaky.</p>
+                        <ul>
+                            <li>Reduced range (12m → 10m)</li>
                         </ul>
                     </div>
                     
@@ -230,6 +275,15 @@
                             <li>Reduced initial impact damage (130 → 100)</li>
                             <li>Reduced subsequent hit damage (50 → 40)</li>
                             <li>Reduced minimum ground slam damage (80 → 50)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="nerf-section">
+                        <p class="nerf"><strong>Dematerializer (Nerf)</strong></p>
+                        <p class="funny-description">Props disappear quicker—clean up your damn mess.</p>
+                        <ul>
+                            <li>Reduced duration of dematerialized objects (30s → 15s)</li>
+                            <li>Now removes props attached to wall segments for cleaner passageways</li>
                         </ul>
                     </div>
                     
@@ -255,12 +309,14 @@
     </footer>
 
     <!-- Load React and ReactDOM first -->
-    <script src="../cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="../cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+
 
     <!-- Then load app.js and FAQSection.js -->
-    <script defer src="app.js"></script>
     <script defer src="FAQSection.js"></script>
+<script defer src="app.js"></script>
+
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"90d5a0a2197ddbbe","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}' crossorigin="anonymous"></script>
 </body>
 
