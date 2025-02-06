@@ -64,65 +64,98 @@ document.addEventListener("DOMContentLoaded", () => {
             )
             .join("");
     };
-    
-    
-    
 
     const startSpinAnimation = (columns, callback) => {
         const itemHeight = 188;
-        const totalSpinTime = 3000; // 3 seconds total spin time
-        const firstStopTime = 500; // First column stops at 0.5 seconds
-        const subsequentStopDelay = 400; // Following columns stop every 0.4s
-    
+        const baseSpeed = 12;
+        
+        // Configure stop times based on whether it's the final spin
+        const stopTimes = columns.map((_, index) => {
+            // Single spin timing pattern
+            switch(index) {
+                case 0: return 700;  // First box
+                case 1: return 1200; // +0.5s
+                case 2: return 1700; // +0.5s
+                case 3: return 2200; // +0.5s
+                case 4: return 2900; // +0.7s
+                case 5: return 3900; // +1.0s
+                default: return 700 + (index * 110);
+            }
+        });
+        
+        // Create and add locked tags to each container
+        columns.forEach(column => {
+            const container = column.closest('.item-container');
+            const existingTag = container.querySelector('.locked-tag');
+            if (!existingTag) {
+                const lockedTag = document.createElement('div');
+                lockedTag.className = 'locked-tag';
+                lockedTag.textContent = 'Locked In!';
+                container.appendChild(lockedTag);
+            }
+        });
+        
         let allStopped = new Array(columns.length).fill(false);
         document.querySelectorAll(".random").forEach((btn) => btn.setAttribute("disabled", "true"));
-    
-        const startTime = performance.now();
-    
-        // Start spinning all at once
-        const animate = (timestamp) => {
-            const elapsed = timestamp - startTime;
+        const startTime = Date.now();
+
+        const animate = () => {
+            const currentTime = Date.now();
             let animationRunning = false;
-    
+
             columns.forEach((column, index) => {
                 if (!allStopped[index]) {
                     animationRunning = true;
-    
-                    // Move the column down for the spinning effect
-                    const currentOffset = parseFloat(column.style.transform.replace("translateY(", "").replace("px)", "")) || 0;
-                    column.style.transform = `translateY(${currentOffset + 40}px)`; // Adjust speed
-    
-                    // Stop first column at 0.5s, others every 0.4s after
-                    const stopTime = index === 0 ? firstStopTime : firstStopTime + index * subsequentStopDelay;
-    
-                    if (elapsed >= stopTime) {
-                        allStopped[index] = true;
-                        column.style.transform = `translateY(${itemHeight * (1 + index)}px)`;
-    
-                        // Select the final item at the stopping position
-                        const selectedIndex = (7 - ((itemHeight * (1 + index)) / itemHeight) % 8) % 8;
-                        const selectedItem = column.children[selectedIndex];
-                        selectedItem.classList.add("selected");
+                    
+                    const timeElapsed = currentTime - startTime;
+                    const shouldStop = timeElapsed >= stopTimes[index];
+                    const currentOffset = parseFloat(column.style.transform?.replace("translateY(", "").replace("px)", "")) || 0;
+                    
+                    // Calculate speed reduction for dramatic effect
+                    let speed = baseSpeed;
+                    if (index === columns.length - 2 && timeElapsed > stopTimes[index] - 500) {
+                        // Gradually slow down second to last column
+                        speed = baseSpeed * Math.max(0.3, (stopTimes[index] - timeElapsed) / 500);
+                    } else if (index === columns.length - 1 && timeElapsed > stopTimes[index] - 800) {
+                        // Gradually slow down last column even more
+                        speed = baseSpeed * Math.max(0.2, (stopTimes[index] - timeElapsed) / 800);
                     }
+                    
+                    let newOffset = currentOffset + speed;
+                    if (newOffset >= itemHeight * 8) newOffset = 0;
+                    
+                    if (shouldStop) {
+                        allStopped[index] = true;
+                        newOffset = itemHeight;
+                        const selectedItem = column.children[0];
+                        if (selectedItem) {
+                            selectedItem.classList.add("selected");
+                            // Add highlighting effect
+                            const container = column.closest('.item-container');
+                            container.classList.add('final-glow');
+                            const tag = container.querySelector('.locked-tag');
+                            if (tag) {
+                                tag.classList.add('show');
+                            }
+                        }
+                    }
+                    
+                    column.style.transform = `translateY(${newOffset}px)`;
                 }
             });
-    
+
             if (animationRunning) {
                 requestAnimationFrame(animate);
             } else {
                 // Enable the button again after spinning stops
                 document.querySelectorAll(".random").forEach((btn) => btn.removeAttribute("disabled"));
-                callback(columns.map(col => col.querySelector(".selected").innerText.trim()));
+                const selectedItems = columns.map(col => col.querySelector(".selected").innerText.trim());
+                callback(selectedItems);
             }
         };
-    
+
         requestAnimationFrame(animate);
     };
-    
-    
-    
-    
-    
 
     const displayLoadout = (loadout, className) => {
         const { weapons, specializations, gadgets } = loadout;
