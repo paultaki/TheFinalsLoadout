@@ -1,4 +1,3 @@
-// FAQSection.js
 const FAQSection = () => {
     const [isOpen, setIsOpen] = React.useState(false);
 
@@ -17,33 +16,24 @@ const FAQSection = () => {
             React.createElement('span', {
                 className: `faq-toggle ${isOpen ? 'open' : ''}`,
                 key: 'plus'
-            }, '+')
+            }, isOpen ? '−' : '+') // Toggle symbol
         ]),
         React.createElement('div', {
-            className: 'faq-content',
-            style: {
-                maxHeight: isOpen ? '500px' : '0',
-                opacity: isOpen ? 1 : 0
-            },
+            className: `faq-content ${isOpen ? 'open' : ''}`, // Toggle display
             key: 'content'
         }, React.createElement('div', {
             className: 'faq-content-inner'
         }, [
             React.createElement('div', { key: 'section1' }, [
-                React.createElement('h3', {
-                    key: 'question1'
-                }, 'Are Season 5 weapons included?'),
+                React.createElement('h3', { key: 'question1' }, 'Are Season 5 weapons included?'),
                 React.createElement('p', { key: 'answer1' },
                     'Yes, this loadout randomizer is fully updated with all Season 5 weapons, builds, and gear, ensuring you can randomly generate the most current options available in The Finals.'
                 )
             ]),
             React.createElement('div', { key: 'section2' }, [
-                React.createElement('h3', {
-                    key: 'question2'
-                }, 'How do I use this tool?'),
-                React.createElement('p', {
-                    key: 'answer2p1'
-                }, ['Using this loadout randomizer is simple! Click on ',
+                React.createElement('h3', { key: 'question2' }, 'How do I use this tool?'),
+                React.createElement('p', { key: 'answer2p1' }, [
+                    'Using this loadout randomizer is simple! Click on ',
                     React.createElement('strong', { key: 's1' }, 'Light'),
                     ', ',
                     React.createElement('strong', { key: 's2' }, 'Medium'),

@@ -32,7 +32,11 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    background: linear-gradient(180deg, #1B1B3A, #2E004D); /* Dark blue to deep purple */
+    background-size: cover;
+    color: white;
 }
+
 
 @keyframes gradientShift {
     0% {
@@ -748,4 +752,229 @@ body.flexStyle {
     100% {
         box-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 40px rgba(255, 140, 0, 0.8);
     }
+}
+.step {
+    margin: 20px 0;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.step.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.step h2 {
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+/* Buffs, Nerfs, and QoL Adjustments Styling */
+.buff-item .buff {
+    color: #1b4d4b; /* Dark Cyan for Buffs */
+    font-weight: bold;
+}
+
+.buff-item .nerf {
+    color: #752b2b; /* Burnt Orange for Nerfs */
+    font-weight: bold;
+}
+
+.buff-item .qol {
+    color: #66521f; /* Dark Gold for QoL Adjustments */
+    font-weight: bold;
+}
+
+/* Background Highlights */
+.buff-item .buff-section {
+    background: rgba(58, 90, 207, 0.2); /* Soft neon blue */
+    padding: 10px;
+    border-radius: 5px;
+    border-left: 4px solid #3A5ACF;
+    margin-bottom: 10px;
+    color: white;
+
+}
+
+.buff-item .nerf-section {
+    background: rgba(214, 28, 124, 0.2); /* Soft neon pink */
+    padding: 10px;
+    border-radius: 5px;
+    border-left: 4px solid #D61C7C;
+    margin-bottom: 10px;
+    color: white;
+
+}
+
+.buff-item .qol-section {
+    background: rgba(90, 24, 154, 0.2); /* Soft neon purple */
+    padding: 10px;
+    border-radius: 5px;
+    border-left: 4px solid #5A189A;
+    margin-bottom: 10px;
+    color: white;
+
+}
+
+/* Section Headings */
+.buff-item h3 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px;
+    background: linear-gradient(90deg, #D61C7C, #3A5ACF); /* Neon Pink to Blue */
+    border-bottom: 4px solid #FFC72C; /* Yellow accent */
+    color: white;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+
+/* List Styling Improvements */
+.buff-item ul {
+    list-style-type: none;
+    padding-left: 15px;
+}
+
+.buff-item ul li::before {
+    content: "•";
+    color: var(--neon-yellow);
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+/* Style for Major Section Headers */
+.buff-item h3 {
+    font-size: 2rem;  /* Larger for better visibility */
+    font-weight: bold;
+    text-align: center;  /* Center the text */
+    margin-top: 30px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.15); /* Subtle highlight */
+    border-radius: 8px;
+    border-bottom: 4px solid var(--neon-yellow);
+    text-transform: uppercase;
+}
+.faqSection {
+    background-color: #292929;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 16px auto;
+    max-width: 48rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.faq-button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px 0;
+    font-size: 1.1rem;
+    color: var(--neon-yellow);
+    font-weight: bold;
+}
+
+.faq-title {
+    font-size: 1.2rem;
+}
+
+.faq-toggle {
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+}
+
+.faq-toggle.open {
+    transform: rotate(45deg);
+}
+
+.faq-content {
+    display: none;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.faq-content.open {
+    display: block;
+}
+body {
+    font-family: var(--baseFont);
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #1B1B3A, #2E004D); /* Dark blue to deep purple */
+    background-size: cover;
+    color: white;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Subtle animated cyber grid overlay */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/cubes.png'); /* Subtle grid effect */
+    opacity: 0.1;
+    pointer-events: none;
+    animation: slowMove 20s linear infinite;
+}
+
+@keyframes slowMove {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0); }
+}
+
+/* Neon glow effect for buttons */
+button {
+    background: linear-gradient(90deg, #D61C7C, #3A5ACF);
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.6);
+    transform: scale(1.05);
+}
+
+/* Smooth scrolling for a more fluid experience */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Neon glow effect for headers */
+h1, h2, h3 {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+    animation: glowPulse 1.5s infinite alternate;
+}
+
+@keyframes glowPulse {
+    0% { text-shadow: 0 0 8px rgba(255, 255, 255, 0.8); }
+    100% { text-shadow: 0 0 16px rgba(255, 255, 255, 1); }
+}
+
+/* Image hover effect */
+img:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
 }

@@ -1,274 +1,224 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // State management
-    const state = {
+    let state = {
         selectedClass: null,
         isSpinning: false,
         currentSpin: 1,
-        totalSpins: 0,
-        selectedItems: new Set()
+        totalSpins: 0
     };
 
-    // Loadouts configuration
     const loadouts = {
         Light: {
-            weapons: ["93R", "Dagger", "LH1", "M26_Matter", "Recurve_Bow", "Sword", "V9S", "XP-54", "Throwing_Knives"],
-            specializations: ["Cloaking_Device", "Evasive_Dash", "Grappling_Hook"],
-            gadgets: ["Breach_Charge", "Gateway", "Glitch_Grenade", "Gravity_Vortex", "Sonar_Grenade", 
-                     "Stun_Gun", "Thermal_Bore", "Thermal_Vision", "Tracking_Dart", "Vanishing_Bomb"]
+            weapons: ["93R", "Dagger", "LH1", "M26 Matter", "Recurve Bow", "Sword", "V9S", "XP-54", "Throwing Knives"],
+            specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
+            gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Sonar Grenade", "Stun Gun"]
         },
         Medium: {
-            weapons: ["AKM", "Cerberus_12GA", "Dual_Blades", "FAMAS", "FCAR", "Model_1887", "Pike_556", "R_357", "Riot_Shield"],
-            specializations: ["Dematerializer", "Guardian_Turret", "Healing_Beam"],
-            gadgets: ["APS_Turret", "Data_Reshaper", "Defibrillator", "Explosive_Mine", "Gas_Mine", "Glitch_Trap"]
+            weapons: ["AKM", "Cerberus 12GA", "Dual Blades", "FAMAS", "FCAR", "Model 1887", "Pike-556", "R.357", "Riot Shield"],
+            specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
+            gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap"]
         },
         Heavy: {
-            weapons: ["50_Akimbo", "Flamethrower", "KS_23", "Lewis_Gun", "M60", "MGL32", "Sledgehammer", "SHAK_50", "Spear"],
-            specializations: ["Charge_N_Slam", "Goo_Gun", "Mesh_Shield", "Winch_Claw"],
-            gadgets: ["Anti_Gravity_Cube", "Barricade", "Dome_Shield", "Lockbolt_Launcher", "Pyro_Mine"]
+            weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "MGL32", "Sledgehammer", "SHAK-50", "Spear"],
+            specializations: ["Charge_N_Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+            gadgets: ["Anti-Gravity Cube", "Barricade", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "RPG-7"]
         }
     };
 
-    // Get DOM elements
-    const elements = {
-        classButtons: document.querySelectorAll('.class-button'),
-        spinButtons: document.querySelectorAll('.spin-button'),
-        spinSelection: document.getElementById('spinSelection'),
-        outputDiv: document.getElementById("output"),
-        copyButton: document.getElementById("copyLoadoutButton")
-    };
+    const classButtons = document.querySelectorAll('.class-button');
+    const spinButtons = document.querySelectorAll('.spin-button');
+    const spinSelection = document.getElementById('spinSelection');
+    const outputDiv = document.getElementById("output");
 
-    // Helper function to normalize item names
-    const normalizeItemName = (item) => item.replace(/ /g, "_");
-
-    // Helper function to get random unique items
-    const getRandomUniqueItems = (array, n) => {
-        const shuffled = [...array].sort(() => Math.random() - 0.5);
-        return shuffled.slice(0, n);
-    };
-
-    // Helper function to preload images
-    const preloadImages = async (items) => {
-        const loadPromises = items.map(item => {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.src = `images/${normalizeItemName(item)}.webp`;
-                img.onload = () => resolve();
-                img.onerror = () => {
-                    console.error(`Failed to load image: ${item}`);
-                    resolve(); // Don't break the chain on error
-                };
-            });
-        });
-        
-        return Promise.all(loadPromises);
-    };
-
-    // Helper function to create scrolling items
-    const createScrollContainer = (items) => {
-        const repeatedItems = [];
-        while (repeatedItems.length < 20) {
-            repeatedItems.push(...items);
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
-        
-        return repeatedItems
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 20)
-            .map(item => `
-                <div class="scroll-item">
-                    <img src="images/${normalizeItemName(item)}.webp" alt="${item}" loading="lazy">
-                    <p>${item.replace(/_/g, " ")}</p>
-                </div>
-            `)
-            .join("");
-    };
+        return array;
+    }
 
-    // Animation function
-    const startSpinAnimation = (containers) => {
-        const baseDelay = 300;
-        const baseDuration = 3000;
-        
-        containers.forEach((container, index) => {
-            const delay = index * baseDelay;
-            const items = container.children;
-            const totalHeight = Array.from(items).reduce((acc, item) => acc + item.offsetHeight, 0);
-            
-            container.style.transform = 'translateY(0)';
-            
-            const animation = container.animate([
-                { transform: 'translateY(0)' },
-                { transform: `translateY(-${totalHeight * 0.8}px)` }
-            ], {
-                duration: baseDuration + delay,
-                easing: 'cubic-bezier(0.25, 0.1, 0.25, 1.0)',
-                fill: 'forwards'
-            });
-            
-            animation.onfinish = () => {
-                container.style.transform = 'translateY(0)';
-                const selectedIndex = Math.floor(Math.random() * (items.length / 3));
-                
-                Array.from(items).forEach(item => item.classList.remove('selected'));
-                if (items[selectedIndex]) {
-                    items[selectedIndex].classList.add('selected');
-                    state.selectedItems.add(items[selectedIndex].querySelector('p').textContent);
-                }
-                
-                if (index === containers.length - 1) {
-                    handleSpinComplete();
-                }
-            };
-        });
-    };
+    function getRandomItems(array, count) {
+        return shuffleArray([...array]).slice(0, count);
+    }
 
-    // Display functions for loadouts
-    const displayRandomLoadout = async () => {
-        const classes = ["Light", "Medium", "Heavy"];
-        const randomClass = classes[Math.floor(Math.random() * classes.length)];
-        await displayLoadout(randomClass, loadouts[randomClass]);
-    };
+    function createScrollContainer(items, index, isLast) {
+        const container = document.createElement('div');
+        container.className = 'scroll-container';
+        container.style.position = 'relative';
+        container.style.height = '191px';
+        container.style.overflow = 'hidden';
+        container.style.transform = 'translateY(0px)';
 
-    const displayManualLoadout = async (classType) => {
-        await displayLoadout(classType, loadouts[classType]);
-    };
+        const spinDuration = isLast ? 2000 + (index * 300) : 1000 + (index * 200);
+        const itemsToShow = 20;
+        let html = '';
 
-    const displayLoadout = async (classType, loadout) => {
-        const selectedGadgets = getRandomUniqueItems(loadout.gadgets, 3);
-        
-        try {
-            await preloadImages([classType, ...loadout.weapons, ...loadout.specializations, ...selectedGadgets]);
-
-            elements.outputDiv.innerHTML = `
-                <div class="scroll-container">
-                    <div class="scroll-column">
-                        <div class="scroll-items">${createScrollContainer([classType])}</div>
-                    </div>
-                    <div class="scroll-column">
-                        <div class="scroll-items">${createScrollContainer(loadout.weapons)}</div>
-                    </div>
-                    <div class="scroll-column">
-                        <div class="scroll-items">${createScrollContainer(loadout.specializations)}</div>
-                    </div>
-                    ${selectedGadgets.map(gadget => `
-                        <div class="scroll-column">
-                            <div class="scroll-items">${createScrollContainer([gadget])}</div>
-                        </div>
-                    `).join("")}
+        // Repeat items to create illusion of infinite scroll
+        for (let i = 0; i < itemsToShow; i++) {
+            const item = items[i % items.length];
+            html += `
+                <div class="itemCol" style="position: absolute; top: ${i * 191}px; width: 100%;">
+                    <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+                    <p>${item}</p>
                 </div>
             `;
-
-            const scrollContainers = Array.from(elements.outputDiv.querySelectorAll('.scroll-items'));
-            startSpinAnimation(scrollContainers);
-
-        } catch (error) {
-            console.error('Error in displayLoadout:', error);
-            handleSpinComplete();
         }
-    };
 
-    // Main spin function
-    const spinLoadout = async (spins) => {
-        if (state.isSpinning) return;
+        container.innerHTML = html;
+        return { container, spinDuration };
+    }
+
+    function animateContainer(container, spinDuration, finalPosition) {
+        return new Promise(resolve => {
+            const totalDistance = 191 * 19; // 19 items to scroll past
+            const start = performance.now();
+            
+            function animate(currentTime) {
+                const elapsed = currentTime - start;
+                const progress = Math.min(elapsed / spinDuration, 1);
+                
+                let currentPosition;
+                if (progress < 0.7) {
+                    // Fast spin at constant speed
+                    currentPosition = -(totalDistance * (progress / 0.7));
+                } else {
+                    // Gradual slowdown
+                    const slowdownProgress = (progress - 0.7) / 0.3;
+                    const easeOut = 1 - Math.pow(1 - slowdownProgress, 3);
+                    currentPosition = -(totalDistance + (191 * easeOut));
+                }
+                
+                container.style.transform = `translateY(${currentPosition}px)`;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    container.style.transform = `translateY(${finalPosition}px)`;
+                    resolve();
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        });
+    }
+
+    async function spinLoadout(spins) {
+        if (!state.selectedClass || state.isSpinning) {
+            alert("Please select a class first!");
+            return;
+        }
         
         state.isSpinning = true;
-        state.currentSpin = 1;
         state.totalSpins = spins;
-        state.selectedItems.clear();
-
-        elements.classButtons.forEach(btn => btn.disabled = true);
-        elements.spinButtons.forEach(btn => btn.disabled = true);
-
-        try {
-            if (state.selectedClass === 'random') {
-                await displayRandomLoadout();
-            } else {
-                await displayManualLoadout(state.selectedClass);
+        
+        for (let currentSpin = 1; currentSpin <= spins; currentSpin++) {
+            state.currentSpin = currentSpin;
+            const isLastSpin = currentSpin === spins;
+            
+            const classType = state.selectedClass === 'random' ? 
+                ['Light', 'Medium', 'Heavy'][Math.floor(Math.random() * 3)] : 
+                state.selectedClass;
+                
+            const loadout = loadouts[classType];
+            const selectedGadgets = getRandomItems(loadout.gadgets, 3);
+            
+            // Create containers
+            outputDiv.innerHTML = '';
+            const containers = [
+                createScrollContainer([classType], 0, isLastSpin),
+                createScrollContainer(loadout.weapons, 1, isLastSpin),
+                createScrollContainer(loadout.specializations, 2, isLastSpin),
+                ...selectedGadgets.map((gadget, idx) => 
+                    createScrollContainer([gadget], 3 + idx, isLastSpin)
+                )
+            ];
+            
+            // Add containers to DOM
+            const itemsContainer = document.createElement('div');
+            itemsContainer.className = 'items-container';
+            containers.forEach(({ container }) => {
+                const itemContainer = document.createElement('div');
+                itemContainer.className = 'item-container';
+                itemContainer.appendChild(container);
+                itemsContainer.appendChild(itemContainer);
+            });
+            outputDiv.appendChild(itemsContainer);
+            
+            // Animate all containers
+            await Promise.all(containers.map(({ container, spinDuration }) => 
+                animateContainer(container, spinDuration, -191)
+            ));
+            
+            if (!isLastSpin) {
+                await new Promise(resolve => setTimeout(resolve, 500));
             }
-        } catch (error) {
-            console.error('Spin error:', error);
-            handleSpinComplete();
         }
-    };
+        
+        state.isSpinning = false;
+        state.currentSpin = 1;
+        state.selectedClass = null;
+        
+        classButtons.forEach(btn => {
+            btn.classList.remove('selected');
+            btn.removeAttribute('disabled');
+        });
+        spinButtons.forEach(btn => {
+            btn.classList.remove('selected');
+            btn.removeAttribute('disabled');
+        });
+        spinSelection.classList.add('disabled');
+    }
 
-    // Handle spin completion
-    const handleSpinComplete = () => {
-        if (state.currentSpin < state.totalSpins) {
-            setTimeout(() => {
-                state.currentSpin++;
-                if (state.selectedClass === 'random') {
-                    displayRandomLoadout();
-                } else {
-                    displayManualLoadout(state.selectedClass);
-                }
-            }, 500);
-        } else {
-            state.isSpinning = false;
-            state.currentSpin = 1;
-            state.totalSpins = 0;
-
-            elements.classButtons.forEach(btn => {
-                btn.classList.remove('selected');
-                btn.disabled = false;
-            });
-            elements.spinButtons.forEach(btn => {
-                btn.classList.remove('selected');
-                btn.disabled = false;
-            });
-            elements.spinSelection.classList.add('disabled');
-        }
-    };
-
-    // Event handlers
-    elements.classButtons.forEach(button => {
+    classButtons.forEach(button => {
         button.addEventListener('click', () => {
             if (state.isSpinning) return;
             
-            elements.classButtons.forEach(b => b.classList.remove('selected'));
+            classButtons.forEach(b => b.classList.remove('selected'));
             button.classList.add('selected');
+            
             state.selectedClass = button.dataset.class;
             
             if (state.selectedClass === 'random') {
                 spinLoadout(1);
             } else {
-                elements.spinSelection.classList.remove('disabled');
+                spinSelection.classList.remove('disabled');
             }
         });
     });
 
-    elements.spinButtons.forEach(button => {
+    spinButtons.forEach(button => {
         button.addEventListener('click', () => {
             if (state.isSpinning) return;
             
-            elements.spinButtons.forEach(b => b.classList.remove('selected'));
+            spinButtons.forEach(b => b.classList.remove('selected'));
             button.classList.add('selected');
+            
             spinLoadout(parseInt(button.dataset.spins));
         });
     });
 
-    // Copy functionality
-    elements.copyButton?.addEventListener("click", () => {
-        const selectedItems = Array.from(elements.outputDiv.querySelectorAll(".selected"))
-            .map(item => item.querySelector("p")?.textContent.trim())
-            .filter(Boolean);
+    document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
+        const selectedItems = Array.from(document.querySelectorAll(".scroll-container"))
+            .map(container => {
+                const selectedItem = container.querySelector(".itemCol");
+                return selectedItem ? selectedItem.querySelector("p").textContent.trim() : "Unknown";
+            });
             
-        if (selectedItems.length !== 6) {
-            alert("Error: Not all items were selected. Please try spinning again.");
+        if (selectedItems.includes("Unknown")) {
+            alert("Error: Not all items were selected. Try spinning again.");
             return;
         }
     
-        const copyText = [
-            `Class: ${selectedItems[0]}`,
-            `Weapon: ${selectedItems[1]}`,
-            `Specialization: ${selectedItems[2]}`,
-            `Gadget 1: ${selectedItems[3]}`,
-            `Gadget 2: ${selectedItems[4]}`,
-            `Gadget 3: ${selectedItems[5]}`
-        ].join("\n");
+        const copyText = 
+            "Class: " + selectedItems[0] + "\n" +
+            "Weapon: " + selectedItems[1] + "\n" +
+            "Specialization: " + selectedItems[2] + "\n" +
+            "Gadget 1: " + selectedItems[3] + "\n" +
+            "Gadget 2: " + selectedItems[4] + "\n" +
+            "Gadget 3: " + selectedItems[5];
     
         navigator.clipboard.writeText(copyText)
             .then(() => alert("Loadout copied to clipboard!"))
-            .catch(err => {
-                console.error("Copy error:", err);
-                alert("Could not copy loadout. Please try again.");
-            });
+            .catch(err => console.error("Could not copy text: ", err));
     });
 });
