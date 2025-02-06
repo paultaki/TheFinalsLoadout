@@ -1,77 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
+<!-- Mirrored from thefinalsloadout.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Feb 2025 20:25:03 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loadout Spinner</title>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>The Finals Random Loadout Generator - Have Fun and Be Challenged!</title>
+    <meta name="description" content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles.">
+
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "The Finals Loadout Generator",
+          "description": "A random loadout generator for The Finals game with optimized weapons and gadgets for different playstyles.",
+          "url": "https://www.thefinalsloadout.com",
+          "image": "https://www.thefinalsloadout.com/images/the-finals.webp",
+          "author": {
+            "@type": "Organization",
+            "name": "1-800-FAT-MOMS"
+          }
+        }
+        </script>
+        
+
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap">
+    </noscript>
+    <link rel="preload" as="image" href="images/the-finals.webp" type="image/webp">
+
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        html {
+            min-height: 100%;
+            background: linear-gradient(-45deg, 
+                #1d1a21,    /* Original dark */
+                #2a1f2d,    /* Slightly purple */
+                #1f2a2d,    /* Slightly blue-ish */
+                #201c24     /* Back to dark */
+            );
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+    </style>
+
+
+
 </head>
+
 <body class="flexStyle">
     <header class="headerSection">
-        <h1 class="mainTitle">Loadout Spinner</h1>
-        <p>Select your class and spin to get your loadout!</p>
+        <div class="container">
+            <img src="images/the-finals.webp" alt="Random Loadout Generator for The Finals Game" class="finals-logo">
+            <h1 class="mainTitle">The Finals Loadout Generator - Spin for Random Builds!</h1>
+        </div>
     </header>
 
     <main class="mainContent">
-        <!-- Step 1: Class Selection -->
-        <div class="step" id="classSelection">
-            <h2>Step 1: Choose Your Class</h2>
+        <div class="container">
+            <div class="buttons">
+                <!-- Step 1: Class Selection -->
+                <div class="buttons">
+                    <!-- Step 1: Class Selection -->
+                    <div id="classSelection" class="step">
+                        <h2>Step 1: Choose Your Class</h2>
+                        <div class="btnRow">
+                            <button class="class-button outlineCircleBtn" data-class="Light">LIGHT</button>
+                            <button class="class-button outlineCircleBtn" data-class="Medium">MEDIUM</button>
+                            <button class="class-button outlineCircleBtn" data-class="Heavy">HEAVY</button>
+                            <button class="class-button outlineCircleBtn random" data-class="random">?</button>
+                        </div>
+                    </div>
+                
+                    <!-- Step 2: Spin Count -->
+                    <div id="spinSelection" class="step disabled">
+                        <h2>Step 2: Number of Spins</h2>
+                        <div class="btnRow">
+                            <button class="spin-button outlineCircleBtn" data-spins="1">1</button>
+                            <button class="spin-button outlineCircleBtn" data-spins="2">2</button>
+                            <button class="spin-button outlineCircleBtn" data-spins="3">3</button>
+                            <button class="spin-button outlineCircleBtn" data-spins="4">4</button>
+                            <button class="spin-button outlineCircleBtn" data-spins="5">5</button>
+                        </div>
+                    </div>
+                </div>
+            <div id="output">
+                <!-- Placeholder Images (Lazy Loaded) -->
+                <div class="items-container">
+                    <div class="placeholder-container">
+                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                        <p>Contestant</p>
+                    </div>
+                    <div class="placeholder-container">
+                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                        <p>Weapon</p>
+                    </div>
+                    <div class="placeholder-container">
+                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                        <p>Specialization</p>
+                    </div>
+                    <div class="placeholder-container">
+                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                        <p>Gadget 1</p>
+                    </div>
+                    <div class="placeholder-container">
+                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                        <p>Gadget 2</p>
+                    </div>
+                    <div class="placeholder-container">
+                        <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                        <p>Gadget 3</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ADD COPY AND PUNISHMENT LOADOUT BUTTONS HERE -->
             <div class="btnRow">
-                <button class="class-button outlineCircleBtn" data-class="Light" id="lightLoadoutButton">
-                    <span>Light</span>
-                </button>
-                <button class="class-button outlineCircleBtn" data-class="Medium" id="mediumLoadoutButton">
-                    <span>Medium</span>
-                </button>
-                <button class="class-button outlineCircleBtn" data-class="Heavy" id="heavyLoadoutButton">
-                    <span>Heavy</span>
-                </button>
+                <button id="copyLoadoutButton" class="copy-button">Copy Loadout</button>
             </div>
-            <button class="class-button outlineBtnStyle" data-class="random" id="randomLoadoutButton">
-                Random Contestant
-            </button>
-        </div>
 
-        <!-- Step 2: Spin Selection -->
-        <div class="step disabled" id="spinSelection">
-            <h2>Step 2: Choose Spin Count</h2>
-            <div class="spin-button-container">
-                <button class="spin-button spin-count-btn" data-spins="1">1</button>
-                <button class="spin-button spin-count-btn" data-spins="2">2</button>
-                <button class="spin-button spin-count-btn" data-spins="3">3</button>
-                <button class="spin-button spin-count-btn" data-spins="4">4</button >
-                <button class="spin-button spin-count-btn" data-spins="5">5</button>
+            <div class="btnRow">
+                <a href="punishment-loadout/index.html" class="outlineBtnStyle">
+                    <img src="images/punishment.webp" class="skull-icon" alt="💀">
+                    Punishment Loadout
+                    <img src="images/punishment.webp" class="skull-icon" alt="💀">
+                </a>
             </div>
-        </div>
-
-        <!-- Spinner Output -->
-        <div id="output" class="spinner-output">
-            <!-- Dynamic content will be inserted here -->
-        </div>
-
-        <!-- Control Buttons -->
-        <div class="control-buttons">
-            <button id="copyLoadoutButton" class="copy-button">
-                Copy Loadout
-            </button>
-            <button id="punishmentLoadoutButton" class="punishment-button">
-                <img src="images/punishment.webp"=skull-icon">
-                Punishment Mode
-                <img src="images/punishment.webp"=skull-icon">
-            </button>
         </div>
     </main>
+
+    <section id="recent-buffs" class="recentBuffsSection">
+        <div class="container">
+            <h2>Recent Buffs, Nerfs and Fixes</h2>
+            <div class="buffs-container">
+                <div class="buff-item">
+                    <p class="patch-date">Patch Date: February 5, 2025</p>
+                    <h3>Weapons</h3>
+    
+                    <h4>Buffs</h4>
+                    <div class="buff-section">
+                        <p class="buff"><strong>Cerberus (Buff)</strong></p>
+                        <p class="funny-description">Cervix reinforced. Tighter, stronger, faster recovery—still takes a pounding.</p>
+                        <ul>
+                            <li>Increased damage (9 → 10 per pellet)</li>
+                            <li>Tighter pellet spread for better accuracy</li>
+                            <li>Reduced reload times</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="buff-section">
+                        <p class="buff"><strong>Pike-556 (Buff)</strong></p>
+                        <p class="funny-description">More penetration. Now they really feel it.</p>
+                        <ul>
+                            <li>Increased damage (47 → 50)</li>
+                        </ul>
+                    </div>
+    
+                    <div class="buff-section">
+                        <p class="buff"><strong>SR-84 (Buff)</strong></p>
+                        <p class="funny-description">Faster bolt action, so you can shoot another load quicker.</p>
+                        <ul>
+                            <li>Faster bolt action animation (1.25s → 1.05s), increasing fire rate</li>
+                            <li>Increased damage (115 → 118)</li>
+                        </ul>
+                    </div>
+    
+                    <div class="buff-section">
+                        <p class="buff"><strong>Sword (Buff/Revert)</strong></p>
+                        <p class="funny-description">Length restored. Still waiting on the girth patch.</p>
+                        <ul>
+                            <li>Increased secondary attack hit sweep length by 55cm (restored previous range)</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>Nerfs</h4>
+                    <div class="nerf-section">
+                        <p class="nerf"><strong>FAMAS (Nerf)</strong></p>
+                        <p class="funny-description">No more Fast Ass Mowing And Spraying—you gotta last longer now.</p>
+                        <ul>
+                            <li>Reduced fire rate (230 → 220 RPM)</li>
+                            <li>Reduced damage per bullet (24 → 23)</li>
+                        </ul>
+                    </div>
+    
+                    <div class="nerf-section">
+                        <p class="nerf"><strong>LH1 (Nerf)</strong></p>
+                        <p class="funny-description">From Lethal Hit 1-shot to Lightly Hugs 1-shot. Weak.</p>
+                        <ul>
+                            <li>Reduced damage (48 → 46)</li>
+                            <li>Reduced fire rate (280 → 270 RPM)</li>
+                        </ul>
+                    </div>
+    
+                    <div class="nerf-section">
+                        <p class="nerf"><strong>Model 1887 (Nerf)</strong></p>
+                        <p class="funny-description">Shotgunners were clapping too hard, so we nerfed their cheeks.</p>
+                        <ul>
+                            <li>Reduced damage (13 → 11 per pellet)</li>
+                            <li>Min damage falloff multiplier increased (0.6 → 0.7), keeping same max-range damage as in 5.7</li>
+                        </ul>
+                    </div>
+    
+                    <h4>Quality of Life Adjustments</h4>
+                    <div class="qol-section">
+                        <p class="qol"><strong>CL-40 (QoL Buff)</strong></p>
+                        <p class="funny-description">Less self-damage because y’all kept blowing yourselves too soon.</p>
+                        <ul>
+                            <li>Reduced projectile radius (10cm → 5cm) to prevent accidental surface hits</li>
+                            <li>Lowered self-damage multiplier (1.6 → 1.25)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="qol-section">
+                        <p class="qol"><strong>Dagger (QoL Adjustment)</strong></p>
+                        <p class="funny-description">Buffed for Back Shots History Month—now hits deeper from behind.</p>
+                        <ul>
+                            <li>Added FoV change during secondary attack charge-up for better clarity</li>
+                        </ul>
+                    </div>
+    
+                    <h3>Gadgets</h3>
+                    <h4>Buffs</h4>
+                    <div class="buff-section">
+                        <p class="buff"><strong>Breach Charge (Buff)</strong></p>
+                        <p class="funny-description">Explodes faster—because sometimes you just can't hold it in.</p>
+                        <ul>
+                            <li>Reduced throw delay (0.9s → 0.6s)</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>Nerfs</h4>
+                    <div class="nerf-section">
+                        <p class="nerf"><strong>Winch Claw (Nerf)</strong></p>
+                        <p class="funny-description">Nerfed because Spider-Daddies were getting too freaky.</p>
+                        <ul>
+                            <li>Reduced range (12m → 10m)</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Specializations</h3>
+                    <h4>Nerfs</h4>
+                    <div class="nerf-section">
+                        <p class="nerf"><strong>Charge N’ Slam (Nerf)</strong></p>
+                        <p class="funny-description">No more one-shot, one-thrust. Takes longer to finish now.</p>
+                        <ul>
+                            <li>Reduced initial impact damage (130 → 100)</li>
+                            <li>Reduced subsequent hit damage (50 → 40)</li>
+                            <li>Reduced minimum ground slam damage (80 → 50)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="nerf-section">
+                        <p class="nerf"><strong>Dematerializer (Nerf)</strong></p>
+                        <p class="funny-description">Props disappear quicker—clean up your damn mess.</p>
+                        <ul>
+                            <li>Reduced duration of dematerialized objects (30s → 15s)</li>
+                            <li>Now removes props attached to wall segments for cleaner passageways</li>
+                        </ul>
+                    </div>
+                    
+                    <a href="https://www.reachthefinals.com/patchnotes/580" target="_blank" class="read-more">Read Full Patch Notes</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    
+    
+    
+    <!-- Replace old FAQ section with this div -->
+    <div id="faq-root"></div>
 
     <footer class="footerSection">
         <div class="container">
             <div class="footerRow">
-                <p>© 2025 Loadout Spinner</p>
-                <p>Created with ❤️ for the community</p>
+                <p class="text-start">© 2025 TheFinalsLoadout.com | <a href="legal/legal.html">Legal Disclaimer</a></p>
+                <p class="text-end">1-800-FAT-MOMS Production</p>
             </div>
         </div>
     </footer>
 
-    <script src="main.js"></script>
+    <!-- Load React and ReactDOM first -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+
+
+    <!-- Then load app.js and FAQSection.js -->
+    <script defer src="FAQSection.js"></script>
+<script defer src="app.js"></script>
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"90d5a0a2197ddbbe","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}' crossorigin="anonymous"></script>
 </body>
+
+<!-- Mirrored from thefinalsloadout.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 05 Feb 2025 20:25:07 GMT -->
 </html>
