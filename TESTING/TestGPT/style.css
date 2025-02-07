@@ -195,28 +195,28 @@ body.flexStyle {
 
 
 }
+
+
 .items-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
-    gap: 12px;
+    align-items: flex-start;
+    gap: 12px; /* Further reduced from 15px */
     background: rgba(255, 255, 255, 0.05);
-    padding: 15px;
+    padding: 15px; /* Further reduced from 20px */
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    
-    /* ✅ CRITICAL CHANGES */
-    flex-wrap: nowrap !important;  /* ✅ Absolutely NO wrapping */
-    width: 100vw;  /* ✅ Forces full viewport width */
-    max-width: 100%; /* ✅ Ensures no restriction */
-    overflow-x: auto !important; /* ✅ Enables scrolling if needed */
-    white-space: nowrap; /* ✅ Keeps everything in a single row */
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: 960px; /* Further adjusted from 1000px */
     margin: 0 auto;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .item-container {
-    flex-shrink: 0 !important; /* ✅ Stops boxes from shrinking */
     text-align: center;
     width: 140px;
     border: 2px solid rgba(255,255,255,0.1);
@@ -234,6 +234,8 @@ body.flexStyle {
                 inset 0 -1px 1px rgba(0,0,0,0.1);
     transform-style: preserve-3d;
     perspective: 1000px;
+    flex-shrink: 0;
+    /* Remove transition */
 }
 
 .scroll-container {
@@ -985,27 +987,7 @@ img:hover {
     border: 2px solid var(--neon-orange);
     box-shadow: 0 0 10px var(--neon-blue);
 }
+        if (animationRunning) {
 
-@media (max-width: 768px) {
-    .items-container {
-        max-width: 100%;
-        transform: scale(0.8); /* ✅ Shrinks instead of wrapping */
-        overflow-x: auto; /* ✅ Allows horizontal scrolling if needed */
-    }
 
-    .item-container {
-        width: 100px;
-        height: 140px;
-    }
-}
-
-@media (max-width: 480px) {
-    .items-container {
-        transform: scale(0.6); /* ✅ Shrinks more instead of wrapping */
-    }
-
-    .item-container {
-        width: 80px;
-        height: 110px;
-    }
 }
