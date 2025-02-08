@@ -197,111 +197,6 @@ body.flexStyle {
 }
 
 
-.items-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 12px; /* Further reduced from 15px */
-    background: rgba(255, 255, 255, 0.05);
-    padding: 15px; /* Further reduced from 20px */
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    flex-wrap: nowrap;
-    width: 100%;
-    max-width: 960px; /* Further adjusted from 1000px */
-    margin: 0 auto;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.item-container {
-    text-align: center;
-    width: 140px;
-    border: 2px solid rgba(255,255,255,0.1);
-    padding: 0 2px;
-    border-radius: 8px;
-    height: 191px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    background-color: #fff;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2),
-                inset 0 1px 1px rgba(255,255,255,0.9),
-                inset 0 -1px 1px rgba(0,0,0,0.1);
-    transform-style: preserve-3d;
-    perspective: 1000px;
-    flex-shrink: 0;
-    /* Remove transition */
-}
-
-.scroll-container {
-    position: relative;
-    /* Remove transition */
-}
-
-.itemCol img {
-    max-width: 100%;
-    display: block;
-    margin: 0 auto;
-    border-radius: 5px;
-    width: 132px; /* Further adjusted from 135px */
-    height: 144px;
-    object-fit: cover;
-}
-
-/* Media query adjustments */
-@media (max-width: 991px) {
-    .items-container {
-        gap: 8px;
-        padding: 12px;
-        max-width: 95%;
-    }
-    
-    .item-container {
-        width: 135px;
-    }
-    
-    .itemCol img {
-        width: 128px;
-    }
-}
-
-.item-container:hover {
-    transform: translateY(-5px) translateZ(20px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.3),
-                inset 0 1px 1px rgba(255,255,255,0.9),
-                inset 0 -1px 1px rgba(0,0,0,0.1);
-}
-
-.itemCol {
-    padding-top: 5px;
-}
-
-.itemCol img {
-    max-width: 100%;
-    display: block;
-    margin: 0 auto;
-    border-radius: 5px;
-    width: 140px;
-    height: 144px;
-    object-fit: cover;
-}
-
-.itemCol p {
-    color: #000;
-    padding: 8px 0 10px;
-    font-size: 14px;
-    margin: 0;
-    white-space: nowrap;
-}
-
-.selected + .itemCol {
-    opacity: 0;
-}
 
 /* Copy Button */
 .copy-button {
@@ -469,35 +364,7 @@ body.flexStyle {
     cursor: not-allowed;
 }
 
-/* Media Queries */
-@media (max-width: 991px) {
-    .mainTitle {
-        font-size: 1.6rem;
-    }
-    
-    .items-container {
-        flex-wrap: wrap;
-        padding: 20px;
-        gap: 8px;
-    }
-    
-    .item-container {
-        width: 140px;
-    }
-    
-    .btnRow {
-        gap: 10px;
-    }
-    
-    .outlineCircleBtn {
-        --circleBtnSize: 90px;
-        font-size: 14px;
-    }
-    
-    #output {
-        padding: 25px 0 72px;
-    }
-}
+
 
 /* Increase instruction font size for better readability */
 .step {
@@ -512,27 +379,6 @@ body.flexStyle {
     margin-top: 15px; /* Creates better separation */
 }
 
-@media (max-width: 575px) {
-    .btnRow {
-        gap: 8px;
-    }
-    
-    .mainTitle {
-        font-size: 1.4rem;
-    }
-    
-    .outlineCircleBtn {
-        --circleBtnSize: 80px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 359px) {
-    .outlineBtnStyle {
-        padding: 14px 20px;
-        font-size: 14px;
-    }
-}
 
 #punishmentLoadoutButton {
     animation: subtlePulse 2.5s ease-in-out infinite; /* Keeps pulsing effect */
@@ -991,46 +837,37 @@ img:hover {
 
 
 }
-/* Updated items-container styles */
 .items-container {
     display: flex;
-    flex-direction: row;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: flex-start;
-    gap: 12px;
+    gap: 8px;
     background: rgba(255, 255, 255, 0.05);
-    padding: 15px;
+    padding: 10px 5px; /* Reduced padding to allow bigger elements */
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     width: 100%;
-    max-width: 960px;
+    max-width: 100%;
     margin: 0 auto;
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    /* Add these properties to prevent wrapping */
-    flex-wrap: nowrap;
-    overflow-x: auto; /* Allow horizontal scroll on very small screens as fallback */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    /* Hide scrollbar but keep functionality */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    overflow-x: auto; /* Allows scrolling only when needed */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Hide scrollbar for Chrome/Safari */
-.items-container::-webkit-scrollbar {
-    display: none;
-}
+
 
 .item-container {
+    flex: 1 1 auto; /* Allows items to shrink and grow */
+    width: clamp(80px, 18%, 150px); /* Dynamically scales */
+    min-width: 80px; /* Prevents items from getting too small */
+    max-width: 150px; /* Prevents them from being too big */
     text-align: center;
-    /* Use relative units */
-    width: clamp(100px, 16.666%, 140px);
-    min-width: 100px; /* Prevent containers from getting too small */
     border: 2px solid rgba(255,255,255,0.1);
-    padding: 0 2px;
+    padding: 5px;
     border-radius: 8px;
-    height: 191px;
+    height: auto;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -1038,9 +875,10 @@ img:hover {
     justify-content: flex-end;
     background-color: #fff;
     box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-    /* Ensure items don't shrink or grow */
-    flex: 0 0 auto;
 }
+
+
+
 
 .itemCol img {
     width: 100%;
@@ -1051,27 +889,66 @@ img:hover {
     margin: 0 auto;
     border-radius: 5px;
 }
-
-/* Updated media queries */
+/* ✅ For screens smaller than 991px (tablets and small laptops) */
 @media (max-width: 991px) {
     .items-container {
-        gap: 8px;
         padding: 12px;
-        /* Scale container based on viewport width */
-        transform: translateX(-50%) scale(0.9);
+        max-width: 95%;
+        overflow-x: auto; /* Ensures scrolling */
+    }
+    
+    .item-container {
+        width: 135px;
+    }
+    
+    .itemCol img {
+        width: 128px;
+    }
+
+    .mainTitle {
+        font-size: 1.6rem;
+    }
+
+    .btnRow {
+        gap: 10px;
+    }
+
+    .outlineCircleBtn {
+        --circleBtnSize: 90px;
+        font-size: 14px;
+    }
+
+    #output {
+        padding: 25px 0 72px;
     }
 }
 
+/* ✅ For screens smaller than 768px (mobile and small tablets) */
 @media (max-width: 768px) {
     .items-container {
-        /* Further scale down for smaller screens */
-        transform: translateX(-50%) scale(0.8);
+        padding: 8px; /* More space for elements */
+        max-width: 100%;
+    }
+
+    .item-container {
+        width: clamp(70px, 22%, 130px); /* Make items bigger on smaller screens */
     }
 }
 
 @media (max-width: 480px) {
     .items-container {
-        /* Even smaller scale for mobile */
-        transform: translateX(-50%) scale(0.7);
+        padding: 5px; /* Smallest padding */
     }
+
+    .item-container {
+        width: clamp(60px, 24%, 120px); /* Further scale for very small devices */
+    }
+}
+
+.items-wrapper {
+    display: flex;
+    justify-content: center; /* 👈 Ensures center alignment */
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
 }

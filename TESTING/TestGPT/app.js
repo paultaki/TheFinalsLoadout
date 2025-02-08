@@ -68,12 +68,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const shuffled = [...array].sort(() => Math.random() - 0.5);
         return shuffled.slice(0, n);
     };
+   
+
     const createItemContainer = (items, winningItem = null) => {
-        // Special handling for class selection
         if (items.length === 1 && (items[0] === "Light" || items[0] === "Medium" || items[0] === "Heavy")) {
-            // Create array of 8 identical class items for consistent animation
             let repeatedItems = new Array(8).fill(items[0]);
-            
+    
             return repeatedItems
                 .map((item, index) => `
                     <div class="itemCol ${index === 4 ? 'winner' : ''}">
@@ -84,19 +84,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 .join("");
         }
     
-        // Rest of the function remains the same
         winningItem = winningItem || items[Math.floor(Math.random() * items.length)];
-        
+    
         let spinningItems = items;
         if (items.length === 1) {
             spinningItems = loadouts[state.selectedClass].gadgets;
         }
-        
+    
         let repeatedItems = spinningItems
             .filter(item => item !== winningItem)
             .sort(() => Math.random() - 0.5)
             .slice(0, 7);
-            
+    
         repeatedItems = [
             ...repeatedItems.slice(0, 4),
             winningItem,
@@ -116,20 +115,38 @@ document.addEventListener("DOMContentLoaded", () => {
             `)
             .join("");
     };
+    
+    
+    
+// ✅ Define updateSpinCountdown BEFORE spinLoadout uses it
+const updateSpinCountdown = () => {
+    console.log("Updating spin countdown..."); // Debugging log
+    document.querySelectorAll(".spin-button").forEach(button => {
+        if (parseInt(button.dataset.spins) === state.currentSpin) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
+    });
+};
 
-// Update the spin function
+
+
+// Define spinLoadout before it's used
 const spinLoadout = (spins) => {
     if (state.isSpinning) return;
-    
+
     // Enable all buttons first
     document.querySelectorAll(".class-button, .spin-button").forEach(btn => {
         btn.removeAttribute('disabled');
     });
-    
+
     state.isSpinning = true;
     state.currentSpin = spins || state.currentSpin;
     state.totalSpins = spins || state.totalSpins;
-    
+
+    console.log("Spin initiated with", state.totalSpins, "spins."); // Debug log
+
     updateSpinCountdown();
 
     if (state.selectedClass === 'random') {
@@ -138,6 +155,25 @@ const spinLoadout = (spins) => {
         displayManualLoadout(state.selectedClass);
     }
 };
+
+
+// Now attach event listeners
+document.querySelectorAll(".spin-button").forEach(button => {
+    button.addEventListener("click", (event) => {
+        if (state.isSpinning) return;
+        
+        document.querySelectorAll(".spin-button").forEach(b => b.classList.remove('selected', 'active'));
+        event.currentTarget.classList.add('selected', 'active');
+
+        state.totalSpins = parseInt(event.currentTarget.dataset.spins);
+        state.currentSpin = state.totalSpins;
+
+        console.log("Spin button clicked, starting spin..."); // Debugging log
+
+        spinLoadout(state.totalSpins); // Call spinLoadout function
+    });
+});
+
 
 
 
@@ -237,64 +273,42 @@ const startSpinAnimation = (columns) => {
     };
 
     const displayLoadout = (classType, loadout) => {
+        if (!loadout) {
+            console.error("Error: Loadout is undefined. Check class selection.");
+            return;
+        }
+    
         const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
         const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
-        
-        // Keep track of which gadgets have been used
-        let remainingGadgets = [...loadout.gadgets];
-        const selectedGadgets = [];
-        
-        // Select three gadgets, removing each one from the pool after selection
-        for (let i = 0; i < 3; i++) {
-            const randomIndex = Math.floor(Math.random() * remainingGadgets.length);
-            selectedGadgets.push(remainingGadgets[randomIndex]);
-            // Remove the selected gadget from the remaining pool
-            remainingGadgets.splice(randomIndex, 1);
-        }
-        
+        let selectedGadgets = getRandomUniqueItems(loadout.gadgets, 3);
+    
         const loadoutHTML = `
             <div class="items-container">
-                <div class="item-container">
-                    <div class="scroll-container">
-                        ${createItemContainer([classType], classType)}
-                    </div>
-                </div>
-                <div class="item-container">
-                    <div class="scroll-container">
-                        ${createItemContainer(loadout.weapons, selectedWeapon)}
-                    </div>
-                </div>
-                <div class="item-container">
-                    <div class="scroll-container">
-                        ${createItemContainer(loadout.specializations, selectedSpec)}
-                    </div>
-                </div>
-                ${selectedGadgets.map((gadget, index) => `
-                    <div class="item-container">
-                        <div class="scroll-container">
-                            ${createItemContainer(loadout.gadgets, gadget)}
-                        </div>
-                    </div>
+                <div class="item-container">${createItemContainer([classType], classType)}</div>
+                <div class="item-container">${createItemContainer(loadout.weapons, selectedWeapon)}</div>
+                <div class="item-container">${createItemContainer(loadout.specializations, selectedSpec)}</div>
+                ${selectedGadgets.map(gadget => `
+                    <div class="item-container">${createItemContainer(loadout.gadgets, gadget)}</div>
                 `).join("")}
             </div>
         `;
-        
+    
         outputDiv.innerHTML = loadoutHTML;
-        
+    
+        const itemsContainer = document.querySelector(".items-container");
+        if (itemsContainer) {
+            itemsContainer.style.width = "100%"; // Prevents layout shift
+            itemsContainer.style.overflowX = "auto"; // Allows scrolling when needed
+            itemsContainer.scrollLeft = 0; // Resets scroll position
+        }
+    
         const scrollContainers = Array.from(outputDiv.querySelectorAll(".scroll-container"));
         startSpinAnimation(scrollContainers);
     };
-
-    // Handle spin completion
-    function updateSpinCountdown() {
-        spinButtons.forEach(button => {
-            if (parseInt(button.dataset.spins) === state.currentSpin) {
-                button.classList.add('active');
-            } else {
-                button.classList.remove('active');
-            }
-        });
-    }
+    
+    
+    
+    
     
     const handleSpinComplete = (columns) => {
         if (state.currentSpin > 1) {
@@ -325,32 +339,47 @@ const startSpinAnimation = (columns) => {
             });
     
             spinSelection.classList.add('disabled');
+    
+            // 🔥 Ensure proper width and reset scroll
+            const itemsContainer = document.querySelector(".items-container");
+            if (itemsContainer) {
+                itemsContainer.style.width = "100%"; // Prevent layout shift
+                itemsContainer.style.overflowX = "auto"; // Allow scrolling if necessary
+                itemsContainer.scrollLeft = 0; // 👈 Reset scroll position after spin
+            }
         }
     };
-
-    // Copy loadout functionality
-    document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
-        const columns = Array.from(document.querySelectorAll(".scroll-container"));
-        const selectedItems = columns.map(col => {
-            const selectedItem = col.querySelector(".winner.selected");
-            return selectedItem ? selectedItem.querySelector("p").innerText.trim() : "Unknown";
-        });
+    
+    
             
-        if (selectedItems.includes("Unknown")) {
-            alert("Error: Not all items were selected. Try spinning again.");
-            return;
-        }
     
-        const copyText = 
-            "Class: " + selectedItems[0] + "\n" +
-            "Weapon: " + selectedItems[1] + "\n" +
-            "Specialization: " + selectedItems[2] + "\n" +
-            "Gadget 1: " + selectedItems[3] + "\n" +
-            "Gadget 2: " + selectedItems[4] + "\n" +
-            "Gadget 3: " + selectedItems[5];
-    
-        navigator.clipboard.writeText(copyText)
-            .then(() => alert("Loadout copied to clipboard!"))
-            .catch(err => console.error("Could not copy text: ", err));
+ 
+    // Copy loadout functionality
+// Copy loadout functionality
+document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
+    const columns = Array.from(document.querySelectorAll(".scroll-container"));
+    const selectedItems = columns.map(col => {
+        const selectedItem = col.querySelector(".winner.selected");
+        return selectedItem ? selectedItem.querySelector("p").innerText.trim() : "Unknown";
     });
+
+    if (selectedItems.includes("Unknown")) {
+        alert("Error: Not all items were selected. Try spinning again.");
+        return;
+    }
+
+    const copyText = 
+        "Class: " + selectedItems[0] + "\n" +
+        "Weapon: " + selectedItems[1] + "\n" +
+        "Specialization: " + selectedItems[2] + "\n" +
+        "Gadget 1: " + selectedItems[3] + "\n" +
+        "Gadget 2: " + selectedItems[4] + "\n" +
+        "Gadget 3: " + selectedItems[5];
+
+    navigator.clipboard.writeText(copyText)
+        .then(() => alert("Loadout copied to clipboard!"))
+        .catch(err => console.error("Could not copy text: ", err));
 });
+
+
+}); // 👈 Correctly closes `DOMContentLoaded`
