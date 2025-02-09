@@ -1052,26 +1052,67 @@ img:hover {
     border-radius: 5px;
 }
 
-/* Updated media queries */
-@media (max-width: 991px) {
+.slot-machine-wrapper {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.items-container {
+    width: 960px;
+    margin: 0 auto;
+    display: flex;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Media queries that maintain centering */
+@media (max-width: 1000px) {
     .items-container {
-        gap: 8px;
-        padding: 12px;
-        /* Scale container based on viewport width */
         transform: translateX(-50%) scale(0.9);
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .items-container {
-        /* Further scale down for smaller screens */
         transform: translateX(-50%) scale(0.8);
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 800px) {
     .items-container {
-        /* Even smaller scale for mobile */
         transform: translateX(-50%) scale(0.7);
     }
+}
+
+@media (max-width: 700px) {
+    .items-container {
+        transform: translateX(-50%) scale(0.6);
+    }
+}
+
+@media (max-width: 600px) {
+    .items-container {
+        transform: translateX(-50%) scale(0.5);
+    }
+}
+
+@media (max-width: 500px) {
+    .items-container {
+        transform: translateX(-50%) scale(0.4);
+    }
+}
+
+/* Keep individual item containers fixed size */
+.item-container {
+    width: 140px;
+    flex: 0 0 140px;
+    min-width: 140px;
 }

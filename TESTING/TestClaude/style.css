@@ -498,15 +498,6 @@ body.flexStyle {
         padding: 25px 0 72px;
     }
 }
-/* Spin Selection Buttons */
-/* Space between the Step 1 instructions and spin buttons */
-.spin-button-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px; /* Space between buttons */
-    margin-top: 5px; /* Add slight spacing above */
-    margin-bottom: 20px; /* More space before Step 2 */
-}
 
 /* Increase instruction font size for better readability */
 .step {
@@ -519,34 +510,6 @@ body.flexStyle {
 /* Space out Step 2 from class buttons */
 .step + .btnRow {
     margin-top: 15px; /* Creates better separation */
-}
-
-
-.spin-count-btn {
-    width: 60px;  /* Twice the original size */
-    height: 60px; /* Twice the original size */
-    font-size: 1.5rem; /* Bigger text */
-    font-weight: bold;
-    border-radius: 50%; /* Circular buttons */
-    border: 2px solid var(--neon-yellow);
-    background: transparent;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-/* Hover effect */
-.spin-count-btn:hover {
-    background: var(--neon-yellow);
-    color: black;
-    transform: scale(1.1); /* Slightly bigger on hover */
-}
-
-/* Selected button effect */
-.spin-count-btn.active {
-    background: var(--neon-orange); /* Change color when selected */
-    color: black;
-    border-color: var(--neon-red);
 }
 
 @media (max-width: 575px) {
@@ -739,10 +702,40 @@ body.flexStyle {
     50% { transform: rotate(45deg) translateX(30%); }
     100% { transform: rotate(0deg) translateX(-30%); }
 }
+
+
 .final-glow {
-    animation: glowEffect 1s ease-in-out infinite alternate;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 140, 0, 0.6);
+    animation: impactGlow 0.3s ease-out forwards,
+               glowEffect 1s ease-in-out infinite alternate 0.3s;
     border-radius: 10px;
+}
+
+/* Initial impact animation with bigger splash */
+@keyframes impactGlow {
+    0% {
+        box-shadow: 0 0 0px rgba(255, 215, 0, 0),
+                   0 0 0px rgba(255, 140, 0, 0);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(255, 215, 0, 1),
+                   0 0 80px rgba(255, 140, 0, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.8),
+                   0 0 30px rgba(255, 140, 0, 0.6);
+    }
+}
+
+/* Continuous pulsing animation after impact */
+@keyframes glowEffect {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.6),
+                   0 0 20px rgba(255, 140, 0, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 1),
+                   0 0 40px rgba(255, 140, 0, 0.8);
+    }
 }
 
 @keyframes glowEffect {
@@ -977,4 +970,149 @@ h1, h2, h3 {
 img:hover {
     transform: scale(1.05);
     transition: transform 0.3s ease-in-out;
+}
+
+/* Keep class button highlighted during spin */
+.class-button.active {
+    background: var(--neon-yellow);
+    color: black;
+    border: 2px solid var(--neon-orange);
+    box-shadow: 0 0 10px var(--neon-yellow);
+}
+
+/* Show active spin count */
+.spin-button.active {
+    background: var(--neon-blue);
+    color: black;
+    border: 2px solid var(--neon-orange);
+    box-shadow: 0 0 10px var(--neon-blue);
+}
+        if (animationRunning) {
+
+
+}
+/* Updated items-container styles */
+.items-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Add these properties to prevent wrapping */
+    flex-wrap: nowrap;
+    overflow-x: auto; /* Allow horizontal scroll on very small screens as fallback */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/* Hide scrollbar for Chrome/Safari */
+.items-container::-webkit-scrollbar {
+    display: none;
+}
+
+.item-container {
+    text-align: center;
+    /* Use relative units */
+    width: clamp(100px, 16.666%, 140px);
+    min-width: 100px; /* Prevent containers from getting too small */
+    border: 2px solid rgba(255,255,255,0.1);
+    padding: 0 2px;
+    border-radius: 8px;
+    height: 191px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #fff;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    /* Ensure items don't shrink or grow */
+    flex: 0 0 auto;
+}
+
+.itemCol img {
+    width: 100%;
+    max-width: 132px;
+    height: 144px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+.slot-machine-wrapper {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.items-container {
+    width: 960px;
+    margin: 0 auto;
+    display: flex;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Media queries that maintain centering */
+@media (max-width: 1000px) {
+    .items-container {
+        transform: translateX(-50%) scale(0.9);
+    }
+}
+
+@media (max-width: 900px) {
+    .items-container {
+        transform: translateX(-50%) scale(0.8);
+    }
+}
+
+@media (max-width: 800px) {
+    .items-container {
+        transform: translateX(-50%) scale(0.7);
+    }
+}
+
+@media (max-width: 700px) {
+    .items-container {
+        transform: translateX(-50%) scale(0.6);
+    }
+}
+
+@media (max-width: 600px) {
+    .items-container {
+        transform: translateX(-50%) scale(0.5);
+    }
+}
+
+@media (max-width: 500px) {
+    .items-container {
+        transform: translateX(-50%) scale(0.4);
+    }
+}
+
+/* Keep individual item containers fixed size */
+.item-container {
+    width: 140px;
+    flex: 0 0 140px;
+    min-width: 140px;
 }
