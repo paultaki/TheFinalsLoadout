@@ -209,10 +209,11 @@ document.addEventListener("DOMContentLoaded", () => {
     
         let allStopped = new Array(columns.length).fill(false);
         const startTime = performance.now();
-        const totalDuration = Math.max(...stopTimes) + 500; 
+        const totalDuration = Math.max(...stopTimes) + 500;
     
         const animate = (currentTime) => {
             const timeElapsed = currentTime - startTime;
+            
             if (timeElapsed >= totalDuration) {
                 columns.forEach((column, index) => {
                     if (!allStopped[index]) {
@@ -229,6 +230,30 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     }
                 });
+    
+                // Add Locked In! indicator after final spin
+                if (isFinalSpin) {
+                    const lastItem = columns[columns.length - 1].closest('.item-container');
+                    if (lastItem) {
+                        // Remove any existing indicator
+                        const existingIndicator = lastItem.querySelector('.locked-indicator');
+                        if (existingIndicator) {
+                            existingIndicator.remove();
+                        }
+    
+                        // Create and add new indicator
+                        const lockedIndicator = document.createElement('div');
+                        lockedIndicator.className = 'locked-indicator';
+                        lockedIndicator.textContent = 'Locked In!';
+                        lastItem.appendChild(lockedIndicator);
+    
+                        // Show with delay
+                        setTimeout(() => {
+                            lockedIndicator.classList.add('show');
+                        }, 500);
+                    }
+                }
+    
                 handleSpinComplete(columns);
                 return;
             }

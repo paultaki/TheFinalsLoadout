@@ -1119,3 +1119,53 @@ body {
         font-size: 0.8rem;
     }
 }
+
+.item-container {
+    position: relative;
+}
+
+.locked-indicator {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: linear-gradient(135deg, #ffb700, #ff7b00);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    opacity: 0;
+    transform: scale(0) rotate(10deg);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(255, 183, 0, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.last-gadget .locked-indicator {
+    opacity: 0;
+    transform: scale(0) rotate(10deg);
+}
+
+.last-gadget.final-glow .locked-indicator {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+    animation: lockPulse 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
+}
+
+@keyframes lockPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(255, 183, 0, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(255, 183, 0, 0.4);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(255, 183, 0, 0.3);
+    }
+}
