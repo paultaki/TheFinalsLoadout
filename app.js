@@ -185,135 +185,137 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Optimized animation function for better mobile performance
     // Replace your startSpinAnimation function with this fixed version
-const startSpinAnimation = (columns) => {
-    const itemHeight = 188;
-    const baseSpeed = 12;
+    const startSpinAnimation = (columns) => {
+        const itemHeight = 188;
+        const baseSpeed = 12;
+        const isFinalSpin = state.currentSpin === 1;
     
-    const isFinalSpin = state.currentSpin === 1;
+        // Apply GPU acceleration only when animation starts
+        columns.forEach(column => {
+            column.style.willChange = 'transform';
+            column.style.backfaceVisibility = 'hidden';
+            column.style.perspective = '1000px';
+            column.style.transform = 'translate3d(0,0,0)'; // GPU acceleration during animation
+        });
     
-    // Reset all columns to starting position
-    columns.forEach(column => {
-        column.style.transform = 'translate3d(0,0,0)';
-    });
+        // Reset all columns to starting position
+        columns.forEach(column => {
+            column.style.transform = 'translate3d(0,0,0)';
+        });
     
-    // Adjust stop times for more reliable completion
-    const stopTimes = columns.map((_, index) => {
-        if (!isFinalSpin) {
-            return 700 + (index * 110);
-        }
-        // Increase final spin duration for better effect
-        return 500 + (index * 200);  // More time between each stop
-    });
-
-    let allStopped = new Array(columns.length).fill(false);
-    const startTime = performance.now();
-
-    // Calculate total animation duration
-    const totalDuration = Math.max(...stopTimes) + 500; // Add buffer time
+        const stopTimes = columns.map((_, index) => {
+            return isFinalSpin ? (500 + index * 200) : (700 + index * 110);
+        });
     
-    const animate = (currentTime) => {
-        const timeElapsed = currentTime - startTime;
-
-        // Check if total animation should end
-        if (timeElapsed >= totalDuration) {
+        let allStopped = new Array(columns.length).fill(false);
+        const startTime = performance.now();
+        const totalDuration = Math.max(...stopTimes) + 500; 
+    
+        const animate = (currentTime) => {
+            const timeElapsed = currentTime - startTime;
+            if (timeElapsed >= totalDuration) {
+                columns.forEach((column, index) => {
+                    if (!allStopped[index]) {
+                        allStopped[index] = true;
+                        column.style.transform = `translate3d(0,${itemHeight}px,0)`;
+                        const selectedItem = column.querySelector('.winner');
+                        if (selectedItem) {
+                            selectedItem.classList.add('selected');
+                            if (isFinalSpin) {
+                                const container = column.closest('.item-container');
+                                container.classList.add('final-glow');
+                                container.style.willChange = 'box-shadow';
+                            }
+                        }
+                    }
+                });
+                handleSpinComplete(columns);
+                return;
+            }
+    
+            let animationRunning = false;
             columns.forEach((column, index) => {
                 if (!allStopped[index]) {
-                    allStopped[index] = true;
-                    column.style.transform = `translate3d(0,${itemHeight}px,0)`;
-                    const selectedItem = column.querySelector('.winner');
-                    if (selectedItem) {
-                        selectedItem.classList.add('selected');
-                        if (isFinalSpin) {
-                            const container = column.closest('.item-container');
-                            container.classList.add('final-glow');
-                            container.style.willChange = 'box-shadow';
+                    animationRunning = true;
+                    const shouldStop = timeElapsed >= stopTimes[index];
+                    const transform = new DOMMatrix(window.getComputedStyle(column).transform);
+                    const currentOffset = transform.m42;
+                    
+                    if (shouldStop) {
+                        allStopped[index] = true;
+                        column.style.transform = `translate3d(0,${itemHeight}px,0)`;
+                        const selectedItem = column.querySelector('.winner');
+                        if (selectedItem) {
+                            selectedItem.classList.add('selected');
+                            if (isFinalSpin) {
+                                const container = column.closest('.item-container');
+                                container.classList.add('final-glow');
+                                container.style.willChange = 'box-shadow';
+                            }
                         }
+                    } else {
+                        let newOffset = currentOffset + baseSpeed;
+                        if (newOffset >= itemHeight * 8) {
+                            newOffset = 0;
+                        }
+                        column.style.transform = `translate3d(0,${newOffset}px,0)`;
                     }
                 }
             });
-            handleSpinComplete(columns);
-            return;
-        }
-
-        let animationRunning = false;
-
-        columns.forEach((column, index) => {
-            if (!allStopped[index]) {
-                animationRunning = true;
-                
-                const shouldStop = timeElapsed >= stopTimes[index];
-                const transform = new DOMMatrix(window.getComputedStyle(column).transform);
-                const currentOffset = transform.m42;
-                
-                if (shouldStop) {
-                    allStopped[index] = true;
-                    column.style.transform = `translate3d(0,${itemHeight}px,0)`;
-                    const selectedItem = column.querySelector('.winner');
-                    if (selectedItem) {
-                        selectedItem.classList.add('selected');
-                        if (isFinalSpin) {
-                            const container = column.closest('.item-container');
-                            container.classList.add('final-glow');
-                            container.style.willChange = 'box-shadow';
-                        }
-                    }
-                } else {
-                    let newOffset = currentOffset + baseSpeed;
-                    if (newOffset >= itemHeight * 8) {
-                        newOffset = 0;
-                    }
-                    column.style.transform = `translate3d(0,${newOffset}px,0)`;
-                }
+    
+            if (animationRunning) {
+                requestAnimationFrame(animate);
+            } else {
+                handleSpinComplete(columns);
             }
-        });
-
-        if (animationRunning) {
-            requestAnimationFrame(animate);
-        } else {
-            handleSpinComplete(columns);
-        }
+        };
+    
+        requestAnimationFrame(animate);
     };
-
-    requestAnimationFrame(animate);
-};
-    // PART 3 OF 3 - Finally, copy everything from here to the end...
-
+    
+    // Reset GPU acceleration after animation ends
     const handleSpinComplete = (columns) => {
         columns.forEach(column => {
-            column.style.willChange = 'auto';
+            column.style.willChange = 'auto'; // Reset optimizations
         });
-
+    
         if (state.currentSpin > 1) {
+            state.currentSpin--; // Reduce spin count
+            updateSpinCountdown();
+    
             setTimeout(() => {
-                state.currentSpin--;
-                updateSpinCountdown();
-        
+                // ✅ Properly trigger a new spin by selecting a loadout again
                 if (state.selectedClass === 'random') {
                     displayRandomLoadout();
                 } else {
                     displayManualLoadout(state.selectedClass);
                 }
-            }, 500);
+            }, 1000); // Delay ensures animation finishes before starting again
         } else {
+            // ✅ Reset state properly after last spin
             state.isSpinning = false;
             state.currentSpin = 1;
             state.totalSpins = 0;
             state.selectedClass = null;
             state.selectedGadgets.clear();
-        
+    
             classButtons.forEach(btn => {
                 btn.classList.remove('selected', 'active');
                 btn.removeAttribute('disabled');
             });
-        
+    
             spinButtons.forEach(btn => {
                 btn.classList.remove('selected', 'active');
                 btn.removeAttribute('disabled');
             });
-        
+    
             spinSelection.classList.add('disabled');
         }
     };
+    
+    
+    
+    
 
     const updateSpinCountdown = () => {
         spinButtons.forEach(button => {

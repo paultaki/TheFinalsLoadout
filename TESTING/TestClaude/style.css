@@ -31,7 +31,7 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
+    min-height: auto;
     background: linear-gradient(180deg, #1B1B3A, #2E004D); /* Dark blue to deep purple */
     background-size: cover;
     color: white;
@@ -197,24 +197,6 @@ body.flexStyle {
 }
 
 
-.items-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 12px; /* Further reduced from 15px */
-    background: rgba(255, 255, 255, 0.05);
-    padding: 15px; /* Further reduced from 20px */
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    flex-wrap: nowrap;
-    width: 100%;
-    max-width: 960px; /* Further adjusted from 1000px */
-    margin: 0 auto;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-}
 
 .item-container {
     text-align: center;
@@ -253,22 +235,6 @@ body.flexStyle {
     object-fit: cover;
 }
 
-/* Media query adjustments */
-@media (max-width: 991px) {
-    .items-container {
-        gap: 8px;
-        padding: 12px;
-        max-width: 95%;
-    }
-    
-    .item-container {
-        width: 135px;
-    }
-    
-    .itemCol img {
-        width: 128px;
-    }
-}
 
 .item-container:hover {
     transform: translateY(-5px) translateZ(20px);
@@ -430,13 +396,12 @@ body.flexStyle {
     transition: opacity 0.3s ease;
 }
 .container {
-    margin-left: auto;
-    margin-right: auto;
     width: 100%;
-    max-width: 1000px;
-    padding-left: 15px;
-    padding-right: 15px;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 15px;
 }
+
 
 .main.mainContent {
     min-height: 500px; /* Adjust based on actual content height */
@@ -469,36 +434,6 @@ body.flexStyle {
     cursor: not-allowed;
 }
 
-/* Media Queries */
-@media (max-width: 991px) {
-    .mainTitle {
-        font-size: 1.6rem;
-    }
-    
-    .items-container {
-        flex-wrap: wrap;
-        padding: 20px;
-        gap: 8px;
-    }
-    
-    .item-container {
-        width: 140px;
-    }
-    
-    .btnRow {
-        gap: 10px;
-    }
-    
-    .outlineCircleBtn {
-        --circleBtnSize: 90px;
-        font-size: 14px;
-    }
-    
-    #output {
-        padding: 25px 0 72px;
-    }
-}
-
 /* Increase instruction font size for better readability */
 .step {
     font-size: 1.3rem; /* Increased from 1.1rem */
@@ -512,27 +447,7 @@ body.flexStyle {
     margin-top: 15px; /* Creates better separation */
 }
 
-@media (max-width: 575px) {
-    .btnRow {
-        gap: 8px;
-    }
-    
-    .mainTitle {
-        font-size: 1.4rem;
-    }
-    
-    .outlineCircleBtn {
-        --circleBtnSize: 80px;
-        font-size: 0.9rem;
-    }
-}
 
-@media (max-width: 359px) {
-    .outlineBtnStyle {
-        padding: 14px 20px;
-        font-size: 14px;
-    }
-}
 
 #punishmentLoadoutButton {
     animation: subtlePulse 2.5s ease-in-out infinite; /* Keeps pulsing effect */
@@ -1052,70 +967,23 @@ img:hover {
     border-radius: 5px;
 }
 
-.slot-machine-wrapper {
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-}
+
 
 .items-container {
-    width: 960px;
-    margin: 0 auto;
     display: flex;
-    gap: 12px;
-    background: rgba(255, 255, 255, 0.05);
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 960px;
+    width: 100%;
+    margin: 20px auto; /* Reduce large gaps */
     padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
-/* Media queries that maintain centering */
-@media (max-width: 1000px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.9);
-    }
-}
 
-@media (max-width: 900px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.8);
-    }
-}
-
-@media (max-width: 800px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.7);
-    }
-}
-
-@media (max-width: 700px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.6);
-    }
-}
-
-@media (max-width: 600px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.5);
-    }
-}
-
-@media (max-width: 500px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.4);
-    }
-}
-
-/* Keep individual item containers fixed size */
-.item-container {
-    width: 140px;
-    flex: 0 0 140px;
-    min-width: 140px;
-}
 .button-container {
     margin-top: 20px;
     display: flex;
@@ -1123,86 +991,131 @@ img:hover {
     align-items: center;
     gap: 15px;
 }
-/* ===== Mobile Responsiveness Fixes ===== */
-/* Add these styles at the END of your style.css file */
 
-/* Update container padding for mobile */
-.container {
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    max-width: 1000px;
-    padding-left: 8px;
-    padding-right: 8px;
-}
-
-/* Update slot machine wrapper for better centering */
-.slot-machine-wrapper {
-    width: 100%;
-    max-width: 100vw;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    overflow: hidden;
-}
-
-/* Adjust items container for better mobile display */
-.items-container {
-    width: 960px;
-    max-width: none;
-    transform: translateX(-50%);
-    padding: 12px 8px;
-}
-
-/* Updated media queries for better scaling */
-@media (max-width: 1000px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.95);
-        transform-origin: center;
-    }
-}
-
-@media (max-width: 900px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.85);
-    }
-}
-
-@media (max-width: 800px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.75);
-    }
-    .container {
-        padding-left: 4px;
-        padding-right: 4px;
-    }
-}
-
-@media (max-width: 700px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.65);
-    }
-}
-
-@media (max-width: 600px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.55);
-    }
-}
-
-@media (max-width: 500px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.45);
-    }
-    .container {
-        padding-left: 2px;
-        padding-right: 2px;
-    }
-}
 
 /* Ensure items maintain size */
 .item-container {
-    width: 140px;
-    flex: 0 0 140px;
-    min-width: 140px;
+    flex: 1 1 auto; /* Allows resizing */
+    min-width: 80px; /* Lets it shrink on small screens */
+    max-width: 140px; /* Prevents it from getting too large */
+    height: 191px;
+}
+
+
+
+
+/* Prevent horizontal scrolling on the entire page */
+body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+/* Ensure proper sizing for item containers */
+.item-container {
+    flex: 1 1 auto;  /* Allows shrinking and growing */
+    width: auto;  /* Prevents forced width */
+    min-width: 80px;  /* Allows containers to shrink below 140px */
+    max-width: 140px;  /* Prevents them from becoming too large */
+    height: 191px;  /* Keeps the height consistent */
+}
+
+/* Add these styles at the end of your style.css file */
+/* ===== Mobile Optimization and Spacing Fixes ===== */
+@media (max-width: 768px) {
+    .headerSection {
+        padding: 15px 0;
+    }
+
+    .mainTitle {
+        font-size: 1.2rem;
+        margin: 5px 0;
+    }
+
+    .finals-logo {
+        max-width: 120px;
+        margin: 0 auto 10px;
+    }
+
+
+    .items-container {
+        width: 960px;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%) scale(0.7);
+        transform-origin: center center;
+        margin: 0 auto;
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+        overflow-x: hidden;
+        width: 100%;
+        min-height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+    .step {
+        margin: 8px 0;
+    }
+
+    .step h2 {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .btnRow {
+        gap: 8px;
+    }
+
+    .outlineCircleBtn {
+        width: 60px;
+        height: 60px;
+        font-size: 0.9rem;
+    }
+
+    .mainContent {
+        padding: 0;
+        gap: 8px;
+    }
+
+    .copy-button {
+        margin: 10px 0;
+    }
+
+    #output {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px; /* Reduce space between items */
+        padding-bottom: 5px; /* Reduce bottom spacing */
+        margin-top: 10px; /* Reduce large gap above */
+    }
+    
+}
+
+/* Additional scaling for smaller screens */
+@media (max-width: 576px) {
+    .items-container {
+        transform: translateX(-50%) scale(0.5);
+    }
+}
+
+@media (max-width: 375px) {
+    .items-container {
+        transform: translateX(-50%) scale(0.4);
+    }
+
+    .outlineCircleBtn {
+        width: 50px;
+        height: 50px;
+        font-size: 0.8rem;
+    }
 }
