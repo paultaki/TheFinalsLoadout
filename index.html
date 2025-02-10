@@ -83,71 +83,75 @@
     <main class="mainContent">
         <div class="container">
             <div class="buttons">
-                <!-- Step 1: Class Selection -->
-                <div id="classSelection" class="step">
-                    <h2>Choose Your Class</h2>
-                    <div class="btnRow">
-                        <button class="class-button outlineCircleBtn" data-class="Light">LIGHT</button>
-                        <button class="class-button outlineCircleBtn" data-class="Medium">MEDIUM</button>
-                        <button class="class-button outlineCircleBtn" data-class="Heavy">HEAVY</button>
-                        <button class="class-button outlineCircleBtn random" data-class="random">?</button>
+                <div class="step-container">
+                    <!-- Step 1: Class Selection -->
+                    <div id="classSelection" class="step">
+                        <div class="step-highlight"></div>
+                        <h2>Choose Your Class</h2>
+                        <div class="btnRow">
+                            <button class="class-button outlineCircleBtn" data-class="Light">LIGHT</button>
+                            <button class="class-button outlineCircleBtn" data-class="Medium">MEDIUM</button>
+                            <button class="class-button outlineCircleBtn" data-class="Heavy">HEAVY</button>
+                            <button class="class-button outlineCircleBtn random" data-class="random">?</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Spin Selection -->
+                    <div id="spinSelection" class="step disabled">
+                        <div class="step-highlight"></div>
+                        <h2>Number of Spins</h2>
+                        <div class="btnRow">
+                            <button class="spin-button outlineCircleBtn" data-spins="1">1</button>
+                            <button class="spin-button outlineCircleBtn" data-spins="2">2</button>
+                            <button class="spin-button outlineCircleBtn" data-spins="3">3</button>
+                            <button class="spin-button outlineCircleBtn" data-spins="4">4</button>
+                            <button class="spin-button outlineCircleBtn" data-spins="5">5</button>
+                        </div>
+                    </div>
+                </div>
+        
+                <div id="output">
+                    <div class="slot-machine-wrapper">
+                        <div class="items-container">
+                            <div class="placeholder-container">
+                                <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                                <p>Contestant</p>
+                            </div>
+                            <div class="placeholder-container">
+                                <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                                <p>Weapon</p>
+                            </div>
+                            <div class="placeholder-container">
+                                <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                                <p>Specialization</p>
+                            </div>
+                            <div class="placeholder-container">
+                                <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                                <p>Gadget 1</p>
+                            </div>
+                            <div class="placeholder-container">
+                                <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                                <p>Gadget 2</p>
+                            </div>
+                            <div class="placeholder-container">
+                                <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                                <p>Gadget 3</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             
-                <!-- Step 2: Spin Count -->
-                <div id="spinSelection" class="step disabled">
-                    <h2>Number of Spins</h2>
-                    <div class="btnRow">
-                        <button class="spin-button outlineCircleBtn" data-spins="1">1</button>
-                        <button class="spin-button outlineCircleBtn" data-spins="2">2</button>
-                        <button class="spin-button outlineCircleBtn" data-spins="3">3</button>
-                        <button class="spin-button outlineCircleBtn" data-spins="4">4</button>
-                        <button class="spin-button outlineCircleBtn" data-spins="5">5</button>
-                    </div>
+                <!-- Single set of buttons -->
+                <div class="btnRow">
+                    <button id="copyLoadoutButton" class="copy-button">Copy Loadout</button>
                 </div>
-            </div>
-                                                      
-            <div id="output">
-                <div class="slot-machine-wrapper">
-                    <div class="items-container">
-                        <div class="placeholder-container">
-                            <img src="images/placeholder.webp" alt="?" loading="lazy" />
-                            <p>Contestant</p>
-                        </div>
-                        <div class="placeholder-container">
-                            <img src="images/placeholder.webp" alt="?" loading="lazy" />
-                            <p>Weapon</p>
-                        </div>
-                        <div class="placeholder-container">
-                            <img src="images/placeholder.webp" alt="?" loading="lazy" />
-                            <p>Specialization</p>
-                        </div>
-                        <div class="placeholder-container">
-                            <img src="images/placeholder.webp" alt="?" loading="lazy" />
-                            <p>Gadget 1</p>
-                        </div>
-                        <div class="placeholder-container">
-                            <img src="images/placeholder.webp" alt="?" loading="lazy" />
-                            <p>Gadget 2</p>
-                        </div>
-                        <div class="placeholder-container">
-                            <img src="images/placeholder.webp" alt="?" loading="lazy" />
-                            <p>Gadget 3</p>
-                        </div>
-                    </div>
+                <div class="btnRow">
+                    <a href="punishment-loadout/index.html" class="outlineBtnStyle">
+                        <img src="images/punishment.webp" class="skull-icon" alt="💀">
+                        Punishment Loadout
+                        <img src="images/punishment.webp" class="skull-icon" alt="💀">
+                    </a>
                 </div>
-            </div>
-    
-            <!-- Buttons area -->
-            <div class="btnRow">
-                <button id="copyLoadoutButton" class="copy-button">Copy Loadout</button>
-            </div>
-            <div class="btnRow">
-                <a href="punishment-loadout/index.html" class="outlineBtnStyle">
-                    <img src="images/punishment.webp" class="skull-icon" alt="💀">
-                    Punishment Loadout
-                    <img src="images/punishment.webp" class="skull-icon" alt="💀">
-                </a>
             </div>
         </div>
     </main>

@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Replace your startSpinAnimation function with this fixed version
     const startSpinAnimation = (columns) => {
         const itemHeight = 188;
-        const baseSpeed = 12;
+        const baseSpeed = 20;
         const isFinalSpin = state.currentSpin === 1;
     
         // Apply GPU acceleration only when animation starts
@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     
         const stopTimes = columns.map((_, index) => {
-            return isFinalSpin ? (500 + index * 200) : (700 + index * 110);
+            return isFinalSpin ? (500 + index * 700) : (700 + index * 110);
         });
     
         let allStopped = new Array(columns.length).fill(false);

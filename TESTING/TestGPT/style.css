@@ -31,7 +31,7 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
+    min-height: auto;
     background: linear-gradient(180deg, #1B1B3A, #2E004D); /* Dark blue to deep purple */
     background-size: cover;
     color: white;
@@ -197,41 +197,33 @@ body.flexStyle {
 }
 
 
-.items-container {
-    display: flex;
-    justify-content: center;  /* ✅ Center items horizontally */
-    align-items: flex-start;
-    gap: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    width: 100%;
-    max-width: 960px;
-    margin: 0 auto;  /* ✅ Ensures the container itself is centered */
-}
-
-
-
 
 .item-container {
-    width: 16.5%; /* Keep items evenly spaced */
-    max-width: 140px; /* Prevent excessive growth */
-    min-width: 90px; /* Ensure scaling on mobile */
-    height: 190px;
-    flex-shrink: 0; /* Prevent shrinking */
-    flex-grow: 0; /* Prevent growing */
-    overflow: hidden; /* Avoid content spilling */
+    text-align: center;
+    width: 140px;
+    border: 2px solid rgba(255,255,255,0.1);
+    padding: 0 2px;
+    border-radius: 8px;
+    height: 191px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #fff;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2),
+                inset 0 1px 1px rgba(255,255,255,0.9),
+                inset 0 -1px 1px rgba(0,0,0,0.1);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    flex-shrink: 0;
+    /* Remove transition */
 }
-
 
 .scroll-container {
-    width: 100%;
-    max-width: 140px; /* Prevent overflow */
-    height: 100%;
-    overflow: hidden;
+    position: relative;
+    /* Remove transition */
 }
-
 
 .itemCol img {
     max-width: 100%;
@@ -243,22 +235,6 @@ body.flexStyle {
     object-fit: cover;
 }
 
-/* Media query adjustments */
-@media (max-width: 991px) {
-    .items-container {
-        gap: 8px;
-        padding: 12px;
-        max-width: 95%;
-    }
-    
-    .item-container {
-        width: 135px;
-    }
-    
-    .itemCol img {
-        width: 128px;
-    }
-}
 
 .item-container:hover {
     transform: translateY(-5px) translateZ(20px);
@@ -421,13 +397,10 @@ body.flexStyle {
 }
 .container {
     width: 100%;
-    max-width: 100%;
-    padding: 0;
+    max-width: 960px;
     margin: 0 auto;
-    overflow-x: hidden; /* Prevents right-side cutoff */
+    padding: 0 15px;
 }
-
-
 
 
 .main.mainContent {
@@ -461,36 +434,6 @@ body.flexStyle {
     cursor: not-allowed;
 }
 
-/* Media Queries */
-@media (max-width: 991px) {
-    .mainTitle {
-        font-size: 1.6rem;
-    }
-    
-    .items-container {
-        flex-wrap: wrap;
-        padding: 20px;
-        gap: 8px;
-    }
-    
-    .item-container {
-        width: 140px;
-    }
-    
-    .btnRow {
-        gap: 10px;
-    }
-    
-    .outlineCircleBtn {
-        --circleBtnSize: 90px;
-        font-size: 14px;
-    }
-    
-    #output {
-        padding: 25px 0 72px;
-    }
-}
-
 /* Increase instruction font size for better readability */
 .step {
     font-size: 1.3rem; /* Increased from 1.1rem */
@@ -504,27 +447,7 @@ body.flexStyle {
     margin-top: 15px; /* Creates better separation */
 }
 
-@media (max-width: 575px) {
-    .btnRow {
-        gap: 8px;
-    }
-    
-    .mainTitle {
-        font-size: 1.4rem;
-    }
-    
-    .outlineCircleBtn {
-        --circleBtnSize: 80px;
-        font-size: 0.9rem;
-    }
-}
 
-@media (max-width: 359px) {
-    .outlineBtnStyle {
-        padding: 14px 20px;
-        font-size: 14px;
-    }
-}
 
 #punishmentLoadoutButton {
     animation: subtlePulse 2.5s ease-in-out infinite; /* Keeps pulsing effect */
@@ -983,25 +906,30 @@ img:hover {
 
 
 }
+/* Updated items-container styles */
 .items-container {
     display: flex;
+    flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
     background: rgba(255, 255, 255, 0.05);
     padding: 15px;
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     width: 100%;
-    max-width: 960px; /* Ensure it doesn’t exceed a certain size */
+    max-width: 960px;
     margin: 0 auto;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
+    /* Add these properties to prevent wrapping */
     flex-wrap: nowrap;
-    overflow-x: auto; /* Allow smooth scrolling if needed */
-    -webkit-overflow-scrolling: touch; /* Improve scrolling on iOS */
-    scrollbar-width: none; /* Hide scrollbar */
+    overflow-x: auto; /* Allow horizontal scroll on very small screens as fallback */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 /* Hide scrollbar for Chrome/Safari */
@@ -1009,48 +937,25 @@ img:hover {
     display: none;
 }
 
-/* Ensure individual items scale properly */
 .item-container {
-    width: clamp(80px, 16.666%, 140px); /* Scale dynamically */
-    min-width: 80px; /* Prevent them from getting too small */
-    flex: 0 0 auto; /* Prevent flex shrink issues */
-}
-
-
-
-
-
-
-
-
-
-/* Hide scrollbar for Chrome/Safari */
-.items-container::-webkit-scrollbar {
-    display: none;
-}
-.item-container {
-    flex: 1 1 auto;
-    width: 16%;
-    min-width: 90px;
-    max-width: 140px;
-    height: auto;
-    aspect-ratio: 2 / 3;
     text-align: center;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    padding: 5px;
+    /* Use relative units */
+    width: clamp(100px, 16.666%, 140px);
+    min-width: 100px; /* Prevent containers from getting too small */
+    border: 2px solid rgba(255,255,255,0.1);
+    padding: 0 2px;
     border-radius: 8px;
+    height: 191px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
     background-color: #fff;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    flex-shrink: 1;
-    transition: all 0.3s ease-in-out;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    /* Ensure items don't shrink or grow */
+    flex: 0 0 auto;
 }
-
-
-
 
 .itemCol img {
     width: 100%;
@@ -1062,22 +967,155 @@ img:hover {
     border-radius: 5px;
 }
 
-/* Updated media queries */
-/* Responsive Scaling */
-@media (max-width: 991px) {
-    .items-container {
-        transform: translateX(-50%) scale(0.9);
-    }
+
+
+.items-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 960px;
+    width: 100%;
+    margin: 20px auto; /* Reduce large gaps */
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
 
+
+.button-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+
+/* Ensure items maintain size */
+.item-container {
+    flex: 1 1 auto; /* Allows resizing */
+    min-width: 80px; /* Lets it shrink on small screens */
+    max-width: 140px; /* Prevents it from getting too large */
+    height: 191px;
+}
+
+
+
+
+/* Prevent horizontal scrolling on the entire page */
+body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+/* Ensure proper sizing for item containers */
+.item-container {
+    flex: 1 1 auto;  /* Allows shrinking and growing */
+    width: auto;  /* Prevents forced width */
+    min-width: 80px;  /* Allows containers to shrink below 140px */
+    max-width: 140px;  /* Prevents them from becoming too large */
+    height: 191px;  /* Keeps the height consistent */
+}
+
+/* Add these styles at the end of your style.css file */
+/* ===== Mobile Optimization and Spacing Fixes ===== */
 @media (max-width: 768px) {
+    .headerSection {
+        padding: 15px 0;
+    }
+
+    .mainTitle {
+        font-size: 1.2rem;
+        margin: 5px 0;
+    }
+
+    .finals-logo {
+        max-width: 120px;
+        margin: 0 auto 10px;
+    }
+
+
     .items-container {
-        transform: translateX(-50%) scale(0.8);
+        width: 960px;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%) scale(0.7);
+        transform-origin: center center;
+        margin: 0 auto;
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+        overflow-x: hidden;
+        width: 100%;
+        min-height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+    .step {
+        margin: 8px 0;
+    }
+
+    .step h2 {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .btnRow {
+        gap: 8px;
+    }
+
+    .outlineCircleBtn {
+        width: 60px;
+        height: 60px;
+        font-size: 0.9rem;
+    }
+
+    .mainContent {
+        padding: 0;
+        gap: 8px;
+    }
+
+    .copy-button {
+        margin: 10px 0;
+    }
+
+    #output {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px; /* Reduce space between items */
+        padding-bottom: 5px; /* Reduce bottom spacing */
+        margin-top: 10px; /* Reduce large gap above */
+    }
+    
+}
+
+/* Additional scaling for smaller screens */
+@media (max-width: 576px) {
+    .items-container {
+        transform: translateX(-50%) scale(0.5);
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 375px) {
     .items-container {
-        transform: translateX(-50%) scale(0.7);
+        transform: translateX(-50%) scale(0.4);
+    }
+
+    .outlineCircleBtn {
+        width: 50px;
+        height: 50px;
+        font-size: 0.8rem;
     }
 }
