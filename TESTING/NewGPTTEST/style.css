@@ -1116,3 +1116,10 @@ img:hover {
     flex: 0 0 140px;
     min-width: 140px;
 }
+.button-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
