@@ -169,13 +169,14 @@ body.flexStyle {
     letter-spacing: 1px;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-/* Increase spacing above the Random Contestant button */
-#randomLoadoutButton {
-    margin-top: 25px; /* Moves it slightly higher */
-    margin-bottom: 25px; /* Pushes it down */
+    
+    /* Increase spacing above the Random Contestant button */
+    #randomLoadoutButton { /* ❌ REMOVE THIS */
+        margin-top: 25px; 
+        margin-bottom: 25px;
+    }
 }
 
-}
 
 .outlineBtnStyle:hover {
     background-color: var(--neon-red);
@@ -197,28 +198,6 @@ body.flexStyle {
 }
 
 
-
-.item-container {
-    text-align: center;
-    width: 140px;
-    border: 2px solid rgba(255,255,255,0.1);
-    padding: 0 2px;
-    border-radius: 8px;
-    height: 191px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    background-color: #fff;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2),
-                inset 0 1px 1px rgba(255,255,255,0.9),
-                inset 0 -1px 1px rgba(0,0,0,0.1);
-    transform-style: preserve-3d;
-    perspective: 1000px;
-    flex-shrink: 0;
-    /* Remove transition */
-}
 
 .scroll-container {
     position: relative;
@@ -260,10 +239,12 @@ body.flexStyle {
 .itemCol p {
     color: #000;
     padding: 8px 0 10px;
-    font-size: 14px;
+    font-size: 16px; /* 👀 Increase readability */
+    font-weight: bold; /* Makes it pop more */
     margin: 0;
     white-space: nowrap;
 }
+
 
 .selected + .itemCol {
     opacity: 0;
@@ -937,25 +918,6 @@ img:hover {
     display: none;
 }
 
-.item-container {
-    text-align: center;
-    /* Use relative units */
-    width: clamp(100px, 16.666%, 140px);
-    min-width: 100px; /* Prevent containers from getting too small */
-    border: 2px solid rgba(255,255,255,0.1);
-    padding: 0 2px;
-    border-radius: 8px;
-    height: 191px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    background-color: #fff;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-    /* Ensure items don't shrink or grow */
-    flex: 0 0 auto;
-}
 
 .itemCol img {
     width: 100%;
@@ -993,14 +955,19 @@ img:hover {
 }
 
 
-/* Ensure items maintain size */
 .item-container {
-    flex: 1 1 auto; /* Allows resizing */
-    min-width: 80px; /* Lets it shrink on small screens */
-    max-width: 140px; /* Prevents it from getting too large */
-    height: 191px;
+    flex: 0 1 140px; /* Ensures a fixed width */
+    min-width: 140px;
+    max-width: 140px;
+    height: 191px; /* Keep height fixed */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #fff;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
 }
-
 
 
 
@@ -1037,17 +1004,39 @@ body {
         margin: 0 auto 10px;
     }
 
-
     .items-container {
-        width: 960px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        
+        width: 100%; /* Makes it flexible */
+        max-width: 1100px; /* Increase width to prevent wrapping */
+        min-width: 960px; /* Prevents it from shrinking too much */
+        
+        margin: 0 auto;
         position: relative;
         left: 50%;
-        transform: translateX(-50%) scale(0.7);
-        transform-origin: center center;
-        margin: 0 auto;
-        padding: 10px;
-        gap: 8px;
+        transform: translateX(-50%); /* Keep it centered */
+        
+        flex-wrap: nowrap; /* Ensure items don’t wrap */
+        overflow-x: auto; /* Allow scrolling if needed */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        
+        scrollbar-width: none; /* Hide scrollbar */
+        -ms-overflow-style: none;
     }
+    
+    /* Hide scrollbar for Chrome/Safari */
+    .items-container::-webkit-scrollbar {
+        display: none;
+    }
+    
 
     .container {
         padding-left: 0;
@@ -1101,21 +1090,52 @@ body {
     
 }
 
-/* Additional scaling for smaller screens */
+@media (max-width: 768px) {
+    .items-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 12px;
+        width: 100%;
+        max-width: 1100px;
+        min-width: 960px;
+        margin: 0 auto;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+}
+
 @media (max-width: 576px) {
     .items-container {
-        transform: translateX(-50%) scale(0.5);
+        transform: translateX(-50%) scale(0.5); /* ❌ REMOVE */
     }
 }
 
 @media (max-width: 375px) {
     .items-container {
-        transform: translateX(-50%) scale(0.4);
+        transform: translateX(-50%) scale(0.4); /* ❌ REMOVE */
     }
+}
+@media (max-width: 1024px) {
+    .itemCol p {
+        font-size: 18px; /* Bigger for medium screens */
+    }
+}
 
-    .outlineCircleBtn {
-        width: 50px;
-        height: 50px;
-        font-size: 0.8rem;
+@media (max-width: 768px) {
+    .itemCol p {
+        font-size: 20px; /* Even larger for small screens */
+    }
+}
+@media (max-width: 1024px) {
+    .items-container {
+        max-width: 95vw; /* Allow more flexibility */
     }
 }
