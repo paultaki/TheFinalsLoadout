@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Finals Random Punishment Loadout Generator</title>
+    <meta name="description" content="Generate random punishment loadouts for The Finals game. Create unique builds with random weapons, specializations, and gadgets for Light, Medium, and Heavy classes.">
+    <meta name="keywords" content="The Finals loadout generator, The Finals random loadout, The Finals game builds, The Finals weapon randomizer, The Finals class randomizer">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="The Finals Random Loadout Generator">
+    <meta property="og:description" content="Generate random loadouts for The Finals game - includes all weapons, specializations, and gadgets for Light, Medium, and Heavy builds">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flexStyle">
+    <div class="top-nav">
+        <div class="container">
+            <a href="../index.html" class="home-button">Back to Home</a>
+        </div>
+    </div>
+    <header class="headerSection">
+        <div class="container">
+            <img src="images/the-finals.webp" alt="The Finals Logo" class="finals-logo" style="max-width: 200px; height: auto;">
+            <div class="header-with-crossbones">
+                <img src="images/punishment.webp" alt="Crossbones" class="crossbones">
+                <h1 class="mainTitle blood-red">Generate Your Punishment</h1>
+                <img src="images/punishment.webp" alt="Crossbones" class="crossbones">
+            </div>
+            <p class="headerSubtext">The Ultimate Test: Can You Survive This Loadout?</p>
+        </div>
+    </header>
+    <main class="mainContent">
+        <div class="container">
+            <div class="buttons">
+                <div class="btnRow">
+                    <button id="randomLoadoutButton" class="random outlineBtnStyle skeleton-overlay" title="Good luck. You'll need it." style="display: flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; font-size: 1rem; line-height: 1.5;">Generate Your Punishment</button>
+                </div>
+            </div>        
+            <div id="output">
+                <div class="failure-stamp">Failure Guaranteed</div>
+            </div>
+
+            <section class="warningSection">
+                <h3>⚠️ Warning</h3>
+                <p>Using these random loadouts may result in:</p>
+                <ul>
+                    <li>Strategic disadvantages</li>
+                    <li>Unexpected deaths</li>
+                    <li>ALT+F4 Spamming</li>
+                    <li>Uncontrollable urge to blame lag.</li>
+                    <li>Potential ban from teammates' friend lists.</li>
+                </ul>
+                <p>Use at your own risk. Results may vary. Fun is guaranteed*</p>
+                <p><small>*Fun not actually guaranteed</small></p>
+            </section>
+            
+            <!-- ✅ ADD THIS HERE -->
+            <!-- Add React Mount Point Where FAQ Should Appear -->
+<div id="punishment-faq-root"></div>
+
+<!-- Load React first -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+
+<!-- Load the Punishment FAQ Component -->
+<script src="PunishmentFAQ.js"></script>
+
+            
+
+    <footer class="footerSection">
+        <div class="container">
+            <div class="footer">
+                <span class="left">&copy; 2025 TheFinalsLoadout.com | <a href="#">Legal Disclaimer</a></span>
+                <span class="separator"> | </span>
+                <span class="center">Randomly generated for maximum chaos™. Play responsibly!</span>
+                <span class="separator"> | </span>
+                <span class="right">1-800-FAT-MOMS Production</span>
+            </div>
+        </div>
+    </footer>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "The Finals Random Loadout Generator",
+      "applicationCategory": "Game Tool",
+      "description": "Generate random loadouts for The Finals game with weapons, specializations, and gadgets",
+      "operatingSystem": "Web Browser",
+      "applicationCategory": "GameApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0"
+      },
+      "gameItem": {
+        "@type": "Thing",
+        "name": "The Finals Loadout"
+      }
+    }
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>

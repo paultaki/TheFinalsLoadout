@@ -1,0 +1,23 @@
+Contestant,Type,Items
+Light,Weapons,"93R, Dagger, LH1, M26 Matter, Recurve Bow, Sword, V9S, XP-54"
+Light,Specializations,"Cloaking Device, Evasive Dash, Grappling Hook"
+Light,Gadgets,"Breach Charge, Gateway, Glitch Grenade, Gravity Vortex, Sonar Grenade, Stun Gun, Thermal Bore, Thermal Vision, Tracking Dart, Vanishing Bomb"
+Medium,Weapons,"AKM, Cerberus 12GA, Dual Blades, FAMAS, FCAR, Model 1887, Pike-556, R.357, Riot Shield"
+Medium,Specializations,"Dematerializer, Guardian Turret, Healing Beam"
+Medium,Gadgets,"APS Turret, Data Reshaper, Defibrillator, Explosive Mine, Gas Mine, Glitch Trap, Jump Pad, Zipline"
+Heavy,Weapons,"50 Akimbo, Flamethrower, KS-23, Lewis Gun, M60, MGL32, Sledgehammer, SHAK-50, Spear"
+Heavy,Specializations,"Charge 'N' Slam, Goo Gun, Mesh Shield, Winch Claw"
+Heavy,Gadgets,"Anti-Gravity Cube, Barricade, Dome Shield, Lockbolt Launcher, Pyro Mine, Motion Sensor, RPG-7, Goo Grenade, Gas Grenade, Frag Grenade, Smoke Grenade, C4"
+,,
+,,
+,,
+,,
+Light,Weapons,"Dagger, Recurve Bow, Sword, Throwing Knives"
+Light,Specializations,"Cloaking Device, Evasive Dash"
+Light,Gadgets,"Breach Charge, Gravity Vortex, Thermal Bore, Thermal Vision, Tracking Dart, Flashbang"
+Medium,Weapons,"Cerberus 12GA, Pike-556, R.357, Dual Blades, Riot Shield"
+Medium,Specializations,"Dematerializer, Guardian Turret"
+Medium,Gadgets,"APS Turret, Data Reshaper, Gas Mine, Flashbang, Smoke Grenade, Motion Sensor"
+Heavy,Weapons,"KS-23, MGL32, Spear"
+Heavy,Specializations,"Goo Gun, Charge 'N' Slam"
+Heavy,Gadgets,"Anti-Gravity Cube, C4, Lockbold Launcher, Motion Sensor, Flashbang, Smoke Grenade"
