@@ -207,8 +207,12 @@ body.flexStyle {
 
 .scroll-container {
     position: relative;
-    /* Remove transition */
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
+
 
 .itemCol img {
     max-width: 100%;

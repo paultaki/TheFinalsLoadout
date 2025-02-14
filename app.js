@@ -177,7 +177,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const startSpinAnimation = (columns) => {
         const itemHeight = 188;
-        const baseSpeed = 20;
+        const baseSpeed = navigator.userAgent.includes("iPhone") ? 10 : 20; 
+
         const isFinalSpin = state.currentSpin === 1;
     
         columns.forEach(column => {
