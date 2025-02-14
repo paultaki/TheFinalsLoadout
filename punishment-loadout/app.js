@@ -4,19 +4,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const loadouts = {
         Light: {
-            weapons: ["Dagger", "Recurve Bow", "Sword"],
+            weapons: ["Dagger", "Recurve Bow", "93R", "SR-84"],
             specializations: ["Cloaking Device"],
             gadgets: ["Breach Charge", "Gravity Vortex", "Thermal Bore", "Thermal Vision", "Tracking Dart"]
         },
         Medium: {
-            weapons: ["Dual Blades", "Pike-556", "R.357", "Riot Shield"],
+            weapons: ["Dual Blades", "Pike-556", "R.357", "Riot Shield", "Model 1887"],
             specializations: ["Dematerializer", "Guardian Turret"],
             gadgets: ["APS Turret", "Data Reshaper", "Smoke Grenade", "Gas Mine", "Proximity Sensor"]
         },
         Heavy: {
             weapons: ["KS-23", "MGL32", "Spear"],
             specializations: ["Charge_N_Slam", "Goo Gun"],
-            gadgets: ["Anti-Gravity Cube", "Lockbolt Launcher", "Pyro Mine", "Proximity Sensor", "Smoke Grenade"]
+            gadgets: ["Anti-Gravity Cube", "Lockbolt Launcher", "Pyro Mine", "Proximity Sensor", "Smoke Grenade", "Lockbold Launcher"]
         }
     };
 
