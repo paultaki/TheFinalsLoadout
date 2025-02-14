@@ -891,36 +891,8 @@ img:hover {
 
 
 }
-/* Updated items-container styles */
-.items-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    width: 100%;
-    max-width: 960px;
-    margin: 0 auto;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    /* Add these properties to prevent wrapping */
-    flex-wrap: nowrap;
-    overflow-x: auto; /* Allow horizontal scroll on very small screens as fallback */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    /* Hide scrollbar but keep functionality */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
 
-/* Hide scrollbar for Chrome/Safari */
-.items-container::-webkit-scrollbar {
-    display: none;
-}
+
 
 
 .itemCol img {
@@ -933,21 +905,6 @@ img:hover {
     border-radius: 5px;
 }
 
-
-
-.items-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    max-width: 960px;
-    width: 100%;
-    margin: 20px auto; /* Reduce large gaps */
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-}
 
 
 .button-container {
@@ -1005,39 +962,6 @@ body {
         margin: 0 auto 10px;
     }
 
-    .items-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: flex-start;
-        gap: 12px;
-        background: rgba(255, 255, 255, 0.05);
-        padding: 15px;
-        border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        
-        width: 100%; /* Makes it flexible */
-        max-width: 1100px; /* Increase width to prevent wrapping */
-        min-width: 960px; /* Prevents it from shrinking too much */
-        
-        margin: 0 auto;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%); /* Keep it centered */
-        
-        flex-wrap: nowrap; /* Ensure items don’t wrap */
-        overflow-x: auto; /* Allow scrolling if needed */
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-        
-        scrollbar-width: none; /* Hide scrollbar */
-        -ms-overflow-style: none;
-    }
-    
-    /* Hide scrollbar for Chrome/Safari */
-    .items-container::-webkit-scrollbar {
-        display: none;
-    }
-    
 
     .container {
         padding-left: 0;
@@ -1092,8 +1016,6 @@ body {
 }
 
 
-
-
 @media (max-width: 1024px) {
     .itemCol p {
         font-size: 18px; /* Bigger for medium screens */
@@ -1101,12 +1023,7 @@ body {
 }
 
 
-}
-@media (max-width: 1024px) {
-    .items-container {
-        max-width: 95vw; /* Allow more flexibility */
-    }
-}
+
 @media (max-width: 768px) {
     .headerSection {
         padding: 15px 0;
@@ -1122,26 +1039,7 @@ body {
         margin: 0 auto 10px;
     }
 
-    .items-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 15px;
-        border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        width: 95%;
-        max-width: none;
-        min-width: 0;
-        margin: 0 auto;
-        position: relative;
-        transform: none;
-        left: auto;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+
 
     .item-container {
         flex: 0 0 auto;
@@ -1154,5 +1052,51 @@ body {
 
     .itemCol p {
         font-size: 20px;
+    }
+}
+.slot-machine-wrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.items-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    margin: 0 auto;
+}
+
+.item-container {
+    flex: 0 0 auto;
+    width: 140px;
+    min-width: 140px;
+    max-width: 140px;
+    height: 191px;
+    margin: 0;
+    background-color: #fff;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+    .slot-machine-wrapper {
+        width: 95%;
+    }
+    
+    .items-container {
+        padding: 10px;
+        gap: 8px;
     }
 }
