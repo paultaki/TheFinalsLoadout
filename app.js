@@ -351,15 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (state.isSpinning) return;
             
             classButtons.forEach(b => b.classList.remove('selected', 'active')); 
-            .outlineCircleBtn.active {
-                background: var(--highlight-color) !important;
-                color: black !important;
-                border-color: var(--neon-orange) !important;
-                box-shadow: 0 0 15px var(--highlight-color) !important;
-                transform: scale(1.1) !important;
-            }
-            
-            
+            button.classList.add('selected', 'active');
 
             if (button.dataset.class === 'random') {
                 // Choose random class
