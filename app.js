@@ -295,14 +295,20 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const updateSpinCountdown = () => {
+        // Remove 'active' and 'selected' from ALL spin buttons
         spinButtons.forEach(button => {
-            if (parseInt(button.dataset.spins) === state.currentSpin) {
-                button.classList.add('active');
-            } else {
-                button.classList.remove('active');
-            }
+            button.classList.remove('active', 'selected');
         });
+    
+        // Highlight only the button corresponding to the current remaining spins
+        const currentButton = [...spinButtons].find(b => parseInt(b.dataset.spins) === state.currentSpin);
+        if (currentButton) {
+            currentButton.classList.add('active');
+        }
     };
+    
+    
+    
 
     const createItemContainer = (items, winningItem = null, isGadget = false) => {
         if (isGadget) {
