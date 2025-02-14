@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             column.style.transform = 'translate3d(0,0,0)';
         });
     };
-    
+     
     // Call it once on load
     addGPUHints();
 
