@@ -6,6 +6,7 @@
     --neon-blue: #00f3ff;
     --bg-dark: #1d1a21;
     --bg-darker: #151318;
+    --highlight-color: var(--neon-yellow); /* Ensuring a bright highlight */
 }
 
 /* Base Styles */
@@ -131,12 +132,17 @@ body.flexStyle {
 }
 
 
-/* Active/Selected effect */
-.outlineCircleBtn.active {
-    background: var(--neon-orange);
-    color: black;
-    border-color: var(--neon-red);
+/* Ensure the selected button stands out */
+.outlineCircleBtn.active,
+.outlineCircleBtn.selected {
+    background: var(--neon-yellow) !important; /* Force background to yellow */
+    color: black !important; /* Ensure text is readable */
+    border: 2px solid var(--neon-orange) !important; /* Border pop */
+    box-shadow: 0 0 15px var(--neon-yellow) !important; /* Glow effect */
+    transform: scale(1.1) !important; /* Slight size increase */
+    transition: all 0.2s ease-in-out;
 }
+
 
 #heavyLoadoutButton {
     border-color: var(--neon-orange);
