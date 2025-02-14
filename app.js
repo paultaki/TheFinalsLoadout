@@ -1,5 +1,3 @@
-// PART 1 OF 3 - Copy everything from here...
-
 document.addEventListener("DOMContentLoaded", () => {
     // State management
     let state = {
@@ -70,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
         state.currentGadgetPool = new Set(selectedGadgets);
         return selectedGadgets;
     };
-    // PART 2 OF 3 - Then copy everything from here...
 
     const displayLoadout = (classType, loadout) => {
         const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
@@ -111,11 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const loadoutHTML = `
             <div class="slot-machine-wrapper">
                 <div class="items-container">
-                    <div class="item-container">
-                        <div class="scroll-container">
-                            ${createItemContainer([classType], classType)}
-                        </div>
-                    </div>
                     <div class="item-container">
                         <div class="scroll-container">
                             ${createItemContainer(loadout.weapons, selectedWeapon)}
@@ -183,22 +175,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Optimized animation function for better mobile performance
-    // Replace your startSpinAnimation function with this fixed version
     const startSpinAnimation = (columns) => {
         const itemHeight = 188;
         const baseSpeed = 20;
         const isFinalSpin = state.currentSpin === 1;
     
-        // Apply GPU acceleration only when animation starts
         columns.forEach(column => {
             column.style.willChange = 'transform';
             column.style.backfaceVisibility = 'hidden';
             column.style.perspective = '1000px';
-            column.style.transform = 'translate3d(0,0,0)'; // GPU acceleration during animation
+            column.style.transform = 'translate3d(0,0,0)';
         });
     
-        // Reset all columns to starting position
         columns.forEach(column => {
             column.style.transform = 'translate3d(0,0,0)';
         });
@@ -272,37 +260,30 @@ document.addEventListener("DOMContentLoaded", () => {
     
         requestAnimationFrame(animate);
     };
-    
-    // Reset GPU acceleration after animation ends
+
     const handleSpinComplete = (columns) => {
         columns.forEach(column => {
-            column.style.willChange = 'auto'; // Reset optimizations
+            column.style.willChange = 'auto';
         });
     
         if (state.currentSpin > 1) {
-            state.currentSpin--; // Reduce spin count
+            state.currentSpin--;
             updateSpinCountdown();
     
             setTimeout(() => {
-                // ✅ Properly trigger a new spin by selecting a loadout again
                 if (state.selectedClass === 'random') {
                     displayRandomLoadout();
                 } else {
                     displayManualLoadout(state.selectedClass);
                 }
-            }, 1000); // Delay ensures animation finishes before starting again
+            }, 1000);
         } else {
-            // ✅ Reset state properly after last spin
             state.isSpinning = false;
             state.currentSpin = 1;
             state.totalSpins = 0;
-            state.selectedClass = null;
+            
+            // Don't reset selectedClass anymore
             state.selectedGadgets.clear();
-    
-            classButtons.forEach(btn => {
-                btn.classList.remove('selected', 'active');
-                btn.removeAttribute('disabled');
-            });
     
             spinButtons.forEach(btn => {
                 btn.classList.remove('selected', 'active');
@@ -312,10 +293,6 @@ document.addEventListener("DOMContentLoaded", () => {
             spinSelection.classList.add('disabled');
         }
     };
-    
-    
-    
-    
 
     const updateSpinCountdown = () => {
         spinButtons.forEach(button => {
@@ -328,18 +305,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const createItemContainer = (items, winningItem = null, isGadget = false) => {
-        if (items.length === 1 && (items[0] === "Light" || items[0] === "Medium" || items[0] === "Heavy")) {
-            let repeatedItems = new Array(8).fill(items[0]);
-            return repeatedItems
-                .map((item, index) => `
-                    <div class="itemCol ${index === 4 ? 'winner' : ''}">
-                        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
-                        <p>${item}</p>
-                    </div>
-                `)
-                .join("");
-        }
-    
         if (isGadget) {
             return items
                 .map((item, index) => `
@@ -379,6 +344,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Add click handlers
+    // Add click handlers
+    // Add click handlers
     classButtons.forEach(button => {
         button.addEventListener('click', () => {
             if (state.isSpinning) return;
@@ -386,11 +353,40 @@ document.addEventListener("DOMContentLoaded", () => {
             classButtons.forEach(b => b.classList.remove('selected', 'active')); 
             button.classList.add('selected', 'active');
 
-            state.selectedClass = button.dataset.class;
-            
-            if (state.selectedClass === 'random') {
-                spinLoadout(1);
+            if (button.dataset.class === 'random') {
+                // Choose random class
+                const classes = ["Light", "Medium", "Heavy"];
+                // Using a more explicit randomization
+                const randomIndex = Math.floor(Math.random() * 3);  // 0, 1, or 2
+                const randomClass = classes[randomIndex];
+                state.selectedClass = randomClass;
+                console.log('Random class selected:', randomClass); // Debug log
+                
+                // Illuminate the randomly selected class button
+                classButtons.forEach(b => {
+                    if (b.dataset.class === randomClass) {
+                        b.classList.add('selected', 'active');
+                    }
+                });
+
+                // Choose random number of spins (1-5)
+                const randomSpins = Math.floor(Math.random() * 5) + 1;
+                state.totalSpins = randomSpins;
+                state.currentSpin = randomSpins;
+
+                // Illuminate the randomly selected spin button
+                spinButtons.forEach(b => {
+                    if (parseInt(b.dataset.spins) === randomSpins) {
+                        b.classList.add('selected', 'active');
+                    } else {
+                        b.classList.remove('selected', 'active');
+                    }
+                });
+
+                // Start spinning immediately
+                spinLoadout();
             } else {
+                state.selectedClass = button.dataset.class;
                 spinSelection.classList.remove('disabled');
             }
         });
@@ -405,7 +401,10 @@ document.addEventListener("DOMContentLoaded", () => {
             state.totalSpins = parseInt(button.dataset.spins);
             state.currentSpin = state.totalSpins;
             
-            spinLoadout();
+            // Only spin if a class is selected
+            if (state.selectedClass) {
+                spinLoadout();
+            }
         });
     });
 
@@ -423,15 +422,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     
         const copyText = 
-            "Class: " + selectedItems[0] + "\n" +
-            "Weapon: " + selectedItems[1] + "\n" +
-            "Specialization: " + selectedItems[2] + "\n" +
-            "Gadget 1: " + selectedItems[3] + "\n" +
-            "Gadget 2: " + selectedItems[4] + "\n" +
-            "Gadget 3: " + selectedItems[5];
+            "Class: " + state.selectedClass + "\n" +
+            "Weapon: " + selectedItems[0] + "\n" +
+            "Specialization: " + selectedItems[1] + "\n" +
+            "Gadget 1: " + selectedItems[2] + "\n" +
+            "Gadget 2: " + selectedItems[3] + "\n" +
+            "Gadget 3: " + selectedItems[4];
     
         navigator.clipboard.writeText(copyText)
             .then(() => alert("Loadout copied to clipboard!"))
             .catch(err => console.error("Could not copy text: ", err));
     });
-});       
+});

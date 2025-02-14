@@ -1139,18 +1139,3 @@ body {
         max-width: 95vw; /* Allow more flexibility */
     }
 }
-.scroll-container {
-    position: relative;
-}
-
-.itemCol.winner {
-    /* Ensure winner items are always in the correct position after spin */
-    position: relative;
-    z-index: 2;
-}
-
-/* Optional: Add a subtle highlight to winner items */
-.item-container.final-glow .itemCol.winner {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 5px;
-}
