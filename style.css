@@ -138,7 +138,7 @@ body.flexStyle {
     background: var(--neon-yellow) !important; /* Force background to yellow */
     color: black !important; /* Ensure text is readable */
     border: 2px solid var(--neon-orange) !important; /* Border pop */
-    box-shadow: 0 0 15px var(--neon-yellow) !important; /* Glow effect */
+    box-shadow: 0 0 5px var(--neon-yellow);
     transform: scale(1.1) !important; /* Slight size increase */
     transition: all 0.2s ease-in-out;
 }
@@ -200,29 +200,8 @@ body.flexStyle {
     padding-bottom: 10px; /* Moves Copy Loadout button up */
     margin-top: 40px; /* Pushes output section further down */
 
-
 }
 
-
-
-.scroll-container {
-    position: relative;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-}
-
-
-.itemCol img {
-    max-width: 100%;
-    display: block;
-    margin: 0 auto;
-    border-radius: 5px;
-    width: 132px; /* Further adjusted from 135px */
-    height: 144px;
-    object-fit: cover;
-}
 
 
 .item-container:hover {
@@ -234,7 +213,12 @@ body.flexStyle {
 
 .itemCol {
     padding-top: 5px;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translate3d(0, 0, 0);
+    opacity: 0.9; /* Prevent unnecessary redraws */
 }
+
 
 .itemCol img {
     max-width: 100%;
@@ -338,19 +322,6 @@ body.flexStyle {
     filter: brightness(0) invert(1);
 }
 
-/* FAQ Section */
-.faqSection {
-    background-color: #292929;
-    padding: 20px 25px;
-    border-radius: 8px;
-    margin: 15px auto;
-    width: 770px;
-    max-width: 100%;
-    font-size: 0.8rem;
-    text-align: left;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    border: 1px solid #444;
-}
 
 
 .faqSection h2 {
@@ -493,14 +464,21 @@ body.flexStyle {
     display: inline-block;
     margin-top: 10px;
 }
-.faq-section {
+.faqSection {
     background-color: #292929;
     padding: 20px;
     border-radius: 8px;
     margin: 16px auto;
     max-width: 48rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    text-align: center !important; /* Ensures text is centered */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid #444;
 }
+
 
 
 .faq-title {
@@ -735,34 +713,43 @@ body.flexStyle {
     border-radius: 8px;
     margin: 16px auto;
     max-width: 48rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: left;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    text-align: center !important; /* Ensures everything inside is centered */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid #444;
 }
 
-.faq-button {
-    background: var(--highlight-color);
-    color: black;
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 5px;
-    transition: all 0.3s ease-in-out;
+
+.faqSection .faq-button:hover {
+    background: white !important;
+    color: black !important;
+    transform: scale(1.05) !important;
+    border: 3px solid #444 !important; /* Ensures contrast when hovering */
 }
 
-.faq-button:hover {
-    background: white;
-    color: black;
-    transform: scale(1.05);
-}
+
 
 
 .faq-title {
-    font-size: 1.2rem;
+    color: black !important; /* Force black text */
+    font-size: 1.3rem !important;
+    font-weight: 900 !important;
+    text-shadow: none !important;
+}
+
+.faqSection, .faq-button {
+    backdrop-filter: none !important;
+    filter: none !important;
 }
 
 .faq-toggle {
-    font-size: 1.2rem;
-    transition: transform 0.2s;
+    -webkit-text-stroke: 0.5px black !important;
+    color: black !important;
 }
+
 
 .faq-toggle.open {
     transform: rotate(45deg);
@@ -839,14 +826,15 @@ html {
 
 /* Neon glow effect for headers */
 h1, h2, h3 {
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-    animation: glowPulse 1.5s infinite alternate;
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.7);
 }
 
+
 @keyframes glowPulse {
-    0% { text-shadow: 0 0 8px rgba(255, 255, 255, 0.8); }
-    100% { text-shadow: 0 0 16px rgba(255, 255, 255, 1); }
+    0% { text-shadow: 0 0 3px rgba(255, 255, 255, 0.6); }
+    100% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
 }
+
 
 /* Image hover effect */
 img:hover {
@@ -925,22 +913,13 @@ img:hover {
     /* Hide scrollbar but keep functionality */
     scrollbar-width: none;
     -ms-overflow-style: none;
+    overflow: visible;
+
 }
 
 /* Hide scrollbar for Chrome/Safari */
 .items-container::-webkit-scrollbar {
     display: none;
-}
-
-
-.itemCol img {
-    width: 100%;
-    max-width: 132px;
-    height: 144px;
-    object-fit: cover;
-    display: block;
-    margin: 0 auto;
-    border-radius: 5px;
 }
 
 
@@ -969,19 +948,6 @@ img:hover {
 }
 
 
-.item-container {
-    flex: 0 1 140px; /* Ensures a fixed width */
-    min-width: 140px;
-    max-width: 140px;
-    height: 191px; /* Keep height fixed */
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    background-color: #fff;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-}
 
 
 
@@ -992,13 +958,19 @@ body {
     position: relative;
 }
 
-/* Ensure proper sizing for item containers */
 .item-container {
-    flex: 1 1 auto;  /* Allows shrinking and growing */
-    width: auto;  /* Prevents forced width */
-    min-width: 80px;  /* Allows containers to shrink below 140px */
-    max-width: 140px;  /* Prevents them from becoming too large */
-    height: 191px;  /* Keeps the height consistent */
+    flex: 1 1 auto; /* Allow dynamic resizing */
+    width: 140px; /* Fixed width */
+    min-width: 80px; /* Allows some flexibility */
+    max-width: 140px; /* Prevents excessive growth */
+    height: 200px; /* Slightly increased height to fix clipping */
+    overflow: hidden; /* Ensure no extra content is showing */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #fff;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
 }
 
 /* Add these styles at the end of your style.css file */
@@ -1063,6 +1035,19 @@ body {
         justify-content: flex-start;
         gap: 10px;
     }
+
+
+    .itemCol img {
+        width: 100%;
+        max-width: 140px; /* Ensures consistent sizing */
+        height: 142px; /* Keeps uniform height */
+        object-fit: cover;
+        display: block;
+        margin: 0 auto;
+        border-radius: 5px;
+    }
+    
+
 
     .step {
         margin: 8px 0;
@@ -1152,4 +1137,56 @@ body {
     .items-container {
         max-width: 95vw; /* Allow more flexibility */
     }
+}
+
+.faqSection .faq-button, 
+#faq-root .faq-button {
+    background: #ffb700 !important; /* Bright yellow */
+    color: black !important; /* Ensure visibility */
+    font-weight: 900 !important; /* Make text bolder */
+    font-size: 1.2rem !important; /* Increase readability */
+    padding: 10px 20px !important; /* Shrink button height */
+    border-radius: 8px !important;
+    border: 3px solid #cc8800 !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7) !important;
+    height: 45px !important; /* Forces smaller height */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important; /* Prevents text from adding height */
+}
+.faq-button {
+    display: block !important;
+    margin: 10px auto !important; /* Ensures it's inside the box */
+    width: fit-content !important;
+}
+
+.faq-section {
+    background-color: #292929 !important; /* Dark box */
+    padding: 30px 15px !important; /* Matches other boxes */
+    border-radius: 10px !important; /* Rounded corners */
+    margin: 50px auto !important; /* Adds spacing */
+    width: 80% !important;
+    max-width: 1000px !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2) !important; /* Adds shadow */
+    text-align: center !important;
+
+    /* Ensure visibility */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 200px !important; /* Prevents collapsing */
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(255,255,255,0.2) !important; /* Adds border */
+}
+
+
+.faq-content {
+    width: 100% !important;
+    max-width: 900px !important;
+    text-align: center !important;
+    margin: 0 auto !important;
+    padding: 20px !important;
 }

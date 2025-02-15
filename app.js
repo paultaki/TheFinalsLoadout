@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         Medium: {
             weapons: ["AKM", "Cerberus 12GA", "Dual Blades", "FAMAS", "FCAR", "Model 1887", "Pike-556", "R.357", "Riot Shield"],
             specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
-            gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade", "Flashbang", "Proximity Sensor"]
+            gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade", "Flashbang"]
         },
         Heavy: {
             weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "M32GL", "Sledgehammer", "SHAK-50", "Spear"],
@@ -174,11 +174,10 @@ document.addEventListener("DOMContentLoaded", () => {
             displayManualLoadout(state.selectedClass);
         }
     };
-
     const startSpinAnimation = (columns) => {
         const itemHeight = 188;
         const baseSpeed = navigator.userAgent.includes("iPhone") ? 10 : 20; 
-
+    
         const isFinalSpin = state.currentSpin === 1;
     
         columns.forEach(column => {
@@ -198,28 +197,34 @@ document.addEventListener("DOMContentLoaded", () => {
     
         let allStopped = new Array(columns.length).fill(false);
         const startTime = performance.now();
-        const totalDuration = Math.max(...stopTimes) + 500; 
+        const totalDuration = Math.max(...stopTimes) + 500;
     
         const animate = (currentTime) => {
             const timeElapsed = currentTime - startTime;
             if (timeElapsed >= totalDuration) {
                 columns.forEach((column, index) => {
-                    if (!allStopped[index]) {
+                    if (shouldStop) {
                         allStopped[index] = true;
-                        column.style.transform = `translate3d(0,${itemHeight}px,0)`;
-                        const selectedItem = column.querySelector('.winner');
+                        const selectedItem = column.querySelector(".winner");
                         if (selectedItem) {
-                            selectedItem.classList.add('selected');
-                            if (isFinalSpin) {
-                                const container = column.closest('.item-container');
-                                container.classList.add('final-glow');
-                                container.style.willChange = 'box-shadow';
-                            }
+                            column.style.transform = `translateY(-${selectedItem.offsetTop}px)`;
+                        } else {
+                            column.style.transform = `translate3d(0, ${itemHeight * 4}px, 0)`; // Ensures it lands on row 5
                         }
                     }
+                    
                 });
                 handleSpinComplete(columns);
                 return;
+                setTimeout(() => {
+                    document.querySelectorAll(".scroll-container").forEach(column => {
+                        const selectedItem = column.querySelector(".winner");
+                        if (selectedItem) {
+                            column.style.transform = `translateY(-${selectedItem.offsetTop + 5}px)`;
+                        }
+                    });
+                }, 50);
+                
             }
     
             let animationRunning = false;
@@ -229,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const shouldStop = timeElapsed >= stopTimes[index];
                     const transform = new DOMMatrix(window.getComputedStyle(column).transform);
                     const currentOffset = transform.m42;
-                    
+    
                     if (shouldStop) {
                         allStopped[index] = true;
                         column.style.transform = `translate3d(0,${itemHeight}px,0)`;
@@ -261,6 +266,9 @@ document.addEventListener("DOMContentLoaded", () => {
     
         requestAnimationFrame(animate);
     };
+    
+    
+    
 
     const handleSpinComplete = (columns) => {
         columns.forEach(column => {
