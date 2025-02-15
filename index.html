@@ -35,14 +35,21 @@
 
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="font" href="https://fonts.gstatic.com/s/oswald/v35/TK3iWkUHHAIjg752GT8G.woff2" type="font/woff2" crossorigin="anonymous">
+
     <noscript>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap">
     </noscript>
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
-
+    <style>
+        body {
+          font-family: 'Oswald', sans-serif;
+          font-display: swap;
+        }
+      </style>
+      
     <style>
         html {
             min-height: 100%;
@@ -122,23 +129,28 @@
                     <div class="slot-machine-wrapper">
                         <div class="items-container">
                             <div class="placeholder-container">
-                                <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                                <img src="images/placeholder.webp" alt="?" width="80" height="80" loading="lazy">
+
                                 <p>Weapon</p>
                             </div>
                             <div class="placeholder-container">
-                                <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                                <img src="images/placeholder.webp" alt="?" width="80" height="80" loading="lazy">
+
                                 <p>Specialization</p>
                             </div>
                             <div class="placeholder-container">
-                                <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                                <img src="images/placeholder.webp" alt="?" width="80" height="80" loading="lazy">
+
                                 <p>Gadget 1</p>
                             </div>
                             <div class="placeholder-container">
-                                <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                                <img src="images/placeholder.webp" alt="?" width="80" height="80" loading="lazy">
+
                                 <p>Gadget 2</p>
                             </div>
                             <div class="placeholder-container">
-                                <img src="images/placeholder.webp" alt="?" loading="lazy" />
+                                <img src="images/placeholder.webp" alt="?" width="80" height="80" loading="lazy">
+
                                 <p>Gadget 3</p>
                             </div>
                         </div>
@@ -224,7 +236,7 @@
 
     <!-- Then load app.js and FAQSection.js -->
     <script defer src="FAQSection.js"></script>
-<script defer src="app.js"></script>
+    <script defer src="app.js"></script>
 
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"90d5a0a2197ddbbe","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}' crossorigin="anonymous"></script>
 </body>
