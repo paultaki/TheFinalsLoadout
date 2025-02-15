@@ -877,17 +877,28 @@ img:hover {
 
 
 
-/* Show active spin count */
-.spin-button.active {
-    background: var(--neon-blue);
-    color: black;
-    border: 2px solid var(--neon-orange);
-    box-shadow: 0 0 10px var(--neon-blue);
+.spin-button {
+    background: linear-gradient(90deg, #ff7b00, #ff4f4f);
+    color: white;
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    text-transform: uppercase;
+    box-shadow: 0px 5px 15px rgba(255, 0, 0, 0.5);
+    transition: all 0.3s ease;
 }
-        if (animationRunning) {
 
-
+.spin-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 10px 20px rgba(255, 0, 0, 0.8);
 }
+
+.spin-button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(255, 0, 0, 0.5);
+}
+
 /* Updated items-container styles */
 .items-container {
     display: flex;
@@ -975,7 +986,33 @@ body {
     justify-content: flex-end;
     background-color: #fff;
     box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    
+    /* Additions */
+    border: 2px solid var(--neon-yellow); /* Neon border */
+    border-radius: 10px; /* Rounded edges for smoother look */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: neonGlow 1.5s infinite alternate;
 }
+
+.item-container:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 25px rgba(255, 183, 0, 1);
+}
+
+/* Animated glow effect */
+@keyframes neonGlow {
+    0% { box-shadow: 0 0 5px #ffb700; }
+    50% { box-shadow: 0 0 15px #ff7b00; }
+    100% { box-shadow: 0 0 5px #ffb700; }
+}
+
+/* Winner effect for selected items */
+.winner {
+    border: 3px solid var(--neon-orange);
+    box-shadow: 0px 0px 20px rgba(255, 123, 0, 1);
+    transform: scale(1.15);
+}
+
 
 /* Add these styles at the end of your style.css file */
 /* ===== Mobile Optimization and Spacing Fixes ===== */
