@@ -1,5 +1,22 @@
 const FAQSection = () => {
+    console.log("FAQSection component is rendering..."); // Debugging log
+
     const [isOpen, setIsOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        console.log("FAQSection useEffect triggered");
+        const faqButton = document.querySelector('.faq-button');
+        if (faqButton) {
+            faqButton.style.background = '#ffb700';  // Bright yellow
+            faqButton.style.color = 'black';
+            faqButton.style.fontWeight = '900';
+            faqButton.style.fontSize = '1.2rem';
+            faqButton.style.padding = '16px 30px';
+            faqButton.style.borderRadius = '8px';
+            faqButton.style.border = '3px solid #cc8800';
+            faqButton.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.7)';
+        }
+    }, []);
 
     return React.createElement('section', {
         className: 'faq-section'
@@ -16,10 +33,10 @@ const FAQSection = () => {
             React.createElement('span', {
                 className: `faq-toggle ${isOpen ? 'open' : ''}`,
                 key: 'plus'
-            }, isOpen ? '−' : '+') // Toggle symbol
+            }, isOpen ? '−' : '+')
         ]),
         React.createElement('div', {
-            className: `faq-content ${isOpen ? 'open' : ''}`, // Toggle display
+            className: `faq-content ${isOpen ? 'open' : ''}`,
             key: 'content'
         }, React.createElement('div', {
             className: 'faq-content-inner'
@@ -53,9 +70,12 @@ const FAQSection = () => {
     ]);
 };
 
-// Render the component
+// Debug React Mounting
 const faqRoot = document.getElementById('faq-root');
 if (faqRoot) {
+    console.log("Mounting FAQSection to #faq-root...");
     const root = ReactDOM.createRoot(faqRoot);
     root.render(React.createElement(FAQSection));
+} else {
+    console.log("ERROR: #faq-root not found!");
 }
