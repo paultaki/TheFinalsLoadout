@@ -63,11 +63,7 @@ body.flexStyle {
     padding: 40px 0 50px;
 }
 
-.finals-logo {
-    max-width: 200px;
-    display: block;
-    margin: 0 auto 30px;
-}
+
 
 .mainTitle {
     font-size: 2rem;
@@ -948,7 +944,12 @@ img:hover {
 }
 
 
-
+.finals-logo {
+    width: 200px;  /* Set explicit width */
+    height: auto;  /* Maintain aspect ratio */
+    display: block;
+    margin: 0 auto 30px;
+}
 
 
 /* Prevent horizontal scrolling on the entire page */
@@ -986,7 +987,8 @@ body {
     }
 
     .finals-logo {
-        max-width: 120px;
+        .finals-logo {
+        width: 120px; /* Reduce size on mobile */
         margin: 0 auto 10px;
     }
 
