@@ -92,98 +92,6 @@ body.flexStyle {
   margin-top: 20px;
 }
 
-/* Resize Light, Medium, and Heavy buttons */
-.outlineCircleBtn {
-  width: 70px; /* Slightly larger */
-  height: 70px; /* Keep proportional */
-  font-size: 1rem; /* Keeps text readable */
-  font-weight: bold;
-  border-radius: 50%; /* Ensure circular shape */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid var(--neon-yellow);
-  background: transparent;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-}
-
-/* Ensure equal spacing inside each button */
-.outlineCircleBtn span {
-  white-space: nowrap;
-  padding: 0 2px; /* Adds slight spacing */
-}
-
-/* Hover effect */
-.outlineCircleBtn:hover {
-  background: var(--neon-yellow);
-  color: black;
-  transform: scale(1.1);
-}
-
-.div.buttons {
-  min-height: 60px; /* Adjust if needed */
-}
-
-/* Ensure the selected button stands out */
-.outlineCircleBtn.active,
-.outlineCircleBtn.selected {
-  background: var(--neon-yellow) !important; /* Force background to yellow */
-  color: black !important; /* Ensure text is readable */
-  border: 2px solid var(--neon-orange) !important; /* Border pop */
-  box-shadow: 0 0 5px var(--neon-yellow);
-  transform: scale(1.1) !important; /* Slight size increase */
-  transition: all 0.2s ease-in-out;
-}
-
-#heavyLoadoutButton {
-  border-color: var(--neon-orange);
-}
-
-#mediumLoadoutButton {
-  border-color: var(--neon-blue);
-}
-
-#lightLoadoutButton {
-  border-color: var(--neon-yellow);
-}
-
-.outlineCircleBtn:hover {
-  transform: translateY(-2px) translateZ(10px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3),
-    inset 0 1px 1px rgba(255, 255, 255, 0.2);
-}
-
-.outlineBtnStyle {
-  background-color: transparent;
-  color: #fff;
-  border: 2px solid var(--neon-red);
-  padding: 14px 24px;
-  font-size: 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: inherit;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-
-  /* Increase spacing above the Random Contestant button */
-  #randomLoadoutButton {
-    /* ❌ REMOVE THIS */
-    margin-top: 25px;
-    margin-bottom: 25px;
-  }
-}
-
-.outlineBtnStyle:hover {
-  background-color: var(--neon-red);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-}
-
 /* Output Styles */
 #output {
   display: flex;
@@ -770,7 +678,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://www.transparenttextures.com/patterns/cubes.png"); /* Subtle grid effect */
+  background: url("../www.transparenttextures.com/patterns/cubes.png"); /* Subtle grid effect */
   opacity: 0.1;
   pointer-events: none;
   animation: slowMove 20s linear infinite;
@@ -891,60 +799,6 @@ img:hover {
   box-shadow: 0px 2px 5px rgba(255, 0, 0, 0.5);
 }
 
-/* Updated items-container styles */
-.items-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  /* Add these properties to prevent wrapping */
-  flex-wrap: nowrap;
-  overflow-x: auto; /* Allow horizontal scroll on very small screens as fallback */
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  /* Hide scrollbar but keep functionality */
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  overflow: visible;
-}
-
-/* Hide scrollbar for Chrome/Safari */
-.items-container::-webkit-scrollbar {
-  display: none;
-}
-
-.items-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  max-width: 960px;
-  width: 100%;
-  margin: 20px auto; /* Reduce large gaps */
-  padding: 15px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
-.button-container {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-}
-
 .finals-logo {
   width: 200px; /* Set explicit width */
   height: auto; /* Maintain aspect ratio */
@@ -957,32 +811,6 @@ body {
   overflow-x: hidden;
   width: 100%;
   position: relative;
-}
-
-.item-container {
-  flex: 1 1 auto; /* Allow dynamic resizing */
-  width: 140px; /* Fixed width */
-  min-width: 80px; /* Allows some flexibility */
-  max-width: 140px; /* Prevents excessive growth */
-  height: 200px; /* Slightly increased height to fix clipping */
-  overflow: hidden; /* Ensure no extra content is showing */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  background-color: #fff;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-
-  /* Additions */
-  border: 2px solid var(--neon-yellow); /* Neon border */
-  border-radius: 10px; /* Rounded edges for smoother look */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  animation: neonGlow 1.5s infinite alternate;
-}
-
-.item-container:hover {
-  transform: scale(1.1);
-  box-shadow: 0px 0px 25px rgba(255, 183, 0, 1);
 }
 
 /* Animated glow effect */
@@ -1006,214 +834,455 @@ body {
 }
 
 /* Add these styles at the end of your style.css file */
-/* ===== Mobile Optimization and Spacing Fixes ===== */
+
+/* Enhanced Flash and Pulse Effects */
+@keyframes finalFlash {
+  0% {
+    box-shadow: 0 0 80px rgba(255, 215, 0, 1);
+    transform: scale(1.15);
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 183, 0, 0.8);
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.6);
+    transform: scale(1.05);
+    background-color: transparent;
+  }
+}
+
+@keyframes continuousPulse {
+  0% {
+    box-shadow: 0 0 15px rgba(255, 183, 0, 0.6);
+    transform: scale(1.05);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 183, 0, 0.8);
+    transform: scale(1.08);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(255, 183, 0, 0.6);
+    transform: scale(1.05);
+  }
+}
+
+/* Spring-back Animation */
+@keyframes springBack {
+  0% {
+    transform: translateY(12px);
+  }
+  40% {
+    transform: translateY(-4px);
+  }
+  70% {
+    transform: translateY(2px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Winner and Animation Styles */
+.winner {
+  position: relative;
+  border: 3px solid var(--neon-orange);
+  box-shadow: 0px 0px 20px rgba(255, 123, 0, 1);
+  transform: scale(1.15);
+}
+
+.itemCol.winner {
+  position: relative;
+  animation: finalFlash 0.5s ease-out, springBack 0.8s ease-out 0.5s,
+    continuousPulse 2s ease-in-out 1.3s infinite;
+}
+
+.itemCol.winner::after {
+  content: "LOCKED IN";
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(45deg, #ffb700, #ff7b00);
+  color: black;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 0 0 10px rgba(255, 183, 0, 0.6);
+  opacity: 0;
+  animation: labelPop 0.3s ease-out 1.3s forwards;
+}
+
+/* Container Styles */
+.items-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  margin: 20px auto;
+  width: 100%;
+  max-width: 800px;
+  min-width: 800px;
+  flex-wrap: nowrap;
+  overflow-x: visible;
+  position: relative;
+  transform-origin: center;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.items-container::-webkit-scrollbar {
+  display: none;
+}
+
+.item-container {
+  flex: 0 0 140px;
+  width: 140px;
+  height: 200px;
+  margin: 0;
+  background-color: #fff;
+  border: 2px solid var(--neon-yellow);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: neonGlow 1.5s infinite alternate;
+}
+
+.item-container:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 0px 25px rgba(255, 183, 0, 1);
+}
+
+/* Animation Keyframes */
+@keyframes finalFlash {
+  0% {
+    box-shadow: 0 0 100px rgba(255, 215, 0, 1);
+    transform: scale(1.2);
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 60px rgba(255, 183, 0, 0.9);
+    transform: scale(1.15);
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(255, 140, 0, 0.7);
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+@keyframes springBack {
+  0% {
+    transform: translateY(12px) scale(1.1);
+  }
+  40% {
+    transform: translateY(-6px) scale(1.12);
+  }
+  60% {
+    transform: translateY(3px) scale(1.11);
+  }
+  80% {
+    transform: translateY(-1px) scale(1.1);
+  }
+  100% {
+    transform: translateY(0) scale(1.1);
+  }
+}
+
+@keyframes continuousPulse {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.7);
+    transform: scale(1.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 183, 0, 0.9);
+    transform: scale(1.12);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.7);
+    transform: scale(1.1);
+  }
+}
+
+@keyframes labelPop {
+  0% {
+    transform: translate(-50%, 10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes neonGlow {
+  0% {
+    box-shadow: 0 0 5px #ffb700;
+  }
+  50% {
+    box-shadow: 0 0 15px #ff7b00;
+  }
+  100% {
+    box-shadow: 0 0 5px #ffb700;
+  }
+}
+
+/* Class Selection Buttons - Base Styles */
+.outlineCircleBtn,
+.class-button {
+  width: 70px;
+  height: 70px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out, transform 0.1s ease-in-out;
+  position: relative;
+  text-transform: uppercase;
+}
+
+/* Class Button Specific Styles */
+.class-button {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.class-button:active {
+  transform: scale(0.95);
+}
+
+.class-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.class-button.selected {
+  background: var(--highlight-color);
+  color: black;
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 15px var(--highlight-color);
+}
+
+/* Outline Circle Button Specific Styles */
+.outlineCircleBtn {
+  border: 2px solid var(--neon-yellow);
+  background: transparent;
+  color: white;
+}
+
+.outlineCircleBtn:hover {
+  background: var(--neon-yellow);
+  color: black;
+  transform: translateY(-2px) translateZ(10px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.outlineCircleBtn.active,
+.outlineCircleBtn.selected {
+  background: var(--neon-yellow) !important;
+  color: black !important;
+  border: 2px solid var(--neon-orange) !important;
+  box-shadow: 0 0 5px var(--neon-yellow);
+  transform: scale(1.1) !important;
+}
+
+/* Spin Button Styles */
+.spin-button {
+  background: linear-gradient(90deg, #ff7b00, #ff4f4f);
+  color: white;
+  font-size: 1.2rem;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 8px;
+  text-transform: uppercase;
+  box-shadow: 0px 5px 15px rgba(255, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.spin-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 10px 20px rgba(255, 0, 0, 0.8);
+}
+
+.spin-button:active {
+  transform: scale(0.95);
+  box-shadow: 0px 2px 5px rgba(255, 0, 0, 0.5);
+}
+
+/* First, keep all the base styles for buttons */
+.outlineCircleBtn,
+.class-button {
+  width: 70px;
+  height: 70px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.spin-button {
+  background: linear-gradient(90deg, #ff7b00, #ff4f4f);
+  color: white;
+  font-size: 1.2rem;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 8px;
+  text-transform: uppercase;
+  box-shadow: 0px 5px 15px rgba(255, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+/* Mobile Styles - Improved Layout */
 @media (max-width: 768px) {
-  .headerSection {
-    padding: 15px 0;
+  /* Container for slot machine - adjusted scaling and width */
+  .items-container {
+    transform: scale(0.45);
+    transform-origin: center top;
+    width: 600px; /* Reduced from 700px */
+    margin: 0 auto;
+    padding: 10px 15px;
+  }
+
+  /* Wrapper to contain the overflow */
+  .slot-machine-wrapper {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Adjust item containers for better spacing */
+  .item-container {
+    width: 110px;
+    margin: 0 4px;
+  }
+
+  /* Adjust main container padding */
+  .container {
+    padding: 0 10px;
+  }
+
+  /* Button row - prevent wrapping */
+  .btnRow {
+    gap: 10px;
+    padding: 0 5px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    margin: 10px 0;
+    width: 100%;
+  }
+
+  /* Header and text adjustments */
+  .finals-logo {
+    width: 100px;
+    height: auto;
+    margin: 0 auto 15px;
   }
 
   .mainTitle {
     font-size: 1.2rem;
+    margin: 10px 0;
+  }
+
+  .headerSection {
+    padding: 20px 0;
+  }
+
+  .headerSection p {
+    font-size: 1.1rem;
+    line-height: 1.2;
     margin: 5px 0;
   }
 
-  .finals-logo {
-    .finals-logo {
-      width: 120px; /* Reduce size on mobile */
-      margin: 0 auto 10px;
-    }
-
-    .items-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-
-      width: 100%; /* Makes it flexible */
-      max-width: 1100px; /* Increase width to prevent wrapping */
-      min-width: 960px; /* Prevents it from shrinking too much */
-
-      margin: 0 auto;
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%); /* Keep it centered */
-
-      flex-wrap: nowrap; /* Ensure items don’t wrap */
-      overflow-x: auto; /* Allow scrolling if needed */
-      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-
-      scrollbar-width: none; /* Hide scrollbar */
-      -ms-overflow-style: none;
-    }
-
-    /* Hide scrollbar for Chrome/Safari */
-    .items-container::-webkit-scrollbar {
-      display: none;
-    }
-
-    .container {
-      padding-left: 0;
-      padding-right: 0;
-      overflow-x: hidden;
-      width: 100%;
-      min-height: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      gap: 10px;
-    }
-
-    .itemCol img {
-      width: 100%;
-      max-width: 140px; /* Ensures consistent sizing */
-      height: 142px; /* Keeps uniform height */
-      object-fit: cover;
-      display: block;
-      margin: 0 auto;
-      border-radius: 5px;
-    }
-
-    .step {
-      margin: 8px 0;
-    }
-
-    .step h2 {
-      font-size: 1.1rem;
-      margin-bottom: 5px;
-    }
-
-    .btnRow {
-      gap: 8px;
-    }
-
-    .outlineCircleBtn {
-      width: 60px;
-      height: 60px;
-      font-size: 0.9rem;
-    }
-
-    .mainContent {
-      padding: 0;
-      gap: 8px;
-    }
-
-    #output {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 5px; /* Reduce space between items */
-      padding-bottom: 5px; /* Reduce bottom spacing */
-      margin-top: 10px; /* Reduce large gap above */
-    }
+  .step h2 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
   }
 
-  @media (max-width: 768px) {
-    .itemCol p {
-      font-size: 20px; /* Even larger for small screens */
-    }
-
-    .items-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 12px;
-      width: 100%;
-      max-width: 1100px;
-      min-width: 960px;
-      margin: 0 auto;
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-
-    .headerSection {
-      padding: 15px 0;
-    }
+  .step {
+    margin: 10px 0;
   }
 
-  @media (max-width: 576px) {
-    .items-container {
-      transform: translateX(-50%) scale(0.5); /* ❌ REMOVE */
-    }
+  .outlineCircleBtn,
+  .class-button {
+    width: 45px !important;
+    height: 45px !important;
+    font-size: 0.9rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
-  @media (max-width: 375px) {
-    .items-container {
-      transform: translateX(-50%) scale(0.4); /* ❌ REMOVE */
-    }
-  }
-  @media (max-width: 1024px) {
-    .itemCol p {
-      font-size: 18px; /* Bigger for medium screens */
-    }
+  /* Adjust vertical spacing */
+  .mainContent {
+    padding-bottom: 20px;
   }
 
-  @media (max-width: 1024px) {
-    .items-container {
-      max-width: 95vw; /* Allow more flexibility */
-    }
-  }
-
-  .faqSection .faq-button,
-  #faq-root .faq-button {
-    background: #ffb700 !important; /* Bright yellow */
-    color: black !important; /* Ensure visibility */
-    font-weight: 900 !important; /* Make text bolder */
-    font-size: 1.2rem !important; /* Increase readability */
-    padding: 10px 20px !important; /* Shrink button height */
-    border-radius: 8px !important;
-    border: 3px solid #cc8800 !important;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7) !important;
-    height: 45px !important; /* Forces smaller height */
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    line-height: 1 !important; /* Prevents text from adding height */
-  }
-  .faq-button {
-    display: block !important;
-    margin: 10px auto !important; /* Ensures it's inside the box */
-    width: fit-content !important;
-  }
-
-  .faq-section {
-    background-color: #292929 !important; /* Dark box */
-    padding: 30px 15px !important; /* Matches other boxes */
-    border-radius: 10px !important; /* Rounded corners */
-    margin: 50px auto !important; /* Adds spacing */
-    width: 80% !important;
-    max-width: 1000px !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important; /* Adds shadow */
-    text-align: center !important;
-
-    /* Ensure visibility */
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-height: 200px !important; /* Prevents collapsing */
-    opacity: 1 !important;
-    visibility: visible !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important; /* Adds border */
+  #output {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    overflow: hidden;
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
   }
 }
 
-.faq-content {
-  width: 100% !important;
-  max-width: 900px !important;
-  text-align: center !important;
-  margin: 0 auto !important;
-  padding: 20px !important;
+/* Extra small devices - iPhone specific */
+@media (max-width: 375px) {
+  .items-container {
+    transform: scale(0.42); /* Reduced from 0.55 */
+    width: 580px; /* Added explicit width */
+  }
+
+  .outlineCircleBtn,
+  .class-button {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .btnRow {
+    gap: 8px;
+  }
+}
+
+/* Prevent horizontal scroll on body */
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Force container to stay within viewport */
+.container {
+  max-width: 100%;
+  overflow: hidden;
 }
