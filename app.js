@@ -369,12 +369,23 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const handleSpinComplete = (columns) => {
-    columns.forEach((column) => {
+    columns.forEach((column, index) => {
       column.style.willChange = "auto";
-      // Add selected class to winners
       const winner = column.querySelector(".winner");
       if (winner) {
+        // Reset animations to ensure flash plays
+        winner.style.animation = "none";
+        winner.offsetHeight; // Trigger reflow
+        winner.style.animation = null;
+
+        // Set the delay index for sequential animation
+        winner.style.setProperty("--index", index);
         winner.classList.add("selected");
+
+        // Add final-glow to the container with a slight delay
+        setTimeout(() => {
+          winner.closest(".item-container").classList.add("final-glow");
+        }, index * 200);
       }
     });
 
@@ -393,7 +404,6 @@ document.addEventListener("DOMContentLoaded", () => {
       state.isSpinning = false;
       state.currentSpin = 1;
       state.totalSpins = 0;
-
       state.selectedGadgets.clear();
 
       spinButtons.forEach((btn) => {
@@ -404,7 +414,6 @@ document.addEventListener("DOMContentLoaded", () => {
       spinSelection.classList.add("disabled");
     }
   };
-
   const updateSpinCountdown = () => {
     // Remove 'active' and 'selected' from ALL spin buttons
     spinButtons.forEach((button) => {
