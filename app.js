@@ -31,7 +31,7 @@ const loadouts = {
       "XP-54",
       "Throwing Knives",
     ],
-    specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hwok"],
+    specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
     gadgets: [
       "Breach Charge",
       "Gateway",
