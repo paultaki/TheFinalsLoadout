@@ -1091,7 +1091,8 @@ img {
 
 
 
-.class-button:hover {
+.class-button:hover,
+.class-button.selected {
   transform: translateY(-2px) scale(1.05);
   box-shadow: 0 6px 18px rgba(0, 243, 255, 0.6);
 }

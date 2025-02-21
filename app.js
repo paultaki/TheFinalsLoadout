@@ -610,31 +610,85 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
     )
     .join("");
 }
+const randomButton = document.getElementById("randomButton");
+
+if (!randomButton) {
+  console.error("Random button not found! Check your HTML.");
+} else {
+  randomButton.addEventListener("click", () => {
+    console.log("🎲 Random button clicked!"); // Debugging
+
+    if (state.isSpinning) {
+      console.log("⚠️ Already spinning! Ignoring click.");
+      return;
+    }
+
+    // Pick a random class
+    const classes = ["Light", "Medium", "Heavy"];
+    const randomClass = classes[Math.floor(Math.random() * classes.length)];
+    state.selectedClass = randomClass;
+
+    // Update UI to show the selected class
+    document.querySelectorAll(".class-button").forEach((b) => {
+      b.classList.remove("selected", "active");
+
+      // Keep the selected class highlighted
+      if (b.dataset.class.toLowerCase() === state.selectedClass.toLowerCase()) {
+        b.classList.add("selected", "active");
+      }
+    });
+
+    // Pick a random number of spins (between 1 and 5)
+    const randomSpins = Math.floor(Math.random() * 5) + 1;
+    state.totalSpins = randomSpins;
+    state.currentSpin = randomSpins;
+
+    // Update UI to show the selected spin count
+    document.querySelectorAll(".spin-button").forEach((b) => {
+      if (parseInt(b.dataset.spins) === randomSpins) {
+        b.classList.add("selected", "active");
+      } else {
+        b.classList.remove("selected", "active");
+      }
+    });
+
+    // Start spinning
+    console.log(
+      `🌀 Spinning ${state.totalSpins} times as ${state.selectedClass}`
+    );
+    spinLoadout();
+  });
+}
 
 // Event Listeners
 classButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    if (state.isSpinning) return;
+    if (state.isSpinning) return; // Prevent changing selection mid-spin
 
+    // Remove highlight from all class buttons
     classButtons.forEach((b) => b.classList.remove("selected", "active"));
+
+    // Highlight the selected button
     button.classList.add("selected", "active");
 
     if (button.dataset.class === "random") {
       const classes = ["Light", "Medium", "Heavy"];
-      const randomIndex = Math.floor(Math.random() * 3);
-      const randomClass = classes[randomIndex];
+      const randomClass = classes[Math.floor(Math.random() * classes.length)];
       state.selectedClass = randomClass;
 
+      // Ensure the randomly chosen class gets highlighted
       classButtons.forEach((b) => {
         if (b.dataset.class === randomClass) {
           b.classList.add("selected", "active");
         }
       });
 
+      // Pick a random number of spins (between 1 and 5)
       const randomSpins = Math.floor(Math.random() * 5) + 1;
       state.totalSpins = randomSpins;
       state.currentSpin = randomSpins;
 
+      // Highlight the correct spin count
       spinButtons.forEach((b) => {
         if (parseInt(b.dataset.spins) === randomSpins) {
           b.classList.add("selected", "active");
@@ -756,10 +810,13 @@ function resetSpin() {
     button.removeAttribute("disabled");
   });
 
-  classButtons.forEach((button) => {
-    button.classList.remove("active", "selected");
-    button.removeAttribute("disabled");
-  });
+  // Reset class highlight **only after the spin is fully done**
+  setTimeout(() => {
+    classButtons.forEach((button) => {
+      button.classList.remove("active", "selected");
+      button.removeAttribute("disabled");
+    });
+  }, 1000); // Small delay to ensure spin animation finishes
 
   spinSelection.classList.add("disabled");
 }
