@@ -131,31 +131,22 @@
           <div class="step-container">
             <!-- Step 1: Class Selection -->
             <div id="classSelection" class="step">
-              <div class="step-highlight"></div>
-              <h2>1: Choose a Class</h2>
+              <h2>Choose Your Class</h2>
               <div class="btnRow">
-                <button
-                  class="class-button outlineCircleBtn"
-                  data-class="Light"
-                >
+                <button class="class-button" data-class="Light">
+                  <span class="icon">⚡</span>
                   L
                 </button>
-                <button
-                  class="class-button outlineCircleBtn"
-                  data-class="Medium"
-                >
+                <button class="class-button" data-class="Medium">
+                  <span class="icon">⚔️</span>
                   M
                 </button>
-                <button
-                  class="class-button outlineCircleBtn"
-                  data-class="Heavy"
-                >
+                <button class="class-button" data-class="Heavy">
+                  <span class="icon">🛡️</span>
                   H
                 </button>
-                <button
-                  class="class-button outlineCircleBtn random"
-                  data-class="random"
-                >
+                <button class="class-button" data-class="Random">
+                  <span class="icon">🎲</span>
                   ?
                 </button>
               </div>
@@ -163,24 +154,13 @@
 
             <!-- Step 2: Spin Selection -->
             <div id="spinSelection" class="step disabled">
-              <div class="step-highlight"></div>
-              <h2>2: How Many Spins?</h2>
+              <h2>Number of Spins</h2>
               <div class="btnRow">
-                <button class="spin-button outlineCircleBtn" data-spins="1">
-                  1
-                </button>
-                <button class="spin-button outlineCircleBtn" data-spins="2">
-                  2
-                </button>
-                <button class="spin-button outlineCircleBtn" data-spins="3">
-                  3
-                </button>
-                <button class="spin-button outlineCircleBtn" data-spins="4">
-                  4
-                </button>
-                <button class="spin-button outlineCircleBtn" data-spins="5">
-                  5
-                </button>
+                <button class="spin-button" data-spins="1">1</button>
+                <button class="spin-button" data-spins="2">2</button>
+                <button class="spin-button" data-spins="3">3</button>
+                <button class="spin-button" data-spins="4">4</button>
+                <button class="spin-button" data-spins="5">5</button>
               </div>
             </div>
           </div>
@@ -249,11 +229,14 @@
 
           <!-- Single set of buttons -->
           <div class="btnRow"></div>
+
           <div class="btnRow">
-            <a href="punishment-loadout/index.html" class="outlineBtnStyle">
-              <img src="images/punishment.webp" class="skull-icon" alt="💀" />
-              Punishment Loadout
-              <img src="images/punishment.webp" class="skull-icon" alt="💀" />
+            <a
+              href="punishment-loadout/index.html"
+              id="punishmentLoadoutButton"
+            >
+              <span class="skull-icon">💀</span> Punishment Loadout
+              <span class="skull-icon">💀</span>
             </a>
           </div>
         </div>

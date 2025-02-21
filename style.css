@@ -1,72 +1,33 @@
 :root {
-  --baseFont: "Oswald", serif;
-  --neon-yellow: #ffb700;
+  --neon-purple: #7b2fe3;
+  --neon-blue: #1e90ff;
+  --neon-cyan: #00f3ff;
+  --neon-pink: #ff1493;
   --neon-orange: #ff7b00;
-  --neon-red: #ff4f4f;
-  --neon-blue: #00f3ff;
-  --bg-dark: #1d1a21;
-  --bg-darker: #151318;
-  --highlight-color: var(--neon-yellow); /* Ensuring a bright highlight */
+  --neon-yellow: #ffb700;
 }
 
-/* Updated Button Styles */
-.class-button,
-.spin-button {
-  width: 55px;
-  height: 55px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background: linear-gradient(45deg, #ff7b00, #ff4f4f);
-  color: white;
-  border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-}
 
-.class-button:hover,
-.spin-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(255, 79, 79, 0.4);
-  background: linear-gradient(45deg, #ff4f4f, #ff7b00);
-}
 
-.class-button.selected,
-.class-button.active,
-.spin-button.selected,
-.spin-button.active {
-  background: var(--neon-yellow);
-  color: black;
-  box-shadow: 0 0 20px var(--neon-yellow);
-}
-
-/* Punishment Button Style */
-.outlineBtnStyle {
-  background: linear-gradient(45deg, #ff4f4f, #ff7b00);
+/* Copy loadout button style */
+.copy-button {
+  background: linear-gradient(45deg, #7b2fe3, #1e90ff); /* Matching gradient */
   border: none;
   color: white;
   padding: 12px 24px;
-  font-size: 1.1rem;
+  font-size: 14px;
   border-radius: 8px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-  box-shadow: 0 4px 12px rgba(255, 79, 79, 0.3);
+  cursor: pointer;
   transition: all 0.3s ease;
-  animation: subtlePulse 2.5s ease-in-out infinite;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0 4px 12px rgba(123, 47, 227, 0.3);
 }
 
-.outlineBtnStyle:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(255, 79, 79, 0.5);
-  background: linear-gradient(45deg, #ff7b00, #ff4f4f);
+.copy-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(123, 47, 227, 0.4);
+  background: linear-gradient(45deg, #1e90ff, #7b2fe3);
 }
 
 @keyframes finalFlash {
@@ -118,6 +79,18 @@ html {
   );
   background-size: 400% 400%;
   animation: gradientShift 20s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 body {
@@ -211,34 +184,54 @@ body.flexStyle {
   opacity: 0;
 }
 
-/* Punishment Button */
-#punishmentLoadoutButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px; /* Space between skulls and text */
-  padding: 15px 30px;
-  background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
-  border: none;
-  font-size: 1.1rem;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  animation: subtlePulse 2.5s ease-in-out infinite; /* Already added pulse */
-}
-
+/* Hover Effect */
 #punishmentLoadoutButton:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(45deg, var(--neon-orange), var(--neon-red));
+  transform: translateY(-3px) scale(1.07);
+  box-shadow: 0 0 20px rgba(255, 140, 0, 0.8);
+  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
 }
 
+/* Skull Icon Fix */
 .skull-icon {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
+
+/* Fix Pulse Animation */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff4500, #ff7b00) !important;
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.6);
+  }
+  50% {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
+    box-shadow: 0 6px 18px rgba(255, 140, 0, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff4500, #ff7b00) !important;
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.6);
+  }
+}
+
+
+/* Pulsing Glow Effect */
+@keyframes subtlePulse {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(255, 140, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+  }
+}
+
 
 .faqSection h2 {
   font-size: 1.2rem;
@@ -324,56 +317,9 @@ body.flexStyle {
   animation: subtlePulse 2.5s ease-in-out infinite; /* Keeps pulsing effect */
 }
 
-.recentBuffsSection {
-  background-color: #292929;
-  padding: 30px 15px;
-  border-radius: 10px;
-  margin: 50px auto;
-  width: 80%;
-  max-width: 1000px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  color: #fff;
-  text-align: left;
-}
 
-.recentBuffsSection h2 {
-  text-align: center;
-  font-size: 1.8rem;
-  color: var(--neon-yellow);
-  margin-bottom: 20px;
-}
 
-.buffs-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
 
-.buff-item {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.buff-item .patch-date {
-  font-size: 0.9rem;
-  color: #ccc;
-  margin-bottom: 10px;
-}
-
-.buff-item strong {
-  color: var(--neon-yellow);
-}
-
-.read-more {
-  color: var(--neon-blue);
-  text-decoration: underline;
-  font-size: 0.9rem;
-  display: inline-block;
-  margin-top: 10px;
-}
 .faqSection {
   background-color: #292929;
   padding: 20px;
@@ -493,71 +439,6 @@ body.flexStyle {
   margin-bottom: 15px;
 }
 
-/* Buffs, Nerfs, and QoL Adjustments Styling */
-.buff-item .buff {
-  color: #1b4d4b; /* Dark Cyan for Buffs */
-  font-weight: bold;
-}
-
-.buff-item .nerf {
-  color: #752b2b; /* Burnt Orange for Nerfs */
-  font-weight: bold;
-}
-
-.buff-item .qol {
-  color: #66521f; /* Dark Gold for QoL Adjustments */
-  font-weight: bold;
-}
-
-/* Background Highlights */
-.buff-item .buff-section {
-  background: rgba(58, 90, 207, 0.4); /* Slightly stronger blue */
-  color: white;
-  font-weight: bold;
-  padding: 12px;
-  border-radius: 5px;
-}
-
-.buff-item .nerf-section {
-  background: rgba(214, 28, 124, 0.2); /* Soft neon pink */
-  padding: 10px;
-  border-radius: 5px;
-  border-left: 4px solid #d61c7c;
-  margin-bottom: 10px;
-  color: white;
-}
-
-.buff-item .qol-section {
-  background: rgba(90, 24, 154, 0.2); /* Soft neon purple */
-  padding: 10px;
-  border-radius: 5px;
-  border-left: 4px solid #5a189a;
-  margin-bottom: 10px;
-  color: white;
-}
-
-/* List Styling Improvements */
-.buff-item ul {
-  list-style-type: none;
-  padding-left: 15px;
-}
-
-.buff-item ul li::before {
-  content: "•";
-  color: var(--neon-yellow);
-  font-weight: bold;
-  display: inline-block;
-  width: 1em;
-  margin-left: -1em;
-}
-/* Style for Major Section Headers */
-.buff-item h3 {
-  font-size: 2rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: var(--highlight-color);
-  text-shadow: 0 0 10px rgba(255, 183, 0, 0.8);
-}
 
 .faqSection {
   background-color: #292929;
@@ -1106,3 +987,358 @@ body {
 img {
   image-rendering: crisp-edges;
 }
+
+.cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: gridMove 20s linear infinite;
+}
+
+/* Neon glow effects */
+.neon-glow {
+  box-shadow: 
+    0 0 5px rgba(123,47,227,0.2),
+    0 0 10px rgba(123,47,227,0.2),
+    0 0 15px rgba(123,47,227,0.2),
+    0 0 20px rgba(123,47,227,0.2);
+  animation: neonPulse 2s ease-in-out infinite;
+}
+
+
+
+
+/* Enhanced background gradient animation */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Cyberpunk-style grid overlay */
+.cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 20px 20px; }
+}
+
+/* Neon glow effects */
+.neon-glow {
+  box-shadow: 
+    0 0 5px rgba(123,47,227,0.2),
+    0 0 10px rgba(123,47,227,0.2),
+    0 0 15px rgba(123,47,227,0.2),
+    0 0 20px rgba(123,47,227,0.2);
+  animation: neonPulse 2s ease-in-out infinite;
+}
+@keyframes neonPulse {
+  0%,
+}
+
+
+/* Fix for Class Selection Buttons */
+/* Fix for Class Selection Buttons */
+
+/* Updated Class Button Styles (Using L, M, H, R) */
+.class-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  max-width: 80px;
+  padding: 8px 10px;
+  font-size: 1.2rem; /* Slightly larger for readability */
+  font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Adjusts size on smaller screens */
+@media (max-width: 600px) {
+  .class-button {
+    font-size: 1rem; /* Reduce text size */
+    min-width: 55px;
+    padding: 6px 8px;
+  }
+}
+
+
+/* Ensuring proper icon alignment */
+.class-button span {
+  font-size: 0.9rem; /* Slightly smaller text */
+  flex-shrink: 1; /* Prevents text from stretching too much */
+  text-align: center;
+}
+
+/* Fixing icon alignment */
+.class-button .icon {
+  font-size: 1.2rem; /* Scaled-down icons for balance */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+.class-button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 18px rgba(0, 243, 255, 0.6);
+}
+
+.class-button:active {
+  transform: scale(0.95);
+}
+
+.class-button[data-class="Light"] {
+  background: linear-gradient(135deg, #1e90ff, #00f3ff);
+}
+
+.class-button[data-class="Medium"] {
+  background: linear-gradient(135deg, #d100d1, #ff1493);
+}
+
+.class-button[data-class="Heavy"] {
+  background: linear-gradient(135deg, #ff4500, #ff7b00);
+}
+
+.class-button[data-class="random"] {
+  background: linear-gradient(135deg, #00c853, #00ff7f);
+}
+
+
+.spin-button {
+  background: linear-gradient(135deg, #8a2be2, #ff00ff);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(255, 0, 255, 0.4);
+}
+
+.spin-button:hover {
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 8px 20px rgba(255, 0, 255, 0.6);
+}
+
+.spin-button:active {
+  transform: scale(0.95);
+}
+
+.spin-button.active {
+  background: linear-gradient(135deg, #ff00ff, #ff4500);
+  box-shadow: 0 4px 15px rgba(255, 69, 0, 0.8);
+}
+
+
+/* Buff Section - Darker Blue */
+.buff-section {
+  background: #1e293b; /* Dark Blue */
+  border-left: 5px solid #4a90e2; /* Bright Blue */
+  color: #c7dbff; /* Softer Light Blue */
+  padding: 20px;
+  border-radius: 6px;
+}
+
+/* Nerf Section - Dark Red */
+.nerf-section {
+  background: #3b1e1e; /* Darker Red */
+  border-left: 5px solid #e24a4a; /* Medium Red */
+  color: #ffb3b3; /* Softer Light Red */
+  padding: 20px;
+  border-radius: 6px;
+}
+
+/* QoL Section - Dark Gold */
+.qol-section {
+  background: #3b2a1e; /* Darker Gold */
+  border-left: 5px solid #e2a04a; /* Medium Gold */
+  color: #ffe4c4; /* Softer Light Gold */
+  padding: 20px;
+  border-radius: 6px;
+}
+
+/* Title Styling */
+.buff-section h3,
+.nerf-section h3,
+.qol-section h3 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff; /* Bright White */
+  margin-bottom: 10px;
+}
+
+/* Bullet Point Fix - Align Lists */
+.buff-section ul,
+.nerf-section ul,
+.qol-section ul {
+  padding-left: 25px;
+  margin-top: 8px;
+}
+
+/* Bullet Point Fix - Better Spacing */
+.buff-section ul li,
+.nerf-section ul li,
+.qol-section ul li {
+  list-style-type: disc;
+  margin-bottom: 6px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Patch Date Styling */
+.patch-date {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ffcc00;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* Buffs/Nerfs Container */
+.buff-item {
+  margin-bottom: 25px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+
+/* Fix for Punishment Loadout Button */
+#punishmentLoadoutButton {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 30px;
+  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+  border: 2px solid #ff3d00 !important;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  color: white !important;
+  cursor: pointer;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(255, 69, 0, 0.8);
+  transition: all 0.3s ease-in-out;
+  animation: subtlePulse 2s ease-in-out infinite;
+}
+
+/* Hover Effect */
+#punishmentLoadoutButton:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 0 20px rgba(255, 140, 0, 0.9);
+  background: linear-gradient(45deg, #ff6f00, #d50000) !important;
+}
+
+/* Fix for Skull Icon */
+.skull-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+/* Fix Button Animation */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.7);
+  }
+  50% {
+    transform: scale(1.06);
+    background: linear-gradient(45deg, #ff6f00, #d50000) !important;
+    box-shadow: 0 6px 14px rgba(255, 140, 0, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.7);
+  }
+}
+
+/* Ensure no unwanted styles from outlineBtnStyle affect it */
+.outlineBtnStyle {
+  all: unset !important;
+}
+
+
+/* Fix Button Animation */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.7);
+  }
+  50% {
+    transform: scale(1.06);
+    background: linear-gradient(45deg, #ff6f00, #d50000) !important;
+    box-shadow: 0 6px 14px rgba(255, 140, 0, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.7);
+  }
+}
+
+
+
+/* Fix Button Animation */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff0000, #ff7b00) !important;
+    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.6);
+  }
+  50% {
+    transform: scale(1.06);
+    background: linear-gradient(45deg, #ff7b00, #ff0000) !important;
+    box-shadow: 0 6px 14px rgba(255, 140, 0, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff0000, #ff7b00) !important;
+    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.6);
+  }
+}
+
+/* Fix Button Animation */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff0000, #ff7b00) !important;
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.6);
+  }
+  50% {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ff7b00, #ff0000) !important;
+    box-shadow: 0 6px 18px rgba(255, 140, 0, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff0000, #ff7b00) !important;
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.6);
+  }
+}
+
+
+
