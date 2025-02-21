@@ -797,26 +797,18 @@ document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
     });
 });
 
-function resetSpin() {
-  state.isSpinning = false;
-  state.currentSpin = 1;
-  state.totalSpins = 0;
-  state.selectedGadgets.clear();
-  state.selectedClass = null;
+// FAQ Toggle functionality
+document.addEventListener("DOMContentLoaded", () => {
+  const faqToggle = document.getElementById("faqToggle");
+  const faqContent = document.getElementById("faqContent");
+  const toggleIcon = document.querySelector(".toggle-icon");
 
-  // Reset UI elements
-  spinButtons.forEach((button) => {
-    button.classList.remove("active", "selected");
-    button.removeAttribute("disabled");
-  });
-
-  // Reset class highlight **only after the spin is fully done**
-  setTimeout(() => {
-    classButtons.forEach((button) => {
-      button.classList.remove("active", "selected");
-      button.removeAttribute("disabled");
+  if (faqToggle && faqContent) {
+    faqToggle.addEventListener("click", () => {
+      faqContent.classList.toggle("open");
+      toggleIcon.textContent = faqContent.classList.contains("open")
+        ? "−"
+        : "+";
     });
-  }, 1000); // Small delay to ensure spin animation finishes
-
-  spinSelection.classList.add("disabled");
-}
+  }
+});

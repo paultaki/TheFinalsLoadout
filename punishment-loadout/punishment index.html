@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Finals Punishment Loadout Generator</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap");
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Oswald", sans-serif;
+        background: linear-gradient(-45deg, #1d1a21, #2a1f2d, #1f2a2d, #201c24);
+        background-size: 400% 400%;
+        animation: gradientShift 20s ease infinite;
+        color: #fff;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .header-with-crossbones {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+      }
+
+      .mainTitle {
+        color: #ff0000;
+        font-size: 2rem;
+        margin: 0;
+      }
+
+      .items-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 40px 0;
+      }
+
+      .item-container {
+        width: 154px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        padding: 0 5px;
+        border-radius: 5px;
+        height: 191px;
+        overflow: hidden;
+        background-color: #fff;
+        position: relative;
+      }
+
+      .scroll-container {
+        transition: transform 0.1s linear;
+      }
+
+      .itemCol {
+        padding-top: 5px;
+      }
+
+      .itemCol img {
+        width: 140px;
+        height: 144px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+
+      .itemCol p {
+        color: #000;
+        padding: 8px 0 10px;
+        font-size: 14px;
+        margin: 0;
+        white-space: nowrap;
+      }
+
+      #randomLoadoutButton {
+        background: transparent;
+        color: #fff;
+        border: 2px solid #ff4f4f;
+        padding: 14px 24px;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: inherit;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        margin: 20px 0;
+      }
+
+      #randomLoadoutButton:hover {
+        background-color: #ff4f4f;
+      }
+
+      #randomLoadoutButton:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .class-indicator {
+        font-size: 24px;
+        margin: 20px 0;
+      }
+
+      .Light {
+        color: #44aaff;
+      }
+      .Medium {
+        color: #aa44ff;
+      }
+      .Heavy {
+        color: #ffaa00;
+      }
+
+      .funny-joke-container {
+        margin: 20px 0;
+        min-height: 32px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .funny-joke-container.visible {
+        opacity: 1;
+      }
+
+      .funny-joke {
+        color: #888;
+        font-size: 18px;
+      }
+
+      .warning-section {
+        background-color: #3a2828;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 30px auto;
+        max-width: 770px;
+      }
+
+      .warning-section h3 {
+        color: #ffb700;
+        margin-bottom: 15px;
+      }
+
+      .warning-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+      }
+
+      .warning-section li {
+        margin: 10px 0;
+      }
+
+      .warning-section li:before {
+        content: "⚠️";
+        margin-right: 8px;
+      }
+
+      .locked-tag {
+        position: absolute;
+        top: 5px;
+        right: -5px;
+        background: linear-gradient(45deg, #ffb700, #ff7b00);
+        color: black;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: bold;
+        transform: scale(0);
+        opacity: 0;
+        z-index: 10;
+      }
+
+      .locked-tag.show {
+        animation: tagPop 0.3s ease-out forwards;
+      }
+
+      @keyframes tagPop {
+        0% {
+          transform: scale(0) rotate(-10deg);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.2) rotate(5deg);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+          opacity: 1;
+        }
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-with-crossbones">
+        <img
+          src="images/punishment.webp"
+          alt="Crossbones"
+          class="crossbones"
+          width="50"
+          height="50"
+        />
+        <h1 class="mainTitle">Generate Your Punishment</h1>
+        <img
+          src="images/punishment.webp"
+          alt="Crossbones"
+          class="crossbones"
+          width="50"
+          height="50"
+        />
+      </div>
+      <p class="headerSubtext">
+        The Ultimate Test: Can You Survive This Loadout?
+      </p>
+
+      <div id="class-indicator" class="class-indicator"></div>
+
+      <button id="randomLoadoutButton" class="random outlineBtnStyle">
+        Generate Your Punishment
+      </button>
+
+      <div id="output"></div>
+
+      <div class="warning-section">
+        <h3>⚠️ Warning</h3>
+        <ul>
+          <li>Strategic disadvantages</li>
+          <li>Unexpected deaths</li>
+          <li>ALT+F4 Spamming</li>
+          <li>Uncontrollable urge to blame lag</li>
+          <li>Potential ban from teammates' friend lists</li>
+        </ul>
+        <p>Use at your own risk. Results may vary. Fun is guaranteed*</p>
+        <p><small>*Fun not actually guaranteed</small></p>
+      </div>
+    </div>
+
+    <script>
+      const loadouts = {
+        Light: {
+          weapons: ["93R", "Dagger", "SR-84", "Recurve Bow"],
+          specializations: ["Cloaking Device"],
+          gadgets: [
+            "Breach Charge",
+            "Gravity Vortex",
+            "Thermal Bore",
+            "Thermal Vision",
+            "Tracking Dart",
+          ],
+        },
+        Medium: {
+          weapons: [
+            "Dual Blades",
+            "Pike-556",
+            "R.357",
+            "Riot Shield",
+            "Model 1887",
+          ],
+          specializations: ["Dematerializer", "Guardian Turret"],
+          gadgets: [
+            "APS Turret",
+            "Data Reshaper",
+            "Smoke Grenade",
+            "Gas Mine",
+            "Proximity Sensor",
+          ],
+        },
+        Heavy: {
+          weapons: ["KS-23", "MGL32", "Spear"],
+          specializations: ["Charge_N_Slam", "Goo Gun"],
+          gadgets: [
+            "Anti-Gravity Cube",
+            "Lockbolt Launcher",
+            "Pyro Mine",
+            "Proximity Sensor",
+            "Smoke Grenade",
+          ],
+        },
+      };
+
+      const jokes = [
+        "This loadout is guaranteed to impress... no one.",
+        "Good luck surviving this chaos.",
+        "Your enemies are laughing already.",
+        "Is it bad? Yes. Is it fun? Absolutely.",
+        "This loadout is scientifically engineered to trigger your teammates.",
+        "Fun fact: This setup has a 0.01% win rate. But hey, stats are overrated.",
+      ];
+
+      const shuffleArray = (array) => {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      };
+
+      const getRandomUniqueItems = (array, n) => {
+        const shuffled = shuffleArray(array);
+        return shuffled.slice(0, n);
+      };
+
+      const createItemContainer = (items) => {
+        let repeatedItems = [...items];
+        while (repeatedItems.length < 100) {
+          repeatedItems.push(...items);
+        }
+        repeatedItems = shuffleArray(repeatedItems);
+        repeatedItems.length = 100;
+
+        return repeatedItems
+          .map(
+            (item) => `
+                    <div class="itemCol">
+                        <img src="images/${item.replaceAll(" ", "_")}.webp" 
+                             alt="The Finals ${item}" 
+                             title="The Finals ${item}"
+                             width="140" 
+                             height="144">
+                        <p>${item}</p>
+                    </div>
+                `
+          )
+          .join("");
+      };
+
+      const startSpinAnimation = (columns, callback) => {
+        const itemHeight = 188;
+        const baseSpeed = 12;
+
+        const stopTimes = columns.map((_, index) => {
+          switch (index) {
+            case 0:
+              return 700;
+            case 1:
+              return 1200;
+            case 2:
+              return 1700;
+            case 3:
+              return 2200;
+            case 4:
+              return 2900;
+            default:
+              return 700 + index * 110;
+          }
+        });
+
+        columns.forEach((column) => {
+          const container = column.closest(".item-container");
+          const existingTag = container.querySelector(".locked-tag");
+          if (!existingTag) {
+            const lockedTag = document.createElement("div");
+            lockedTag.className = "locked-tag";
+            lockedTag.textContent = "Locked In!";
+            container.appendChild(lockedTag);
+          }
+        });
+
+        let allStopped = new Array(columns.length).fill(false);
+        document.getElementById("randomLoadoutButton").disabled = true;
+
+        const startTime = Date.now();
+
+        const animate = () => {
+          const currentTime = Date.now();
+          let animationRunning = false;
+
+          columns.forEach((column, index) => {
+            if (!allStopped[index]) {
+              animationRunning = true;
+
+              const timeElapsed = currentTime - startTime;
+              const shouldStop = timeElapsed >= stopTimes[index];
+              const currentOffset =
+                parseFloat(
+                  column.style.transform
+                    ?.replace("translateY(", "")
+                    .replace("px)", "")
+                ) || 0;
+
+              let speed = baseSpeed;
+              if (shouldStop) {
+                allStopped[index] = true;
+                const newOffset = itemHeight;
+                column.style.transform = `translateY(${newOffset}px)`;
+
+                const container = column.closest(".item-container");
+                const tag = container.querySelector(".locked-tag");
+                if (tag) {
+                  tag.classList.add("show");
+                }
+                return;
+              }
+
+              let newOffset = currentOffset + speed;
+              if (newOffset >= itemHeight * 8) newOffset = 0;
+
+              column.style.transform = `translateY(${newOffset}px)`;
+            }
+          });
+
+          if (animationRunning) {
+            requestAnimationFrame(animate);
+          } else {
+            document.getElementById("randomLoadoutButton").disabled = false;
+            if (callback) callback();
+          }
+        };
+
+        requestAnimationFrame(animate);
+      };
+
+      const displayLoadout = (loadout, className) => {
+        const { weapons, specializations, gadgets } = loadout;
+        const selectedGadgets = getRandomUniqueItems(gadgets, 3);
+
+        document.getElementById(
+          "class-indicator"
+        ).innerHTML = `Selected Class: <span class="${className}">${className}</span>`;
+
+        const loadoutHTML = `
+                <div class="items-container">
+                    <div class="item-container">
+                        <div class="scroll-container">${createItemContainer(
+                          weapons
+                        )}</div>
+                    </div>
+                    <div class="item-container">
+                        <div class="scroll-container">${createItemContainer(
+                          specializations
+                        )}</div>
+                    </div>
+                    ${selectedGadgets
+                      .map(
+                        (gadget) => `
+                        <div class="item-container">
+                            <div class="scroll-container">
+                                ${createItemContainer([gadget])}
+                            </div>
+                        </div>`
+                      )
+                      .join("")}
+                </div>
+                <div class="funny-joke-container"></div>
+            `;
+
+        const outputDiv = document.getElementById("output");
+        outputDiv.innerHTML = loadoutHTML;
+
+        setTimeout(() => {
+          const scrollContainers = Array.from(
+            document.querySelectorAll(".scroll-container")
+          );
+          startSpinAnimation(scrollContainers, () => {
+            const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+            const jokeContainer = outputDiv.querySelector(
+              ".funny-joke-container"
+            );
+            jokeContainer.innerHTML = `<p class="funny-joke">${randomJoke}</p>`;
+            jokeContainer.classList.add("visible");
+          });
+        }, 50);
+      };
+
+      document.getElementById("randomLoadoutButton").onclick = () => {
+        const classes = ["Light", "Medium", "Heavy"];
+        const randomClass = classes[Math.floor(Math.random() * classes.length)];
+        const loadout = loadouts[randomClass];
+        displayLoadout(loadout, randomClass);
+      };
+    </script>
+  </body>
+</html>
