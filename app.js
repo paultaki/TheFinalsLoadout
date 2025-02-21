@@ -1,5 +1,4 @@
 let state = {
-  // ✅ Now it's globally accessible
   selectedClass: null,
   isSpinning: false,
   currentSpin: 1,
@@ -17,45 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Code continues...
 });
 
-// Animation Constants
-const ANIMATION_PHASES = {
-  ACCELERATION: "acceleration",
-  HIGH_SPEED: "highSpeed",
-  DECELERATION: "deceleration",
-  STOPPING: "stopping",
-};
-
-const ANIMATION_TIMINGS = {
-  // Phase durations in milliseconds
-  INITIAL_SPIN: {
-    ACCELERATION: 500,
-    HIGH_SPEED: 2000,
-    DECELERATION: 1500,
-    STOPPING: 800,
-  },
-  // Shorter durations for subsequent spins
-  REGULAR_SPIN: {
-    ACCELERATION: 300,
-    HIGH_SPEED: 1200,
-    DECELERATION: 1000,
-    STOPPING: 500,
-  },
-  // Delays between column stops
-  COLUMN_STOP_DELAY: 300,
-  FINAL_COLUMN_DELAY: 500,
-};
-
-const ANIMATION_SPEEDS = {
-  MIN: 2, // Minimum speed (pixels per frame)
-  MAX: 50, // Maximum speed during high-speed phase
-  BLUR: {
-    // Speed thresholds for blur effects
-    HEAVY: 40,
-    MEDIUM: 25,
-    LIGHT: 10,
-  },
-};
-
 // Loadouts object
 const loadouts = {
   Light: {
@@ -63,7 +23,7 @@ const loadouts = {
       "93R",
       "Dagger",
       "SR-84",
-      "SH190",
+      "SH1900",
       "LH1",
       "M26 Matter",
       "Recurve Bow",
@@ -233,42 +193,36 @@ const displayLoadout = (classType, loadout) => {
   };
 
   const loadoutHTML = `
-            <div class="slot-machine-wrapper">
-                <div class="items-container">
-                    <div class="item-container">
-                        <div class="scroll-container">
-                            ${createItemContainer(
-                              loadout.weapons,
-                              selectedWeapon
-                            )}
-                        </div>
-                    </div>
-                    <div class="item-container">
-                        <div class="scroll-container">
-                            ${createItemContainer(
-                              loadout.specializations,
-                              selectedSpec
-                            )}
-                        </div>
-                    </div>
-                    ${selectedGadgets
-                      .map(
-                        (gadget, index) => `
-                        <div class="item-container">
-                            <div class="scroll-container" data-gadget-index="${index}">
-                                ${createItemContainer(
-                                  createGadgetSpinSequence(gadget, index),
-                                  gadget,
-                                  true
-                                )}
-                            </div>
-                        </div>
-                    `
-                      )
-                      .join("")}
-                </div>
+    <div class="slot-machine-wrapper">
+      <div class="items-container">
+        <div class="item-container">
+          <div class="scroll-container">
+            ${createItemContainer(loadout.weapons, selectedWeapon)}
+          </div>
+        </div>
+        <div class="item-container">
+          <div class="scroll-container">
+            ${createItemContainer(loadout.specializations, selectedSpec)}
+          </div>
+        </div>
+        ${selectedGadgets
+          .map(
+            (gadget, index) => `
+            <div class="item-container">
+              <div class="scroll-container" data-gadget-index="${index}">
+                ${createItemContainer(
+                  createGadgetSpinSequence(gadget, index),
+                  gadget,
+                  true
+                )}
+              </div>
             </div>
-        `;
+          `
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
 
   outputDiv.innerHTML = loadoutHTML;
 
@@ -295,8 +249,9 @@ const displayManualLoadout = (classType) => {
 const spinLoadout = (spins) => {
   if (state.isSpinning) return;
 
+  // Disable buttons during spin
   document.querySelectorAll(".class-button, .spin-button").forEach((btn) => {
-    btn.removeAttribute("disabled");
+    btn.setAttribute("disabled", "true");
   });
 
   state.isSpinning = true;
@@ -304,13 +259,14 @@ const spinLoadout = (spins) => {
   state.totalSpins = spins || state.totalSpins;
 
   state.currentGadgetPool.clear();
-
   updateSpinCountdown();
 
   if (!state.selectedClass && state.selectedClass !== "random") {
+    state.isSpinning = false; // Make sure to reset spinning state
     return;
   }
 
+  // Display initial loadout
   if (state.selectedClass === "random") {
     displayRandomLoadout();
   } else {
@@ -318,299 +274,310 @@ const spinLoadout = (spins) => {
   }
 };
 
-// Function to update slot image based on speed phase
-function updateSlotImage(slotElement, baseImageName, state) {
-  let imagePath;
-  switch (state) {
-    case "fast":
-      imagePath = `${baseImageName}_blur2.webp`; // Medium blur
-      break;
-    case "medium":
-      imagePath = `${baseImageName}_blur1.webp`; // Light blur
-      break;
-    case "slow":
-      imagePath = `${baseImageName}.webp`; // Clear image
-      break;
+// Updated physics constants for smoother animation
+
+// Updated physics constants with separate timing for regular vs final spins
+
+const PHYSICS = {
+  ACCELERATION: 6000,
+  MAX_VELOCITY: 4000,
+  DECELERATION: -3000,
+  BOUNCE_DAMPENING: 0.3,
+  ITEM_HEIGHT: 188,
+  TIMING: {
+    REGULAR_SPIN: {
+      COLUMN_DELAY: 250, // 0.25s between stops for regular spins
+      BASE_DURATION: 800,
+      DECELERATION_TIME: 400,
+    },
+    FINAL_SPIN: {
+      COLUMN_DELAY: 600, // 0.6s between stops for final spin
+      BASE_DURATION: 2500,
+      DECELERATION_TIME: 800,
+    },
+  },
+};
+
+class SlotColumn {
+  constructor(element, index, isFinalSpin) {
+    this.element = element;
+    this.index = index;
+    this.velocity = 0;
+    this.position = 0;
+    this.state = "waiting";
+    this.lastTimestamp = null;
+    this.isFinalSpin = isFinalSpin;
+
+    const timing = isFinalSpin
+      ? PHYSICS.TIMING.FINAL_SPIN
+      : PHYSICS.TIMING.REGULAR_SPIN;
+    this.stopDelay = timing.COLUMN_DELAY * index;
+    this.totalDuration = timing.BASE_DURATION + this.stopDelay;
+    this.decelerationTime = timing.DECELERATION_TIME;
+
+    this.targetPosition = 0;
+    this.initialPosition = 0;
   }
-  slotElement.src = `images/${imagePath}`;
+
+  update(elapsed, deltaTime) {
+    if (this.state === "stopped") return;
+
+    const dt = deltaTime / 1000;
+
+    switch (this.state) {
+      case "accelerating":
+        this.velocity += PHYSICS.ACCELERATION * dt;
+        if (this.velocity >= PHYSICS.MAX_VELOCITY) {
+          this.velocity = PHYSICS.MAX_VELOCITY;
+          this.state = "spinning";
+        }
+        break;
+
+      case "spinning":
+        this.velocity = PHYSICS.MAX_VELOCITY;
+
+        if (elapsed >= this.totalDuration - this.decelerationTime) {
+          this.state = "decelerating";
+          this.targetPosition =
+            Math.ceil(this.position / PHYSICS.ITEM_HEIGHT) *
+            PHYSICS.ITEM_HEIGHT;
+        }
+        break;
+
+      case "decelerating":
+        this.velocity += PHYSICS.DECELERATION * dt;
+
+        if (this.velocity <= 0) {
+          if (Math.abs(this.velocity) < 100) {
+            this.velocity = 0;
+            this.position = this.targetPosition;
+            this.state = "stopped";
+          } else {
+            this.velocity = -this.velocity * PHYSICS.BOUNCE_DAMPENING;
+            this.state = "bouncing";
+          }
+        }
+        break;
+
+      case "bouncing":
+        this.velocity += PHYSICS.DECELERATION * 1.2 * dt;
+
+        if (
+          Math.abs(this.velocity) < 50 &&
+          Math.abs(this.position - this.targetPosition) < 5
+        ) {
+          this.velocity = 0;
+          this.position = this.targetPosition;
+          this.state = "stopped";
+        }
+        break;
+    }
+
+    this.position += this.velocity * dt;
+    const wrappedPosition = this.position % PHYSICS.ITEM_HEIGHT;
+    this.position =
+      wrappedPosition >= 0
+        ? wrappedPosition
+        : wrappedPosition + PHYSICS.ITEM_HEIGHT;
+
+    this.updateVisuals();
+  }
+
+  updateVisuals() {
+    let blur = 0;
+    if (Math.abs(this.velocity) > 3000) blur = 12;
+    else if (Math.abs(this.velocity) > 2000) blur = 8;
+    else if (Math.abs(this.velocity) > 1000) blur = 5;
+
+    this.element.style.transform = `translateY(${this.position}px)`;
+    this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
+  }
 }
 
-function getRandomItemFromColumn(column, loadout) {
-  if (column.dataset.type === "weapon") {
-    return getRandomUniqueItems(loadout.weapons, 1)[0];
-  }
-  if (column.dataset.type === "specialization") {
-    return getRandomUniqueItems(loadout.specializations, 1)[0];
-  }
-  if (column.dataset.type === "gadget") {
-    return getRandomUniqueItems(loadout.gadgets, 1)[0];
-  }
-  return "placeholder"; // Default fallback if nothing is found
-}
+function startSpinAnimation(columns) {
+  const isFinalSpin = state.currentSpin === 1;
+  const startTime = performance.now();
 
-const startSpinAnimation = (columns) => {
-  const itemHeight = 188;
-  const isFirstSpin = state.currentSpin === state.totalSpins;
-  const columnDelay = 700; // Consistent dramatic delay between columns
-  const spinDuration = 3000; // Same longer duration for all spins
-  const decelerationTime = 1500; // Same deceleration time for all spins
-  let startTime = performance.now();
+  const slotColumns = columns.map(
+    (element, index) => new SlotColumn(element, index, isFinalSpin)
+  );
 
-  // Initialize state for each column
-  const columnStates = columns.map((column, index) => ({
-    element: column,
-    speed: 0,
-    offset: 0,
-    phase: "spinning",
-    stopTime: spinDuration + index * columnDelay, // Each column stops later than the previous
-    container: column.closest(".item-container"),
-  }));
-
-  // Reset any existing animations
+  // Reset columns - remove all animations
   columns.forEach((column) => {
     const container = column.closest(".item-container");
     if (container) {
-      container.classList.remove(
-        "landing-flash",
-        "winner-pulsate",
-        "final-glow"
-      );
-      container.style.animation = "none";
+      container.classList.remove("landing-flash", "winner-pulsate");
     }
-    column.style.transition = "none";
     column.style.transform = "translateY(0)";
+    column.style.transition = "none";
   });
+
+  slotColumns.forEach((column) => (column.state = "accelerating"));
 
   function animate(currentTime) {
     const elapsed = currentTime - startTime;
+    let isAnimating = false;
 
-    // Update each column
-    columnStates.forEach((columnState, index) => {
-      // Calculate the column's current speed and position
-      if (elapsed < columnState.stopTime - 1000) {
-        // Full speed phase
-        columnState.speed = ANIMATION_SPEEDS.MAX;
-        columnState.phase = "spinning";
-      } else if (elapsed < columnState.stopTime) {
-        // Deceleration phase
-        const timeLeft = columnState.stopTime - elapsed;
-        const progress = timeLeft / decelerationTime;
-        const easeProgress = progress * progress;
-
-        // Add natural bounce near the end of deceleration
-        if (progress < 0.3) {
-          // Last 30% of deceleration for longer bounce
-          const bounceProgress = 1 - progress / 0.3; // Normalize to 0-1 for bounce
-          // Larger bounce (15px) with a sharper curve
-          const bounceOffset =
-            Math.sin(bounceProgress * Math.PI) *
-            15 *
-            Math.pow(1 - bounceProgress, 0.5);
-          columnState.offset += bounceOffset;
-        }
-
-        // Ensure we're grid-aligned during deceleration
-        const baseOffset =
-          Math.round(columnState.offset / itemHeight) * itemHeight;
-        columnState.speed = ANIMATION_SPEEDS.MAX * easeProgress;
-
-        // Apply speed to base-aligned position
-        if (progress > 0.3) {
-          // Only apply speed before bounce phase
-          columnState.offset = baseOffset + (columnState.speed % itemHeight);
-        }
-
-        columnState.phase = "slowing";
+    slotColumns.forEach((column) => {
+      if (column.state !== "stopped") {
+        isAnimating = true;
+        const deltaTime = column.lastTimestamp
+          ? currentTime - column.lastTimestamp
+          : 16.67;
+        column.update(elapsed, deltaTime);
+        column.lastTimestamp = currentTime;
       }
-
-      // Update position
-      columnState.offset = columnState.offset + columnState.speed;
-      if (columnState.offset >= itemHeight) {
-        columnState.offset = columnState.offset % itemHeight;
-      }
-      // When nearly stopped, align to grid
-      if (columnState.speed < 2) {
-        columnState.offset =
-          Math.round(columnState.offset / itemHeight) * itemHeight;
-      }
-
-      // Apply blur based on speed
-      if (columnState.speed >= ANIMATION_SPEEDS.BLUR.HEAVY) {
-        columnState.element.style.filter = "blur(15px)";
-      } else if (columnState.speed >= ANIMATION_SPEEDS.BLUR.MEDIUM) {
-        columnState.element.style.filter = "blur(10px)";
-      } else if (columnState.speed >= ANIMATION_SPEEDS.BLUR.LIGHT) {
-        columnState.element.style.filter = "blur(5px)";
-      } else {
-        columnState.element.style.filter = "none";
-      }
-
-      // Apply transform
-      columnState.element.style.transform = `translateY(${columnState.offset}px)`;
     });
 
-    // Continue animation if any column is still moving
-    const lastColumn = columnStates[columnStates.length - 1];
-    if (!lastColumn.stopped || elapsed < lastColumn.stopTime + 400) {
+    if (isAnimating) {
       requestAnimationFrame(animate);
     } else {
+      if (isFinalSpin) {
+        // Only add flash animations on the final spin
+        columns.forEach((column, index) => {
+          const container = column.closest(".item-container");
+          if (container) {
+            setTimeout(() => {
+              container.classList.add("landing-flash");
+              setTimeout(() => {
+                container.classList.add("winner-pulsate");
+              }, 300);
+            }, index * 200);
+          }
+        });
+        finalizeSpin(columns);
+      } else {
+        // For non-final spins, just move to the next spin
+        setTimeout(() => {
+          if (state.selectedClass === "random") {
+            displayRandomLoadout();
+          } else {
+            displayManualLoadout(state.selectedClass);
+          }
+        }, 300);
+      }
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+// Other physics constants remain the same...
+function startSpinAnimation(columns) {
+  const isFinalSpin = state.currentSpin === 1;
+  const startTime = performance.now();
+
+  const slotColumns = columns.map(
+    (element, index) => new SlotColumn(element, index, isFinalSpin)
+  );
+
+  // Reset columns - simply reset position, no animation handling here
+  columns.forEach((column) => {
+    column.style.transform = "translateY(0)";
+    column.style.transition = "none";
+  });
+
+  slotColumns.forEach((column) => (column.state = "accelerating"));
+
+  function animate(currentTime) {
+    const elapsed = currentTime - startTime;
+    let isAnimating = false;
+
+    slotColumns.forEach((column) => {
+      if (column.state !== "stopped") {
+        isAnimating = true;
+        const deltaTime = column.lastTimestamp
+          ? currentTime - column.lastTimestamp
+          : 16.67;
+        column.update(elapsed, deltaTime);
+        column.lastTimestamp = currentTime;
+      }
+    });
+
+    if (isAnimating) {
+      requestAnimationFrame(animate);
+    } else {
+      // Simply call finalizeSpin, which will handle all end-of-spin logic
       finalizeSpin(columns);
     }
   }
 
   requestAnimationFrame(animate);
-};
+}
 
-// Stopping boxes one at a time
 function finalizeSpin(columns) {
+  const isFinalSpin = state.currentSpin === 1;
+
+  // Only do flash animation on the final spin
+  if (isFinalSpin) {
+    columns.forEach((column, index) => {
+      const container = column.closest(".item-container");
+      if (container) {
+        // Remove any existing animations first
+        container.classList.remove("landing-flash", "winner-pulsate");
+
+        setTimeout(() => {
+          container.classList.add("landing-flash");
+          setTimeout(() => {
+            container.classList.add("winner-pulsate");
+          }, 300);
+        }, index * 200);
+      }
+    });
+  }
+
   if (state.currentSpin > 1) {
     state.currentSpin--;
     updateSpinCountdown();
 
-    // Short delay before next spin
     setTimeout(() => {
       if (state.selectedClass === "random") {
         displayRandomLoadout();
       } else {
         displayManualLoadout(state.selectedClass);
       }
-    }, 1500); // Wait 1.5s before next spin
+    }, 300);
   } else {
-    // Reset everything after the final spin
     state.isSpinning = false;
     state.currentSpin = 1;
     state.totalSpins = 0;
     state.selectedGadgets.clear();
     state.selectedClass = null;
 
-    // Reset all buttons
-    spinButtons.forEach((button) => {
-      button.classList.remove("active", "selected");
-      button.removeAttribute("disabled");
-    });
+    document
+      .querySelectorAll(".class-button, .spin-button")
+      .forEach((button) => {
+        button.classList.remove("active", "selected");
+        button.removeAttribute("disabled");
+      });
 
-    classButtons.forEach((button) => {
-      button.classList.remove("active", "selected");
-      button.removeAttribute("disabled");
-    });
-
-    spinSelection.classList.add("disabled");
-
-    const spinSelectionHeading = document.querySelector("#spinSelection h2");
-    if (spinSelectionHeading) {
-      spinSelectionHeading.style.opacity = "0.5";
-    }
+    document.getElementById("spinSelection").classList.add("disabled");
   }
 }
 
-const handleSpinComplete = (columns) => {
-  columns.forEach((column, index) => {
-    column.style.willChange = "auto";
-    const itemContainer = column.closest(".item-container");
-    const winner = column.querySelector(".winner");
-
-    if (winner) {
-      // Reset any existing animations
-      winner.style.animation = "none";
-      winner.offsetHeight; // Force reflow
-      winner.style.animation = null;
-
-      // Add selected class with delay based on index
-      setTimeout(() => {
-        winner.classList.add("selected");
-
-        // Add final-glow to the container
-        if (itemContainer) {
-          // Remove any existing animation
-          itemContainer.style.animation = "none";
-          itemContainer.offsetHeight; // Force reflow
-          itemContainer.style.animation = null;
-
-          // Add the glow class
-          itemContainer.classList.add("final-glow");
-        }
-      }, index * 200);
-    }
-  });
-
-  if (state.currentSpin > 1) {
-    state.currentSpin--;
-    updateSpinCountdown();
-
-    setTimeout(() => {
-      if (state.selectedClass === "random") {
-        displayRandomLoadout();
-      } else {
-        displayManualLoadout(state.selectedClass);
-      }
-    }, 1000);
-  } else {
-    // Reset everything after the final spin
-    state.isSpinning = false;
-    state.currentSpin = 1;
-    state.totalSpins = 0;
-    state.selectedGadgets.clear();
-    state.selectedClass = null; // Reset selected class
-
-    // Reset all spin buttons
-    spinButtons.forEach((button) => {
-      button.classList.remove("active", "selected");
-      button.removeAttribute("disabled");
-    });
-
-    // Reset class buttons
-    classButtons.forEach((button) => {
-      button.classList.remove("active", "selected");
-      button.removeAttribute("disabled");
-    });
-
-    // Reset spin selection section
-    spinSelection.classList.add("disabled");
-
-    // Update the step headings if you want
-    const spinSelectionHeading = document.querySelector("#spinSelection h2");
-    if (spinSelectionHeading) {
-      spinSelectionHeading.style.opacity = "0.5";
-    }
-    // Clean up animation classes
-    document.querySelectorAll(".item-container").forEach((container) => {
-      container.classList.remove(
-        "landing-flash",
-        "winner-pulsate",
-        "final-glow"
-      );
-    });
-  }
-};
-
-const updateSpinCountdown = () => {
-  // Remove 'active' and 'selected' from ALL spin buttons
+function updateSpinCountdown() {
   spinButtons.forEach((button) => {
     button.classList.remove("active", "selected");
   });
 
-  // Highlight only the button corresponding to the current remaining spins
   const currentButton = [...spinButtons].find(
     (b) => parseInt(b.dataset.spins) === state.currentSpin
   );
   if (currentButton) {
     currentButton.classList.add("active");
   }
-};
+}
 
-const createItemContainer = (items, winningItem = null, isGadget = false) => {
+function createItemContainer(items, winningItem = null, isGadget = false) {
   if (isGadget) {
     return items
       .map(
         (item, index) => `
-                    <div class="itemCol ${index === 4 ? "winner" : ""}">
-                        <img src="images/${item.replace(
-                          / /g,
-                          "_"
-                        )}.webp" alt="${item}">
-                        <p>${item}</p>
-                    </div>
-                `
+        <div class="itemCol ${index === 4 ? "winner" : ""}">
+          <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+          <p>${item}</p>
+        </div>
+      `
       )
       .join("");
   }
@@ -635,20 +602,16 @@ const createItemContainer = (items, winningItem = null, isGadget = false) => {
   return repeatedItems
     .map(
       (item, index) => `
-                <div class="itemCol ${index === 4 ? "winner" : ""}">
-                    <img src="images/${item.replace(
-                      / /g,
-                      "_"
-                    )}.webp" alt="${item}">
-                    <p>${item}</p>
-                </div>
-            `
+      <div class="itemCol ${index === 4 ? "winner" : ""}">
+        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+        <p>${item}</p>
+      </div>
+    `
     )
     .join("");
-};
+}
 
-// Add click handlers
-
+// Event Listeners
 classButtons.forEach((button) => {
   button.addEventListener("click", () => {
     if (state.isSpinning) return;
@@ -657,27 +620,21 @@ classButtons.forEach((button) => {
     button.classList.add("selected", "active");
 
     if (button.dataset.class === "random") {
-      // Choose random class
       const classes = ["Light", "Medium", "Heavy"];
-      // Using a more explicit randomization
-      const randomIndex = Math.floor(Math.random() * 3); // 0, 1, or 2
+      const randomIndex = Math.floor(Math.random() * 3);
       const randomClass = classes[randomIndex];
       state.selectedClass = randomClass;
-      console.log("Random class selected:", randomClass); // Debug log
 
-      // Illuminate the randomly selected class button
       classButtons.forEach((b) => {
         if (b.dataset.class === randomClass) {
           b.classList.add("selected", "active");
         }
       });
 
-      // Choose random number of spins (1-5)
       const randomSpins = Math.floor(Math.random() * 5) + 1;
       state.totalSpins = randomSpins;
       state.currentSpin = randomSpins;
 
-      // Illuminate the randomly selected spin button
       spinButtons.forEach((b) => {
         if (parseInt(b.dataset.spins) === randomSpins) {
           b.classList.add("selected", "active");
@@ -686,7 +643,6 @@ classButtons.forEach((button) => {
         }
       });
 
-      // Start spinning immediately
       spinLoadout();
     } else {
       state.selectedClass = button.dataset.class;
@@ -704,7 +660,6 @@ spinButtons.forEach((button) => {
     state.totalSpins = parseInt(button.dataset.spins);
     state.currentSpin = state.totalSpins;
 
-    // Only spin if a class is selected
     if (state.selectedClass) {
       spinLoadout();
     }
@@ -713,7 +668,6 @@ spinButtons.forEach((button) => {
 
 // Copy loadout functionality
 document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
-  // Get all item containers after spin has completed
   const itemContainers = document.querySelectorAll(
     ".slot-machine-wrapper .items-container .item-container"
   );
@@ -723,18 +677,14 @@ document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
     return;
   }
 
-  // Get the final items that are actually visible in each container
   const selectedItems = Array.from(itemContainers).map((container) => {
-    // Get the scroll container
     const scrollContainer = container.querySelector(".scroll-container");
     if (!scrollContainer) return "Unknown";
 
-    // Find the item in the winning position (should have class 'selected' or be visible)
     const allItems = scrollContainer.querySelectorAll(".itemCol");
     const visibleItem = Array.from(allItems).find((item) => {
       const rect = item.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
-      // Check if this item is in the visible/winning position
       return (
         rect.top >= containerRect.top &&
         rect.bottom <= containerRect.bottom &&
@@ -755,7 +705,6 @@ document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
     return;
   }
 
-  // Get the currently selected class
   const activeClassButton = document.querySelector(
     ".class-button.selected, .class-button.active"
   );
