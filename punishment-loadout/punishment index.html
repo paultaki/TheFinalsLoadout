@@ -15,9 +15,7 @@
 
       body {
         font-family: "Oswald", sans-serif;
-        background: linear-gradient(-45deg, #1d1a21, #2a1f2d, #1f2a2d, #201c24);
-        background-size: 400% 400%;
-        animation: gradientShift 20s ease infinite;
+        background-color: #1d1a21;
         color: #fff;
         min-height: 100vh;
         padding: 20px;
@@ -37,10 +35,22 @@
         margin: 20px 0;
       }
 
+      .skull {
+        width: 50px;
+        height: auto;
+      }
+
       .mainTitle {
         color: #ff0000;
-        font-size: 2rem;
+        font-size: 2.5rem;
         margin: 0;
+        text-transform: uppercase;
+      }
+
+      .headerSubtext {
+        color: #888;
+        margin: 10px 0 30px;
+        font-size: 1.2rem;
       }
 
       .items-container {
@@ -51,12 +61,15 @@
       }
 
       .item-container {
+        text-align: center;
         width: 154px;
         border: 2px solid rgba(255, 255, 255, 0.1);
         padding: 0 5px;
         border-radius: 5px;
         height: 191px;
         overflow: hidden;
+        display: flex;
+        align-items: flex-end;
         background-color: #fff;
         position: relative;
       }
@@ -70,10 +83,13 @@
       }
 
       .itemCol img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+        border-radius: 5px;
         width: 140px;
         height: 144px;
         object-fit: cover;
-        border-radius: 5px;
       }
 
       .itemCol p {
@@ -84,7 +100,11 @@
         white-space: nowrap;
       }
 
-      #randomLoadoutButton {
+      .selected + .itemCol {
+        opacity: 0;
+      }
+
+      #generateButton {
         background: transparent;
         color: #fff;
         border: 2px solid #ff4f4f;
@@ -99,11 +119,11 @@
         margin: 20px 0;
       }
 
-      #randomLoadoutButton:hover {
+      #generateButton:hover {
         background-color: #ff4f4f;
       }
 
-      #randomLoadoutButton:disabled {
+      #generateButton:disabled {
         opacity: 0.5;
         cursor: not-allowed;
       }
@@ -124,6 +144,7 @@
       }
 
       .funny-joke-container {
+        height: 32px;
         margin: 20px 0;
         min-height: 32px;
         opacity: 0;
@@ -135,6 +156,7 @@
       }
 
       .funny-joke {
+        margin: 0;
         color: #888;
         font-size: 18px;
       }
@@ -200,38 +222,14 @@
           opacity: 1;
         }
       }
-
-      @keyframes gradientShift {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="header-with-crossbones">
-        <img
-          src="images/punishment.webp"
-          alt="Crossbones"
-          class="crossbones"
-          width="50"
-          height="50"
-        />
+        <img src="images/punishment.webp" alt="Crossbones" class="skull" />
         <h1 class="mainTitle">Generate Your Punishment</h1>
-        <img
-          src="images/punishment.webp"
-          alt="Crossbones"
-          class="crossbones"
-          width="50"
-          height="50"
-        />
+        <img src="images/punishment.webp" alt="Crossbones" class="skull" />
       </div>
       <p class="headerSubtext">
         The Ultimate Test: Can You Survive This Loadout?
@@ -239,14 +237,14 @@
 
       <div id="class-indicator" class="class-indicator"></div>
 
-      <button id="randomLoadoutButton" class="random outlineBtnStyle">
-        Generate Your Punishment
+      <button id="generateButton" class="random outlineBtnStyle">
+        GENERATE YOUR PUNISHMENT
       </button>
 
       <div id="output"></div>
 
       <div class="warning-section">
-        <h3>⚠️ Warning</h3>
+        <h3>⚠️ Warning ⚠️</h3>
         <ul>
           <li>Strategic disadvantages</li>
           <li>Unexpected deaths</li>
@@ -291,7 +289,7 @@
         },
         Heavy: {
           weapons: ["KS-23", "MGL32", "Spear"],
-          specializations: ["Charge_N_Slam", "Goo Gun"],
+          specializations: ["Charge N Slam", "Goo Gun"],
           gadgets: [
             "Anti-Gravity Cube",
             "Lockbolt Launcher",
@@ -382,7 +380,7 @@
         });
 
         let allStopped = new Array(columns.length).fill(false);
-        document.getElementById("randomLoadoutButton").disabled = true;
+        document.getElementById("generateButton").disabled = true;
 
         const startTime = Date.now();
 
@@ -427,7 +425,7 @@
           if (animationRunning) {
             requestAnimationFrame(animate);
           } else {
-            document.getElementById("randomLoadoutButton").disabled = false;
+            document.getElementById("generateButton").disabled = false;
             if (callback) callback();
           }
         };
@@ -487,7 +485,7 @@
         }, 50);
       };
 
-      document.getElementById("randomLoadoutButton").onclick = () => {
+      document.getElementById("generateButton").onclick = () => {
         const classes = ["Light", "Medium", "Heavy"];
         const randomClass = classes[Math.floor(Math.random() * classes.length)];
         const loadout = loadouts[randomClass];
