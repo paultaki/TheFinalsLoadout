@@ -17,16 +17,58 @@ document.addEventListener("DOMContentLoaded", () => {
   // Code continues...
 });
 
+// Animation Constants
+const ANIMATION_PHASES = {
+  ACCELERATION: "acceleration",
+  HIGH_SPEED: "highSpeed",
+  DECELERATION: "deceleration",
+  STOPPING: "stopping",
+};
+
+const ANIMATION_TIMINGS = {
+  // Phase durations in milliseconds
+  INITIAL_SPIN: {
+    ACCELERATION: 500,
+    HIGH_SPEED: 2000,
+    DECELERATION: 1500,
+    STOPPING: 800,
+  },
+  // Shorter durations for subsequent spins
+  REGULAR_SPIN: {
+    ACCELERATION: 300,
+    HIGH_SPEED: 1200,
+    DECELERATION: 1000,
+    STOPPING: 500,
+  },
+  // Delays between column stops
+  COLUMN_STOP_DELAY: 300,
+  FINAL_COLUMN_DELAY: 500,
+};
+
+const ANIMATION_SPEEDS = {
+  MIN: 2, // Minimum speed (pixels per frame)
+  MAX: 50, // Maximum speed during high-speed phase
+  BLUR: {
+    // Speed thresholds for blur effects
+    HEAVY: 40,
+    MEDIUM: 25,
+    LIGHT: 10,
+  },
+};
+
 // Loadouts object
 const loadouts = {
   Light: {
     weapons: [
       "93R",
       "Dagger",
+      "SR-84",
+      "SH190",
       "LH1",
       "M26 Matter",
       "Recurve Bow",
       "Sword",
+      "M11",
       "V9S",
       "XP-54",
       "Throwing Knives",
@@ -38,8 +80,9 @@ const loadouts = {
       "Glitch Grenade",
       "Gravity Vortex",
       "Sonar Grenade",
-      "Stun Gun",
       "Thermal Bore",
+      "Gas Grenade",
+      "Gravity Vortex",
       "Thermal Vision",
       "Tracking Dart",
       "Vanishing Bomb",
@@ -56,6 +99,7 @@ const loadouts = {
       "Cerberus 12GA",
       "Dual Blades",
       "FAMAS",
+      "CL-40",
       "FCAR",
       "Model 1887",
       "Pike-556",
@@ -89,6 +133,7 @@ const loadouts = {
       "Lewis Gun",
       "M60",
       "M32GL",
+      "SA 1216",
       "Sledgehammer",
       "SHAK-50",
       "Spear",
@@ -97,6 +142,7 @@ const loadouts = {
     gadgets: [
       "Anti-Gravity Cube",
       "Barricade",
+      "C4",
       "Dome Shield",
       "Lockbolt Launcher",
       "Pyro Mine",
@@ -272,12 +318,55 @@ const spinLoadout = (spins) => {
   }
 };
 
+// Function to update slot image based on speed phase
+function updateSlotImage(slotElement, baseImageName, state) {
+  let imagePath;
+  switch (state) {
+    case "fast":
+      imagePath = `${baseImageName}_blur2.webp`; // Medium blur
+      break;
+    case "medium":
+      imagePath = `${baseImageName}_blur1.webp`; // Light blur
+      break;
+    case "slow":
+      imagePath = `${baseImageName}.webp`; // Clear image
+      break;
+  }
+  slotElement.src = `images/${imagePath}`;
+}
+
+function getRandomItemFromColumn(column, loadout) {
+  if (column.dataset.type === "weapon") {
+    return getRandomUniqueItems(loadout.weapons, 1)[0];
+  }
+  if (column.dataset.type === "specialization") {
+    return getRandomUniqueItems(loadout.specializations, 1)[0];
+  }
+  if (column.dataset.type === "gadget") {
+    return getRandomUniqueItems(loadout.gadgets, 1)[0];
+  }
+  return "placeholder"; // Default fallback if nothing is found
+}
+
 const startSpinAnimation = (columns) => {
   const itemHeight = 188;
-  const baseSpeed = navigator.userAgent.includes("iPhone") ? 10 : 20;
-  const isFinalSpin = state.currentSpin === 1;
+  const isFirstSpin = state.currentSpin === state.totalSpins;
+  const columnDelay = 700; // Consistent dramatic delay between columns
+  const spinDuration = 3000; // Same longer duration for all spins
+  const decelerationTime = 1500; // Same deceleration time for all spins
+  let startTime = performance.now();
 
-  // Reset any existing animation classes first
+  // Initialize state for each column
+  const columnStates = columns.map((column, index) => ({
+    element: column,
+    speed: 0,
+    offset: 0,
+    phase: "spinning",
+    stopTime: spinDuration + index * columnDelay, // Each column stops later than the previous
+    container: column.closest(".item-container"),
+  }));
+
+  // Reset any existing animations
   columns.forEach((column) => {
     const container = column.closest(".item-container");
     if (container) {
@@ -286,109 +375,133 @@ const startSpinAnimation = (columns) => {
         "winner-pulsate",
         "final-glow"
       );
+      container.style.animation = "none";
     }
+    column.style.transition = "none";
+    column.style.transform = "translateY(0)";
   });
 
-  // Ensure columns have GPU hints
-  columns.forEach((column) => {
-    column.style.willChange = "transform";
-    column.style.backfaceVisibility = "hidden";
-    column.style.perspective = "1000px";
-    column.style.transform = "translate3d(0,0,0)";
-  });
+  function animate(currentTime) {
+    const elapsed = currentTime - startTime;
 
-  const stopTimes = columns.map((_, index) => {
-    return isFinalSpin ? 500 + index * 1000 : 700 + index * 150;
-  });
+    // Update each column
+    columnStates.forEach((columnState, index) => {
+      // Calculate the column's current speed and position
+      if (elapsed < columnState.stopTime - 1000) {
+        // Full speed phase
+        columnState.speed = ANIMATION_SPEEDS.MAX;
+        columnState.phase = "spinning";
+      } else if (elapsed < columnState.stopTime) {
+        // Deceleration phase
+        const timeLeft = columnState.stopTime - elapsed;
+        const progress = timeLeft / decelerationTime;
+        const easeProgress = progress * progress;
 
-  let allStopped = new Array(columns.length).fill(false);
-  const startTime = performance.now();
-  const totalDuration = Math.max(...stopTimes) + 1000;
-
-  let animationsApplied = new Array(columns.length).fill(false);
-
-  const animate = (currentTime) => {
-    const timeElapsed = currentTime - startTime;
-
-    columns.forEach((column, index) => {
-      if (allStopped[index] && !animationsApplied[index]) {
-        // Only apply animations once per column when it stops
-        animationsApplied[index] = true;
-        const selectedItem = column.querySelector(".winner");
-        if (selectedItem && isFinalSpin) {
-          const container = column.closest(".item-container");
-          if (!container) return;
-
-          // Clear any existing classes first
-          container.classList.remove(
-            "landing-flash",
-            "winner-pulsate",
-            "final-glow"
-          );
-
-          // Initial bounce effect
-          column.style.transform = `translate3d(0,${itemHeight + 8}px,0)`;
-
-          // Sequence of animations with proper timing
-          setTimeout(() => {
-            // Add flash effect
-            container.classList.add("landing-flash");
-
-            // Bounce back to final position
-            column.style.transform = `translate3d(0,${itemHeight}px,0)`;
-
-            // After flash completes, start the continuous pulse
-            setTimeout(() => {
-              if (container) {
-                container.classList.remove("landing-flash");
-                container.classList.add("winner-pulsate", "final-glow");
-              }
-            }, 500);
-          }, index * 200);
+        // Add natural bounce near the end of deceleration
+        if (progress < 0.3) {
+          // Last 30% of deceleration for longer bounce
+          const bounceProgress = 1 - progress / 0.3; // Normalize to 0-1 for bounce
+          // Larger bounce (15px) with a sharper curve
+          const bounceOffset =
+            Math.sin(bounceProgress * Math.PI) *
+            15 *
+            Math.pow(1 - bounceProgress, 0.5);
+          columnState.offset += bounceOffset;
         }
+
+        // Ensure we're grid-aligned during deceleration
+        const baseOffset =
+          Math.round(columnState.offset / itemHeight) * itemHeight;
+        columnState.speed = ANIMATION_SPEEDS.MAX * easeProgress;
+
+        // Apply speed to base-aligned position
+        if (progress > 0.3) {
+          // Only apply speed before bounce phase
+          columnState.offset = baseOffset + (columnState.speed % itemHeight);
+        }
+
+        columnState.phase = "slowing";
       }
 
-      if (!allStopped[index]) {
-        // Calculate position based on time
-        const scrollSpeed = baseSpeed * (1 + index * 0.2);
-        const offset = (timeElapsed * scrollSpeed) % itemHeight;
-        column.style.transform = `translate3d(0,${offset}px,0)`;
-
-        // Check if it's time to stop this column
-        if (timeElapsed >= stopTimes[index]) {
-          allStopped[index] = true;
-          column.style.transform = `translate3d(0,${itemHeight}px,0)`;
-        }
+      // Update position
+      columnState.offset = columnState.offset + columnState.speed;
+      if (columnState.offset >= itemHeight) {
+        columnState.offset = columnState.offset % itemHeight;
       }
+      // When nearly stopped, align to grid
+      if (columnState.speed < 2) {
+        columnState.offset =
+          Math.round(columnState.offset / itemHeight) * itemHeight;
+      }
+
+      // Apply blur based on speed
+      if (columnState.speed >= ANIMATION_SPEEDS.BLUR.HEAVY) {
+        columnState.element.style.filter = "blur(15px)";
+      } else if (columnState.speed >= ANIMATION_SPEEDS.BLUR.MEDIUM) {
+        columnState.element.style.filter = "blur(10px)";
+      } else if (columnState.speed >= ANIMATION_SPEEDS.BLUR.LIGHT) {
+        columnState.element.style.filter = "blur(5px)";
+      } else {
+        columnState.element.style.filter = "none";
+      }
+
+      // Apply transform
+      columnState.element.style.transform = `translateY(${columnState.offset}px)`;
     });
 
-    // Continue animation if not all columns have stopped
-    if (
-      !allStopped.every((stopped) => stopped) ||
-      timeElapsed < totalDuration
-    ) {
+    // Continue animation if any column is still moving
+    const lastColumn = columnStates[columnStates.length - 1];
+    if (!lastColumn.stopped || elapsed < lastColumn.stopTime + 400) {
       requestAnimationFrame(animate);
     } else {
-      // Ensure all containers maintain their final state
-      columns.forEach((column, index) => {
-        const container = column.closest(".item-container");
-        if (container && isFinalSpin) {
-          // Add a slight delay for the last items to ensure they get their glow
-          setTimeout(() => {
-            container.classList.add("winner-pulsate", "final-glow");
-          }, index * 50);
-        }
-      });
-
-      // Delay the spin complete handler slightly to ensure all animations are done
-      setTimeout(() => {
-        handleSpinComplete(columns);
-      }, 500);
+      finalizeSpin(columns);
     }
-  };
+  }
 
   requestAnimationFrame(animate);
 };
+
+// Stopping boxes one at a time
+function finalizeSpin(columns) {
+  if (state.currentSpin > 1) {
+    state.currentSpin--;
+    updateSpinCountdown();
+
+    // Short delay before next spin
+    setTimeout(() => {
+      if (state.selectedClass === "random") {
+        displayRandomLoadout();
+      } else {
+        displayManualLoadout(state.selectedClass);
+      }
+    }, 1500); // Wait 1.5s before next spin
+  } else {
+    // Reset everything after the final spin
+    state.isSpinning = false;
+    state.currentSpin = 1;
+    state.totalSpins = 0;
+    state.selectedGadgets.clear();
+    state.selectedClass = null;
+
+    // Reset all buttons
+    spinButtons.forEach((button) => {
+      button.classList.remove("active", "selected");
+      button.removeAttribute("disabled");
+    });
+
+    classButtons.forEach((button) => {
+      button.classList.remove("active", "selected");
+      button.removeAttribute("disabled");
+    });
+
+    spinSelection.classList.add("disabled");
+
+    const spinSelectionHeading = document.querySelector("#spinSelection h2");
+    if (spinSelectionHeading) {
+      spinSelectionHeading.style.opacity = "0.5";
+    }
+  }
+}
 
 const handleSpinComplete = (columns) => {
   columns.forEach((column, index) => {
@@ -680,3 +793,24 @@ document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
       alert("Failed to copy loadout to clipboard");
     });
 });
+
+function resetSpin() {
+  state.isSpinning = false;
+  state.currentSpin = 1;
+  state.totalSpins = 0;
+  state.selectedGadgets.clear();
+  state.selectedClass = null;
+
+  // Reset UI elements
+  spinButtons.forEach((button) => {
+    button.classList.remove("active", "selected");
+    button.removeAttribute("disabled");
+  });
+
+  classButtons.forEach((button) => {
+    button.classList.remove("active", "selected");
+    button.removeAttribute("disabled");
+  });
+
+  spinSelection.classList.add("disabled");
+}
