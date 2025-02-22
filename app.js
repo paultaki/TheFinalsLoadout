@@ -307,6 +307,8 @@ class SlotColumn {
     this.state = "waiting";
     this.lastTimestamp = null;
     this.isFinalSpin = isFinalSpin;
+    this.animationStartTime = null;
+    this.maxAnimationDuration = 10000; // 10 second safety timeout
 
     const timing = isFinalSpin
       ? PHYSICS.TIMING.FINAL_SPIN
@@ -320,9 +322,22 @@ class SlotColumn {
   }
 
   update(elapsed, deltaTime) {
+    // Safety check for runaway animations
+    if (!this.animationStartTime) {
+      this.animationStartTime = performance.now();
+    } else if (
+      performance.now() - this.animationStartTime >
+      this.maxAnimationDuration
+    ) {
+      console.warn("Animation timeout - forcing stop");
+      this.forceStop();
+      return;
+    }
+
     if (this.state === "stopped") return;
 
-    const dt = deltaTime / 1000;
+    // Ensure deltaTime is reasonable
+    const dt = Math.min(deltaTime, 50) / 1000; // Cap at 50ms, convert to seconds
 
     switch (this.state) {
       case "accelerating":
@@ -334,10 +349,9 @@ class SlotColumn {
         break;
 
       case "spinning":
-        this.velocity = PHYSICS.MAX_VELOCITY;
-
         if (elapsed >= this.totalDuration - this.decelerationTime) {
           this.state = "decelerating";
+          // Ensure target position is aligned with item height
           this.targetPosition =
             Math.ceil(this.position / PHYSICS.ITEM_HEIGHT) *
             PHYSICS.ITEM_HEIGHT;
@@ -347,11 +361,18 @@ class SlotColumn {
       case "decelerating":
         this.velocity += PHYSICS.DECELERATION * dt;
 
+        // Added safety check for deceleration
+        if (
+          Math.abs(this.position - this.targetPosition) < 1 &&
+          Math.abs(this.velocity) < 50
+        ) {
+          this.forceStop();
+          return;
+        }
+
         if (this.velocity <= 0) {
           if (Math.abs(this.velocity) < 100) {
-            this.velocity = 0;
-            this.position = this.targetPosition;
-            this.state = "stopped";
+            this.forceStop();
           } else {
             this.velocity = -this.velocity * PHYSICS.BOUNCE_DAMPENING;
             this.state = "bouncing";
@@ -362,24 +383,34 @@ class SlotColumn {
       case "bouncing":
         this.velocity += PHYSICS.DECELERATION * 1.2 * dt;
 
+        // Enhanced bounce completion check
         if (
-          Math.abs(this.velocity) < 50 &&
+          Math.abs(this.velocity) < 50 ||
           Math.abs(this.position - this.targetPosition) < 5
         ) {
-          this.velocity = 0;
-          this.position = this.targetPosition;
-          this.state = "stopped";
+          this.forceStop();
+          return;
         }
         break;
     }
 
+    // Update position with boundary checking
     this.position += this.velocity * dt;
-    const wrappedPosition = this.position % PHYSICS.ITEM_HEIGHT;
-    this.position =
-      wrappedPosition >= 0
-        ? wrappedPosition
-        : wrappedPosition + PHYSICS.ITEM_HEIGHT;
+    this.position = this.normalizePosition(this.position);
+    this.updateVisuals();
+  }
 
+  normalizePosition(pos) {
+    const wrappedPosition = pos % PHYSICS.ITEM_HEIGHT;
+    return wrappedPosition >= 0
+      ? wrappedPosition
+      : wrappedPosition + PHYSICS.ITEM_HEIGHT;
+  }
+
+  forceStop() {
+    this.velocity = 0;
+    this.position = this.targetPosition;
+    this.state = "stopped";
     this.updateVisuals();
   }
 
@@ -412,6 +443,18 @@ function startSpinAnimation(columns) {
     column.style.transition = "none";
   });
 
+  // Add locked tags to containers
+  columns.forEach((column) => {
+    const container = column.closest(".item-container");
+    const existingTag = container.querySelector(".locked-tag");
+    if (!existingTag) {
+      const lockedTag = document.createElement("div");
+      lockedTag.className = "locked-tag";
+      lockedTag.textContent = "Locked In!";
+      container.appendChild(lockedTag);
+    }
+  });
+
   slotColumns.forEach((column) => (column.state = "accelerating"));
 
   function animate(currentTime) {
@@ -426,6 +469,13 @@ function startSpinAnimation(columns) {
           : 16.67;
         column.update(elapsed, deltaTime);
         column.lastTimestamp = currentTime;
+      } else {
+        // Show locked tag when column stops
+        const container = column.element.closest(".item-container");
+        const tag = container.querySelector(".locked-tag");
+        if (tag) {
+          tag.classList.add("show");
+        }
       }
     });
 
@@ -508,24 +558,7 @@ function startSpinAnimation(columns) {
 function finalizeSpin(columns) {
   const isFinalSpin = state.currentSpin === 1;
 
-  // Only do flash animation on the final spin
-  if (isFinalSpin) {
-    columns.forEach((column, index) => {
-      const container = column.closest(".item-container");
-      if (container) {
-        // Remove any existing animations first
-        container.classList.remove("landing-flash", "winner-pulsate");
-
-        setTimeout(() => {
-          container.classList.add("landing-flash");
-          setTimeout(() => {
-            container.classList.add("winner-pulsate");
-          }, 300);
-        }, index * 200);
-      }
-    });
-  }
-
+  // Handle the spin count first
   if (state.currentSpin > 1) {
     state.currentSpin--;
     updateSpinCountdown();
@@ -537,7 +570,36 @@ function finalizeSpin(columns) {
         displayManualLoadout(state.selectedClass);
       }
     }, 300);
-  } else {
+    return; // Exit early if not final spin
+  }
+
+  // Only proceed with final spin animations if it's the last spin
+  if (isFinalSpin) {
+    columns.forEach((column, index) => {
+      const container = column.closest(".item-container");
+      if (container) {
+        // Clear any existing locked tags
+        const existingTags = container.querySelectorAll(".locked-tag");
+        existingTags.forEach((tag) => tag.remove());
+
+        // Create new locked tag
+        const lockedTag = document.createElement("div");
+        lockedTag.className = "locked-tag";
+        lockedTag.textContent = "LOCKED IN";
+        container.appendChild(lockedTag);
+
+        setTimeout(() => {
+          container.classList.add("landing-flash");
+          lockedTag.classList.add("show");
+
+          setTimeout(() => {
+            container.classList.add("winner-pulsate");
+          }, 300);
+        }, index * 200);
+      }
+    });
+
+    // Reset state after final spin
     state.isSpinning = false;
     state.currentSpin = 1;
     state.totalSpins = 0;

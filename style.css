@@ -1541,3 +1541,47 @@ img {
 .change-details li {
   margin: 0.5rem 0;
 }
+
+/* Add these styles to your existing CSS */
+
+.locked-tag {
+  position: absolute;
+  top: 5px;
+  right: -5px;
+  background: linear-gradient(45deg, #ffb700, #ff7b00);
+  color: black;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  transform: scale(0);
+  opacity: 0;
+  z-index: 10;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.locked-tag.show {
+  animation: tagPop 0.3s ease-out forwards;
+}
+
+@keyframes tagPop {
+  0% {
+      transform: scale(0) rotate(-10deg);
+      opacity: 0;
+  }
+  50% {
+      transform: scale(1.2) rotate(5deg);
+      opacity: 1;
+  }
+  100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+  }
+}
+
+/* Make sure item containers have relative positioning for the locked tag */
+.item-container {
+  position: relative;
+  padding-top: 15px !important; /* Add padding to accommodate the tag */
+}

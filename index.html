@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
   <head>
     <!-- Google tag (gtag.js) -->
     <script
@@ -13,7 +12,6 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-GVGKYFGZ1Z");
     </script>
     <meta charset="UTF-8" />
@@ -102,6 +100,49 @@
         min-height: 100vh;
       }
     </style>
+
+    <!-- FAQ Section Styles -->
+    <style>
+      .faq-section {
+        margin: 40px auto;
+        max-width: 800px;
+        background: #222;
+        border-radius: 8px;
+        padding: 20px;
+      }
+      .faq-button {
+        background: #ffb700;
+        color: black;
+        font-weight: 900;
+        font-size: 1.2rem;
+        padding: 16px 30px;
+        border-radius: 8px;
+        border: 3px solid #cc8800;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .faq-content {
+        display: none;
+        margin-top: 20px;
+        text-align: left;
+      }
+      .faq-content.open {
+        display: block;
+      }
+      .faq-content-inner {
+        padding: 0 10px;
+      }
+      .faq-item {
+        margin-bottom: 20px;
+      }
+      .faq-item h3 {
+        margin-bottom: 8px;
+      }
+    </style>
   </head>
 
   <body class="flexStyle">
@@ -114,7 +155,6 @@
           width="200"
           height="auto"
         />
-
         <h1 class="mainTitle">
           The Finals Loadout Generator - Spin for Random Builds!
         </h1>
@@ -175,7 +215,6 @@
                     height="80"
                     loading="lazy"
                   />
-
                   <p>Weapon</p>
                 </div>
                 <div class="placeholder-container">
@@ -186,7 +225,6 @@
                     height="80"
                     loading="lazy"
                   />
-
                   <p>Specialization</p>
                 </div>
                 <div class="placeholder-container">
@@ -197,7 +235,6 @@
                     height="80"
                     loading="lazy"
                   />
-
                   <p>Gadget 1</p>
                 </div>
                 <div class="placeholder-container">
@@ -208,7 +245,6 @@
                     height="80"
                     loading="lazy"
                   />
-
                   <p>Gadget 2</p>
                 </div>
                 <div class="placeholder-container">
@@ -219,7 +255,6 @@
                     height="80"
                     loading="lazy"
                   />
-
                   <p>Gadget 3</p>
                 </div>
               </div>
@@ -245,7 +280,6 @@
     <section class="patch-notes">
       <div class="notes-container">
         <h2>Recent Buffs, Nerfs, and Fixes from The Finals Patch Notes</h2>
-
         <div class="patch-header">
           <span class="patch-date">PATCH DATE: FEBRUARY 19, 2025</span>
         </div>
@@ -253,7 +287,6 @@
         <!-- Balance Changes -->
         <div class="patch-section">
           <h3>Balance Changes</h3>
-
           <div class="change-item nerf">
             <div class="change-title">Stun Gun (Rework)</div>
             <div class="change-details">
@@ -261,7 +294,6 @@
               as a crowd control tool.
             </div>
           </div>
-
           <div class="change-item adjustment">
             <div class="change-title">Frag Grenade (Adjustment)</div>
             <div class="change-details">
@@ -275,7 +307,6 @@
               </ul>
             </div>
           </div>
-
           <div class="change-item buff">
             <div class="change-title">Breach Charge (Buff)</div>
             <div class="change-details">
@@ -310,8 +341,41 @@
       </div>
     </section>
 
-    <!-- Replace old FAQ section with this div -->
-    <div id="faq-root"></div>
+    <!-- New FAQ Section -->
+    <section class="faq-section">
+      <div class="container">
+        <button class="faq-button" id="faq-toggle-button">
+          <h2 class="faq-title">Frequently Asked Questions</h2>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-content" id="faq-content">
+          <div class="faq-content-inner">
+            <div class="faq-item">
+              <h3>Are Season 5 weapons included?</h3>
+              <p>
+                Yes, this loadout randomizer is fully updated with all Season 5
+                weapons, builds, and gear, ensuring you can randomly generate
+                the most current options available in The Finals.
+              </p>
+            </div>
+            <div class="faq-item">
+              <h3>How do I use this tool?</h3>
+              <p>
+                Using this loadout randomizer is simple! Click on
+                <strong>Light</strong>, <strong>Medium</strong>, or
+                <strong>Heavy</strong> to generate a loadout tailored to a
+                specific class, or select <strong>Random</strong> to embrace the
+                chaos with a completely unpredictable loadout.
+              </p>
+              <p>
+                Want to share your randomized loadout with teammates? Just hit
+                <strong>'Copy Loadout'</strong> and send it to them.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <footer class="footerSection">
       <div class="container">
@@ -328,19 +392,42 @@
             <a href="legal/legal.html">Legal Disclaimer</a> | 1-800-FAT-MOMS
             Production
           </p>
-          <a href="https://www.buymeacoffee.com/dismiss3d">
-            <img
-              src="https://img.buymeacoffee.com/button-api/?text=Support%20Me&amp;emoji=&amp;slug=dismiss3d&amp;button_colour=ffb700&amp;font_colour=000000&amp;font_family=Poppins&amp;outline_colour=000000&amp;coffee_colour=FFDD00"
-              style="width: 95%; max-width: 150px; height: auto"
-            />
-          </a>
+          <div
+            style="
+              width: 100%;
+              text-align: right;
+              overflow: visible;
+              padding-right: 20px;
+            "
+          >
+            <div
+              style="
+                display: inline-block;
+                transform: scale(0.8);
+                transform-origin: top right;
+              "
+            >
+              <script
+                type="text/javascript"
+                src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+                data-name="bmc-button"
+                data-slug="dismiss3d"
+                data-color="#651a94"
+                data-emoji=""
+                data-font="Cookie"
+                data-text="Buy me a coffee"
+                data-outline-color="#ffffff"
+                data-font-color="#ffffff"
+                data-coffee-color="#FFDD00"
+              ></script>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
 
-    <!-- Then load app.js and FAQSection.js -->
+    <!-- Scripts -->
     <script defer src="app.js"></script>
-
     <script
       defer
       src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
@@ -348,5 +435,20 @@
       data-cf-beacon='{"rayId":"90d5a0a2197ddbbe","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}'
       crossorigin="anonymous"
     ></script>
+    <script>
+      // FAQ Toggle Script
+      document.addEventListener("DOMContentLoaded", function () {
+        var faqToggleButton = document.getElementById("faq-toggle-button");
+        var faqContent = document.getElementById("faq-content");
+        var faqToggle = document.querySelector(".faq-toggle");
+
+        faqToggleButton.addEventListener("click", function () {
+          faqContent.classList.toggle("open");
+          faqToggle.innerText = faqContent.classList.contains("open")
+            ? "−"
+            : "+";
+        });
+      });
+    </script>
   </body>
 </html>
