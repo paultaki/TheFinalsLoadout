@@ -706,7 +706,7 @@ body {
   height: 200px;
   margin: 0;
   background-color: #fff;
-  border: 2px solid var(--neon-yellow);
+  border: 3px solid #ffcc00 !important; /* Brighter yellow */
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -1584,4 +1584,23 @@ img {
 .item-container {
   position: relative;
   padding-top: 15px !important; /* Add padding to accommodate the tag */
+}
+
+/* 🔥 Intense Yellow Flash Effect When Locked In 🔥 */
+@keyframes intenseYellowFlash {
+  0% { box-shadow: 0 0 40px rgba(255, 215, 0, 1); }
+  50% { box-shadow: 0 0 80px rgba(255, 183, 0, 0.9); }
+  100% { box-shadow: 0 0 40px rgba(255, 215, 0, 1); }
+}
+
+/* 🔥 Continuous Pulse After Flash 🔥 */
+@keyframes continuousYellowPulse {
+  0% { box-shadow: 0 0 15px rgba(255, 183, 0, 0.8); }
+  50% { box-shadow: 0 0 30px rgba(255, 183, 0, 1); }
+  100% { box-shadow: 0 0 15px rgba(255, 183, 0, 0.8); }
+}
+
+/* Apply Flash Effect When Locked In */
+.item-container.landing-flash {
+  animation: intenseYellowFlash 0.5s ease-in-out, continuousYellowPulse 2s infinite ease-in-out 0.5s;
 }
