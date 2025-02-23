@@ -1495,7 +1495,7 @@ h1::after {
   position: absolute;
   width: 100%;
   height: 20px;
-  background: url('images/blood-drip.png') repeat-x;
+  background: url('../images/blood-drip.png') repeat-x;
   animation: bloodDrip 2s linear infinite;
   top: 100%;
 }
@@ -1520,7 +1520,7 @@ h1::after {
   position: absolute;
   width: 100%;
   height: 20px;
-  background: url('images/blood-drip.png') repeat-x;
+  background: url('../images/blood-drip.png') repeat-x;
   animation: bloodDrip 2s linear infinite;
   top: 100%;
 }
@@ -1556,7 +1556,7 @@ h1::after {
 /* Ominous Background Animation */
 body {
   background: #0a0a0a;
-  background-image: url("images/dark-fog.gif"); /* Replace with your chosen fog GIF */
+  background-image: url("../images/dark-fog.gif"); /* Replace with your chosen fog GIF */
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

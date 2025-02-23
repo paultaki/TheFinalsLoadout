@@ -422,27 +422,16 @@ class SlotColumn {
 }
 
 // Load Sound Effects
-// Load Sound Effects
-const whisperSound = new Audio("sounds/whisper.mp3");
-const glitchSound = new Audio("sounds/glitch.mp3");
 const metalClank = new Audio("sounds/metal-clank.mp3");
 
 // 🔊 Reduce volume (0.0 = silent, 1.0 = full volume)
-whisperSound.volume = 0.1; // Reduce whisper to 30% volume
-glitchSound.volume = 0.1; // Reduce glitch to 40% volume
-metalClank.volume = 0.3; // Keep metal clank louder
+metalClank.volume = 0.1; // Keep metal clank at the right volume
 
 function startSpinAnimation(columns) {
-  whisperSound.play(); // Play whisper when spinning starts
-
   const slotMachine = document.querySelector(".slot-machine-wrapper");
 
   // Add flicker effect on spin start
   slotMachine.classList.add("spinning");
-
-  setTimeout(() => {
-    glitchSound.play(); // Play glitch noise mid-spin
-  }, 1000);
 
   const isFinalSpin = state.currentSpin === 1;
   const startTime = performance.now();
