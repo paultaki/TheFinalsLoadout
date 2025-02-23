@@ -100,49 +100,6 @@
         min-height: 100vh;
       }
     </style>
-
-    <!-- FAQ Section Styles -->
-    <style>
-      .faq-section {
-        margin: 40px auto;
-        max-width: 800px;
-        background: #222;
-        border-radius: 8px;
-        padding: 20px;
-      }
-      .faq-button {
-        background: #ffb700;
-        color: black;
-        font-weight: 900;
-        font-size: 1.2rem;
-        padding: 16px 30px;
-        border-radius: 8px;
-        border: 3px solid #cc8800;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-      }
-      .faq-content {
-        display: none;
-        margin-top: 20px;
-        text-align: left;
-      }
-      .faq-content.open {
-        display: block;
-      }
-      .faq-content-inner {
-        padding: 0 10px;
-      }
-      .faq-item {
-        margin-bottom: 20px;
-      }
-      .faq-item h3 {
-        margin-bottom: 8px;
-      }
-    </style>
   </head>
 
   <body class="flexStyle">
@@ -276,7 +233,15 @@
         </div>
       </div>
     </main>
-
+    <section id="loadout-history" class="loadout-history">
+      <h2>Loadout History</h2>
+      <div id="history-list">
+        <!-- History entries will be populated here -->
+      </div>
+      <button id="clear-history" class="clear-history-btn">
+        Clear History
+      </button>
+    </section>
     <section class="patch-notes">
       <div class="notes-container">
         <h2>Recent Buffs, Nerfs, and Fixes from The Finals Patch Notes</h2>
@@ -343,89 +308,43 @@
 
     <!-- New FAQ Section -->
     <section class="faq-section">
-      <div class="container">
-        <button class="faq-button" id="faq-toggle-button">
+      <div class="faq-container">
+        <div class="faq-header" id="faq-toggle-button">
           <h2 class="faq-title">Frequently Asked Questions</h2>
           <span class="faq-toggle">+</span>
-        </button>
+        </div>
         <div class="faq-content" id="faq-content">
-          <div class="faq-content-inner">
-            <div class="faq-item">
-              <h3>Are Season 5 weapons included?</h3>
-              <p>
-                Yes, this loadout randomizer is fully updated with all Season 5
-                weapons, builds, and gear, ensuring you can randomly generate
-                the most current options available in The Finals.
-              </p>
-            </div>
-            <div class="faq-item">
-              <h3>How do I use this tool?</h3>
-              <p>
-                Using this loadout randomizer is simple! Click on
-                <strong>Light</strong>, <strong>Medium</strong>, or
-                <strong>Heavy</strong> to generate a loadout tailored to a
-                specific class, or select <strong>Random</strong> to embrace the
-                chaos with a completely unpredictable loadout.
-              </p>
-              <p>
-                Want to share your randomized loadout with teammates? Just hit
-                <strong>'Copy Loadout'</strong> and send it to them.
-              </p>
-            </div>
+          <div class="faq-item">
+            <h3>Are Season 5 weapons included?</h3>
+            <p>
+              Yes, this loadout randomizer is fully updated with all Season 5
+              weapons, builds, and gear.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>How do I use this tool?</h3>
+            <p>
+              Select a class (Light, Medium, Heavy) or Random, then choose the
+              number of spins to generate your loadout.
+            </p>
           </div>
         </div>
       </div>
     </section>
-
     <footer class="footerSection">
       <div class="container">
-        <div
-          class="footerRow"
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          "
-        >
+        <div class="footerRow">
           <p class="text-start">
             © 2025 TheFinalsLoadout.com |
             <a href="legal/legal.html">Legal Disclaimer</a> | 1-800-FAT-MOMS
             Production
           </p>
           <div
-            style="
-              width: 100%;
-              text-align: right;
-              overflow: visible;
-              padding-right: 20px;
-            "
-          >
-            <div
-              style="
-                display: inline-block;
-                transform: scale(0.8);
-                transform-origin: top right;
-              "
-            >
-              <script
-                type="text/javascript"
-                src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
-                data-name="bmc-button"
-                data-slug="dismiss3d"
-                data-color="#651a94"
-                data-emoji=""
-                data-font="Cookie"
-                data-text="Buy me a coffee"
-                data-outline-color="#ffffff"
-                data-font-color="#ffffff"
-                data-coffee-color="#FFDD00"
-              ></script>
-            </div>
-          </div>
+            style="position: relative; width: 200px; margin-left: 20px"
+          ></div>
         </div>
       </div>
     </footer>
-
     <!-- Scripts -->
     <script defer src="app.js"></script>
     <script

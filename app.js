@@ -555,10 +555,105 @@ function startSpinAnimation(columns) {
   requestAnimationFrame(animate);
 }
 
+// These should be defined outside finalizeSpin, at the top level of your file
+function addToHistory(
+  classType,
+  selectedWeapon,
+  selectedSpec,
+  selectedGadgets
+) {
+  const historyList = document.getElementById("history-list");
+  const newEntry = document.createElement("div");
+  newEntry.classList.add("history-entry");
+
+  newEntry.innerHTML = `
+    <p><strong>Class:</strong> ${classType}</p>
+    <p><strong>Weapon:</strong> ${selectedWeapon}</p>
+    <p><strong>Specialization:</strong> ${selectedSpec}</p>
+    <p><strong>Gadgets:</strong> ${selectedGadgets.join(", ")}</p>
+    <button class="copy-loadout" onclick="copyLoadoutText(this)">Copy</button>
+  `;
+
+  historyList.prepend(newEntry);
+  saveHistory();
+}
+
+function saveHistory() {
+  const entries = Array.from(document.querySelectorAll(".history-entry")).map(
+    (entry) => entry.innerHTML
+  );
+  localStorage.setItem("loadoutHistory", JSON.stringify(entries));
+}
+
+function loadHistory() {
+  const historyList = document.getElementById("history-list");
+  const savedEntries = JSON.parse(localStorage.getItem("loadoutHistory")) || [];
+  historyList.innerHTML = "";
+
+  savedEntries.forEach((html) => {
+    const newEntry = document.createElement("div");
+    newEntry.classList.add("history-entry");
+    newEntry.innerHTML = html;
+    historyList.appendChild(newEntry);
+  });
+}
+
+function copyLoadoutText(button) {
+  const entry = button.closest(".history-entry");
+
+  if (!entry) {
+    console.error("Error: No history entry found.");
+    return;
+  }
+
+  const text = Array.from(entry.querySelectorAll("p"))
+    .map((p) => p.textContent)
+    .join("\n");
+
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      button.textContent = "Copied!";
+      setTimeout(() => {
+        button.textContent = "Copy";
+      }, 2000);
+    })
+    .catch((err) => {
+      console.error("Could not copy text: ", err);
+      alert("Failed to copy loadout to clipboard");
+    });
+}
+
+function copyLoadoutText(button) {
+  const entry = button.closest(".history-entry");
+
+  if (!entry) {
+    console.error("Error: No history entry found.");
+    return;
+  }
+
+  const text = Array.from(entry.querySelectorAll("p"))
+    .map((p) => p.textContent)
+    .join("\n");
+
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      button.textContent = "Copied!";
+      setTimeout(() => {
+        button.textContent = "Copy";
+      }, 2000);
+    })
+    .catch((err) => {
+      console.error("Could not copy text: ", err);
+      alert("Failed to copy loadout to clipboard");
+    });
+}
+
+// Then your finalizeSpin function should look like this:
 function finalizeSpin(columns) {
   const isFinalSpin = state.currentSpin === 1;
 
-  // Handle the spin count first
   if (state.currentSpin > 1) {
     state.currentSpin--;
     updateSpinCountdown();
@@ -570,28 +665,16 @@ function finalizeSpin(columns) {
         displayManualLoadout(state.selectedClass);
       }
     }, 300);
-    return; // Exit early if not final spin
+    return;
   }
 
-  // Only proceed with final spin animations if it's the last spin
   if (isFinalSpin) {
+    // Add animations and visual effects
     columns.forEach((column, index) => {
       const container = column.closest(".item-container");
       if (container) {
-        // Clear any existing locked tags
-        const existingTags = container.querySelectorAll(".locked-tag");
-        existingTags.forEach((tag) => tag.remove());
-
-        // Create new locked tag
-        const lockedTag = document.createElement("div");
-        lockedTag.className = "locked-tag";
-        lockedTag.textContent = "LOCKED IN";
-        container.appendChild(lockedTag);
-
         setTimeout(() => {
           container.classList.add("landing-flash");
-          lockedTag.classList.add("show");
-
           setTimeout(() => {
             container.classList.add("winner-pulsate");
           }, 300);
@@ -599,13 +682,47 @@ function finalizeSpin(columns) {
       }
     });
 
-    // Reset state after final spin
+    // Get the final loadout items
+    const itemContainers = document.querySelectorAll(".item-container");
+    const selectedItems = Array.from(itemContainers).map((container) => {
+      const scrollContainer = container.querySelector(".scroll-container");
+      if (!scrollContainer) return "Unknown";
+
+      const allItems = scrollContainer.querySelectorAll(".itemCol");
+      const visibleItem = Array.from(allItems).find((item) => {
+        const rect = item.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        return (
+          rect.top >= containerRect.top &&
+          rect.bottom <= containerRect.bottom &&
+          rect.height > 0 &&
+          rect.width > 0
+        );
+      });
+
+      return visibleItem
+        ? visibleItem.querySelector("p")?.innerText.trim()
+        : "Unknown";
+    });
+
+    // Add to history if we have valid items
+    if (selectedItems.length >= 5) {
+      const selectedClass = state.selectedClass || "Unknown";
+      const weapon = selectedItems[0];
+      const specialization = selectedItems[1];
+      const gadgets = selectedItems.slice(2, 5);
+
+      addToHistory(selectedClass, weapon, specialization, gadgets);
+    }
+
+    // Reset state
     state.isSpinning = false;
     state.currentSpin = 1;
     state.totalSpins = 0;
     state.selectedGadgets.clear();
     state.selectedClass = null;
 
+    // Update UI
     document
       .querySelectorAll(".class-button, .spin-button")
       .forEach((button) => {
@@ -616,6 +733,16 @@ function finalizeSpin(columns) {
     document.getElementById("spinSelection").classList.add("disabled");
   }
 }
+
+// Add event listener for clearing history
+document.addEventListener("DOMContentLoaded", () => {
+  loadHistory(); // Load saved history when page loads
+
+  document.getElementById("clear-history")?.addEventListener("click", () => {
+    localStorage.removeItem("loadoutHistory");
+    document.getElementById("history-list").innerHTML = "";
+  });
+});
 
 function updateSpinCountdown() {
   spinButtons.forEach((button) => {
@@ -859,8 +986,16 @@ document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
     });
 });
 
-// FAQ Toggle functionality
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("✅ DOM fully loaded");
+  document.addEventListener("DOMContentLoaded", () => {
+    loadHistory(); // Load saved history when page loads
+
+    document.getElementById("clear-history")?.addEventListener("click", () => {
+      localStorage.removeItem("loadoutHistory");
+      document.getElementById("history-list").innerHTML = "";
+    });
+  });
   const faqToggle = document.getElementById("faqToggle");
   const faqContent = document.getElementById("faqContent");
   const toggleIcon = document.querySelector(".toggle-icon");
@@ -873,4 +1008,14 @@ document.addEventListener("DOMContentLoaded", () => {
         : "+";
     });
   }
+
+  // ✅ Call `loadHistory()` properly
+  loadHistory();
+
+  // ✅ Move `clear-history` event outside the FAQ function
+  document.getElementById("clear-history")?.addEventListener("click", () => {
+    localStorage.removeItem("loadoutHistory");
+    document.getElementById("history-list").innerHTML = "";
+    console.log("🗑️ Loadout history cleared.");
+  });
 });

@@ -282,14 +282,14 @@ const PHYSICS = {
   ITEM_HEIGHT: 188,
   TIMING: {
     REGULAR_SPIN: {
-      COLUMN_DELAY: 250, // 0.25s between stops for regular spins
-      BASE_DURATION: 800,
-      DECELERATION_TIME: 400,
+      COLUMN_DELAY: 400, // Increase delay to 0.4s for suspense
+      BASE_DURATION: 1200, // Extend spin time
+      DECELERATION_TIME: 600, // Smoothly slow down
     },
     FINAL_SPIN: {
-      COLUMN_DELAY: 600, // 0.6s between stops for final spin
-      BASE_DURATION: 2500,
-      DECELERATION_TIME: 800,
+      COLUMN_DELAY: 800, // Increase final suspense between stops
+      BASE_DURATION: 3000, // Extend the final spin
+      DECELERATION_TIME: 1000, // More dramatic slow down
     },
   },
 };
