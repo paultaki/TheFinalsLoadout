@@ -7,6 +7,12 @@
   --neon-yellow: #ffb700;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+
+h1, h2, h3, .mainTitle, button {
+  font-family: 'Creepster', cursive;
+  text-shadow: 3px 3px 5px rgba(255, 0, 0, 0.8);
+}
 
 
 /* Copy loadout button style */
@@ -30,38 +36,6 @@
   background: linear-gradient(45deg, #1e90ff, #7b2fe3);
 }
 
-@keyframes finalFlash {
-  0% {
-    box-shadow: 0 0 100px rgba(255, 215, 0, 1);
-    transform: scale(1.2);
-    background-color: rgba(255, 255, 255, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 60px rgba(255, 183, 0, 0.9);
-    transform: scale(1.15);
-    background-color: rgba(255, 255, 255, 0.2);
-  }
-  100% {
-    box-shadow: 0 0 30px rgba(255, 140, 0, 0.7);
-    transform: scale(1.1);
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-}
-
-@keyframes slowPulse {
-  0% {
-    box-shadow: 0 0 20px rgba(255, 183, 0, 0.7);
-    transform: scale(1.05);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(255, 183, 0, 0.9);
-    transform: scale(1.1);
-  }
-  100% {
-    box-shadow: 0 0 20px rgba(255, 183, 0, 0.7);
-    transform: scale(1.05);
-  }
-}
 
 /* Base Styles */
 * {
@@ -233,26 +207,6 @@ body.flexStyle {
 }
 
 
-.faqSection h2 {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  color: var(--neon-yellow);
-  text-align: center;
-}
-
-.faqSection h3 {
-  font-size: 1rem;
-  margin-bottom: 10px;
-  color: #ffffff;
-}
-
-.faqSection p {
-  font-size: 0.85rem;
-  margin-bottom: 15px;
-  color: #cccccc;
-  line-height: 1.6;
-}
-
 /* Footer Section */
 .footerSection {
   color: #ddd; /* Slightly brighter */
@@ -264,12 +218,7 @@ body.flexStyle {
   text-decoration: none;
   transition: opacity 0.3s ease;
 }
-.container {
-  width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
+
 
 .main.mainContent {
   min-height: 500px; /* Adjust based on actual content height */
@@ -309,12 +258,6 @@ body.flexStyle {
 }
 
 
-/* Updates Section */
-.updates-section, .faq-section {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
 
 .patch-container {
   background: #1a1f2e;
@@ -388,62 +331,6 @@ body.flexStyle {
   margin-bottom: 0.25rem;
 }
 
-/* FAQ Section */
-.faq-container {
-  background: #1a1f2e;
-  border: 1px solid #2a3040;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.faq-header {
-  background: #2a3040;
-  padding: 1rem;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.faq-header h2 {
-  color: var(--neon-yellow);
-  margin: 0;
-}
-
-.toggle-icon {
-  color: var(--neon-yellow);
-  font-size: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.faq-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-}
-
-.faq-content.open {
-  max-height: 1000px;
-}
-
-.faq-item {
-  padding: 1rem;
-  border-bottom: 1px solid #2a3040;
-}
-
-.faq-item:last-child {
-  border-bottom: none;
-}
-
-.faq-item h3 {
-  color: var(--neon-yellow);
-  margin-bottom: 0.5rem;
-}
-
-.faq-item p {
-  color: #cccccc;
-  margin-bottom: 0.5rem;
-}
 
 /* Class highlight colors */
 .class-light { color: #44aaff; font-weight: 600; }
@@ -529,64 +416,10 @@ body.flexStyle {
 }
 
 
-.faqSection {
-  background-color: #292929;
-  padding: 20px;
-  border-radius: 8px;
-  margin: 16px auto;
-  max-width: 48rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  text-align: center !important; /* Ensures everything inside is centered */
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border: 1px solid #444;
-}
 
-.faq-title {
-  color: black !important; /* Force black text */
-  font-size: 1.3rem !important;
-  font-weight: 900 !important;
-  text-shadow: none !important;
-}
 
-.faq-toggle {
-  -webkit-text-stroke: 0.5px black !important;
-  color: black !important;
-}
 
-.faq-toggle.open {
-  transform: rotate(45deg);
-}
 
-.faq-content {
-  display: none;
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #ccc;
-}
-
-.faq-content.open {
-  display: block;
-}
-body {
-  font-family: var(--baseFont);
-  color: #fff;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  background: linear-gradient(
-    180deg,
-    #1b1b3a,
-    #2e004d
-  ); /* Dark blue to deep purple */
-  background-size: cover;
-  color: white;
-  overflow-x: hidden;
-  position: relative;
-}
 
 /* Subtle animated cyber grid overlay */
 body::before {
@@ -706,7 +539,7 @@ body {
   height: 200px;
   margin: 0;
   background-color: #fff;
-  border: 2px solid var(--neon-yellow);
+  border: 3px solid #ffcc00 !important; /* Brighter yellow */
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -749,10 +582,6 @@ body {
     margin: 0 4px;
   }
 
-  /* Adjust main container padding */
-  .container {
-    padding: 0 10px;
-  }
 
   /* Button row - prevent wrapping */
   .btnRow {
@@ -834,11 +663,6 @@ body {
   position: relative;
 }
 
-/* Force container to stay within viewport */
-.container {
-  max-width: 100%;
-  overflow: hidden;
-}
 
 /* =====================
    Consolidated Animations
@@ -886,21 +710,38 @@ body {
 /* Final item landing animations */
 @keyframes finalFlash {
   0% {
-    box-shadow: 0 0 100px rgba(255, 215, 0, 1);
+    box-shadow: 0 0 120px rgba(255, 0, 0, 1); /* Intense red flash */
     transform: scale(1.2);
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 0, 0, 0.4); /* Blood red tint */
+    filter: blur(2px);
+  }
+  25% {
+    box-shadow: 0 0 90px rgba(255, 50, 50, 0.9);
+    transform: scale(1.15);
+    background-color: rgba(100, 0, 0, 0.3);
+    filter: blur(1px);
   }
   50% {
-    box-shadow: 0 0 60px rgba(255, 183, 0, 0.9);
-    transform: scale(1.15);
-    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 60px rgba(255, 0, 0, 0.7);
+    transform: scale(1.1);
+    background-color: rgba(50, 0, 0, 0.2);
+    filter: none;
+  }
+  75% {
+    box-shadow: 0 0 40px rgba(255, 0, 0, 0.5);
+    transform: scale(1.05);
+    background-color: rgba(20, 0, 0, 0.1);
   }
   100% {
-    box-shadow: 0 0 30px rgba(255, 140, 0, 0.7);
-    transform: scale(1.1);
-    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(100, 0, 0, 0.3);
+    transform: scale(1);
+    background-color: rgba(0, 0, 0, 0);
+    filter: none;
   }
 }
+
+
+
 
 @keyframes slotMachineOvershoot {
   0% {
@@ -979,24 +820,31 @@ body {
 
 @keyframes landingFlash {
   0% {
-    box-shadow: 0 0 60px rgba(255, 183, 0, 0.8),
-      inset 0 0 60px rgba(255, 183, 0, 0.8);
+    box-shadow: 0 0 80px rgba(255, 0, 0, 1); /* Bright red for a horror effect */
+    transform: scale(1.2);
+    filter: brightness(1.8) contrast(1.2);
+  }
+  20% {
+    box-shadow: 0 0 40px rgba(255, 50, 50, 0.9);
     transform: scale(1.15);
     filter: brightness(1.5);
   }
-  50% {
-    box-shadow: 0 0 30px rgba(255, 183, 0, 0.6),
-      inset 0 0 30px rgba(255, 183, 0, 0.6);
+  40% {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
     transform: scale(1.1);
-    filter: brightness(1.3);
+    filter: brightness(1.2);
+  }
+  60% {
+    box-shadow: 0 0 10px rgba(100, 0, 0, 0.5);
+    transform: scale(1.05);
   }
   100% {
-    box-shadow: 0 0 20px rgba(255, 183, 0, 0.4),
-      inset 0 0 20px rgba(255, 183, 0, 0.4);
-    transform: scale(1.05);
-    filter: brightness(1.1);
+    box-shadow: 0 0 0px rgba(0, 0, 0, 0);
+    transform: scale(1);
+    filter: none;
   }
 }
+
 
 @keyframes pulsateWinner {
   0% {
@@ -1567,21 +1415,406 @@ img {
 
 @keyframes tagPop {
   0% {
-      transform: scale(0) rotate(-10deg);
-      opacity: 0;
+    transform: scale(0) rotate(-10deg);
+    opacity: 0;
+    filter: blur(4px);
   }
-  50% {
-      transform: scale(1.2) rotate(5deg);
-      opacity: 1;
+  30% {
+    transform: scale(1.3) rotate(5deg);
+    opacity: 1;
+    filter: blur(1px);
+  }
+  60% {
+    transform: scale(1.1) rotate(-3deg);
+    opacity: 1;
+    filter: none;
   }
   100% {
-      transform: scale(1) rotate(0deg);
-      opacity: 1;
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
   }
 }
+
+/* Apply Blood-Red Font to Locked In */
+.locked-tag {
+  font-family: 'Creepster', cursive;
+  color: red;
+  text-shadow: 2px 2px 5px black;
+  animation: bloodDrip 1s infinite alternate;
+}
+
+@keyframes bloodDrip {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(5px); opacity: 0.8; }
+}
+
 
 /* Make sure item containers have relative positioning for the locked tag */
 .item-container {
   position: relative;
   padding-top: 15px !important; /* Add padding to accommodate the tag */
 }
+
+
+/* Ominous Background Animation */
+body {
+  background: #0a0a0a;
+  background-image: url("../images/dark-fog.gif"); /* Add a looping dark mist effect */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  animation: redPulse 10s infinite alternate;
+}
+
+/* Subtle Red Glow Pulse */
+@keyframes redPulse {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 40px rgba(255, 0, 0, 0.3);
+  }
+}
+/* Skull & Chains Background on Headers */
+h1::before {
+  content: "💀 ";
+  color: red;
+}
+h1::after {
+  content: " 💀";
+  color: red;
+}
+
+/* Dripping Blood Effect */
+@keyframes bloodDrip {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 20px; }
+}
+
+.blood-drip {
+  position: absolute;
+  width: 100%;
+  height: 20px;
+  background: url('images/blood-drip.png') repeat-x;
+  animation: bloodDrip 2s linear infinite;
+  top: 100%;
+}
+
+/* Skull & Chains Background on Headers */
+h1::before {
+  content: "💀 ";
+  color: red;
+}
+h1::after {
+  content: " 💀";
+  color: red;
+}
+
+/* Dripping Blood Effect */
+@keyframes bloodDrip {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 20px; }
+}
+
+.blood-drip {
+  position: absolute;
+  width: 100%;
+  height: 20px;
+  background: url('images/blood-drip.png') repeat-x;
+  animation: bloodDrip 2s linear infinite;
+  top: 100%;
+}
+
+
+/* Horror Flicker Effect During Spin */
+@keyframes horrorFlicker {
+  0%, 100% {
+    opacity: 1;
+    filter: none;
+  }
+  10%, 20%, 50%, 70%, 90% {
+    opacity: 0.8;
+    filter: brightness(1.3);
+  }
+  30%, 60%, 80% {
+    opacity: 0.5;
+    filter: brightness(0.7);
+  }
+}
+
+/* Ensure flickering only happens when the class is added */
+.slot-machine-wrapper {
+  animation: none; /* This prevents the animation from running on page load */
+}
+
+/* Apply horror flicker ONLY during spin */
+.slot-machine-wrapper.spinning {
+  animation: horrorFlicker 0.15s infinite alternate;
+}
+
+
+/* Ominous Background Animation */
+body {
+  background: #0a0a0a;
+  background-image: url("images/dark-fog.gif"); /* Replace with your chosen fog GIF */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  animation: redPulse 10s infinite alternate;
+}
+
+/* Subtle Red Glow Pulse */
+@keyframes redPulse {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 40px rgba(255, 0, 0, 0.3);
+  }
+}
+
+/* Apply horror flicker ONLY to the slot machine wrapper */
+@keyframes horrorFlicker {
+  0%, 100% { opacity: 1; filter: none; }
+  20%, 40%, 60%, 80% { opacity: 0.8; filter: brightness(1.2); }
+  30%, 70% { opacity: 0.6; filter: brightness(0.9); }
+}
+
+/* Flicker only when spinning */
+.slot-machine-wrapper.spinning {
+  animation: horrorFlicker 0.15s infinite alternate;
+}
+
+@keyframes lockedInShake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-3px) rotate(-2deg); }
+  50% { transform: translateX(3px) rotate(2deg); }
+  75% { transform: translateX(-2px) rotate(-1deg); }
+  100% { transform: translateX(0); }
+}
+
+.locked-tag {
+  animation: lockedInShake 0.3s ease-in-out;
+}
+
+
+/* 🔥 More Realistic Blood Dripping Effect 🔥 */
+@keyframes bloodDrip {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  20% { transform: translateY(2px) scale(1.02); opacity: 0.95; }
+  40% { transform: translateY(4px) scale(1.05); opacity: 0.9; }
+  60% { transform: translateY(7px) scale(1.08); opacity: 0.85; }
+  80% { transform: translateY(10px) scale(1.1); opacity: 0.8; }
+  100% { transform: translateY(12px) scale(1.12); opacity: 0.75; }
+}
+
+/* Make "LOCKED IN" text look like it's dripping */
+.locked-tag {
+  font-family: 'Creepster', cursive;
+  color: red;
+  text-shadow: 2px 2px 5px black;
+  opacity: 0; /* Start hidden */
+  transform: translateY(-10px); /* Start slightly raised */
+  animation: none; /* Default state */
+  transition: opacity 0.5s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Reveal and make it drip after the spin stops */
+.locked-tag.show {
+  opacity: 1;
+  transform: translateY(0);
+  animation: bloodDrip 3s infinite ease-in-out; /* Slower, more realistic */
+}
+
+
+/* 🔥 Intense Yellow Flash Effect When Locked In 🔥 */
+@keyframes intenseYellowFlash {
+  0% { box-shadow: 0 0 40px rgba(255, 215, 0, 1); }
+  50% { box-shadow: 0 0 80px rgba(255, 183, 0, 0.9); }
+  100% { box-shadow: 0 0 40px rgba(255, 215, 0, 1); }
+}
+
+/* 🔥 Continuous Pulse After Flash 🔥 */
+@keyframes continuousYellowPulse {
+  0% { box-shadow: 0 0 15px rgba(255, 183, 0, 0.8); }
+  50% { box-shadow: 0 0 30px rgba(255, 183, 0, 1); }
+  100% { box-shadow: 0 0 15px rgba(255, 183, 0, 0.8); }
+}
+
+/* Apply Flash Effect When Locked In */
+.item-container.landing-flash {
+  animation: intenseYellowFlash 0.5s ease-in-out, continuousYellowPulse 2s infinite ease-in-out 0.5s;
+}
+
+/* 🔥 New "Generate Punishment" Button Styling 🔥 */
+/* 🔥 Slightly Smaller "Generate Punishment" Button 🔥 */
+.generate-btn {
+  display: block;
+  margin: 20px auto;
+  padding: 14px 26px; /* Reduced padding */
+  font-size: 1.35rem; /* Reduced font size */
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #8b0000, #ff0000);
+  border: 2px solid #ff0000; /* Slightly thinner border */
+  border-radius: 10px; /* Adjusted to match size */
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+  transition: all 0.3s ease-in-out;
+  animation: pulseGlow 1.5s infinite alternate;
+}
+
+.generate-btn:hover {
+  transform: scale(1.05); /* Less aggressive hover effect */
+  box-shadow: 0 0 20px rgba(255, 0, 0, 1);
+  background: linear-gradient(135deg, #ff0000, #8b0000);
+}
+
+/* 🔥 Subtle pulsing effect */
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 8px rgba(255, 0, 0, 0.8); }
+  100% { box-shadow: 0 0 18px rgba(255, 0, 0, 1); }
+}
+
+/* 📱 Adjust for Mobile */
+@media (max-width: 600px) {
+  .generate-btn {
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    width: 75%;
+  }
+}
+
+/* ☕ Fix Buy Me a Coffee Button Alignment */
+.buy-me-coffee-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 10px 0; /* Adjust spacing */
+}
+
+.buy-me-coffee-container iframe {
+  max-width: 100%;
+  height: auto;
+  transform: scale(1); /* Adjust scale if needed */
+}
+
+/* ✅ Make FAQ Section Blend In More */
+.faqSection {
+  background-color: #222 !important; /* Darker background */
+  border: 1px solid #333 !important; /* Subtle border */
+  padding: 8px !important;
+  border-radius: 8px;
+  margin: 16px auto;
+  max-width: 800px;
+  box-shadow: none !important; /* ✅ Remove excessive shadow */
+  text-align: center;
+  display: block !important;
+  max-height: 65px !important;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+
+/* ✅ Expands when clicked */
+.faqSection.open {
+  max-height: 500px !important; /* Expand fully */
+  padding: 15px !important;
+}
+
+
+/* ✅ Ensure FAQ Content Starts Hidden But Expands */
+.faq-content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  display: block;
+  transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out;
+}
+
+/* ✅ Show FAQ Content When Expanded */
+.faqSection.open .faq-content {
+  max-height: 500px; /* Adjust this height as needed */
+  opacity: 1;
+}
+
+/* ✅ Ensure FAQ Button Stays Properly Sized Before Expanding */
+.faq-toggle-container {
+  width: 100% !important;
+  background: #ffb700 !important;
+  color: black !important;
+  font-weight: 900 !important;
+  font-size: 1.2rem !important;
+  padding: 14px 20px !important; /* ✅ Ensures proper button height */
+  border-radius: 8px !important;
+  border: 2px solid #cc8800 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  text-align: center !important;
+  min-height: 55px !important; /* ✅ Ensures button height is correct */
+}
+
+
+/* ✅ Make button slightly bigger for larger screens */
+@media (min-width: 600px) {
+  .faq-toggle-container {
+    min-height: 50px !important;
+  }
+}
+
+
+
+
+/* ✅ Rotate icon when expanded */
+.faq-toggle.open {
+  transform: rotate(45deg);
+}
+
+/* ✅ Unified .container Styles (Fixed for FAQ) */
+.container {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 15px;
+  display: block; /* ✅ Removed !important to avoid layout conflicts */
+}
+
+/* ✅ Special fix: Ensure FAQ container behaves correctly */
+.faqSection .container {
+  width: auto;
+  max-width: 100%;
+  padding: 0;
+}
+
+
+/* ✅ Make FAQ Button Blend Into the Theme */
+.faq-toggle-container {
+  width: 100% !important;
+  background: #333 !important; /* Dark gray instead of yellow */
+  color: #ddd !important; /* Lighter gray for text */
+  font-weight: 600 !important; /* ✅ Make text slightly less bold */
+  font-size: 1rem !important;
+  padding: 8px 15px !important;
+  border-radius: 6px !important;
+  border: 1px solid #444 !important; /* ✅ Darker border */
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  text-align: center !important;
+  min-height: 40px !important;
+  max-height: 45px !important;
+  transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* ✅ Subtle Hover Effect */
+.faq-toggle-container:hover {
+  background: #444 !important; /* Slightly lighter on hover */
+  color: white !important; /* Makes text pop slightly */
+}
+
+

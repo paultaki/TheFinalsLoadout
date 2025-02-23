@@ -23,14 +23,10 @@ const loadouts = {
       "93R",
       "Dagger",
       "SR-84",
-      "SH1900",
-      "LH1",
       "M26 Matter",
       "Recurve Bow",
       "Sword",
-      "M11",
       "V9S",
-      "XP-54",
       "Throwing Knives",
     ],
     specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
@@ -425,7 +421,29 @@ class SlotColumn {
   }
 }
 
+// Load Sound Effects
+// Load Sound Effects
+const whisperSound = new Audio("sounds/whisper.mp3");
+const glitchSound = new Audio("sounds/glitch.mp3");
+const metalClank = new Audio("sounds/metal-clank.mp3");
+
+// 🔊 Reduce volume (0.0 = silent, 1.0 = full volume)
+whisperSound.volume = 0.1; // Reduce whisper to 30% volume
+glitchSound.volume = 0.1; // Reduce glitch to 40% volume
+metalClank.volume = 0.3; // Keep metal clank louder
+
 function startSpinAnimation(columns) {
+  whisperSound.play(); // Play whisper when spinning starts
+
+  const slotMachine = document.querySelector(".slot-machine-wrapper");
+
+  // Add flicker effect on spin start
+  slotMachine.classList.add("spinning");
+
+  setTimeout(() => {
+    glitchSound.play(); // Play glitch noise mid-spin
+  }, 1000);
+
   const isFinalSpin = state.currentSpin === 1;
   const startTime = performance.now();
 
@@ -443,16 +461,40 @@ function startSpinAnimation(columns) {
     column.style.transition = "none";
   });
 
-  // Add locked tags to containers
-  columns.forEach((column) => {
-    const container = column.closest(".item-container");
-    const existingTag = container.querySelector(".locked-tag");
-    if (!existingTag) {
-      const lockedTag = document.createElement("div");
-      lockedTag.className = "locked-tag";
-      lockedTag.textContent = "Locked In!";
-      container.appendChild(lockedTag);
-    }
+  // Ensure "LOCKED IN" only appears when the last column stops
+  slotColumns.forEach((column, index) => {
+    column.updateVisuals = function () {
+      let blur = 0;
+      if (Math.abs(this.velocity) > 3000) blur = 12;
+      else if (Math.abs(this.velocity) > 2000) blur = 8;
+      else if (Math.abs(this.velocity) > 1000) blur = 5;
+
+      this.element.style.transform = `translateY(${this.position}px)`;
+      this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
+
+      // ✅ Play metal clank only when the LAST column stops and add "LOCKED IN"
+      if (this.state === "stopped" && index === slotColumns.length - 1) {
+        console.log(
+          "🔊 Metal clank playing exactly when the last column stops!"
+        );
+        metalClank.play();
+
+        // Add the locked-in tag AFTER all columns have stopped
+        document.querySelectorAll(".item-container").forEach((container) => {
+          if (!container.querySelector(".locked-tag")) {
+            const lockedTag = document.createElement("div");
+            lockedTag.className = "locked-tag";
+            lockedTag.textContent = "LOCKED IN!";
+            container.appendChild(lockedTag);
+
+            // Apply animation delay to match final stop
+            setTimeout(() => {
+              lockedTag.classList.add("show");
+            }, 300);
+          }
+        });
+      }
+    };
   });
 
   slotColumns.forEach((column) => (column.state = "accelerating"));
@@ -461,7 +503,7 @@ function startSpinAnimation(columns) {
     const elapsed = currentTime - startTime;
     let isAnimating = false;
 
-    slotColumns.forEach((column) => {
+    slotColumns.forEach((column, index) => {
       if (column.state !== "stopped") {
         isAnimating = true;
         const deltaTime = column.lastTimestamp
@@ -475,6 +517,14 @@ function startSpinAnimation(columns) {
         const tag = container.querySelector(".locked-tag");
         if (tag) {
           tag.classList.add("show");
+        }
+
+        // ✅ Play metal clank only when the LAST column stops
+        if (index === slotColumns.length - 1) {
+          console.log(
+            "🔊 Metal clank playing exactly when the last column stops!"
+          );
+          metalClank.play();
         }
       }
     });
@@ -495,7 +545,14 @@ function startSpinAnimation(columns) {
             }, index * 200);
           }
         });
+
         finalizeSpin(columns);
+
+        // ✅ Force remove flicker even if finalizeSpin is slow
+        setTimeout(() => {
+          console.log("Removing flicker effect..."); // Debugging
+          slotMachine.classList.remove("spinning");
+        }, 1500); // Ensure flicker is removed after animations
       } else {
         // For non-final spins, just move to the next spin
         setTimeout(() => {
@@ -505,116 +562,17 @@ function startSpinAnimation(columns) {
             displayManualLoadout(state.selectedClass);
           }
         }, 300);
-      }
-    }
-  }
 
-  requestAnimationFrame(animate);
-}
-
-// Other physics constants remain the same...
-function startSpinAnimation(columns) {
-  const isFinalSpin = state.currentSpin === 1;
-  const startTime = performance.now();
-
-  const slotColumns = columns.map(
-    (element, index) => new SlotColumn(element, index, isFinalSpin)
-  );
-
-  // Reset columns - simply reset position, no animation handling here
-  columns.forEach((column) => {
-    column.style.transform = "translateY(0)";
-    column.style.transition = "none";
-  });
-
-  slotColumns.forEach((column) => (column.state = "accelerating"));
-
-  function animate(currentTime) {
-    const elapsed = currentTime - startTime;
-    let isAnimating = false;
-
-    slotColumns.forEach((column) => {
-      if (column.state !== "stopped") {
-        isAnimating = true;
-        const deltaTime = column.lastTimestamp
-          ? currentTime - column.lastTimestamp
-          : 16.67;
-        column.update(elapsed, deltaTime);
-        column.lastTimestamp = currentTime;
-      }
-    });
-
-    if (isAnimating) {
-      requestAnimationFrame(animate);
-    } else {
-      // Simply call finalizeSpin, which will handle all end-of-spin logic
-      finalizeSpin(columns);
-    }
-  }
-
-  requestAnimationFrame(animate);
-}
-
-function finalizeSpin(columns) {
-  const isFinalSpin = state.currentSpin === 1;
-
-  // Handle the spin count first
-  if (state.currentSpin > 1) {
-    state.currentSpin--;
-    updateSpinCountdown();
-
-    setTimeout(() => {
-      if (state.selectedClass === "random") {
-        displayRandomLoadout();
-      } else {
-        displayManualLoadout(state.selectedClass);
-      }
-    }, 300);
-    return; // Exit early if not final spin
-  }
-
-  // Only proceed with final spin animations if it's the last spin
-  if (isFinalSpin) {
-    columns.forEach((column, index) => {
-      const container = column.closest(".item-container");
-      if (container) {
-        // Clear any existing locked tags
-        const existingTags = container.querySelectorAll(".locked-tag");
-        existingTags.forEach((tag) => tag.remove());
-
-        // Create new locked tag
-        const lockedTag = document.createElement("div");
-        lockedTag.className = "locked-tag";
-        lockedTag.textContent = "LOCKED IN";
-        container.appendChild(lockedTag);
-
+        // ✅ Also remove flicker after non-final spins
         setTimeout(() => {
-          container.classList.add("landing-flash");
-          lockedTag.classList.add("show");
-
-          setTimeout(() => {
-            container.classList.add("winner-pulsate");
-          }, 300);
-        }, index * 200);
+          console.log("Removing flicker effect after normal spin...");
+          slotMachine.classList.remove("spinning");
+        }, 1500);
       }
-    });
-
-    // Reset state after final spin
-    state.isSpinning = false;
-    state.currentSpin = 1;
-    state.totalSpins = 0;
-    state.selectedGadgets.clear();
-    state.selectedClass = null;
-
-    document
-      .querySelectorAll(".class-button, .spin-button")
-      .forEach((button) => {
-        button.classList.remove("active", "selected");
-        button.removeAttribute("disabled");
-      });
-
-    document.getElementById("spinSelection").classList.add("disabled");
+    }
   }
+
+  requestAnimationFrame(animate);
 }
 
 function updateSpinCountdown() {
@@ -636,7 +594,7 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
       .map(
         (item, index) => `
         <div class="itemCol ${index === 4 ? "winner" : ""}">
-          <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+          <img src="../images/${item.replace(/ /g, "_")}.webp" alt="${item}">
           <p>${item}</p>
         </div>
       `
@@ -665,62 +623,37 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
     .map(
       (item, index) => `
       <div class="itemCol ${index === 4 ? "winner" : ""}">
-        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+        <img src="../images/${item.replace(/ /g, "_")}.webp" alt="${item}">
         <p>${item}</p>
       </div>
     `
     )
     .join("");
 }
-const randomButton = document.getElementById("randomButton");
 
-if (!randomButton) {
-  console.error("Random button not found! Check your HTML.");
-} else {
-  randomButton.addEventListener("click", () => {
-    console.log("🎲 Random button clicked!"); // Debugging
+document.getElementById("generatePunishment").addEventListener("click", () => {
+  if (state.isSpinning) return; // Prevent multiple spins at once
 
-    if (state.isSpinning) {
-      console.log("⚠️ Already spinning! Ignoring click.");
-      return;
-    }
+  console.log("🎲 Generating Punishment Loadout...");
 
-    // Pick a random class
-    const classes = ["Light", "Medium", "Heavy"];
-    const randomClass = classes[Math.floor(Math.random() * classes.length)];
-    state.selectedClass = randomClass;
+  // Pick a random class
+  const classes = ["Light", "Medium", "Heavy"];
+  const randomClass = classes[Math.floor(Math.random() * classes.length)];
+  state.selectedClass = randomClass;
 
-    // Update UI to show the selected class
-    document.querySelectorAll(".class-button").forEach((b) => {
-      b.classList.remove("selected", "active");
+  console.log(`🌀 Selected Class: ${randomClass}`);
 
-      // Keep the selected class highlighted
-      if (b.dataset.class.toLowerCase() === state.selectedClass.toLowerCase()) {
-        b.classList.add("selected", "active");
-      }
-    });
+  // Display the selected class text
+  document.getElementById("selectedClassText").style.display = "block";
+  document.getElementById("selectedClassName").textContent = randomClass;
 
-    // Pick a random number of spins (between 1 and 5)
-    const randomSpins = Math.floor(Math.random() * 5) + 1;
-    state.totalSpins = randomSpins;
-    state.currentSpin = randomSpins;
+  // Only do ONE spin
+  state.totalSpins = 1;
+  state.currentSpin = 1;
 
-    // Update UI to show the selected spin count
-    document.querySelectorAll(".spin-button").forEach((b) => {
-      if (parseInt(b.dataset.spins) === randomSpins) {
-        b.classList.add("selected", "active");
-      } else {
-        b.classList.remove("selected", "active");
-      }
-    });
-
-    // Start spinning
-    console.log(
-      `🌀 Spinning ${state.totalSpins} times as ${state.selectedClass}`
-    );
-    spinLoadout();
-  });
-}
+  // Display and animate the random loadout
+  displayLoadout(state.selectedClass, loadouts[state.selectedClass]);
+});
 
 // Event Listeners
 classButtons.forEach((button) => {
@@ -859,18 +792,79 @@ document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
     });
 });
 
-// FAQ Toggle functionality
-document.addEventListener("DOMContentLoaded", () => {
-  const faqToggle = document.getElementById("faqToggle");
-  const faqContent = document.getElementById("faqContent");
-  const toggleIcon = document.querySelector(".toggle-icon");
+document.addEventListener("DOMContentLoaded", function () {
+  var faqToggleButton = document.getElementById("faq-toggle-button");
+  var faqSection = document.querySelector(".faqSection");
+  var faqContent = document.getElementById("faq-content");
+  var faqToggle = document.querySelector(".faq-toggle");
 
-  if (faqToggle && faqContent) {
-    faqToggle.addEventListener("click", () => {
-      faqContent.classList.toggle("open");
-      toggleIcon.textContent = faqContent.classList.contains("open")
-        ? "−"
-        : "+";
-    });
+  if (!faqToggleButton || !faqSection || !faqContent || !faqToggle) {
+    console.error(
+      "⚠️ FAQ elements not found. Check IDs and class names in index.html."
+    );
+    return;
   }
+
+  faqToggleButton.addEventListener("click", function () {
+    faqSection.classList.toggle("open");
+    faqContent.classList.toggle("open");
+    faqToggle.classList.toggle("open");
+  });
 });
+
+function finalizeSpin(columns) {
+  console.log("finalizeSpin() called - Finalizing spin.");
+
+  const isFinalSpin = state.currentSpin === 1;
+
+  if (isFinalSpin) {
+    console.log("Final spin detected.");
+
+    columns.forEach((column, index) => {
+      const container = column.closest(".item-container");
+      if (container) {
+        // Ensure locked-in visuals
+        const lockedTag = document.createElement("div");
+        lockedTag.className = "locked-tag";
+        lockedTag.textContent = "LOCKED IN";
+        container.appendChild(lockedTag);
+
+        setTimeout(() => {
+          container.classList.add("landing-flash");
+          lockedTag.classList.add("show");
+
+          setTimeout(() => {
+            container.classList.add("winner-pulsate");
+          }, 300);
+        }, index * 200);
+      }
+    });
+
+    // Reset the state
+    state.isSpinning = false;
+    state.currentSpin = 1;
+    state.totalSpins = 0;
+    state.selectedGadgets.clear();
+    state.selectedClass = null;
+
+    document
+      .querySelectorAll(".class-button, .spin-button")
+      .forEach((button) => {
+        button.classList.remove("active", "selected");
+        button.removeAttribute("disabled");
+      });
+
+    document.getElementById("spinSelection").classList.add("disabled");
+  }
+}
+
+// 🔥 Failsafe: Force Remove Flickering Every 5 Seconds
+setInterval(() => {
+  const slotMachine = document.querySelector(".slot-machine-wrapper");
+  if (slotMachine.classList.contains("spinning")) {
+    console.log(
+      "🔥 Failsafe Triggered: Removing .spinning to stop flickering."
+    );
+    slotMachine.classList.remove("spinning");
+  }
+}, 5000); // Runs every 5 seconds
