@@ -101,8 +101,8 @@
       }
     </style>
   </head>
+  <audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
 
-  <body class="flexStyle">
     <header class="headerSection">
       <div class="container">
         <img
@@ -126,25 +126,34 @@
             <div id="classSelection" class="step">
               <h2>Choose Your Class</h2>
               <div class="btnRow">
-                <button class="class-button" data-class="Light">
-                  <span class="icon">⚡</span>
-                  L
-                </button>
-                <button class="class-button" data-class="Medium">
-                  <span class="icon">⚔️</span>
-                  M
-                </button>
-                <button class="class-button" data-class="Heavy">
-                  <span class="icon">🛡️</span>
-                  H
-                </button>
-                <button
-                  id="randomButton"
+                <img
+                  id="light-class"
                   class="class-button"
+                  src="images/light_silhouette.webp"
+                  data-class="Light"
+                  alt="Light Class"
+                />
+                <img
+                  id="medium-class"
+                  class="class-button"
+                  src="images/medium_silhouette.webp"
+                  data-class="Medium"
+                  alt="Medium Class"
+                />
+                <img
+                  id="heavy-class"
+                  class="class-button"
+                  src="images/heavy_silhouette.webp"
+                  data-class="Heavy"
+                  alt="Heavy Class"
+                />
+                <img
+                  id="random-class"
+                  class="class-button random-btn"
+                  src="images/random_dice.webp"
                   data-class="Random"
-                >
-                  <span class="icon">🎲</span> ?
-                </button>
+                  alt="Random Class"
+                />
               </div>
             </div>
 
@@ -331,6 +340,7 @@
         </div>
       </div>
     </section>
+
     <footer class="footerSection">
       <div class="container">
         <div class="footerRow">

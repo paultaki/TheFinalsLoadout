@@ -42,7 +42,6 @@ const loadouts = {
       "Sonar Grenade",
       "Thermal Bore",
       "Gas Grenade",
-      "Gravity Vortex",
       "Thermal Vision",
       "Tracking Dart",
       "Vanishing Bomb",
@@ -156,6 +155,49 @@ const getUniqueGadgets = (classType, loadout) => {
   return selectedGadgets;
 };
 
+function createItemContainer(items, winningItem = null, isGadget = false) {
+  if (isGadget) {
+    return items
+      .map(
+        (item, index) => `
+        <div class="itemCol ${index === 4 ? "winner" : ""}">
+          <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+          <p>${item}</p>
+        </div>
+      `
+      )
+      .join("");
+  }
+
+  winningItem = winningItem || items[Math.floor(Math.random() * items.length)];
+  let repeatedItems = items
+    .filter((item) => item !== winningItem)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 7);
+
+  repeatedItems = [
+    ...repeatedItems.slice(0, 4),
+    winningItem,
+    ...repeatedItems.slice(4),
+  ];
+
+  while (repeatedItems.length < 8) {
+    const randomItem = items[Math.floor(Math.random() * items.length)];
+    repeatedItems.push(randomItem);
+  }
+
+  return repeatedItems
+    .map(
+      (item, index) => `
+      <div class="itemCol ${index === 4 ? "winner" : ""}">
+        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+        <p>${item}</p>
+      </div>
+    `
+    )
+    .join("");
+}
+
 const displayLoadout = (classType, loadout) => {
   const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
@@ -245,6 +287,20 @@ const displayManualLoadout = (classType) => {
   const loadout = loadouts[classType];
   displayLoadout(classType, loadout);
 };
+
+function updateSpinCountdown() {
+  document.querySelectorAll(".spin-button").forEach((button) => {
+    button.classList.remove("active", "selected");
+  });
+
+  const currentButton = [...document.querySelectorAll(".spin-button")].find(
+    (b) => parseInt(b.dataset.spins) === state.currentSpin
+  );
+
+  if (currentButton) {
+    currentButton.classList.add("active");
+  }
+}
 
 const spinLoadout = (spins) => {
   if (state.isSpinning) return;
@@ -624,33 +680,6 @@ function copyLoadoutText(button) {
     });
 }
 
-function copyLoadoutText(button) {
-  const entry = button.closest(".history-entry");
-
-  if (!entry) {
-    console.error("Error: No history entry found.");
-    return;
-  }
-
-  const text = Array.from(entry.querySelectorAll("p"))
-    .map((p) => p.textContent)
-    .join("\n");
-
-  navigator.clipboard
-    .writeText(text)
-    .then(() => {
-      button.textContent = "Copied!";
-      setTimeout(() => {
-        button.textContent = "Copy";
-      }, 2000);
-    })
-    .catch((err) => {
-      console.error("Could not copy text: ", err);
-      alert("Failed to copy loadout to clipboard");
-    });
-}
-
-// Then your finalizeSpin function should look like this:
 function finalizeSpin(columns) {
   const isFinalSpin = state.currentSpin === 1;
 
@@ -715,6 +744,18 @@ function finalizeSpin(columns) {
       addToHistory(selectedClass, weapon, specialization, gadgets);
     }
 
+    // Reset class button images and states
+    document.querySelectorAll(".class-button").forEach((btn) => {
+      const classType = btn.dataset.class.toLowerCase();
+      if (classType === "random") {
+        btn.src = "images/random_dice.webp";
+        btn.classList.remove("active", "pulsing", "selected");
+      } else {
+        btn.src = `images/${classType}_silhouette.webp`;
+        btn.classList.remove("active", "selected");
+      }
+    });
+
     // Reset state
     state.isSpinning = false;
     state.currentSpin = 1;
@@ -722,7 +763,7 @@ function finalizeSpin(columns) {
     state.selectedGadgets.clear();
     state.selectedClass = null;
 
-    // Update UI
+    // Reset UI
     document
       .querySelectorAll(".class-button, .spin-button")
       .forEach((button) => {
@@ -730,292 +771,220 @@ function finalizeSpin(columns) {
         button.removeAttribute("disabled");
       });
 
-    document.getElementById("spinSelection").classList.add("disabled");
+    document.getElementById("spinSelection").classList.remove("disabled");
   }
 }
-
-// Add event listener for clearing history
-document.addEventListener("DOMContentLoaded", () => {
-  loadHistory(); // Load saved history when page loads
-
-  document.getElementById("clear-history")?.addEventListener("click", () => {
-    localStorage.removeItem("loadoutHistory");
-    document.getElementById("history-list").innerHTML = "";
-  });
-});
-
-function updateSpinCountdown() {
-  spinButtons.forEach((button) => {
-    button.classList.remove("active", "selected");
-  });
-
-  const currentButton = [...spinButtons].find(
-    (b) => parseInt(b.dataset.spins) === state.currentSpin
-  );
-  if (currentButton) {
-    currentButton.classList.add("active");
-  }
-}
-
-function createItemContainer(items, winningItem = null, isGadget = false) {
-  if (isGadget) {
-    return items
-      .map(
-        (item, index) => `
-        <div class="itemCol ${index === 4 ? "winner" : ""}">
-          <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
-          <p>${item}</p>
-        </div>
-      `
-      )
-      .join("");
-  }
-
-  winningItem = winningItem || items[Math.floor(Math.random() * items.length)];
-  let repeatedItems = items
-    .filter((item) => item !== winningItem)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 7);
-
-  repeatedItems = [
-    ...repeatedItems.slice(0, 4),
-    winningItem,
-    ...repeatedItems.slice(4),
-  ];
-
-  while (repeatedItems.length < 8) {
-    const randomItem = items[Math.floor(Math.random() * items.length)];
-    repeatedItems.push(randomItem);
-  }
-
-  return repeatedItems
-    .map(
-      (item, index) => `
-      <div class="itemCol ${index === 4 ? "winner" : ""}">
-        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
-        <p>${item}</p>
-      </div>
-    `
-    )
-    .join("");
-}
-const randomButton = document.getElementById("randomButton");
-
-if (!randomButton) {
-  console.error("Random button not found! Check your HTML.");
-} else {
-  randomButton.addEventListener("click", () => {
-    console.log("🎲 Random button clicked!"); // Debugging
-
-    if (state.isSpinning) {
-      console.log("⚠️ Already spinning! Ignoring click.");
-      return;
-    }
-
-    // Pick a random class
-    const classes = ["Light", "Medium", "Heavy"];
-    const randomClass = classes[Math.floor(Math.random() * classes.length)];
-    state.selectedClass = randomClass;
-
-    // Update UI to show the selected class
-    document.querySelectorAll(".class-button").forEach((b) => {
-      b.classList.remove("selected", "active");
-
-      // Keep the selected class highlighted
-      if (b.dataset.class.toLowerCase() === state.selectedClass.toLowerCase()) {
-        b.classList.add("selected", "active");
-      }
-    });
-
-    // Pick a random number of spins (between 1 and 5)
-    const randomSpins = Math.floor(Math.random() * 5) + 1;
-    state.totalSpins = randomSpins;
-    state.currentSpin = randomSpins;
-
-    // Update UI to show the selected spin count
-    document.querySelectorAll(".spin-button").forEach((b) => {
-      if (parseInt(b.dataset.spins) === randomSpins) {
-        b.classList.add("selected", "active");
-      } else {
-        b.classList.remove("selected", "active");
-      }
-    });
-
-    // Start spinning
-    console.log(
-      `🌀 Spinning ${state.totalSpins} times as ${state.selectedClass}`
-    );
-    spinLoadout();
-  });
-}
-
-// Event Listeners
-classButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    if (state.isSpinning) return; // Prevent changing selection mid-spin
-
-    // Remove highlight from all class buttons
-    classButtons.forEach((b) => b.classList.remove("selected", "active"));
-
-    // Highlight the selected button
-    button.classList.add("selected", "active");
-
-    if (button.dataset.class === "random") {
-      const classes = ["Light", "Medium", "Heavy"];
-      const randomClass = classes[Math.floor(Math.random() * classes.length)];
-      state.selectedClass = randomClass;
-
-      // Ensure the randomly chosen class gets highlighted
-      classButtons.forEach((b) => {
-        if (b.dataset.class === randomClass) {
-          b.classList.add("selected", "active");
-        }
-      });
-
-      // Pick a random number of spins (between 1 and 5)
-      const randomSpins = Math.floor(Math.random() * 5) + 1;
-      state.totalSpins = randomSpins;
-      state.currentSpin = randomSpins;
-
-      // Highlight the correct spin count
-      spinButtons.forEach((b) => {
-        if (parseInt(b.dataset.spins) === randomSpins) {
-          b.classList.add("selected", "active");
-        } else {
-          b.classList.remove("selected", "active");
-        }
-      });
-
-      spinLoadout();
-    } else {
-      state.selectedClass = button.dataset.class;
-      spinSelection.classList.remove("disabled");
-    }
-  });
-});
-
-spinButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    if (state.isSpinning) return;
-
-    spinButtons.forEach((b) => b.classList.remove("selected", "active"));
-    button.classList.add("selected", "active");
-    state.totalSpins = parseInt(button.dataset.spins);
-    state.currentSpin = state.totalSpins;
-
-    if (state.selectedClass) {
-      spinLoadout();
-    }
-  });
-});
-
-// Copy loadout functionality
-document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
-  const itemContainers = document.querySelectorAll(
-    ".slot-machine-wrapper .items-container .item-container"
-  );
-
-  if (!itemContainers || itemContainers.length === 0) {
-    alert("Error: No items found to copy");
-    return;
-  }
-
-  const selectedItems = Array.from(itemContainers).map((container) => {
-    const scrollContainer = container.querySelector(".scroll-container");
-    if (!scrollContainer) return "Unknown";
-
-    const allItems = scrollContainer.querySelectorAll(".itemCol");
-    const visibleItem = Array.from(allItems).find((item) => {
-      const rect = item.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-      return (
-        rect.top >= containerRect.top &&
-        rect.bottom <= containerRect.bottom &&
-        rect.height > 0 &&
-        rect.width > 0
-      );
-    });
-
-    if (!visibleItem) return "Unknown";
-    const itemText = visibleItem.querySelector("p")?.innerText.trim();
-    return itemText || "Unknown";
-  });
-
-  if (selectedItems.includes("Unknown") || selectedItems.length < 5) {
-    alert(
-      "Error: Not all items were properly selected. Please try again after the spin completes."
-    );
-    return;
-  }
-
-  const activeClassButton = document.querySelector(
-    ".class-button.selected, .class-button.active"
-  );
-  const selectedClass = activeClassButton
-    ? activeClassButton.dataset.class === "random"
-      ? document.querySelector(".class-button.selected:not(.random)")?.dataset
-          .class
-      : activeClassButton.dataset.class
-    : "Unknown";
-
-  const copyText =
-    "Class: " +
-    selectedClass +
-    "\n" +
-    "Weapon: " +
-    selectedItems[0] +
-    "\n" +
-    "Specialization: " +
-    selectedItems[1] +
-    "\n" +
-    "Gadget 1: " +
-    selectedItems[2] +
-    "\n" +
-    "Gadget 2: " +
-    selectedItems[3] +
-    "\n" +
-    "Gadget 3: " +
-    selectedItems[4];
-
-  navigator.clipboard
-    .writeText(copyText)
-    .then(() => alert("Loadout copied to clipboard!"))
-    .catch((err) => {
-      console.error("Could not copy text: ", err);
-      alert("Failed to copy loadout to clipboard");
-    });
-});
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded");
-  document.addEventListener("DOMContentLoaded", () => {
-    loadHistory(); // Load saved history when page loads
 
-    document.getElementById("clear-history")?.addEventListener("click", () => {
-      localStorage.removeItem("loadoutHistory");
-      document.getElementById("history-list").innerHTML = "";
-    });
-  });
-  const faqToggle = document.getElementById("faqToggle");
-  const faqContent = document.getElementById("faqContent");
-  const toggleIcon = document.querySelector(".toggle-icon");
+  loadHistory(); // Load saved history when page loads
 
-  if (faqToggle && faqContent) {
-    faqToggle.addEventListener("click", () => {
-      faqContent.classList.toggle("open");
-      toggleIcon.textContent = faqContent.classList.contains("open")
-        ? "−"
-        : "+";
-    });
-  }
-
-  // ✅ Call `loadHistory()` properly
-  loadHistory();
-
-  // ✅ Move `clear-history` event outside the FAQ function
+  // 🔥 Clear Loadout History
   document.getElementById("clear-history")?.addEventListener("click", () => {
     localStorage.removeItem("loadoutHistory");
     document.getElementById("history-list").innerHTML = "";
     console.log("🗑️ Loadout history cleared.");
   });
+
+  // 🔥 Dark Mode Toggle Logic
+  const darkModeToggle = document.getElementById("darkModeToggle");
+  if (darkModeToggle) {
+    if (localStorage.getItem("darkMode") === "enabled") {
+      document.body.classList.add("dark-mode");
+    }
+
+    darkModeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark-mode");
+
+      if (document.body.classList.contains("dark-mode")) {
+        localStorage.setItem("darkMode", "enabled");
+      } else {
+        localStorage.removeItem("darkMode");
+      }
+    });
+  }
+
+  // 🔥 Class Button Click Event
+  // Class Button Click Event
+  // Class Button Click Event
+  document.querySelectorAll(".class-button").forEach((button) => {
+    button.addEventListener("click", function () {
+      if (state.isSpinning) return;
+
+      // Reset all buttons to their default images
+      document.querySelectorAll(".class-button").forEach((btn) => {
+        let classType = btn.dataset.class.toLowerCase();
+
+        if (classType === "random") {
+          btn.src = `images/random_dice.webp`;
+          btn.classList.remove("active", "pulsing");
+        } else {
+          btn.src = `images/${classType}_silhouette.webp`;
+          btn.classList.remove("active", "selected");
+        }
+      });
+
+      // Handle the clicked button
+      let selectedClass = this.dataset.class.toLowerCase();
+
+      if (selectedClass === "random") {
+        this.classList.add("pulsing");
+
+        // Select a random class
+        const classes = ["Light", "Medium", "Heavy"];
+        const randomClass = classes[Math.floor(Math.random() * classes.length)];
+        state.selectedClass = randomClass;
+
+        // Highlight the selected class and update its image
+        document.querySelectorAll(".class-button").forEach((b) => {
+          b.classList.remove("selected", "active");
+          if (b.dataset.class === randomClass) {
+            b.classList.add("selected", "active");
+            // Update the image to the active variant
+            b.src = `images/${randomClass.toLowerCase()}_active.webp`;
+          }
+        });
+
+        // Select random spins (1-5)
+        const randomSpins = Math.floor(Math.random() * 5) + 1;
+        state.totalSpins = randomSpins;
+        state.currentSpin = randomSpins;
+
+        // Highlight the selected spin button
+        document.querySelectorAll(".spin-button").forEach((b) => {
+          if (parseInt(b.dataset.spins) === randomSpins) {
+            b.classList.add("selected", "active");
+          } else {
+            b.classList.remove("selected", "active");
+          }
+        });
+
+        // Enable spin buttons
+        document
+          .querySelectorAll(".spin-button")
+          .forEach((btn) => btn.removeAttribute("disabled"));
+        document.getElementById("spinSelection").classList.remove("disabled");
+
+        // Start spin animation automatically
+        setTimeout(() => {
+          spinLoadout(state.totalSpins);
+        }, 300);
+      } else {
+        // Manual class selection
+        this.src = `images/${selectedClass}_active.webp`;
+        state.selectedClass = this.dataset.class;
+        this.classList.add("active", "selected");
+
+        // Enable spin buttons for manual selection
+        document.querySelectorAll(".spin-button").forEach((btn) => {
+          btn.removeAttribute("disabled");
+        });
+        document.getElementById("spinSelection").classList.remove("disabled");
+      }
+
+      console.log(`Selected class: ${state.selectedClass}`);
+    });
+  });
+
+  // Spin Button Click Event
+  document.querySelectorAll(".spin-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (state.isSpinning) return;
+
+      try {
+        // Play click sound (if file is valid)
+        const clickSound = document.getElementById("clickSound");
+        if (clickSound && clickSound.readyState >= 2) {
+          clickSound.currentTime = 0;
+          clickSound
+            .play()
+            .catch((err) => console.warn("Error playing sound:", err));
+        }
+
+        document
+          .querySelectorAll(".spin-button")
+          .forEach((b) => b.classList.remove("selected", "active"));
+        button.classList.add("selected", "active");
+
+        state.totalSpins = parseInt(button.dataset.spins);
+        state.currentSpin = state.totalSpins;
+
+        // Always trigger spinLoadout when both class and spins are selected
+        if (state.selectedClass) {
+          spinLoadout(state.totalSpins); // Pass the number of spins explicitly
+        } else {
+          console.warn("No class selected!");
+        }
+      } catch (error) {
+        console.error("Error in spin button handler:", error);
+      }
+    });
+  });
+
+  // 🔥 Copy Loadout Button
+  document
+    .getElementById("copyLoadoutButton")
+    ?.addEventListener("click", () => {
+      try {
+        const itemContainers = document.querySelectorAll(
+          ".slot-machine-wrapper .items-container .item-container"
+        );
+
+        if (!itemContainers || itemContainers.length === 0) {
+          alert("Error: No items found to copy");
+          return;
+        }
+
+        const selectedItems = Array.from(itemContainers).map((container) => {
+          const scrollContainer = container.querySelector(".scroll-container");
+          if (!scrollContainer) return "Unknown";
+
+          const allItems = scrollContainer.querySelectorAll(".itemCol");
+          const visibleItem = Array.from(allItems).find((item) => {
+            const rect = item.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            return (
+              rect.top >= containerRect.top &&
+              rect.bottom <= containerRect.bottom &&
+              rect.height > 0 &&
+              rect.width > 0
+            );
+          });
+
+          if (!visibleItem) return "Unknown";
+          return visibleItem.querySelector("p")?.innerText.trim() || "Unknown";
+        });
+
+        if (selectedItems.includes("Unknown") || selectedItems.length < 5) {
+          alert(
+            "Error: Not all items were properly selected. Please try again after the spin completes."
+          );
+          return;
+        }
+
+        const activeClassButton = document.querySelector(
+          ".class-button.selected, .class-button.active"
+        );
+        const selectedClass = activeClassButton
+          ? activeClassButton.dataset.class === "random"
+            ? document.querySelector(".class-button.selected:not(.random)")
+                ?.dataset.class
+            : activeClassButton.dataset.class
+          : "Unknown";
+
+        const copyText = `Class: ${selectedClass}\nWeapon: ${selectedItems[0]}\nSpecialization: ${selectedItems[1]}\nGadget 1: ${selectedItems[2]}\nGadget 2: ${selectedItems[3]}\nGadget 3: ${selectedItems[4]}`;
+
+        navigator.clipboard
+          .writeText(copyText)
+          .then(() => alert("Loadout copied to clipboard!"))
+          .catch((err) => {
+            console.error("Could not copy text:", err);
+            alert("Failed to copy loadout to clipboard");
+          });
+      } catch (error) {
+        console.error("Error in copy loadout handler:", error);
+        alert("An error occurred while copying the loadout");
+      }
+    });
 });
