@@ -1695,7 +1695,7 @@ iframe#bmc-button {
 .dark-mode {
   background: #111 !important;
   color: #fff !important;
-}
+}`
 .dark-mode .headerSection,
 .dark-mode .container,
 .dark-mode .slot-machine-wrapper {
@@ -1713,12 +1713,26 @@ iframe#bmc-button {
 
 /* === CLASS BUTTON STYLES (IMAGE-BASED) === */
 .class-button {
-  width: 150px;
-  height: auto;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-
+  .class-button {
+    width: 18vw; /* Make width relative to viewport width */
+    max-width: 120px; /* Prevent it from getting too big */
+    height: auto;
+  }
+  
+  /* Adjust further for smaller screens */
+  @media (max-width: 600px) {
+    .class-button {
+      width: 22vw; /* Increase relative width for smaller screens */
+      max-width: 100px;
+    }
+  }
+  
+  @media (max-width: 400px) {
+    .class-button {
+      width: 24vw;
+      max-width: 90px;
+    }
+  }
 /* Hover Effect: Character glow */
 .class-button:hover {
   filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7)) 
