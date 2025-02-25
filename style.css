@@ -1663,11 +1663,27 @@ iframe#bmc-button {
 }
 
 /* === MOBILE RESPONSIVENESS === */
+.class-button {
+  width: 18vw; /* Make width relative to viewport width */
+  max-width: 120px; /* Prevent it from getting too big */
+  height: auto;
+}
+
+/* Adjust further for smaller screens */
 @media (max-width: 600px) {
   .class-button {
-      width: 100px; /* Adjust for smaller screens */
+    width: 22vw; /* Increase relative width for smaller screens */
+    max-width: 100px;
   }
 }
+
+@media (max-width: 400px) {
+  .class-button {
+    width: 24vw;
+    max-width: 90px;
+  }
+}
+
 /* Spin Button Click Animation */
 .spin-button:active {
   transform: scale(0.9); /* Press-in effect */
