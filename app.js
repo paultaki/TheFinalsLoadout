@@ -988,14 +988,3 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 });
-
-function updateClassUI(selectedClass) {
-  document.querySelectorAll(".class-button").forEach((btn) => {
-    btn.classList.remove("active", "selected");
-
-    // Convert to lowercase for comparison since your data attributes might vary in case
-    if (btn.dataset.class.toLowerCase() === selectedClass.toLowerCase()) {
-      btn.classList.add("active", "selected");
-    }
-  });
-}
