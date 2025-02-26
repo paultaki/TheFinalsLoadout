@@ -704,10 +704,22 @@ function finalizeSpin(columns) {
       if (container) {
         setTimeout(() => {
           container.classList.add("landing-flash");
+
+          // Speed up the "LOCKED IN" tag appearance
           setTimeout(() => {
-            container.classList.add("winner-pulsate");
-          }, 300);
-        }, index * 200);
+            if (!container.querySelector(".locked-tag")) {
+              const lockedTag = document.createElement("div");
+              lockedTag.className = "locked-tag";
+              lockedTag.textContent = "LOCKED IN!";
+              container.appendChild(lockedTag);
+
+              // Show the tag with animation
+              setTimeout(() => {
+                lockedTag.classList.add("show");
+              }, 150); // Slightly faster reveal
+            }
+          }, 180); // Reduced delay for smoother sync
+        }, index * 150); // Faster sequence (previously 250ms)
       }
     });
 
@@ -743,18 +755,6 @@ function finalizeSpin(columns) {
 
       addToHistory(selectedClass, weapon, specialization, gadgets);
     }
-
-    // Reset class button images and states
-    document.querySelectorAll(".class-button").forEach((btn) => {
-      const classType = btn.dataset.class.toLowerCase();
-      if (classType === "random") {
-        btn.src = "images/random_dice.webp";
-        btn.classList.remove("active", "pulsing", "selected");
-      } else {
-        btn.src = `images/${classType}_silhouette.webp`;
-        btn.classList.remove("active", "selected");
-      }
-    });
 
     // Reset state
     state.isSpinning = false;
