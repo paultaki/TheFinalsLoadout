@@ -30,39 +30,6 @@
   background: linear-gradient(45deg, #1e90ff, #7b2fe3);
 }
 
-@keyframes finalFlash {
-  0% {
-    box-shadow: 0 0 100px rgba(255, 215, 0, 1);
-    transform: scale(1.2);
-    background-color: rgba(255, 255, 255, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 60px rgba(255, 183, 0, 0.9);
-    transform: scale(1.15);
-    background-color: rgba(255, 255, 255, 0.2);
-  }
-  100% {
-    box-shadow: 0 0 30px rgba(255, 140, 0, 0.7);
-    transform: scale(1.1);
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-}
-
-@keyframes slowPulse {
-  0% {
-    box-shadow: 0 0 20px rgba(255, 183, 0, 0.7);
-    transform: scale(1.05);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(255, 183, 0, 0.9);
-    transform: scale(1.1);
-  }
-  100% {
-    box-shadow: 0 0 20px rgba(255, 183, 0, 0.7);
-    transform: scale(1.05);
-  }
-}
-
 /* Base Styles */
 * {
   box-sizing: border-box;
@@ -1781,5 +1748,51 @@ iframe#bmc-button {
 @media (max-width: 400px) {
   .class-button {
     width: 90px; /* Slightly smaller on very small screens */
+  }
+}
+
+/* Subheading for Loadout Generator */
+.subTitle {
+  font-size: 1.2rem; /* Default size */
+  color: var(--neon-yellow); /* Same color as mainTitle */
+  font-weight: 400;
+  margin-top: -5px; /* Reduce gap between title and subtitle */
+  display: block;
+  text-align: center;
+}
+
+/* Reduce size on smaller screens */
+@media (max-width: 768px) {
+  .subTitle {
+    font-size: 1rem; /* Make it smaller on tablets & small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .subTitle {
+    font-size: 0.9rem; /* Even smaller on mobile */
+  }
+}
+@media (max-width: 768px) {
+  /* Reduce the bottom margin of the slot machine */
+  .slot-machine-wrapper {
+    margin-bottom: 5px !important; /* Force minimal space */
+    padding-bottom: 0 !important;
+  }
+
+  /* Reduce extra padding below the slot items */
+  .items-container {
+    padding-bottom: 0px !important;
+    margin-bottom: 0px !important;
+  }
+
+  /* Ensure Punishment Loadout button is close */
+  #punishmentLoadoutButton {
+    margin-top: -10px !important; /* Pull it closer */
+  }
+
+  /* If there's still space, try forcing the section below up */
+  .loadout-history {
+    margin-top: -20px !important;
   }
 }
