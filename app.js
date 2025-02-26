@@ -588,6 +588,12 @@ function addToHistory(
   `;
 
   historyList.prepend(newEntry);
+
+  // Ensure the history list contains only the last 5 entries
+  while (historyList.children.length > 5) {
+    historyList.removeChild(historyList.lastChild);
+  }
+
   saveHistory();
 }
 
