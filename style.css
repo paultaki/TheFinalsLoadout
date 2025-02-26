@@ -549,6 +549,9 @@ body {
   transform-origin: center;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  height: 210px; /* Adjust based on your item height */
+  margin-bottom: 10px !important; /* Force consistent bottom margin */
+  transform-origin: center center; /* Change transform origin to prevent shifting */
 }
 
 .items-container::-webkit-scrollbar {
@@ -584,16 +587,17 @@ body {
   .items-container {
     transform: scale(0.45);
     transform-origin: center top;
-    width: 600px; /* Reduced from 700px */
-    margin: 0 auto;
-    padding: 10px 15px;
+    width: 600px;
+    margin: 0 auto -50px; /* Add negative bottom margin to pull elements up */
+    padding: 10px 15px 0; /* Remove bottom padding */
   }
-
   /* Wrapper to contain the overflow */
   .slot-machine-wrapper {
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
     display: flex;
+    margin-bottom: 0;
+    padding-bottom: 0;
     justify-content: center;
     align-items: center;
   }
@@ -1066,7 +1070,13 @@ img {
   background: linear-gradient(45deg, #d50000, #ff6f00) !important;
   border: 1px solid #ff3d00 !important;
   font-size: 0.9rem;
+      position: relative;
+
   font-weight: bold;
+  z-index: 10; /* Ensure it's above other elements */
+
+  margin-top: -30px; /* Negative margin to pull it up */
+
   text-transform: uppercase;
   text-decoration: none !important;
   color: white !important;
