@@ -153,12 +153,6 @@ body.flexStyle {
   opacity: 0;
 }
 
-/* Hover Effect */
-#punishmentLoadoutButton:hover {
-  transform: translateY(-3px) scale(1.07);
-  box-shadow: 0 0 20px rgba(255, 140, 0, 0.8);
-  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
-}
 
 /* Skull Icon Fix */
 .skull-icon {
@@ -351,10 +345,6 @@ div[style*="display: inline-block"] {
 /* Space out Step 2 from class buttons */
 .step + .btnRow {
   margin-top: 15px; /* Creates better separation */
-}
-
-#punishmentLoadoutButton {
-  animation: subtlePulse 2.5s ease-in-out infinite; /* Keeps pulsing effect */
 }
 
 
@@ -550,7 +540,7 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
   height: 210px; /* Adjust based on your item height */
-  margin-bottom: 10px !important; /* Force consistent bottom margin */
+  margin-bottom: 20px !important;
   transform-origin: center center; /* Change transform origin to prevent shifting */
 }
 
@@ -589,7 +579,8 @@ body {
     transform-origin: center top;
     width: 600px;
     margin: 0 auto -50px; /* Add negative bottom margin to pull elements up */
-    padding: 10px 15px 0; /* Remove bottom padding */
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
   }
   /* Wrapper to contain the overflow */
   .slot-machine-wrapper {
@@ -797,28 +788,6 @@ body {
   }
 }
 
-/* Punishment button pulse */
-@keyframes subtlePulse {
-  0% {
-    transform: scale(1);
-    background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-  50% {
-    transform: scale(1.02);
-    background: linear-gradient(
-      45deg,
-      var(--neon-red),
-      var(--neon-orange, 0.9)
-    );
-    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.3);
-  }
-  100% {
-    transform: scale(1);
-    background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-}
 
 /* New animation for selected state */
 @keyframes selectedPulse {
@@ -1060,39 +1029,7 @@ img {
 }
 
 
-/* Fix for Punishment Loadout Button */
-#punishmentLoadoutButton {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 8px 15px;
-  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
-  border: 1px solid #ff3d00 !important;
-  font-size: 0.9rem;
-      position: relative;
 
-  font-weight: bold;
-  z-index: 10; /* Ensure it's above other elements */
-
-  margin-top: -30px; /* Negative margin to pull it up */
-
-  text-transform: uppercase;
-  text-decoration: none !important;
-  color: white !important;
-  cursor: pointer;
-  border-radius: 6px;
-  box-shadow: 0 0 6px rgba(255, 69, 0, 0.8);
-  transition: all 0.3s ease-in-out;
-  animation: subtlePulse 2s ease-in-out infinite;
-}
-
-/* Hover Effect */
-#punishmentLoadoutButton:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 0 10px rgba(255, 140, 0, 0.9);
-  background: linear-gradient(45deg, #ff6f00, #d50000) !important;
-}
 
 .skull-icon {
   width: 12px;
@@ -1109,18 +1046,18 @@ img {
 @keyframes subtlePulse {
   0% {
     transform: scale(1);
-    background: linear-gradient(45deg, #d50000, #ff6f00) !important;
-    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.7);
+    background: linear-gradient(45deg, #ff0000, #ff7b00) !important;
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.6);
   }
   50% {
-    transform: scale(1.06);
-    background: linear-gradient(45deg, #ff6f00, #d50000) !important;
-    box-shadow: 0 6px 14px rgba(255, 140, 0, 0.9);
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ff7b00, #ff0000) !important;
+    box-shadow: 0 6px 18px rgba(255, 140, 0, 0.8);
   }
   100% {
     transform: scale(1);
-    background: linear-gradient(45deg, #d50000, #ff6f00) !important;
-    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.7);
+    background: linear-gradient(45deg, #ff0000, #ff7b00) !important;
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.6);
   }
 }
 
@@ -1371,6 +1308,9 @@ img {
   padding: 20px;
   margin: 20px auto;
   max-width: 800px;
+  margin-top: 15px; /* Ensure space between button and history */
+  z-index: 1;
+
   border: 2px solid #ffcc00;
 }
 
@@ -1796,13 +1736,209 @@ iframe#bmc-button {
     margin-bottom: 0px !important;
   }
 
-  /* Ensure Punishment Loadout button is close */
-  #punishmentLoadoutButton {
-    margin-top: -10px !important; /* Pull it closer */
+
+
+}
+/* =============================================
+   PUNISHMENT LOADOUT BUTTON - CONSOLIDATED STYLES
+   ============================================= */
+
+/* Base button styles with broad selector for consistency */
+#punishmentLoadoutButton, 
+button[id*="punishment"], 
+a[id*="punishment"],
+.punishment-loadout-button {
+  /* Display & Alignment */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  
+  /* Dimensions & Spacing */
+  padding: 8px 15px;
+  margin: 15px auto !important;
+  width: fit-content;
+  
+  /* Positioning */
+  position: relative;
+  z-index: 5;
+  
+  /* Typography */
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  color: white !important;
+  
+  /* Visual styling */
+  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+  border: 1px solid #ff3d00 !important;
+  border-radius: 6px;
+  box-shadow: 0 0 6px rgba(255, 69, 0, 0.8);
+  
+  /* Behavior */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  
+  /* Animation */
+  animation: subtlePulse 2.5s ease-in-out infinite;
+}
+
+/* Hover effect with consistent values */
+#punishmentLoadoutButton:hover,
+button[id*="punishment"]:hover,
+a[id*="punishment"]:hover,
+.punishment-loadout-button:hover {
+  transform: translateY(-3px) scale(1.07);
+  box-shadow: 0 0 20px rgba(255, 140, 0, 0.8);
+  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
+}
+
+/* Pulse animation with consistent color values */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff0000, #ff7b00) !important;
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.6);
+  }
+  50% {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ff7b00, #ff0000) !important;
+    box-shadow: 0 6px 18px rgba(255, 140, 0, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff0000, #ff7b00) !important;
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.6);
+  }
+}
+
+
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  #punishmentLoadoutButton, 
+  button[id*="punishment"], 
+  a[id*="punishment"],
+  .punishment-loadout-button {
+    margin: 15px auto !important;
+    padding: 7px 14px;
+    font-size: 0.85rem;
+  }
+}
+/* Improved mobile layout that preserves original styling */
+@media (max-width: 768px) {
+  /* Container for slot machine - preserve scaling but fix spacing */
+
+  .slot-machine-wrapper::before {
+    display: none;
+  }
+  .items-container {
+    transform: scale(0.45);
+    transform-origin: center top;
+    width: 800px !important; /* Much wider to ensure all items fit */
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  
+  .slot-machine-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible !important;
+  }
+  
+  /* Create a wider background that doesn't affect the items */
+  .slot-machine-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 110%;
+    height: 110%;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    z-index: -1;
+  }
+  .slot-machine-wrapper::after {
+    content: "";
+    position: absolute;
+    width: 95%;
+    height: 95%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    z-index: -1;
   }
 
-  /* If there's still space, try forcing the section below up */
+  /* Position the punishment button closer to the items */
+  #punishmentLoadoutButton, 
+  button[id*="punishment"], 
+  a[id*="punishment"],
+  .punishment-loadout-button {
+    margin-top: 0 !important; /* No top margin */
+    margin-bottom: 10px !important; /* Small bottom margin */
+    position: relative;
+    z-index: 10;
+  }
+  
+  /* Ensure loadout history starts right after the button */
   .loadout-history {
-    margin-top: -20px !important;
+    margin-top: 10 !important; /* No top margin */
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Remove space after slot machine */
+  .mainContent > div {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  
+  /* Force the slot machine to have minimal height impact on page flow */
+  .slot-machine-wrapper + div {
+    margin-top: 0 !important;
+  }
+  
+  /* Fix for any hidden divs creating space */
+  .slot-machine-wrapper ~ div:empty {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* Extra small devices - keep your original settings */
+@media (max-width: 375px) {
+  .items-container {
+    transform: scale(0.42);
+    width: 580px;
+  }
+}
+
+/* Extra tweaks for iPhone and smaller screens */
+@media (max-width: 400px) {
+  .items-container {
+    transform: scale(0.42);
+    height: 140px !important;
+    min-height: 140px !important;
+  }
+  
+  #punishmentLoadoutButton, 
+  button[id*="punishment"], 
+  a[id*="punishment"],
+  .punishment-loadout-button {
+    top: -25px; /* Pull button up even more on smaller screens */
+  }
+  
+  .loadout-history {
+    top: -15px; /* Pull history up more */
   }
 }
