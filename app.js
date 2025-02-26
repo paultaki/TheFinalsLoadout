@@ -568,49 +568,6 @@ function startSpinAnimation(columns) {
   requestAnimationFrame(animate);
 }
 
-// Other physics constants remain the same...
-function startSpinAnimation(columns) {
-  const isFinalSpin = state.currentSpin === 1;
-  const startTime = performance.now();
-
-  const slotColumns = columns.map(
-    (element, index) => new SlotColumn(element, index, isFinalSpin)
-  );
-
-  // Reset columns - simply reset position, no animation handling here
-  columns.forEach((column) => {
-    column.style.transform = "translateY(0)";
-    column.style.transition = "none";
-  });
-
-  slotColumns.forEach((column) => (column.state = "accelerating"));
-
-  function animate(currentTime) {
-    const elapsed = currentTime - startTime;
-    let isAnimating = false;
-
-    slotColumns.forEach((column) => {
-      if (column.state !== "stopped") {
-        isAnimating = true;
-        const deltaTime = column.lastTimestamp
-          ? currentTime - column.lastTimestamp
-          : 16.67;
-        column.update(elapsed, deltaTime);
-        column.lastTimestamp = currentTime;
-      }
-    });
-
-    if (isAnimating) {
-      requestAnimationFrame(animate);
-    } else {
-      // Simply call finalizeSpin, which will handle all end-of-spin logic
-      finalizeSpin(columns);
-    }
-  }
-
-  requestAnimationFrame(animate);
-}
-
 // These should be defined outside finalizeSpin, at the top level of your file
 function addToHistory(
   classType,
@@ -805,8 +762,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 🔥 Class Button Click Event
-  // Class Button Click Event
   // Class Button Click Event
   document.querySelectorAll(".class-button").forEach((button) => {
     button.addEventListener("click", function () {
