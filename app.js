@@ -319,6 +319,9 @@ const spinLoadout = (spins) => {
 
   if (!state.selectedClass && state.selectedClass !== "random") {
     state.isSpinning = false; // Make sure to reset spinning state
+    document.querySelectorAll(".class-button, .spin-button").forEach((btn) => {
+      btn.removeAttribute("disabled");
+    });
     return;
   }
 
@@ -480,7 +483,6 @@ class SlotColumn {
     this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
   }
 }
-
 function startSpinAnimation(columns) {
   const isFinalSpin = state.currentSpin === 1;
   const startTime = performance.now();
@@ -494,22 +496,32 @@ function startSpinAnimation(columns) {
     const container = column.closest(".item-container");
     if (container) {
       container.classList.remove("landing-flash", "winner-pulsate");
+
+      // Remove existing locked tag for non-final spins
+      if (!isFinalSpin) {
+        const existingTag = container.querySelector(".locked-tag");
+        if (existingTag) {
+          existingTag.remove();
+        }
+      }
     }
     column.style.transform = "translateY(0)";
     column.style.transition = "none";
   });
 
-  // Add locked tags to containers
-  columns.forEach((column) => {
-    const container = column.closest(".item-container");
-    const existingTag = container.querySelector(".locked-tag");
-    if (!existingTag) {
-      const lockedTag = document.createElement("div");
-      lockedTag.className = "locked-tag";
-      lockedTag.textContent = "Locked In!";
-      container.appendChild(lockedTag);
-    }
-  });
+  // Add locked tags only for final spin
+  if (isFinalSpin) {
+    columns.forEach((column) => {
+      const container = column.closest(".item-container");
+      const existingTag = container.querySelector(".locked-tag");
+      if (!existingTag) {
+        const lockedTag = document.createElement("div");
+        lockedTag.className = "locked-tag";
+        lockedTag.textContent = "Locked In!";
+        container.appendChild(lockedTag);
+      }
+    });
+  }
 
   slotColumns.forEach((column) => (column.state = "accelerating"));
 
@@ -525,8 +537,8 @@ function startSpinAnimation(columns) {
           : 16.67;
         column.update(elapsed, deltaTime);
         column.lastTimestamp = currentTime;
-      } else {
-        // Show locked tag when column stops
+      } else if (isFinalSpin) {
+        // Only show locked tag when column stops on final spin
         const container = column.element.closest(".item-container");
         const tag = container.querySelector(".locked-tag");
         if (tag) {
@@ -538,36 +550,12 @@ function startSpinAnimation(columns) {
     if (isAnimating) {
       requestAnimationFrame(animate);
     } else {
-      if (isFinalSpin) {
-        // Only add flash animations on the final spin
-        columns.forEach((column, index) => {
-          const container = column.closest(".item-container");
-          if (container) {
-            setTimeout(() => {
-              container.classList.add("landing-flash");
-              setTimeout(() => {
-                container.classList.add("winner-pulsate");
-              }, 300);
-            }, index * 200);
-          }
-        });
-        finalizeSpin(columns);
-      } else {
-        // For non-final spins, just move to the next spin
-        setTimeout(() => {
-          if (state.selectedClass === "random") {
-            displayRandomLoadout();
-          } else {
-            displayManualLoadout(state.selectedClass);
-          }
-        }, 300);
-      }
+      finalizeSpin(columns);
     }
   }
 
   requestAnimationFrame(animate);
 }
-
 // These should be defined outside finalizeSpin, at the top level of your file
 function addToHistory(
   classType,
@@ -643,25 +631,36 @@ function copyLoadoutText(button) {
     });
 }
 
+// Fix 1: Update the finalizeSpin function to correctly handle multiple spins
 function finalizeSpin(columns) {
+  // Check if this is the final spin
   const isFinalSpin = state.currentSpin === 1;
 
   if (state.currentSpin > 1) {
+    // This is not the final spin, so decrement the counter and prepare for next spin
     state.currentSpin--;
     updateSpinCountdown();
 
+    // Re-enable buttons between spins
+    document
+      .querySelectorAll(".class-button, .spin-button")
+      .forEach((button) => {
+        button.removeAttribute("disabled");
+      });
+
+    // Wait a moment, then trigger the next spin
     setTimeout(() => {
       if (state.selectedClass === "random") {
         displayRandomLoadout();
       } else {
         displayManualLoadout(state.selectedClass);
       }
-    }, 300);
+    }, 800); // Longer delay between spins for better user experience
     return;
   }
 
   if (isFinalSpin) {
-    // Add animations and visual effects
+    // This is the final spin - show landing animations and add to history
     columns.forEach((column, index) => {
       const container = column.closest(".item-container");
       if (container) {
@@ -679,10 +678,10 @@ function finalizeSpin(columns) {
               // Show the tag with animation
               setTimeout(() => {
                 lockedTag.classList.add("show");
-              }, 150); // Slightly faster reveal
+              }, 150);
             }
-          }, 180); // Reduced delay for smoother sync
-        }, index * 150); // Faster sequence (previously 250ms)
+          }, 180);
+        }, index * 150);
       }
     });
 
