@@ -42,6 +42,7 @@ const loadouts = {
       "Sonar Grenade",
       "Thermal Bore",
       "Gas Grenade",
+      "Free Choice",
       "Thermal Vision",
       "Tracking Dart",
       "Vanishing Bomb",
@@ -72,6 +73,7 @@ const loadouts = {
       "Defibrillator",
       "Explosive Mine",
       "Gas Mine",
+      "Free Choice",
       "Glitch Trap",
       "Jump Pad",
       "Zipline",
@@ -108,6 +110,7 @@ const loadouts = {
       "Proximity Sensor",
       "RPG-7",
       "Goo Grenade",
+      "Free Choice",
       "Pyro Grenade",
       "Smoke Grenade",
       "Frag Grenade",
@@ -368,6 +371,7 @@ class SlotColumn {
     this.isFinalSpin = isFinalSpin;
     this.animationStartTime = null;
     this.maxAnimationDuration = 10000; // 10 second safety timeout
+    this.onStop = null; // Add this callback property
 
     const timing = isFinalSpin
       ? PHYSICS.TIMING.FINAL_SPIN
@@ -471,6 +475,11 @@ class SlotColumn {
     this.position = this.targetPosition;
     this.state = "stopped";
     this.updateVisuals();
+
+    // Call the onStop callback if it exists
+    if (this.onStop && typeof this.onStop === "function") {
+      this.onStop(this.element);
+    }
   }
 
   updateVisuals() {
@@ -483,19 +492,58 @@ class SlotColumn {
     this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
   }
 }
+
 function startSpinAnimation(columns) {
   const isFinalSpin = state.currentSpin === 1;
   const startTime = performance.now();
 
-  const slotColumns = columns.map(
-    (element, index) => new SlotColumn(element, index, isFinalSpin)
-  );
+  const slotColumns = columns.map((element, index) => {
+    const column = new SlotColumn(element, index, isFinalSpin);
+
+    // Add the onStop callback for final spin effects
+    if (isFinalSpin) {
+      column.onStop = (columnElement) => {
+        const container = columnElement.closest(".item-container");
+        if (container) {
+          // Apply initial flash effect
+          container.classList.remove("final-flash"); // Ensure restart
+          void container.offsetWidth; // Force reflow
+          container.classList.add("final-flash");
+
+          // Add locked in tag with animation
+          if (!container.querySelector(".locked-tag")) {
+            const lockedTag = document.createElement("div");
+            lockedTag.className = "locked-tag";
+            lockedTag.textContent = "LOCKED IN!";
+            container.appendChild(lockedTag);
+
+            // Small delay for tag animation
+            setTimeout(() => {
+              lockedTag.classList.add("show");
+            }, 150);
+          }
+
+          // Transition from flash to pulse effect
+          setTimeout(() => {
+            container.classList.remove("final-flash");
+            container.classList.add("winner-pulsate");
+          }, 500);
+        }
+      };
+    }
+
+    return column;
+  });
 
   // Reset columns - remove all animations
   columns.forEach((column) => {
     const container = column.closest(".item-container");
     if (container) {
-      container.classList.remove("landing-flash", "winner-pulsate");
+      container.classList.remove(
+        "landing-flash",
+        "winner-pulsate",
+        "final-flash"
+      );
 
       // Remove existing locked tag for non-final spins
       if (!isFinalSpin) {
@@ -508,20 +556,6 @@ function startSpinAnimation(columns) {
     column.style.transform = "translateY(0)";
     column.style.transition = "none";
   });
-
-  // Add locked tags only for final spin
-  if (isFinalSpin) {
-    columns.forEach((column) => {
-      const container = column.closest(".item-container");
-      const existingTag = container.querySelector(".locked-tag");
-      if (!existingTag) {
-        const lockedTag = document.createElement("div");
-        lockedTag.className = "locked-tag";
-        lockedTag.textContent = "Locked In!";
-        container.appendChild(lockedTag);
-      }
-    });
-  }
 
   slotColumns.forEach((column) => (column.state = "accelerating"));
 
@@ -537,25 +571,23 @@ function startSpinAnimation(columns) {
           : 16.67;
         column.update(elapsed, deltaTime);
         column.lastTimestamp = currentTime;
-      } else if (isFinalSpin) {
-        // Only show locked tag when column stops on final spin
-        const container = column.element.closest(".item-container");
-        const tag = container.querySelector(".locked-tag");
-        if (tag) {
-          tag.classList.add("show");
-        }
       }
     });
 
     if (isAnimating) {
       requestAnimationFrame(animate);
     } else {
+      // When all columns are stopped, if this is the final spin, trigger the victory flash
+      if (isFinalSpin) {
+        finalVictoryFlash(columns);
+      }
       finalizeSpin(columns);
     }
   }
 
   requestAnimationFrame(animate);
 }
+
 // These should be defined outside finalizeSpin, at the top level of your file
 function addToHistory(
   classType,
@@ -633,108 +665,215 @@ function copyLoadoutText(button) {
 
 // Fix 1: Update the finalizeSpin function to correctly handle multiple spins
 function finalizeSpin(columns) {
-  // Check if this is the final spin
   const isFinalSpin = state.currentSpin === 1;
 
   if (state.currentSpin > 1) {
-    // This is not the final spin, so decrement the counter and prepare for next spin
     state.currentSpin--;
     updateSpinCountdown();
 
-    // Re-enable buttons between spins
     document
       .querySelectorAll(".class-button, .spin-button")
-      .forEach((button) => {
-        button.removeAttribute("disabled");
-      });
+      .forEach((button) => button.removeAttribute("disabled"));
 
-    // Wait a moment, then trigger the next spin
     setTimeout(() => {
       if (state.selectedClass === "random") {
         displayRandomLoadout();
       } else {
         displayManualLoadout(state.selectedClass);
       }
-    }, 800); // Longer delay between spins for better user experience
+    }, 800);
     return;
   }
 
   if (isFinalSpin) {
-    // This is the final spin - show landing animations and add to history
-    columns.forEach((column, index) => {
-      const container = column.closest(".item-container");
-      if (container) {
-        setTimeout(() => {
-          container.classList.add("landing-flash");
-
-          // Speed up the "LOCKED IN" tag appearance
-          setTimeout(() => {
-            if (!container.querySelector(".locked-tag")) {
-              const lockedTag = document.createElement("div");
-              lockedTag.className = "locked-tag";
-              lockedTag.textContent = "LOCKED IN!";
-              container.appendChild(lockedTag);
-
-              // Show the tag with animation
-              setTimeout(() => {
-                lockedTag.classList.add("show");
-              }, 150);
-            }
-          }, 180);
-        }, index * 150);
-      }
-    });
-
-    // Get the final loadout items
-    const itemContainers = document.querySelectorAll(".item-container");
-    const selectedItems = Array.from(itemContainers).map((container) => {
-      const scrollContainer = container.querySelector(".scroll-container");
-      if (!scrollContainer) return "Unknown";
-
-      const allItems = scrollContainer.querySelectorAll(".itemCol");
-      const visibleItem = Array.from(allItems).find((item) => {
-        const rect = item.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        return (
-          rect.top >= containerRect.top &&
-          rect.bottom <= containerRect.bottom &&
-          rect.height > 0 &&
-          rect.width > 0
-        );
-      });
-
-      return visibleItem
-        ? visibleItem.querySelector("p")?.innerText.trim()
-        : "Unknown";
-    });
-
-    // Add to history if we have valid items
-    if (selectedItems.length >= 5) {
-      const selectedClass = state.selectedClass || "Unknown";
-      const weapon = selectedItems[0];
-      const specialization = selectedItems[1];
-      const gadgets = selectedItems.slice(2, 5);
-
-      addToHistory(selectedClass, weapon, specialization, gadgets);
-    }
-
-    // Reset state
+    // Reset state after final spin
     state.isSpinning = false;
     state.currentSpin = 1;
     state.totalSpins = 0;
     state.selectedGadgets.clear();
     state.selectedClass = null;
 
-    // Reset UI
     document
       .querySelectorAll(".class-button, .spin-button")
-      .forEach((button) => {
-        button.classList.remove("active", "selected");
-        button.removeAttribute("disabled");
-      });
+      .forEach((button) => button.classList.remove("active", "selected"));
 
     document.getElementById("spinSelection").classList.remove("disabled");
   }
+}
+
+// Improved confetti function with random starting positions
+function createConfetti() {
+  // Find the items container
+  const itemsContainer = document.querySelector(".items-container");
+
+  if (!itemsContainer) {
+    console.warn("Items container not found for confetti");
+    return;
+  }
+
+  // Get the container dimensions for absolute positioning
+  const containerRect = itemsContainer.getBoundingClientRect();
+  const containerHeight = containerRect.height;
+  const containerWidth = containerRect.width;
+
+  // Create a positioned wrapper for the confetti
+  const confettiWrapper = document.createElement("div");
+  confettiWrapper.style.position = "absolute";
+  confettiWrapper.style.top = "0";
+  confettiWrapper.style.left = "0";
+  confettiWrapper.style.width = "100%";
+  confettiWrapper.style.height = "100%";
+  confettiWrapper.style.overflow = "hidden";
+  confettiWrapper.style.pointerEvents = "none";
+  confettiWrapper.style.zIndex = "100";
+
+  // Ensure the container has positioning for absolute children
+  if (getComputedStyle(itemsContainer).position === "static") {
+    itemsContainer.style.position = "relative";
+  }
+
+  itemsContainer.appendChild(confettiWrapper);
+
+  // Create confetti pieces
+  for (let i = 0; i < 100; i++) {
+    const confetti = document.createElement("div");
+
+    // Randomize confetti properties
+    const size = Math.random() * 8 + 4; // 4-12px
+    const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+
+    // Create different shapes
+    const shapes = ["square", "circle", "triangle"];
+    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+
+    confetti.style.position = "absolute";
+    confetti.style.width = `${size}px`;
+    confetti.style.height = `${size}px`;
+    confetti.style.backgroundColor = color;
+    confetti.style.opacity = "0.8";
+
+    // Set initial position - randomized within the top half of container
+    // This makes them appear as if already falling
+    confetti.style.top = `${Math.random() * (containerHeight / 2) * -1}px`; // Start above container
+    confetti.style.left = `${Math.random() * containerWidth}px`; // Random horizontal position
+
+    // Apply different shapes
+    if (shape === "circle") {
+      confetti.style.borderRadius = "50%";
+    } else if (shape === "triangle") {
+      confetti.style.width = "0";
+      confetti.style.height = "0";
+      confetti.style.backgroundColor = "transparent";
+      confetti.style.borderLeft = `${size / 2}px solid transparent`;
+      confetti.style.borderRight = `${size / 2}px solid transparent`;
+      confetti.style.borderBottom = `${size}px solid ${color}`;
+    }
+
+    // Add the animation directly with JavaScript
+    const duration = Math.random() * 1 + 1; // 1-2 seconds duration (faster)
+    const finalY = containerHeight + size; // Fall past bottom of container
+
+    // Create keyframe animation manually
+    confetti.animate(
+      [
+        {
+          transform: `translateY(0) rotate(${Math.random() * 180}deg)`,
+          opacity: 1,
+        },
+        {
+          transform: `translateY(${finalY}px) rotate(${
+            Math.random() * 360
+          }deg)`,
+          opacity: 0,
+        },
+      ],
+      {
+        duration: duration * 1000,
+        easing: "cubic-bezier(0.55, 0, 0.55, 0.2)",
+        delay: 0, // No delay for immediate start
+        fill: "forwards",
+      }
+    );
+
+    confettiWrapper.appendChild(confetti);
+  }
+
+  // Remove the confetti after all animations complete
+  setTimeout(() => {
+    confettiWrapper.remove();
+  }, 3000); // Reduced cleanup time
+}
+
+// Improved final victory flash function with contained effects
+function finalVictoryFlash(columns) {
+  // Wait for the last column to finish its individual animation
+  setTimeout(() => {
+    const allContainers = columns.map((col) => col.closest(".item-container"));
+    const itemsContainer = document.querySelector(".items-container");
+
+    // Add a big flash animation to each container in sequence
+    allContainers.forEach((container, index) => {
+      setTimeout(() => {
+        // Remove any existing animation to reset
+        container.classList.remove("mega-flash");
+        void container.offsetWidth; // Force reflow
+
+        // Add the mega flash
+        container.classList.add("mega-flash");
+
+        // If this is the last container, trigger confetti and final flash
+        if (index === allContainers.length - 1) {
+          // Trigger confetti in the container
+          setTimeout(() => {
+            createConfetti();
+
+            // Add a flash effect just to the items container
+            if (itemsContainer) {
+              // Create a positioned flash overlay
+              const flashOverlay = document.createElement("div");
+
+              // Ensure container has positioning for absolute children
+              if (getComputedStyle(itemsContainer).position === "static") {
+                itemsContainer.style.position = "relative";
+              }
+
+              // Style the flash element
+              flashOverlay.style.position = "absolute";
+              flashOverlay.style.top = "0";
+              flashOverlay.style.left = "0";
+              flashOverlay.style.width = "100%";
+              flashOverlay.style.height = "100%";
+              flashOverlay.style.backgroundColor = "rgba(255, 255, 255, 0)";
+              flashOverlay.style.pointerEvents = "none";
+              flashOverlay.style.zIndex = "90";
+
+              // Add it to the container
+              itemsContainer.appendChild(flashOverlay);
+
+              // Create and apply the flash animation
+              flashOverlay.animate(
+                [
+                  { backgroundColor: "rgba(255, 255, 255, 0)" },
+                  { backgroundColor: "rgba(255, 255, 255, 0.7)" },
+                  { backgroundColor: "rgba(255, 255, 255, 0)" },
+                ],
+                {
+                  duration: 600,
+                  easing: "ease-out",
+                  fill: "forwards",
+                }
+              );
+
+              // Remove the overlay after animation
+              setTimeout(() => {
+                flashOverlay.remove();
+              }, 700);
+            }
+          }, 100); // Small delay after the last mega-flash starts
+        }
+      }, index * 150); // Staggered timing - 150ms between each
+    });
+  }, 800); // Wait for last column's individual animation to finish
 }
 
 document.addEventListener("DOMContentLoaded", () => {
