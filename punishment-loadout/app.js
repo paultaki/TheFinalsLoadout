@@ -255,7 +255,7 @@ class SlotColumn {
     this.lastTimestamp = null;
     this.isFinalSpin = isFinalSpin;
     this.animationStartTime = null;
-    this.maxAnimationDuration = 10000; // 10 second safety timeout
+    this.maxAnimationDuration = 5000; // Reduce to 5 seconds
 
     const timing = isFinalSpin
       ? PHYSICS.TIMING.FINAL_SPIN
@@ -276,8 +276,12 @@ class SlotColumn {
       performance.now() - this.animationStartTime >
       this.maxAnimationDuration
     ) {
-      console.warn("Animation timeout - forcing stop");
+      console.warn("⚠️ Animation timeout detected. Adjusting...");
       this.forceStop();
+      this.state = "stopped"; // Ensure it fully stops
+      this.velocity = 0; // Reset velocity
+      this.updateVisuals();
+
       return;
     }
 
@@ -420,6 +424,12 @@ function startSpinAnimation(columns) {
         metalClank.play();
 
         // Add the locked-in tag AFTER all columns have stopped
+        // First remove any existing locked tags
+        document.querySelectorAll(".locked-tag").forEach((tag) => {
+          tag.remove();
+        });
+
+        // Then add the new ones
         document.querySelectorAll(".item-container").forEach((container) => {
           if (!container.querySelector(".locked-tag")) {
             const lockedTag = document.createElement("div");
@@ -822,3 +832,27 @@ function setupGeneratePunishment() {
     });
   }
 }
+
+// JavaScript Fixes for Mobile Compatibility
+document.addEventListener("DOMContentLoaded", () => {
+  // Add touch support for scrolling
+  const slotMachine = document.querySelector(".slot-machine-wrapper");
+  if (slotMachine) {
+    slotMachine.addEventListener(
+      "touchmove",
+      (e) => {
+        e.preventDefault();
+      },
+      { passive: false }
+    );
+  }
+
+  // Ensure animations don't break on mobile
+  const allContainers = document.querySelectorAll(".scroll-container");
+  allContainers.forEach((container) => {
+    container.style.willChange = "auto";
+    container.style.backfaceVisibility = "visible";
+  });
+
+  console.log("Mobile optimizations applied!");
+});

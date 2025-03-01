@@ -978,40 +978,200 @@ body.flexStyle {
   }
 }
 
-/* Special fix for item layout in different screen sizes */
-@media (max-width: 650px) {
-  /* For screens where 5 items won't fit in one row */
-  .items-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-    gap: 8px;
-  }
-}
-
-/* Fix scroll containers on mobile */
+/* Remove the transform override that was breaking animations */
 @media (max-width: 768px) {
   .scroll-container {
-    transform: translateY(0) !important;
+    transform: none !important; /* Remove this line - it was preventing animations */
   }
 
-  /* Prevent overflow issues */
+  /* Fix for scroll containers - instead of forcing translateY(0) */
+  .slot-machine-wrapper .scroll-container {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    /* No fixed transforms here to allow animations to work */
+  }
+
+  /* Fix the width/height to be consistent when spinning */
+  .item-container {
+    height: 180px !important;
+    width: 120px !important;
+    overflow: hidden;
+  }
+
+  /* Let the itemCol elements be properly positioned by JS */
+  .itemCol {
+    position: relative;
+    transition: none; /* Remove any transitions that might interfere */
+  }
+
+  /* Ensure the wrapper doesn't affect transforms */
+  .slot-machine-wrapper.spinning {
+    /* Keep the spinning class behavior without affecting child transforms */
+    animation: flickerEffect 0.15s infinite alternate;
+  }
+
+  /* Separate effect for spinning that doesn't use transforms */
+  @keyframes flickerEffect {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.9;
+    }
+  }
+}
+
+/* Extra small devices need special handling */
+@media (max-width: 480px) {
+  .item-container {
+    height: 160px !important;
+    width: 100px !important;
+  }
+
+  /* Force proper sizing of item columns on tiny screens */
+  .itemCol {
+    height: 160px !important;
+    width: 100% !important;
+  }
+
+  /* Keep consistent image size */
+  .itemCol img {
+    width: 60px !important;
+    height: 60px !important;
+    max-width: 60px !important;
+    max-height: 60px !important;
+    object-fit: contain !important;
+  }
+}
+
+/* General fixes to prevent interference with animations */
+.items-container {
+  overflow: visible !important; /* Important for animations */
+}
+
+/* Remove any !important transform properties from previous mobile fixes */
+@media (max-width: 768px) {
+  .items-container {
+    transform: none; /* Remove the !important */
+  }
+}
+
+/* Make sure the slot machine wrapper allows for proper animations */
+.slot-machine-wrapper {
+  overflow: visible !important;
+}
+/* Mobile animation critical fix - add to the END of your CSS file */
+
+/* Remove ALL previous mobile-specific styles that affect animations */
+@media (max-width: 768px) {
+  /* Reset ALL animation-related properties */
+  .scroll-container,
+  .itemCol,
+  .item-container,
+  .items-container,
+  .slot-machine-wrapper,
+  #output * {
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+    overflow: visible !important;
+    position: relative !important;
+    z-index: auto !important;
+    transform-origin: initial !important;
+    will-change: auto !important;
+    backface-visibility: visible !important;
+    perspective: none !important;
+  }
+
+  /* ONLY override these styles when NOT spinning */
+  .scroll-container:not(.spinning *) {
+    transform: none !important;
+  }
+}
+
+/* Special fix for the spinning state */
+.slot-machine-wrapper.spinning .scroll-container {
+  /* REMOVE ALL conflicts when spinning */
+  transform: none; /* Let JS control transforms */
+  transition: none !important;
+
+  /* Force hardware acceleration during animation */
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+/* Simple mobile fix - just focus on fixing layout without breaking animations */
+@media (max-width: 768px) {
+  /* Base styling for containers */
+  .items-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    width: auto;
+    padding: 0;
+    margin: 0;
+    flex-wrap: nowrap;
+  }
+
+  /* Fix item size */
+  .item-container {
+    width: 120px;
+    height: 170px;
+  }
+
+  /* Special scrolling container for mobile */
+  #output {
+    overflow-x: auto;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+/* Ensure only one LOCKED IN tag appears per item */
+.locked-tag {
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  background: var(--highlight-color) !important;
+  color: white !important;
+  font-size: 0.8rem !important;
+  font-weight: bold !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  z-index: 100 !important; /* Higher z-index to ensure it's on top */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Ensure each item container only shows one tag */
+.item-container .locked-tag:not(:first-of-type) {
+  display: none !important;
+}
+/* === Mobile-Specific Fixes === */
+@media (max-width: 768px) {
+  /* Fix layout scaling */
+  .items-container {
+    flex-wrap: nowrap; /* Prevent items from wrapping */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth touch scrolling */
+  }
+
+  /* Ensure item-container scales properly */
+  .item-container {
+    width: 120px;
+    height: 160px;
+  }
+
+  /* Fix transform issues */
+  .scroll-container {
+    transform: none !important;
+  }
+
+  /* Allow touch interaction */
   .slot-machine-wrapper {
-    overflow-x: hidden;
-    overflow-y: visible;
+    overflow-x: visible;
+    white-space: nowrap;
+    scroll-behavior: smooth;
   }
-}
-
-/* Prevent body overflow on mobile */
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-html {
-  overflow-x: hidden;
-}
-
-/* Fix for page height on mobile */
-.mainContent {
-  min-height: auto;
 }
