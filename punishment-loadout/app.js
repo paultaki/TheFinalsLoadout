@@ -255,7 +255,7 @@ class SlotColumn {
     this.lastTimestamp = null;
     this.isFinalSpin = isFinalSpin;
     this.animationStartTime = null;
-    this.maxAnimationDuration = 5000; // Reduce to 5 seconds
+    this.maxAnimationDuration = 10000; // 10 second safety timeout
 
     const timing = isFinalSpin
       ? PHYSICS.TIMING.FINAL_SPIN
@@ -276,12 +276,8 @@ class SlotColumn {
       performance.now() - this.animationStartTime >
       this.maxAnimationDuration
     ) {
-      console.warn("⚠️ Animation timeout detected. Adjusting...");
+      console.warn("Animation timeout - forcing stop");
       this.forceStop();
-      this.state = "stopped"; // Ensure it fully stops
-      this.velocity = 0; // Reset velocity
-      this.updateVisuals();
-
       return;
     }
 
