@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-GVGKYFGZ1Z");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generate Your Punishment</title>
+    <meta
+      name="description"
+      content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles."
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "The Finals Loadout Generator",
+        "description": "A random loadout generator for The Finals game with optimized weapons and gadgets for different playstyles.",
+        "url": "https://www.thefinalsloadout.com",
+        "image": "https://www.thefinalsloadout.com/images/the-finals.webp",
+        "author": {
+          "@type": "Organization",
+          "name": "1-800-FAT-MOMS"
+        }
+      }
+    </script>
+
+    <link rel="icon" type="image/x-icon" href="../images/favicon2.ico" />
+
+    <link
+      rel="preload"
+      as="font"
+      href="https://fonts.gstatic.com/s/oswald/v35/TK3iWkUHHAIjg752GT8G.woff2"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap"
+      />
+    </noscript>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body class="flexStyle">
+    <header class="headerSection">
+      <div class="container">
+        <img
+          src="../images/the-finals.webp"
+          alt="Random Loadout Generator for The Finals Game"
+          class="finals-logo"
+          width="200"
+          height="auto"
+        />
+        <h1 class="mainTitle">Generate Your Punishment Loadout</h1>
+      </div>
+    </header>
+
+    <div class="class-selection-container">
+      <div class="class-selection-inner">
+        <p id="selectedClassText" class="selected-class-text">
+          Selected Class: <span id="selectedClassName">Heavy</span>
+        </p>
+      </div>
+    </div>
+    <div class="btnRow">
+      <button id="generatePunishment" class="generate-btn">
+        GENERATE YOUR PUNISHMENT
+      </button>
+    </div>
+
+    <main class="mainContent">
+      <div class="container">
+        <div id="output">
+          <div class="slot-machine-wrapper">
+            <div class="items-container">
+              <div class="loadout-item">
+                <img
+                  src="../images/placeholder.webp"
+                  alt="?"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <p>Weapon</p>
+              </div>
+              <div class="loadout-item">
+                <img
+                  src="../images/placeholder.webp"
+                  alt="?"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <p>Specialization</p>
+              </div>
+              <div class="loadout-item">
+                <img
+                  src="../images/placeholder.webp"
+                  alt="?"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <p>Gadget 1</p>
+              </div>
+              <div class="loadout-item">
+                <img
+                  src="../images/placeholder.webp"
+                  alt="?"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <p>Gadget 2</p>
+              </div>
+              <div class="loadout-item">
+                <img
+                  src="../images/placeholder.webp"
+                  alt="?"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <p>Gadget 3</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Warning Section -->
+    <section class="warning-section">
+      <div class="container">
+        <div class="warning-container">
+          <div class="warning-header">⚠️ Warning ⚠️</div>
+          <ul class="warning-list">
+            <li>Strategic disadvantages</li>
+            <li>Unexpected deaths</li>
+            <li>ALT+F4 Spamming</li>
+            <li>Uncontrollable urge to blame lag</li>
+            <li>Potential ban from teammates' friend lists</li>
+          </ul>
+          <p class="warning-footnote">
+            Use at your own risk. Results may vary. Fun is guaranteed*
+          </p>
+          <p class="warning-disclaimer">*Fun not actually guaranteed</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faqSection">
+      <div class="container">
+        <button id="faq-toggle-button" class="faq-toggle-container">
+          <h2 class="faq-title">Frequently Asked Questions</h2>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-content" id="faq-content">
+          <div class="faq-content-inner">
+            <div class="faq-item">
+              <h3>What is a Punishment Loadout?</h3>
+              <p>
+                A Punishment Loadout is a randomized selection of weapons and
+                gadgets meant to challenge you with unconventional and often
+                suboptimal setups.
+              </p>
+            </div>
+            <div class="faq-item">
+              <h3>Can I customize my loadout?</h3>
+              <p>
+                Nope! The whole point is to test your adaptability with whatever
+                you get.
+              </p>
+            </div>
+            <div class="faq-item">
+              <h3>Why would I use this?</h3>
+              <p>
+                Because it's hilarious, chaotic, and a great way to push your
+                limits as a player.
+              </p>
+            </div>
+            <div class="faq-item">
+              <h3>Is this an official tool?</h3>
+              <p>
+                Nope! This is a fan-made challenge mode for those who love
+                suffering in The Finals.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footerSection">
+      <div class="container">
+        <div class="footerRow">
+          <p class="text-start">
+            © 2025 TheFinalsLoadout.com |
+            <a href="legal/legal.html">Legal Disclaimer</a> | 1-800-FAT-MOMS
+            Production
+          </p>
+          <div class="buy-me-coffee-container">
+            <script
+              type="text/javascript"
+              src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+              data-name="bmc-button"
+              data-slug="dismiss3d"
+              data-color="#651a94"
+              data-emoji=""
+              data-font="Cookie"
+              data-text="Buy me a coffee"
+              data-outline-color="#ffffff"
+              data-font-color="#ffffff"
+              data-coffee-color="#FFDD00"
+            ></script>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script defer src="app.js"></script>
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+      integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+      data-cf-beacon='{"rayId":"90d5a0a2197ddbbe","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}'
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
