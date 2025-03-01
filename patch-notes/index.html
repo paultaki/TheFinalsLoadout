@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patch Notes Summary | The Finals Loadout</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <nav>
+      <a href="https://thefinalsloadout.com/">Home</a>
+      <a href="https://thefinalsloadout.com/punishment-loadout/index.html"
+        >Punishment Loadout</a
+      >
+      <a href="feedback.html">Feedback</a>
+    </nav>
+
+    <header class="headerSection">
+      <h1 class="mainTitle">Patch Notes Summary</h1>
+      <p>Recent buffs, nerfs, and fixes from The Finals patch notes.</p>
+    </header>
+
+    <main class="patch-notes">
+      <section class="notes-container">
+        <h2 class="patch-date">PATCH DATE: FEBRUARY 19, 2025</h2>
+
+        <div class="patch-section">
+          <h3 class="section-title">Balance Changes</h3>
+          <div class="change-item nerf">
+            <h4 class="change-title">Stun Gun (Rework)</h4>
+            <p class="change-details">
+              Temporarily removed for a comprehensive rework to improve its role
+              as a crowd control tool.
+            </p>
+          </div>
+          <div class="change-item adjustment">
+            <h4 class="change-title">Frag Grenade (Adjustment)</h4>
+            <ul class="change-details">
+              <li>Ammo count reduced from 2 to 1</li>
+              <li>Damage decreased from 150 to 140</li>
+              <li>
+                Increased environmental damage from 600 to 900 to balance its
+                impact
+              </li>
+            </ul>
+          </div>
+          <div class="change-item buff">
+            <h4 class="change-title">Breach Charge (Buff)</h4>
+            <p class="change-details">
+              Priming time reduced from 1.9s to 1.5s to improve usability.
+            </p>
+          </div>
+        </div>
+
+        <div class="patch-section">
+          <h3 class="section-title">Weapons</h3>
+          <div class="change-item improvement">
+            <h4 class="change-title">General Improvements</h4>
+            <p class="change-details">
+              Enhanced animation timing for manual actions following melee
+              attacks, improving weapon responsiveness.
+            </p>
+          </div>
+        </div>
+
+        <div class="patch-section">
+          <h3 class="section-title">Gameplay Enhancements</h3>
+          <div class="change-item fixes">
+            <h4 class="change-title">Server Performance</h4>
+            <p class="change-details">
+              Key issue identified and fixed, significantly improving server
+              performance for many players.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="past-patches">
+        <h2 class="section-title">Past Patch Notes</h2>
+        <div class="patch" id="patch-580">
+          <button class="toggle-btn">Patch 5.80</button>
+          <div class="patch-content">
+            <h3 class="update-title">Mid-Season Update 5.8.0</h3>
+            <p>
+              <strong>Valentine’s Event:</strong> Introduced "Wheel of Love"
+              with 20 rewards.
+            </p>
+            <p><strong>Balance Changes:</strong></p>
+            <ul>
+              <li>Breach Charge throw delay reduced.</li>
+              <li>Lockbolt Launcher re-enabled for objectives.</li>
+            </ul>
+            <p>
+              <strong>Game Modes:</strong> Adjusted cash distribution in Cashout
+              mode.
+            </p>
+            <p>
+              <strong>Bug Fixes:</strong> Improved elevators, drawbridges, and
+              general stability.
+            </p>
+            <a
+              href="https://www.reachthefinals.com/patchnotes/580"
+              target="_blank"
+              >Read Full Notes</a
+            >
+          </div>
+        </div>
+        <div class="patch" id="patch-570">
+          <button class="toggle-btn">Patch 5.70</button>
+          <div class="patch-content">
+            <h3 class="update-title">Store Update 5.7.0</h3>
+            <p>
+              <strong>New Content:</strong> Introduced legendary "Hairy Hiker
+              Set" cosmetics.
+            </p>
+            <p><strong>Fixes:</strong> Resolved contract issues.</p>
+            <p>
+              <strong>Upcoming:</strong> Announced upcoming balance patch
+              (5.8.0).
+            </p>
+            <a
+              href="https://www.reachthefinals.com/patchnotes/570"
+              target="_blank"
+              >Read Full Notes</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll(".toggle-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+          const content = button.nextElementSibling;
+          content.style.display =
+            content.style.display === "block" ? "none" : "block";
+        });
+      });
+    </script>
+  </body>
+</html>

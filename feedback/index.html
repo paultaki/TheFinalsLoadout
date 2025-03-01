@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback | The Finals Loadout</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav>
+      <a href="https://thefinalsloadout.com/">Home</a>
+      <a href="https://thefinalsloadout.com/punishment-loadout/index.html"
+        >Punishment Loadout</a
+      >
+      <a href="feedback.html">Feedback</a>
+    </nav>
+
+    <header class="headerSection">
+      <h1 class="mainTitle">Feedback</h1>
+      <p>Feedback is a Gift! Let us know what you think.</p>
+    </header>
+
+    <main class="feedback-container">
+      <form id="feedback-form">
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Your Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="message">Your Feedback:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+
+        <button type="submit">Submit Feedback</button>
+      </form>
+      <p
+        id="feedback-response"
+        style="display: none; color: green; margin-top: 10px"
+      >
+        Thank you for your feedback!
+      </p>
+    </main>
+
+    <script>
+      document
+        .getElementById("feedback-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const formData = new FormData(this);
+          fetch("send.php", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              document.getElementById("feedback-response").style.display =
+                "block";
+              document.getElementById("feedback-form").reset();
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+    </script>
+  </body>
+</html>
