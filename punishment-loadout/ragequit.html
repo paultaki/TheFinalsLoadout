@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-GVGKYFGZ1Z");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      The Finals RAGE QUIT SIMULATOR | The Most Frustrating Loadouts
+    </title>
+    <meta
+      name="description"
+      content="Rage Quit Simulator for The Finals - Challenge yourself with the worst weapons, gadgets, and movement handicaps for maximum frustration."
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "The Finals Rage Quit Simulator",
+        "description": "A simulator that gives you the worst possible loadouts and handicaps in The Finals game, guaranteed to make you rage quit.",
+        "url": "https://www.thefinalsloadout.com/ragequit",
+        "image": "https://www.thefinalsloadout.com/images/rage-quit.webp",
+        "author": {
+          "@type": "Organization",
+          "name": "1-800-FAT-MOMS"
+        }
+      }
+    </script>
+
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+
+    <link
+      rel="preload"
+      as="font"
+      href="https://fonts.gstatic.com/s/oswald/v35/TK3iWkUHHAIjg752GT8G.woff2"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap"
+      />
+    </noscript>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="ragequit-style.css" />
+    <style>
+      body {
+        font-family: "Oswald", sans-serif;
+        font-display: swap;
+      }
+    </style>
+  </head>
+  <audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
+  <nav class="main-nav">
+    <a href="https://thefinalsloadout.com/">Home</a>
+    <a href="https://thefinalsloadout.com/ragequit/" class="active"
+      >Rage Quit Simulator</a
+    >
+    <a href="https://thefinalsloadout.com/patch-notes/">Patch Notes</a>
+    <a href="https://thefinalsloadout.com/feedback/">Feedback</a>
+  </nav>
+
+  <header class="headerSection">
+    <div class="container">
+      <img
+        src="images/rage-quit.webp"
+        alt="Rage Quit Simulator for The Finals"
+        class="rage-logo"
+        width="200"
+        height="auto"
+        onerror="this.src='images/the-finals.webp'"
+      />
+      <h1 class="mainTitle">THE FINALS RAGE QUIT SIMULATOR</h1>
+      <h2 class="subTitle">Maximum Frustration Guaranteed!!</h2>
+    </div>
+  </header>
+
+  <main class="mainContent">
+    <div class="container">
+      <div class="rage-intro">
+        <p>
+          This simulator will give you the
+          <span class="rage-text">absolute worst</span> possible loadout
+          combined with a <span class="rage-text">handicap challenge</span> that
+          will push you to your limits!
+        </p>
+      </div>
+
+      <div class="rage-button-container">
+        <button id="rage-quit-btn" class="rage-quit-button">
+          <span class="rage-icon">💢</span> GENERATE RAGE LOADOUT
+          <span class="rage-icon">💢</span>
+        </button>
+      </div>
+
+      <div id="output">
+        <div class="slot-machine-wrapper">
+          <div class="items-container">
+            <div class="placeholder-container">
+              <img
+                src="images/placeholder.webp"
+                alt="?"
+                width="80"
+                height="80"
+                loading="lazy"
+              />
+              <p>Weapon</p>
+            </div>
+            <div class="placeholder-container">
+              <img
+                src="images/placeholder.webp"
+                alt="?"
+                width="80"
+                height="80"
+                loading="lazy"
+              />
+              <p>Specialization</p>
+            </div>
+            <div class="placeholder-container">
+              <img
+                src="images/placeholder.webp"
+                alt="?"
+                width="80"
+                height="80"
+                loading="lazy"
+              />
+              <p>Gadget 1</p>
+            </div>
+            <div class="placeholder-container">
+              <img
+                src="images/placeholder.webp"
+                alt="?"
+                width="80"
+                height="80"
+                loading="lazy"
+              />
+              <p>Gadget 2</p>
+            </div>
+            <div class="placeholder-container">
+              <img
+                src="images/placeholder.webp"
+                alt="?"
+                width="80"
+                height="80"
+                loading="lazy"
+              />
+              <p>Gadget 3</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<!-- Handicap Container -->
+<div class="handicap-section">
+  <h2 class="section-title">MOVEMENT HANDICAP</h2>
+  <div id="handicap-container" class="handicap-container">
+    <!-- Handicap wheel will be inserted here by JavaScript -->
+    <div class="placeholder-handicap">
+      <p>Your handicap challenge will appear here after spinning</p>
+    </div>
+  </div>
+</div>
+
+      <div class="btnRow">
+        <button id="copyLoadoutButton" class="copy-button">
+          <span class="copy-icon">📋</span> Copy Rage Loadout
+        </button>
+      </div>
+
+      <div class="rage-description">
+        <h3>WHY TORTURE YOURSELF?</h3>
+        <p>
+          Challenge your skills with the most frustrating equipment in The
+          Finals, paired with movement and aiming handicaps that will test your
+          patience. Send these loadouts to your enemies or try them yourself if
+          you dare!
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document
+      .getElementById("test-button")
+      .addEventListener("click", function () {
+        alert("Test button works!");
+      });
+  </script>
+  <section id="loadout-history" class="loadout-history">
+    <h2>Rage Quit History</h2>
+    <div id="history-list">
+      <!-- History entries will be populated here -->
+    </div>
+    <button id="clear-history" class="clear-history-btn">Clear History</button>
+  </section>
+  <div class="rage-button-container">
+    <button id="rage-quit-btn" class="rage-quit-button">
+      <span class="rage-icon">💢</span> GENERATE RAGE LOADOUT
+      <span class="rage-icon">💢</span>
+    </button>
+  </div>
+  
+  <!-- Add this script immediately after your button -->
+  <script>
+    (function() {
+      console.log("Inline button script running");
+      
+      // Function to attach the event handler
+      function attachButtonHandler() {
+        const rageButton = document.getElementById("rage-quit-btn");
+        if (rageButton) {
+          console.log("Found rage button, attaching handler");
+          
+          rageButton.addEventListener("click", function() {
+            console.log("Button clicked!");
+            
+            // Disable button
+            this.disabled = true;
+            
+            // Use the existing function if available
+            if (typeof spinRageQuitLoadout === 'function') {
+              console.log("Calling spinRageQuitLoadout");
+              spinRageQuitLoadout();
+            } else {
+              console.error("spinRageQuitLoadout not found");
+              alert("Error: Could not find spin function. Check the console for details.");
+              this.disabled = false;
+            }
+          });
+          
+          console.log("Handler attached successfully");
+        } else {
+          console.error("Button not found");
+        }
+      }
+      
+      // Try to attach handler immediately
+      if (document.readyState === "complete" || document.readyState === "interactive") {
+        attachButtonHandler();
+      } else {
+        // Or wait for DOM to be ready
+        document.addEventListener("DOMContentLoaded", attachButtonHandler);
+      }
+      
+      // Final fallback - try again after a short delay
+      setTimeout(attachButtonHandler, 500);
+    })();
+  </script>
+  <section class="rage-tips">
+    <div class="container">
+      <h2>Rage Management Tips</h2>
+      <div class="tips-container">
+        <div class="tip-item">
+          <div class="tip-icon">😤</div>
+          <div class="tip-content">
+            <h3>Control Your Breathing</h3>
+            <p>
+              When you feel yourself getting tilted, take deep breaths. Inhale
+              for 4 seconds, hold for 4 seconds, exhale for 4 seconds.
+            </p>
+          </div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-icon">⏱️</div>
+          <div class="tip-content">
+            <h3>Take Regular Breaks</h3>
+            <p>
+              Step away from the game for 5-10 minutes after particularly
+              frustrating matches.
+            </p>
+          </div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-icon">🤣</div>
+          <div class="tip-content">
+            <h3>Laugh It Off</h3>
+            <p>
+              Remember it's just a game. Try to find humor in the ridiculous
+              situations these loadouts create.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footerSection">
+    <div class="container">
+      <div class="footerRow">
+        <p class="text-start">
+          © 2025 TheFinalsLoadout.com |
+          <a href="legal/legal.html">Legal Disclaimer</a> | 1-800-FAT-MOMS
+          Production
+        </p>
+        <div style="position: relative; width: 200px; margin-left: 20px"></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script defer src="ragequit-app.js"></script>
+  <script defer src="mobile-fixes.js"></script>
+
+</main>
+<!-- Your other content sections should be here -->
+</body>
+</html>

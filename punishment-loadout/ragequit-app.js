@@ -5,223 +5,7 @@ let state = {
   currentGadgetPool: new Set(),
   handicap: null,
 };
-// Add this at the beginning of your ragequit-app.js file, right after the state object
 
-// Debug logging function
-function debugLog(message, data) {
-  console.log(
-    `%c${message}`,
-    "background: #ff0000; color: white; padding: 2px 5px; border-radius: 3px;",
-    data || ""
-  );
-}
-
-// Debug the DOM elements and event listeners
-document.addEventListener("DOMContentLoaded", () => {
-  debugLog("DOM fully loaded - Starting debug");
-
-  // Check if the button exists
-  const rageQuitBtn = document.getElementById("rage-quit-btn");
-  debugLog("Rage Quit Button exists:", !!rageQuitBtn);
-
-  if (rageQuitBtn) {
-    // Add an explicit click handler for testing
-    rageQuitBtn.addEventListener("click", function () {
-      debugLog("Button clicked directly from debug listener");
-      // Test direct call to the spin function
-      if (typeof spinRageQuitLoadout === "function") {
-        debugLog("Calling spinRageQuitLoadout directly");
-        spinRageQuitLoadout();
-      } else {
-        debugLog(
-          "ERROR: spinRageQuitLoadout is not a function",
-          typeof spinRageQuitLoadout
-        );
-      }
-    });
-
-    // Simulate a click for testing
-    debugLog("Button is clickable:", !rageQuitBtn.disabled);
-  }
-
-  // Debug other key functions
-  debugLog(
-    "spinRageQuitLoadout exists:",
-    typeof spinRageQuitLoadout === "function"
-  );
-  debugLog(
-    "displayRageQuitLoadout exists:",
-    typeof displayRageQuitLoadout === "function"
-  );
-  debugLog(
-    "startSpinAnimation exists:",
-    typeof startSpinAnimation === "function"
-  );
-  debugLog("finalizeSpin exists:", typeof finalizeSpin === "function");
-});
-
-// Debug version of spinRageQuitLoadout
-const originalSpinRageQuitLoadout = spinRageQuitLoadout;
-spinRageQuitLoadout = function () {
-  debugLog("spinRageQuitLoadout called");
-
-  // Check state
-  debugLog("Current state:", JSON.stringify(state));
-
-  if (state.isSpinning) {
-    debugLog("Already spinning, returning early");
-    return;
-  }
-
-  try {
-    debugLog("Setting disabled attribute on button");
-    const btn = document.getElementById("rage-quit-btn");
-    if (btn) {
-      btn.setAttribute("disabled", "true");
-      debugLog("Button disabled:", btn.disabled);
-    } else {
-      debugLog("ERROR: Button not found when trying to disable");
-    }
-
-    debugLog("Setting isSpinning to true");
-    state.isSpinning = true;
-
-    debugLog("Clearing currentGadgetPool");
-    state.currentGadgetPool.clear();
-
-    debugLog("Calling displayRageQuitLoadout");
-    displayRageQuitLoadout();
-  } catch (error) {
-    debugLog("ERROR in spinRageQuitLoadout:", error.message);
-    console.error(error);
-  }
-};
-
-// Debug version of displayRageQuitLoadout
-const originalDisplayRageQuitLoadout = displayRageQuitLoadout;
-displayRageQuitLoadout = function () {
-  debugLog("displayRageQuitLoadout called");
-
-  try {
-    const outputDiv = document.getElementById("output");
-    debugLog("Output div exists:", !!outputDiv);
-
-    // Call the original function
-    originalDisplayRageQuitLoadout();
-
-    // Check if scroll containers were created
-    setTimeout(() => {
-      const scrollContainers = document.querySelectorAll(".scroll-container");
-      debugLog("Scroll containers created:", scrollContainers.length);
-    }, 100);
-  } catch (error) {
-    debugLog("ERROR in displayRageQuitLoadout:", error.message);
-    console.error(error);
-  }
-};
-
-// Debug version of startSpinAnimation
-const originalStartSpinAnimation = startSpinAnimation;
-startSpinAnimation = function (columns) {
-  debugLog("startSpinAnimation called with columns:", columns.length);
-
-  try {
-    // Call the original function
-    originalStartSpinAnimation(columns);
-  } catch (error) {
-    debugLog("ERROR in startSpinAnimation:", error.message);
-    console.error(error);
-  }
-};
-
-// Fix for the finalizeSpin function - redefine it completely
-function finalizeSpin() {
-  debugLog("finalizeSpin called");
-
-  try {
-    // Capture the selected items for history
-    const itemContainers = document.querySelectorAll(
-      ".slot-machine-wrapper .items-container .item-container"
-    );
-
-    debugLog("Item containers found:", itemContainers.length);
-
-    if (itemContainers && itemContainers.length >= 5) {
-      try {
-        const selectedItems = Array.from(itemContainers).map((container) => {
-          const winnerElement = container.querySelector(".itemCol.winner");
-          if (winnerElement) {
-            return winnerElement.querySelector("p").textContent.trim();
-          }
-          return "Unknown";
-        });
-
-        debugLog("Selected items:", selectedItems);
-
-        // Get a random class for the rage quit loadout
-        const classes = ["Light", "Medium", "Heavy"];
-        const randomClass = classes[Math.floor(Math.random() * classes.length)];
-        debugLog("Random class selected:", randomClass);
-
-        // Add to history if we have valid data
-        if (
-          selectedItems.length >= 5 &&
-          !selectedItems.includes("Unknown") &&
-          state.handicap
-        ) {
-          const weapon = selectedItems[0];
-          const specialization = selectedItems[1];
-          const gadgets = selectedItems.slice(2, 5);
-
-          debugLog("Adding to history");
-          // Add to history
-          addToHistory(
-            randomClass,
-            weapon,
-            specialization,
-            gadgets,
-            state.handicap
-          );
-        } else {
-          debugLog("Not adding to history - conditions not met", {
-            hasItems: selectedItems.length >= 5,
-            noUnknowns: !selectedItems.includes("Unknown"),
-            hasHandicap: !!state.handicap,
-          });
-        }
-      } catch (error) {
-        debugLog("ERROR in history collection:", error.message);
-        console.error("Error saving loadout history:", error);
-      }
-    }
-
-    // Re-enable spin button
-    debugLog("Re-enabling spin button");
-    const btn = document.getElementById("rage-quit-btn");
-    if (btn) {
-      btn.removeAttribute("disabled");
-      debugLog("Button re-enabled");
-    } else {
-      debugLog("ERROR: Button not found when trying to re-enable");
-    }
-
-    // Reset state after spin is complete
-    debugLog("Resetting state.isSpinning to false");
-    state.isSpinning = false;
-  } catch (error) {
-    debugLog("ERROR in finalizeSpin:", error.message);
-    console.error(error);
-
-    // Emergency recovery - make sure button is re-enabled and state is reset
-    try {
-      document.getElementById("rage-quit-btn")?.removeAttribute("disabled");
-      state.isSpinning = false;
-      debugLog("Emergency recovery applied");
-    } catch (e) {
-      debugLog("ERROR in emergency recovery:", e.message);
-    }
-  }
-}
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded for Rage Quit Simulator");
 
@@ -383,74 +167,360 @@ const rageQuitLoadouts = {
     "Data Reshaper", // Limited functionality
     "Proximity Sensor", // Often doesn't help in fast-paced combat
   ],
+
   // New handicaps list
+  // Replace the handicaps array in your rageQuitLoadouts object with this expanded list
+
   handicaps: [
+    // Movement Handicaps
     {
       name: "Sloth Mode",
       description: "No Sprinting – Must walk everywhere",
       icon: "🦥",
+      category: "Movement",
     },
     {
       name: "Bunny Hop Ban",
       description: "No Jumping – Stairs and ramps only",
       icon: "🐰",
+      category: "Movement",
     },
     {
       name: "Permanent Crouch",
       description: "You must stay crouched the entire game",
       icon: "🧎",
+      category: "Movement",
     },
     {
       name: "Opposite Day",
       description: "Swap forward/backward and left/right",
       icon: "🔄",
+      category: "Movement",
     },
-    { name: "Moonwalk Mode", description: "Walk backward only", icon: "🕴️" },
+    {
+      name: "Moonwalk Mode",
+      description: "Walk backward only",
+      icon: "🕴️",
+      category: "Movement",
+    },
     {
       name: "Controller Drift",
       description: "Cannot stop moving unless using an ability",
       icon: "🎮",
+      category: "Movement",
     },
+    {
+      name: "Strafe Master",
+      description: "Never move forward - only sideways",
+      icon: "↔️",
+      category: "Movement",
+    },
+    {
+      name: "Zig Zag Only",
+      description: "Must constantly alternate left and right while moving",
+      icon: "⚡",
+      category: "Movement",
+    },
+    {
+      name: "Jump Addict",
+      description: "Must jump constantly while moving",
+      icon: "🏃",
+      category: "Movement",
+    },
+    {
+      name: "Scenic Route",
+      description: "Never take the direct path to objectives",
+      icon: "🗺️",
+      category: "Movement",
+    },
+
+    // Aiming Handicaps
     {
       name: "No Scope Challenge",
       description: "Unmap the ADS button; hipfire only",
       icon: "🎯",
+      category: "Aiming",
     },
     {
       name: "Flip 'n' Rage",
       description: "Swap up/down and left/right for aiming",
       icon: "🔃",
+      category: "Aiming",
     },
     {
       name: "Squirrel Mode",
       description: "Max out your mouse DPI/sensitivity",
       icon: "🐿️",
+      category: "Aiming",
     },
     {
       name: "Snail Aim",
       description: "Set mouse/controller sensitivity to the lowest value",
       icon: "🐌",
+      category: "Aiming",
     },
     {
       name: "One Stick",
       description: "Use only one joystick/WASD or mouse",
       icon: "🕹️",
+      category: "Aiming",
     },
-    { name: "Mute All", description: "Play with no game sounds", icon: "🔇" },
+    {
+      name: "Inverted Controls",
+      description: "Invert both X and Y axis",
+      icon: "⬆️",
+      category: "Aiming",
+    },
+    {
+      name: "Tunnel Vision",
+      description: "Use only 50% of your normal FOV",
+      icon: "👁️",
+      category: "Aiming",
+    },
+    {
+      name: "Acrobat",
+      description: "You can only shoot while jumping or crouched",
+      icon: "🤸",
+      category: "Aiming",
+    },
+    {
+      name: "Reload Addict",
+      description: "Must reload after every kill or every 3 shots",
+      icon: "🔄",
+      category: "Aiming",
+    },
+    {
+      name: "Quick Draw",
+      description: "No aiming down sights for more than 2 seconds",
+      icon: "⏱️",
+      category: "Aiming",
+    },
+
+    // Audio Handicaps
+    {
+      name: "Mute All",
+      description: "Play with no game sounds",
+      icon: "🔇",
+      category: "Audio",
+    },
+    {
+      name: "Music Only",
+      description: "Turn off all sound effects, keep only music",
+      icon: "🎵",
+      category: "Audio",
+    },
+    {
+      name: "Static Earrape",
+      description: "Set voice chat volume to maximum",
+      icon: "📢",
+      category: "Audio",
+    },
+    {
+      name: "Bass Boost",
+      description: "Max out the bass in your audio settings",
+      icon: "🔊",
+      category: "Audio",
+    },
+    {
+      name: "Wrong Channel",
+      description:
+        "Listen to the wrong audio channel (e.g., 7.1 on stereo headphones)",
+      icon: "🎧",
+      category: "Audio",
+    },
+
+    // Communication Handicaps
     {
       name: "Chat Roulette",
       description: "Must type every action in team chat",
       icon: "💬",
+      category: "Communication",
     },
+    {
+      name: "Commentator",
+      description: "Must narrate everything you do on voice chat",
+      icon: "🎙️",
+      category: "Communication",
+    },
+    {
+      name: "Radio Silence",
+      description: "No communication with teammates",
+      icon: "🤐",
+      category: "Communication",
+    },
+    {
+      name: "Language Barrier",
+      description: "Communicate only using a language you don't know",
+      icon: "🈲",
+      category: "Communication",
+    },
+    {
+      name: "Sing It",
+      description: "Must sing your callouts instead of speaking them",
+      icon: "🎤",
+      category: "Communication",
+    },
+
+    // Gameplay Handicaps
     {
       name: "Pacifist Run",
       description: "Can only engage enemies after teammates do",
       icon: "☮️",
+      category: "Gameplay",
     },
     {
       name: "Kamikaze",
       description: "You must rush and melee every enemy you see",
       icon: "💥",
+      category: "Gameplay",
+    },
+    {
+      name: "Glass Cannon",
+      description: "No armor or defensive abilities allowed",
+      icon: "🔮",
+      category: "Gameplay",
+    },
+    {
+      name: "Scavenger",
+      description: "Can only use weapons picked up from defeated enemies",
+      icon: "🗑️",
+      category: "Gameplay",
+    },
+    {
+      name: "Collector",
+      description: "Must pick up every item you see",
+      icon: "🧲",
+      category: "Gameplay",
+    },
+    {
+      name: "No Healing",
+      description: "Cannot use healing items or abilities",
+      icon: "❤️‍🩹",
+      category: "Gameplay",
+    },
+    {
+      name: "Lone Wolf",
+      description: "Must stay at least 50m away from teammates",
+      icon: "🐺",
+      category: "Gameplay",
+    },
+    {
+      name: "Shadow",
+      description: "Must follow exactly 10m behind a teammate",
+      icon: "👥",
+      category: "Gameplay",
+    },
+    {
+      name: "Half Magazine",
+      description: "Can only use half of each magazine before reloading",
+      icon: "🔫",
+      category: "Gameplay",
+    },
+    {
+      name: "Countdown",
+      description: "Can only stay in one spot for 5 seconds max",
+      icon: "⏲️",
+      category: "Gameplay",
+    },
+
+    // Visual Handicaps
+    {
+      name: "Low Resolution",
+      description: "Set your resolution to 800x600",
+      icon: "📉",
+      category: "Visual",
+    },
+    {
+      name: "Dark Mode Extreme",
+      description: "Turn brightness to minimum",
+      icon: "🌚",
+      category: "Visual",
+    },
+    {
+      name: "Colorblind Simulation",
+      description: "Enable colorblind mode even if you're not colorblind",
+      icon: "🌈",
+      category: "Visual",
+    },
+    {
+      name: "HUD Free",
+      description: "Disable all HUD elements",
+      icon: "🚫",
+      category: "Visual",
+    },
+    {
+      name: "Third Person",
+      description: "Look only at your character's feet",
+      icon: "👣",
+      category: "Visual",
+    },
+    {
+      name: "Motion Blur",
+      description: "Max out motion blur settings",
+      icon: "💫",
+      category: "Visual",
+    },
+
+    // Challenge Handicaps
+    {
+      name: "Melee Only",
+      description: "Can only use melee attacks",
+      icon: "🔪",
+      category: "Challenge",
+    },
+    {
+      name: "Sidearm Specialist",
+      description: "Only use your secondary weapon",
+      icon: "🔫",
+      category: "Challenge",
+    },
+    {
+      name: "No Gadgets",
+      description: "Cannot use any gadgets or abilities",
+      icon: "🛠️",
+      category: "Challenge",
+    },
+    {
+      name: "Grenade Spam",
+      description: "Must throw all grenades immediately when available",
+      icon: "💣",
+      category: "Challenge",
+    },
+    {
+      name: "Last Bullet",
+      description: "Only the last bullet in your magazine deals damage",
+      icon: "🎲",
+      category: "Challenge",
+    },
+    {
+      name: "Exposed",
+      description: "Never take cover during firefights",
+      icon: "🎯",
+      category: "Challenge",
+    },
+    {
+      name: "YOLO",
+      description: "If you die, you must quit the match",
+      icon: "💀",
+      category: "Challenge",
+    },
+    {
+      name: "Distracted Gamer",
+      description: "Must watch a video on your phone while playing",
+      icon: "📱",
+      category: "Challenge",
+    },
+    {
+      name: "Bravado",
+      description: "Must emote after every kill",
+      icon: "💃",
+      category: "Challenge",
+    },
+    {
+      name: "The Floor is Lava",
+      description: "Stay off the ground as much as possible",
+      icon: "🌋",
+      category: "Challenge",
     },
   ],
 };
@@ -914,6 +984,8 @@ function finalVictoryFlash(columns) {
 }
 
 // New function to spin the handicap wheel
+// Replace the spinHandicap function in your ragequit-app.js file with this improved version
+
 function spinHandicap() {
   const handicapContainer = document.getElementById("handicap-container");
 
@@ -931,7 +1003,7 @@ function spinHandicap() {
 
   // Create HTML for the handicap wheel
   const wheelHTML = `
-    <div class="handicap-wheel-container">
+    <div class="handicap-wheel-container handicap-glow">
       <div class="handicap-title">EXTRA PUNISHMENT</div>
       <div class="handicap-wheel">
         <div class="handicap-spinner">
@@ -966,8 +1038,22 @@ function spinHandicap() {
         result.style.opacity = "1";
       }
 
+      // Add a dramatic sound effect (optional - if you have a sound file)
+      const handicapSound = document.getElementById("handicapSound");
+      if (handicapSound && handicapSound.readyState >= 2) {
+        handicapSound.currentTime = 0;
+        handicapSound
+          .play()
+          .catch((err) => console.warn("Error playing handicap sound:", err));
+      }
+
       // Finalize the spin and update history
       setTimeout(() => {
+        // Scroll to ensure the handicap is visible
+        handicapContainer.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
         finalizeSpin();
       }, 1000);
     }, 3000);
@@ -1065,13 +1151,17 @@ function loadHistory() {
   });
 }
 
+// Replace the finalizeSpin function in ragequit-app.js with this version:
+
+// Replace the finalizeSpin function in ragequit-app.js with this version:
+
 function finalizeSpin() {
   // Capture the selected items for history
   const itemContainers = document.querySelectorAll(
     ".slot-machine-wrapper .items-container .item-container"
   );
 
-  if (itemContainers && itemContainers.length >= 5) {
+  if (itemContainers && itemContainers.length >= 3) {
     try {
       const selectedItems = Array.from(itemContainers).map((container) => {
         const winnerElement = container.querySelector(".itemCol.winner");
@@ -1087,13 +1177,13 @@ function finalizeSpin() {
 
       // Add to history if we have valid data
       if (
-        selectedItems.length >= 5 &&
+        selectedItems.length >= 3 &&
         !selectedItems.includes("Unknown") &&
         state.handicap
       ) {
         const weapon = selectedItems[0];
         const specialization = selectedItems[1];
-        const gadgets = selectedItems.slice(2, 5);
+        const gadgets = selectedItems.slice(2); // Get all gadgets
 
         // Add to history
         addToHistory(
@@ -1110,7 +1200,13 @@ function finalizeSpin() {
   }
 
   // Re-enable spin button
-  document.getElementById("rage-quit-btn").removeAttribute("disabled");
+  const rageQuitBtn = document.getElementById("rage-quit-btn");
+  if (rageQuitBtn) {
+    rageQuitBtn.removeAttribute("disabled");
+    console.log("Button re-enabled");
+  } else {
+    console.error("Rage quit button not found when trying to re-enable");
+  }
 
   // Reset state after spin is complete
   state.isSpinning = false;
@@ -1142,6 +1238,3 @@ function copyLoadoutText(button) {
       alert("Failed to copy loadout to clipboard");
     });
 }
-document.addEventListener("click", function (e) {
-  console.log("Element clicked:", e.target);
-});
