@@ -142,9 +142,7 @@ const rageQuitLoadouts = {
     "Model 1887", // Medium - Slow reload, limited use
     "R.357", // Medium - Slow rate of fire, hard to use in close quarters
     "Riot Shield", // Medium - Limits mobility and offensive capability
-    "50 Akimbo", // Heavy - Inaccurate, excessive recoil
     "KS-23", // Heavy - Very slow reload
-    "SHAK-50", // Heavy - Slow, unwieldy
     "Spear", // Heavy - Limited range and difficult to master
   ],
   specializations: [
@@ -168,7 +166,6 @@ const rageQuitLoadouts = {
     "Proximity Sensor", // Often doesn't help in fast-paced combat
   ],
 
-  // New handicaps list
   // Replace the handicaps array in your rageQuitLoadouts object with this expanded list
 
   handicaps: [
