@@ -2101,3 +2101,111 @@ img {
   visibility: visible;
   opacity: 1;
 }
+/* Mobile-specific fixes */
+@media screen and (max-width: 768px) {
+  /* Ensure main button is visible and properly sized */
+  .rage-quit-button {
+    width: 90% !important;
+    max-width: 300px !important;
+    margin: 15px auto !important;
+    padding: 10px !important;
+    font-size: 16px !important;
+  }
+
+  /* Fix selected class container */
+  .selected-class-container {
+    width: 90% !important;
+    margin: 10px auto !important;
+    font-size: 16px !important;
+    padding: 8px !important;
+  }
+
+  /* Ensure any wrappers don't cause overflow */
+  .slot-machine-wrapper {
+    width: 100% !important;
+    overflow: hidden !important;
+    transform: none !important;
+    padding: 5px !important;
+  }
+
+  /* Fix section title spacing */
+  .section-title,
+  h2 {
+    margin-top: 20px !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Ensure no horizontal scroll */
+  body,
+  html {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Extra small devices */
+@media screen and (max-width: 375px) {
+  .placeholder-container,
+  .item-container {
+    flex: 0 0 50px !important;
+    width: 50px !important;
+    height: 80px !important;
+  }
+
+  .placeholder-container img,
+  .item-container img {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}
+/* Reduce size for all screen sizes */
+.selected-class-container {
+  width: 70%;
+  max-width: 250px;
+  margin: 10px auto;
+  font-size: 1rem;
+  padding: 5px;
+  transform: scale(0.9);
+  transform-origin: center;
+}
+
+.selected-class-container h2,
+.selected-class-container span,
+#selected-class {
+  font-size: 1rem;
+  margin: 10px auto;
+  padding: 0;
+}
+
+/* Additional reduction for mobile */
+@media screen and (max-width: 768px) {
+  .selected-class-container {
+    width: 60%;
+    max-width: 180px;
+    font-size: 0.8rem;
+    transform: scale(0.8);
+  }
+
+  .selected-class-container h2,
+  .selected-class-container span,
+  #selected-class {
+    font-size: 0.8rem;
+  }
+}
+
+/* Even smaller for very small screens */
+@media screen and (max-width: 375px) {
+  .selected-class-container {
+    width: 50%;
+    max-width: 150px;
+    font-size: 0.7rem;
+    transform: scale(0.7);
+  }
+
+  .selected-class-container h2,
+  .selected-class-container span,
+  #selected-class {
+    font-size: 0.7rem;
+  }
+}

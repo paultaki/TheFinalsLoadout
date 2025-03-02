@@ -2142,3 +2142,72 @@ body.flexStyle {
   background-color: var(--highlight-color);
 }
 
+@media (max-width: 768px) {
+  /* Improve slot machine scaling */
+  .items-container {
+    transform: scale(0.6);
+    width: 100vw;
+    max-width: 100vw;
+    margin: 0 auto;
+    overflow-x: hidden;
+  }
+  
+  /* Fix container width */
+  .container {
+    width: 95%;
+    padding: 0 10px;
+  }
+  
+  /* Improve selected class container */
+  .selected-class-container {
+    width: 90%;
+    margin: 20px auto;
+    font-size: 1.2rem;
+  }
+  
+  /* Improve handicap container */
+  .handicap-wheel-container {
+    width: 90%;
+    margin: 10px auto;
+  }
+  
+  /* Ensure button sizing is appropriate */
+  .copy-button, .rage-quit-button {
+    width: 90%;
+    margin: 10px auto;
+    padding: 12px;
+  }
+  
+  /* Fix overflow issues */
+  body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
+  /* Scale down the title */
+  .mainTitle {
+    font-size: 1.3rem;
+  }
+  
+  /* Better spacing between sections */
+  .handicap-section, .loadout-history {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .items-container {
+    transform: scale(0.5);
+  }
+  
+  .mainTitle {
+    font-size: 1.1rem;
+  }
+  
+  .selected-class-container {
+    font-size: 1rem;
+    padding: 8px;
+  }
+}

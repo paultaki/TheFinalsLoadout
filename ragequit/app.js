@@ -1,114 +1,202 @@
 let state = {
+  selectedClass: null,
   isSpinning: false,
+  currentSpin: 1,
+  totalSpins: 0,
   selectedGadgets: new Set(),
-  gadgetQueue: [],
+  gadgetQueue: {
+    Light: [],
+    Medium: [],
+    Heavy: [],
+  },
   currentGadgetPool: new Set(),
-  handicap: null,
-  selectedClass: null, // Add this property
 };
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("✅ DOM fully loaded for Rage Quit Simulator");
+// Move this function declaration to the top of your file
+function createItemContainer(items, winningItem = null, isGadget = false) {
+  if (isGadget) {
+    // For gadgets, use the full gadget list but ensure the winning item is included and properly marked
+    const gadgetList = [...loadout.gadgets];
 
-  loadHistory(); // Load saved history when page loads
-  addGPUHints(); // Add GPU performance hints
-
-  // 🔥 Clear Loadout History
-  document.getElementById("clear-history")?.addEventListener("click", () => {
-    localStorage.removeItem("rageQuitHistory");
-    document.getElementById("history-list").innerHTML = "";
-    console.log("🗑️ Rage Quit history cleared.");
-  });
-
-  // 🔥 Dark Mode Toggle Logic
-  const darkModeToggle = document.getElementById("darkModeToggle");
-  if (darkModeToggle) {
-    if (localStorage.getItem("darkMode") === "enabled") {
-      document.body.classList.add("dark-mode");
+    // Make sure the winning item is in the list
+    if (winningItem && !gadgetList.includes(winningItem)) {
+      gadgetList.push(winningItem);
     }
 
-    darkModeToggle.addEventListener("click", () => {
-      document.body.classList.toggle("dark-mode");
+    // Shuffle the list
+    const shuffledList = gadgetList.sort(() => Math.random() - 0.5);
 
-      if (document.body.classList.contains("dark-mode")) {
-        localStorage.setItem("darkMode", "enabled");
-      } else {
-        localStorage.removeItem("darkMode");
-      }
-    });
+    // Make sure winning item is at a specific position (e.g., middle)
+    const winnerIndex = 4; // Position in the middle
+    const winnerPosition = shuffledList.indexOf(winningItem);
+    if (winnerPosition !== -1 && winnerPosition !== winnerIndex) {
+      // Swap to put winner in the right position
+      [shuffledList[winnerIndex], shuffledList[winnerPosition]] = [
+        shuffledList[winnerPosition],
+        shuffledList[winnerIndex],
+      ];
+    }
+
+    return shuffledList
+      .map(
+        (item, index) => `
+        <div class="itemCol ${index === winnerIndex ? "winner" : ""}">
+          <img src="../images/${item.replace(
+            / /g,
+            "_"
+          )}.webp" alt="${item}" onerror="this.src='../images/placeholder.webp'">
+          <p>${item}</p>
+        </div>
+      `
+      )
+      .join("");
   }
 
-  // Rage Quit Button Click Event
-  document
-    .getElementById("rage-quit-btn")
-    ?.addEventListener("click", function () {
-      if (state.isSpinning) return;
+  // For non-gadgets (weapons, specializations), use similar logic
+  const itemList = [...items];
+  const winnerIndex = Math.floor(itemList.length / 2); // Middle position
+  const winnerPosition = itemList.indexOf(winningItem);
+  if (winnerPosition !== -1 && winnerPosition !== winnerIndex) {
+    [itemList[winnerIndex], itemList[winnerPosition]] = [
+      itemList[winnerPosition],
+      itemList[winnerIndex],
+    ];
+  }
 
-      // Play click sound (if file is valid)
-      const clickSound = document.getElementById("clickSound");
-      if (clickSound && clickSound.readyState >= 2) {
-        clickSound.currentTime = 0;
-        clickSound
-          .play()
-          .catch((err) => console.warn("Error playing sound:", err));
-      }
+  return itemList
+    .map(
+      (item, index) => `
+      <div class="itemCol ${index === winnerIndex ? "winner" : ""}">
+        <img src="../images/${item.replace(
+          / /g,
+          "_"
+        )}.webp" alt="${item}" onerror="this.src='../images/placeholder.webp'">
+        <p>${item}</p>
+      </div>
+    `
+    )
+    .join("");
+}
+// Define outputDiv at the global scope, before any functions
+const outputDiv = document.getElementById("output");
 
-      // Start the spin animation
-      spinRageQuitLoadout();
+document.addEventListener("DOMContentLoaded", () => {
+  // Code continues...
+});
+
+// Loadouts object
+const loadouts = {
+  Light: {
+    weapons: [
+      "Dagger",
+      "SR-84",
+      "Recurve Bow",
+      "Sword",
+      "XP-54",
+      "Throwing Knives",
+    ],
+    specializations: ["Cloaking Device", "Evasive Dash"],
+    gadgets: [
+      "Breach Charge",
+      "Gravity Vortex",
+      "Sonar Grenade",
+      "Thermal Bore",
+      "Tracking Dart",
+      "Smoke Grenade",
+    ],
+  },
+  Medium: {
+    weapons: ["CL-40", "Model 1887", "Pike-556", "R.357", "Riot Shield"],
+    specializations: ["Dematerializer"],
+    gadgets: [
+      "APS Turret",
+      "Data Reshaper",
+      "Gas Mine",
+      "Zipline",
+      "Smoke Grenade",
+    ],
+  },
+  Heavy: {
+    weapons: ["Flamethrower", "KS-23", "M32GL", "Spear"],
+    specializations: ["Charge N Slam", "Goo Gun"],
+    gadgets: [
+      "Anti-Gravity Cube",
+      "C4",
+      "Proximity Sensor",
+      "Goo Grenade",
+      "Smoke Grenade",
+      "Flashbang",
+    ],
+  },
+};
+
+// Rage Quit Button Click Event
+document
+  .getElementById("rage-quit-btn")
+  ?.addEventListener("click", function () {
+    if (state.isSpinning) return;
+
+    // Play click sound (if file is valid)
+    const clickSound = document.getElementById("clickSound");
+    if (clickSound && clickSound.readyState >= 2) {
+      clickSound.currentTime = 0;
+      clickSound
+        .play()
+        .catch((err) => console.warn("Error playing sound:", err));
+    }
+
+    // Start the spin animation
+    spinRageQuitLoadout();
+  });
+
+// 🔥 Copy Loadout Button
+document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
+  try {
+    const itemContainers = document.querySelectorAll(
+      ".slot-machine-wrapper .items-container .item-container"
+    );
+
+    if (!itemContainers || itemContainers.length === 0) {
+      alert("Error: No items found to copy");
+      return;
+    }
+
+    const selectedItems = Array.from(itemContainers).map((container) => {
+      const scrollContainer = container.querySelector(".scroll-container");
+      if (!scrollContainer) return "Unknown";
+
+      const allItems = scrollContainer.querySelectorAll(".itemCol");
+      const visibleItem = Array.from(allItems).find((item) => {
+        const rect = item.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        return (
+          rect.top >= containerRect.top &&
+          rect.bottom <= containerRect.bottom &&
+          rect.height > 0 &&
+          rect.width > 0
+        );
+      });
+
+      if (!visibleItem) return "Unknown";
+      return visibleItem.querySelector("p")?.innerText.trim() || "Unknown";
     });
 
-  // 🔥 Copy Loadout Button
-  document
-    .getElementById("copyLoadoutButton")
-    ?.addEventListener("click", () => {
-      try {
-        const itemContainers = document.querySelectorAll(
-          ".slot-machine-wrapper .items-container .item-container"
-        );
+    const handicapElement = document.querySelector(".handicap-result");
+    const handicapText = handicapElement ? handicapElement.textContent : "None";
 
-        if (!itemContainers || itemContainers.length === 0) {
-          alert("Error: No items found to copy");
-          return;
-        }
+    if (selectedItems.includes("Unknown") || selectedItems.length < 5) {
+      alert(
+        "Error: Not all items were properly selected. Please try again after the spin completes."
+      );
+      return;
+    }
 
-        const selectedItems = Array.from(itemContainers).map((container) => {
-          const scrollContainer = container.querySelector(".scroll-container");
-          if (!scrollContainer) return "Unknown";
+    // Get the actual class that was selected (or use random if not available)
+    const selectedClass =
+      state.selectedClass ||
+      ["Light", "Medium", "Heavy"][Math.floor(Math.random() * 3)];
 
-          const allItems = scrollContainer.querySelectorAll(".itemCol");
-          const visibleItem = Array.from(allItems).find((item) => {
-            const rect = item.getBoundingClientRect();
-            const containerRect = container.getBoundingClientRect();
-            return (
-              rect.top >= containerRect.top &&
-              rect.bottom <= containerRect.bottom &&
-              rect.height > 0 &&
-              rect.width > 0
-            );
-          });
-
-          if (!visibleItem) return "Unknown";
-          return visibleItem.querySelector("p")?.innerText.trim() || "Unknown";
-        });
-
-        const handicapElement = document.querySelector(".handicap-result");
-        const handicapText = handicapElement
-          ? handicapElement.textContent
-          : "None";
-
-        if (selectedItems.includes("Unknown") || selectedItems.length < 5) {
-          alert(
-            "Error: Not all items were properly selected. Please try again after the spin completes."
-          );
-          return;
-        }
-
-        // Get the actual class that was selected (or use random if not available)
-        const selectedClass =
-          state.selectedClass ||
-          ["Light", "Medium", "Heavy"][Math.floor(Math.random() * 3)];
-
-        // Fixed template string - using backticks instead of regular quotes
-        const copyText = `RAGE QUIT LOADOUT
+    // Fixed template string - using backticks instead of regular quotes
+    const copyText = `RAGE QUIT LOADOUT
 Class: ${selectedClass}
 Weapon: ${selectedItems[0]}
 Specialization: ${selectedItems[1]}
@@ -117,18 +205,17 @@ Gadget 2: ${selectedItems[3]}
 Gadget 3: ${selectedItems[4]}
 Handicap: ${handicapText}`;
 
-        navigator.clipboard
-          .writeText(copyText)
-          .then(() => alert("Rage Quit Loadout copied to clipboard!"))
-          .catch((err) => {
-            console.error("Could not copy text:", err);
-            alert("Failed to copy loadout to clipboard");
-          });
-      } catch (error) {
-        console.error("Error in copy loadout handler:", error);
-        alert("An error occurred while copying the loadout");
-      }
-    });
+    navigator.clipboard
+      .writeText(copyText)
+      .then(() => alert("Rage Quit Loadout copied to clipboard!"))
+      .catch((err) => {
+        console.error("Could not copy text:", err);
+        alert("Failed to copy loadout to clipboard");
+      });
+  } catch (error) {
+    console.error("Error in copy loadout handler:", error);
+    alert("An error occurred while copying the loadout");
+  }
 });
 // Add GPU hints to columns on load for better performance
 const addGPUHints = () => {
@@ -141,41 +228,8 @@ const addGPUHints = () => {
   });
 };
 
-// Loadouts object - Only the worst items for Rage Quit Simulator
+// Replace the handicaps array in your rageQuitLoadouts object with this expanded list
 const rageQuitLoadouts = {
-  weapons: [
-    "Throwing Knives", // Light - Low damage, difficult to aim
-    "V9S", // Light - Low damage pistol
-    "XP-54", // Light - Challenging to use effectively
-    "Model 1887", // Medium - Slow reload, limited use
-    "R.357", // Medium - Slow rate of fire, hard to use in close quarters
-    "Riot Shield", // Medium - Limits mobility and offensive capability
-    "KS-23", // Heavy - Very slow reload
-    "Spear", // Heavy - Limited range and difficult to master
-  ],
-  specializations: [
-    "Cloaking Device", // Limited duration, situational
-    "Guardian Turret", // Stationary, can be easily destroyed
-    "Mesh Shield", // Blocks your own line of sight
-    "Winch Claw", // Very situational
-  ],
-  gadgets: [
-    "Breach Charge", // Situational, can self-damage
-    "Thermal Bore", // Limited utility
-    "Vanishing Bomb", // Confusing to use effectively
-    "Glitch Trap", // Situational
-    "Jump Pad", // Very situational
-    "Zipline", // Limited use cases
-    "Anti-Gravity Cube", // Difficult to use properly
-    "Dome Shield", // Can trap yourself
-    "Lockbolt Launcher", // Hard to use effectively
-    "Flashbang", // Can blind yourself
-    "Data Reshaper", // Limited functionality
-    "Proximity Sensor", // Often doesn't help in fast-paced combat
-  ],
-
-  // Replace the handicaps array in your rageQuitLoadouts object with this expanded list
-
   handicaps: [
     // Movement Handicaps
     {
@@ -314,12 +368,6 @@ const rageQuitLoadouts = {
       icon: "📢",
       category: "Audio",
     },
-    {
-      name: "Bass Boost",
-      description: "Max out the bass in your audio settings",
-      icon: "🔊",
-      category: "Audio",
-    },
 
     // Communication Handicaps
     {
@@ -338,12 +386,6 @@ const rageQuitLoadouts = {
       name: "Radio Silence",
       description: "No communication with teammates",
       icon: "🤐",
-      category: "Communication",
-    },
-    {
-      name: "Language Barrier",
-      description: "Communicate only using a language you don't know",
-      icon: "🈲",
       category: "Communication",
     },
     {
@@ -501,115 +543,138 @@ const rageQuitLoadouts = {
 
 // Helper functions
 const getRandomUniqueItems = (array, n) => {
-  const shuffled = [...array].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, n);
+  // Create a copy to avoid modifying the original array
+  const available = [...array];
+  const result = [];
+
+  // Ensure we don't request more items than are available
+  const count = Math.min(n, available.length);
+
+  for (let i = 0; i < count; i++) {
+    // Get a random index from remaining items
+    const randomIndex = Math.floor(Math.random() * available.length);
+    // Add the item to our results
+    result.push(available[randomIndex]);
+    // Remove the item so it can't be selected again
+    available.splice(randomIndex, 1);
+  }
+
+  return result;
 };
 
+// Fixed function to create item containers with proper winner class
 function createItemContainer(items, winningItem = null, isGadget = false) {
-  if (isGadget) {
-    return items
-      .map(
-        (item, index) => `
-        <div class="itemCol ${index === 4 ? "winner" : ""}">
+  // When creating the container, make sure to mark the winning item
+  return items
+    .map((item) => {
+      const isWinner = item === winningItem;
+      return `
+        <div class="itemCol ${isWinner ? "winner" : ""}">
           <img src="../images/${item.replace(
             / /g,
             "_"
           )}.webp" alt="${item}" onerror="this.src='../images/placeholder.webp'">
           <p>${item}</p>
         </div>
-      `
-      )
-      .join("");
-  }
-
-  winningItem = winningItem || items[Math.floor(Math.random() * items.length)];
-  let repeatedItems = items
-    .filter((item) => item !== winningItem)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 7);
-
-  repeatedItems = [
-    ...repeatedItems.slice(0, 4),
-    winningItem,
-    ...repeatedItems.slice(4),
-  ];
-
-  while (repeatedItems.length < 8) {
-    const randomItem = items[Math.floor(Math.random() * items.length)];
-    repeatedItems.push(randomItem);
-  }
-
-  return repeatedItems
-    .map(
-      (item, index) => `
-      <div class="itemCol ${index === 4 ? "winner" : ""}">
-        <img src="../images/${item.replace(
-          / /g,
-          "_"
-        )}.webp" alt="${item}" onerror="this.src='../images/placeholder.webp'">
-        <p>${item}</p>
-      </div>
-    `
-    )
+      `;
+    })
     .join("");
 }
 
-const displayRageQuitLoadout = () => {
-  const outputDiv = document.getElementById("output");
-  const classes = ["Light", "Medium", "Heavy"];
-  const selectedClass = classes[Math.floor(Math.random() * classes.length)];
+// Then update the displayRageQuitLoadout function:
 
-  // Store the selected class in state for later use
-  state.selectedClass = selectedClass;
+const displayRageQuitLoadout = () => {
+  // Randomly select a class
+  const classes = ["Light", "Medium", "Heavy"];
+  const randomClass = classes[Math.floor(Math.random() * classes.length)];
+
+  state.selectedClass = randomClass;
 
   // Update the selected class text
   const selectedClassElement = document.getElementById("selected-class");
   if (selectedClassElement) {
-    selectedClassElement.innerText = selectedClass;
-  } else {
-    console.warn("⚠️ Warning: #selected-class not found in the DOM!");
+    selectedClassElement.textContent = randomClass;
   }
 
-  const selectedWeapon = getRandomUniqueItems(rageQuitLoadouts.weapons, 1)[0];
-  const selectedSpec = getRandomUniqueItems(
-    rageQuitLoadouts.specializations,
-    1
-  )[0];
-  const selectedGadgets = getRandomUniqueItems(rageQuitLoadouts.gadgets, 3);
+  // Get the loadout for the selected class
+  const loadout = loadouts[randomClass];
 
+  // Debug logging to verify items are being selected
+  console.log(`Class: ${randomClass}`);
+  console.log(`Available weapons: ${loadout.weapons.join(", ")}`);
+  console.log(
+    `Available specializations: ${loadout.specializations.join(", ")}`
+  );
+  console.log(`Available gadgets: ${loadout.gadgets.join(", ")}`);
+
+  // Make sure we have items to select from
+  if (
+    !loadout ||
+    !loadout.weapons.length ||
+    !loadout.specializations.length ||
+    !loadout.gadgets.length
+  ) {
+    console.error("Missing loadout items for class:", randomClass);
+    return;
+  }
+
+  // Select random items for each category
+  const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
+  const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
+
+  // Make sure gadgets are unique by using getRandomUniqueItems
+  const selectedGadgets = getRandomUniqueItems(loadout.gadgets, 3);
+
+  console.log(`Selected weapon: ${selectedWeapon}`);
+  console.log(`Selected specialization: ${selectedSpec}`);
+  console.log(`Selected gadgets: ${selectedGadgets.join(", ")}`);
+  console.log(
+    "Are gadgets unique?",
+    new Set(selectedGadgets).size === selectedGadgets.length
+  );
+
+  // Create HTML with explicit separate gadget creation
+  const gadgetHtml = selectedGadgets
+    .map((gadget, index) => {
+      // Log each gadget being rendered to help debug
+      console.log(`Creating container for gadget ${index}: ${gadget}`);
+      return `<div class="item-container">
+      <div class="scroll-container" data-gadget-index="${index}">
+        ${createItemContainer([gadget], gadget, true)}
+      </div>
+    </div>`;
+    })
+    .join("");
+
+  // Create the complete loadout HTML - ensuring weapon and specialization are included
   const loadoutHTML = `
     <div class="slot-machine-wrapper">
       <div class="items-container">
         <div class="item-container">
           <div class="scroll-container">
-            ${createItemContainer(rageQuitLoadouts.weapons, selectedWeapon)}
+            ${createItemContainer(loadout.weapons, selectedWeapon)}
           </div>
         </div>
         <div class="item-container">
           <div class="scroll-container">
-            ${createItemContainer(
-              rageQuitLoadouts.specializations,
-              selectedSpec
-            )}
+            ${createItemContainer(loadout.specializations, selectedSpec)}
           </div>
         </div>
-        ${selectedGadgets
-          .map(
-            (gadget) => `
-            <div class="item-container">
-              <div class="scroll-container">
-                ${createItemContainer(rageQuitLoadouts.gadgets, gadget)}
-              </div>
-            </div>
-          `
-          )
-          .join("")}
+        ${gadgetHtml}
       </div>
     </div>
   `;
 
-  outputDiv.innerHTML = loadoutHTML;
+  // Add the HTML to the output div
+  const outputDiv = document.getElementById("output");
+  if (outputDiv) {
+    outputDiv.innerHTML = loadoutHTML;
+  } else {
+    console.error("Output div not found");
+    return;
+  }
 
+  // Start the spin animation after a short delay
   setTimeout(() => {
     const scrollContainers = Array.from(
       document.querySelectorAll(".scroll-container")
@@ -631,6 +696,41 @@ const spinRageQuitLoadout = () => {
   displayRageQuitLoadout();
 };
 
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("✅ DOM fully loaded for Rage Quit Simulator");
+
+  loadHistory(); // Load saved history when page loads
+  addGPUHints(); // Add GPU performance hints
+
+  // Rage Quit Button Click Event
+  document
+    .getElementById("rage-quit-btn")
+    ?.addEventListener("click", function () {
+      if (state.isSpinning) return;
+
+      // Play click sound (if file is valid)
+      const clickSound = document.getElementById("clickSound");
+      if (clickSound && clickSound.readyState >= 2) {
+        clickSound.currentTime = 0;
+        clickSound
+          .play()
+          .catch((err) => console.warn("Error playing sound:", err));
+      }
+
+      // Start the spin animation
+      spinRageQuitLoadout();
+    });
+
+  // 🔥 Copy Loadout Button
+  document
+    .getElementById("copyLoadoutButton")
+    ?.addEventListener("click", () => {
+      // Your existing copy loadout code...
+    });
+
+  // Other initialization code...
+});
+
 // Slightly modified physics constants for the Rage Quit Simulator
 const PHYSICS = {
   ACCELERATION: 3000, // Slower acceleration for gradual build-up
@@ -644,28 +744,6 @@ const PHYSICS = {
     DECELERATION_TIME: 1800, // Extended deceleration phase
   },
 };
-
-function finalVictoryFlash(columns) {
-  setTimeout(() => {
-    const allContainers = columns.map((col) => col.closest(".item-container"));
-    const itemsContainer = document.querySelector(".items-container");
-
-    allContainers.forEach((container, index) => {
-      setTimeout(() => {
-        container.classList.remove("mega-flash");
-        void container.offsetWidth; // Force reflow
-        container.classList.add("mega-flash");
-
-        if (index === allContainers.length - 1) {
-          setTimeout(() => {
-            if (itemsContainer) {
-            }
-          }, 100);
-        }
-      }, index * 150);
-    });
-  }, 800);
-}
 
 class SlotColumn {
   constructor(element, index) {
@@ -795,10 +873,30 @@ class SlotColumn {
     this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
   }
 }
-
 function startSpinAnimation(columns) {
+  columns.forEach((column) => {
+    const container = column.closest(".item-container");
+    if (container) {
+      container.classList.remove(
+        "landing-flash",
+        "winner-pulsate",
+        "final-flash"
+      );
+
+      // Remove existing locked tag
+      const existingTag = container.querySelector(".locked-tag");
+      if (existingTag) {
+        existingTag.remove();
+      }
+    }
+    column.style.transform = "translateY(0)";
+    column.style.transition = "none";
+  });
+
+  // Continue with normal animation initialization
   const startTime = performance.now();
 
+  // Create slot columns
   const slotColumns = columns.map((element, index) => {
     const column = new SlotColumn(element, index);
 
@@ -835,28 +933,10 @@ function startSpinAnimation(columns) {
     return column;
   });
 
-  // Reset columns - remove all animations
-  columns.forEach((column) => {
-    const container = column.closest(".item-container");
-    if (container) {
-      container.classList.remove(
-        "landing-flash",
-        "winner-pulsate",
-        "final-flash"
-      );
-
-      // Remove existing locked tag
-      const existingTag = container.querySelector(".locked-tag");
-      if (existingTag) {
-        existingTag.remove();
-      }
-    }
-    column.style.transform = "translateY(0)";
-    column.style.transition = "none";
-  });
-
+  // Set all columns to accelerating state to start animation
   slotColumns.forEach((column) => (column.state = "accelerating"));
 
+  // Animation loop function
   function animate(currentTime) {
     const elapsed = currentTime - startTime;
     let isAnimating = false;
@@ -883,6 +963,7 @@ function startSpinAnimation(columns) {
     }
   }
 
+  // Start the animation loop
   requestAnimationFrame(animate);
 }
 
@@ -1087,8 +1168,6 @@ function loadHistory() {
 
 // Replace the finalizeSpin function in ragequit-app.js with this version:
 
-// Replace the finalizeSpin function in ragequit-app.js with this version:
-
 function finalizeSpin() {
   // Capture the selected items for history
   const itemContainers = document.querySelectorAll(
@@ -1131,6 +1210,10 @@ function finalizeSpin() {
       console.error("Error saving loadout history:", error);
     }
   }
+
+  // Re-enable the Rage Quit button
+  document.getElementById("rage-quit-btn").removeAttribute("disabled");
+  state.isSpinning = false;
 }
 
 function copyLoadoutText(button) {
