@@ -1916,12 +1916,13 @@ a[id*="punishment"]:hover,
 /* Updated Navigation Bar Styles */
 .main-nav {
   background: rgba(0, 0, 0, 0.8);
-  padding: 15px 0;
+  padding: 15px 20px; /* Add horizontal padding */
   display: flex;
-  justify-content: center; /* Center the links instead of left alignment */
-  gap: 30px; /* Increased spacing between links */
+  justify-content: flex-start; /* Align to the left */
+  gap: 30px; /* Keep spacing between links */
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
   z-index: 1000;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
@@ -1932,9 +1933,9 @@ a[id*="punishment"]:hover,
   text-decoration: none;
   font-size: 18px;
   font-weight: bold;
-  padding: 5px 10px; /* Add padding for larger click area */
+  padding: 5px 15px; /* Adjust padding */
   transition: color 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
-  position: relative; /* For the underline effect */
+  position: relative;
 }
 
 /* Highlight effect on hover */
@@ -1995,4 +1996,252 @@ body.flexStyle {
 
 .headerSection {
   padding-top: 30px;
+}
+
+.headerSection {
+  padding-top: 80px; /* Increased padding to push the logo down */
+}
+
+/* Add these styles to your style.css file to style the rage quit button and enhance the generate button */
+
+/* Rage Quit Button on Homepage */
+.rage-quit-link {
+  /* Display & Alignment */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  
+  /* Dimensions & Spacing */
+  padding: 12px 25px;
+  margin: 20px auto !important;
+  width: fit-content;
+  
+  /* Typography */
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  color: white !important;
+  
+  /* Visual styling */
+  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+  border: 2px solid #ff3d00 !important;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.8);
+  
+  /* Behavior */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  
+  /* Animation */
+  animation: rageButtonPulse 2.5s ease-in-out infinite;
+}
+
+.rage-quit-link:hover {
+  transform: translateY(-5px) scale(1.07);
+  box-shadow: 0 0 25px rgba(255, 140, 0, 1);
+  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
+}
+
+.rage-icon {
+  font-size: 1.4rem;
+}
+
+/* Animation for the rage button */
+@keyframes rageButtonPulse {
+  0% { box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); }
+  50% { box-shadow: 0 0 25px rgba(255, 69, 0, 1); }
+  100% { box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); }
+}
+
+/* Enhanced Generate Button (Rage Quit Button) */
+.rage-quit-button {
+  /* Display & Alignment */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  
+  /* Dimensions & Spacing */
+  padding: 15px 30px;
+  margin: 20px auto !important;
+  
+  /* Typography */
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  
+  /* Visual styling */
+  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+  border: 2px solid #ff3d00 !important;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.8);
+  
+  /* Animation & Effects */
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Shiny effect on the rage quit button */
+.rage-quit-button::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,0,0,0) 70%);
+  transform: rotate(0deg);
+  animation: rageButtonShine 3s infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes rageButtonShine {
+  0% { transform: rotate(0deg) translateX(-30%); }
+  100% { transform: rotate(360deg) translateX(30%); }
+}
+
+/* Enhanced hover effects */
+.rage-quit-button:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 0 30px rgba(255, 0, 0, 1);
+  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
+}
+
+.rage-quit-button:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+/* Make sure the navigation uses the correct highlight color */
+:root {
+  --highlight-color: var(--neon-yellow, #ffb700);
+}
+
+.main-nav a.active,
+.main-nav a:hover {
+  color: var(--highlight-color);
+}
+
+.main-nav a::after {
+  background-color: var(--highlight-color);
+}
+
+/* Add these styles to your style.css file to style the rage quit button and enhance the generate button */
+
+/* Rage Quit Button on Homepage */
+.rage-quit-link {
+  /* Display & Alignment */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  
+  /* Dimensions & Spacing */
+  padding: 12px 25px;
+  margin: 20px auto !important;
+  width: fit-content;
+  
+  /* Typography */
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  color: white !important;
+  
+  /* Visual styling */
+  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+  border: 2px solid #ff3d00 !important;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.8);
+  
+  /* Behavior */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  
+  /* Animation */
+  animation: rageButtonPulse 2.5s ease-in-out infinite;
+}
+
+.rage-quit-link:hover {
+  transform: translateY(-5px) scale(1.07);
+  box-shadow: 0 0 25px rgba(255, 140, 0, 1);
+  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
+}
+
+.rage-icon {
+  font-size: 1.4rem;
+}
+
+/* Animation for the rage button */
+@keyframes rageButtonPulse {
+  0% { box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); }
+  50% { box-shadow: 0 0 25px rgba(255, 69, 0, 1); }
+  100% { box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); }
+}
+
+/* Enhanced Generate Button (Rage Quit Button) */
+.rage-quit-button {
+  /* Display & Alignment */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  
+  /* Dimensions & Spacing */
+  padding: 15px 30px;
+  margin: 20px auto !important;
+  
+  /* Typography */
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  
+  /* Visual styling */
+  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+  border: 2px solid #ff3d00 !important;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.8);
+  
+  /* Animation & Effects */
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Shiny effect on the rage quit button */
+.rage-quit-button::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,0,0,0) 70%);
+  transform: rotate(0deg);
+  animation: rageButtonShine 3s infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes rageButtonShine {
+  0% { transform: rotate(0deg) translateX(-30%); }
+  100% { transform: rotate(360deg) translateX(30%); }
+}
+
+/* Enhanced hover effects */
+.rage-quit-button:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 0 30px rgba(255, 0, 0, 1);
+  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
+}
+
+.rage-quit-button:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
 }
