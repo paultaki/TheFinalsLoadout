@@ -2329,3 +2329,61 @@ body.flexStyle {
 .rage-quit-button {
   animation: mediumButtonPulse 2.5s infinite alternate;
 }
+
+/* Mobile Spacing Fix for Rage Loadout Generator */
+
+/* Fix gap between slot machine and handicap section on mobile */
+@media (max-width: 768px) {
+  /* Reduce or eliminate space between slot machine and handicap section */
+  .items-container {
+    margin-bottom: 0 !important;
+  }
+  
+  /* Pull the handicap section up */
+  .handicap-section, 
+  .section-title,
+  .handicap-container {
+    margin-top: 0;
+    padding-top: 0;
+  }
+  
+  /* Target the movement handicap title specifically */
+  .section-title {
+    margin-top: -15px; /* Negative margin to pull up */
+  }
+  
+  /* Adjust the gap between items container and what follows */
+  .slot-machine-wrapper {
+    margin-bottom: 0 !important;
+  }
+  
+  /* Force no bottom margin on the output container */
+  #output {
+    margin-bottom: 0 !important;
+  }
+  
+  /* Ensure no extra space below slot machine items */
+  .item-container {
+    margin-bottom: 0 !important;
+  }
+  
+  /* Target the MOVEMENT HANDICAP title directly */
+  h2, h2.section-title {
+    margin-top: -20px !important; /* More aggressive negative margin */
+    position: relative;
+    z-index: 5;
+  }
+}
+
+/* Even more aggressive adjustments for smaller screens */
+@media (max-width: 480px) {
+  /* Further reduce the gap on smaller screens */
+  .section-title {
+    margin-top: -25px !important;
+  }
+  
+  /* Optional: slightly reduce the height of the handicap container */
+  .handicap-container {
+    min-height: 180px; /* Reduced from 200px if that exists */
+  }
+}

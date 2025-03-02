@@ -266,12 +266,6 @@ const rageQuitLoadouts = {
       category: "Aiming",
     },
     {
-      name: "Inverted Controls",
-      description: "Invert both X and Y axis",
-      icon: "⬆️",
-      category: "Aiming",
-    },
-    {
       name: "Tunnel Vision",
       description: "Use only 50% of your normal FOV",
       icon: "👁️",
@@ -319,13 +313,6 @@ const rageQuitLoadouts = {
       name: "Bass Boost",
       description: "Max out the bass in your audio settings",
       icon: "🔊",
-      category: "Audio",
-    },
-    {
-      name: "Wrong Channel",
-      description:
-        "Listen to the wrong audio channel (e.g., 7.1 on stereo headphones)",
-      icon: "🎧",
       category: "Audio",
     },
 
@@ -378,12 +365,6 @@ const rageQuitLoadouts = {
       name: "Glass Cannon",
       description: "No armor or defensive abilities allowed",
       icon: "🔮",
-      category: "Gameplay",
-    },
-    {
-      name: "Scavenger",
-      description: "Can only use weapons picked up from defeated enemies",
-      icon: "🗑️",
       category: "Gameplay",
     },
     {
@@ -449,12 +430,6 @@ const rageQuitLoadouts = {
       category: "Visual",
     },
     {
-      name: "Third Person",
-      description: "Look only at your character's feet",
-      icon: "👣",
-      category: "Visual",
-    },
-    {
       name: "Motion Blur",
       description: "Max out motion blur settings",
       icon: "💫",
@@ -466,12 +441,6 @@ const rageQuitLoadouts = {
       name: "Melee Only",
       description: "Can only use melee attacks",
       icon: "🔪",
-      category: "Challenge",
-    },
-    {
-      name: "Sidearm Specialist",
-      description: "Only use your secondary weapon",
-      icon: "🔫",
       category: "Challenge",
     },
     {
