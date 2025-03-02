@@ -706,6 +706,7 @@ function finalizeSpin(columns) {
 }
 
 // Improved final victory flash function with contained effects
+// Improved final victory flash function with contained effects
 function finalVictoryFlash(columns) {
   // Wait for the last column to finish its individual animation
   setTimeout(() => {
@@ -722,12 +723,9 @@ function finalVictoryFlash(columns) {
         // Add the mega flash
         container.classList.add("mega-flash");
 
-        // If this is the last container, trigger confetti and final flash
+        // If this is the last container, trigger the final flash
         if (index === allContainers.length - 1) {
-          // Trigger confetti in the container
           setTimeout(() => {
-            createConfetti();
-
             // Add a flash effect just to the items container
             if (itemsContainer) {
               // Create a positioned flash overlay
