@@ -2174,7 +2174,7 @@ img {
 .selected-class-container span,
 #selected-class {
   font-size: 1rem;
-  margin: 10px auto;
+  margin: 0;
   padding: 0;
 }
 
@@ -2207,5 +2207,31 @@ img {
   .selected-class-container span,
   #selected-class {
     font-size: 0.7rem;
+  }
+}
+/* Fix for uneven item alignment */
+
+/* Fix for large gap between slot machine and EXTRA PUNISHMENT */
+.items-container {
+  margin-bottom: 20px !important; /* Reduce bottom margin */
+}
+
+/* Target the EXTRA PUNISHMENT section */
+[id*="punishment"],
+.punishment-loadout-button,
+.extra-punishment {
+  margin-top: 20px !important; /* Consistent top margin */
+}
+
+/* Ensure responsive spacing on mobile */
+@media screen and (max-width: 768px) {
+  .items-container {
+    margin-bottom: 15px !important;
+  }
+
+  [id*="punishment"],
+  .punishment-loadout-button,
+  .extra-punishment {
+    margin-top: 15px !important;
   }
 }
