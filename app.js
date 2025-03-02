@@ -502,58 +502,34 @@ function startSpinAnimation(columns) {
       column.onStop = (columnElement) => {
         const container = columnElement.closest(".item-container");
         if (container) {
-          // Apply initial flash effect
           container.classList.remove("final-flash"); // Ensure restart
           void container.offsetWidth; // Force reflow
           container.classList.add("final-flash");
 
-          // Add locked in tag with animation
           if (!container.querySelector(".locked-tag")) {
             const lockedTag = document.createElement("div");
             lockedTag.className = "locked-tag";
             lockedTag.textContent = "LOCKED IN!";
             container.appendChild(lockedTag);
 
-            // Small delay for tag animation
             setTimeout(() => {
               lockedTag.classList.add("show");
             }, 150);
           }
 
-          // Transition from flash to pulse effect
           setTimeout(() => {
-            container.classList.remove("final-flash");
-            container.classList.add("winner-pulsate");
-          }, 500);
+            container.classList.remove("final-flash"); // Remove flash class
+            container.classList.add("winner-pulsate"); // Start continuous pulse
+            console.log("Added winner-pulsate to:", container);
+          }, 700);
         }
       };
-    }
+    } // ✅ This closes the `if (isFinalSpin)` block!
 
     return column;
   });
 
-  // Reset columns - remove all animations
-  columns.forEach((column) => {
-    const container = column.closest(".item-container");
-    if (container) {
-      container.classList.remove(
-        "landing-flash",
-        "winner-pulsate",
-        "final-flash"
-      );
-
-      // Remove existing locked tag for non-final spins
-      if (!isFinalSpin) {
-        const existingTag = container.querySelector(".locked-tag");
-        if (existingTag) {
-          existingTag.remove();
-        }
-      }
-    }
-    column.style.transform = "translateY(0)";
-    column.style.transition = "none";
-  });
-
+  // ✅ Make sure the function continues with the animation logic!
   slotColumns.forEach((column) => (column.state = "accelerating"));
 
   function animate(currentTime) {
@@ -574,7 +550,6 @@ function startSpinAnimation(columns) {
     if (isAnimating) {
       requestAnimationFrame(animate);
     } else {
-      // When all columns are stopped, if this is the final spin, trigger the victory flash
       if (isFinalSpin) {
         finalVictoryFlash(columns);
       }
@@ -583,7 +558,7 @@ function startSpinAnimation(columns) {
   }
 
   requestAnimationFrame(animate);
-}
+} // ✅ This closes `startSpinAnimation()`
 
 // These should be defined outside finalizeSpin, at the top level of your file
 function addToHistory(

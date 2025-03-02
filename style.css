@@ -1673,10 +1673,20 @@ a[id*="punishment"]:hover,
 
 /* Pulsating winner effect */
 @keyframes pulsateWinner {
-  0% { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 183, 0, 0.5); }
-  50% { transform: scale(1.08); box-shadow: 0 0 30px rgba(255, 183, 0, 1); }
-  100% { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 183, 0, 0.5); }
+  0% {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255, 183, 0, 0.4);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(255, 183, 0, 1);
+  }
+  100% {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255, 183, 0, 0.4);
+  }
 }
+
 
 /* Left-to-right pulsing effect */
 @keyframes leftToRightPulse {
@@ -1725,8 +1735,9 @@ a[id*="punishment"]:hover,
 /* === APPLYING THE ANIMATIONS === */
 /* Slot machine winning item */
 .item-container.winner-pulsate {
-  animation: pulsateWinner 2s ease-in-out infinite, glowPulse 2s ease-in-out infinite;
+  animation: pulsateWinner 2.5s infinite alternate ease-in-out;
 }
+
 
 /* Final locked-in effect */
 .item-container.landing-flash {
