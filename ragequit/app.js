@@ -649,17 +649,76 @@ const spinRageQuitLoadout = () => {
 
 // Slightly modified physics constants for the Rage Quit Simulator
 const PHYSICS = {
-  ACCELERATION: 6500, // Slightly faster for more rage
-  MAX_VELOCITY: 4200, // Slightly faster for more rage
-  DECELERATION: -3000,
-  BOUNCE_DAMPENING: 0.3,
+  ACCELERATION: 3000, // Slower acceleration for gradual build-up
+  MAX_VELOCITY: 3000, // Lower velocity for a controlled spin
+  DECELERATION: -1500, // Gradual slow down for suspense
+  BOUNCE_DAMPENING: 0.2, // Less bouncing to keep the focus on suspense
   ITEM_HEIGHT: 188,
   TIMING: {
-    COLUMN_DELAY: 400, // Increased delay between columns
-    BASE_DURATION: 1500, // Longer base duration
-    DECELERATION_TIME: 600, // Longer deceleration time
+    COLUMN_DELAY: 1000, // Increased delay between stops for drama
+    BASE_DURATION: 4000, // Longer spin duration for suspense
+    DECELERATION_TIME: 1800, // Extended deceleration phase
   },
 };
+
+function finalVictoryFlash(columns) {
+  // Wait for the last column to finish its individual animation
+  setTimeout(() => {
+    const allContainers = columns.map((col) => col.closest(".item-container"));
+    const itemsContainer = document.querySelector(".items-container");
+
+    // Add a big flash animation to each container in sequence
+    allContainers.forEach((container, index) => {
+      setTimeout(() => {
+        // Remove any existing animation to reset
+        container.classList.remove("mega-flash");
+        void container.offsetWidth; // Force reflow
+
+        // Add the mega flash
+        container.classList.add("mega-flash");
+
+        // If this is the last container, trigger final flash without confetti
+        if (index === allContainers.length - 1) {
+          setTimeout(() => {
+            if (itemsContainer) {
+              const flashOverlay = document.createElement("div");
+              if (getComputedStyle(itemsContainer).position === "static") {
+                itemsContainer.style.position = "relative";
+              }
+
+              flashOverlay.style.position = "absolute";
+              flashOverlay.style.top = "0";
+              flashOverlay.style.left = "0";
+              flashOverlay.style.width = "100%";
+              flashOverlay.style.height = "100%";
+              flashOverlay.style.backgroundColor = "rgba(255, 255, 255, 0)";
+              flashOverlay.style.pointerEvents = "none";
+              flashOverlay.style.zIndex = "90";
+              itemsContainer.appendChild(flashOverlay);
+
+              flashOverlay.animate(
+                [
+                  { backgroundColor: "rgba(255, 255, 255, 0)" },
+                  { backgroundColor: "rgba(255, 255, 255, 0.7)" },
+                  { backgroundColor: "rgba(255, 255, 255, 0)" },
+                ],
+                {
+                  duration: 800,
+                  easing: "ease-out",
+                  fill: "forwards",
+                }
+              );
+
+              setTimeout(() => {
+                flashOverlay.remove();
+              }, 900);
+            }
+          }, 1000); // Final dramatic pause before revealing result
+        }
+      }, index * 250); // Slower staggered timing - 250ms between each
+    });
+  }, 1200); // Longer delay before the final reveal
+}
 
 class SlotColumn {
   constructor(element, index) {
@@ -947,7 +1006,7 @@ function finalVictoryFlash(columns) {
             }
           }, 100); // Small delay after the last mega-flash starts
         }
-      }, index * 150); // Staggered timing - 150ms between each
+      }, index * 550); // Staggered timing - 150ms between each
     });
   }, 800); // Wait for last column's individual animation to finish
 }
@@ -1030,43 +1089,6 @@ function spinHandicap() {
     // Fallback if spinner element not found
     finalizeSpin();
   }
-}
-
-// Create confetti effect
-function createConfetti() {
-  // Create a container for the confetti
-  const confettiContainer = document.createElement("div");
-  confettiContainer.className = "confetti-container";
-  document.body.appendChild(confettiContainer);
-
-  // Confetti colors suited for rage (reds, oranges)
-  const colors = [
-    "#FF5252",
-    "#FF1744",
-    "#D50000",
-    "#FF4081",
-    "#FF9100",
-    "#FF6D00",
-  ];
-
-  // Create confetti pieces
-  for (let i = 0; i < 100; i++) {
-    const confetti = document.createElement("div");
-    confetti.className = "confetti";
-    confetti.style.left = Math.random() * 100 + "vw";
-    confetti.style.backgroundColor =
-      colors[Math.floor(Math.random() * colors.length)];
-    confetti.style.width = Math.random() * 10 + 5 + "px";
-    confetti.style.height = Math.random() * 10 + 5 + "px";
-    confetti.style.animationDuration = Math.random() * 3 + 2 + "s";
-
-    confettiContainer.appendChild(confetti);
-  }
-
-  // Remove the confetti container after animations complete
-  setTimeout(() => {
-    confettiContainer.remove();
-  }, 5000);
 }
 
 function addToHistory(

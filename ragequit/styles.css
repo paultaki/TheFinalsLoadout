@@ -1813,45 +1813,6 @@ a[id*="punishment"]:hover,
   z-index: 10;
 }
 
-/* Confetti container */
-.confetti-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1000;
-  overflow: hidden;
-}
-
-/* Confetti pieces */
-.confetti {
-  position: absolute;
-  top: -10px;
-  width: 10px;
-  height: 10px;
-  background-color: #f00;
-  opacity: 0.8;
-  border-radius: 0;
-  transform: rotate(45deg);
-  animation: confettiFall linear forwards;
-}
-
-/* Confetti fall animation */
-@keyframes confettiFall {
-  0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 1;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh) rotate(720deg);
-    opacity: 0;
-  }
-}
 
 /* Flash overlay for full screen effect */
 .flash-overlay {
@@ -2386,4 +2347,93 @@ body.flexStyle {
   .handicap-container {
     min-height: 180px; /* Reduced from 200px if that exists */
   }
+}
+/* Improve Rage Management Tips Section */
+.rage-tips {
+  background: rgba(30, 30, 40, 0.8); /* Slightly darker background */
+  padding: 30px;
+  border-radius: 12px;
+  margin: 40px auto;
+  max-width: 800px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.rage-tips h2 {
+  color: var(--neon-yellow);
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.tips-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.tip-item {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out;
+}
+
+.tip-item:hover {
+  transform: scale(1.05);
+}
+
+.tip-icon {
+  font-size: 2rem;
+  margin-right: 15px;
+}
+
+.tip-content h3 {
+  color: var(--neon-cyan);
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.tip-content p {
+  margin: 5px 0 0;
+  font-size: 1rem;
+  color: #ddd;
+}
+
+/* Improve Footer Spacing */
+.footerSection {
+  background: rgba(20, 20, 30, 0.9);
+  padding: 15px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.footerRow p {
+  margin: 0;
+  color: #ddd;
+}
+
+.footerRow a {
+  color: var(--neon-yellow);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footerRow a:hover {
+  color: var(--neon-orange);
 }

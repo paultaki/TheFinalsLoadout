@@ -346,13 +346,13 @@ const PHYSICS = {
   TIMING: {
     REGULAR_SPIN: {
       COLUMN_DELAY: 250, // 0.25s between stops for regular spins
-      BASE_DURATION: 800,
+      BASE_DURATION: 600,
       DECELERATION_TIME: 400,
     },
     FINAL_SPIN: {
-      COLUMN_DELAY: 600, // 0.6s between stops for final spin
+      COLUMN_DELAY: 900, // 0.6s between stops for final spin
       BASE_DURATION: 2500,
-      DECELERATION_TIME: 800,
+      DECELERATION_TIME: 900,
     },
   },
 };
@@ -678,7 +678,7 @@ function finalizeSpin(columns) {
       } else {
         displayManualLoadout(state.selectedClass);
       }
-    }, 800);
+    }, 400);
     return;
   }
 
