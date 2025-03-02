@@ -39,7 +39,7 @@
       }
     </script>
 
-    <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
 
     <link
       rel="preload"
@@ -65,7 +65,7 @@
       }
     </style>
   </head>
-  <audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
+  <audio id="clickSound" src="sounds/tabby.mp3" preload="auto"></audio>
   <nav class="main-nav">
     <a href="https://thefinalsloadout.com/">Home</a>
     <a href="https://thefinalsloadout.com/ragequit/" class="active"
@@ -78,7 +78,7 @@
   <header class="headerSection">
     <div class="container">
       <img
-        src="../images/rage-quit.webp"
+        src="images/rage-quit.webp"
         alt="Rage Quit Simulator for The Finals"
         class="rage-logo"
         width="200"
@@ -107,6 +107,12 @@
           <span class="rage-icon">💢</span>
         </button>
       </div>
+<!-- Selected Class Display -->
+<div style="width: 100%; display: flex; justify-content: center; margin: 20px 0;">
+  <div id="selected-class-container" class="selected-class-container">
+    <h2>Selected Class: <span id="selected-class">None</span></h2>
+  </div>
+</div>
 
       <div id="output">
         <div class="slot-machine-wrapper">
@@ -194,13 +200,6 @@
     </div>
   </main>
 
-  <script>
-    document
-      .getElementById("test-button")
-      .addEventListener("click", function () {
-        alert("Test button works!");
-      });
-  </script>
   <section id="loadout-history" class="loadout-history">
     <h2>Rage Quit History</h2>
     <div id="history-list">
@@ -302,9 +301,9 @@
   </footer>
 
   <!-- Scripts -->
-  <script defer src="app.js"></script>
-
 </main>
 <!-- Your other content sections should be here -->
+<script defer src="app.js"></script>
+
 </body>
 </html>

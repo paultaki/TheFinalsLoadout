@@ -4,8 +4,8 @@ let state = {
   gadgetQueue: [],
   currentGadgetPool: new Set(),
   handicap: null,
+  selectedClass: null, // Add this property
 };
-
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded for Rage Quit Simulator");
 
@@ -102,11 +102,20 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        // Random class selection for rage quit loadout
-        const classes = ["Light", "Medium", "Heavy"];
-        const randomClass = classes[Math.floor(Math.random() * classes.length)];
+        // Get the actual class that was selected (or use random if not available)
+        const selectedClass =
+          state.selectedClass ||
+          ["Light", "Medium", "Heavy"][Math.floor(Math.random() * 3)];
 
-        const copyText = `RAGE QUIT LOADOUT\nClass: ${randomClass}\nWeapon: ${selectedItems[0]}\nSpecialization: ${selectedItems[1]}\nGadget 1: ${selectedItems[2]}\nGadget 2: ${selectedItems[3]}\nGadget 3: ${selectedItems[4]}\nHandicap: ${handicapText}`;
+        // Fixed template string - using backticks instead of regular quotes
+        const copyText = `RAGE QUIT LOADOUT
+Class: ${selectedClass}
+Weapon: ${selectedItems[0]}
+Specialization: ${selectedItems[1]}
+Gadget 1: ${selectedItems[2]}
+Gadget 2: ${selectedItems[3]}
+Gadget 3: ${selectedItems[4]}
+Handicap: ${handicapText}`;
 
         navigator.clipboard
           .writeText(copyText)
@@ -121,7 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 });
-
 // Add GPU hints to columns on load for better performance
 const addGPUHints = () => {
   const columns = document.querySelectorAll(".scroll-container");
@@ -548,43 +556,26 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
 
 const displayRageQuitLoadout = () => {
   const outputDiv = document.getElementById("output");
+  const classes = ["Light", "Medium", "Heavy"];
+  const selectedClass = classes[Math.floor(Math.random() * classes.length)];
+
+  // Store the selected class in state for later use
+  state.selectedClass = selectedClass;
+
+  // Update the selected class text
+  const selectedClassElement = document.getElementById("selected-class");
+  if (selectedClassElement) {
+    selectedClassElement.innerText = selectedClass;
+  } else {
+    console.warn("⚠️ Warning: #selected-class not found in the DOM!");
+  }
+
   const selectedWeapon = getRandomUniqueItems(rageQuitLoadouts.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(
     rageQuitLoadouts.specializations,
     1
   )[0];
-
-  const allGadgets = [...rageQuitLoadouts.gadgets];
-  const gadgetChunks = [[], [], []];
-  const selectedGadgets = [];
-
-  for (let i = 0; i < 3; i++) {
-    const index = Math.floor(Math.random() * allGadgets.length);
-    selectedGadgets.push(allGadgets[index]);
-    allGadgets.splice(index, 1);
-  }
-
-  while (allGadgets.length > 0) {
-    for (let i = 0; i < 3 && allGadgets.length > 0; i++) {
-      const index = Math.floor(Math.random() * allGadgets.length);
-      gadgetChunks[i].push(allGadgets[index]);
-      allGadgets.splice(index, 1);
-    }
-  }
-
-  const createGadgetSpinSequence = (winningGadget, chunkIndex) => {
-    const sequence = new Array(8);
-    sequence[4] = winningGadget;
-
-    const chunk = gadgetChunks[chunkIndex];
-    for (let i = 0; i < 8; i++) {
-      if (i !== 4) {
-        const randomIndex = Math.floor(Math.random() * chunk.length);
-        sequence[i] = chunk[randomIndex];
-      }
-    }
-    return sequence;
-  };
+  const selectedGadgets = getRandomUniqueItems(rageQuitLoadouts.gadgets, 3);
 
   const loadoutHTML = `
     <div class="slot-machine-wrapper">
@@ -604,14 +595,10 @@ const displayRageQuitLoadout = () => {
         </div>
         ${selectedGadgets
           .map(
-            (gadget, index) => `
+            (gadget) => `
             <div class="item-container">
-              <div class="scroll-container" data-gadget-index="${index}">
-                ${createItemContainer(
-                  createGadgetSpinSequence(gadget, index),
-                  gadget,
-                  true
-                )}
+              <div class="scroll-container">
+                ${createItemContainer(rageQuitLoadouts.gadgets, gadget)}
               </div>
             </div>
           `
@@ -628,7 +615,7 @@ const displayRageQuitLoadout = () => {
       document.querySelectorAll(".scroll-container")
     );
     startSpinAnimation(scrollContainers);
-  }, 50);
+  }, 100);
 };
 
 const spinRageQuitLoadout = () => {
@@ -659,62 +646,25 @@ const PHYSICS = {
 };
 
 function finalVictoryFlash(columns) {
-  // Wait for the last column to finish its individual animation
   setTimeout(() => {
     const allContainers = columns.map((col) => col.closest(".item-container"));
     const itemsContainer = document.querySelector(".items-container");
 
-    // Add a big flash animation to each container in sequence
     allContainers.forEach((container, index) => {
       setTimeout(() => {
-        // Remove any existing animation to reset
         container.classList.remove("mega-flash");
         void container.offsetWidth; // Force reflow
-
-        // Add the mega flash
         container.classList.add("mega-flash");
 
-        // If this is the last container, trigger final flash without confetti
         if (index === allContainers.length - 1) {
           setTimeout(() => {
             if (itemsContainer) {
-              const flashOverlay = document.createElement("div");
-              if (getComputedStyle(itemsContainer).position === "static") {
-                itemsContainer.style.position = "relative";
-              }
-
-              flashOverlay.style.position = "absolute";
-              flashOverlay.style.top = "0";
-              flashOverlay.style.left = "0";
-              flashOverlay.style.width = "100%";
-              flashOverlay.style.height = "100%";
-              flashOverlay.style.backgroundColor = "rgba(255, 255, 255, 0)";
-              flashOverlay.style.pointerEvents = "none";
-              flashOverlay.style.zIndex = "90";
-              itemsContainer.appendChild(flashOverlay);
-
-              flashOverlay.animate(
-                [
-                  { backgroundColor: "rgba(255, 255, 255, 0)" },
-                  { backgroundColor: "rgba(255, 255, 255, 0.7)" },
-                  { backgroundColor: "rgba(255, 255, 255, 0)" },
-                ],
-                {
-                  duration: 800,
-                  easing: "ease-out",
-                  fill: "forwards",
-                }
-              );
-
-              setTimeout(() => {
-                flashOverlay.remove();
-              }, 900);
             }
-          }, 1000); // Final dramatic pause before revealing result
+          }, 100);
         }
-      }, index * 250); // Slower staggered timing - 250ms between each
+      }, index * 150);
     });
-  }, 1200); // Longer delay before the final reveal
+  }, 800);
 }
 
 class SlotColumn {
@@ -953,12 +903,9 @@ function finalVictoryFlash(columns) {
         // Add the mega flash
         container.classList.add("mega-flash");
 
-        // If this is the last container, trigger confetti and final flash
         if (index === allContainers.length - 1) {
           // Create a positioned flash overlay
           setTimeout(() => {
-            createConfetti();
-
             // Add a flash effect just to the items container
             if (itemsContainer) {
               // Create a positioned flash overlay
@@ -1008,7 +955,6 @@ function finalVictoryFlash(columns) {
   }, 800); // Wait for last column's individual animation to finish
 }
 
-// New function to spin the handicap wheel
 // Replace the spinHandicap function in your ragequit-app.js file with this improved version
 
 function spinHandicap() {
@@ -1159,9 +1105,8 @@ function finalizeSpin() {
         return "Unknown";
       });
 
-      // Get a random class for the rage quit loadout
-      const classes = ["Light", "Medium", "Heavy"];
-      const randomClass = classes[Math.floor(Math.random() * classes.length)];
+      // Use the class stored in state
+      const selectedClass = state.selectedClass || "Unknown";
 
       // Add to history if we have valid data
       if (
@@ -1173,9 +1118,9 @@ function finalizeSpin() {
         const specialization = selectedItems[1];
         const gadgets = selectedItems.slice(2); // Get all gadgets
 
-        // Add to history
+        // Add correct class to history
         addToHistory(
-          randomClass,
+          selectedClass,
           weapon,
           specialization,
           gadgets,
@@ -1186,21 +1131,8 @@ function finalizeSpin() {
       console.error("Error saving loadout history:", error);
     }
   }
-
-  // Re-enable spin button
-  const rageQuitBtn = document.getElementById("rage-quit-btn");
-  if (rageQuitBtn) {
-    rageQuitBtn.removeAttribute("disabled");
-    console.log("Button re-enabled");
-  } else {
-    console.error("Rage quit button not found when trying to re-enable");
-  }
-
-  // Reset state after spin is complete
-  state.isSpinning = false;
 }
 
-// Function to copy loadout text from history
 function copyLoadoutText(button) {
   const entry = button.closest(".history-entry");
 
