@@ -506,10 +506,10 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
       .map(
         (item, index) => `
         <div class="itemCol ${index === 4 ? "winner" : ""}">
-          <img src="images/${item.replace(
+          <img src="../images/${item.replace(
             / /g,
             "_"
-          )}.webp" alt="${item}" onerror="this.src='images/placeholder.webp'">
+          )}.webp" alt="${item}" onerror="this.src='../images/placeholder.webp'">
           <p>${item}</p>
         </div>
       `
@@ -538,10 +538,10 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
     .map(
       (item, index) => `
       <div class="itemCol ${index === 4 ? "winner" : ""}">
-        <img src="images/${item.replace(
+        <img src="../images/${item.replace(
           / /g,
           "_"
-        )}.webp" alt="${item}" onerror="this.src='images/placeholder.webp'">
+        )}.webp" alt="${item}" onerror="this.src='../images/placeholder.webp'">
         <p>${item}</p>
       </div>
     `
