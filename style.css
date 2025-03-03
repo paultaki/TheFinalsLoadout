@@ -2211,3 +2211,250 @@ body.flexStyle {
     padding: 8px;
   }
 }
+
+/* ==========================================
+   CORE SLOT MACHINE ITEM FIXES
+   ========================================== */
+
+/* Fix item containers and their alignment */
+.item-container {
+  height: 200px !important;
+  width: 140px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  overflow: hidden !important;
+  margin: 0 4px !important;
+  border: 3px solid #ffcc00 !important;
+}
+
+/* Fix the images inside the item containers */
+.itemCol img,
+.item-container img {
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: contain !important;
+  margin: 5px auto !important;
+  display: block !important;
+  max-width: 100% !important;
+}
+
+/* Fix text alignment and sizing */
+.itemCol p,
+.item-container p {
+  margin: 5px 0 10px 0 !important;
+  padding: 0 5px !important;
+  text-align: center !important;
+  width: 100% !important;
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  color: #000 !important;
+}
+
+/* Fix container for all slot items */
+.items-container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 15px !important;
+  margin: 0 auto 20px auto !important;
+  height: auto !important;
+  min-height: 220px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+  width: 100% !important;
+  max-width: 800px !important;
+  overflow: visible !important;
+}
+
+/* Fix the scroll container inside item containers */
+.scroll-container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  transform: translateY(0) !important;
+}
+
+/* "LOCKED IN" tag position fix */
+.locked-tag {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  transform-origin: top right !important;
+  z-index: 10 !important;
+}
+
+/* Ensure the "LOCKED IN" tags display properly */
+.locked-tag.show {
+  animation: tagPop 0.3s ease-out forwards !important;
+}
+
+/* ==========================================
+   SPACING AND POSITION FIXES
+   ========================================== */
+
+/* Slot machine wrapper container */
+.slot-machine-wrapper {
+  width: 100% !important;
+  margin: 20px auto !important;
+  padding: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  overflow: visible !important;
+  position: relative !important;
+  height: auto !important;
+  min-height: 250px !important;
+}
+
+/* Selected class container styling */
+.selected-class-container {
+  width: 80% !important;
+  max-width: 300px !important;
+  margin: 15px auto !important;
+  padding: 10px !important;
+  font-size: 1.3rem !important;
+  color: var(--neon-yellow) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-radius: 10px !important;
+  border: 2px solid var(--neon-yellow) !important;
+  box-shadow: 0 0 15px rgba(255, 183, 0, 0.5) !important;
+  transform: none !important;
+  display: block !important;
+  text-align: center !important;
+}
+
+/* Fix the EXTRA PUNISHMENT section */
+[id*="punishment"],
+.punishment-loadout-button,
+.extra-punishment {
+  margin-top: 20px !important;
+  position: relative !important;
+  z-index: 10 !important;
+  display: block !important;
+}
+
+/* Fix error message styling */
+.error-message {
+  background-color: rgba(30, 30, 50, 0.95) !important;
+  border: 2px solid #ff3d00 !important;
+  border-radius: 8px !important;
+  padding: 15px !important;
+  color: white !important;
+  text-align: center !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 9999 !important;
+  max-width: 80% !important;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+.error-message button {
+  background: linear-gradient(135deg, #8a2be2, #ff00ff) !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 20px !important;
+  border-radius: 6px !important;
+  margin-top: 10px !important;
+  cursor: pointer !important;
+}
+
+/* Remove Copy Rage Loadout button under slot machine */
+button.copy-loadout:not(.history-entry .copy-loadout) {
+  display: none !important;
+}
+
+/* Fix the rage quit button spacing */
+.rage-quit-button {
+  margin: 30px auto 20px auto !important;
+  width: auto !important;
+  max-width: 280px !important;
+  white-space: nowrap !important;
+}
+
+/* Fix loadout history spacing */
+.loadout-history {
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* ==========================================
+   MOBILE RESPONSIVENESS FIXES
+   ========================================== */
+
+@media (max-width: 768px) {
+  /* Ensure items are centered and properly sized */
+  .items-container {
+    transform: scale(0.9) !important;
+    margin: 0 auto 10px auto !important;
+    width: 95% !important;
+    gap: 2px !important;
+    padding: 10px !important;
+  }
+  
+  .item-container {
+    width: 18% !important;
+    margin: 0 2px !important;
+  }
+  
+  /* Ensure "LOCKED IN" tags are visible */
+  .locked-tag {
+    font-size: 10px !important;
+    padding: 2px 5px !important;
+  }
+  
+  /* Fix the spacing between elements */
+  .selected-class-container {
+    font-size: 1.1rem !important;
+    margin: 10px auto !important;
+    padding: 5px !important;
+  }
+  
+  /* Fix the EXTRA PUNISHMENT position */
+  [id*="punishment"],
+  .punishment-loadout-button,
+  .extra-punishment {
+    margin-top: 15px !important;
+  }
+  
+  /* Fix spacing after the slot machine */
+  .slot-machine-wrapper {
+    margin-bottom: 10px !important;
+  }
+  
+  /* Fix rage button spacing */
+  .rage-quit-button {
+    margin: 15px auto !important;
+    padding: 10px 15px !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* Even more aggressive for smaller screens */
+@media (max-width: 480px) {
+  .items-container {
+    transform: scale(0.8) !important;
+  }
+  
+  .item-container {
+    width: 19% !important;
+    margin: 0 1px !important;
+  }
+  
+  .selected-class-container {
+    font-size: 1rem !important;
+    max-width: 250px !important;
+  }
+}
