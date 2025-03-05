@@ -452,13 +452,6 @@ img:hover {
   transition: transform 0.3s ease-in-out;
 }
 
-.finals-logo {
-  width: 200px; /* Set explicit width */
-  height: auto; /* Maintain aspect ratio */
-  display: block;
-  margin: 0 auto 30px;
-}
-
 /* Prevent horizontal scrolling on the entire page */
 body {
   overflow-x: hidden;
@@ -594,13 +587,6 @@ body {
     flex-wrap: nowrap;
     margin: 10px 0;
     width: 100%;
-  }
-
-  /* Header and text adjustments */
-  .finals-logo {
-    width: 100px;
-    height: auto;
-    margin: 0 auto 15px;
   }
 
   .mainTitle {
@@ -1391,10 +1377,13 @@ iframe#bmc-button {
 }
 /* === CLASS BUTTON STYLES === */
 .class-button {
-  width: 90px; /* Standard size */
+  width: auto;
   height: auto;
+  max-width: 175px;
+  max-height: 175px;
   cursor: pointer;
   transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
+  object-fit: contain; /* Prevents stretching */
 }
 
 /* Hover Effect: Light glow */
@@ -1429,22 +1418,32 @@ iframe#bmc-button {
 }
 
 /* === MOBILE RESPONSIVENESS === */
-@media (max-width: 600px) {
+.class-button {
+  width: 90px; /* Default size for desktop */
+}
+
+@media (max-width: 768px) {
   .class-button {
-    width: 80px; /* Reduce size slightly */
+    width: 80%; /* Shrinks slightly for tablets */
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .class-button {
-    width: 90px; /* Slightly smaller on very small screens */
+    width: 70%; /* Smaller buttons for phones */
+  }
+}
+
+@media (max-width: 375px) {
+  .class-button {
+    width: 60%; /* Even smaller for very small phones */
   }
 }
 
 /* Subheading for Loadout Generator */
 .subTitle {
   font-size: 1.2rem; /* Default size */
-  color: var(--neon-yellow); /* Same color as mainTitle */
+  color: white
   font-weight: 400;
   margin-top: -5px; /* Reduce gap between title and subtitle */
   display: block;
@@ -2138,4 +2137,29 @@ body.flexStyle {
 
 .main-nav a::after {
   background-color: var(--highlight-color);
+}
+
+.finals-logo {
+  width: 15vw; /* Default: 20% of the viewport width */
+  height: auto;
+  display: block;
+  margin: 0 auto 30px;
+}
+
+@media (max-width: 768px) {
+  .finals-logo {
+    width: 40vw; /* Scale up slightly on tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .finals-logo {
+    width: 60vw; /* Scale more on phones */
+  }
+}
+
+@media (max-width: 375px) {
+  .finals-logo {
+    width: 70vw; /* Increase further on very small screens */
+  }
 }
