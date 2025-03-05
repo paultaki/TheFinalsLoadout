@@ -7,8 +7,6 @@
   --neon-yellow: #ffb700;
 }
 
-
-
 /* Copy loadout button style */
 .copy-button {
   background: linear-gradient(45deg, #7b2fe3, #1e90ff); /* Matching gradient */
@@ -153,7 +151,6 @@ body.flexStyle {
   opacity: 0;
 }
 
-
 /* Skull Icon Fix */
 .skull-icon {
   width: 24px;
@@ -161,7 +158,6 @@ body.flexStyle {
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
-
 
 /* Footer Section */
 .footerSection {
@@ -195,11 +191,6 @@ body.flexStyle {
   margin: 0;
 }
 
-
-
-
-
-
 /* Container for BMC button */
 div[style*="display: inline-block"] {
   transform: scale(0.8);
@@ -227,8 +218,6 @@ div[style*="display: inline-block"] {
   font-weight: bold;
   margin-bottom: 12px; /* Adds slight spacing below each step */
 }
-
-
 
 .patch-container {
   background: #1a1f2e;
@@ -271,20 +260,40 @@ div[style*="display: inline-block"] {
   border-left: 4px solid transparent;
 }
 
-.update-item.nerf { border-left-color: #ff4444; }
-.update-item.nerf .update-title { color: #ff4444; }
+.update-item.nerf {
+  border-left-color: #ff4444;
+}
+.update-item.nerf .update-title {
+  color: #ff4444;
+}
 
-.update-item.buff { border-left-color: #44ff44; }
-.update-item.buff .update-title { color: #44ff44; }
+.update-item.buff {
+  border-left-color: #44ff44;
+}
+.update-item.buff .update-title {
+  color: #44ff44;
+}
 
-.update-item.adjustment { border-left-color: #ffaa00; }
-.update-item.adjustment .update-title { color: #ffaa00; }
+.update-item.adjustment {
+  border-left-color: #ffaa00;
+}
+.update-item.adjustment .update-title {
+  color: #ffaa00;
+}
 
-.update-item.improvement { border-left-color: #44aaff; }
-.update-item.improvement .update-title { color: #44aaff; }
+.update-item.improvement {
+  border-left-color: #44aaff;
+}
+.update-item.improvement .update-title {
+  color: #44aaff;
+}
 
-.update-item.fixes { border-left-color: #aa44ff; }
-.update-item.fixes .update-title { color: #aa44ff; }
+.update-item.fixes {
+  border-left-color: #aa44ff;
+}
+.update-item.fixes .update-title {
+  color: #aa44ff;
+}
 
 .update-title {
   font-weight: 600;
@@ -302,22 +311,32 @@ div[style*="display: inline-block"] {
   margin-bottom: 0.25rem;
 }
 
-
-
 /* Class highlight colors */
-.class-light { color: #44aaff; font-weight: 600; }
-.class-medium { color: #aa44ff; font-weight: 600; }
-.class-heavy { color: #ffaa00; font-weight: 600; }
-.class-random { color: var(--neon-yellow); font-weight: 600; }
-.action-copy { color: #44ff44; font-weight: 600; }
+.class-light {
+  color: #44aaff;
+  font-weight: 600;
+}
+.class-medium {
+  color: #aa44ff;
+  font-weight: 600;
+}
+.class-heavy {
+  color: #ffaa00;
+  font-weight: 600;
+}
+.class-random {
+  color: var(--neon-yellow);
+  font-weight: 600;
+}
+.action-copy {
+  color: #44ff44;
+  font-weight: 600;
+}
 
 /* Space out Step 2 from class buttons */
 .step + .btnRow {
   margin-top: 15px; /* Creates better separation */
 }
-
-
-
 
 /* Mystery Placeholder Styling */
 .placeholder-container {
@@ -382,7 +401,6 @@ div[style*="display: inline-block"] {
   color: #fff;
   margin-bottom: 15px;
 }
-
 
 body {
   font-family: var(--baseFont);
@@ -462,8 +480,6 @@ body {
   box-shadow: 0px 0px 20px rgba(255, 123, 0, 1);
   transform: scale(1.15);
 }
-
-
 
 .itemCol.winner::after {
   content: "LOCKED IN";
@@ -698,7 +714,6 @@ body {
   }
 }
 
-
 @keyframes slotMachineOvershoot {
   0% {
     transform: translateY(0);
@@ -719,9 +734,6 @@ body {
     transform: translateY(0);
   }
 }
-
-
-
 
 @media (max-width: 768px) {
   .outlineBtnStyle {
@@ -769,30 +781,39 @@ img {
   image-rendering: crisp-edges;
 }
 
-
 /* Enhanced background gradient animation */
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Cyberpunk-style grid overlay */
 .cyber-grid {
-  background-image: 
-    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
   animation: gridMove 20s linear infinite;
 }
 
 @keyframes gridMove {
-  0% { background-position: 0 0; }
-  100% { background-position: 20px 20px; }
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
 }
-
-
-
 
 /* Buff Section - Darker Blue */
 .buff-section {
@@ -867,9 +888,6 @@ img {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-
-
-
 .skull-icon {
   width: 12px;
   height: 12px;
@@ -881,16 +899,10 @@ img {
   margin-top: -1px; /* Fine-tune vertical alignment */
 }
 
-
-
 /* Ensure no unwanted styles from outlineBtnStyle affect it */
 .outlineBtnStyle {
   all: unset !important;
 }
-
-
-
-
 
 .patch-notes {
   width: 100%;
@@ -941,7 +953,7 @@ img {
 
 /* Colored bars for different change types */
 .change-item.nerf::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -951,7 +963,7 @@ img {
 }
 
 .change-item.adjustment::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -961,7 +973,7 @@ img {
 }
 
 .change-item.buff::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -1020,7 +1032,7 @@ img {
   opacity: 0;
   z-index: 10;
   white-space: nowrap;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .locked-tag.show {
@@ -1029,16 +1041,16 @@ img {
 
 @keyframes tagPop {
   0% {
-      transform: scale(0) rotate(-10deg);
-      opacity: 0;
+    transform: scale(0) rotate(-10deg);
+    opacity: 0;
   }
   50% {
-      transform: scale(1.2) rotate(5deg);
-      opacity: 1;
+    transform: scale(1.2) rotate(5deg);
+    opacity: 1;
   }
   100% {
-      transform: scale(1) rotate(0deg);
-      opacity: 1;
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
   }
 }
 
@@ -1047,7 +1059,6 @@ img {
   position: relative;
   padding-top: 15px !important; /* Add padding to accommodate the tag */
 }
-
 
 .loadout-history {
   background: rgba(0, 0, 0, 0.5);
@@ -1100,7 +1111,7 @@ img {
 
 .copy-loadout:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .clear-history-btn {
@@ -1117,7 +1128,7 @@ img {
 
 .clear-history-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* FAQ Section */
@@ -1196,17 +1207,6 @@ img {
   line-height: 1.4;
   margin-bottom: 0.5rem;
 }
-/* Add these specific styles for the Buy Me a Coffee button */
-.bmc-button-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  transform: none
-  transform-origin: right center;
-  margin-left: auto;
-  white-space: nowrap;
-  max-width: max-content;
-}
 
 iframe#bmc-button {
   width: auto !important;
@@ -1226,19 +1226,33 @@ iframe#bmc-button {
 }
 
 @keyframes glowEffect {
-  0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.4); }
-  100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+  0% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  }
 }
 .random-btn:hover {
   animation: shake 0.3s ease-in-out;
 }
 
 @keyframes shake {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(5deg); }
-  50% { transform: rotate(-5deg); }
-  75% { transform: rotate(5deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 /* === RANDOM BUTTON SPECIAL STYLES === */
@@ -1252,17 +1266,15 @@ iframe#bmc-button {
   filter: brightness(1.3);
 }
 
-
 /* Keyframes for selection glow */
 @keyframes glowEffect {
   0% {
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
   }
   100% {
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
   }
 }
-
 
 /* Dark Mode Toggle Button */
 .dark-mode-btn {
@@ -1297,16 +1309,14 @@ iframe#bmc-button {
   gap: 0;
 }
 
-
 @keyframes characterGlowEffect {
   0% {
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7)) 
-            drop-shadow(0 0 5px currentColor);
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7))
+      drop-shadow(0 0 5px currentColor);
   }
   100% {
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9)) 
-            drop-shadow(0 0 10px currentColor) 
-            drop-shadow(0 0 15px currentColor);
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9))
+      drop-shadow(0 0 10px currentColor) drop-shadow(0 0 15px currentColor);
   }
 }
 
@@ -1374,7 +1384,6 @@ iframe#bmc-button {
     max-width: 95%; /* Use more screen width */
   }
 
-
   .spin-button {
     padding: 8px 14px; /* Shrink padding */
     font-size: 14px; /* Keep readable size */
@@ -1382,7 +1391,7 @@ iframe#bmc-button {
 }
 /* === CLASS BUTTON STYLES === */
 .class-button {
-  width: 110px; /* Standard size */
+  width: 90px; /* Standard size */
   height: auto;
   cursor: pointer;
   transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
@@ -1390,8 +1399,8 @@ iframe#bmc-button {
 
 /* Hover Effect: Light glow */
 .class-button:hover {
-  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7)) 
-          drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7))
+    drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
   transform: scale(1.05);
 }
 
@@ -1420,15 +1429,20 @@ iframe#bmc-button {
 }
 
 /* === MOBILE RESPONSIVENESS === */
+@media (max-width: 768px) {
+  .class-button {
+    width: 90px; /* Reduce size slightly */
+  }
+}
 @media (max-width: 600px) {
   .class-button {
-    width: 95px; /* Reduce size slightly */
+    width: 90px; /* Reduce size slightly */
   }
 }
 
 @media (max-width: 400px) {
   .class-button {
-    width: 90px; /* Slightly smaller on very small screens */
+    width: 85px; /* Slightly smaller on very small screens */
   }
 }
 
@@ -1466,17 +1480,14 @@ iframe#bmc-button {
     padding-bottom: 0px !important;
     margin-bottom: 0px !important;
   }
-
-
-
 }
 /* =============================================
    PUNISHMENT LOADOUT BUTTON - CONSOLIDATED STYLES
    ============================================= */
 
 /* Base button styles with broad selector for consistency */
-#punishmentLoadoutButton, 
-button[id*="punishment"], 
+#punishmentLoadoutButton,
+button[id*="punishment"],
 a[id*="punishment"],
 .punishment-loadout-button {
   /* Display & Alignment */
@@ -1484,33 +1495,33 @@ a[id*="punishment"],
   align-items: center;
   justify-content: center;
   gap: 5px;
-  
+
   /* Dimensions & Spacing */
   padding: 8px 15px;
   margin: 15px auto !important;
   width: fit-content;
-  
+
   /* Positioning */
   position: relative;
   z-index: 5;
-  
+
   /* Typography */
   font-size: 0.9rem;
   font-weight: bold;
   text-transform: uppercase;
   text-decoration: none !important;
   color: white !important;
-  
+
   /* Visual styling */
   background: linear-gradient(45deg, #d50000, #ff6f00) !important;
   border: 1px solid #ff3d00 !important;
   border-radius: 6px;
   box-shadow: 0 0 6px rgba(255, 69, 0, 0.8);
-  
+
   /* Behavior */
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-  
+
   /* Animation */
   animation: subtlePulse 2.5s ease-in-out infinite;
 }
@@ -1525,13 +1536,10 @@ a[id*="punishment"]:hover,
   background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
 }
 
-
-
-
 /* Mobile optimizations */
 @media (max-width: 768px) {
-  #punishmentLoadoutButton, 
-  button[id*="punishment"], 
+  #punishmentLoadoutButton,
+  button[id*="punishment"],
   a[id*="punishment"],
   .punishment-loadout-button {
     margin: 15px auto !important;
@@ -1553,7 +1561,7 @@ a[id*="punishment"]:hover,
     background: transparent !important;
     box-shadow: none !important;
   }
-  
+
   .slot-machine-wrapper {
     position: relative;
     display: flex;
@@ -1561,7 +1569,7 @@ a[id*="punishment"]:hover,
     align-items: center;
     overflow: visible !important;
   }
-  
+
   /* Create a wider background that doesn't affect the items */
   .slot-machine-wrapper::before {
     content: "";
@@ -1591,8 +1599,8 @@ a[id*="punishment"]:hover,
   }
 
   /* Position the punishment button closer to the items */
-  #punishmentLoadoutButton, 
-  button[id*="punishment"], 
+  #punishmentLoadoutButton,
+  button[id*="punishment"],
   a[id*="punishment"],
   .punishment-loadout-button {
     margin-top: 0 !important; /* No top margin */
@@ -1600,25 +1608,25 @@ a[id*="punishment"]:hover,
     position: relative;
     z-index: 10;
   }
-  
+
   /* Ensure loadout history starts right after the button */
   .loadout-history {
     margin-top: 10 !important; /* No top margin */
     position: relative;
     z-index: 1;
   }
-  
+
   /* Remove space after slot machine */
   .mainContent > div {
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
   }
-  
+
   /* Force the slot machine to have minimal height impact on page flow */
   .slot-machine-wrapper + div {
     margin-top: 0 !important;
   }
-  
+
   /* Fix for any hidden divs creating space */
   .slot-machine-wrapper ~ div:empty {
     display: none !important;
@@ -1643,14 +1651,14 @@ a[id*="punishment"]:hover,
     height: 140px !important;
     min-height: 140px !important;
   }
-  
-  #punishmentLoadoutButton, 
-  button[id*="punishment"], 
+
+  #punishmentLoadoutButton,
+  button[id*="punishment"],
   a[id*="punishment"],
   .punishment-loadout-button {
     top: -25px; /* Pull button up even more on smaller screens */
   }
-  
+
   .loadout-history {
     top: -15px; /* Pull history up more */
   }
@@ -1659,85 +1667,147 @@ a[id*="punishment"]:hover,
 /* === PULSING EFFECTS === */
 /* General pulse effect for growing and shrinking */
 @keyframes pulseSize {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); } /* Slightly bigger */
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  } /* Slightly bigger */
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Continuous glow pulsing */
 @keyframes glowPulse {
-  0% { box-shadow: 0 0 10px rgba(255, 183, 0, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(255, 183, 0, 1); }
-  100% { box-shadow: 0 0 10px rgba(255, 183, 0, 0.5); }
+  0% {
+    box-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 1);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
+  }
 }
 
 /* Pulsating winner effect */
 @keyframes pulsateWinner {
   0% {
     transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(255, 183, 0, 0.4);
+    box-shadow: 0 0 15px rgba(255, 183, 0, 0.5);
   }
   50% {
-    transform: scale(1.1);
-    box-shadow: 0 0 25px rgba(255, 183, 0, 1);
+    transform: scale(1.08);
+    box-shadow: 0 0 30px rgba(255, 183, 0, 1);
   }
   100% {
     transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(255, 183, 0, 0.4);
+    box-shadow: 0 0 15px rgba(255, 183, 0, 0.5);
   }
 }
 
-
 /* Left-to-right pulsing effect */
 @keyframes leftToRightPulse {
-  0% { box-shadow: 0 0 10px rgba(255, 183, 0, 0.3); }
-  20% { box-shadow: 0 0 20px rgba(255, 183, 0, 1); }
-  40% { box-shadow: 0 0 10px rgba(255, 183, 0, 0.3); }
-  60% { box-shadow: 0 0 20px rgba(255, 183, 0, 1); }
-  80% { box-shadow: 0 0 10px rgba(255, 183, 0, 0.3); }
-  100% { box-shadow: 0 0 20px rgba(255, 183, 0, 1); }
+  0% {
+    box-shadow: 0 0 10px rgba(255, 183, 0, 0.3);
+  }
+  20% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 1);
+  }
+  40% {
+    box-shadow: 0 0 10px rgba(255, 183, 0, 0.3);
+  }
+  60% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 1);
+  }
+  80% {
+    box-shadow: 0 0 10px rgba(255, 183, 0, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 1);
+  }
 }
 
 /* === FINAL LANDING FLASH === */
 @keyframes landingFlash {
-  0% { box-shadow: 0 0 80px rgba(255, 183, 0, 1); transform: scale(1.2); filter: brightness(1.5); }
-  50% { box-shadow: 0 0 40px rgba(255, 183, 0, 0.6); transform: scale(1.1); filter: brightness(1.3); }
-  100% { box-shadow: 0 0 20px rgba(255, 183, 0, 0.4); transform: scale(1.05); filter: brightness(1.1); }
+  0% {
+    box-shadow: 0 0 80px rgba(255, 183, 0, 1);
+    transform: scale(1.2);
+    filter: brightness(1.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 183, 0, 0.6);
+    transform: scale(1.1);
+    filter: brightness(1.3);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.4);
+    transform: scale(1.05);
+    filter: brightness(1.1);
+  }
 }
 
 /* === FINAL SEQUENCE: SCALE AND PULSE === */
 @keyframes scaleUpDown {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* === NEON EFFECTS FOR UI === */
 @keyframes neonGlow {
-  0% { box-shadow: 0 0 5px rgba(123, 47, 227, 0.2); }
-  50% { box-shadow: 0 0 15px rgba(123, 47, 227, 1); }
-  100% { box-shadow: 0 0 5px rgba(123, 47, 227, 0.2); }
+  0% {
+    box-shadow: 0 0 5px rgba(123, 47, 227, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(123, 47, 227, 1);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(123, 47, 227, 0.2);
+  }
 }
 
 /* === SHAKE & PULSE FOR CLASS BUTTONS === */
 @keyframes shake {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(5deg); }
-  50% { transform: rotate(-5deg); }
-  75% { transform: rotate(5deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
 }
 
 @keyframes pulseGlow {
-  0% { filter: brightness(1.3); transform: scale(1.05); }
-  100% { filter: brightness(1.5); transform: scale(1.1); }
+  0% {
+    filter: brightness(1.3);
+    transform: scale(1.05);
+  }
+  100% {
+    filter: brightness(1.5);
+    transform: scale(1.1);
+  }
 }
 
 /* === APPLYING THE ANIMATIONS === */
 /* Slot machine winning item */
 .item-container.winner-pulsate {
-  animation: pulsateWinner 2.5s infinite alternate ease-in-out;
+  animation: pulsateWinner 2s ease-in-out infinite,
+    glowPulse 2s ease-in-out infinite;
 }
-
 
 /* Final locked-in effect */
 .item-container.landing-flash {
@@ -1891,25 +1961,25 @@ a[id*="punishment"]:hover,
 /* More aggressive mobile spacing fix */
 @media (max-width: 768px) {
   /* Pull up punishment button dramatically */
-  #punishmentLoadoutButton, 
+  #punishmentLoadoutButton,
   a[id*="punishment"] {
     margin-top: -30px !important; /* Negative margin to pull it up */
     position: relative;
     z-index: 10; /* Ensure it stays on top */
   }
-  
+
   /* Reduce height of output container */
   #output {
     margin-bottom: -20px !important;
   }
-  
+
   /* Eliminate all bottom padding/margin in slot machine area */
   .slot-machine-wrapper,
   .items-container {
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
   }
-  
+
   /* Remove spacing from button row */
   .btnRow {
     margin-top: 0 !important;
@@ -1919,10 +1989,151 @@ a[id*="punishment"]:hover,
 
 /* Even more aggressive for smaller screens */
 @media (max-width: 375px) {
-  #punishmentLoadoutButton, 
+  #punishmentLoadoutButton,
   a[id*="punishment"] {
     margin-top: -40px !important; /* Pull up even more on small screens */
   }
+}
+/* Fix the rage quit button spacing */
+.rage-quit-button {
+  margin: 30px auto 20px auto !important;
+  width: auto !important;
+  max-width: 280px !important;
+  white-space: nowrap !important;
+}
+
+/* Rage Quit Button on Homepage */
+.rage-quit-link {
+  /* Display & Alignment */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  /* Dimensions & Spacing */
+  padding: 12px 25px;
+  margin: 20px auto !important;
+  width: fit-content;
+
+  /* Typography */
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  color: white !important;
+
+  /* Visual styling */
+  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+  border: 2px solid #ff3d00 !important;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.8);
+
+  /* Behavior */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  /* Animation */
+  animation: rageButtonPulse 2.5s ease-in-out infinite;
+}
+
+.rage-quit-link:hover {
+  transform: translateY(-5px) scale(1.07);
+  box-shadow: 0 0 25px rgba(255, 140, 0, 1);
+  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
+}
+
+.rage-icon {
+  font-size: 1.4rem;
+}
+
+/* Animation for the rage button */
+@keyframes rageButtonPulse {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 69, 0, 1);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+  }
+}
+
+/* Enhanced Generate Button (Rage Quit Button) */
+.rage-quit-button {
+  /* Display & Alignment */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  /* Dimensions & Spacing */
+  padding: 15px 30px;
+  margin: 20px auto !important;
+
+  /* Typography */
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+
+  /* Visual styling */
+  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+  border: 2px solid #ff3d00 !important;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.8);
+
+  /* Animation & Effects */
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Shiny effect on the rage quit button */
+.rage-quit-button::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 0, 0, 0) 70%
+  );
+  transform: rotate(0deg);
+  animation: rageButtonShine 3s infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes rageButtonShine {
+  0% {
+    transform: rotate(0deg) translateX(-30%);
+  }
+  100% {
+    transform: rotate(360deg) translateX(30%);
+  }
+}
+
+/* Enhanced hover effects */
+.rage-quit-button:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 0 30px rgba(255, 0, 0, 1);
+  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
+}
+
+.rage-quit-button:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+/* Fix the rage quit button spacing */
+.rage-quit-button {
+  margin: 30px auto 20px auto !important;
+  width: auto !important;
+  max-width: 280px !important;
+  white-space: nowrap !important;
 }
 /* Updated Navigation Bar Styles */
 .main-nav {
@@ -1962,7 +2173,7 @@ a[id*="punishment"]:hover,
 
 /* Add underline effect on hover */
 .main-nav a::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -5px;
   left: 0;
@@ -1983,7 +2194,7 @@ a[id*="punishment"]:hover,
     padding: 10px 0;
     gap: 15px;
   }
-  
+
   .main-nav a {
     font-size: 16px;
     padding: 3px 5px;
@@ -1994,7 +2205,7 @@ a[id*="punishment"]:hover,
   .main-nav {
     gap: 10px;
   }
-  
+
   .main-nav a {
     font-size: 14px;
   }
@@ -2013,126 +2224,6 @@ body.flexStyle {
   padding-top: 80px; /* Increased padding to push the logo down */
 }
 
-/* Add these styles to your style.css file to style the rage quit button and enhance the generate button */
-
-/* Rage Quit Button on Homepage */
-.rage-quit-link {
-  /* Display & Alignment */
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  
-  /* Dimensions & Spacing */
-  padding: 12px 25px;
-  margin: 20px auto !important;
-  width: fit-content;
-  
-  /* Typography */
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  text-decoration: none !important;
-  color: white !important;
-  
-  /* Visual styling */
-  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
-  border: 2px solid #ff3d00 !important;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(255, 69, 0, 0.8);
-  
-  /* Behavior */
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  
-  /* Animation */
-  animation: rageButtonPulse 2.5s ease-in-out infinite;
-}
-
-.rage-quit-link:hover {
-  transform: translateY(-5px) scale(1.07);
-  box-shadow: 0 0 25px rgba(255, 140, 0, 1);
-  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
-}
-
-.rage-icon {
-  font-size: 1.4rem;
-}
-
-/* Animation for the rage button */
-@keyframes rageButtonPulse {
-  0% { box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); }
-  50% { box-shadow: 0 0 25px rgba(255, 69, 0, 1); }
-  100% { box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); }
-}
-
-/* Enhanced Generate Button (Rage Quit Button) */
-.rage-quit-button {
-  /* Display & Alignment */
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  
-  /* Dimensions & Spacing */
-  padding: 15px 30px;
-  margin: 20px auto !important;
-  
-  /* Typography */
-  font-size: 1.4rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  
-  /* Visual styling */
-  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
-  border: 2px solid #ff3d00 !important;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(255, 69, 0, 0.8);
-  
-  /* Animation & Effects */
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-}
-
-/* Shiny effect on the rage quit button */
-.rage-quit-button::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,0,0,0) 70%);
-  transform: rotate(0deg);
-  animation: rageButtonShine 3s infinite;
-  z-index: -1;
-  pointer-events: none;
-}
-
-@keyframes rageButtonShine {
-  0% { transform: rotate(0deg) translateX(-30%); }
-  100% { transform: rotate(360deg) translateX(30%); }
-}
-
-/* Enhanced hover effects */
-.rage-quit-button:hover {
-  transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 0 30px rgba(255, 0, 0, 1);
-  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
-}
-
-.rage-quit-button:active {
-  transform: translateY(2px) scale(0.98);
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
-}
-
-/* Make sure the navigation uses the correct highlight color */
-:root {
-  --highlight-color: var(--neon-yellow, #ffb700);
-}
-
 .main-nav a.active,
 .main-nav a:hover {
   color: var(--highlight-color);
@@ -2141,320 +2232,91 @@ body.flexStyle {
 .main-nav a::after {
   background-color: var(--highlight-color);
 }
+/* Updated Navigation Bar Styles */
+.main-nav {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 15px 20px; /* Add horizontal padding */
+  display: flex;
+  justify-content: flex-start; /* Align to the left */
+  gap: 30px; /* Keep spacing between links */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+}
 
+.main-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 5px 15px; /* Adjust padding */
+  transition: color 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
+  position: relative;
+}
+
+/* Highlight effect on hover */
+.main-nav a:hover {
+  color: var(--highlight-color); /* Use your theme color */
+  transform: translateY(-2px);
+}
+
+/* Active state styling */
+.main-nav a.active {
+  color: var(--highlight-color);
+}
+
+/* Add underline effect on hover */
+.main-nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--highlight-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.main-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Mobile responsiveness */
 @media (max-width: 768px) {
-  /* Improve slot machine scaling */
-  .items-container {
-    transform: scale(0.6);
-    width: 100vw;
-    max-width: 100vw;
-    margin: 0 auto;
-    overflow-x: hidden;
+  .main-nav {
+    padding: 10px 0;
+    gap: 15px;
   }
-  
-  /* Fix container width */
-  .container {
-    width: 95%;
-    padding: 0 10px;
-  }
-  
-  /* Improve selected class container */
-  .selected-class-container {
-    width: 90%;
-    margin: 20px auto;
-    font-size: 1.2rem;
-  }
-  
-  /* Improve handicap container */
-  .handicap-wheel-container {
-    width: 90%;
-    margin: 10px auto;
-  }
-  
-  /* Ensure button sizing is appropriate */
-  .copy-button, .rage-quit-button {
-    width: 90%;
-    margin: 10px auto;
-    padding: 12px;
-  }
-  
-  /* Fix overflow issues */
-  body {
-    overflow-x: hidden;
-    width: 100%;
-  }
-  
-  /* Scale down the title */
-  .mainTitle {
-    font-size: 1.3rem;
-  }
-  
-  /* Better spacing between sections */
-  .handicap-section, .loadout-history {
-    margin-top: 15px;
-    margin-bottom: 15px;
+
+  .main-nav a {
+    font-size: 16px;
+    padding: 3px 5px;
   }
 }
 
-/* Extra small devices */
 @media (max-width: 480px) {
-  .items-container {
-    transform: scale(0.5);
+  .main-nav {
+    gap: 10px;
   }
-  
-  .mainTitle {
-    font-size: 1.1rem;
-  }
-  
-  .selected-class-container {
-    font-size: 1rem;
-    padding: 8px;
+
+  .main-nav a {
+    font-size: 14px;
   }
 }
 
-/* ==========================================
-   CORE SLOT MACHINE ITEM FIXES
-   ========================================== */
-
-/* Fix item containers and their alignment */
-.item-container {
-  height: 200px !important;
-  width: 140px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
-  position: relative !important;
-  overflow: hidden !important;
-  margin: 0 4px !important;
-  border: 3px solid #ffcc00 !important;
+/* Add margin to top of page content to account for fixed navbar */
+body.flexStyle {
+  padding-top: 50px;
 }
 
-/* Fix the images inside the item containers */
-.itemCol img,
-.item-container img {
-  width: 80px !important;
-  height: 80px !important;
-  object-fit: contain !important;
-  margin: 5px auto !important;
-  display: block !important;
-  max-width: 100% !important;
+.headerSection {
+  padding-top: 30px;
 }
 
-/* Fix text alignment and sizing */
-.itemCol p,
-.item-container p {
-  margin: 5px 0 10px 0 !important;
-  padding: 0 5px !important;
-  text-align: center !important;
-  width: 100% !important;
-  font-size: 14px !important;
-  line-height: 1.2 !important;
-  color: #000 !important;
-}
-
-/* Fix container for all slot items */
-.items-container {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 4px !important;
-  padding: 15px !important;
-  margin: 0 auto 20px auto !important;
-  height: auto !important;
-  min-height: 220px !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
-  width: 100% !important;
-  max-width: 800px !important;
-  overflow: visible !important;
-}
-
-/* Fix the scroll container inside item containers */
-.scroll-container {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  width: 100% !important;
-  height: 100% !important;
-  transform: translateY(0) !important;
-}
-
-/* "LOCKED IN" tag position fix */
-.locked-tag {
-  position: absolute !important;
-  top: 0 !important;
-  right: 0 !important;
-  transform-origin: top right !important;
-  z-index: 10 !important;
-}
-
-/* Ensure the "LOCKED IN" tags display properly */
-.locked-tag.show {
-  animation: tagPop 0.3s ease-out forwards !important;
-}
-
-/* ==========================================
-   SPACING AND POSITION FIXES
-   ========================================== */
-
-/* Slot machine wrapper container */
-.slot-machine-wrapper {
-  width: 100% !important;
-  margin: 20px auto !important;
-  padding: 0 !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  overflow: visible !important;
-  position: relative !important;
-  height: auto !important;
-  min-height: 250px !important;
-}
-
-/* Selected class container styling */
-.selected-class-container {
-  width: 80% !important;
-  max-width: 300px !important;
-  margin: 15px auto !important;
-  padding: 10px !important;
-  font-size: 1.3rem !important;
-  color: var(--neon-yellow) !important;
-  background: rgba(0, 0, 0, 0.5) !important;
-  border-radius: 10px !important;
-  border: 2px solid var(--neon-yellow) !important;
-  box-shadow: 0 0 15px rgba(255, 183, 0, 0.5) !important;
-  transform: none !important;
-  display: block !important;
-  text-align: center !important;
-}
-
-/* Fix the EXTRA PUNISHMENT section */
-[id*="punishment"],
-.punishment-loadout-button,
-.extra-punishment {
-  margin-top: 20px !important;
-  position: relative !important;
-  z-index: 10 !important;
-  display: block !important;
-}
-
-/* Fix error message styling */
-.error-message {
-  background-color: rgba(30, 30, 50, 0.95) !important;
-  border: 2px solid #ff3d00 !important;
-  border-radius: 8px !important;
-  padding: 15px !important;
-  color: white !important;
-  text-align: center !important;
-  position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  z-index: 9999 !important;
-  max-width: 80% !important;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) !important;
-}
-
-.error-message button {
-  background: linear-gradient(135deg, #8a2be2, #ff00ff) !important;
-  color: white !important;
-  border: none !important;
-  padding: 8px 20px !important;
-  border-radius: 6px !important;
-  margin-top: 10px !important;
-  cursor: pointer !important;
-}
-
-/* Remove Copy Rage Loadout button under slot machine */
-button.copy-loadout:not(.history-entry .copy-loadout) {
-  display: none !important;
-}
-
-/* Fix the rage quit button spacing */
-.rage-quit-button {
-  margin: 30px auto 20px auto !important;
-  width: auto !important;
-  max-width: 280px !important;
-  white-space: nowrap !important;
-}
-
-/* Fix loadout history spacing */
-.loadout-history {
-  margin-top: 30px !important;
-  margin-bottom: 30px !important;
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-/* ==========================================
-   MOBILE RESPONSIVENESS FIXES
-   ========================================== */
-
-@media (max-width: 768px) {
-  /* Ensure items are centered and properly sized */
-  .items-container {
-    transform: scale(0.9) !important;
-    margin: 0 auto 10px auto !important;
-    width: 95% !important;
-    gap: 2px !important;
-    padding: 10px !important;
-  }
-  
-  .item-container {
-    width: 18% !important;
-    margin: 0 2px !important;
-  }
-  
-  /* Ensure "LOCKED IN" tags are visible */
-  .locked-tag {
-    font-size: 10px !important;
-    padding: 2px 5px !important;
-  }
-  
-  /* Fix the spacing between elements */
-  .selected-class-container {
-    font-size: 1.1rem !important;
-    margin: 10px auto !important;
-    padding: 5px !important;
-  }
-  
-  /* Fix the EXTRA PUNISHMENT position */
-  [id*="punishment"],
-  .punishment-loadout-button,
-  .extra-punishment {
-    margin-top: 15px !important;
-  }
-  
-  /* Fix spacing after the slot machine */
-  .slot-machine-wrapper {
-    margin-bottom: 10px !important;
-  }
-  
-  /* Fix rage button spacing */
-  .rage-quit-button {
-    margin: 15px auto !important;
-    padding: 10px 15px !important;
-    font-size: 1rem !important;
-  }
-}
-
-/* Even more aggressive for smaller screens */
-@media (max-width: 480px) {
-  .items-container {
-    transform: scale(0.8) !important;
-  }
-  
-  .item-container {
-    width: 19% !important;
-    margin: 0 1px !important;
-  }
-  
-  .selected-class-container {
-    font-size: 1rem !important;
-    max-width: 250px !important;
-  }
+.headerSection {
+  padding-top: 80px; /* Increased padding to push the logo down */
 }
