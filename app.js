@@ -42,7 +42,6 @@ const loadouts = {
       "Sonar Grenade",
       "Thermal Bore",
       "Gas Grenade",
-      "Free Choice",
       "Thermal Vision",
       "Tracking Dart",
       "Vanishing Bomb",
@@ -73,7 +72,6 @@ const loadouts = {
       "Defibrillator",
       "Explosive Mine",
       "Gas Mine",
-      "Free Choice",
       "Glitch Trap",
       "Jump Pad",
       "Zipline",
@@ -110,7 +108,6 @@ const loadouts = {
       "Proximity Sensor",
       "RPG-7",
       "Goo Grenade",
-      "Free Choice",
       "Pyro Grenade",
       "Smoke Grenade",
       "Frag Grenade",
@@ -349,13 +346,13 @@ const PHYSICS = {
   TIMING: {
     REGULAR_SPIN: {
       COLUMN_DELAY: 250, // 0.25s between stops for regular spins
-      BASE_DURATION: 800,
+      BASE_DURATION: 600,
       DECELERATION_TIME: 400,
     },
     FINAL_SPIN: {
-      COLUMN_DELAY: 600, // 0.6s between stops for final spin
+      COLUMN_DELAY: 900, // 0.6s between stops for final spin
       BASE_DURATION: 2500,
-      DECELERATION_TIME: 800,
+      DECELERATION_TIME: 900,
     },
   },
 };
@@ -505,58 +502,34 @@ function startSpinAnimation(columns) {
       column.onStop = (columnElement) => {
         const container = columnElement.closest(".item-container");
         if (container) {
-          // Apply initial flash effect
           container.classList.remove("final-flash"); // Ensure restart
           void container.offsetWidth; // Force reflow
           container.classList.add("final-flash");
 
-          // Add locked in tag with animation
           if (!container.querySelector(".locked-tag")) {
             const lockedTag = document.createElement("div");
             lockedTag.className = "locked-tag";
             lockedTag.textContent = "LOCKED IN!";
             container.appendChild(lockedTag);
 
-            // Small delay for tag animation
             setTimeout(() => {
               lockedTag.classList.add("show");
             }, 150);
           }
 
-          // Transition from flash to pulse effect
           setTimeout(() => {
-            container.classList.remove("final-flash");
-            container.classList.add("winner-pulsate");
-          }, 500);
+            container.classList.remove("final-flash"); // Remove flash class
+            container.classList.add("winner-pulsate"); // Start continuous pulse
+            console.log("Added winner-pulsate to:", container);
+          }, 700);
         }
       };
-    }
+    } // ✅ This closes the `if (isFinalSpin)` block!
 
     return column;
   });
 
-  // Reset columns - remove all animations
-  columns.forEach((column) => {
-    const container = column.closest(".item-container");
-    if (container) {
-      container.classList.remove(
-        "landing-flash",
-        "winner-pulsate",
-        "final-flash"
-      );
-
-      // Remove existing locked tag for non-final spins
-      if (!isFinalSpin) {
-        const existingTag = container.querySelector(".locked-tag");
-        if (existingTag) {
-          existingTag.remove();
-        }
-      }
-    }
-    column.style.transform = "translateY(0)";
-    column.style.transition = "none";
-  });
-
+  // ✅ Make sure the function continues with the animation logic!
   slotColumns.forEach((column) => (column.state = "accelerating"));
 
   function animate(currentTime) {
@@ -577,7 +550,6 @@ function startSpinAnimation(columns) {
     if (isAnimating) {
       requestAnimationFrame(animate);
     } else {
-      // When all columns are stopped, if this is the final spin, trigger the victory flash
       if (isFinalSpin) {
         finalVictoryFlash(columns);
       }
@@ -586,7 +558,7 @@ function startSpinAnimation(columns) {
   }
 
   requestAnimationFrame(animate);
-}
+} // ✅ This closes `startSpinAnimation()`
 
 // These should be defined outside finalizeSpin, at the top level of your file
 function addToHistory(
@@ -681,7 +653,7 @@ function finalizeSpin(columns) {
       } else {
         displayManualLoadout(state.selectedClass);
       }
-    }, 800);
+    }, 400);
     return;
   }
 
@@ -734,6 +706,7 @@ function finalizeSpin(columns) {
 }
 
 // Improved final victory flash function with contained effects
+// Improved final victory flash function with contained effects
 function finalVictoryFlash(columns) {
   // Wait for the last column to finish its individual animation
   setTimeout(() => {
@@ -750,12 +723,9 @@ function finalVictoryFlash(columns) {
         // Add the mega flash
         container.classList.add("mega-flash");
 
-        // If this is the last container, trigger confetti and final flash
+        // If this is the last container, trigger the final flash
         if (index === allContainers.length - 1) {
-          // Trigger confetti in the container
           setTimeout(() => {
-            createConfetti();
-
             // Add a flash effect just to the items container
             if (itemsContainer) {
               // Create a positioned flash overlay

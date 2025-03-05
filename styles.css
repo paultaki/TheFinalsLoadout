@@ -132,6 +132,38 @@ body.flexStyle {
   background: linear-gradient(45deg, #1e90ff, #7b2fe3);
 }
 
+/* Slot Machine & Item Styles */
+.items-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  margin: 20px auto;
+  margin-bottom: 0px !important;
+
+  width: 100%;
+  max-width: 800px;
+  min-width: 800px;
+  flex-wrap: nowrap;
+  overflow-x: visible;
+  position: relative;
+  transform-origin: center;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  height: 210px;
+  margin-bottom: 20px !important;
+  transform-origin: center center;
+}
+
+.items-container::-webkit-scrollbar {
+  display: none;
+}
+
 .item-container {
   flex: 0 0 140px;
   width: 140px;
@@ -1035,7 +1067,7 @@ iframe#bmc-button {
   background: #222 !important;
 }
 .slot-machine-wrapper {
-  margin-bottom: 0px !important; /* Remove gap */
+  margin-bottom: 5px !important; /* Reduce spacing */
 }
 /* Flash Overlay */
 .flash-overlay {
@@ -1832,6 +1864,18 @@ img {
     margin: 10px 0;
   }
 
+  /* Container for slot machine - adjusted scaling and width */
+  .items-container {
+    transform: scale(0.45);
+    transform-origin: center top;
+    width: 600px;
+    margin: 0 auto -50px;
+    margin-bottom: 0px !important;
+    margin-bottom: 0px !important; /* Remove extra spacing */
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
   /* Slot machine wrapper */
   .slot-machine-wrapper {
     width: 100%;
@@ -1981,6 +2025,11 @@ img {
     font-size: 14px;
   }
 
+  /* Fix gap between slot machine and handicap section */
+  .items-container {
+    margin-bottom: 0px !important;
+  }
+
   .handicap-section,
   .handicap-container {
     margin-top: 0 !important;
@@ -2091,102 +2140,4 @@ img {
 .rage-description {
   line-height: 1.3; /* Tighter spacing */
   margin-bottom: 10px; /* Reduce bottom margin */
-}
-/* ✅ Fix gap between slot machine & handicap generator */
-.slot-machine-wrapper {
-  margin-bottom: 10px !important; /* Reduce space */
-}
-
-/* ✅ Keep Handicap Container Consistent */
-.handicap-container {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  flex-direction: column !important;
-  width: 95% !important; /* Keep width within boundaries */
-  max-width: 600px !important; /* Ensure it doesn’t stretch */
-  min-height: 180px !important; /* Consistent height */
-  padding: 15px !important; /* Add consistent padding */
-  border-radius: 12px !important;
-  margin: 20px auto !important; /* Adjust spacing */
-  background: rgba(0, 0, 0, 0.7) !important; /* Ensure background consistency */
-  border: 3px solid var(--rage-red, #ff0000) !important;
-  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6) !important;
-  transition: all 0.3s ease-in-out !important; /* Smooth transition */
-}
-
-/* ✅ Fix handicap container padding to prevent bleeding */
-.handicap-wheel-container {
-  width: 100% !important;
-  min-height: 100px !important; /* Prevent shrink */
-  padding: 15px !important;
-  background: rgba(0, 0, 0, 0.8) !important;
-  border-radius: 12px !important;
-  border: 3px solid var(--rage-red, #ff0000) !important;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6) !important;
-  transition: all 0.3s ease-in-out !important;
-}
-
-/* ✅ Ensure Placeholder (Before Spinning) Matches Final Size */
-.placeholder-handicap {
-  width: 100% !important;
-  min-height: 180px !important; /* Ensure same height as final */
-  color: rgba(255, 255, 255, 0.7) !important;
-  font-style: italic !important;
-  font-size: 1.1rem !important;
-  padding: 15px !important;
-  border-radius: 12px !important;
-  border: 2px dashed rgba(255, 0, 0, 0.5) !important;
-  background: rgba(51, 0, 0, 0.4) !important;
-  transition: all 0.3s ease-in-out !important;
-}
-
-/* ✅ Mobile Optimization */
-@media (max-width: 768px) {
-  .handicap-container {
-    width: 95% !important; /* Prevent overflow */
-    min-height: 160px !important;
-    padding: 10px !important;
-  }
-}
-/* ✅ Slot Machine & Item Styles - Optimized */
-.items-container {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-  align-items: flex-start !important;
-  gap: 12px !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  padding: 15px !important;
-  border-radius: 12px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
-  width: 100% !important;
-  max-width: 800px !important;
-  min-width: 800px !important;
-  flex-wrap: nowrap !important;
-  overflow-x: visible !important;
-  position: relative !important;
-  transform-origin: center !important;
-  height: 210px !important;
-  margin: 5px auto 0 !important; /* Remove extra gap */
-  -ms-overflow-style: none !important;
-  scrollbar-width: none !important;
-}
-
-.items-container::-webkit-scrollbar {
-  display: none !important;
-}
-
-/* ✅ Mobile Optimizations (Max 768px) */
-@media (max-width: 768px) {
-  .items-container {
-    margin-bottom: 0px !important; /* Ensure no extra spacing */
-    transform: scale(0.45) !important;
-    transform-origin: center top !important;
-    width: 600px !important;
-    margin: 0 auto -50px !important;
-    background: transparent !important;
-    box-shadow: none !important;
-  }
 }

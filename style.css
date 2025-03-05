@@ -1429,20 +1429,15 @@ iframe#bmc-button {
 }
 
 /* === MOBILE RESPONSIVENESS === */
-@media (max-width: 768px) {
-  .class-button {
-    width: 90px; /* Reduce size slightly */
-  }
-}
 @media (max-width: 600px) {
   .class-button {
-    width: 90px; /* Reduce size slightly */
+    width: 80px; /* Reduce size slightly */
   }
 }
 
 @media (max-width: 400px) {
   .class-button {
-    width: 85px; /* Slightly smaller on very small screens */
+    width: 90px; /* Slightly smaller on very small screens */
   }
 }
 
@@ -1485,68 +1480,6 @@ iframe#bmc-button {
    PUNISHMENT LOADOUT BUTTON - CONSOLIDATED STYLES
    ============================================= */
 
-/* Base button styles with broad selector for consistency */
-#punishmentLoadoutButton,
-button[id*="punishment"],
-a[id*="punishment"],
-.punishment-loadout-button {
-  /* Display & Alignment */
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-
-  /* Dimensions & Spacing */
-  padding: 8px 15px;
-  margin: 15px auto !important;
-  width: fit-content;
-
-  /* Positioning */
-  position: relative;
-  z-index: 5;
-
-  /* Typography */
-  font-size: 0.9rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  text-decoration: none !important;
-  color: white !important;
-
-  /* Visual styling */
-  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
-  border: 1px solid #ff3d00 !important;
-  border-radius: 6px;
-  box-shadow: 0 0 6px rgba(255, 69, 0, 0.8);
-
-  /* Behavior */
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-
-  /* Animation */
-  animation: subtlePulse 2.5s ease-in-out infinite;
-}
-
-/* Hover effect with consistent values */
-#punishmentLoadoutButton:hover,
-button[id*="punishment"]:hover,
-a[id*="punishment"]:hover,
-.punishment-loadout-button:hover {
-  transform: translateY(-3px) scale(1.07);
-  box-shadow: 0 0 20px rgba(255, 140, 0, 0.8);
-  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
-}
-
-/* Mobile optimizations */
-@media (max-width: 768px) {
-  #punishmentLoadoutButton,
-  button[id*="punishment"],
-  a[id*="punishment"],
-  .punishment-loadout-button {
-    margin: 15px auto !important;
-    padding: 7px 14px;
-    font-size: 0.85rem;
-  }
-}
 /* Improved mobile layout that preserves original styling */
 @media (max-width: 768px) {
   /* Container for slot machine - preserve scaling but fix spacing */
@@ -1598,17 +1531,6 @@ a[id*="punishment"]:hover,
     z-index: -1;
   }
 
-  /* Position the punishment button closer to the items */
-  #punishmentLoadoutButton,
-  button[id*="punishment"],
-  a[id*="punishment"],
-  .punishment-loadout-button {
-    margin-top: 0 !important; /* No top margin */
-    margin-bottom: 10px !important; /* Small bottom margin */
-    position: relative;
-    z-index: 10;
-  }
-
   /* Ensure loadout history starts right after the button */
   .loadout-history {
     margin-top: 10 !important; /* No top margin */
@@ -1652,13 +1574,6 @@ a[id*="punishment"]:hover,
     min-height: 140px !important;
   }
 
-  #punishmentLoadoutButton,
-  button[id*="punishment"],
-  a[id*="punishment"],
-  .punishment-loadout-button {
-    top: -25px; /* Pull button up even more on smaller screens */
-  }
-
   .loadout-history {
     top: -15px; /* Pull history up more */
   }
@@ -1695,15 +1610,15 @@ a[id*="punishment"]:hover,
 @keyframes pulsateWinner {
   0% {
     transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 183, 0, 0.5);
+    box-shadow: 0 0 10px rgba(255, 183, 0, 0.4);
   }
   50% {
-    transform: scale(1.08);
-    box-shadow: 0 0 30px rgba(255, 183, 0, 1);
+    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(255, 183, 0, 1);
   }
   100% {
     transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 183, 0, 0.5);
+    box-shadow: 0 0 10px rgba(255, 183, 0, 0.4);
   }
 }
 
@@ -1805,8 +1720,7 @@ a[id*="punishment"]:hover,
 /* === APPLYING THE ANIMATIONS === */
 /* Slot machine winning item */
 .item-container.winner-pulsate {
-  animation: pulsateWinner 2s ease-in-out infinite,
-    glowPulse 2s ease-in-out infinite;
+  animation: pulsateWinner 2.5s infinite alternate ease-in-out;
 }
 
 /* Final locked-in effect */
@@ -1994,13 +1908,96 @@ a[id*="punishment"]:hover,
     margin-top: -40px !important; /* Pull up even more on small screens */
   }
 }
-/* Fix the rage quit button spacing */
-.rage-quit-button {
-  margin: 30px auto 20px auto !important;
-  width: auto !important;
-  max-width: 280px !important;
-  white-space: nowrap !important;
+/* Updated Navigation Bar Styles */
+.main-nav {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 15px 20px; /* Add horizontal padding */
+  display: flex;
+  justify-content: flex-start; /* Align to the left */
+  gap: 30px; /* Keep spacing between links */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
 }
+
+.main-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 5px 15px; /* Adjust padding */
+  transition: color 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
+  position: relative;
+}
+
+/* Highlight effect on hover */
+.main-nav a:hover {
+  color: var(--highlight-color); /* Use your theme color */
+  transform: translateY(-2px);
+}
+
+/* Active state styling */
+.main-nav a.active {
+  color: var(--highlight-color);
+}
+
+/* Add underline effect on hover */
+.main-nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--highlight-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.main-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .main-nav {
+    padding: 10px 0;
+    gap: 15px;
+  }
+
+  .main-nav a {
+    font-size: 16px;
+    padding: 3px 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-nav {
+    gap: 10px;
+  }
+
+  .main-nav a {
+    font-size: 14px;
+  }
+}
+
+/* Add margin to top of page content to account for fixed navbar */
+body.flexStyle {
+  padding-top: 50px;
+}
+
+.headerSection {
+  padding-top: 30px;
+}
+
+.headerSection {
+  padding-top: 80px; /* Increased padding to push the logo down */
+}
+
+/* Add these styles to your style.css file to style the rage quit button and enhance the generate button */
 
 /* Rage Quit Button on Homepage */
 .rage-quit-link {
@@ -2128,100 +2125,10 @@ a[id*="punishment"]:hover,
   transform: translateY(2px) scale(0.98);
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
 }
-/* Fix the rage quit button spacing */
-.rage-quit-button {
-  margin: 30px auto 20px auto !important;
-  width: auto !important;
-  max-width: 280px !important;
-  white-space: nowrap !important;
-}
-/* Updated Navigation Bar Styles */
-.main-nav {
-  background: rgba(0, 0, 0, 0.8);
-  padding: 15px 20px; /* Add horizontal padding */
-  display: flex;
-  justify-content: flex-start; /* Align to the left */
-  gap: 30px; /* Keep spacing between links */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
-}
 
-.main-nav a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 5px 15px; /* Adjust padding */
-  transition: color 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
-  position: relative;
-}
-
-/* Highlight effect on hover */
-.main-nav a:hover {
-  color: var(--highlight-color); /* Use your theme color */
-  transform: translateY(-2px);
-}
-
-/* Active state styling */
-.main-nav a.active {
-  color: var(--highlight-color);
-}
-
-/* Add underline effect on hover */
-.main-nav a::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: var(--highlight-color);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.main-nav a:hover::after {
-  transform: scaleX(1);
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .main-nav {
-    padding: 10px 0;
-    gap: 15px;
-  }
-
-  .main-nav a {
-    font-size: 16px;
-    padding: 3px 5px;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-nav {
-    gap: 10px;
-  }
-
-  .main-nav a {
-    font-size: 14px;
-  }
-}
-
-/* Add margin to top of page content to account for fixed navbar */
-body.flexStyle {
-  padding-top: 50px;
-}
-
-.headerSection {
-  padding-top: 30px;
-}
-
-.headerSection {
-  padding-top: 80px; /* Increased padding to push the logo down */
+/* Make sure the navigation uses the correct highlight color */
+:root {
+  --highlight-color: var(--neon-yellow, #ffb700);
 }
 
 .main-nav a.active,
@@ -2231,92 +2138,4 @@ body.flexStyle {
 
 .main-nav a::after {
   background-color: var(--highlight-color);
-}
-/* Updated Navigation Bar Styles */
-.main-nav {
-  background: rgba(0, 0, 0, 0.8);
-  padding: 15px 20px; /* Add horizontal padding */
-  display: flex;
-  justify-content: flex-start; /* Align to the left */
-  gap: 30px; /* Keep spacing between links */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.main-nav a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 5px 15px; /* Adjust padding */
-  transition: color 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
-  position: relative;
-}
-
-/* Highlight effect on hover */
-.main-nav a:hover {
-  color: var(--highlight-color); /* Use your theme color */
-  transform: translateY(-2px);
-}
-
-/* Active state styling */
-.main-nav a.active {
-  color: var(--highlight-color);
-}
-
-/* Add underline effect on hover */
-.main-nav a::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: var(--highlight-color);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.main-nav a:hover::after {
-  transform: scaleX(1);
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .main-nav {
-    padding: 10px 0;
-    gap: 15px;
-  }
-
-  .main-nav a {
-    font-size: 16px;
-    padding: 3px 5px;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-nav {
-    gap: 10px;
-  }
-
-  .main-nav a {
-    font-size: 14px;
-  }
-}
-
-/* Add margin to top of page content to account for fixed navbar */
-body.flexStyle {
-  padding-top: 50px;
-}
-
-.headerSection {
-  padding-top: 30px;
-}
-
-.headerSection {
-  padding-top: 80px; /* Increased padding to push the logo down */
 }

@@ -265,12 +265,6 @@ const rageQuitLoadouts = {
       category: "Aiming",
     },
     {
-      name: "One Stick",
-      description: "Use only one joystick/WASD or mouse",
-      icon: "🕹️",
-      category: "Aiming",
-    },
-    {
       name: "Tunnel Vision",
       description: "Use only 50% of your normal FOV",
       icon: "👁️",
@@ -314,12 +308,6 @@ const rageQuitLoadouts = {
       icon: "📢",
       category: "Audio",
     },
-    {
-      name: "Bass Boost",
-      description: "Max out the bass in your audio settings",
-      icon: "🔊",
-      category: "Audio",
-    },
 
     // Communication Handicaps
     {
@@ -340,12 +328,7 @@ const rageQuitLoadouts = {
       icon: "🤐",
       category: "Communication",
     },
-    {
-      name: "Language Barrier",
-      description: "Communicate only using a language you don't know",
-      icon: "🈲",
-      category: "Communication",
-    },
+
     {
       name: "Sing It",
       description: "Must sing your callouts instead of speaking them",
@@ -366,12 +349,7 @@ const rageQuitLoadouts = {
       icon: "💥",
       category: "Gameplay",
     },
-    {
-      name: "Glass Cannon",
-      description: "No armor or defensive abilities allowed",
-      icon: "🔮",
-      category: "Gameplay",
-    },
+
     {
       name: "Collector",
       description: "Must pick up every item you see",
@@ -460,12 +438,7 @@ const rageQuitLoadouts = {
       icon: "💣",
       category: "Challenge",
     },
-    {
-      name: "Last Bullet",
-      description: "Only the last bullet in your magazine deals damage",
-      icon: "🎲",
-      category: "Challenge",
-    },
+
     {
       name: "Exposed",
       description: "Never take cover during firefights",
@@ -795,6 +768,12 @@ class SlotColumn {
     this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
   }
 }
+function saveHistory() {
+  const entries = Array.from(document.querySelectorAll(".history-entry")).map(
+    (entry) => entry.innerHTML
+  );
+  localStorage.setItem("rageQuitHistory", JSON.stringify(entries));
+}
 
 function startSpinAnimation(columns) {
   const startTime = performance.now();
@@ -972,44 +951,63 @@ function spinHandicap() {
     handicaps[Math.floor(Math.random() * handicaps.length)];
   state.handicap = randomHandicap;
 
-  // Create HTML for the handicap wheel
+  // Placeholder texts to cycle through for suspense
+  const placeholderTexts = [
+    "?? ??????? ????",
+    "MYSTERY HANDICAP...",
+    "SPINNING...",
+    "WHAT WILL IT BE?",
+    "?? ??? ??? ???",
+  ];
+
+  // Create initial spinning UI with placeholder text
   const wheelHTML = `
     <div class="handicap-wheel-container handicap-glow">
-      <div class="handicap-title">EXTRA PUNISHMENT</div>
+      <div class="handicap-title">EXTRA HANDICAP</div>
       <div class="handicap-wheel">
         <div class="handicap-spinner">
           <div class="handicap-result">
-            <span class="handicap-icon">${randomHandicap.icon}</span>
-            <span class="handicap-name">${randomHandicap.name}</span>
+            <span class="handicap-icon">🎰</span>
+            <span class="handicap-name">${placeholderTexts[0]}</span>
           </div>
         </div>
       </div>
-      <div class="handicap-description">${randomHandicap.description}</div>
+      <div class="handicap-description"></div> <!-- Empty at first for suspense -->
     </div>
   `;
 
   handicapContainer.innerHTML = wheelHTML;
 
-  // Animate the handicap wheel
+  const resultName = handicapContainer.querySelector(".handicap-name");
+  const resultDescription = handicapContainer.querySelector(
+    ".handicap-description"
+  );
   const spinner = handicapContainer.querySelector(".handicap-spinner");
+
   if (spinner) {
     // Spin animation
     spinner.style.animation =
       "spin-wheel 3s cubic-bezier(0.2, 0.8, 0.3, 1) forwards";
 
+    // Cycle through placeholder texts while spinning
+    let textIndex = 0;
+    const textInterval = setInterval(() => {
+      textIndex = (textIndex + 1) % placeholderTexts.length;
+      resultName.textContent = placeholderTexts[textIndex];
+    }, 250); // Change text every 250ms for more randomness
+
     // After spin completes
     setTimeout(() => {
+      clearInterval(textInterval); // Stop placeholder text changes
+
+      // Reveal final handicap
+      resultName.textContent = randomHandicap.name;
+      resultDescription.textContent = randomHandicap.description;
+
       // Flash effect
       spinner.style.animation = "flash-handicap 0.5s ease-out";
 
-      // Show the result with growing effect
-      const result = handicapContainer.querySelector(".handicap-result");
-      if (result) {
-        result.style.animation = "grow-result 0.5s ease-out forwards";
-        result.style.opacity = "1";
-      }
-
-      // Add a dramatic sound effect (optional - if you have a sound file)
+      // Add a dramatic sound effect (optional)
       const handicapSound = document.getElementById("handicapSound");
       if (handicapSound && handicapSound.readyState >= 2) {
         handicapSound.currentTime = 0;
@@ -1020,55 +1018,56 @@ function spinHandicap() {
 
       // Finalize the spin and update history
       setTimeout(() => {
-        // Scroll to ensure the handicap is visible
         handicapContainer.scrollIntoView({
           behavior: "smooth",
           block: "center",
         });
         finalizeSpin();
       }, 1000);
-    }, 3000);
+    }, 3000); // Total spin time before revealing final result
   } else {
-    // Fallback if spinner element not found
     finalizeSpin();
   }
 }
 
 function addToHistory(
   classType,
-  selectedWeapon,
-  selectedSpec,
-  selectedGadgets,
-  handicap
+  weapon,
+  specialization,
+  gadgets,
+  handicapName,
+  handicapDesc
 ) {
   const historyList = document.getElementById("history-list");
+  if (!historyList) return;
+
   const newEntry = document.createElement("div");
   newEntry.classList.add("history-entry");
 
   newEntry.innerHTML = `
     <p><strong>Class:</strong> ${classType}</p>
-    <p><strong>Weapon:</strong> ${selectedWeapon}</p>
-    <p><strong>Specialization:</strong> ${selectedSpec}</p>
-    <p><strong>Gadgets:</strong> ${selectedGadgets.join(", ")}</p>
-    <p><strong>Handicap:</strong> ${handicap.name} - ${handicap.description}</p>
+    <p><strong>Weapon:</strong> ${weapon || "Unknown"}</p>
+    <p><strong>Specialization:</strong> ${specialization || "Unknown"}</p>
+    <p><strong>Gadgets:</strong> ${gadgets || "Unknown"}</p>
+    <p><strong>Handicap:</strong> ${handicapName || "None"} - ${
+    handicapDesc || "No handicap selected"
+  }</p>
     <button class="copy-loadout" onclick="copyLoadoutText(this)">Copy</button>
   `;
 
   historyList.prepend(newEntry);
 
-  // Ensure the history list contains only the last 5 entries
+  // ✅ Fix: Ensure saveHistory is defined before calling
+  if (typeof saveHistory === "function") {
+    saveHistory();
+  } else {
+    console.error("⚠️ Warning: saveHistory function is missing.");
+  }
+
+  // ✅ Keep only the last 5 entries in history
   while (historyList.children.length > 5) {
     historyList.removeChild(historyList.lastChild);
   }
-
-  saveHistory();
-}
-
-function saveHistory() {
-  const entries = Array.from(document.querySelectorAll(".history-entry")).map(
-    (entry) => entry.innerHTML
-  );
-  localStorage.setItem("rageQuitHistory", JSON.stringify(entries));
 }
 
 function loadHistory() {
@@ -1086,50 +1085,61 @@ function loadHistory() {
 }
 
 // Replace the finalizeSpin function in ragequit-app.js with this version:
-
-// Replace the finalizeSpin function in ragequit-app.js with this version:
-
 function finalizeSpin() {
   // Capture the selected items for history
   const itemContainers = document.querySelectorAll(
     ".slot-machine-wrapper .items-container .item-container"
   );
 
-  if (itemContainers && itemContainers.length >= 3) {
-    try {
-      const selectedItems = Array.from(itemContainers).map((container) => {
-        const winnerElement = container.querySelector(".itemCol.winner");
-        if (winnerElement) {
-          return winnerElement.querySelector("p").textContent.trim();
-        }
-        return "Unknown";
-      });
+  if (itemContainers.length < 5) {
+    console.error("Error: Not enough items in slot machine.");
+    return;
+  }
 
-      // Use the class stored in state
-      const selectedClass = state.selectedClass || "Unknown";
+  try {
+    const selectedItems = Array.from(itemContainers).map((container) => {
+      const winnerElement = container.querySelector(".itemCol.winner");
+      return winnerElement
+        ? winnerElement.querySelector("p").textContent.trim()
+        : "Unknown";
+    });
 
-      // Add to history if we have valid data
-      if (
-        selectedItems.length >= 3 &&
-        !selectedItems.includes("Unknown") &&
-        state.handicap
-      ) {
-        const weapon = selectedItems[0];
-        const specialization = selectedItems[1];
-        const gadgets = selectedItems.slice(2); // Get all gadgets
-
-        // Add correct class to history
-        addToHistory(
-          selectedClass,
-          weapon,
-          specialization,
-          gadgets,
-          state.handicap
-        );
-      }
-    } catch (error) {
-      console.error("Error saving loadout history:", error);
+    // Ensure valid selections
+    if (selectedItems.includes("Unknown") || selectedItems.length < 5) {
+      console.error("Error: Some selected items are missing.");
+      return;
     }
+
+    // Get the class and handicap
+    const selectedClass = state.selectedClass || "Unknown";
+    const handicapName = state.handicap ? state.handicap.name : "None";
+    const handicapDesc = state.handicap
+      ? state.handicap.description
+      : "No handicap selected";
+
+    // Format data properly
+    const weapon = selectedItems[0];
+    const specialization = selectedItems[1];
+    const gadgets = selectedItems.slice(2).join(", ");
+
+    // Add to history
+    addToHistory(
+      selectedClass,
+      weapon,
+      specialization,
+      gadgets,
+      handicapName,
+      handicapDesc
+    );
+
+    // ✅ Re-enable the "Generate Rage Loadout" button
+    setTimeout(() => {
+      document.getElementById("rage-quit-btn").removeAttribute("disabled");
+      state.isSpinning = false; // Reset state to allow new spin
+      console.log("✅ Button re-enabled and ready for next spin");
+    }, 1000);
+  } catch (error) {
+    console.error("Error finalizing spin:", error);
   }
 }
 
