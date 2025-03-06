@@ -2086,7 +2086,7 @@ body.flexStyle {
 }
 
 .finals-logo {
-  width: 15vw; /* Default: 20% of the viewport width */
+  width: 10vw; /* Default: 20% of the viewport width */
   height: auto;
   display: block;
   margin: 0 auto 30px;

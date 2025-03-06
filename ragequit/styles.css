@@ -447,7 +447,7 @@ body.flexStyle {
 .loadout-history h2 {
   color: #ffcc00;
   margin-bottom: 20px;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .history-entry {
@@ -1862,6 +1862,7 @@ img {
     margin-top: 10px;
     position: relative;
     z-index: 1;
+    font-size: 1rem;
   }
 
   .rage-description {
@@ -2243,4 +2244,70 @@ img {
     min-height: 100vh;
     padding-bottom: 50px !important;
   }
+}
+#rage-management-tips {
+  min-height: 150px; /* Adjust as needed */
+  padding-bottom: 20px; /* Extra spacing */
+}
+#rage-management-tips {
+  overflow: visible !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@media screen and (max-width: 768px) {
+  #rage-management-tips {
+    padding-bottom: 40px;
+    margin-bottom: 40px;
+  }
+}
+#rage-management-container,
+#rage-management-tips {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.rage-tips .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Ensures content is centered */
+  min-height: 250px; /* Adjust based on your needs */
+}
+.rage-tips .container {
+  min-height: 100%;
+  overflow: visible;
+}
+
+.rage-tips {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.4rem; /* Adjust size */
+  margin-bottom: 10px; /* Reduce extra spacing */
+  font-weight: bold;
+  text-transform: uppercase; /* Keep uppercase but smaller */
+
+  justify-content: center;
+  width: 100%;
+  min-height: 300px; /* Increase minimum height */
+  padding: 30px 15px; /* Ensure inner content isn't cut off */
+  overflow: visible; /* Prevent clipping */
+  position: relative; /* Ensure it stacks correctly */
+}
+
+@media screen and (max-width: 768px) {
+  .rage-tips {
+    min-height: 350px; /* Ensure enough space on smaller screens */
+    padding-bottom: 50px; /* Prevent cut-off at the bottom */
+  }
+  .rage-tips h2 {
+    font-size: 1.2rem; /* Smaller for mobile */
+  }
+}
+html,
+body {
+  height: auto;
+  overflow-x: hidden; /* Keep horizontal scroll disabled */
+  overflow-y: auto; /* Ensure vertical scrolling is possible */
 }
