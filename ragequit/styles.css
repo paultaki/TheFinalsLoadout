@@ -71,8 +71,6 @@ body.flexStyle {
   line-height: 1.2 !important; /* Fix spacing */
 }
 
-
-
 .subTitle {
   font-size: 1rem !important; /* Reduce text size */
   color: var(--neon-yellow);
@@ -418,7 +416,6 @@ body.flexStyle {
   animation: shineEffect 3s infinite linear;
 }
 
-
 .copy-loadout {
   position: absolute;
   top: 10px;
@@ -471,61 +468,6 @@ body.flexStyle {
   align-items: center;
   justify-content: center;
   margin-top: -1px;
-}
-
-/* Patch Notes Styles */
-.patch-notes {
-  width: 100%;
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 15px;
-}
-
-.notes-container {
-  background: rgb(21, 23, 28);
-  padding: 1rem;
-  border-radius: 12px;
-}
-
-.patch-notes h2 {
-  color: #ffb700;
-  text-align: center;
-  padding: 0.5rem;
-  margin: 0;
-  font-size: 1.2rem;
-}
-
-.patch-date {
-  color: #ffb700;
-  text-align: center;
-  padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 1.1rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-}
-.patch-section,
-  background: linear-gradient(
-    180deg,
-    rgba(30, 30, 50, 0.95),
-    rgba(40, 40, 80, 0.95)
-  );
-  border: 2px solid var(--neon-purple);
-  box-shadow: 0 0 15px rgba(123, 47, 227, 0.4);
-  margin: 1rem 0;
-  padding: 20px;
-  border-radius: 10px;
-  transition: all 0.3s ease-in-out;
-}
-
-.patch-section h3 {
-  color: var(--neon-yellow);
-  text-align: center;
-  margin: 1rem 0;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  text-shadow: 0px 0px 10px rgba(255, 183, 0, 0.8);
 }
 
 .change-item {
@@ -1168,43 +1110,6 @@ iframe#bmc-button {
   box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
 }
 
-/* Punishment Loadout Button Styles */
-#punishmentLoadoutButton,
-button[id*="punishment"],
-a[id*="punishment"],
-.punishment-loadout-button {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 8px 15px;
-  margin: 15px auto !important;
-  width: fit-content;
-  position: relative;
-  z-index: 5;
-  font-size: 0.9rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  text-decoration: none !important;
-  color: white !important;
-  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
-  border: 1px solid #ff3d00 !important;
-  border-radius: 6px;
-  box-shadow: 0 0 6px rgba(255, 69, 0, 0.8);
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  animation: subtlePulse 2.5s ease-in-out infinite;
-}
-
-#punishmentLoadoutButton:hover,
-button[id*="punishment"]:hover,
-a[id*="punishment"]:hover,
-.punishment-loadout-button:hover {
-  transform: translateY(-3px) scale(1.07);
-  box-shadow: 0 0 20px rgba(255, 140, 0, 0.8);
-  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
-}
-
 .rage-button-container {
   display: flex;
   justify-content: center;
@@ -1704,7 +1609,6 @@ img {
     margin: 10px 0;
   }
 
-
   .subTitle {
     font-size: 1rem;
   }
@@ -1849,8 +1753,6 @@ img {
 
 /* Extra small devices */
 @media (max-width: 375px) {
-  
-
   .btnRow {
     gap: 8px;
   }
@@ -2020,7 +1922,6 @@ img {
   box-shadow: 0px 0px 25px rgba(255, 183, 0, 1);
 }
 
-
 @media (max-width: 768px) {
   .items-container {
     flex-wrap: nowrap !important; /* Ensures it stays in one row */
@@ -2050,32 +1951,28 @@ img {
   }
 }
 
-
-/* Updated Navigation Bar Styles */
 .main-nav {
-  background: rgba(0, 0, 0, 0.9);
-  padding: 10px 15px; /* Adjusted for mobile */
+  background: rgba(0, 0, 0, 0.8);
+  padding: 15px 20px; /* Add horizontal padding */
   display: flex;
-  justify-content: space-between; /* Keeps items aligned */
-  align-items: center; /* Ensures vertical alignment */
+  justify-content: flex-start; /* Align to the left */
+  gap: 30px; /* Keep spacing between links */
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
-  margin-bottom: 0px !important; /* Prevents extra spacing */
 }
 
 .main-nav a {
   color: white;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
-  padding: 8px 12px;
-  transition: color 0.3s ease, transform 0.2s ease;
+  padding: 5px 15px; /* Adjust padding */
+  transition: color 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
   position: relative;
-  white-space: nowrap; /* Prevents text wrapping */
 }
 
 /* Highlight effect on hover */
@@ -2089,19 +1986,57 @@ img {
   color: var(--highlight-color);
 }
 
-/* Mobile Adjustments */
+/* Add underline effect on hover */
+.main-nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--highlight-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.main-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Mobile responsiveness */
 @media (max-width: 768px) {
   .main-nav {
-    padding: 8px 10px; /* Reduces padding for mobile */
+    padding: 10px 0;
+    gap: 15px;
+  }
+
+  .main-nav a {
+    font-size: 16px;
+    padding: 3px 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-nav {
+    gap: 10px;
   }
 
   .main-nav a {
     font-size: 14px;
-    padding: 5px 8px; /* Adjusts spacing */
   }
 }
 
+body.flexStyle {
+  padding-top: 50px;
+}
 
+.headerSection {
+  padding-top: 30px;
+}
+
+.headerSection {
+  padding-top: 80px; /* Increased padding to push the logo down */
+}
 
 @media (max-width: 768px) {
   /* Reduce space above the handicap generator */
@@ -2218,7 +2153,6 @@ body {
   margin: 10px auto 0px !important; /* Reduce top margin */
 }
 
-
 @media (max-width: 768px) {
   .rage-logo {
     width: 150px;
@@ -2321,7 +2255,6 @@ body {
   overflow: hidden; /* Prevents text from spilling out */
 }
 
-
 .loadout-history h2 {
   color: var(--neon-yellow);
   margin-bottom: 15px; /* Reduce spacing below */
@@ -2331,7 +2264,6 @@ body {
   padding: 10px 15px; /* Ensure padding keeps it inside */
   display: block; /* Make sure it behaves properly */
 }
-
 
 .history-entry {
   background: rgba(255, 255, 255, 0.1);
