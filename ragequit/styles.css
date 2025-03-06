@@ -12,6 +12,11 @@
 * {
   box-sizing: border-box;
 }
+.neon-text {
+  color: var(--neon-yellow);
+  text-shadow: 0px 0px 5px rgba(255, 183, 0, 0.9),
+    0px 0px 10px rgba(255, 183, 0, 0.7);
+}
 
 html {
   min-height: 100%;
@@ -57,12 +62,6 @@ body.flexStyle {
   padding-top: 50px;
 }
 
-/* Header Section */
-.headerSection {
-  padding: 40px 0 50px;
-  padding-top: 80px;
-}
-
 .mainTitle {
   font-size: 1.5rem !important; /* Reduce font size */
   margin: 5px 0 !important; /* Reduce spacing */
@@ -72,13 +71,7 @@ body.flexStyle {
   line-height: 1.2 !important; /* Fix spacing */
 }
 
-.headerSection p {
-  font-size: 18px;
-  line-height: 1.2;
-  font-weight: 300;
-  letter-spacing: 1px;
-  margin: 0;
-}
+
 
 .subTitle {
   font-size: 1rem !important; /* Reduce text size */
@@ -119,10 +112,10 @@ body.flexStyle {
   box-shadow: 0 4px 12px rgba(123, 47, 227, 0.3);
 }
 
-.copy-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(123, 47, 227, 0.4);
-  background: linear-gradient(45deg, #1e90ff, #7b2fe3);
+.copy-button:hover,
+.rage-quit-button:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.8);
 }
 
 .item-container {
@@ -425,42 +418,6 @@ body.flexStyle {
   animation: shineEffect 3s infinite linear;
 }
 
-/* Loadout History Styles */
-.loadout-history {
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 12px;
-  padding: 20px;
-  margin: 20px auto;
-  max-width: 800px;
-  margin-top: 15px;
-  z-index: 1;
-  border: 2px solid #ffcc00;
-}
-
-.loadout-history h2 {
-  color: #ffcc00;
-  margin-bottom: 20px;
-  font-size: 20px;
-}
-
-.history-entry {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 15px;
-  position: relative;
-  font-size: 0.9rem; /* Smaller text */
-  text-align: left;
-}
-
-.history-entry p {
-  margin: 5px 0;
-  color: #fff;
-}
-
-.history-entry strong {
-  color: #ffcc00;
-}
 
 .copy-loadout {
   position: absolute;
@@ -548,16 +505,27 @@ body.flexStyle {
   margin-bottom: 10px;
   text-transform: uppercase;
 }
-
-.patch-section {
+.patch-section,
+  background: linear-gradient(
+    180deg,
+    rgba(30, 30, 50, 0.95),
+    rgba(40, 40, 80, 0.95)
+  );
+  border: 2px solid var(--neon-purple);
+  box-shadow: 0 0 15px rgba(123, 47, 227, 0.4);
   margin: 1rem 0;
+  padding: 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
 }
 
 .patch-section h3 {
-  color: #ffb700;
+  color: var(--neon-yellow);
   text-align: center;
   margin: 1rem 0;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  text-shadow: 0px 0px 10px rgba(255, 183, 0, 0.8);
 }
 
 .change-item {
@@ -968,9 +936,7 @@ iframe#bmc-button {
 .dark-mode .slot-machine-wrapper {
   background: #222 !important;
 }
-.slot-machine-wrapper {
-  margin-bottom: 0px !important; /* Remove gap */
-}
+
 /* Flash Overlay */
 .flash-overlay {
   position: fixed;
@@ -1738,15 +1704,6 @@ img {
     margin: 10px 0;
   }
 
-  .headerSection {
-    padding: 20px 0;
-  }
-
-  .headerSection p {
-    font-size: 1.1rem;
-    line-height: 1.2;
-    margin: 5px 0;
-  }
 
   .subTitle {
     font-size: 1rem;
@@ -1761,50 +1718,6 @@ img {
     margin: 10px 0;
   }
 
-  /* Slot machine wrapper */
-  .slot-machine-wrapper {
-    width: 100%;
-    overflow: visible;
-    display: flex;
-    margin-bottom: 0px !important;
-    padding-bottom: 0;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
-
-  .slot-machine-wrapper::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 110%;
-    height: 110%;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    z-index: -1;
-    margin-bottom: 5px !important;
-  }
-
-  .slot-machine-wrapper::after {
-    content: "";
-    position: absolute;
-    width: 95%;
-    height: 95%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    z-index: -1;
-  }
-  .history-entry {
-    padding: 8px;
-    font-size: 0.8rem;
-  }
   /* Button row - prevent wrapping */
   .btnRow {
     gap: 10px;
@@ -1843,14 +1756,6 @@ img {
     margin-top: 10px;
     margin-bottom: 5px;
     margin-bottom: -20px !important;
-  }
-
-  /* Ensure loadout history starts right after the button */
-  .loadout-history {
-    margin-top: 10px;
-    position: relative;
-    z-index: 1;
-    font-size: 1rem;
   }
 
   .rage-description {
@@ -1944,10 +1849,7 @@ img {
 
 /* Extra small devices */
 @media (max-width: 375px) {
-  .items-container {
-    transform: scale(0.42);
-    width: 580px;
-  }
+  
 
   .btnRow {
     gap: 8px;
@@ -2013,10 +1915,6 @@ img {
   line-height: 1.3; /* Tighter spacing */
   margin-bottom: 10px; /* Reduce bottom margin */
 }
-/* ✅ Fix gap between slot machine & handicap generator */
-.slot-machine-wrapper {
-  margin-bottom: 10px !important; /* Reduce space */
-}
 
 /* ✅ Keep Handicap Container Consistent */
 .handicap-container {
@@ -2071,7 +1969,6 @@ img {
     padding: 10px !important;
   }
 }
-/* ✅ Slot Machine & Item Styles - Optimized */
 .items-container {
   display: flex !important;
   flex-direction: row !important;
@@ -2095,14 +1992,55 @@ img {
   scrollbar-width: none !important;
 }
 
+/* Hide Scrollbar */
 .items-container::-webkit-scrollbar {
   display: none !important;
 }
 
-/* ✅ Mobile Optimizations (Max 768px) */
+.item-container {
+  flex: 0 0 140px;
+  width: 140px;
+  height: 200px;
+  margin: 0;
+  background-color: #fff;
+  border: 3px solid #ffcc00 !important;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: none !important; /* Disable any excessive scaling animations */
+}
+
+.item-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 0px 25px rgba(255, 183, 0, 1);
+}
+
+
 @media (max-width: 768px) {
   .items-container {
-    margin-bottom: 0px !important; /* Ensure no extra spacing */
+    flex-wrap: nowrap !important; /* Ensures it stays in one row */
+    max-width: 100% !important; /* Prevents shrinking */
+    overflow-x: auto !important; /* Enables horizontal scrolling */
+    justify-content: flex-start !important; /* Aligns items correctly */
+    padding: 10px 5px !important; /* Adds slight padding for spacing */
+  }
+
+  .slot-machine-wrapper {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    justify-content: center !important;
+  }
+
+  .items-container::-webkit-scrollbar {
+    display: none !important; /* Hides scrollbar for a cleaner look */
+  }
+
+  .items-container {
     transform: scale(0.45) !important;
     transform-origin: center top !important;
     width: 600px !important;
@@ -2112,29 +2050,32 @@ img {
   }
 }
 
+
 /* Updated Navigation Bar Styles */
 .main-nav {
-  background: rgba(0, 0, 0, 0.8);
-  padding: 15px 20px; /* Add horizontal padding */
+  background: rgba(0, 0, 0, 0.9);
+  padding: 10px 15px; /* Adjusted for mobile */
   display: flex;
-  justify-content: flex-start; /* Align to the left */
-  gap: 30px; /* Keep spacing between links */
+  justify-content: space-between; /* Keeps items aligned */
+  align-items: center; /* Ensures vertical alignment */
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+  margin-bottom: 0px !important; /* Prevents extra spacing */
 }
 
 .main-nav a {
   color: white;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  padding: 5px 15px; /* Adjust padding */
-  transition: color 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
+  padding: 8px 12px;
+  transition: color 0.3s ease, transform 0.2s ease;
   position: relative;
+  white-space: nowrap; /* Prevents text wrapping */
 }
 
 /* Highlight effect on hover */
@@ -2148,58 +2089,28 @@ img {
   color: var(--highlight-color);
 }
 
-/* Add underline effect on hover */
-.main-nav a::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: var(--highlight-color);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.main-nav a:hover::after {
-  transform: scaleX(1);
-}
-
-/* Mobile responsiveness */
+/* Mobile Adjustments */
 @media (max-width: 768px) {
   .main-nav {
-    padding: 10px 0;
-    gap: 15px;
-  }
-
-  .main-nav a {
-    font-size: 16px;
-    padding: 3px 5px;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-nav {
-    gap: 10px;
+    padding: 8px 10px; /* Reduces padding for mobile */
   }
 
   .main-nav a {
     font-size: 14px;
+    padding: 5px 8px; /* Adjusts spacing */
   }
 }
-@media (max-width: 768px) {
-  /* Reduce space below the slot machine */
-  .slot-machine-wrapper {
-    margin-bottom: 5px !important; /* Reduce spacing */
-    padding-bottom: 0 !important;
-  }
 
+
+
+@media (max-width: 768px) {
   /* Reduce space above the handicap generator */
   .handicap-container {
-    margin-top: 5px !important; /* Pull it up */
-    padding-top: 10px !important; /* Reduce padding */
+    margin-top: 20px !important;
+    padding: 15px !important;
+    min-width: 90% !important;
+    text-align: center;
   }
-
   /* Ensure handicap section aligns properly */
   .handicap-wheel-container {
     margin-top: 5px !important;
@@ -2290,7 +2201,7 @@ img {
     padding-bottom: 50px; /* Prevent cut-off at the bottom */
   }
   .rage-tips h2 {
-    font-size: 1.2rem; /* Smaller for mobile */
+    font-size: 1rem; /* Smaller for mobile */
   }
 }
 html,
@@ -2304,10 +2215,9 @@ body {
   width: 200px;
   height: auto;
   display: block;
-  margin: 0 auto 30px;
-  animation: glitch 1.5s infinite alternate;
-  position: relative;
+  margin: 10px auto 0px !important; /* Reduce top margin */
 }
+
 
 @media (max-width: 768px) {
   .rage-logo {
@@ -2339,5 +2249,196 @@ body {
   100% {
     transform: skewX(0.5deg) translate(0.5px, -0.5px);
     filter: drop-shadow(0px 0px 8px rgba(255, 0, 0, 0.5));
+  }
+}
+
+.patch-section:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(123, 47, 227, 0.6);
+}
+/* Fix Slot Machine Wrapper */
+.slot-machine-wrapper {
+  width: 100%;
+  max-width: 800px; /* Prevent it from stretching too wide */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: rgba(30, 30, 40, 0.9); /* Adjust background */
+  margin: 20px auto; /* Center it properly */
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Slot Machine Background Effects */
+.slot-machine-wrapper::before,
+.slot-machine-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 12px;
+  z-index: -1;
+}
+
+.slot-machine-wrapper::before {
+  width: 110%;
+  height: 110%;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  margin-bottom: 5px !important;
+}
+
+.slot-machine-wrapper::after {
+  width: 95%;
+  height: 95%;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .slot-machine-wrapper {
+    margin-bottom: 5px !important; /* Reduce spacing */
+  }
+}
+.loadout-history {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 800px;
+  margin: 20px auto;
+  text-align: center;
+  border: 2px solid #ffcc00;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* Ensures children stay inside */
+  overflow: hidden; /* Prevents text from spilling out */
+}
+
+
+.loadout-history h2 {
+  color: var(--neon-yellow);
+  margin-bottom: 15px; /* Reduce spacing below */
+  font-size: 1.2rem;
+  text-align: center;
+  text-shadow: 0px 0px 10px rgba(255, 183, 0, 0.8);
+  padding: 10px 15px; /* Ensure padding keeps it inside */
+  display: block; /* Make sure it behaves properly */
+}
+
+
+.history-entry {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 15px;
+  position: relative;
+  font-size: 0.9rem; /* Smaller text */
+  text-align: left;
+  width: 100%; /* Ensures entries fill container */
+}
+
+.history-entry p {
+  margin: 5px 0;
+  color: #fff;
+}
+
+.history-entry strong {
+  color: var(--neon-yellow);
+}
+
+/* Responsive Fixes */
+@media (max-width: 768px) {
+  .loadout-history h2 {
+    font-size: 1rem !important; /* Slightly smaller for mobile */
+    padding: 8px !important; /* Reduces padding inside */
+  }
+
+  .loadout-history {
+    padding: 15px !important; /* Keeps the box compact */
+  }
+
+  .history-entry {
+    font-size: 0.85rem;
+  }
+}
+/* Adjust the size of the Rage Management Tips heading */
+.rage-tips h2 {
+  font-size: 1.5rem !important; /* Increase or decrease as needed */
+}
+
+/* Adjust the size of the tip titles (e.g., "Control Your Breathing") */
+.tip-content h3 {
+  font-size: 1.2rem !important; /* Adjust to make titles smaller or bigger */
+}
+
+/* Adjust the size of the description text inside each tip */
+.tip-content p {
+  font-size: 1rem !important; /* Adjust for readability */
+}
+@media (max-width: 768px) {
+  .rage-tips h2 {
+    font-size: 1.3rem !important; /* Slightly smaller on tablets */
+  }
+
+  .tip-content h3 {
+    font-size: 1.1rem !important; /* Reduce for better mobile layout */
+  }
+
+  .tip-content p {
+    font-size: 0.9rem !important; /* Make descriptions fit better */
+  }
+}
+
+@media (max-width: 480px) {
+  .rage-tips h2 {
+    font-size: 1.2rem !important; /* Even smaller for phones */
+  }
+
+  .tip-content h3 {
+    font-size: 1rem !important;
+  }
+
+  .tip-content p {
+    font-size: 0.85rem !important; /* Smallest for readability */
+  }
+}
+/* Header Section */
+.headerSection {
+  padding-top: 50px !important; /* Pulls the logo up closer to the nav */
+  padding-bottom: 20px;
+  text-align: center;
+  margin-top: 0 !important; /* Prevents unwanted space */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headerSection p {
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 300;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* Mobile Fixes */
+@media (max-width: 768px) {
+  .headerSection {
+    padding-top: 40px !important; /* Ensures logo sits right below nav */
+    padding-bottom: 15px !important;
+    margin-top: 0 !important;
+  }
+
+  .headerSection p {
+    font-size: 1.1rem;
+    line-height: 1.2;
+    margin: 5px 0;
   }
 }
