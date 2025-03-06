@@ -12,13 +12,31 @@ body {
   font-family: "Oswald", sans-serif;
   margin: 0;
   padding: 0;
-  background: linear-gradient(180deg, var(--background-color), #2e004d);
+  background: linear-gradient(180deg, #1b1b3a 10%, #2e004d 50%, #1b1b3a 90%);
   color: var(--text-color);
   text-align: center;
 }
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("images/hex-pattern.png") repeat;
+  opacity: 0.05; /* Keep it subtle */
+  z-index: -1;
+}
 
 header {
-  background: rgba(0, 0, 0, 0.8);
+  background: radial-gradient(
+    circle at top,
+    #12002b 10%,
+    #1b1035 40%,
+    #0a001a 90%
+  );
+  background-attachment: fixed;
+
   color: white;
   padding: 80px 20px 20px;
   text-align: center;
@@ -119,4 +137,145 @@ main {
 .main-nav a:hover {
   color: #ffcc00; /* Change color on hover */
   transform: scale(1.1);
+}
+.notes-container {
+  max-width: 900px; /* Adjust width to desired size */
+  margin: 0 auto; /* Center it */
+  padding: 20px;
+  background: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-color);
+}
+
+@media screen and (max-width: 1200px) {
+  .notes-container {
+    max-width: 85%; /* Slightly wider for smaller screens */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .notes-container {
+    width: 95%; /* Use almost full width on mobile */
+  }
+}
+main {
+  max-width: 1000px; /* Keep the main container from stretching too far */
+  width: 90%;
+  margin: 40px auto;
+  background: var(--card-background);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-color);
+}
+#past-patches {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.headerSection {
+  background: linear-gradient(90deg, #ff00ff, #ffcc00, #00ffff);
+  color: black;
+  text-align: center;
+  padding: 40px 20px;
+  box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.7);
+}
+
+.patch-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 20, 40, 0.95),
+    rgba(30, 30, 60, 0.95)
+  );
+  border: 2px solid var(--highlight-color);
+  box-shadow: 0 4px 15px rgba(255, 200, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.patch-section:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(255, 200, 0, 0.7);
+}
+
+.nerf {
+  border-left: 6px solid #ff1a1a; /* Bright red */
+  background: rgba(255, 0, 0, 0.2);
+  text-shadow: 0px 0px 8px rgba(255, 50, 50, 0.7);
+}
+
+.buff {
+  border-left: 6px solid #33ff33; /* Bright green */
+  background: rgba(0, 255, 0, 0.2);
+  text-shadow: 0px 0px 8px rgba(50, 255, 50, 0.7);
+}
+
+.adjustment {
+  border-left: 6px solid #ffbb33; /* Orange-yellow */
+  background: rgba(255, 165, 0, 0.2);
+  text-shadow: 0px 0px 8px rgba(255, 200, 50, 0.7);
+}
+
+.fixes {
+  border-left: 6px solid #33bbff; /* Bright cyan */
+  background: rgba(0, 200, 255, 0.2);
+  text-shadow: 0px 0px 8px rgba(50, 200, 255, 0.7);
+}
+
+.patch button {
+  background: linear-gradient(45deg, #ff00ff, #ffcc00, #00ffff);
+  color: black;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 0px 0px 6px rgba(255, 255, 255, 0.7);
+  box-shadow: 0px 0px 12px rgba(255, 255, 255, 0.3);
+}
+
+.patch button:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.7);
+}
+
+#past-patches {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 25px;
+  background: linear-gradient(
+    180deg,
+    rgba(40, 40, 80, 0.95),
+    rgba(50, 50, 100, 0.95)
+  );
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(255, 255, 0, 0.3);
+  border: 2px solid var(--highlight-color);
+}
+.patch-logo {
+  width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto 15px;
+  filter: drop-shadow(0px 0px 15px rgba(0, 255, 255, 0.7));
+  animation: subtle-glitch 2s infinite alternate;
+}
+
+@keyframes subtle-glitch {
+  0% {
+    transform: skewX(-0.5deg) translate(-0.5px, 0);
+    filter: drop-shadow(0px 0px 8px rgba(255, 0, 255, 0.5));
+  }
+  50% {
+    transform: skewX(0.5deg) translate(0.5px, -0.5px);
+    filter: drop-shadow(0px 0px 10px rgba(0, 255, 255, 0.6));
+  }
+  100% {
+    transform: skewX(-0.3deg) translate(-0.3px, 0.3px);
+    filter: drop-shadow(0px 0px 7px rgba(255, 255, 0, 0.5));
+  }
 }
