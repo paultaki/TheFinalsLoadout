@@ -547,15 +547,7 @@ body {
 
 /* Mobile Styles - Improved Layout */
 @media (max-width: 768px) {
-  /* Container for slot machine - adjusted scaling and width */
-  .items-container {
-    transform: scale(0.45);
-    transform-origin: center top;
-    width: 600px;
-    margin: 0 auto -50px; /* Add negative bottom margin to pull elements up */
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
-  }
+
   /* Wrapper to contain the overflow */
   .slot-machine-wrapper {
     width: 100%;
@@ -578,16 +570,7 @@ body {
     padding: 0 10px;
   }
 
-  /* Button row - prevent wrapping */
-  .btnRow {
-    gap: 10px;
-    padding: 0 5px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: nowrap;
-    margin: 10px 0;
-    width: 100%;
-  }
+
 
   .mainTitle {
     font-size: 1.2rem;
@@ -728,23 +711,12 @@ body {
     font-size: 1rem;
   }
 
-  .btnRow {
-    margin: 8px 0;
-    gap: 15px;
-  }
 
   #output {
     margin-top: 10px;
     margin-bottom: 5px;
   }
 
-  .items-container {
-    transform: scale(0.45);
-    transform-origin: center top;
-    width: 600px;
-    margin: 0 auto;
-    padding: 10px 15px;
-  }
 
   .slot-machine-wrapper {
     width: 100%;
@@ -1462,19 +1434,8 @@ iframe#bmc-button {
     font-size: 0.9rem; /* Even smaller on mobile */
   }
 }
-@media (max-width: 768px) {
-  /* Reduce the bottom margin of the slot machine */
-  .slot-machine-wrapper {
-    margin-bottom: 5px !important; /* Force minimal space */
-    padding-bottom: 0 !important;
-  }
 
-  /* Reduce extra padding below the slot items */
-  .items-container {
-    padding-bottom: 0px !important;
-    margin-bottom: 0px !important;
-  }
-}
+
 /* =============================================
    PUNISHMENT LOADOUT BUTTON - CONSOLIDATED STYLES
    ============================================= */
@@ -1485,13 +1446,6 @@ iframe#bmc-button {
 
   .slot-machine-wrapper::before {
     display: none;
-  }
-  .items-container {
-    transform: scale(0.45);
-    transform-origin: center top;
-    width: 800px !important; /* Much wider to ensure all items fit */
-    background: transparent !important;
-    box-shadow: none !important;
   }
 
   .slot-machine-wrapper {
@@ -1888,16 +1842,8 @@ iframe#bmc-button {
 
   /* Eliminate all bottom padding/margin in slot machine area */
   .slot-machine-wrapper,
-  .items-container {
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
-  }
 
-  /* Remove spacing from button row */
-  .btnRow {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
+
 }
 
 /* Even more aggressive for smaller screens */
@@ -2161,5 +2107,71 @@ body.flexStyle {
 @media (max-width: 375px) {
   .finals-logo {
     width: 70vw; /* Increase further on very small screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .rage-quit-button {
+    font-size: 14px !important; /* Reduce font size */
+    padding: 8px 12px !important; /* Reduce padding */
+    white-space: nowrap !important; /* Prevent text wrapping */
+    letter-spacing: 1px !important; /* Reduce spacing */
+    width: auto !important; /* Ensure it doesn't stretch */
+    max-width: 90%; /* Prevent excessive width */
+  }
+}
+@media (max-width: 768px) {
+  /* Reduce the size and space of the slot machine */
+  .items-container {
+    transform: scale(0.45);
+    transform-origin: center top;
+    width: 600px !important;
+    margin: 0 auto 0px !important; /* Minimal bottom space */
+    padding: 0 !important;
+  }
+}
+@media (max-width: 768px) {
+  /* Reduce button row spacing */
+  .btnRow {
+    display: flex;
+    justify-content: center;
+    gap: 10px !important;
+    padding: 0 5px !important;
+    flex-wrap: nowrap;
+    margin: 5px 0 !important; /* Reduce space above & below */
+  }
+}
+@media (max-width: 768px) {
+  /* Reduce space between class selection buttons */
+  #classSelection .btnRow {
+    gap: 5px !important; /* Tighter spacing between class buttons */
+    margin-bottom: 5px !important; /* Reduce extra space below class buttons */
+  }
+
+  /* Reduce the space between the slot machine and the spin button */
+  .slot-machine-wrapper {
+    margin-bottom: 5px !important; /* Keep it close to the spin button */
+  }
+
+  /* Reduce space between the spin button and history */
+  .btnRow + .loadout-history {
+    margin-top: 10px !important; /* Keep history close */
+  }
+
+  /* Keep the class buttons centered */
+  .class-button {
+    width: 80px !important;
+    height: auto !important;
+    display: inline-block;
+  }
+
+  /* Keep the spin button from expanding too much */
+  .spin-button {
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+    white-space: nowrap !important;
+    letter-spacing: 1px !important;
+    width: auto !important;
+    max-width: 90%;
   }
 }

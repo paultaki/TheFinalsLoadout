@@ -1,3 +1,7 @@
+function logDebug(title, data) {
+  console.log(`%c ${title} `, "background: #333; color: #bada55", data);
+}
+
 let state = {
   selectedClass: null,
   isSpinning: false,
@@ -15,6 +19,12 @@ let state = {
 document.addEventListener("DOMContentLoaded", () => {
   // Code continues...
 });
+
+const getUniqueGadgetsFromUI = () => {
+  return Array.from(document.querySelectorAll(".itemCol.winner"))
+    .slice(2, 5) // Select only the last 3 locked-in items (gadgets)
+    .map((item) => item.querySelector("p").textContent.trim());
+};
 
 // Loadouts object
 const loadouts = {
@@ -145,16 +155,46 @@ const getRandomUniqueItems = (array, n) => {
 };
 
 const getUniqueGadgets = (classType, loadout) => {
+  // If we need to refill the queue
   if (state.gadgetQueue[classType].length < 3) {
+    // Repopulate with shuffled gadget list
     state.gadgetQueue[classType] = [...loadout.gadgets].sort(
       () => Math.random() - 0.5
     );
   }
-  const selectedGadgets = state.gadgetQueue[classType].splice(0, 3);
+
+  // Take 3 gadgets from the queue
+  const selectedGadgets = [];
+
+  // Make sure we get exactly 3 unique gadgets
+  while (
+    selectedGadgets.length < 3 &&
+    state.gadgetQueue[classType].length > 0
+  ) {
+    const gadget = state.gadgetQueue[classType].shift();
+    // Only add if not already selected
+    if (!selectedGadgets.includes(gadget)) {
+      selectedGadgets.push(gadget);
+    }
+  }
+
+  // If we still don't have 3 unique gadgets, get more from the remaining gadgets
+  if (selectedGadgets.length < 3) {
+    const remainingGadgets = loadout.gadgets.filter(
+      (g) => !selectedGadgets.includes(g)
+    );
+    const additionalGadgets = getRandomUniqueItems(
+      remainingGadgets,
+      3 - selectedGadgets.length
+    );
+    selectedGadgets.push(...additionalGadgets);
+  }
+
+  // Update the current gadget pool
   state.currentGadgetPool = new Set(selectedGadgets);
+
   return selectedGadgets;
 };
-
 function createItemContainer(items, winningItem = null, isGadget = false) {
   if (isGadget) {
     return items
@@ -199,52 +239,51 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
 }
 
 const displayLoadout = (classType, loadout) => {
+  if (state.finalLoadout) {
+    console.warn("⚠️ Warning: Overwriting an existing finalLoadout.");
+  }
+
+  // ✅ Pick final selections (ensures history is correct)
   const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
+  const selectedGadgets = getUniqueGadgets(classType, loadout);
 
-  const allGadgets = [...loadout.gadgets];
-  const gadgetChunks = [[], [], []];
-  const selectedGadgets = [];
+  // ✅ Store the final loadout BEFORE the spin animation starts
+  state.finalLoadout = {
+    classType,
+    weapon: selectedWeapon,
+    specialization: selectedSpec,
+    gadgets: selectedGadgets,
+  };
 
-  for (let i = 0; i < 3; i++) {
-    const index = Math.floor(Math.random() * allGadgets.length);
-    selectedGadgets.push(allGadgets[index]);
-    allGadgets.splice(index, 1);
-  }
+  console.log("✅ Final Loadout Stored:", state.finalLoadout);
 
-  while (allGadgets.length > 0) {
-    for (let i = 0; i < 3 && allGadgets.length > 0; i++) {
-      const index = Math.floor(Math.random() * allGadgets.length);
-      gadgetChunks[i].push(allGadgets[index]);
-      allGadgets.splice(index, 1);
-    }
-  }
-
-  const createGadgetSpinSequence = (winningGadget, chunkIndex) => {
-    const sequence = new Array(8);
-    sequence[4] = winningGadget;
-
-    const chunk = gadgetChunks[chunkIndex];
-    for (let i = 0; i < 8; i++) {
-      if (i !== 4) {
-        const randomIndex = Math.floor(Math.random() * chunk.length);
-        sequence[i] = chunk[randomIndex];
-      }
-    }
+  // ✅ Generate random-looking spin sequences that land on final selection
+  const createSpinSequence = (items, winningItem) => {
+    let sequence = [...items]; // Copy full list of items for randomness
+    sequence = sequence.sort(() => Math.random() - 0.5).slice(0, 7); // Shuffle & take 7 random
+    sequence.splice(4, 0, winningItem); // Ensure the final locked choice is in the 5th position
     return sequence;
   };
 
+  // ✅ Build the animation UI ensuring it looks random but lands on correct items
   const loadoutHTML = `
     <div class="slot-machine-wrapper">
       <div class="items-container">
         <div class="item-container">
           <div class="scroll-container">
-            ${createItemContainer(loadout.weapons, selectedWeapon)}
+            ${createItemContainer(
+              createSpinSequence(loadout.weapons, selectedWeapon),
+              selectedWeapon
+            )}
           </div>
         </div>
         <div class="item-container">
           <div class="scroll-container">
-            ${createItemContainer(loadout.specializations, selectedSpec)}
+            ${createItemContainer(
+              createSpinSequence(loadout.specializations, selectedSpec),
+              selectedSpec
+            )}
           </div>
         </div>
         ${selectedGadgets
@@ -253,7 +292,7 @@ const displayLoadout = (classType, loadout) => {
             <div class="item-container">
               <div class="scroll-container" data-gadget-index="${index}">
                 ${createItemContainer(
-                  createGadgetSpinSequence(gadget, index),
+                  createSpinSequence(loadout.gadgets, gadget),
                   gadget,
                   true
                 )}
@@ -266,8 +305,10 @@ const displayLoadout = (classType, loadout) => {
     </div>
   `;
 
+  // ✅ Insert the generated HTML into the output container
   outputDiv.innerHTML = loadoutHTML;
 
+  // ✅ Start the spin animation after a short delay
   setTimeout(() => {
     const scrollContainers = Array.from(
       document.querySelectorAll(".scroll-container")
@@ -303,34 +344,44 @@ function updateSpinCountdown() {
 }
 
 const spinLoadout = (spins) => {
-  if (state.isSpinning) return;
+  if (state.isSpinning) return; // Prevent double spins
 
-  // Disable buttons during spin
-  document.querySelectorAll(".class-button, .spin-button").forEach((btn) => {
-    btn.setAttribute("disabled", "true");
-  });
-
+  // ✅ Enable spin animation
   state.isSpinning = true;
   state.currentSpin = spins || state.currentSpin;
   state.totalSpins = spins || state.totalSpins;
+
+  // ✅ Disable buttons to prevent multiple presses
+  document.querySelectorAll(".class-button, .spin-button").forEach((btn) => {
+    btn.setAttribute("disabled", "true");
+  });
 
   state.currentGadgetPool.clear();
   updateSpinCountdown();
 
   if (!state.selectedClass && state.selectedClass !== "random") {
-    state.isSpinning = false; // Make sure to reset spinning state
+    console.error("⚠️ No class selected! Resetting spin.");
+    state.isSpinning = false; // Reset spinning state
     document.querySelectorAll(".class-button, .spin-button").forEach((btn) => {
       btn.removeAttribute("disabled");
     });
     return;
   }
 
-  // Display initial loadout
+  // ✅ Start spin animation with pre-selected loadout
   if (state.selectedClass === "random") {
     displayRandomLoadout();
   } else {
     displayManualLoadout(state.selectedClass);
   }
+
+  // ✅ Restore buttons after spin completes
+  setTimeout(() => {
+    state.isSpinning = false; // ✅ Allow next spin
+    document.querySelectorAll(".class-button, .spin-button").forEach((btn) => {
+      btn.removeAttribute("disabled");
+    });
+  }, 4000); // Ensure a delay matching spin duration
 };
 
 // Updated physics constants for smoother animation
@@ -635,7 +686,6 @@ function copyLoadoutText(button) {
     });
 }
 
-// Fix for the finalizeSpin function to capture and save history
 function finalizeSpin(columns) {
   const isFinalSpin = state.currentSpin === 1;
 
@@ -643,69 +693,82 @@ function finalizeSpin(columns) {
     state.currentSpin--;
     updateSpinCountdown();
 
-    document
-      .querySelectorAll(".class-button, .spin-button")
-      .forEach((button) => button.removeAttribute("disabled"));
-
     setTimeout(() => {
       if (state.selectedClass === "random") {
         displayRandomLoadout();
       } else {
         displayManualLoadout(state.selectedClass);
       }
-    }, 400);
+    }, 300);
     return;
   }
 
   if (isFinalSpin) {
-    // Capture the selected items for history before resetting state
-    const itemContainers = document.querySelectorAll(
-      ".slot-machine-wrapper .items-container .item-container"
-    );
-
-    if (itemContainers && itemContainers.length >= 5) {
-      try {
-        const selectedItems = Array.from(itemContainers).map((container) => {
-          const winnerElement = container.querySelector(".itemCol.winner");
-          if (winnerElement) {
-            return winnerElement.querySelector("p").textContent.trim();
-          }
-          return "Unknown";
-        });
-
-        // Get the currently selected class
-        const selectedClass = state.selectedClass || "Unknown";
-
-        // Add to history if we have valid data
-        if (selectedItems.length >= 5 && !selectedItems.includes("Unknown")) {
-          const weapon = selectedItems[0];
-          const specialization = selectedItems[1];
-          const gadgets = selectedItems.slice(2, 5);
-
-          // Add to history
-          addToHistory(selectedClass, weapon, specialization, gadgets);
-        }
-      } catch (error) {
-        console.error("Error saving loadout history:", error);
+    // Add animations and visual effects
+    columns.forEach((column, index) => {
+      const container = column.closest(".item-container");
+      if (container) {
+        setTimeout(() => {
+          container.classList.add("landing-flash");
+          setTimeout(() => {
+            container.classList.add("winner-pulsate");
+          }, 300);
+        }, index * 200);
       }
+    });
+
+    // Get the final loadout items
+    const itemContainers = document.querySelectorAll(".item-container");
+    const selectedItems = Array.from(itemContainers).map((container) => {
+      const scrollContainer = container.querySelector(".scroll-container");
+      if (!scrollContainer) return "Unknown";
+
+      const allItems = scrollContainer.querySelectorAll(".itemCol");
+      const visibleItem = Array.from(allItems).find((item) => {
+        const rect = item.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        return (
+          rect.top >= containerRect.top &&
+          rect.bottom <= containerRect.bottom &&
+          rect.height > 0 &&
+          rect.width > 0
+        );
+      });
+
+      return visibleItem
+        ? visibleItem.querySelector("p")?.innerText.trim()
+        : "Unknown";
+    });
+
+    // Add to history if we have valid items
+    if (selectedItems.length >= 5) {
+      const selectedClass = state.selectedClass || "Unknown";
+      const weapon = selectedItems[0];
+      const specialization = selectedItems[1];
+      const gadgets = selectedItems.slice(2, 5);
+
+      addToHistory(selectedClass, weapon, specialization, gadgets);
     }
 
-    // Reset state after final spin
+    // Reset state
     state.isSpinning = false;
     state.currentSpin = 1;
     state.totalSpins = 0;
     state.selectedGadgets.clear();
     state.selectedClass = null;
 
+    // Update UI
     document
       .querySelectorAll(".class-button, .spin-button")
-      .forEach((button) => button.classList.remove("active", "selected"));
+      .forEach((button) => {
+        button.classList.remove("active", "selected");
+        button.removeAttribute("disabled");
+      });
 
-    document.getElementById("spinSelection").classList.remove("disabled");
+    document.getElementById("spinSelection").classList.add("disabled");
   }
 }
 
-// Improved final victory flash function with contained effects
 // Improved final victory flash function with contained effects
 function finalVictoryFlash(columns) {
   // Wait for the last column to finish its individual animation

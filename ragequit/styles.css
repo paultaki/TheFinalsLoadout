@@ -881,65 +881,6 @@ body.flexStyle {
   margin-bottom: 0.5rem;
 }
 
-/* Navigation Bar Styles */
-.main-nav {
-  background: rgba(0, 0, 0, 0.8);
-  padding: 8px 5px; /* Reduce padding */
-  display: flex;
-  justify-content: space-around; /* Spread links evenly */
-  gap: 5px; /* Decrease spacing between items */
-  position: fixed;
-  top: 0;
-  left: 0;
-  align-items: center;
-  font-size: 14px; /* Reduce font size */
-
-  width: 100%;
-  z-index: 1000;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.main-nav a {
-  color: white;
-  text-decoration: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: nowrap; /* Prevents wrapping */
-  gap: 10px; /* Reduce space between links */
-  font-size: 14px; /* Make text slightly smaller */
-  font-weight: bold;
-  padding: 5px 15px;
-  position: relative;
-  transition: color 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
-}
-
-.main-nav a:hover {
-  color: var(--neon-yellow);
-  transform: translateY(-2px);
-  text-shadow: 0 0 8px rgba(255, 183, 0, 0.8);
-}
-
-.main-nav a.active {
-  color: var(--highlight-color);
-}
-
-.main-nav a::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: var(--neon-yellow);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.main-nav a:hover::after {
-  transform: scaleX(1);
-}
-
 /* Footer Section Styles */
 .footerSection {
   color: #ddd;
@@ -1923,15 +1864,6 @@ img {
     z-index: 1;
   }
 
-  /* Navigation adjustments */
-  .main-nav {
-    font-size: 12px;
-    padding: 5px 3px;
-  }
-
-  .main-nav a {
-    padding: 2px 4px;
-  }
   .rage-description {
     font-size: 0.9rem;
     line-height: 1.2;
@@ -2188,5 +2120,127 @@ img {
     margin: 0 auto -50px !important;
     background: transparent !important;
     box-shadow: none !important;
+  }
+}
+
+/* Updated Navigation Bar Styles */
+.main-nav {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 15px 20px; /* Add horizontal padding */
+  display: flex;
+  justify-content: flex-start; /* Align to the left */
+  gap: 30px; /* Keep spacing between links */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.main-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 5px 15px; /* Adjust padding */
+  transition: color 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
+  position: relative;
+}
+
+/* Highlight effect on hover */
+.main-nav a:hover {
+  color: var(--highlight-color); /* Use your theme color */
+  transform: translateY(-2px);
+}
+
+/* Active state styling */
+.main-nav a.active {
+  color: var(--highlight-color);
+}
+
+/* Add underline effect on hover */
+.main-nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--highlight-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.main-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .main-nav {
+    padding: 10px 0;
+    gap: 15px;
+  }
+
+  .main-nav a {
+    font-size: 16px;
+    padding: 3px 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-nav {
+    gap: 10px;
+  }
+
+  .main-nav a {
+    font-size: 14px;
+  }
+}
+@media (max-width: 768px) {
+  /* Reduce space below the slot machine */
+  .slot-machine-wrapper {
+    margin-bottom: 5px !important; /* Reduce spacing */
+    padding-bottom: 0 !important;
+  }
+
+  /* Reduce space above the handicap generator */
+  .handicap-container {
+    margin-top: 5px !important; /* Pull it up */
+    padding-top: 10px !important; /* Reduce padding */
+  }
+
+  /* Ensure handicap section aligns properly */
+  .handicap-wheel-container {
+    margin-top: 5px !important;
+    padding-top: 5px !important;
+  }
+}
+@media (max-width: 768px) {
+  /* Ensure Rage Management Tips have enough space */
+  .rage-tips {
+    background: rgba(30, 30, 40, 0.8);
+    padding: 30px !important;
+    border-radius: 12px;
+    margin: 40px auto !important;
+    max-width: 800px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    min-height: 250px !important; /* Ensure it doesn’t get cut off */
+  }
+
+  /* Adjust footer to ensure no overlap */
+  .footerSection {
+    margin-top: 20px !important;
+    padding-bottom: 30px !important;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Ensure entire page has enough space */
+  body {
+    min-height: 100vh;
+    padding-bottom: 50px !important;
   }
 }

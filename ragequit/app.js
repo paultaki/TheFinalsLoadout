@@ -532,10 +532,10 @@ const displayRageQuitLoadout = () => {
   const classes = ["Light", "Medium", "Heavy"];
   const selectedClass = classes[Math.floor(Math.random() * classes.length)];
 
-  // Store the selected class in state for later use
+  // ✅ Store the selected class in state for later use
   state.selectedClass = selectedClass;
 
-  // Update the selected class text
+  // ✅ Update the selected class text in the UI
   const selectedClassElement = document.getElementById("selected-class");
   if (selectedClassElement) {
     selectedClassElement.innerText = selectedClass;
@@ -543,35 +543,134 @@ const displayRageQuitLoadout = () => {
     console.warn("⚠️ Warning: #selected-class not found in the DOM!");
   }
 
-  const selectedWeapon = getRandomUniqueItems(rageQuitLoadouts.weapons, 1)[0];
-  const selectedSpec = getRandomUniqueItems(
-    rageQuitLoadouts.specializations,
+  // ✅ Ensure weapons, specializations, and gadgets match the selected class
+  const classSpecificLoadouts = {
+    Light: {
+      weapons: ["Throwing Knives", "V9S", "XP-54"],
+      specializations: ["Cloaking Device"],
+      gadgets: [
+        "Breach Charge",
+        "Vanishing Bomb",
+        "Glitch Grenade",
+        "Gravity Vortex",
+        "Sonar Grenade",
+        "Thermal Bore",
+      ],
+    },
+    Medium: {
+      weapons: ["Model 1887", "R.357", "Riot Shield"],
+      specializations: ["Guardian Turret"],
+      gadgets: [
+        "APS Turret",
+        "Data Reshaper",
+        "Defibrillator",
+        "Explosive Mine",
+        "Gas Mine",
+        "Glitch Trap",
+        "Jump Pad",
+        "Zipline",
+      ],
+    },
+    Heavy: {
+      weapons: ["KS-23", "Spear"],
+      specializations: ["Mesh Shield", "Winch Claw"],
+      gadgets: [
+        "Anti-Gravity Cube",
+        "Barricade",
+        "C4",
+        "Dome Shield",
+        "Lockbolt Launcher",
+        "Pyro Mine",
+        "Proximity Sensor",
+        "RPG-7",
+      ],
+    },
+  };
+
+  // ✅ Select the correct items based on the chosen class
+  const selectedWeapon = getRandomUniqueItems(
+    classSpecificLoadouts[selectedClass].weapons,
     1
   )[0];
-  const selectedGadgets = getRandomUniqueItems(rageQuitLoadouts.gadgets, 3);
+  const selectedSpec = getRandomUniqueItems(
+    classSpecificLoadouts[selectedClass].specializations,
+    1
+  )[0];
 
+  // ✅ Pick 3 unique gadgets using the **working method**
+  const allGadgets = [...classSpecificLoadouts[selectedClass].gadgets];
+  const gadgetChunks = [[], [], []];
+  const selectedGadgets = [];
+
+  // Pick 3 unique gadgets for the loadout
+  for (let i = 0; i < 3; i++) {
+    const index = Math.floor(Math.random() * allGadgets.length);
+    selectedGadgets.push(allGadgets[index]);
+    allGadgets.splice(index, 1);
+  }
+
+  // Shuffle the remaining gadgets for visual spin randomness
+  while (allGadgets.length > 0) {
+    for (let i = 0; i < 3 && allGadgets.length > 0; i++) {
+      const index = Math.floor(Math.random() * allGadgets.length);
+      gadgetChunks[i].push(allGadgets[index]);
+      allGadgets.splice(index, 1);
+    }
+  }
+
+  // ✅ Store the final loadout BEFORE the spin animation starts
+  state.finalLoadout = {
+    classType: selectedClass,
+    weapon: selectedWeapon,
+    specialization: selectedSpec,
+    gadgets: selectedGadgets,
+  };
+
+  // Function to create a randomized spin sequence for gadgets
+  const createGadgetSpinSequence = (winningGadget, chunkIndex) => {
+    const sequence = new Array(8);
+    sequence[4] = winningGadget;
+
+    const chunk = gadgetChunks[chunkIndex];
+    for (let i = 0; i < 8; i++) {
+      if (i !== 4) {
+        const randomIndex = Math.floor(Math.random() * chunk.length);
+        sequence[i] = chunk[randomIndex];
+      }
+    }
+    return sequence;
+  };
+
+  // ✅ Build the UI correctly
   const loadoutHTML = `
     <div class="slot-machine-wrapper">
       <div class="items-container">
         <div class="item-container">
           <div class="scroll-container">
-            ${createItemContainer(rageQuitLoadouts.weapons, selectedWeapon)}
+            ${createItemContainer(
+              classSpecificLoadouts[selectedClass].weapons,
+              selectedWeapon
+            )}
           </div>
         </div>
         <div class="item-container">
           <div class="scroll-container">
             ${createItemContainer(
-              rageQuitLoadouts.specializations,
+              classSpecificLoadouts[selectedClass].specializations,
               selectedSpec
             )}
           </div>
         </div>
         ${selectedGadgets
           .map(
-            (gadget) => `
+            (gadget, index) => `
             <div class="item-container">
-              <div class="scroll-container">
-                ${createItemContainer(rageQuitLoadouts.gadgets, gadget)}
+              <div class="scroll-container" data-gadget-index="${index}">
+                ${createItemContainer(
+                  createGadgetSpinSequence(gadget, index),
+                  gadget,
+                  true
+                )}
               </div>
             </div>
           `
@@ -588,7 +687,7 @@ const displayRageQuitLoadout = () => {
       document.querySelectorAll(".scroll-container")
     );
     startSpinAnimation(scrollContainers);
-  }, 100);
+  }, 50);
 };
 
 const spinRageQuitLoadout = () => {
@@ -1086,43 +1185,58 @@ function loadHistory() {
 
 // Replace the finalizeSpin function in ragequit-app.js with this version:
 function finalizeSpin() {
-  // Capture the selected items for history
+  // ✅ Capture the selected items directly from the UI
   const itemContainers = document.querySelectorAll(
     ".slot-machine-wrapper .items-container .item-container"
   );
 
   if (itemContainers.length < 5) {
-    console.error("Error: Not enough items in slot machine.");
+    console.error("⚠️ ERROR: Not enough items in slot machine.");
     return;
   }
 
   try {
+    // ✅ Extract the visible items from the UI
     const selectedItems = Array.from(itemContainers).map((container) => {
-      const winnerElement = container.querySelector(".itemCol.winner");
-      return winnerElement
-        ? winnerElement.querySelector("p").textContent.trim()
+      const scrollContainer = container.querySelector(".scroll-container");
+      if (!scrollContainer) return "Unknown";
+
+      const allItems = scrollContainer.querySelectorAll(".itemCol");
+      const visibleItem = Array.from(allItems).find((item) => {
+        const rect = item.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        return (
+          rect.top >= containerRect.top &&
+          rect.bottom <= containerRect.bottom &&
+          rect.height > 0 &&
+          rect.width > 0
+        );
+      });
+
+      return visibleItem
+        ? visibleItem.querySelector("p").textContent.trim()
         : "Unknown";
     });
 
-    // Ensure valid selections
+    // ✅ Ensure all selections are valid
     if (selectedItems.includes("Unknown") || selectedItems.length < 5) {
-      console.error("Error: Some selected items are missing.");
+      console.error("⚠️ ERROR: Some selected items are missing.");
       return;
     }
 
-    // Get the class and handicap
+    // ✅ Get the class and handicap
     const selectedClass = state.selectedClass || "Unknown";
     const handicapName = state.handicap ? state.handicap.name : "None";
     const handicapDesc = state.handicap
       ? state.handicap.description
       : "No handicap selected";
 
-    // Format data properly
+    // ✅ Format data correctly
     const weapon = selectedItems[0];
     const specialization = selectedItems[1];
     const gadgets = selectedItems.slice(2).join(", ");
 
-    // Add to history
+    // ✅ Add to history
     addToHistory(
       selectedClass,
       weapon,
@@ -1139,7 +1253,7 @@ function finalizeSpin() {
       console.log("✅ Button re-enabled and ready for next spin");
     }, 1000);
   } catch (error) {
-    console.error("Error finalizing spin:", error);
+    console.error("⚠️ ERROR: Something went wrong finalizing spin:", error);
   }
 }
 
