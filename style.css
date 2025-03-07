@@ -878,43 +878,6 @@ iframe#bmc-button {
   margin-top: 5px !important; /* Override negative margins for these specific rows */
 }
 
-/* === CLASS BUTTON STYLES === */
-.class-button {
-  width: 80px !important;
-  height: auto !important;
-  display: inline-block;
-}
-/* Hover Effect: Light glow */
-.class-button:hover {
-  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7))
-    drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
-  transform: scale(1.05);
-}
-
-/* Active (Selected) */
-.class-button.active {
-  transform: scale(1.1);
-  filter: brightness(1.5);
-  animation: characterGlowEffect 1s infinite alternate;
-}
-
-/* Class-Specific Glows */
-.class-button[data-class="Light"] {
-  color: rgba(0, 255, 255, 0.8);
-}
-
-.class-button[data-class="Medium"] {
-  color: rgba(255, 0, 255, 0.8);
-}
-
-.class-button[data-class="Heavy"] {
-  color: rgba(255, 183, 0, 0.8);
-}
-
-.class-button[data-class="random"] {
-  color: rgba(255, 70, 70, 0.8);
-}
-
 /* === PULSING EFFECTS === */
 /* General pulse effect for growing and shrinking */
 @keyframes pulseSize {
@@ -1419,10 +1382,6 @@ img {
   text-align: center;
 }
 
-/* === DESKTOP BUTTON STYLES === */
-.class-button {
-  width: 90px; /* Default size for desktop */
-}
 
 .outlineBtnStyle {
   margin-top: 15px;
@@ -1759,9 +1718,7 @@ header {
     overflow: visible !important; /* Make sure items don't get cut off */
   }
 
-  .class-button {
-    width: 60px !important; /* Even smaller for tiny screens */
-  }
+
 
   /* More space for history to not overlap rage quit */
   #loadout-history {
@@ -1850,12 +1807,6 @@ header {
     margin: 10px 0;
   }
 
-  /* Keep the class buttons centered and smaller */
-  .class-button {
-    width: 70px !important; /* Reduced size by ~25% */
-    height: auto !important;
-    display: inline-block;
-  }
 
   /* Button row spacing for class and spin sections */
   #classSelection .btnRow,
@@ -2025,5 +1976,62 @@ header {
     width: 30px !important;
     height: 30px !important;
     font-size: 14px !important;
+  }
+}
+/* === UNIVERSAL CLASS BUTTON STYLES === */
+.class-button {
+  width: 100px !important; /* Adjust as needed */
+  height: auto !important;
+  max-height: 140px; /* Prevents excessive scaling */
+  display: inline-block;
+  object-fit: contain; /* Keeps aspect ratio */
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+/* Hover Effect: Subtle glow */
+.class-button:hover {
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7))
+    drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+  transform: scale(1.05);
+}
+
+/* Active (Selected) Effect */
+.class-button.active {
+  transform: scale(1.1);
+  filter: brightness(1.5);
+}
+
+/* === CLASS-SPECIFIC COLOR EFFECTS === */
+.class-button[data-class="Light"] {
+  color: rgba(0, 255, 255, 0.8);
+}
+
+.class-button[data-class="Medium"] {
+  color: rgba(255, 0, 255, 0.8);
+}
+
+.class-button[data-class="Heavy"] {
+  color: rgba(255, 183, 0, 0.8);
+}
+
+.class-button[data-class="random"] {
+  color: rgba(255, 70, 70, 0.8);
+}
+
+/* === RESPONSIVE SIZE ADJUSTMENTS === */
+
+/* For Tablets (Smaller Buttons) */
+@media (max-width: 768px) {
+  .class-button {
+    width: 80px !important;
+    max-height: 120px;
+  }
+}
+
+/* For Small Phones (Even Smaller Buttons) */
+@media (max-width: 375px) {
+  .class-button {
+    width: 70px !important;
+    max-height: 110px;
   }
 }
