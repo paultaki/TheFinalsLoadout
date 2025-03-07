@@ -163,24 +163,33 @@ const getUniqueGadgets = (classType, loadout) => {
   console.log(`📌 Available gadgets after filtering:`, availableGadgets);
 
   if (availableGadgets.length < 3) {
-    console.error("⚠️ Not enough unique gadgets! Rebuilding gadget pool.");
+    console.error("⚠️ Not enough unique gadgets! Resetting gadget pool.");
     availableGadgets = [...loadout.gadgets];
   }
 
-  let selectedGadgets = [];
+  let selectedGadgets = new Set(); // Ensures unique selection
 
-  while (selectedGadgets.length < 3) {
+  while (selectedGadgets.size < 3) {
+    if (availableGadgets.length === 0) {
+      console.error("⚠️ No more gadgets available! Breaking loop.");
+      break;
+    }
+
     let randomIndex = Math.floor(Math.random() * availableGadgets.length);
-    let gadget = availableGadgets.splice(randomIndex, 1)[0]; // Remove from array
+    let gadget = availableGadgets[randomIndex];
 
-    if (!selectedGadgets.includes(gadget)) {
-      selectedGadgets.push(gadget);
-      state.currentGadgetPool.add(gadget); // Track globally
+    if (!selectedGadgets.has(gadget)) {
+      selectedGadgets.add(gadget);
+      availableGadgets.splice(randomIndex, 1); // Remove to prevent re-selection
     }
   }
 
-  console.log(`✅ Selected gadgets:`, selectedGadgets);
-  return selectedGadgets;
+  // ✅ Update global tracking to prevent future duplicates
+  state.currentGadgetPool.clear();
+  selectedGadgets.forEach((gadget) => state.currentGadgetPool.add(gadget));
+
+  console.log(`✅ Final selected gadgets:`, [...selectedGadgets]);
+  return [...selectedGadgets]; // Convert Set to Array for UI usage
 };
 
 function createItemContainer(items, winningItem = null, isGadget = false) {
@@ -277,20 +286,22 @@ const displayLoadout = (classType, loadout) => {
                   </div>
               </div>
               ${selectedGadgets
+                .slice(0, 3) // 🔥 Ensures only 3 gadgets are displayed
                 .map(
                   (gadget, index) => `
-                      <div class="item-container">
-                          <div class="scroll-container" data-gadget-index="${index}">
-                              ${createItemContainer(
-                                createSpinSequence(loadout.gadgets, gadget),
-                                gadget,
-                                true
-                              )}
-                          </div>
-                      </div>
-                  `
+                    <div class="item-container">
+                        <div class="scroll-container" data-gadget-index="${index}">
+                            ${createItemContainer(
+                              createSpinSequence(loadout.gadgets, gadget),
+                              gadget,
+                              true
+                            )}
+                        </div>
+                    </div>
+                `
                 )
                 .join("")}
+            
           </div>
       </div>
   `;
@@ -310,7 +321,7 @@ const displayLoadout = (classType, loadout) => {
     startSpinAnimation(scrollContainers);
   }, 50);
 
-  // ✅ Log the gadgets actually rendered in the UI
+  // 🛠️ **ADD THIS DEBUGGING CODE HERE (END OF FUNCTION)**
   setTimeout(() => {
     console.log("🖥️ UI Loadout After Rendering:");
     document.querySelectorAll(".itemCol.winner p").forEach((el, index) => {
