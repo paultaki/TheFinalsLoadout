@@ -153,34 +153,26 @@ const getRandomUniqueItems = (array, n) => {
   const shuffled = [...array].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, n);
 };
-
 const getUniqueGadgets = (classType, loadout) => {
-  let availableGadgets = [...loadout.gadgets]; // Convert Set to Array if necessary
-  let selectedGadgets = new Set();
+  let availableGadgets = loadout.gadgets.filter(
+    (gadget) => !state.currentGadgetPool.has(gadget)
+  );
+  let selectedGadgets = [];
 
-  while (selectedGadgets.size < 3) {
+  while (selectedGadgets.length < 3) {
     if (availableGadgets.length === 0) {
       console.error("⚠️ Not enough unique gadgets available!");
       break; // Prevent infinite loop
     }
 
     let randomIndex = Math.floor(Math.random() * availableGadgets.length);
-    let gadget = availableGadgets[randomIndex];
+    let gadget = availableGadgets.splice(randomIndex, 1)[0]; // Remove from pool
 
-    // Ensure it's not already chosen
-    if (!selectedGadgets.has(gadget)) {
-      selectedGadgets.add(gadget);
-      availableGadgets.splice(randomIndex, 1); // Remove from pool to prevent duplicates
-    }
+    selectedGadgets.push(gadget);
+    state.currentGadgetPool.add(gadget); // Track globally
   }
 
-  // Store selected gadgets in state to prevent future duplicates
-  state.currentGadgetPool = new Set([
-    ...state.currentGadgetPool,
-    ...selectedGadgets,
-  ]);
-
-  return [...selectedGadgets]; // Convert back to array
+  return selectedGadgets;
 };
 
 function createItemContainer(items, winningItem = null, isGadget = false) {
