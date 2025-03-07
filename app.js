@@ -153,48 +153,32 @@ const getRandomUniqueItems = (array, n) => {
   const shuffled = [...array].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, n);
 };
-
 const getUniqueGadgets = (classType, loadout) => {
-  // If we need to refill the queue
-  if (state.gadgetQueue[classType].length < 3) {
-    // Repopulate with shuffled gadget list
-    state.gadgetQueue[classType] = [...loadout.gadgets].sort(
-      () => Math.random() - 0.5
-    );
-  }
+  let availableGadgets = new Set(loadout.gadgets);
 
-  // Take 3 gadgets from the queue
-  const selectedGadgets = [];
+  // Ensure unique gadgets across selections
+  let selectedGadgets = [];
 
-  // Make sure we get exactly 3 unique gadgets
-  while (
-    selectedGadgets.length < 3 &&
-    state.gadgetQueue[classType].length > 0
-  ) {
-    const gadget = state.gadgetQueue[classType].shift();
-    // Only add if not already selected
+  while (selectedGadgets.length < 3) {
+    // If queue is empty, refill with shuffled gadget list
+    if (state.gadgetQueue[classType].length === 0) {
+      state.gadgetQueue[classType] = [...availableGadgets].sort(
+        () => Math.random() - 0.5
+      );
+    }
+
+    let gadget = state.gadgetQueue[classType].shift();
+
+    // Ensure gadget is unique before adding
     if (!selectedGadgets.includes(gadget)) {
       selectedGadgets.push(gadget);
     }
   }
 
-  // If we still don't have 3 unique gadgets, get more from the remaining gadgets
-  if (selectedGadgets.length < 3) {
-    const remainingGadgets = loadout.gadgets.filter(
-      (g) => !selectedGadgets.includes(g)
-    );
-    const additionalGadgets = getRandomUniqueItems(
-      remainingGadgets,
-      3 - selectedGadgets.length
-    );
-    selectedGadgets.push(...additionalGadgets);
-  }
-
-  // Update the current gadget pool
   state.currentGadgetPool = new Set(selectedGadgets);
-
   return selectedGadgets;
 };
+
 function createItemContainer(items, winningItem = null, isGadget = false) {
   if (isGadget) {
     return items
