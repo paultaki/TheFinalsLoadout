@@ -153,24 +153,52 @@ const getRandomUniqueItems = (array, n) => {
   const shuffled = [...array].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, n);
 };
+
 const getUniqueGadgets = (classType, loadout) => {
-  let availableGadgets = loadout.gadgets.filter(
-    (gadget) => !state.currentGadgetPool.has(gadget)
+  console.log(`🔍 Selecting gadgets for class: ${classType}`);
+  console.log(`📌 Initial gadget queue:`, state.gadgetQueue[classType]);
+  console.log(
+    `🛑 Current gadget pool (preventing duplicates):`,
+    state.currentGadgetPool
   );
+
+  // Reset gadget queue if it's running low
+  if (state.gadgetQueue[classType].length < 3) {
+    console.log(`♻️ Refilling gadget queue for ${classType}`);
+    state.gadgetQueue[classType] = [...loadout.gadgets].sort(
+      () => Math.random() - 0.5
+    );
+  }
+
   let selectedGadgets = [];
+  let availableGadgets = [...loadout.gadgets]; // Full set of gadgets for the class
 
   while (selectedGadgets.length < 3) {
     if (availableGadgets.length === 0) {
-      console.error("⚠️ Not enough unique gadgets available!");
-      break; // Prevent infinite loop
+      console.error("⚠️ Not enough unique gadgets available! Breaking loop.");
+      break;
     }
 
-    let randomIndex = Math.floor(Math.random() * availableGadgets.length);
-    let gadget = availableGadgets.splice(randomIndex, 1)[0]; // Remove from pool
+    let gadget = state.gadgetQueue[classType].shift(); // Take from queue
 
-    selectedGadgets.push(gadget);
-    state.currentGadgetPool.add(gadget); // Track globally
+    if (
+      !selectedGadgets.includes(gadget) &&
+      !state.currentGadgetPool.has(gadget)
+    ) {
+      selectedGadgets.push(gadget);
+      availableGadgets = availableGadgets.filter((g) => g !== gadget); // Remove to prevent re-selection
+    } else {
+      console.warn(
+        `🚨 Duplicate detected! ${gadget} was already chosen. Retrying...`
+      );
+    }
   }
+
+  // Store selected gadgets in state for next spins
+  selectedGadgets.forEach((gadget) => state.currentGadgetPool.add(gadget));
+
+  console.log(`✅ Final gadgets selected:`, selectedGadgets);
+  console.log(`📌 Updated gadget pool:`, state.currentGadgetPool);
 
   return selectedGadgets;
 };
