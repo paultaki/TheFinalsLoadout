@@ -156,50 +156,30 @@ const getRandomUniqueItems = (array, n) => {
 
 const getUniqueGadgets = (classType, loadout) => {
   console.log(`🔍 Selecting gadgets for class: ${classType}`);
-  console.log(`📌 Initial gadget queue:`, state.gadgetQueue[classType]);
-  console.log(
-    `🛑 Current gadget pool (preventing duplicates):`,
-    state.currentGadgetPool
-  );
 
-  // Reset gadget queue if it's running low
-  if (state.gadgetQueue[classType].length < 3) {
-    console.log(`♻️ Refilling gadget queue for ${classType}`);
-    state.gadgetQueue[classType] = [...loadout.gadgets].sort(
-      () => Math.random() - 0.5
-    );
+  let availableGadgets = loadout.gadgets.filter(
+    (gadget) => !state.currentGadgetPool.has(gadget)
+  );
+  console.log(`📌 Available gadgets after filtering:`, availableGadgets);
+
+  if (availableGadgets.length < 3) {
+    console.error("⚠️ Not enough unique gadgets! Rebuilding gadget pool.");
+    availableGadgets = [...loadout.gadgets];
   }
 
   let selectedGadgets = [];
-  let availableGadgets = [...loadout.gadgets]; // Full set of gadgets for the class
 
   while (selectedGadgets.length < 3) {
-    if (availableGadgets.length === 0) {
-      console.error("⚠️ Not enough unique gadgets available! Breaking loop.");
-      break;
-    }
+    let randomIndex = Math.floor(Math.random() * availableGadgets.length);
+    let gadget = availableGadgets.splice(randomIndex, 1)[0]; // Remove from array
 
-    let gadget = state.gadgetQueue[classType].shift(); // Take from queue
-
-    if (
-      !selectedGadgets.includes(gadget) &&
-      !state.currentGadgetPool.has(gadget)
-    ) {
+    if (!selectedGadgets.includes(gadget)) {
       selectedGadgets.push(gadget);
-      availableGadgets = availableGadgets.filter((g) => g !== gadget); // Remove to prevent re-selection
-    } else {
-      console.warn(
-        `🚨 Duplicate detected! ${gadget} was already chosen. Retrying...`
-      );
+      state.currentGadgetPool.add(gadget); // Track globally
     }
   }
 
-  // Store selected gadgets in state for next spins
-  selectedGadgets.forEach((gadget) => state.currentGadgetPool.add(gadget));
-
-  console.log(`✅ Final gadgets selected:`, selectedGadgets);
-  console.log(`📌 Updated gadget pool:`, state.currentGadgetPool);
-
+  console.log(`✅ Selected gadgets:`, selectedGadgets);
   return selectedGadgets;
 };
 
@@ -246,17 +226,24 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
     .join("");
 }
 
-const displayLoadout = (classType, loadout) => {
-  if (state.finalLoadout) {
-    console.warn("⚠️ Warning: Overwriting an existing finalLoadout.");
-  }
+const createSpinSequence = (items, winningItem) => {
+  let sequence = [...items]; // Copy full list of items
+  sequence = sequence.sort(() => Math.random() - 0.5).slice(0, 7); // Shuffle & take 7 random
+  sequence.splice(4, 0, winningItem); // Ensure the final locked choice is in the 5th position
+  return sequence;
+};
 
-  // ✅ Pick final selections (ensures history is correct)
+const displayLoadout = (classType, loadout) => {
+  console.log("🚀 Displaying new loadout... Clearing old content.");
+
+  // ✅ Forcefully remove all previous content before inserting the new loadout
+  const outputDiv = document.getElementById("output");
+  outputDiv.innerHTML = ""; // Completely clears previous loadout
+
   const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
   const selectedGadgets = getUniqueGadgets(classType, loadout);
 
-  // ✅ Store the final loadout BEFORE the spin animation starts
   state.finalLoadout = {
     classType,
     weapon: selectedWeapon,
@@ -266,63 +253,70 @@ const displayLoadout = (classType, loadout) => {
 
   console.log("✅ Final Loadout Stored:", state.finalLoadout);
 
-  // ✅ Generate random-looking spin sequences that land on final selection
-  const createSpinSequence = (items, winningItem) => {
-    let sequence = [...items]; // Copy full list of items for randomness
-    sequence = sequence.sort(() => Math.random() - 0.5).slice(0, 7); // Shuffle & take 7 random
-    sequence.splice(4, 0, winningItem); // Ensure the final locked choice is in the 5th position
-    return sequence;
-  };
-
-  // ✅ Build the animation UI ensuring it looks random but lands on correct items
+  // ✅ Build the UI ensuring old elements are gone
   const loadoutHTML = `
-    <div class="slot-machine-wrapper">
-      <div class="items-container">
-        <div class="item-container">
-          <div class="scroll-container">
-            ${createItemContainer(
-              createSpinSequence(loadout.weapons, selectedWeapon),
-              selectedWeapon
-            )}
-          </div>
-        </div>
-        <div class="item-container">
-          <div class="scroll-container">
-            ${createItemContainer(
-              createSpinSequence(loadout.specializations, selectedSpec),
-              selectedSpec
-            )}
-          </div>
-        </div>
-        ${selectedGadgets
-          .map(
-            (gadget, index) => `
-            <div class="item-container">
-              <div class="scroll-container" data-gadget-index="${index}">
-                ${createItemContainer(
-                  createSpinSequence(loadout.gadgets, gadget),
-                  gadget,
-                  true
-                )}
+      <div class="slot-machine-wrapper">
+          <div class="items-container">
+              <div class="item-container">
+                  <div class="scroll-container">
+                      ${createItemContainer(
+                        createSpinSequence(loadout.weapons, selectedWeapon),
+                        selectedWeapon
+                      )}
+                  </div>
               </div>
-            </div>
-          `
-          )
-          .join("")}
+              <div class="item-container">
+                  <div class="scroll-container">
+                      ${createItemContainer(
+                        createSpinSequence(
+                          loadout.specializations,
+                          selectedSpec
+                        ),
+                        selectedSpec
+                      )}
+                  </div>
+              </div>
+              ${selectedGadgets
+                .map(
+                  (gadget, index) => `
+                      <div class="item-container">
+                          <div class="scroll-container" data-gadget-index="${index}">
+                              ${createItemContainer(
+                                createSpinSequence(loadout.gadgets, gadget),
+                                gadget,
+                                true
+                              )}
+                          </div>
+                      </div>
+                  `
+                )
+                .join("")}
+          </div>
       </div>
-    </div>
   `;
 
-  // ✅ Insert the generated HTML into the output container
+  // ✅ Insert the new loadout AFTER clearing old content
   outputDiv.innerHTML = loadoutHTML;
 
-  // ✅ Start the spin animation after a short delay
+  // ✅ Ensure debug panel updates correctly
+  document.getElementById("debug-gadgets").textContent =
+    selectedGadgets.join(", ");
+
+  // ✅ Start spin animation
   setTimeout(() => {
     const scrollContainers = Array.from(
       document.querySelectorAll(".scroll-container")
     );
     startSpinAnimation(scrollContainers);
   }, 50);
+
+  // ✅ Log the gadgets actually rendered in the UI
+  setTimeout(() => {
+    console.log("🖥️ UI Loadout After Rendering:");
+    document.querySelectorAll(".itemCol.winner p").forEach((el, index) => {
+      console.log(`🛠️ UI Gadget Slot ${index + 1}:`, el.textContent.trim());
+    });
+  }, 500);
 };
 
 const displayRandomLoadout = () => {
@@ -354,42 +348,45 @@ function updateSpinCountdown() {
 const spinLoadout = (spins) => {
   if (state.isSpinning) return; // Prevent double spins
 
-  // ✅ Enable spin animation
+  console.log(`🔄 Starting new spin: ${spins} spins remaining.`);
+  console.log(`🛑 Clearing previous gadget pool...`);
+
+  state.currentGadgetPool.clear(); // This should fully reset the previous selections
+  console.log(`✅ Gadget pool after clearing:`, state.currentGadgetPool);
+
   state.isSpinning = true;
   state.currentSpin = spins || state.currentSpin;
   state.totalSpins = spins || state.totalSpins;
 
-  // ✅ Disable buttons to prevent multiple presses
   document.querySelectorAll(".class-button, .spin-button").forEach((btn) => {
     btn.setAttribute("disabled", "true");
   });
 
-  state.currentGadgetPool.clear();
   updateSpinCountdown();
 
   if (!state.selectedClass && state.selectedClass !== "random") {
     console.error("⚠️ No class selected! Resetting spin.");
-    state.isSpinning = false; // Reset spinning state
+    state.isSpinning = false;
     document.querySelectorAll(".class-button, .spin-button").forEach((btn) => {
       btn.removeAttribute("disabled");
     });
     return;
   }
 
-  // ✅ Start spin animation with pre-selected loadout
   if (state.selectedClass === "random") {
     displayRandomLoadout();
   } else {
     displayManualLoadout(state.selectedClass);
   }
 
-  // ✅ Restore buttons after spin completes
   setTimeout(() => {
-    state.isSpinning = false; // ✅ Allow next spin
+    state.isSpinning = false;
     document.querySelectorAll(".class-button, .spin-button").forEach((btn) => {
       btn.removeAttribute("disabled");
     });
-  }, 4000); // Ensure a delay matching spin duration
+
+    console.log(`🎉 Spin complete. Gadget Pool now:`, state.currentGadgetPool);
+  }, 4000);
 };
 
 // Updated physics constants for smoother animation
