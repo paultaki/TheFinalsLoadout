@@ -62,3 +62,97 @@
   color: #ffcc00; /* Change color on hover */
   transform: scale(1.1);
 }
+/* ✅ Legal Page Styling */
+#legal-content {
+  background: rgba(30, 30, 40, 0.85); /* Matches main page sections */
+  padding: 30px;
+  border-radius: 12px;
+  margin: 40px auto;
+  max-width: 900px;
+  text-align: left;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 204, 0, 0.3);
+}
+
+#legal-content h2 {
+  font-size: 1.8rem;
+  color: #ffb700;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  text-shadow: 0px 0px 10px rgba(255, 183, 0, 0.8);
+}
+
+#legal-content p {
+  font-size: 1rem;
+  color: #cccccc;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+#legal-content a {
+  color: #6fa8dc;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+#legal-content a:hover {
+  color: #ffb700;
+}
+
+/* ✅ Header Section - Matches Main Page */
+.headerSection {
+  background: linear-gradient(90deg, #ff00ff, #ffcc00, #00ffff);
+  text-align: center;
+  padding: 40px 20px;
+  box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.7);
+}
+
+.finals-logo {
+  width: 180px;
+  height: auto;
+  display: block;
+  margin: 0 auto 15px;
+  filter: drop-shadow(0px 0px 15px rgba(0, 255, 255, 0.7));
+}
+
+/* ✅ Footer Styling */
+.footerSection {
+  background: rgba(20, 20, 30, 0.9);
+  padding: 15px 0;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footerSection p {
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+.footerSection a {
+  color: #ffb700;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.footerSection a:hover {
+  color: var(--neon-orange);
+}
+/* ✅ Remove extra space at the top */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* ✅ Ensure content starts below the navbar */
+.headerSection {
+  margin-top: 0 !important;
+  padding-top: 80px; /* Adjust this if needed */
+}
+
+/* ✅ Fix for main content being pushed down */
+.mainContent {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}

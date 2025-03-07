@@ -1131,7 +1131,6 @@ function spinHandicap() {
     finalizeSpin();
   }
 }
-
 function addToHistory(
   classType,
   weapon,
@@ -1157,18 +1156,18 @@ function addToHistory(
     <button class="copy-loadout" onclick="copyLoadoutText(this)">Copy</button>
   `;
 
-  historyList.prepend(newEntry);
+  historyList.prepend(newEntry); // ✅ Adds new entry at the top
 
-  // ✅ Fix: Ensure saveHistory is defined before calling
+  // ✅ Ensure history does not exceed 5 entries
+  while (historyList.children.length > 5) {
+    historyList.removeChild(historyList.lastChild);
+  }
+
+  // ✅ Save updated history to localStorage
   if (typeof saveHistory === "function") {
     saveHistory();
   } else {
     console.error("⚠️ Warning: saveHistory function is missing.");
-  }
-
-  // ✅ Keep only the last 5 entries in history
-  while (historyList.children.length > 5) {
-    historyList.removeChild(historyList.lastChild);
   }
 }
 

@@ -1711,13 +1711,6 @@ img {
     font-size: 14px;
   }
 
-  .handicap-section,
-  .handicap-container {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-    min-height: 180px !important;
-  }
-
   .section-title {
     display: none; /* Hide it */
   }
@@ -1756,23 +1749,6 @@ img {
   .btnRow {
     gap: 8px;
   }
-}
-
-/* Handicap Container - Keep Consistent Size & Spacing */
-.handicap-container {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  max-width: 600px !important; /* Keep width fixed */
-  min-height: 180px !important; /* Ensure consistent height */
-  padding: 15px !important; /* Standardize padding */
-  border-radius: 12px !important;
-  margin: 30px auto !important; /* Prevent shifting */
-  animation: glowHandicap 2s infinite alternate !important;
-  transition: all 0.3s ease-in-out !important; /* Smooth appearance */
 }
 
 .selected-class-container {
@@ -1818,25 +1794,6 @@ img {
   margin-bottom: 10px; /* Reduce bottom margin */
 }
 
-/* ✅ Keep Handicap Container Consistent */
-.handicap-container {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  flex-direction: column !important;
-  width: 95% !important; /* Keep width within boundaries */
-  max-width: 600px !important; /* Ensure it doesn’t stretch */
-  min-height: 180px !important; /* Consistent height */
-  padding: 15px !important; /* Add consistent padding */
-  border-radius: 12px !important;
-  margin: 20px auto !important; /* Adjust spacing */
-  background: rgba(0, 0, 0, 0.7) !important; /* Ensure background consistency */
-  border: 3px solid var(--rage-red, #ff0000) !important;
-  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6) !important;
-  transition: all 0.3s ease-in-out !important; /* Smooth transition */
-}
-
 /* ✅ Fix handicap container padding to prevent bleeding */
 .handicap-wheel-container {
   width: 100% !important;
@@ -1863,14 +1820,6 @@ img {
   transition: all 0.3s ease-in-out !important;
 }
 
-/* ✅ Mobile Optimization */
-@media (max-width: 768px) {
-  .handicap-container {
-    width: 95% !important; /* Prevent overflow */
-    min-height: 160px !important;
-    padding: 10px !important;
-  }
-}
 .items-container {
   display: flex !important;
   flex-direction: row !important;
@@ -2038,20 +1987,6 @@ body.flexStyle {
   padding-top: 80px; /* Increased padding to push the logo down */
 }
 
-@media (max-width: 768px) {
-  /* Reduce space above the handicap generator */
-  .handicap-container {
-    margin-top: 20px !important;
-    padding: 15px !important;
-    min-width: 90% !important;
-    text-align: center;
-  }
-  /* Ensure handicap section aligns properly */
-  .handicap-wheel-container {
-    margin-top: 5px !important;
-    padding-top: 5px !important;
-  }
-}
 @media (max-width: 768px) {
   /* Ensure Rage Management Tips have enough space */
   .rage-tips {
@@ -2373,4 +2308,91 @@ body {
     line-height: 1.2;
     margin: 5px 0;
   }
+}
+/* ✅ Handicap Container - Keep Consistent Size & Spacing */
+.handicap-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  flex-direction: column !important;
+  width: 95% !important; /* Keep width within boundaries */
+  max-width: 600px !important; /* Prevent stretching */
+  min-height: 180px !important; /* Ensure consistent height */
+  padding: 15px !important; /* Standardized padding */
+  border-radius: 12px !important;
+  margin: 20px auto !important; /* Adjust spacing */
+  background: rgba(0, 0, 0, 0.8) !important; /* Darker for better contrast */
+  border: 3px solid #ff0000 !important; /* Stronger neon red border */
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.5); /* Neon glow effect */
+  animation: pulseGlow 1.5s infinite alternate !important; /* Subtle glow */
+  transition: all 0.3s ease-in-out !important; /* Smooth animations */
+}
+
+/* ✅ Handicap Title (EXTRA HANDICAP) */
+.handicap-title {
+  font-size: 1.5rem !important;
+  font-weight: bold;
+  color: #ffcc00 !important; /* Bright yellow */
+  text-shadow: 0 0 10px rgba(255, 183, 0, 0.9), 0 0 20px rgba(255, 183, 0, 0.6); /* Neon glow */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* ✅ Handicap Button (e.g., CHAT ROULETTE) */
+.handicap-result {
+  background: linear-gradient(45deg, #990000, #ff0000) !important;
+  border: 2px solid #ffcc00 !important;
+  border-radius: 8px !important;
+  padding: 15px 20px !important;
+  color: white !important;
+  font-size: 1.2rem !important;
+  font-weight: bold !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+  transform: scale(1);
+  transition: all 0.3s ease;
+}
+
+.handicap-result:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255, 0, 0, 1);
+}
+
+/* ✅ Handicap Description */
+.handicap-description {
+  font-size: 1.1rem !important;
+  color: white !important;
+  font-weight: 500 !important;
+  padding: 12px !important;
+  background: rgba(255, 0, 0, 0.2) !important;
+  border-radius: 8px !important;
+  text-align: center !important;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+  .handicap-container {
+    width: 90% !important; /* Slightly reduce width for spacing */
+    min-height: 140px !important; /* Reduce height */
+    padding: 10px !important; /* Reduce padding */
+  }
+
+  .handicap-title {
+    font-size: 1.2rem !important; /* Make title smaller */
+  }
+
+  .handicap-result {
+    padding: 10px 15px !important; /* Reduce padding */
+    font-size: 1rem !important; /* Shrink button text */
+  }
+
+  .handicap-description {
+    font-size: 0.9rem !important; /* Reduce description text size */
+    padding: 8px !important;
+  }
+}
+
 }

@@ -1454,7 +1454,11 @@ header {
   width: 100%;
   max-width: 800px;
   margin: 2rem auto;
-  padding: 0 15px;
+  background: rgba(0, 0, 0, 0.9); /* Keeps it readable */
+  border: 2px solid rgba(255, 200, 0, 0.6); /* Golden glow */
+  box-shadow: 0px 0px 15px rgba(255, 200, 0, 0.5),
+  border-radius: 12px;
+  padding: 20px;
 }
 
 /* Inner container styling */
