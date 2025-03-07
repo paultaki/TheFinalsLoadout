@@ -155,12 +155,10 @@ const getRandomUniqueItems = (array, n) => {
 };
 const getUniqueGadgets = (classType, loadout) => {
   let availableGadgets = new Set(loadout.gadgets);
+  let selectedGadgets = new Set();
 
-  // Ensure unique gadgets across selections
-  let selectedGadgets = [];
-
-  while (selectedGadgets.length < 3) {
-    // If queue is empty, refill with shuffled gadget list
+  while (selectedGadgets.size < 3) {
+    // If queue is empty, refill it with shuffled gadgets
     if (state.gadgetQueue[classType].length === 0) {
       state.gadgetQueue[classType] = [...availableGadgets].sort(
         () => Math.random() - 0.5
@@ -169,14 +167,16 @@ const getUniqueGadgets = (classType, loadout) => {
 
     let gadget = state.gadgetQueue[classType].shift();
 
-    // Ensure gadget is unique before adding
-    if (!selectedGadgets.includes(gadget)) {
-      selectedGadgets.push(gadget);
+    // Ensure gadget is not in previously selected gadgets
+    if (!state.currentGadgetPool.has(gadget) && !selectedGadgets.has(gadget)) {
+      selectedGadgets.add(gadget);
     }
   }
 
-  state.currentGadgetPool = new Set(selectedGadgets);
-  return selectedGadgets;
+  // Update global state to track selected gadgets for future prevention
+  selectedGadgets.forEach((gadget) => state.currentGadgetPool.add(gadget));
+
+  return [...selectedGadgets]; // Convert back to array for use
 };
 
 function createItemContainer(items, winningItem = null, isGadget = false) {
