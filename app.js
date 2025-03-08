@@ -674,7 +674,6 @@ function copyLoadoutText(button) {
       alert("Failed to copy loadout to clipboard");
     });
 }
-
 function finalizeSpin(columns) {
   const isFinalSpin = state.currentSpin === 1;
 
@@ -738,6 +737,11 @@ function finalizeSpin(columns) {
 
       addToHistory(selectedClass, weapon, specialization, gadgets);
     }
+
+    // ✅ Remove glow from class button after spin animation finishes
+    document.querySelectorAll(".class-button").forEach((button) => {
+      button.classList.remove("active");
+    });
 
     // Reset state
     state.isSpinning = false;

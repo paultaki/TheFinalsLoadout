@@ -1982,25 +1982,24 @@ header {
 .class-button {
   width: 100px !important; /* Adjust as needed */
   height: auto !important;
-  max-height: 140px; /* Prevents excessive scaling */
+  max-height: 140px;
   display: inline-block;
-  object-fit: contain; /* Keeps aspect ratio */
-  transition: transform 0.2s ease, filter 0.2s ease;
+  object-fit: contain; /* Ensures the image scales properly */
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.3s ease;
 }
+
 
 /* Hover Effect: Subtle glow */
 .class-button:hover {
-  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7))
-    drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
-  transform: scale(1.05);
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
 }
-
+.class-button.active img {
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1)) !important;
+}
 /* Active (Selected) Effect */
 .class-button.active {
-  transform: scale(1.1);
-  filter: brightness(1.5);
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 1)) !important;
 }
-
 /* === CLASS-SPECIFIC COLOR EFFECTS === */
 .class-button[data-class="Light"] {
   color: rgba(0, 255, 255, 0.8);
