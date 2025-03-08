@@ -169,8 +169,41 @@ const getUniqueGadgets = (classType, loadout) => {
 };
 
 function createItemContainer(items, winningItem = null, isGadget = false) {
+  // For gadgets, we need to ensure random spinning appearance while still keeping our winning item
   if (isGadget) {
-    return items
+    // Make sure we have the winning item
+    const gadget = items[0]; // This should be our single gadget
+
+    // We need to create a list of filler items to make the spinning effect work
+    // Let's get the appropriate gadget list based on the class
+    const classType = state.selectedClass;
+    const allGadgets = loadouts[classType]?.gadgets || [];
+
+    // Create a list of random gadgets that doesn't include our winning gadget
+    const fillerGadgets = allGadgets
+      .filter((item) => item !== gadget)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 7);
+
+    // Create the full sequence with our winning item in position 5 (index 4)
+    const gadgetSequence = [
+      ...fillerGadgets.slice(0, 4),
+      gadget, // Put the winning gadget in the middle
+      ...fillerGadgets.slice(4),
+    ];
+
+    // Make sure we have enough items
+    while (gadgetSequence.length < 8) {
+      const randomGadget =
+        allGadgets[Math.floor(Math.random() * allGadgets.length)];
+      if (randomGadget !== gadget) {
+        // Avoid duplicating our winner
+        gadgetSequence.push(randomGadget);
+      }
+    }
+
+    // Return the HTML for our gadget sequence
+    return gadgetSequence
       .map(
         (item, index) => `
         <div class="itemCol ${index === 4 ? "winner" : ""}">
@@ -182,6 +215,7 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
       .join("");
   }
 
+  // Original code for non-gadget items
   winningItem = winningItem || items[Math.floor(Math.random() * items.length)];
   let repeatedItems = items
     .filter((item) => item !== winningItem)
@@ -282,9 +316,6 @@ const displayLoadout = (classType, loadout) => {
           </div>
       </div>
   `;
-
-  // ✅ Ensure debug panel updates correctly
-  document.getElementById("debug-gadgets").textContent = gadgetSlots.join(", ");
 
   // ✅ Start spin animation
   setTimeout(() => {
