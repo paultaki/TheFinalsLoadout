@@ -155,41 +155,17 @@ const getRandomUniqueItems = (array, n) => {
 };
 
 const getUniqueGadgets = (classType, loadout) => {
-  console.log(`🔍 Selecting gadgets for class: ${classType}`);
+  let availableGadgets = [...loadout.gadgets]; // Start with all gadgets
+  let selectedGadgets = [];
 
-  let availableGadgets = loadout.gadgets.filter(
-    (gadget) => !state.currentGadgetPool.has(gadget)
-  );
-  console.log(`📌 Available gadgets after filtering:`, availableGadgets);
-
-  if (availableGadgets.length < 3) {
-    console.error("⚠️ Not enough unique gadgets! Resetting gadget pool.");
-    availableGadgets = [...loadout.gadgets];
-  }
-
-  let selectedGadgets = new Set(); // Ensures unique selection
-
-  while (selectedGadgets.size < 3) {
-    if (availableGadgets.length === 0) {
-      console.error("⚠️ No more gadgets available! Breaking loop.");
-      break;
-    }
-
+  while (selectedGadgets.length < 3 && availableGadgets.length > 0) {
     let randomIndex = Math.floor(Math.random() * availableGadgets.length);
-    let gadget = availableGadgets[randomIndex];
-
-    if (!selectedGadgets.has(gadget)) {
-      selectedGadgets.add(gadget);
-      availableGadgets.splice(randomIndex, 1); // Remove to prevent re-selection
-    }
+    selectedGadgets.push(availableGadgets[randomIndex]);
+    availableGadgets.splice(randomIndex, 1); // Remove to prevent duplicates
   }
 
-  // ✅ Update global tracking to prevent future duplicates
-  state.currentGadgetPool.clear();
-  selectedGadgets.forEach((gadget) => state.currentGadgetPool.add(gadget));
-
-  console.log(`✅ Final selected gadgets:`, [...selectedGadgets]);
-  return [...selectedGadgets]; // Convert Set to Array for UI usage
+  state.currentGadgetPool = new Set(selectedGadgets); // Track selected gadgets globally
+  return selectedGadgets;
 };
 
 function createItemContainer(items, winningItem = null, isGadget = false) {
@@ -245,9 +221,8 @@ const createSpinSequence = (items, winningItem) => {
 const displayLoadout = (classType, loadout) => {
   console.log("🚀 Displaying new loadout... Clearing old content.");
 
-  // ✅ Forcefully remove all previous content before inserting the new loadout
-  const outputDiv = document.getElementById("output");
-  outputDiv.innerHTML = ""; // Completely clears previous loadout
+  // ✅ Fully reset the UI to prevent duplicate gadgets
+  outputDiv.innerHTML = ""; // Clears previous loadout
 
   const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
@@ -262,56 +237,54 @@ const displayLoadout = (classType, loadout) => {
 
   console.log("✅ Final Loadout Stored:", state.finalLoadout);
 
-  // ✅ Build the UI ensuring old elements are gone
-  const loadoutHTML = `
+  // 🚀 Ensure only unique gadgets are rendered exactly as logged
+  const uniqueGadgetSet = new Set();
+  const gadgetSlots = selectedGadgets
+    .filter((gadget) => {
+      if (uniqueGadgetSet.has(gadget)) return false; // 🚨 Prevent duplicate rendering
+      uniqueGadgetSet.add(gadget);
+      return true;
+    })
+    .slice(0, 3); // 🔥 Limit to 3 gadgets
+
+  // ✅ Insert new loadout content, ensuring exactly 3 unique gadgets are displayed
+  outputDiv.innerHTML = `
       <div class="slot-machine-wrapper">
           <div class="items-container">
               <div class="item-container">
                   <div class="scroll-container">
-                      ${createItemContainer(
-                        createSpinSequence(loadout.weapons, selectedWeapon),
-                        selectedWeapon
-                      )}
+                      ${createItemContainer(loadout.weapons, selectedWeapon)}
                   </div>
               </div>
               <div class="item-container">
                   <div class="scroll-container">
                       ${createItemContainer(
-                        createSpinSequence(
-                          loadout.specializations,
-                          selectedSpec
-                        ),
+                        loadout.specializations,
                         selectedSpec
                       )}
                   </div>
               </div>
-              ${selectedGadgets
-                .slice(0, 3) // 🔥 Ensures only 3 gadgets are displayed
+              ${gadgetSlots
                 .map(
                   (gadget, index) => `
-                    <div class="item-container">
-                        <div class="scroll-container" data-gadget-index="${index}">
-                            ${createItemContainer(
-                              createSpinSequence(loadout.gadgets, gadget),
-                              gadget,
-                              true
-                            )}
-                        </div>
-                    </div>
-                `
+                  <div class="item-container">
+                      <div class="scroll-container" data-gadget-index="${index}">
+                          ${createItemContainer(
+                            [gadget], // 🔥 Only pass 1 gadget to avoid duplicates
+                            gadget,
+                            true
+                          )}
+                      </div>
+                  </div>
+              `
                 )
                 .join("")}
-            
           </div>
       </div>
   `;
 
-  // ✅ Insert the new loadout AFTER clearing old content
-  outputDiv.innerHTML = loadoutHTML;
-
   // ✅ Ensure debug panel updates correctly
-  document.getElementById("debug-gadgets").textContent =
-    selectedGadgets.join(", ");
+  document.getElementById("debug-gadgets").textContent = gadgetSlots.join(", ");
 
   // ✅ Start spin animation
   setTimeout(() => {
@@ -321,7 +294,7 @@ const displayLoadout = (classType, loadout) => {
     startSpinAnimation(scrollContainers);
   }, 50);
 
-  // 🛠️ **ADD THIS DEBUGGING CODE HERE (END OF FUNCTION)**
+  // ✅ Log the gadgets actually rendered in the UI
   setTimeout(() => {
     console.log("🖥️ UI Loadout After Rendering:");
     document.querySelectorAll(".itemCol.winner p").forEach((el, index) => {
