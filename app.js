@@ -495,7 +495,6 @@ const displayManualLoadout = (classType) => {
   const loadout = loadouts[classType];
   displayLoadout(classType, loadout);
 };
-
 class SlotColumn {
   constructor(element, index, isFinalSpin) {
     this.element = element;
@@ -539,7 +538,7 @@ class SlotColumn {
 
     switch (this.state) {
       case "accelerating":
-        this.velocity += PHYSICS.ACCELERATION * dt;
+        this.velocity += PHYSICS.ACCELERATION * dt * 1.5; // Increased acceleration
         if (this.velocity >= PHYSICS.MAX_VELOCITY) {
           this.velocity = PHYSICS.MAX_VELOCITY;
           this.state = "spinning";
@@ -557,22 +556,20 @@ class SlotColumn {
         break;
 
       case "decelerating":
-        this.velocity += PHYSICS.DECELERATION * dt;
-
-        // Added safety check for deceleration
+        this.velocity += PHYSICS.DECELERATION * dt * 1.2; // Smoother deceleration
         if (
-          Math.abs(this.position - this.targetPosition) < 1 &&
+          Math.abs(this.position - this.targetPosition) < 3 &&
           Math.abs(this.velocity) < 50
         ) {
           this.forceStop();
           return;
         }
-
         if (this.velocity <= 0) {
-          if (Math.abs(this.velocity) < 100) {
+          if (Math.abs(this.velocity) < 150) {
+            // Make stopping less abrupt
             this.forceStop();
           } else {
-            this.velocity = -this.velocity * PHYSICS.BOUNCE_DAMPENING;
+            this.velocity = -this.velocity * (PHYSICS.BOUNCE_DAMPENING * 1.2);
             this.state = "bouncing";
           }
         }
@@ -614,11 +611,15 @@ class SlotColumn {
 
   updateVisuals() {
     let blur = 0;
-    if (Math.abs(this.velocity) > 3000) blur = 12;
-    else if (Math.abs(this.velocity) > 2000) blur = 8;
-    else if (Math.abs(this.velocity) > 1000) blur = 5;
+    if (Math.abs(this.velocity) > 3500)
+      blur = 15; // Increased blur for high-speed effect
+    else if (Math.abs(this.velocity) > 2500) blur = 10;
+    else if (Math.abs(this.velocity) > 1500) blur = 6;
+    // Shake effect when stopping
+    let shakeX =
+      this.state === "bouncing" ? Math.sin(performance.now() / 100) * 2 : 0;
 
-    this.element.style.transform = `translateY(${this.position}px)`;
+    this.element.style.transform = `translate(${shakeX}px, ${this.position}px)`;
     this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
   }
 }
