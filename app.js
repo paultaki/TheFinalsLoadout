@@ -1,1 +1,1146 @@
-const _0x127eee=_0x5d1d;(function(_0x5853f9,_0x4b80d8){const _0x1e8dd2=_0x5d1d,_0x943b2a=_0x5853f9();while(!![]){try{const _0x35966f=parseInt(_0x1e8dd2(0x109))/0x1*(-parseInt(_0x1e8dd2(0x12b))/0x2)+-parseInt(_0x1e8dd2(0xd2))/0x3*(-parseInt(_0x1e8dd2(0x18f))/0x4)+-parseInt(_0x1e8dd2(0x133))/0x5*(-parseInt(_0x1e8dd2(0x86))/0x6)+parseInt(_0x1e8dd2(0x169))/0x7+parseInt(_0x1e8dd2(0x111))/0x8*(-parseInt(_0x1e8dd2(0x10d))/0x9)+-parseInt(_0x1e8dd2(0xe5))/0xa+parseInt(_0x1e8dd2(0xa6))/0xb*(parseInt(_0x1e8dd2(0x124))/0xc);if(_0x35966f===_0x4b80d8)break;else _0x943b2a['push'](_0x943b2a['shift']());}catch(_0x21a484){_0x943b2a['push'](_0x943b2a['shift']());}}}(_0x39c7,0x1bf1e));function logDebug(_0x1e06c6,_0x158816){const _0x4e371d=_0x5d1d;console[_0x4e371d(0xeb)](_0x4e371d(0x106)+_0x1e06c6+'\x20',_0x4e371d(0x173),_0x158816);}let state={'selectedClass':null,'isSpinning':![],'currentSpin':0x1,'totalSpins':0x0,'selectedGadgets':new Set(),'gadgetQueue':{'Light':[],'Medium':[],'Heavy':[]},'currentGadgetPool':new Set()};document[_0x127eee(0x172)](_0x127eee(0x7c),()=>{});const getUniqueGadgetsFromUI=()=>{const _0xcd33f3=_0x127eee;return Array[_0xcd33f3(0xed)](document[_0xcd33f3(0x92)](_0xcd33f3(0xec)))['slice'](0x2,0x5)[_0xcd33f3(0x98)](_0x19473a=>_0x19473a[_0xcd33f3(0xfc)]('p')[_0xcd33f3(0x177)][_0xcd33f3(0x161)]());},loadouts={'Light':{'weapons':[_0x127eee(0x165),_0x127eee(0x147),_0x127eee(0x132),_0x127eee(0xc4),'LH1',_0x127eee(0x12f),_0x127eee(0x82),_0x127eee(0x146),'M11',_0x127eee(0xf7),_0x127eee(0x8c),_0x127eee(0x149)],'specializations':[_0x127eee(0x16c),_0x127eee(0x16b),_0x127eee(0xaa)],'gadgets':[_0x127eee(0x93),_0x127eee(0x18a),_0x127eee(0x136),'Gravity\x20Vortex',_0x127eee(0x174),_0x127eee(0xd0),_0x127eee(0xe4),'Thermal\x20Vision','Tracking\x20Dart','Vanishing\x20Bomb',_0x127eee(0xf9),_0x127eee(0x108),_0x127eee(0xf6),'Frag\x20Grenade','Flashbang']},'Medium':{'weapons':[_0x127eee(0x168),'Cerberus\x2012GA','Dual\x20Blades',_0x127eee(0x163),'CL-40','FCAR',_0x127eee(0x138),_0x127eee(0x9f),'R.357',_0x127eee(0xb5)],'specializations':[_0x127eee(0x104),_0x127eee(0xe9),_0x127eee(0x10b)],'gadgets':[_0x127eee(0xe1),'Data\x20Reshaper','Defibrillator',_0x127eee(0x87),'Gas\x20Mine',_0x127eee(0x17b),_0x127eee(0xc0),_0x127eee(0x8f),'Gas\x20Grenade',_0x127eee(0xf9),_0x127eee(0x108),_0x127eee(0xf6),_0x127eee(0xfb),_0x127eee(0xe7),_0x127eee(0x156)]},'Heavy':{'weapons':[_0x127eee(0x180),_0x127eee(0xf2),_0x127eee(0x162),_0x127eee(0x119),_0x127eee(0x10a),_0x127eee(0x192),'SA\x201216','Sledgehammer',_0x127eee(0xb2),_0x127eee(0x171)],'specializations':[_0x127eee(0xc9),_0x127eee(0x9d),'Mesh\x20Shield',_0x127eee(0x137)],'gadgets':[_0x127eee(0xfd),_0x127eee(0x99),'C4',_0x127eee(0x11a),_0x127eee(0xd7),_0x127eee(0xe2),_0x127eee(0x156),_0x127eee(0x120),'Goo\x20Grenade',_0x127eee(0x108),_0x127eee(0xf6),_0x127eee(0xfb),_0x127eee(0xe7),_0x127eee(0x87),_0x127eee(0xe4)]}},classButtons=document[_0x127eee(0x92)]('.class-button'),spinButtons=document['querySelectorAll']('.spin-button'),spinSelection=document['getElementById'](_0x127eee(0x17e)),outputDiv=document[_0x127eee(0xf4)]('output'),addGPUHints=()=>{const _0x9791f=_0x127eee,_0x667667=document[_0x9791f(0x92)](_0x9791f(0x7f));_0x667667[_0x9791f(0xca)](_0x4c83c0=>{const _0x42dce4=_0x9791f;_0x4c83c0[_0x42dce4(0x12e)][_0x42dce4(0x160)]=_0x42dce4(0x144),_0x4c83c0['style'][_0x42dce4(0xe0)]=_0x42dce4(0x15a),_0x4c83c0[_0x42dce4(0x12e)][_0x42dce4(0xf5)]=_0x42dce4(0x145),_0x4c83c0[_0x42dce4(0x12e)][_0x42dce4(0x144)]=_0x42dce4(0xbb);});};addGPUHints();const getRandomUniqueItems=(_0x5b6146,_0x115ad9)=>{const _0x4a09d3=_0x127eee,_0x2032ac=[..._0x5b6146][_0x4a09d3(0xd8)](()=>Math[_0x4a09d3(0x14d)]()-0.5);return _0x2032ac[_0x4a09d3(0x186)](0x0,_0x115ad9);},getUniqueGadgets=(_0x14d199,_0x5e0f7e)=>{const _0x7976c=_0x127eee;let _0x148ffa=[..._0x5e0f7e[_0x7976c(0x14e)]],_0x277c31=[];while(_0x277c31['length']<0x3&&_0x148ffa[_0x7976c(0x13d)]>0x0){let _0x1eefd7=Math[_0x7976c(0x16f)](Math[_0x7976c(0x14d)]()*_0x148ffa['length']);_0x277c31[_0x7976c(0x121)](_0x148ffa[_0x1eefd7]),_0x148ffa['splice'](_0x1eefd7,0x1);}return state[_0x7976c(0xf3)]=new Set(_0x277c31),_0x277c31;};function createItemContainer(_0x3f9a28,_0x296031=null,_0x3b045d=![]){const _0x2acdb3=_0x127eee;if(_0x3b045d){const _0x3195d2=_0x3f9a28[0x0],_0x1ab38b=state['selectedClass'],_0x31f9ac=loadouts[_0x1ab38b]?.[_0x2acdb3(0x14e)]||[],_0x4570eb=_0x31f9ac[_0x2acdb3(0xee)](_0x3c4108=>_0x3c4108!==_0x3195d2)[_0x2acdb3(0xd8)](()=>Math[_0x2acdb3(0x14d)]()-0.5)[_0x2acdb3(0x186)](0x0,0x7),_0x5acaa4=[..._0x4570eb['slice'](0x0,0x4),_0x3195d2,..._0x4570eb[_0x2acdb3(0x186)](0x4)];while(_0x5acaa4[_0x2acdb3(0x13d)]<0x8){const _0x4d0c31=_0x31f9ac[Math[_0x2acdb3(0x16f)](Math[_0x2acdb3(0x14d)]()*_0x31f9ac['length'])];_0x4d0c31!==_0x3195d2&&_0x5acaa4[_0x2acdb3(0x121)](_0x4d0c31);}return _0x5acaa4['map']((_0x2512a0,_0x4526d9)=>'\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22itemCol\x20'+(_0x4526d9===0x4?_0x2acdb3(0xb6):'')+_0x2acdb3(0x18c)+_0x2512a0[_0x2acdb3(0x14b)](/ /g,'_')+_0x2acdb3(0x131)+_0x2512a0+_0x2acdb3(0x17f)+_0x2512a0+_0x2acdb3(0xdd))[_0x2acdb3(0x139)]('');}_0x296031=_0x296031||_0x3f9a28[Math[_0x2acdb3(0x16f)](Math[_0x2acdb3(0x14d)]()*_0x3f9a28[_0x2acdb3(0x13d)])];let _0x54536e=_0x3f9a28[_0x2acdb3(0xee)](_0x44bd7f=>_0x44bd7f!==_0x296031)[_0x2acdb3(0xd8)](()=>Math[_0x2acdb3(0x14d)]()-0.5)[_0x2acdb3(0x186)](0x0,0x7);_0x54536e=[..._0x54536e[_0x2acdb3(0x186)](0x0,0x4),_0x296031,..._0x54536e['slice'](0x4)];while(_0x54536e[_0x2acdb3(0x13d)]<0x8){const _0x37c5f9=_0x3f9a28[Math['floor'](Math['random']()*_0x3f9a28[_0x2acdb3(0x13d)])];_0x54536e[_0x2acdb3(0x121)](_0x37c5f9);}return _0x54536e[_0x2acdb3(0x98)]((_0x2bceb7,_0x369833)=>_0x2acdb3(0x8d)+(_0x369833===0x4?_0x2acdb3(0xb6):'')+_0x2acdb3(0xc1)+_0x2bceb7[_0x2acdb3(0x14b)](/ /g,'_')+_0x2acdb3(0x131)+_0x2bceb7+_0x2acdb3(0x102)+_0x2bceb7+_0x2acdb3(0x182))[_0x2acdb3(0x139)]('');}const createSpinSequence=(_0x5c4bef,_0x28187f)=>{const _0x42d0d6=_0x127eee;let _0xbc6c5=[..._0x5c4bef];return _0xbc6c5=_0xbc6c5[_0x42d0d6(0xd8)](()=>Math['random']()-0.5)[_0x42d0d6(0x186)](0x0,0x7),_0xbc6c5[_0x42d0d6(0x14f)](0x4,0x0,_0x28187f),_0xbc6c5;},displayLoadout=(_0x38121a,_0x3a7d77)=>{const _0xcb583a=_0x127eee;console[_0xcb583a(0xeb)](_0xcb583a(0x15b)),outputDiv[_0xcb583a(0x8b)]='';const _0x5eb799=getRandomUniqueItems(_0x3a7d77['weapons'],0x1)[0x0],_0x51b0c6=getRandomUniqueItems(_0x3a7d77[_0xcb583a(0x13a)],0x1)[0x0],_0x232a6f=getUniqueGadgets(_0x38121a,_0x3a7d77);state[_0xcb583a(0x14c)]={'classType':_0x38121a,'weapon':_0x5eb799,'specialization':_0x51b0c6,'gadgets':_0x232a6f},console[_0xcb583a(0xeb)](_0xcb583a(0x105),state[_0xcb583a(0x14c)]);const _0xae05bd=new Set(),_0x243351=_0x232a6f[_0xcb583a(0xee)](_0x114d8a=>{const _0x288194=_0xcb583a;if(_0xae05bd[_0x288194(0x16d)](_0x114d8a))return![];return _0xae05bd['add'](_0x114d8a),!![];})[_0xcb583a(0x186)](0x0,0x3);outputDiv[_0xcb583a(0x8b)]=_0xcb583a(0x143)+createItemContainer(_0x3a7d77['weapons'],_0x5eb799)+_0xcb583a(0xb0)+createItemContainer(_0x3a7d77[_0xcb583a(0x13a)],_0x51b0c6)+_0xcb583a(0x8e)+_0x243351[_0xcb583a(0x98)]((_0x2e1b0f,_0x25b2e1)=>'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22item-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22scroll-container\x22\x20data-gadget-index=\x22'+_0x25b2e1+_0xcb583a(0x191)+createItemContainer([_0x2e1b0f],_0x2e1b0f,!![])+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20')[_0xcb583a(0x139)]('')+_0xcb583a(0x154),setTimeout(()=>{const _0x57e8f9=_0xcb583a,_0x4ae52f=Array[_0x57e8f9(0xed)](document[_0x57e8f9(0x92)](_0x57e8f9(0x7f)));startSpinAnimation(_0x4ae52f);},0x32),setTimeout(()=>{const _0x103ff9=_0xcb583a;console[_0x103ff9(0xeb)](_0x103ff9(0x125)),document[_0x103ff9(0x92)](_0x103ff9(0x97))[_0x103ff9(0xca)]((_0x2fd323,_0x78e8cd)=>{const _0x56e7bc=_0x103ff9;console[_0x56e7bc(0xeb)](_0x56e7bc(0x13e)+(_0x78e8cd+0x1)+':',_0x2fd323['textContent']['trim']());});},0x1f4);},displayRandomLoadout=()=>{const _0x3bb02e=_0x127eee,_0x1c6a62=['Light',_0x3bb02e(0xa2),_0x3bb02e(0x159)],_0x4bf654=_0x1c6a62[Math['floor'](Math['random']()*_0x1c6a62['length'])],_0x4bdd2e=loadouts[_0x4bf654];displayLoadout(_0x4bf654,_0x4bdd2e);},displayManualLoadout=_0x47021a=>{const _0x1e4bd8=loadouts[_0x47021a];displayLoadout(_0x47021a,_0x1e4bd8);};function updateSpinCountdown(){const _0x46d4cb=_0x127eee;document[_0x46d4cb(0x92)](_0x46d4cb(0x122))['forEach'](_0x45a66b=>{const _0x2961ec=_0x46d4cb;_0x45a66b[_0x2961ec(0x11f)][_0x2961ec(0xbc)](_0x2961ec(0xc5),_0x2961ec(0x140));});const _0x563502=[...document['querySelectorAll'](_0x46d4cb(0x122))][_0x46d4cb(0x112)](_0x15b544=>parseInt(_0x15b544[_0x46d4cb(0x16a)]['spins'])===state['currentSpin']);_0x563502&&_0x563502[_0x46d4cb(0x11f)][_0x46d4cb(0x9e)]('active');}const spinLoadout=_0x300722=>{const _0x343aca=_0x127eee;if(state['isSpinning'])return;console['log'](_0x343aca(0xf8)+_0x300722+_0x343aca(0x81)),console[_0x343aca(0xeb)](_0x343aca(0x9a)),state['currentGadgetPool']['clear'](),console[_0x343aca(0xeb)](_0x343aca(0x130),state[_0x343aca(0xf3)]),state[_0x343aca(0xc3)]=!![],state['currentSpin']=_0x300722||state[_0x343aca(0x18d)],state[_0x343aca(0x187)]=_0x300722||state[_0x343aca(0x187)],document['querySelectorAll'](_0x343aca(0x96))[_0x343aca(0xca)](_0x168cc0=>{const _0x2bdfda=_0x343aca;_0x168cc0[_0x2bdfda(0xb4)](_0x2bdfda(0x123),_0x2bdfda(0x151));}),updateSpinCountdown();if(!state[_0x343aca(0x101)]&&state[_0x343aca(0x101)]!=='random'){console['error']('⚠️\x20No\x20class\x20selected!\x20Resetting\x20spin.'),state['isSpinning']=![],document[_0x343aca(0x92)](_0x343aca(0x96))['forEach'](_0x3257e0=>{const _0x5174f0=_0x343aca;_0x3257e0[_0x5174f0(0xd1)](_0x5174f0(0x123));});return;}state[_0x343aca(0x101)]===_0x343aca(0x14d)?displayRandomLoadout():displayManualLoadout(state[_0x343aca(0x101)]),setTimeout(()=>{const _0x5db348=_0x343aca;state['isSpinning']=![],document[_0x5db348(0x92)]('.class-button,\x20.spin-button')[_0x5db348(0xca)](_0x19ef44=>{const _0x5e50c1=_0x5db348;_0x19ef44[_0x5e50c1(0xd1)](_0x5e50c1(0x123));}),console[_0x5db348(0xeb)](_0x5db348(0xa8),state[_0x5db348(0xf3)]);},0xfa0);},PHYSICS={'ACCELERATION':0x1770,'MAX_VELOCITY':0xfa0,'DECELERATION':-0xbb8,'BOUNCE_DAMPENING':0.3,'ITEM_HEIGHT':0xbc,'TIMING':{'REGULAR_SPIN':{'COLUMN_DELAY':0xfa,'BASE_DURATION':0x258,'DECELERATION_TIME':0x190},'FINAL_SPIN':{'COLUMN_DELAY':0x384,'BASE_DURATION':0x9c4,'DECELERATION_TIME':0x384}}};class SlotColumn{constructor(_0x22fd5c,_0x341580,_0x1681ac){const _0xf7d068=_0x127eee;this[_0xf7d068(0xce)]=_0x22fd5c,this[_0xf7d068(0x164)]=_0x341580,this[_0xf7d068(0x12d)]=0x0,this[_0xf7d068(0xcf)]=0x0,this['state']=_0xf7d068(0xc7),this[_0xf7d068(0x115)]=null,this['isFinalSpin']=_0x1681ac,this[_0xf7d068(0x88)]=null,this['maxAnimationDuration']=0x2710,this[_0xf7d068(0xc8)]=null;const _0xf6ffa7=_0x1681ac?PHYSICS[_0xf7d068(0x118)]['FINAL_SPIN']:PHYSICS[_0xf7d068(0x118)][_0xf7d068(0x12a)];this[_0xf7d068(0x167)]=_0xf6ffa7[_0xf7d068(0xaf)]*_0x341580,this['totalDuration']=_0xf6ffa7['BASE_DURATION']+this['stopDelay'],this[_0xf7d068(0x117)]=_0xf6ffa7['DECELERATION_TIME'],this[_0xf7d068(0x15f)]=0x0,this['initialPosition']=0x0;}[_0x127eee(0xd4)](_0x434b1c,_0x1cd10f){const _0x50d73a=_0x127eee;if(!this['animationStartTime'])this[_0x50d73a(0x88)]=performance['now']();else{if(performance[_0x50d73a(0x79)]()-this[_0x50d73a(0x88)]>this[_0x50d73a(0x155)]){console['warn']('Animation\x20timeout\x20-\x20forcing\x20stop'),this[_0x50d73a(0x190)]();return;}}if(this[_0x50d73a(0x15d)]===_0x50d73a(0x114))return;const _0x32fdc5=Math[_0x50d73a(0xa5)](_0x1cd10f,0x32)/0x3e8;switch(this['state']){case'accelerating':this[_0x50d73a(0x12d)]+=PHYSICS[_0x50d73a(0x94)]*_0x32fdc5;this[_0x50d73a(0x12d)]>=PHYSICS[_0x50d73a(0xae)]&&(this[_0x50d73a(0x12d)]=PHYSICS['MAX_VELOCITY'],this[_0x50d73a(0x15d)]='spinning');break;case _0x50d73a(0x181):_0x434b1c>=this[_0x50d73a(0x15c)]-this[_0x50d73a(0x117)]&&(this[_0x50d73a(0x15d)]=_0x50d73a(0xad),this[_0x50d73a(0x15f)]=Math[_0x50d73a(0x17d)](this[_0x50d73a(0xcf)]/PHYSICS[_0x50d73a(0x126)])*PHYSICS[_0x50d73a(0x126)]);break;case'decelerating':this[_0x50d73a(0x12d)]+=PHYSICS[_0x50d73a(0x148)]*_0x32fdc5;if(Math['abs'](this[_0x50d73a(0xcf)]-this[_0x50d73a(0x15f)])<0x1&&Math[_0x50d73a(0x113)](this['velocity'])<0x32){this[_0x50d73a(0x190)]();return;}this[_0x50d73a(0x12d)]<=0x0&&(Math[_0x50d73a(0x113)](this[_0x50d73a(0x12d)])<0x64?this[_0x50d73a(0x190)]():(this['velocity']=-this[_0x50d73a(0x12d)]*PHYSICS[_0x50d73a(0x17a)],this['state']=_0x50d73a(0x85)));break;case _0x50d73a(0x85):this[_0x50d73a(0x12d)]+=PHYSICS[_0x50d73a(0x148)]*1.2*_0x32fdc5;if(Math[_0x50d73a(0x113)](this[_0x50d73a(0x12d)])<0x32||Math['abs'](this[_0x50d73a(0xcf)]-this[_0x50d73a(0x15f)])<0x5){this[_0x50d73a(0x190)]();return;}break;}this[_0x50d73a(0xcf)]+=this[_0x50d73a(0x12d)]*_0x32fdc5,this[_0x50d73a(0xcf)]=this[_0x50d73a(0xe8)](this[_0x50d73a(0xcf)]),this[_0x50d73a(0x14a)]();}[_0x127eee(0xe8)](_0x4289c3){const _0x49aae6=_0x127eee,_0x473c8d=_0x4289c3%PHYSICS[_0x49aae6(0x126)];return _0x473c8d>=0x0?_0x473c8d:_0x473c8d+PHYSICS[_0x49aae6(0x126)];}['forceStop'](){const _0x240806=_0x127eee;this['velocity']=0x0,this[_0x240806(0xcf)]=this[_0x240806(0x15f)],this[_0x240806(0x15d)]=_0x240806(0x114),this[_0x240806(0x14a)](),this[_0x240806(0xc8)]&&typeof this[_0x240806(0xc8)]===_0x240806(0xf1)&&this[_0x240806(0xc8)](this['element']);}['updateVisuals'](){const _0x180071=_0x127eee;let _0x24c99e=0x0;if(Math[_0x180071(0x113)](this['velocity'])>0xbb8)_0x24c99e=0xc;else{if(Math['abs'](this['velocity'])>0x7d0)_0x24c99e=0x8;else{if(Math[_0x180071(0x113)](this[_0x180071(0x12d)])>0x3e8)_0x24c99e=0x5;}}this[_0x180071(0xce)][_0x180071(0x12e)][_0x180071(0x144)]=_0x180071(0x116)+this[_0x180071(0xcf)]+_0x180071(0xb3),this['element'][_0x180071(0x12e)][_0x180071(0xee)]=_0x24c99e>0x0?_0x180071(0x166)+_0x24c99e+'px)':_0x180071(0x183);}}function startSpinAnimation(_0x280d0d){const _0x43ed6b=_0x127eee,_0x392bcd=state[_0x43ed6b(0x18d)]===0x1,_0x7b28b0=performance[_0x43ed6b(0x79)](),_0x599480=_0x280d0d[_0x43ed6b(0x98)]((_0x4d20a9,_0x17c3b5)=>{const _0x2ecff7=_0x43ed6b,_0xa42e1b=new SlotColumn(_0x4d20a9,_0x17c3b5,_0x392bcd);return _0x392bcd&&(_0xa42e1b[_0x2ecff7(0xc8)]=_0x4faba3=>{const _0x4a0975=_0x2ecff7,_0x1947ee=_0x4faba3['closest'](_0x4a0975(0xff));if(_0x1947ee){_0x1947ee[_0x4a0975(0x11f)][_0x4a0975(0xbc)]('final-flash'),void _0x1947ee[_0x4a0975(0x178)],_0x1947ee['classList']['add'](_0x4a0975(0xa9));if(!_0x1947ee['querySelector'](_0x4a0975(0x89))){const _0x12e7a8=document['createElement']('div');_0x12e7a8[_0x4a0975(0xd3)]=_0x4a0975(0x10f),_0x12e7a8['textContent']='LOCKED\x20IN!',_0x1947ee[_0x4a0975(0x135)](_0x12e7a8),setTimeout(()=>{const _0x17b3a2=_0x4a0975;_0x12e7a8['classList']['add'](_0x17b3a2(0xba));},0x96);}setTimeout(()=>{const _0x1b4f9e=_0x4a0975;_0x1947ee[_0x1b4f9e(0x11f)][_0x1b4f9e(0xbc)](_0x1b4f9e(0xa9)),_0x1947ee[_0x1b4f9e(0x11f)][_0x1b4f9e(0x9e)](_0x1b4f9e(0x90)),console[_0x1b4f9e(0xeb)]('Added\x20winner-pulsate\x20to:',_0x1947ee);},0x2bc);}}),_0xa42e1b;});_0x599480[_0x43ed6b(0xca)](_0x4cb2b2=>_0x4cb2b2[_0x43ed6b(0x15d)]='accelerating');function _0x2d33ff(_0x42fd21){const _0x5548ce=_0x43ed6b,_0x937957=_0x42fd21-_0x7b28b0;let _0x1f3610=![];_0x599480[_0x5548ce(0xca)](_0x1146d0=>{const _0x4e981f=_0x5548ce;if(_0x1146d0[_0x4e981f(0x15d)]!==_0x4e981f(0x114)){_0x1f3610=!![];const _0x2cacb8=_0x1146d0[_0x4e981f(0x115)]?_0x42fd21-_0x1146d0[_0x4e981f(0x115)]:16.67;_0x1146d0[_0x4e981f(0xd4)](_0x937957,_0x2cacb8),_0x1146d0[_0x4e981f(0x115)]=_0x42fd21;}}),_0x1f3610?requestAnimationFrame(_0x2d33ff):(_0x392bcd&&finalVictoryFlash(_0x280d0d),finalizeSpin(_0x280d0d));}requestAnimationFrame(_0x2d33ff);}function _0x5d1d(_0x1a944d,_0x5acf14){const _0x39c75d=_0x39c7();return _0x5d1d=function(_0x5d1dfd,_0x1a6e3f){_0x5d1dfd=_0x5d1dfd-0x79;let _0x398d46=_0x39c75d[_0x5d1dfd];return _0x398d46;},_0x5d1d(_0x1a944d,_0x5acf14);}function addToHistory(_0x1db7c3,_0x399bbe,_0x59b0a3,_0x2f56fa){const _0x2b3331=_0x127eee,_0x2c5ffe=document[_0x2b3331(0xf4)](_0x2b3331(0x7a)),_0x14ed8a=document['createElement']('div');_0x14ed8a[_0x2b3331(0x11f)]['add'](_0x2b3331(0xd5)),_0x14ed8a[_0x2b3331(0x8b)]=_0x2b3331(0xfa)+_0x1db7c3+_0x2b3331(0xcb)+_0x399bbe+_0x2b3331(0x150)+_0x59b0a3+'</p>\x0a\x20\x20\x20\x20<p><strong>Gadgets:</strong>\x20'+_0x2f56fa['join'](',\x20')+_0x2b3331(0xef),_0x2c5ffe[_0x2b3331(0x141)](_0x14ed8a);while(_0x2c5ffe[_0x2b3331(0x13f)][_0x2b3331(0x13d)]>0x5){_0x2c5ffe['removeChild'](_0x2c5ffe[_0x2b3331(0x185)]);}saveHistory();}function saveHistory(){const _0x364804=_0x127eee,_0x28b586=Array['from'](document[_0x364804(0x92)](_0x364804(0xda)))[_0x364804(0x98)](_0x4e5b1d=>_0x4e5b1d['innerHTML']);localStorage[_0x364804(0x100)](_0x364804(0x80),JSON[_0x364804(0xa7)](_0x28b586));}function loadHistory(){const _0x347a07=_0x127eee,_0x272348=document[_0x347a07(0xf4)](_0x347a07(0x7a)),_0x326d4f=JSON['parse'](localStorage['getItem']('loadoutHistory'))||[];_0x272348[_0x347a07(0x8b)]='',_0x326d4f[_0x347a07(0xca)](_0x223b89=>{const _0x2311ea=_0x347a07,_0x8d69c7=document[_0x2311ea(0xab)](_0x2311ea(0x11b));_0x8d69c7[_0x2311ea(0x11f)]['add']('history-entry'),_0x8d69c7['innerHTML']=_0x223b89,_0x272348[_0x2311ea(0x135)](_0x8d69c7);});}function copyLoadoutText(_0x7d591c){const _0x1d046a=_0x127eee,_0x3e697d=_0x7d591c[_0x1d046a(0xd6)](_0x1d046a(0xda));if(!_0x3e697d){console['error']('Error:\x20No\x20history\x20entry\x20found.');return;}const _0x5ca8e8=Array['from'](_0x3e697d[_0x1d046a(0x92)]('p'))[_0x1d046a(0x98)](_0x921b29=>_0x921b29[_0x1d046a(0x177)])[_0x1d046a(0x139)]('\x0a');navigator[_0x1d046a(0xf0)]['writeText'](_0x5ca8e8)['then'](()=>{const _0xb7c3f=_0x1d046a;_0x7d591c[_0xb7c3f(0x177)]=_0xb7c3f(0xb7),setTimeout(()=>{const _0x4d1263=_0xb7c3f;_0x7d591c[_0x4d1263(0x177)]=_0x4d1263(0xa1);},0x7d0);})[_0x1d046a(0x11d)](_0x2c181e=>{const _0x4be280=_0x1d046a;console[_0x4be280(0xe6)]('Could\x20not\x20copy\x20text:\x20',_0x2c181e),alert('Failed\x20to\x20copy\x20loadout\x20to\x20clipboard');});}function finalizeSpin(_0xce8c8d){const _0x3ee293=_0x127eee,_0x4750ee=state[_0x3ee293(0x18d)]===0x1;if(state[_0x3ee293(0x18d)]>0x1){state['currentSpin']--,updateSpinCountdown(),setTimeout(()=>{const _0x491d93=_0x3ee293;state[_0x491d93(0x101)]===_0x491d93(0x14d)?displayRandomLoadout():displayManualLoadout(state[_0x491d93(0x101)]);},0x12c);return;}if(_0x4750ee){_0xce8c8d[_0x3ee293(0xca)]((_0x298c81,_0x499864)=>{const _0x2664b9=_0x3ee293,_0x429b25=_0x298c81[_0x2664b9(0xd6)](_0x2664b9(0xff));_0x429b25&&setTimeout(()=>{const _0x13ef70=_0x2664b9;_0x429b25[_0x13ef70(0x11f)][_0x13ef70(0x9e)](_0x13ef70(0xe3)),setTimeout(()=>{const _0x41123b=_0x13ef70;_0x429b25[_0x41123b(0x11f)]['add'](_0x41123b(0x90));},0x12c);},_0x499864*0xc8);});const _0x12f907=document[_0x3ee293(0x92)](_0x3ee293(0xff)),_0x213854=Array[_0x3ee293(0xed)](_0x12f907)[_0x3ee293(0x98)](_0x3013e0=>{const _0x3ff6fc=_0x3ee293,_0x45ac6f=_0x3013e0[_0x3ff6fc(0xfc)](_0x3ff6fc(0x7f));if(!_0x45ac6f)return _0x3ff6fc(0x7b);const _0x3a99d2=_0x45ac6f[_0x3ff6fc(0x92)]('.itemCol'),_0x2f3b7d=Array[_0x3ff6fc(0xed)](_0x3a99d2)[_0x3ff6fc(0x112)](_0x2a79a7=>{const _0x98e501=_0x3ff6fc,_0x1d8635=_0x2a79a7[_0x98e501(0x17c)](),_0x268a07=_0x3013e0[_0x98e501(0x17c)]();return _0x1d8635[_0x98e501(0x18e)]>=_0x268a07['top']&&_0x1d8635['bottom']<=_0x268a07[_0x98e501(0xcd)]&&_0x1d8635[_0x98e501(0x170)]>0x0&&_0x1d8635[_0x98e501(0xdf)]>0x0;});return _0x2f3b7d?_0x2f3b7d[_0x3ff6fc(0xfc)]('p')?.['innerText'][_0x3ff6fc(0x161)]():'Unknown';});if(_0x213854[_0x3ee293(0x13d)]>=0x5){const _0x3c687a=state[_0x3ee293(0x101)]||_0x3ee293(0x7b),_0x43eb9e=_0x213854[0x0],_0x54569e=_0x213854[0x1],_0x4ffcd3=_0x213854[_0x3ee293(0x186)](0x2,0x5);addToHistory(_0x3c687a,_0x43eb9e,_0x54569e,_0x4ffcd3);}document[_0x3ee293(0x92)](_0x3ee293(0x13b))[_0x3ee293(0xca)](_0x501eb0=>{const _0xc3068c=_0x3ee293;_0x501eb0['classList'][_0xc3068c(0xbc)](_0xc3068c(0xc5));}),state[_0x3ee293(0xc3)]=![],state[_0x3ee293(0x18d)]=0x1,state['totalSpins']=0x0,state[_0x3ee293(0x176)][_0x3ee293(0x158)](),state[_0x3ee293(0x101)]=null,document['querySelectorAll'](_0x3ee293(0x96))[_0x3ee293(0xca)](_0x42b613=>{const _0x1923f8=_0x3ee293;_0x42b613[_0x1923f8(0x11f)][_0x1923f8(0xbc)](_0x1923f8(0xc5),_0x1923f8(0x140)),_0x42b613[_0x1923f8(0xd1)](_0x1923f8(0x123));}),document['getElementById'](_0x3ee293(0x17e))[_0x3ee293(0x11f)][_0x3ee293(0x9e)]('disabled');}}function _0x39c7(){const _0x2d0a20=['disabled','814836DeWQZw','🖥️\x20UI\x20Loadout\x20After\x20Rendering:','ITEM_HEIGHT','src','contains','.items-container','REGULAR_SPIN','174qvThFX','100%','velocity','style','M26\x20Matter','✅\x20Gadget\x20pool\x20after\x20clearing:','.webp\x22\x20alt=\x22','SR-84','50MGTJNv','readyState','appendChild','Glitch\x20Grenade','Winch\x20Claw','Model\x201887','join','specializations','.class-button','\x0aSpecialization:\x20','length','🛠️\x20UI\x20Gadget\x20Slot\x20','children','selected','prepend','_active.webp','\x0a\x20\x20\x20\x20\x20\x20<div\x20class=\x22slot-machine-wrapper\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22items-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22item-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22scroll-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','transform','1000px','Sword','Dagger','DECELERATION','Throwing\x20Knives','updateVisuals','replace','finalLoadout','random','gadgets','splice','</p>\x0a\x20\x20\x20\x20<p><strong>Specialization:</strong>\x20','true','zIndex','darkModeToggle','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20','maxAnimationDuration','Proximity\x20Sensor','writeText','clear','Heavy','hidden','🚀\x20Displaying\x20new\x20loadout...\x20Clearing\x20old\x20content.','totalDuration','state','\x0aWeapon:\x20','targetPosition','willChange','trim','KS-23','FAMAS','index','93R','blur(','stopDelay','AKM','884436WLbKqV','dataset','Evasive\x20Dash','Cloaking\x20Device','has','_silhouette.webp','floor','height','Spear','addEventListener','background:\x20#333;\x20color:\x20#bada55','Sonar\x20Grenade','Error:\x20No\x20items\x20found\x20to\x20copy','selectedGadgets','textContent','offsetWidth','Light','BOUNCE_DAMPENING','Glitch\x20Trap','getBoundingClientRect','ceil','spinSelection','\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>','50\x20Akimbo','spinning','</p>\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20','none','\x0aGadget\x203:\x20','lastChild','slice','totalSpins','darkMode','images/random_dice.webp','Gateway','enabled','\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<img\x20src=\x22images/','currentSpin','top','656984SDhlDm','forceStop','\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','M32GL','backgroundColor','now','history-list','Unknown','DOMContentLoaded','left','Error:\x20Not\x20all\x20items\x20were\x20properly\x20selected.\x20Please\x20try\x20again\x20after\x20the\x20spin\x20completes.','.scroll-container','loadoutHistory','\x20spins\x20remaining.','Recurve\x20Bow','copyLoadoutButton','Failed\x20to\x20copy\x20loadout\x20to\x20clipboard','bouncing','119718sCBKsI','Explosive\x20Mine','animationStartTime','.locked-tag','body','innerHTML','XP-54','\x0a\x20\x20\x20\x20\x20\x20<div\x20class=\x22itemCol\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','Zipline','winner-pulsate','toLowerCase','querySelectorAll','Breach\x20Charge','ACCELERATION','ease-out','.class-button,\x20.spin-button','.itemCol.winner\x20p','map','Barricade','🛑\x20Clearing\x20previous\x20gadget\x20pool...','pulsing','warn','Goo\x20Gun','add','Pike-556','.itemCol','Copy','Medium','No\x20class\x20selected!','toggle','min','11kcGpJW','stringify','🎉\x20Spin\x20complete.\x20Gadget\x20Pool\x20now:','final-flash','Grappling\x20Hook','createElement','play','decelerating','MAX_VELOCITY','COLUMN_DELAY','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22item-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22scroll-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','innerText','SHAK-50','px)','setAttribute','Riot\x20Shield','winner','Copied!','.class-button.selected,\x20.class-button.active','includes','show','translate3d(0,0,0)','remove','click','Error\x20in\x20copy\x20loadout\x20handler:','static','Jump\x20Pad','\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<img\x20src=\x22images/','rgba(255,\x20255,\x20255,\x200.7)','isSpinning','SH1900','active','spins','waiting','onStop','Charge\x20N\x20Slam','forEach','</p>\x0a\x20\x20\x20\x20<p><strong>Weapon:</strong>\x20','🗑️\x20Loadout\x20history\x20cleared.','bottom','element','position','Thermal\x20Bore','removeAttribute','3WeYtXy','className','update','history-entry','closest','Lockbolt\x20Launcher','sort','class','.history-entry','relative','removeItem','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20','Loadout\x20copied\x20to\x20clipboard!','width','backfaceVisibility','APS\x20Turret','Pyro\x20Mine','landing-flash','Gas\x20Grenade','1438180WcmxSJ','error','Flashbang','normalizePosition','Guardian\x20Turret','clear-history','log','.itemCol.winner','from','filter','</p>\x0a\x20\x20\x20\x20<button\x20class=\x22copy-loadout\x22\x20onclick=\x22copyLoadoutText(this)\x22>Copy</button>\x0a\x20\x20','clipboard','function','Flamethrower','currentGadgetPool','getElementById','perspective','Smoke\x20Grenade','V9S','🔄\x20Starting\x20new\x20spin:\x20','Goo\x20Grenade','\x0a\x20\x20\x20\x20<p><strong>Class:</strong>\x20','Frag\x20Grenade','querySelector','Anti-Gravity\x20Cube','.slot-machine-wrapper\x20.items-container\x20.item-container','.item-container','setItem','selectedClass','\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<p>','images/','Dematerializer','✅\x20Final\x20Loadout\x20Stored:','%c\x20','\x0aGadget\x201:\x20','Pyro\x20Grenade','858OuuiMg','M60','Healing\x20Beam','rgba(255,\x20255,\x20255,\x200)','88083afTTIB','mega-flash','locked-tag','dark-mode','184QneXWT','find','abs','stopped','lastTimestamp','translateY(','decelerationTime','TIMING','Lewis\x20Gun','Dome\x20Shield','div','\x0aGadget\x202:\x20','catch','✅\x20DOM\x20fully\x20loaded','classList','RPG-7','push','.spin-button'];_0x39c7=function(){return _0x2d0a20;};return _0x39c7();}function finalVictoryFlash(_0x11045d){setTimeout(()=>{const _0x427299=_0x5d1d,_0x34cbab=_0x11045d[_0x427299(0x98)](_0x4608bb=>_0x4608bb['closest'](_0x427299(0xff))),_0x22dc89=document['querySelector'](_0x427299(0x129));_0x34cbab[_0x427299(0xca)]((_0x12f360,_0x51ca76)=>{setTimeout(()=>{const _0x4bb965=_0x5d1d;_0x12f360[_0x4bb965(0x11f)]['remove'](_0x4bb965(0x10e)),void _0x12f360[_0x4bb965(0x178)],_0x12f360[_0x4bb965(0x11f)][_0x4bb965(0x9e)](_0x4bb965(0x10e)),_0x51ca76===_0x34cbab[_0x4bb965(0x13d)]-0x1&&setTimeout(()=>{const _0x2ed4b0=_0x4bb965;if(_0x22dc89){const _0x462550=document[_0x2ed4b0(0xab)](_0x2ed4b0(0x11b));getComputedStyle(_0x22dc89)[_0x2ed4b0(0xcf)]===_0x2ed4b0(0xbf)&&(_0x22dc89['style'][_0x2ed4b0(0xcf)]=_0x2ed4b0(0xdb)),_0x462550['style'][_0x2ed4b0(0xcf)]='absolute',_0x462550[_0x2ed4b0(0x12e)][_0x2ed4b0(0x18e)]='0',_0x462550[_0x2ed4b0(0x12e)][_0x2ed4b0(0x7d)]='0',_0x462550[_0x2ed4b0(0x12e)]['width']=_0x2ed4b0(0x12c),_0x462550['style'][_0x2ed4b0(0x170)]=_0x2ed4b0(0x12c),_0x462550[_0x2ed4b0(0x12e)][_0x2ed4b0(0x193)]=_0x2ed4b0(0x10c),_0x462550[_0x2ed4b0(0x12e)]['pointerEvents']='none',_0x462550[_0x2ed4b0(0x12e)][_0x2ed4b0(0x152)]='90',_0x22dc89['appendChild'](_0x462550),_0x462550['animate']([{'backgroundColor':_0x2ed4b0(0x10c)},{'backgroundColor':_0x2ed4b0(0xc2)},{'backgroundColor':_0x2ed4b0(0x10c)}],{'duration':0x258,'easing':_0x2ed4b0(0x95),'fill':'forwards'}),setTimeout(()=>{const _0x4801e8=_0x2ed4b0;_0x462550[_0x4801e8(0xbc)]();},0x2bc);}},0x64);},_0x51ca76*0x96);});},0x320);}document[_0x127eee(0x172)]('DOMContentLoaded',()=>{const _0x399e5c=_0x127eee;console[_0x399e5c(0xeb)](_0x399e5c(0x11e)),loadHistory(),document[_0x399e5c(0xf4)](_0x399e5c(0xea))?.[_0x399e5c(0x172)](_0x399e5c(0xbd),()=>{const _0x10998d=_0x399e5c;localStorage[_0x10998d(0xdc)](_0x10998d(0x80)),document['getElementById'](_0x10998d(0x7a))['innerHTML']='',console[_0x10998d(0xeb)](_0x10998d(0xcc));});const _0x1eb356=document[_0x399e5c(0xf4)](_0x399e5c(0x153));_0x1eb356&&(localStorage['getItem'](_0x399e5c(0x188))===_0x399e5c(0x18b)&&document[_0x399e5c(0x8a)][_0x399e5c(0x11f)]['add'](_0x399e5c(0x110)),_0x1eb356['addEventListener'](_0x399e5c(0xbd),()=>{const _0x3368b5=_0x399e5c;document[_0x3368b5(0x8a)][_0x3368b5(0x11f)][_0x3368b5(0xa4)](_0x3368b5(0x110)),document[_0x3368b5(0x8a)][_0x3368b5(0x11f)][_0x3368b5(0x128)](_0x3368b5(0x110))?localStorage[_0x3368b5(0x100)]('darkMode','enabled'):localStorage[_0x3368b5(0xdc)](_0x3368b5(0x188));})),document['querySelectorAll']('.class-button')[_0x399e5c(0xca)](_0x5857b3=>{const _0x13a4ea=_0x399e5c;_0x5857b3[_0x13a4ea(0x172)](_0x13a4ea(0xbd),function(){const _0x1fa6f0=_0x13a4ea;if(state['isSpinning'])return;document['querySelectorAll'](_0x1fa6f0(0x13b))[_0x1fa6f0(0xca)](_0x38910e=>{const _0x1a35dc=_0x1fa6f0;let _0x45f672=_0x38910e[_0x1a35dc(0x16a)][_0x1a35dc(0xd9)]['toLowerCase']();_0x45f672===_0x1a35dc(0x14d)?(_0x38910e['src']=_0x1a35dc(0x189),_0x38910e[_0x1a35dc(0x11f)]['remove'](_0x1a35dc(0xc5),_0x1a35dc(0x9b))):(_0x38910e['src']=_0x1a35dc(0x103)+_0x45f672+_0x1a35dc(0x16e),_0x38910e[_0x1a35dc(0x11f)][_0x1a35dc(0xbc)]('active','selected'));});let _0xc9f876=this[_0x1fa6f0(0x16a)][_0x1fa6f0(0xd9)]['toLowerCase']();if(_0xc9f876===_0x1fa6f0(0x14d)){this[_0x1fa6f0(0x11f)][_0x1fa6f0(0x9e)]('pulsing');const _0x36d8bf=[_0x1fa6f0(0x179),_0x1fa6f0(0xa2),_0x1fa6f0(0x159)],_0x12f6d1=_0x36d8bf[Math[_0x1fa6f0(0x16f)](Math[_0x1fa6f0(0x14d)]()*_0x36d8bf[_0x1fa6f0(0x13d)])];state['selectedClass']=_0x12f6d1,document[_0x1fa6f0(0x92)](_0x1fa6f0(0x13b))['forEach'](_0x486d05=>{const _0x398ed0=_0x1fa6f0;_0x486d05[_0x398ed0(0x11f)][_0x398ed0(0xbc)](_0x398ed0(0x140),_0x398ed0(0xc5)),_0x486d05[_0x398ed0(0x16a)][_0x398ed0(0xd9)]===_0x12f6d1&&(_0x486d05[_0x398ed0(0x11f)][_0x398ed0(0x9e)](_0x398ed0(0x140),_0x398ed0(0xc5)),_0x486d05['src']=_0x398ed0(0x103)+_0x12f6d1[_0x398ed0(0x91)]()+_0x398ed0(0x142));});const _0x3b7878=Math[_0x1fa6f0(0x16f)](Math[_0x1fa6f0(0x14d)]()*0x5)+0x1;state['totalSpins']=_0x3b7878,state[_0x1fa6f0(0x18d)]=_0x3b7878,document[_0x1fa6f0(0x92)]('.spin-button')[_0x1fa6f0(0xca)](_0x6c38b4=>{const _0x54e05e=_0x1fa6f0;parseInt(_0x6c38b4['dataset'][_0x54e05e(0xc6)])===_0x3b7878?_0x6c38b4['classList'][_0x54e05e(0x9e)]('selected','active'):_0x6c38b4[_0x54e05e(0x11f)][_0x54e05e(0xbc)](_0x54e05e(0x140),_0x54e05e(0xc5));}),document[_0x1fa6f0(0x92)]('.spin-button')[_0x1fa6f0(0xca)](_0x251e21=>_0x251e21['removeAttribute']('disabled')),document['getElementById'](_0x1fa6f0(0x17e))[_0x1fa6f0(0x11f)][_0x1fa6f0(0xbc)](_0x1fa6f0(0x123)),setTimeout(()=>{const _0x766e09=_0x1fa6f0;spinLoadout(state[_0x766e09(0x187)]);},0x12c);}else this[_0x1fa6f0(0x127)]=_0x1fa6f0(0x103)+_0xc9f876+_0x1fa6f0(0x142),state[_0x1fa6f0(0x101)]=this[_0x1fa6f0(0x16a)][_0x1fa6f0(0xd9)],this[_0x1fa6f0(0x11f)][_0x1fa6f0(0x9e)](_0x1fa6f0(0xc5),_0x1fa6f0(0x140)),document[_0x1fa6f0(0x92)](_0x1fa6f0(0x122))[_0x1fa6f0(0xca)](_0x90b1cd=>{const _0x33736e=_0x1fa6f0;_0x90b1cd[_0x33736e(0xd1)](_0x33736e(0x123));}),document[_0x1fa6f0(0xf4)]('spinSelection')[_0x1fa6f0(0x11f)][_0x1fa6f0(0xbc)](_0x1fa6f0(0x123));console['log']('Selected\x20class:\x20'+state['selectedClass']);});}),document[_0x399e5c(0x92)](_0x399e5c(0x122))[_0x399e5c(0xca)](_0x266d57=>{const _0x50f263=_0x399e5c;_0x266d57[_0x50f263(0x172)](_0x50f263(0xbd),()=>{const _0x12071b=_0x50f263;if(state[_0x12071b(0xc3)])return;try{const _0x4c485a=document['getElementById']('clickSound');_0x4c485a&&_0x4c485a[_0x12071b(0x134)]>=0x2&&(_0x4c485a['currentTime']=0x0,_0x4c485a[_0x12071b(0xac)]()['catch'](_0x1c7ae7=>console[_0x12071b(0x9c)]('Error\x20playing\x20sound:',_0x1c7ae7))),document['querySelectorAll'](_0x12071b(0x122))[_0x12071b(0xca)](_0x4da31c=>_0x4da31c[_0x12071b(0x11f)][_0x12071b(0xbc)]('selected',_0x12071b(0xc5))),_0x266d57[_0x12071b(0x11f)][_0x12071b(0x9e)](_0x12071b(0x140),'active'),state[_0x12071b(0x187)]=parseInt(_0x266d57['dataset'][_0x12071b(0xc6)]),state[_0x12071b(0x18d)]=state[_0x12071b(0x187)],state['selectedClass']?spinLoadout(state[_0x12071b(0x187)]):console[_0x12071b(0x9c)](_0x12071b(0xa3));}catch(_0x46efde){console[_0x12071b(0xe6)]('Error\x20in\x20spin\x20button\x20handler:',_0x46efde);}});}),document[_0x399e5c(0xf4)](_0x399e5c(0x83))?.[_0x399e5c(0x172)](_0x399e5c(0xbd),()=>{const _0x61b98c=_0x399e5c;try{const _0xd17e37=document[_0x61b98c(0x92)](_0x61b98c(0xfe));if(!_0xd17e37||_0xd17e37[_0x61b98c(0x13d)]===0x0){alert(_0x61b98c(0x175));return;}const _0x17b241=Array[_0x61b98c(0xed)](_0xd17e37)['map'](_0x540c7f=>{const _0x4fe66b=_0x61b98c,_0x1b2315=_0x540c7f[_0x4fe66b(0xfc)](_0x4fe66b(0x7f));if(!_0x1b2315)return _0x4fe66b(0x7b);const _0x11922e=_0x1b2315[_0x4fe66b(0x92)](_0x4fe66b(0xa0)),_0x2372d4=Array[_0x4fe66b(0xed)](_0x11922e)[_0x4fe66b(0x112)](_0x3cf6d7=>{const _0x30e2ce=_0x4fe66b,_0x5a1d68=_0x3cf6d7[_0x30e2ce(0x17c)](),_0x1a63a3=_0x540c7f[_0x30e2ce(0x17c)]();return _0x5a1d68[_0x30e2ce(0x18e)]>=_0x1a63a3[_0x30e2ce(0x18e)]&&_0x5a1d68[_0x30e2ce(0xcd)]<=_0x1a63a3['bottom']&&_0x5a1d68[_0x30e2ce(0x170)]>0x0&&_0x5a1d68[_0x30e2ce(0xdf)]>0x0;});if(!_0x2372d4)return _0x4fe66b(0x7b);return _0x2372d4['querySelector']('p')?.[_0x4fe66b(0xb1)][_0x4fe66b(0x161)]()||_0x4fe66b(0x7b);});if(_0x17b241[_0x61b98c(0xb9)](_0x61b98c(0x7b))||_0x17b241['length']<0x5){alert(_0x61b98c(0x7e));return;}const _0x57a9f4=document['querySelector'](_0x61b98c(0xb8)),_0x174fb4=_0x57a9f4?_0x57a9f4[_0x61b98c(0x16a)][_0x61b98c(0xd9)]===_0x61b98c(0x14d)?document[_0x61b98c(0xfc)]('.class-button.selected:not(.random)')?.[_0x61b98c(0x16a)]['class']:_0x57a9f4[_0x61b98c(0x16a)][_0x61b98c(0xd9)]:_0x61b98c(0x7b),_0x259bd3='Class:\x20'+_0x174fb4+_0x61b98c(0x15e)+_0x17b241[0x0]+_0x61b98c(0x13c)+_0x17b241[0x1]+_0x61b98c(0x107)+_0x17b241[0x2]+_0x61b98c(0x11c)+_0x17b241[0x3]+_0x61b98c(0x184)+_0x17b241[0x4];navigator['clipboard'][_0x61b98c(0x157)](_0x259bd3)['then'](()=>alert(_0x61b98c(0xde)))[_0x61b98c(0x11d)](_0x5d00cb=>{const _0x26d4ef=_0x61b98c;console[_0x26d4ef(0xe6)]('Could\x20not\x20copy\x20text:',_0x5d00cb),alert(_0x26d4ef(0x84));});}catch(_0x467911){console[_0x61b98c(0xe6)](_0x61b98c(0xbe),_0x467911),alert('An\x20error\x20occurred\x20while\x20copying\x20the\x20loadout');}});});
+const state = {
+  selectedClass: null,
+  isSpinning: false,
+  currentSpin: 1,
+  totalSpins: 0,
+  selectedGadgets: new Set(),
+  gadgetQueue: {
+    Light: [],
+    Medium: [],
+    Heavy: [],
+  },
+  currentGadgetPool: new Set(),
+};
+
+let spinButtons;
+let classButtons;
+let spinSelection;
+let outputDiv;
+
+const PHYSICS = {
+  ACCELERATION: 6000,
+  MAX_VELOCITY: 4000,
+  DECELERATION: -3000,
+  BOUNCE_DAMPENING: 0.3,
+  ITEM_HEIGHT: 188,
+  TIMING: {
+    REGULAR_SPIN: {
+      COLUMN_DELAY: 250, // 0.25s between stops for regular spins
+      BASE_DURATION: 800,
+      DECELERATION_TIME: 400,
+    },
+    FINAL_SPIN: {
+      COLUMN_DELAY: 600, // 0.6s between stops for final spin
+      BASE_DURATION: 2500,
+      DECELERATION_TIME: 800,
+    },
+  },
+};
+
+// Loadouts object
+const loadouts = {
+  Light: {
+    weapons: [
+      "93R",
+      "Dagger",
+      "SR-84",
+      "SH1900",
+      "LH1",
+      "M26 Matter",
+      "Recurve Bow",
+      "Sword",
+      "M11",
+      "V9S",
+      "XP-54",
+      "Throwing Knives",
+    ],
+    specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
+    gadgets: [
+      "Breach Charge",
+      "Gateway",
+      "Glitch Grenade",
+      "Gravity Vortex",
+      "Sonar Grenade",
+      "Thermal Bore",
+      "Gas Grenade",
+      "Gravity Vortex",
+      "Thermal Vision",
+      "Tracking Dart",
+      "Vanishing Bomb",
+      "Goo Grenade",
+      "Pyro Grenade",
+      "Smoke Grenade",
+      "Frag Grenade",
+      "Flashbang",
+    ],
+  },
+  Medium: {
+    weapons: [
+      "AKM",
+      "Cerberus 12GA",
+      "Dual Blades",
+      "FAMAS",
+      "CL-40",
+      "FCAR",
+      "Model 1887",
+      "Pike-556",
+      "R.357",
+      "Riot Shield",
+    ],
+    specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
+    gadgets: [
+      "APS Turret",
+      "Data Reshaper",
+      "Defibrillator",
+      "Explosive Mine",
+      "Gas Mine",
+      "Glitch Trap",
+      "Jump Pad",
+      "Zipline",
+      "Gas Grenade",
+      "Goo Grenade",
+      "Pyro Grenade",
+      "Smoke Grenade",
+      "Frag Grenade",
+      "Flashbang",
+      "Proximity Sensor",
+    ],
+  },
+  Heavy: {
+    weapons: [
+      "50 Akimbo",
+      "Flamethrower",
+      "KS-23",
+      "Lewis Gun",
+      "M60",
+      "M32GL",
+      "SA 1216",
+      "Sledgehammer",
+      "SHAK-50",
+      "Spear",
+    ],
+    specializations: ["Charge N Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+    gadgets: [
+      "Anti-Gravity Cube",
+      "Barricade",
+      "C4",
+      "Dome Shield",
+      "Lockbolt Launcher",
+      "Pyro Mine",
+      "Proximity Sensor",
+      "RPG-7",
+      "Goo Grenade",
+      "Pyro Grenade",
+      "Smoke Grenade",
+      "Frag Grenade",
+      "Flashbang",
+      "Explosive Mine",
+      "Gas Grenade",
+    ],
+  },
+};
+
+const getRandomUniqueItems = (array, n) => {
+  const shuffled = [...array].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, n);
+};
+
+const getUniqueGadgets = (classType, loadout) => {
+  if (state.gadgetQueue[classType].length < 3) {
+    state.gadgetQueue[classType] = [...loadout.gadgets].sort(
+      () => Math.random() - 0.5
+    );
+  }
+  const selectedGadgets = state.gadgetQueue[classType].splice(0, 3);
+  state.currentGadgetPool = new Set(selectedGadgets);
+  return selectedGadgets;
+};
+
+function createItemContainer(items, winningItem = null, isGadget = false) {
+  if (isGadget) {
+    return items
+      .map(
+        (item, index) => `
+        <div class="itemCol ${index === 4 ? "winner" : ""}">
+          <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+          <p>${item}</p>
+        </div>
+      `
+      )
+      .join("");
+  }
+
+  winningItem = winningItem || items[Math.floor(Math.random() * items.length)];
+  let repeatedItems = items
+    .filter((item) => item !== winningItem)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 7);
+
+  repeatedItems = [
+    ...repeatedItems.slice(0, 4),
+    winningItem,
+    ...repeatedItems.slice(4),
+  ];
+
+  while (repeatedItems.length < 8) {
+    const randomItem = items[Math.floor(Math.random() * items.length)];
+    repeatedItems.push(randomItem);
+  }
+
+  return repeatedItems
+    .map(
+      (item, index) => `
+      <div class="itemCol ${index === 4 ? "winner" : ""}">
+        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+        <p>${item}</p>
+      </div>
+    `
+    )
+    .join("");
+}
+
+// Helper functions
+document.addEventListener("DOMContentLoaded", () => {
+  // DOM element queries after loaded
+  classButtons = document.querySelectorAll(".class-button");
+  spinButtons = document.querySelectorAll(".spin-button");
+  spinSelection = document.getElementById("spinSelection");
+  outputDiv = document.getElementById("output"); // assign here after DOM loaded
+
+  console.log("✅ DOM fully loaded");
+
+  spinButtons.forEach((button) => {
+    button.disabled = true; // Disable button
+    button.classList.add("dimmed"); // Add class to dim the button
+  });
+
+  // Class button event listeners
+  classButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      if (state.isSpinning) return;
+
+      console.log(`✅ Class Selected: ${button.dataset.class}`);
+
+      // Clear previous selections and reset images
+      classButtons.forEach((b) => {
+        b.classList.remove("selected", "active");
+        b.src = b.dataset.default; // Reset image to default
+      });
+
+      // Select current button
+      button.classList.add("selected", "active");
+      button.src = button.dataset.active; // Change image to active
+
+      // Handle "Random" class selection
+      if (button.dataset.class.toLowerCase() === "random") {
+        // Get a random class
+        const classes = ["Light", "Medium", "Heavy"];
+        const randomClass = classes[Math.floor(Math.random() * classes.length)];
+        state.selectedClass = randomClass;
+        console.log(`🎲 Randomly Chosen Class: ${randomClass}`);
+
+        // Pick a random spin count (1-5)
+        const randomSpins = Math.floor(Math.random() * 5) + 1;
+        state.totalSpins = randomSpins;
+        console.log(`🔄 Random Spins: ${randomSpins}`);
+
+        // Highlight the randomly selected class button
+        classButtons.forEach((b) => {
+          if (b.dataset.class.toLowerCase() === randomClass.toLowerCase()) {
+            b.classList.add("selected");
+            b.src = b.dataset.active; // Switch image for selected class
+          }
+        });
+
+        // Highlight the randomly selected spin button
+        spinButtons.forEach((b) => {
+          b.classList.toggle(
+            "selected",
+            parseInt(b.dataset.spins) === randomSpins
+          );
+        });
+
+        // Start the spin process immediately
+        spinLoadout();
+      } else {
+        // Set selected class and enable spin buttons
+        state.selectedClass = button.dataset.class;
+        console.log(`✅ Selected Class Stored: ${state.selectedClass}`);
+
+        // Remove disabled class from spin selection container
+        if (spinSelection) {
+          spinSelection.classList.remove("disabled");
+        } else {
+          console.warn("spinSelection element not found");
+        }
+
+        // Enable all spin buttons
+        spinButtons.forEach((btn) => {
+          btn.disabled = false; // Enable buttons
+          btn.classList.remove("dimmed"); // Remove dimming effect
+        });
+      }
+    });
+
+    // Add hover effect to switch images
+    button.addEventListener("mouseenter", () => {
+      button.src = button.dataset.active;
+    });
+
+    button.addEventListener("mouseleave", () => {
+      if (!button.classList.contains("selected")) {
+        button.src = button.dataset.default;
+      }
+    });
+  });
+
+  // Add spin button click handlers
+  spinButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      if (button.disabled || state.isSpinning) return;
+
+      console.log(`🎲 Spin button clicked: ${button.dataset.spins} spins`);
+
+      // Update the selected number of spins
+      state.totalSpins = parseInt(button.dataset.spins);
+
+      // Visual feedback - highlight the selected button
+      spinButtons.forEach((btn) => btn.classList.remove("selected", "active"));
+      button.classList.add("selected", "active");
+
+      // Start the spin process
+      spinLoadout();
+    });
+  });
+
+  // 👉 Copy loadout functionality
+  document
+    .getElementById("copyLoadoutButton")
+    ?.addEventListener("click", () => {
+      const itemContainers = document.querySelectorAll(
+        ".slot-machine-wrapper .items-container .item-container"
+      );
+
+      if (!itemContainers || itemContainers.length === 0) {
+        alert("Error: No items found to copy");
+        return;
+      }
+
+      const selectedItems = Array.from(itemContainers).map((container) => {
+        const scrollContainer = container.querySelector(".scroll-container");
+        if (!scrollContainer) return "Unknown";
+
+        const allItems = scrollContainer.querySelectorAll(".itemCol");
+        const visibleItem = Array.from(allItems).find((item) => {
+          const rect = item.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+          return (
+            rect.top >= containerRect.top &&
+            rect.bottom <= containerRect.bottom &&
+            rect.height > 0 &&
+            rect.width > 0
+          );
+        });
+
+        if (!visibleItem) return "Unknown";
+        const itemText = visibleItem.querySelector("p")?.innerText.trim();
+        return itemText || "Unknown";
+      });
+
+      if (selectedItems.includes("Unknown") || selectedItems.length < 5) {
+        alert(
+          "Error: Not all items were properly selected. Try again after the spin completes."
+        );
+        return;
+      }
+
+      const activeClassButton = document.querySelector(
+        ".class-button.selected, .class-button.active"
+      );
+      const selectedClass = activeClassButton
+        ? activeClassButton.dataset.class.toLowerCase() === "random"
+          ? document.querySelector(
+              ".class-button.selected:not([data-class='Random'])"
+            )?.dataset.class
+          : activeClassButton.dataset.class
+        : "Unknown";
+
+      const copyText = `Class: ${selectedClass}
+Weapon: ${selectedItems[0]}
+Specialization: ${selectedItems[1]}
+Gadget 1: ${selectedItems[2]}
+Gadget 2: ${selectedItems[3]}
+Gadget 3: ${selectedItems[4]}`;
+
+      navigator.clipboard
+        .writeText(copyText)
+        .then(() => alert("Loadout copied to clipboard!"))
+        .catch((err) => {
+          console.error("Could not copy text: ", err);
+          alert("Failed to copy loadout to clipboard");
+        });
+    });
+
+  // Load history when page loads (only once)
+  loadHistory();
+
+  // Clear history button (moved out of copyLoadoutButton event handler)
+  document.getElementById("clear-history")?.addEventListener("click", () => {
+    localStorage.removeItem("loadoutHistory");
+    document.getElementById("history-list").innerHTML = "";
+    console.log("🗑️ Loadout history cleared.");
+  });
+
+  // FAQ Toggle (moved out of copyLoadoutButton event handler)
+  const faqToggle = document.getElementById("faq-toggle-button");
+  const faqContent = document.getElementById("faq-content");
+  const faqToggleIcon = document.querySelector(".faq-toggle");
+
+  if (faqToggle && faqContent) {
+    faqToggle.addEventListener("click", () => {
+      faqContent.classList.toggle("open");
+      faqToggleIcon.innerText = faqContent.classList.contains("open")
+        ? "−"
+        : "+";
+    });
+  }
+}); // ✅ DOMContentLoaded CLOSES HERE!
+
+const displayLoadout = (classType, loadout) => {
+  const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
+  const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
+
+  const allGadgets = [...loadout.gadgets];
+  const gadgetChunks = [[], [], []];
+  const selectedGadgets = [];
+
+  for (let i = 0; i < 3; i++) {
+    const index = Math.floor(Math.random() * allGadgets.length);
+    selectedGadgets.push(allGadgets[index]);
+    allGadgets.splice(index, 1);
+  }
+
+  while (allGadgets.length > 0) {
+    for (let i = 0; i < 3 && allGadgets.length > 0; i++) {
+      const index = Math.floor(Math.random() * allGadgets.length);
+      gadgetChunks[i].push(allGadgets[index]);
+      allGadgets.splice(index, 1);
+    }
+  }
+
+  const createGadgetSpinSequence = (winningGadget, chunkIndex) => {
+    const sequence = new Array(8);
+    sequence[4] = winningGadget;
+
+    const chunk = gadgetChunks[chunkIndex];
+    for (let i = 0; i < 8; i++) {
+      if (i !== 4) {
+        const randomIndex = Math.floor(Math.random() * chunk.length);
+        sequence[i] = chunk[randomIndex];
+      }
+    }
+    return sequence;
+  };
+
+  const loadoutHTML = `
+    <div class="slot-machine-wrapper">
+      <div class="items-container">
+        <div class="item-container">
+          <div class="scroll-container">
+            ${createItemContainer(loadout.weapons, selectedWeapon)}
+          </div>
+        </div>
+        <div class="item-container">
+          <div class="scroll-container">
+            ${createItemContainer(loadout.specializations, selectedSpec)}
+          </div>
+        </div>
+        ${selectedGadgets
+          .map(
+            (gadget, index) => `
+            <div class="item-container">
+              <div class="scroll-container" data-gadget-index="${index}">
+                ${createItemContainer(
+                  createGadgetSpinSequence(gadget, index),
+                  gadget,
+                  true
+                )}
+              </div>
+            </div>
+          `
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
+
+  outputDiv.innerHTML = loadoutHTML;
+
+  setTimeout(() => {
+    const scrollContainers = Array.from(
+      document.querySelectorAll(".scroll-container")
+    );
+    startSpinAnimation(scrollContainers);
+  }, 50);
+};
+
+const displayRandomLoadout = () => {
+  const classes = ["Light", "Medium", "Heavy"];
+  const randomClass = classes[Math.floor(Math.random() * classes.length)];
+  const loadout = loadouts[randomClass];
+  displayLoadout(randomClass, loadout);
+};
+
+const displayManualLoadout = (classType) => {
+  const loadout = loadouts[classType];
+  displayLoadout(classType, loadout);
+};
+
+class SlotColumn {
+  constructor(element, index, isFinalSpin) {
+    this.element = element;
+    this.index = index;
+    this.velocity = 0;
+    this.position = 0;
+    this.state = "waiting";
+    this.lastTimestamp = null;
+    this.isFinalSpin = isFinalSpin;
+    this.animationStartTime = null;
+    this.maxAnimationDuration = 10000; // 10 second safety timeout
+
+    const timing = isFinalSpin
+      ? PHYSICS.TIMING.FINAL_SPIN
+      : PHYSICS.TIMING.REGULAR_SPIN;
+    this.stopDelay = timing.COLUMN_DELAY * index;
+    this.totalDuration = timing.BASE_DURATION + this.stopDelay;
+    this.decelerationTime = timing.DECELERATION_TIME;
+
+    this.targetPosition = 0;
+    this.initialPosition = 0;
+  }
+
+  update(elapsed, deltaTime) {
+    // Safety check for runaway animations
+    if (!this.animationStartTime) {
+      this.animationStartTime = performance.now();
+    } else if (
+      performance.now() - this.animationStartTime >
+      this.maxAnimationDuration
+    ) {
+      console.warn("Animation timeout - forcing stop");
+      this.forceStop();
+      return;
+    }
+
+    if (this.state === "stopped") return;
+
+    // Ensure deltaTime is reasonable
+    const dt = Math.min(deltaTime, 50) / 1000; // Cap at 50ms, convert to seconds
+
+    switch (this.state) {
+      case "accelerating":
+        this.velocity += PHYSICS.ACCELERATION * dt;
+        if (this.velocity >= PHYSICS.MAX_VELOCITY) {
+          this.velocity = PHYSICS.MAX_VELOCITY;
+          this.state = "spinning";
+        }
+        break;
+
+      case "spinning":
+        if (elapsed >= this.totalDuration - this.decelerationTime) {
+          this.state = "decelerating";
+          // Ensure target position is aligned with item height
+          this.targetPosition =
+            Math.ceil(this.position / PHYSICS.ITEM_HEIGHT) *
+            PHYSICS.ITEM_HEIGHT;
+        }
+        break;
+
+      case "decelerating":
+        this.velocity += PHYSICS.DECELERATION * dt;
+
+        // Added safety check for deceleration
+        if (
+          Math.abs(this.position - this.targetPosition) < 1 &&
+          Math.abs(this.velocity) < 50
+        ) {
+          this.forceStop();
+          return;
+        }
+
+        if (this.velocity <= 0) {
+          if (Math.abs(this.velocity) < 100) {
+            this.forceStop();
+          } else {
+            this.velocity = -this.velocity * PHYSICS.BOUNCE_DAMPENING;
+            this.state = "bouncing";
+          }
+        }
+        break;
+
+      case "bouncing":
+        this.velocity += PHYSICS.DECELERATION * 1.2 * dt;
+
+        // Enhanced bounce completion check
+        if (
+          Math.abs(this.velocity) < 50 ||
+          Math.abs(this.position - this.targetPosition) < 5
+        ) {
+          this.forceStop();
+          return;
+        }
+        break;
+    }
+
+    // Update position with boundary checking
+    this.position += this.velocity * dt;
+    this.position = this.normalizePosition(this.position);
+    this.updateVisuals();
+  }
+
+  normalizePosition(pos) {
+    const wrappedPosition = pos % PHYSICS.ITEM_HEIGHT;
+    return wrappedPosition >= 0
+      ? wrappedPosition
+      : wrappedPosition + PHYSICS.ITEM_HEIGHT;
+  }
+
+  forceStop() {
+    this.velocity = 0;
+    this.position = this.targetPosition;
+    this.state = "stopped";
+    this.updateVisuals();
+  }
+
+  updateVisuals() {
+    let blur = 0;
+    if (Math.abs(this.velocity) > 3000) blur = 12;
+    else if (Math.abs(this.velocity) > 2000) blur = 8;
+    else if (Math.abs(this.velocity) > 1000) blur = 5;
+
+    this.element.style.transform = `translateY(${this.position}px)`;
+    this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
+  }
+}
+
+function startSpinAnimation(columns) {
+  // Change this to match the old working version: final spin is when currentSpin is 1, not 0
+  const isFinalSpin = state.currentSpin === 1;
+  const startTime = performance.now();
+
+  const slotColumns = columns.map(
+    (element, index) => new SlotColumn(element, index, isFinalSpin)
+  );
+
+  // Reset containers
+  columns.forEach((column) => {
+    const container = column.closest(".item-container");
+    if (container) {
+      container.classList.remove("landing-flash", "winner-pulsate");
+      const lockedTag = container.querySelector(".locked-tag");
+      if (lockedTag) lockedTag.remove();
+    }
+    column.style.transform = "translateY(0)";
+    column.style.transition = "none";
+  });
+
+  // Initialize animation states clearly
+  slotColumns.forEach((column) => {
+    column.state = "accelerating";
+    column.velocity = 0;
+    column.position = 0;
+    column.lastTimestamp = null;
+  });
+
+  function animate(currentTime) {
+    const elapsed = currentTime - startTime;
+    let isAnimating = false;
+
+    slotColumns.forEach((column) => {
+      if (column.state !== "stopped") {
+        isAnimating = true;
+        const deltaTime = column.lastTimestamp
+          ? currentTime - column.lastTimestamp
+          : 16.67;
+        column.update(elapsed, deltaTime);
+        column.lastTimestamp = currentTime;
+      }
+    });
+
+    if (isAnimating) {
+      requestAnimationFrame(animate);
+    } else {
+      if (isFinalSpin) {
+        columns.forEach((column, index) => {
+          const container = column.closest(".item-container");
+          if (container) {
+            setTimeout(() => {
+              container.classList.add("landing-flash");
+
+              let lockedTag = container.querySelector(".locked-tag");
+              if (!lockedTag) {
+                lockedTag = document.createElement("div");
+                lockedTag.className = "locked-tag show";
+                lockedTag.textContent = "Locked In!";
+                container.appendChild(lockedTag);
+              }
+
+              setTimeout(() => container.classList.add("winner-pulsate"), 300);
+            }, index * 200);
+          }
+        });
+
+        // Add a significantly longer delay before calling finalizeSpin
+        // This ensures all animations have completed and items are stable
+        setTimeout(() => {
+          console.log(
+            "🏁 Calling finalizeSpin from animation end with longer delay"
+          );
+          finalizeSpin();
+        }, 2000); // Increased from 1000ms to 2000ms
+      } else {
+        // For intermediate spins, just allow next spin
+        state.isSpinning = false;
+
+        // Continue with next spin if there are more
+        if (state.currentSpin > 0) {
+          setTimeout(() => {
+            if (state.selectedClass === "random") {
+              displayRandomLoadout();
+            } else {
+              displayManualLoadout(state.selectedClass);
+            }
+          }, 500);
+        }
+      }
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+const spinLoadout = () => {
+  if (state.isSpinning || !state.selectedClass) {
+    console.log("⚠️ Cannot start spin - already spinning or no class selected");
+    return;
+  }
+
+  console.log(`🌀 Starting spin sequence: ${state.totalSpins} total spins`);
+
+  state.isSpinning = true;
+  state.currentSpin = state.totalSpins;
+
+  // Properly disable all buttons during the spin
+  document.querySelectorAll(".class-button").forEach((btn) => {
+    btn.setAttribute("disabled", "true");
+  });
+
+  document.querySelectorAll(".spin-button").forEach((btn) => {
+    btn.setAttribute("disabled", "true");
+    btn.classList.add("dimmed");
+  });
+
+  document.getElementById("output").scrollIntoView({
+    behavior: "smooth",
+    block: "center",
+  });
+
+  // Update visuals for spin
+  updateSpinCountdown(state.currentSpin);
+
+  console.log(`🎲 Starting first spin with currentSpin = ${state.currentSpin}`);
+
+  // Start the first spin
+  if (state.selectedClass === "random") {
+    displayRandomLoadout();
+  } else {
+    displayManualLoadout(state.selectedClass);
+  }
+};
+
+// Add this at the top of your file with other variables
+let isAddingToHistory = false;
+let lastAddedLoadout = null;
+
+function finalizeSpin(columns) {
+  console.log("⚠️ Running finalizeSpin with currentSpin:", state.currentSpin);
+
+  // IMPORTANT: Follow the exact approach from your old working version
+  // Check if there are more spins to do
+  if (state.currentSpin > 1) {
+    console.log(
+      "🔄 Not final spin, continue sequence. Current spin:",
+      state.currentSpin
+    );
+
+    // Decrement spin counter
+    state.currentSpin--;
+
+    // Update UI to show remaining spins
+    updateSpinCountdown(state.currentSpin);
+
+    // Clear isSpinning flag to allow next spin
+    state.isSpinning = false;
+
+    // Start next spin after a short delay
+    setTimeout(() => {
+      console.log(
+        "🎲 Starting next spin in sequence. Remaining:",
+        state.currentSpin
+      );
+      if (state.selectedClass === "random") {
+        displayRandomLoadout();
+      } else {
+        displayManualLoadout(state.selectedClass);
+      }
+    }, 500);
+
+    return; // Exit early - we're handling next spin
+  }
+
+  console.log("🎯 Final spin, recording loadout");
+
+  // Prevent duplicate processing
+  if (isAddingToHistory) {
+    console.log("🛑 Already adding to history, preventing duplicate call");
+    return;
+  }
+
+  state.isSpinning = false;
+
+  // Re-enable class buttons after spin is complete
+  classButtons.forEach((button) => {
+    button.removeAttribute("disabled");
+  });
+
+  // Keep spin buttons disabled until a class is selected again
+  spinButtons.forEach((button) => {
+    button.disabled = true;
+    button.classList.add("dimmed");
+  });
+
+  // Get the final selections from the DOM
+  const itemContainers = document.querySelectorAll(
+    ".slot-machine-wrapper .items-container .item-container"
+  );
+
+  if (itemContainers && itemContainers.length > 0) {
+    isAddingToHistory = true; // Set the flag to prevent duplicate calls
+    console.log("🔒 Setting isAddingToHistory flag to prevent duplicates");
+
+    // ✅ Save the selected class BEFORE doing anything else
+    let savedClass = state.selectedClass;
+    console.log("💾 Selected Class Before Processing:", savedClass);
+
+    // If we're using the random class mode, get the actual selected class
+    if (savedClass && savedClass.toLowerCase() === "random") {
+      const activeClassButton = document.querySelector(
+        ".class-button.selected:not([data-class='Random'])"
+      );
+      savedClass = activeClassButton
+        ? activeClassButton.dataset.class
+        : savedClass;
+    }
+
+    // Get all the selected items using the OLD working method
+    const selectedItems = Array.from(itemContainers).map((container) => {
+      const scrollContainer = container.querySelector(".scroll-container");
+      if (!scrollContainer) return "Unknown";
+
+      // Find all item columns
+      const allItems = scrollContainer.querySelectorAll(".itemCol");
+
+      // Use the EXACT method from old working version
+      const visibleItem = Array.from(allItems).find((item) => {
+        const rect = item.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        return (
+          rect.top >= containerRect.top &&
+          rect.bottom <= containerRect.bottom &&
+          rect.height > 0 &&
+          rect.width > 0
+        );
+      });
+
+      if (!visibleItem) return "Unknown";
+      const itemText = visibleItem.querySelector("p")?.innerText.trim();
+      return itemText || "Unknown";
+    });
+
+    // Debug the selected items
+    console.log("🔍 Selected Items:", selectedItems);
+
+    // Make sure we have all items and none are 'Unknown'
+    if (selectedItems.length >= 5 && !selectedItems.includes("Unknown")) {
+      console.log("💾 Selected items for history:", selectedItems);
+
+      // Create a loadout string to check for duplicates
+      const weapon = selectedItems[0];
+      const specialization = selectedItems[1];
+      const gadgets = selectedItems.slice(2, 5);
+
+      const loadoutString = `${savedClass}-${weapon}-${specialization}-${gadgets.join(
+        "-"
+      )}`;
+      console.log("🚨 Loadout to be recorded:", loadoutString);
+      console.log("Last Added Loadout:", lastAddedLoadout);
+
+      if (loadoutString === lastAddedLoadout) {
+        console.log("🔍 Duplicate loadout detected, not adding to history");
+        isAddingToHistory = false;
+        // Reset the class even if we don't add to history
+        state.selectedClass = null;
+        return;
+      }
+      lastAddedLoadout = loadoutString;
+
+      // Add to history after a delay (helps prevent race conditions)
+      setTimeout(() => {
+        // Use savedClass instead of state.selectedClass
+        addToHistory(savedClass, weapon, specialization, gadgets);
+
+        console.log("✅ Successfully added to history:", loadoutString);
+        isAddingToHistory = false; // Reset the flag
+      }, 500);
+
+      // Reset the class AFTER saving it
+      state.selectedClass = null;
+    } else {
+      console.warn(
+        "⚠️ Could not record loadout - incomplete data:",
+        selectedItems
+      );
+      isAddingToHistory = false; // Reset the flag
+      // Reset selected class even if we don't add to history
+      state.selectedClass = null;
+    }
+  } else {
+    isAddingToHistory = false; // Reset the flag
+    // Reset selected class
+    state.selectedClass = null;
+  }
+
+  console.log("✅ Spin completed and finalized!");
+}
+
+// Helper function to update the spin countdown display
+function updateSpinCountdown(spinsRemaining) {
+  console.log(`🔢 Updating spin countdown: ${spinsRemaining} spins left`);
+
+  const spinButtons = document.querySelectorAll(".spin-button");
+
+  spinButtons.forEach((button) => {
+    const spinValue = parseInt(button.dataset.spins);
+    button.classList.remove("active", "selected");
+
+    if (spinValue === spinsRemaining) {
+      button.classList.add("active", "selected");
+      button.style.animation = "moveLeft 0.5s ease-in-out forwards";
+    } else {
+      button.style.animation = "none";
+    }
+  });
+}
+
+function startSpinAnimation(columns) {
+  // Final spin is when we're on the last spin (currentSpin === 1)
+  const isFinalSpin = state.currentSpin === 1;
+  console.log(
+    `🎲 Animation starting with currentSpin = ${state.currentSpin}, isFinalSpin = ${isFinalSpin}`
+  );
+
+  const startTime = performance.now();
+
+  const slotColumns = columns.map(
+    (element, index) => new SlotColumn(element, index, isFinalSpin)
+  );
+
+  // Reset containers
+  columns.forEach((column) => {
+    const container = column.closest(".item-container");
+    if (container) {
+      container.classList.remove("landing-flash", "winner-pulsate");
+      const lockedTag = container.querySelector(".locked-tag");
+      if (lockedTag) lockedTag.remove();
+    }
+    column.style.transform = "translateY(0)";
+    column.style.transition = "none";
+  });
+
+  // Initialize animation states clearly
+  slotColumns.forEach((column) => {
+    column.state = "accelerating";
+    column.velocity = 0;
+    column.position = 0;
+    column.lastTimestamp = null;
+  });
+
+  function animate(currentTime) {
+    const elapsed = currentTime - startTime;
+    let isAnimating = false;
+
+    slotColumns.forEach((column) => {
+      if (column.state !== "stopped") {
+        isAnimating = true;
+        const deltaTime = column.lastTimestamp
+          ? currentTime - column.lastTimestamp
+          : 16.67;
+        column.update(elapsed, deltaTime);
+        column.lastTimestamp = currentTime;
+      }
+    });
+
+    if (isAnimating) {
+      requestAnimationFrame(animate);
+    } else {
+      // IMPORTANT CHANGE: Always call finalizeSpin after any spin completes
+      // Just like in your old working version
+      console.log("✅ All columns stopped, calling finalizeSpin");
+
+      // Add visual effects only for final spin
+      if (isFinalSpin) {
+        columns.forEach((column, index) => {
+          const container = column.closest(".item-container");
+          if (container) {
+            setTimeout(() => {
+              container.classList.add("landing-flash");
+
+              let lockedTag = container.querySelector(".locked-tag");
+              if (!lockedTag) {
+                lockedTag = document.createElement("div");
+                lockedTag.className = "locked-tag show";
+                lockedTag.textContent = "Locked In!";
+                container.appendChild(lockedTag);
+              }
+
+              setTimeout(() => container.classList.add("winner-pulsate"), 300);
+            }, index * 200);
+          }
+        });
+      }
+
+      // Let finalizeSpin handle whether to continue or end the sequence
+      setTimeout(
+        () => {
+          finalizeSpin(columns);
+        },
+        isFinalSpin ? 1000 : 300
+      ); // Longer delay for final spin
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+function addToHistory(
+  classType,
+  selectedWeapon,
+  selectedSpec,
+  selectedGadgets
+) {
+  const historyList = document.getElementById("history-list");
+  const newEntry = document.createElement("div");
+  newEntry.classList.add("history-entry");
+
+  newEntry.innerHTML = `
+    <p><strong>Class:</strong> ${classType}</p>
+    <p><strong>Weapon:</strong> ${selectedWeapon}</p>
+    <p><strong>Specialization:</strong> ${selectedSpec}</p>
+    <p><strong>Gadgets:</strong> ${selectedGadgets.join(", ")}</p>
+    <button class="copy-loadout" onclick="copyLoadoutText(this)">Copy</button>
+  `;
+
+  historyList.prepend(newEntry);
+
+  // Remove excess entries beyond 5
+  while (historyList.children.length > 5) {
+    historyList.removeChild(historyList.lastChild);
+  }
+
+  saveHistory();
+}
+
+function saveHistory() {
+  const entries = Array.from(document.querySelectorAll(".history-entry")).map(
+    (entry) => entry.innerHTML
+  );
+
+  // Limit to the most recent 5 entries
+  const cappedEntries = entries.slice(0, 5);
+
+  localStorage.setItem("loadoutHistory", JSON.stringify(cappedEntries));
+}
+
+// Loadout history
+const loadHistory = () => {
+  const historyList = document.getElementById("history-list");
+  const savedEntries = JSON.parse(localStorage.getItem("loadoutHistory")) || [];
+  historyList.innerHTML = "";
+  savedEntries.forEach((html) => {
+    const entry = document.createElement("div");
+    entry.classList.add("history-entry");
+    entry.innerHTML = html;
+    historyList.appendChild(entry);
+  });
+};
+
+loadHistory();
+
+// Update spin countdown display by shifting highlight left
+function updateSpinCountdown(spinsRemaining) {
+  console.log(`🔢 Updating spin countdown: ${spinsRemaining} spins left`);
+
+  const spinButtons = document.querySelectorAll(".spin-button");
+
+  spinButtons.forEach((button) => {
+    const spinValue = parseInt(button.dataset.spins);
+    button.classList.remove("active", "selected");
+
+    if (spinValue === spinsRemaining) {
+      button.classList.add("active", "selected");
+      button.style.animation = "moveLeft 0.5s ease-in-out forwards";
+    } else {
+      button.style.animation = "none";
+    }
+  });
+}
+
+function copyLoadoutText(button) {
+  const entry = button.closest(".history-entry");
+
+  if (!entry) {
+    console.error("Error: No history entry found.");
+    return;
+  }
+
+  const text = Array.from(entry.querySelectorAll("p"))
+    .map((p) => p.textContent)
+    .join("\n");
+
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      button.textContent = "Copied!";
+      setTimeout(() => {
+        button.textContent = "Copy";
+      }, 2000);
+    })
+    .catch((err) => {
+      console.error("Could not copy text: ", err);
+      alert("Failed to copy loadout to clipboard");
+    });
+}
+
+// Add GPU hints to columns on load for better performance
+const addGPUHints = () => {
+  const columns = document.querySelectorAll(".scroll-container");
+  columns.forEach((column) => {
+    column.style.willChange = "transform";
+    column.style.backfaceVisibility = "hidden";
+    column.style.perspective = "1000px";
+    column.style.transform = "translate3d(0,0,0)";
+  });
+};
+
+// Call it once on load
+addGPUHints();
