@@ -209,11 +209,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   console.log("✅ DOM fully loaded");
 
-  spinButtons.forEach((button) => {
-    button.disabled = true; // Disable button
-    button.classList.add("dimmed"); // Add class to dim the button
-  });
+  if (!state.selectedClass) {
+    spinButtons.forEach((button) => {
+      button.disabled = true;
+      button.classList.add("dimmed");
+    });
+  }
 
+  // Class button event listeners
   // Class button event listeners
   classButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -274,10 +277,14 @@ document.addEventListener("DOMContentLoaded", () => {
           console.warn("spinSelection element not found");
         }
 
-        // Enable all spin buttons
+        // Enable all spin buttons when a class is selected
+        // This ensures they can be re-enabled after being disabled at the end of a spin
         spinButtons.forEach((btn) => {
           btn.disabled = false; // Enable buttons
+          btn.removeAttribute("disabled"); // Make sure the attribute is removed
           btn.classList.remove("dimmed"); // Remove dimming effect
+          btn.style.opacity = ""; // Reset any inline opacity
+          btn.style.pointerEvents = ""; // Reset any inline pointer-events
         });
       }
     });
@@ -293,7 +300,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
-
   // Add spin button click handlers
   spinButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -625,8 +631,12 @@ class SlotColumn {
 }
 
 function startSpinAnimation(columns) {
-  // Change this to match the old working version: final spin is when currentSpin is 1, not 0
+  // Final spin is when we're on the last spin (currentSpin === 1)
   const isFinalSpin = state.currentSpin === 1;
+  console.log(
+    `🎲 Animation starting with currentSpin = ${state.currentSpin}, isFinalSpin = ${isFinalSpin}`
+  );
+
   const startTime = performance.now();
 
   const slotColumns = columns.map(
@@ -671,7 +681,14 @@ function startSpinAnimation(columns) {
     if (isAnimating) {
       requestAnimationFrame(animate);
     } else {
+      // IMPORTANT CHANGE: Always call finalizeSpin after any spin completes
+      // Just like in your old working version
+      console.log("✅ All columns stopped, calling finalizeSpin");
+
+      // Add visual effects only for final spin
       if (isFinalSpin) {
+        let lastColumnIndex = columns.length - 1;
+
         columns.forEach((column, index) => {
           const container = column.closest(".item-container");
           if (container) {
@@ -686,34 +703,31 @@ function startSpinAnimation(columns) {
                 container.appendChild(lockedTag);
               }
 
+              // If this is the last column, disable buttons when its tag appears
+              if (index === lastColumnIndex) {
+                console.log("🔒 Last locked tag added, disabling spin buttons");
+                const spinBtns = document.querySelectorAll(".spin-button");
+                spinBtns.forEach((button) => {
+                  button.disabled = true;
+                  button.setAttribute("disabled", "disabled");
+                  button.classList.add("dimmed");
+                });
+                console.log(`Disabled ${spinBtns.length} spin buttons`);
+              }
+
               setTimeout(() => container.classList.add("winner-pulsate"), 300);
             }, index * 200);
           }
         });
-
-        // Add a significantly longer delay before calling finalizeSpin
-        // This ensures all animations have completed and items are stable
-        setTimeout(() => {
-          console.log(
-            "🏁 Calling finalizeSpin from animation end with longer delay"
-          );
-          finalizeSpin();
-        }, 2000); // Increased from 1000ms to 2000ms
-      } else {
-        // For intermediate spins, just allow next spin
-        state.isSpinning = false;
-
-        // Continue with next spin if there are more
-        if (state.currentSpin > 0) {
-          setTimeout(() => {
-            if (state.selectedClass === "random") {
-              displayRandomLoadout();
-            } else {
-              displayManualLoadout(state.selectedClass);
-            }
-          }, 500);
-        }
       }
+
+      // Let finalizeSpin handle whether to continue or end the sequence
+      setTimeout(
+        () => {
+          finalizeSpin(columns);
+        },
+        isFinalSpin ? 1000 : 300
+      ); // Longer delay for final spin
     }
   }
 
@@ -731,14 +745,9 @@ const spinLoadout = () => {
   state.isSpinning = true;
   state.currentSpin = state.totalSpins;
 
-  // Properly disable all buttons during the spin
+  // Disable ONLY class buttons during the spin, leave spin buttons enabled
   document.querySelectorAll(".class-button").forEach((btn) => {
     btn.setAttribute("disabled", "true");
-  });
-
-  document.querySelectorAll(".spin-button").forEach((btn) => {
-    btn.setAttribute("disabled", "true");
-    btn.classList.add("dimmed");
   });
 
   document.getElementById("output").scrollIntoView({
@@ -766,7 +775,6 @@ let lastAddedLoadout = null;
 function finalizeSpin(columns) {
   console.log("⚠️ Running finalizeSpin with currentSpin:", state.currentSpin);
 
-  // IMPORTANT: Follow the exact approach from your old working version
   // Check if there are more spins to do
   if (state.currentSpin > 1) {
     console.log(
@@ -814,10 +822,26 @@ function finalizeSpin(columns) {
     button.removeAttribute("disabled");
   });
 
-  // Keep spin buttons disabled until a class is selected again
-  spinButtons.forEach((button) => {
-    button.disabled = true;
-    button.classList.add("dimmed");
+  // DIRECT BUTTON MANIPULATION - 100% reliable method
+  console.log("🔒 Getting direct references to all spin buttons");
+  // Get a direct reference to each button by ID if possible
+  const spinBtns = document.querySelectorAll(".spin-button");
+  console.log(`Found ${spinBtns.length} spin buttons`);
+
+  // Force disable ALL spin buttons
+  spinBtns.forEach((btn, index) => {
+    console.log(`Disabling spin button ${index + 1}`);
+    // Use all possible disabling methods to guarantee they work
+    btn.disabled = true;
+    btn.setAttribute("disabled", "true");
+    btn.classList.add("dimmed");
+
+    // Add a data attribute for debugging
+    btn.dataset.disabledAt = new Date().toISOString();
+
+    // Apply inline style as a last resort
+    btn.style.opacity = "0.5";
+    btn.style.pointerEvents = "none";
   });
 
   // Get the final selections from the DOM
@@ -921,7 +945,10 @@ function finalizeSpin(columns) {
     state.selectedClass = null;
   }
 
-  console.log("✅ Spin completed and finalized!");
+  // REMOVED re-enabling code - buttons will stay disabled until user selects a class
+  console.log(
+    "✅ Spin completed and finalized! Buttons remain disabled until class selection."
+  );
 }
 
 // Helper function to update the spin countdown display
@@ -994,8 +1021,6 @@ function startSpinAnimation(columns) {
     if (isAnimating) {
       requestAnimationFrame(animate);
     } else {
-      // IMPORTANT CHANGE: Always call finalizeSpin after any spin completes
-      // Just like in your old working version
       console.log("✅ All columns stopped, calling finalizeSpin");
 
       // Add visual effects only for final spin

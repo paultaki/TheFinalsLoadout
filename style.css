@@ -1104,11 +1104,17 @@ img {
 
 .spin-button:active {
   transform: scale(0.95);
+  background: linear-gradient(135deg, #ff1493, #1e90ff); /* Neon Pink & Blue */
+  box-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 10px rgba(0, 255, 255, 0.8); /* Glow */
+  border: 2px solid rgba(255, 20, 147, 0.8); /* Hot Pink Border */
 }
 
 .spin-button.active {
   background: linear-gradient(135deg, #ff00ff, #ff4500);
   box-shadow: 0 4px 15px rgba(255, 69, 0, 0.8);
+  background: linear-gradient(135deg, #ff1493, #1e90ff); /* Neon Pink & Blue */
+  box-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 10px rgba(0, 255, 255, 0.8); /* Glow */
+  border: 2px solid rgba(255, 20, 147, 0.8); /* Hot Pink Border */
 }
 
 
@@ -1743,15 +1749,21 @@ iframe#bmc-button {
   transition: transform 0.1s ease-out !important;
 }
 
-/* Active (Selected) Button - Combined styles */
+/* 🔥 Active (Selected) Spin Button - Strong Glow */
 .spin-button.active {
-  background: linear-gradient(
-    135deg,
-    #ff00ff,
-    #ff4500
-  ) !important; /* Keep your gradient */
-  box-shadow: 0 4px 15px rgba(255, 69, 0, 0.8) !important; /* Keep your shadow */
+  background: linear-gradient(135deg, #ff1493, #00ffff) !important; /* Neon Pink → Cyan */
+  box-shadow: 0 0 20px rgba(255, 20, 147, 0.8), 0 0 15px rgba(0, 255, 255, 0.8) !important; /* Strong Pink & Cyan Glow */
+  border: 3px solid rgba(255, 20, 147, 0.8) !important; /* Hot Pink Border */
+  transform: scale(1.1); /* Slightly enlarges the button */
 }
+
+/* 🔥 Hover Effect - Keeps Glow Even When Active */
+.spin-button:hover,
+.spin-button.active:hover {
+  box-shadow: 0 0 25px rgba(255, 20, 147, 1), 0 0 20px rgba(0, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.6); /* Even Stronger Glow */
+  transform: scale(1.15); /* Extra scale-up effect on hover */
+}
+
 
 /* Specific fix for spin buttons container */
 #spinSelection .btnRow {
@@ -2433,9 +2445,14 @@ iframe#bmc-button {
   to { transform: scale(1.05); }
 }
 .spin-selection button.active {
-  outline: 3px solid rgba(255, 100, 0, 0.7); /* Adjust color/thickness as desired */
+  outline: 2px solid rgba(255, 20, 147, 0.8); /* Hot Pink Border */
   outline-offset: 3px; /* Adds gap between button and outline */
+  box-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 10px rgba(0, 255, 255, 0.8); /* Glow */
+  background: linear-gradient(135deg, #ff1493, #1e90ff); /* Neon Pink & Blue */
+
 }
+
+
 .dimmed {
   opacity: 0.5;
   pointer-events: none;  /* Prevent interaction */
@@ -2489,4 +2506,9 @@ html {
 }
 .copy-button:hover {
   background: linear-gradient(45deg, #1e90ff, #ff1493);
+}
+.spin-button.active {
+  background: linear-gradient(135deg, #ff1493, #1e90ff); /* Neon Pink & Blue */
+  box-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 10px rgba(0, 255, 255, 0.8); /* Glow */
+  border: 2px solid rgba(255, 20, 147, 0.8); /* Hot Pink Border */
 }
