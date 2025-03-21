@@ -2637,3 +2637,26 @@ html {
     font-size: 16px !important;
   }
 }
+
+details summary {
+  cursor: pointer;
+  padding: 10px;
+  background: linear-gradient(45deg, #ff00ff, #ffcc00, #00ffff);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  color: black;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(255,255,255,0.2);
+}
+
+details[open] summary {
+  background: linear-gradient(45deg, #ffcc00, #ff00ff, #00ffff);
+}
+
+details .patch-content {
+  padding: 10px 20px;
+  background: rgba(0,0,0,0.4);
+  border-left: 4px solid #ffb700;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
