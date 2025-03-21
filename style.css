@@ -1498,7 +1498,7 @@ img {
   padding-top: 5px;
   margin: 20px auto;
   margin-top: 5px;
-  max-width: 800px;
+  max-width: 790px;
   border: 2px solid #ffcc00;
 }
 
@@ -1804,8 +1804,8 @@ iframe#bmc-button {
   .step h2,
   #classSelection h2,
   #spinSelection h2 {
-    font-size: 18px !important;
-    margin-bottom: 15px !important;
+    font-size: 1.5em !important;
+    margin-bottom: 10px !important;
     padding-bottom: 0 !important;
   }
 
@@ -1845,13 +1845,14 @@ iframe#bmc-button {
   }
 
   .subTitle {
-    font-size: 1rem;
+    font-size: .5rem;
     margin-top: -2px;
   }
 
   /* Adjust main container padding */
   .container {
     padding: 15px 10px !important;
+    padding-bottom: 5px;
   }
 
   /* ===== 2. CLASS & SPIN SELECTION AREA ===== */
@@ -1929,7 +1930,7 @@ iframe#bmc-button {
 
   /* ===== 5. HISTORY AREA ===== */
   #loadout-history {
-    margin-top: 20px !important;
+    margin-top: 10px !important;
   }
 
   /* General mobile buttons style */
@@ -2003,6 +2004,8 @@ iframe#bmc-button {
 
   .subTitle {
     font-size: 0.9rem;
+    margin-top: -2px;
+
   }
 
   #classSelection h2,
@@ -2022,6 +2025,8 @@ iframe#bmc-button {
   /* Ensure history section stays properly spaced */
   #loadout-history {
     margin-top: 10px !important;
+    padding: 10px !important;
+    gap: 10px !important;
   }
 }
 
@@ -2370,8 +2375,8 @@ iframe#bmc-button {
 }
 
 .class-selection, .spin-selection {
-  padding: 10px 10px;
-  margin: 10px auto;
+  padding: 5px 10px;
+  margin: 5px auto;
   width: 430px;  /* Example width—adjust based on your design preference */
   text-align: center;
   box-sizing: border-box;
@@ -2381,7 +2386,7 @@ iframe#bmc-button {
 .spin-selection {
     width: 100%;
     max-width: 428px;
-    margin: 10px auto;
+    margin: 5px auto;
 }
 
 /* Media query for smaller screens */
@@ -2511,4 +2516,124 @@ html {
   background: linear-gradient(135deg, #ff1493, #1e90ff); /* Neon Pink & Blue */
   box-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 10px rgba(0, 255, 255, 0.8); /* Glow */
   border: 2px solid rgba(255, 20, 147, 0.8); /* Hot Pink Border */
+}
+.patch-notes .change-details, .patch-notes .change-title {
+  text-align: left;
+}
+
+.patch-notes h3 {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #FFD700; /* Bright gold */
+}
+
+.change-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  padding-left: 8px;
+}
+
+.change-item.buff .change-title {
+  color: #4CAF50; /* green */
+}
+
+.change-item.nerf .change-title {
+  color: #F44336; /* red */
+}
+
+.change-item.adjustment .change-title {
+  color: #FF9800; /* orange */
+}
+
+.patch-notes .change-item {
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+.patch-section {
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.change-details ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+.patch-notes .change-details ul {
+  padding-left: 20px;
+  text-align: left;
+}
+
+.patch-notes .change-details li {
+  text-align: left;
+}
+
+/* Rage Quit Loadout Nav Styling */
+.main-nav a[href*="ragequit"] {
+  background: linear-gradient(45deg, #ff7b00, #ff4500);
+  color: white !important;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 10px rgba(255, 123, 0, 0.7);
+}
+
+/* Hover effect */
+.main-nav a[href*="ragequit"]:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 123, 0, 1);
+  background: linear-gradient(45deg, #ff4500, #ff7b00);
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  /* Container for spin buttons */
+  .spin-buttons {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 8px !important; /* Slightly reduced gap to fit all buttons */
+    margin: 10px auto !important;
+  }
+  
+  /* Make buttons larger on mobile */
+  .spin-button {
+    width: 45px !important; /* Increased from 30px */
+    height: 45px !important; /* Increased from 30px */
+    font-size: 18px !important; /* Increased from 14px */
+    box-shadow: 0 4px 10px rgba(255, 0, 255, 0.6) !important; /* Enhanced shadow */
+  }
+  
+  /* Add more pronounced hover/touch state */
+  .spin-button:hover, 
+  .spin-button:active {
+    transform: scale(1.1) !important;
+    box-shadow: 0 6px 15px rgba(255, 0, 255, 0.8) !important;
+  }
+  
+  /* Make selected button stand out even more */
+  .spin-button.selected,
+  .spin-button.active {
+    transform: scale(1.15) !important;
+    box-shadow: 0 0 20px rgba(255, 20, 147, 1), 0 0 15px rgba(0, 255, 255, 1) !important;
+    border: 2px solid rgba(255, 255, 255, 0.9) !important;
+  }
+}
+
+/* Extra small devices (phones under 480px) */
+@media (max-width: 480px) {
+  .spin-selection h2 {
+    margin-bottom: 10px !important; /* Reduce space below heading */
+  }
+  
+  .spin-buttons {
+    margin: 5px auto !important; /* Reduce margin to save space */
+    gap: 6px !important; /* Closer spacing */
+  }
+  
+  .spin-button {
+    width: 40px !important; /* Slightly smaller than tablets but still larger than original */
+    height: 40px !important;
+    font-size: 16px !important;
+  }
 }
