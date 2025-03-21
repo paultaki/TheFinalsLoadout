@@ -1498,7 +1498,7 @@ img {
   padding-top: 5px;
   margin: 20px auto;
   margin-top: 5px;
-  max-width: 790px;
+  max-width: 800px;
   border: 2px solid #ffcc00;
 }
 
@@ -1563,82 +1563,6 @@ img {
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-/* FAQ Section */
-.faq-section {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 20px;
-}
-
-.faq-container {
-  background: rgba(26, 28, 35, 0.95);
-  border: 1px solid rgba(255, 204, 0, 0.3);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.faq-header {
-  background: rgba(42, 48, 64, 0.8);
-  padding: 1rem;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.faq-title {
-  color: var(--neon-yellow);
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.faq-toggle {
-  color: var(--neon-yellow);
-  font-size: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.faq-toggle.open {
-  transform: rotate(45deg);
-}
-
-.faq-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  padding: 0 1rem;
-}
-
-.faq-content.open {
-  max-height: 1000px;
-  padding: 1rem;
-}
-
-.faq-item {
-  margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 1rem;
-}
-
-.faq-item:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.faq-item h3 {
-  color: var(--neon-yellow);
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.faq-item p {
-  color: #cccccc;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  margin-bottom: 0.5rem;
-}
 /* Add these specific styles for the Buy Me a Coffee button */
 .bmc-button-wrapper {
   display: flex;
@@ -1804,8 +1728,8 @@ iframe#bmc-button {
   .step h2,
   #classSelection h2,
   #spinSelection h2 {
-    font-size: 1.5em !important;
-    margin-bottom: 10px !important;
+    font-size: 18px !important;
+    margin-bottom: 15px !important;
     padding-bottom: 0 !important;
   }
 
@@ -1845,14 +1769,13 @@ iframe#bmc-button {
   }
 
   .subTitle {
-    font-size: .5rem;
+    font-size: 1rem;
     margin-top: -2px;
   }
 
   /* Adjust main container padding */
   .container {
     padding: 15px 10px !important;
-    padding-bottom: 5px;
   }
 
   /* ===== 2. CLASS & SPIN SELECTION AREA ===== */
@@ -1930,7 +1853,7 @@ iframe#bmc-button {
 
   /* ===== 5. HISTORY AREA ===== */
   #loadout-history {
-    margin-top: 10px !important;
+    margin-top: 20px !important;
   }
 
   /* General mobile buttons style */
@@ -2004,8 +1927,6 @@ iframe#bmc-button {
 
   .subTitle {
     font-size: 0.9rem;
-    margin-top: -2px;
-
   }
 
   #classSelection h2,
@@ -2025,8 +1946,6 @@ iframe#bmc-button {
   /* Ensure history section stays properly spaced */
   #loadout-history {
     margin-top: 10px !important;
-    padding: 10px !important;
-    gap: 10px !important;
   }
 }
 
@@ -2375,8 +2294,8 @@ iframe#bmc-button {
 }
 
 .class-selection, .spin-selection {
-  padding: 5px 10px;
-  margin: 5px auto;
+  padding: 10px 10px;
+  margin: 10px auto;
   width: 430px;  /* Example width—adjust based on your design preference */
   text-align: center;
   box-sizing: border-box;
@@ -2386,7 +2305,7 @@ iframe#bmc-button {
 .spin-selection {
     width: 100%;
     max-width: 428px;
-    margin: 5px auto;
+    margin: 10px auto;
 }
 
 /* Media query for smaller screens */
@@ -2517,73 +2436,154 @@ html {
   box-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 10px rgba(0, 255, 255, 0.8); /* Glow */
   border: 2px solid rgba(255, 20, 147, 0.8); /* Hot Pink Border */
 }
-.patch-notes .change-details, .patch-notes .change-title {
-  text-align: left;
+
+
+/* FAQ Section */
+.faq-section {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 20px;
 }
 
-.patch-notes h3 {
-  font-size: 1.4em;
-  font-weight: bold;
-  color: #FFD700; /* Bright gold */
+.faq-container {
+  background: rgba(26, 28, 35, 0.95);
+  border: 1px solid rgba(255, 204, 0, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.change-title {
-  font-size: 1.2em;
-  font-weight: bold;
-  padding-left: 8px;
+.faq-header {
+  background: rgba(42, 48, 64, 0.8);
+  padding: 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.change-item.buff .change-title {
-  color: #4CAF50; /* green */
+.faq-title {
+  color: var(--neon-yellow);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
 }
 
-.change-item.nerf .change-title {
-  color: #F44336; /* red */
+.faq-toggle {
+  color: var(--neon-yellow);
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
 }
 
-.change-item.adjustment .change-title {
-  color: #FF9800; /* orange */
+.faq-toggle.open {
+  transform: rotate(45deg);
 }
 
-.patch-notes .change-item {
-  padding: 12px 16px;
-  margin-bottom: 12px;
-}
-.patch-section {
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  padding-bottom: 20px;
-  margin-bottom: 20px;
+.faq-content {
+  display: none !important;  /* Ensure it's hidden initially */
+  max-height: 0 !important;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
 }
 
-.change-details ul {
-  list-style-type: disc;
-  padding-left: 20px;
-}
-.patch-notes .change-details ul {
-  padding-left: 20px;
-  text-align: left;
+.faq-content.open {
+  display: block !important;  /* Force visibility */
+  max-height: 1000px !important;  /* Expand height */
+  opacity: 1 !important;  /* Make it visible */
+  padding: 1rem !important; /* Ensure spacing */
 }
 
-.patch-notes .change-details li {
-  text-align: left;
+
+.faq-item {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1rem;
 }
 
-/* Rage Quit Loadout Nav Styling */
-.main-nav a[href*="ragequit"] {
-  background: linear-gradient(45deg, #ff7b00, #ff4500);
+.faq-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.faq-item h3 {
+  color: var(--neon-yellow);
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.faq-item p {
+  color: #cccccc;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+
+/* Reset the main navigation to ensure proper display */
+.main-nav {
+  display: flex !important;
+  width: 100% !important;
+  background: rgba(0, 0, 0, 0.8) !important;
+  padding: 8px 10px !important;
+  position: relative !important; /* Not fixed/absolute */
+  top: auto !important;
+  left: auto !important;
+  z-index: 100 !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  flex-wrap: wrap !important; /* Allow wrapping on small screens */
+}
+
+/* Adjust links for all sizes */
+.main-nav a {
+  display: inline-block !important;
   color: white !important;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-weight: bold;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 0 10px rgba(255, 123, 0, 0.7);
+  text-decoration: none !important;
+  padding: 5px 8px !important;
+  margin: 2px !important;
+  font-size: 14px !important;
+  white-space: nowrap !important;
 }
 
-/* Hover effect */
-.main-nav a[href*="ragequit"]:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 123, 0, 1);
-  background: linear-gradient(45deg, #ff4500, #ff7b00);
+/* Make Rage Quit link stand out */
+.main-nav a[href*="ragequit"] {
+  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
+  border-radius: 6px !important;
+  padding: 5px 8px !important;
+  box-shadow: 0 0 10px rgba(255, 123, 0, 0.7) !important;
+}
+
+/* Mobile optimization */
+@media (max-width: 480px) {
+  .main-nav {
+    justify-content: center !important; /* Center on small screens */
+    padding: 5px !important;
+    gap: 3px !important;
+  }
+  
+  .main-nav a {
+    font-size: 12px !important;
+    padding: 4px 6px !important;
+  }
+  
+  .main-nav a[href*="ragequit"] {
+    padding: 4px 6px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* Enhanced Spin Button Styling for Mobile */
+
+/* Base spin button styling - keep your existing styles and add these */
+.spin-button {
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: bold !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  cursor: pointer !important;
 }
 
 /* Mobile-specific styles */
@@ -2636,27 +2636,4 @@ html {
     height: 40px !important;
     font-size: 16px !important;
   }
-}
-
-details summary {
-  cursor: pointer;
-  padding: 10px;
-  background: linear-gradient(45deg, #ff00ff, #ffcc00, #00ffff);
-  border-radius: 6px;
-  margin-bottom: 8px;
-  color: black;
-  font-weight: bold;
-  box-shadow: 0 2px 6px rgba(255,255,255,0.2);
-}
-
-details[open] summary {
-  background: linear-gradient(45deg, #ffcc00, #ff00ff, #00ffff);
-}
-
-details .patch-content {
-  padding: 10px 20px;
-  background: rgba(0,0,0,0.4);
-  border-left: 4px solid #ffb700;
-  border-radius: 6px;
-  margin-bottom: 20px;
 }
