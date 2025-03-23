@@ -302,6 +302,7 @@ div[style*="display: inline-block"] {
 
 .patch-header {
   background: #2a3040;
+  border-radius: 12px;
   padding: 1rem;
   border-bottom: 1px solid #3a4050;
 }
@@ -365,14 +366,6 @@ div[style*="display: inline-block"] {
   margin-bottom: 0.25rem;
 }
 
-
-
-/* Class highlight colors */
-.class-light { color: #44aaff; font-weight: 600; }
-.class-medium { color: #aa44ff; font-weight: 600; }
-.class-heavy { color: #ffaa00; font-weight: 600; }
-.class-random { color: var(--neon-yellow); font-weight: 600; }
-.action-copy { color: #44ff44; font-weight: 600; }
 
 /* Space out Step 2 from class buttons */
 .step + .btnRow {
@@ -497,12 +490,7 @@ img:hover {
   transition: transform 0.3s ease-in-out;
 }
 
-.finals-logo {
-  width: 200px; /* Set explicit width */
-  height: auto; /* Maintain aspect ratio */
-  display: block;
-  margin: 0 auto 30px;
-}
+
 
 /* Prevent horizontal scrolling on the entire page */
 body {
@@ -913,12 +901,6 @@ body {
     gap: 15px;
   }
 
-  .class-button,
-  .spin-button {
-    width: 45px;
-    height: 45px;
-    font-size: 1rem;
-  }
 
   #output {
     margin-top: 10px;
@@ -1013,75 +995,6 @@ img {
 /* Fix for Class Selection Buttons */
 /* Fix for Class Selection Buttons */
 
-/* Updated Class Button Styles (Using L, M, H, R) */
-.class-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 60px;
-  max-width: 80px;
-  padding: 5px 5px;
-  font-size: 1.2rem; /* Slightly larger for readability */
-  font-weight: bold;
-  text-align: center;
-  white-space: nowrap;
-  border-radius: 10px;
-  transition: all 0.3s ease-in-out;
-}
-
-/* Adjusts size on smaller screens */
-@media (max-width: 600px) {
-  .class-button {
-    font-size: 1rem; /* Reduce text size */
-    min-width: 55px;
-    padding: 6px 8px;
-  }
-}
-
-
-/* Ensuring proper icon alignment */
-.class-button span {
-  font-size: 0.9rem; /* Slightly smaller text */
-  flex-shrink: 1; /* Prevents text from stretching too much */
-  text-align: center;
-}
-
-/* Fixing icon alignment */
-.class-button .icon {
-  font-size: 1.2rem; /* Scaled-down icons for balance */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
-
-
-.class-button:hover,
-.class-button.selected {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 18px rgba(0, 243, 255, 0.6);
-}
-
-.class-button:active {
-  transform: scale(0.95);
-}
-
-.class-button[data-class="Light"] {
-  background: linear-gradient(135deg, #1e90ff, #00f3ff);
-}
-
-.class-button[data-class="Medium"] {
-  background: linear-gradient(135deg, #d100d1, #ff1493);
-}
-
-.class-button[data-class="Heavy"] {
-  background: linear-gradient(135deg, #ff4500, #ff7b00);
-}
-
-.class-button[data-class="random"] {
-  background: linear-gradient(135deg, #00c853, #00ff7f);
-}
 
 
 .spin-button {
@@ -1358,6 +1271,7 @@ img {
   background: rgba(26, 28, 35, 0.95);
   padding: 1rem;
   margin: 0.5rem 0;
+  border-radius: 12px;
   position: relative;
   text-align: center;
 }
@@ -1728,7 +1642,7 @@ iframe#bmc-button {
   .step h2,
   #classSelection h2,
   #spinSelection h2 {
-    font-size: 18px !important;
+    font-size: 1.5em !important;
     margin-bottom: 15px !important;
     padding-bottom: 0 !important;
   }
@@ -1969,62 +1883,7 @@ iframe#bmc-button {
     font-size: 14px !important;
   }
 }
-/* === UNIVERSAL CLASS BUTTON STYLES === */
-.class-button {
-  width: 100px !important; /* Adjust as needed */
-  height: auto !important;
-  max-height: 160px;
-  display: inline-block;
-  object-fit: contain; /* Ensures the image scales properly */
-  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.3s ease;
-}
 
-
-/* Hover Effect: Subtle glow */
-.class-button:hover {
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
-}
-.class-button.active img {
-  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1)) !important;
-}
-/* Active (Selected) Effect */
-.class-button.active {
-  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 1)) !important;
-}
-/* === CLASS-SPECIFIC COLOR EFFECTS === */
-.class-button[data-class="Light"] {
-  color: rgba(0, 255, 255, 0.8);
-}
-
-.class-button[data-class="Medium"] {
-  color: rgba(255, 0, 255, 0.8);
-}
-
-.class-button[data-class="Heavy"] {
-  color: rgba(255, 183, 0, 0.8);
-}
-
-.class-button[data-class="random"] {
-  color: rgba(255, 70, 70, 0.8);
-}
-
-/* === RESPONSIVE SIZE ADJUSTMENTS === */
-
-/* For Tablets (Smaller Buttons) */
-@media (max-width: 768px) {
-  .class-button {
-    width: 100px !important;
-    max-height: 160px;
-  }
-}
-
-/* For Small Phones (Even Smaller Buttons) */
-@media (max-width: 375px) {
-  .class-button {
-    width: 70px !important;
-    max-height: 10px;
-  }
-}
 
 /* Main container for selections */
 .selection-container {
@@ -2039,16 +1898,6 @@ iframe#bmc-button {
   width: fit-content;
   margin: auto;
 }
-/* 🔹 Class Selection Container */
-.class-selection {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 15px 20px;
-  border-radius: 12px 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-  text-align: center;
-  width: fit-content;
-  margin: 10px auto;
-}
 
 /* 🔹 Flexbox for Class Buttons */
 .btnRow {
@@ -2063,63 +1912,14 @@ iframe#bmc-button {
   gap: 15px;
 }
 
-
-/* 🔹 Class Buttons (Silhouettes as Clickable Elements) */
-.class-button {
-  width: 90px; /* Adjust as needed */
-  height: 110px;
-  object-fit: contain; /* Ensures the image scales properly */
-  background: none !important; /* Removes background */
-  border: none !important; /* Removes border */
-  outline: none !important; /* Ensures no outline */
-  cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.3s ease;
-}
-
-
-/* 🔥 Hover Effect (Slight Lift) */
-.class-button:hover {
-  transform: scale(1.05);
-  opacity: 0.85;
-}
-
-/* 🔥 Selected (Active) Class Button - Glow Instead of Box */
-.class-button.selected {
-  transform: scale(1.1);
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); /* White glow */
-}
-
-
-/* 🔹 Responsive Tweaks */
-@media (max-width: 768px) {
-  .btnRow {
-      flex-wrap: wrap;
-      gap: 10px;
-  }
-
-  .class-button {
-      width: 80px;
-      height: 100px;
+@media (max-width: 480px) {
+  .class-selection h2 {
+    margin-bottom: 64px;
+    position: relative;
+    z-index: 1;
   }
 }
 
-
-/* 🔹 Class-Specific Border Colors */
-.class-button[data-class="Light"].selected {
-  border-color: #1e90ff; /* Neon blue */
-}
-
-.class-button[data-class="Medium"].selected {
-  border-color: #ff1493; /* Neon pink */
-}
-
-.class-button[data-class="Heavy"].selected {
-  border-color: #ff7b00; /* Neon orange */
-}
-
-.class-button[data-class="Random"].selected {
-  border-color: #00ff7f; /* Bright green */
-}
 
 /* Spins Container Styling */
 .spin-selection {
@@ -2187,29 +1987,6 @@ iframe#bmc-button {
       width: 100%;
   }
 
-  /* Ensure "Choose Your Class" stays on top */
-  .class-selection {
-      display: flex;
-      flex-direction: column !important;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      gap: 5px;
-      position: relative;
-      padding-top: 30px; /* Adds space for the heading */
-  }
-
-  /* Move "Choose Your Class" up slightly */
-  .class-selection h2 {
-      position: relative !important;
-      top: -40px !important; /* Adjust this value as needed */
-      width: 100%;
-      text-align: center;
-      font-size: 1.4rem !important;
-      z-index: 10 !important;
-      background: transparent; /* Keeps it blending naturally */
-      padding: 25px 0;
-  }
 
   /* Ensure the class buttons stay in one row */
   .btnRow {
@@ -2222,14 +1999,19 @@ iframe#bmc-button {
       margin-top: 25px !important; /* Fine-tune spacing */
   }
 }
-.class-button img.selected {
-  filter: drop-shadow(0 0 12px cyan);
+
+
+
+
+@keyframes subtleGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 8px currentColor);
+  }
 }
 
-/* Remove the glow from outer image/container */
-.class-button.selected {
-  box-shadow: none;
-}
 .spin-button.selected {
   box-shadow: 0 0 0 4px rgba(255, 0, 150, 0.8);
   background-color: transparent; /* keep transparency for clean look */
@@ -2239,106 +2021,6 @@ iframe#bmc-button {
   transition: box-shadow 0.3s ease-in-out;
 }
 
-.class-button {
-  cursor: pointer;
-  transition: filter 0.3s ease;
-}
-
-.class-button:hover {
-  filter: drop-shadow(0 0 15px rgba(0, 200, 255, 0.9));
-}
-
-.class-button.selected,
-.class-button.active {
-  filter: drop-shadow(0 0 20px rgba(0, 200, 255, 1));
-}
-
-/* Remove existing glow styles */
-.class-button:hover, .class-button.selected, .class-button.active {
-  box-shadow: none !important;
-  outline: none !important;
-  border: none !important;
-}
-
-
-
-.class-button {
-  transition: filter 0.3s ease-in-out;
-}
-
-.class-button:hover {
-  filter: drop-shadow(0 0 12px currentColor);
-}
-
-#light-class {
-  color: #00ffff; /* Teal glow */
-}
-
-#medium-class {
-  color: #ff00ff; /* Magenta glow */
-}
-
-#heavy-class {
-  color: #ffa500; /* Orange glow */
-}
-
-#random-class {
-  color: #000000; /* Black (initially no glow) */
-}
-
-#random-class.selected,
-#random-class.active,
-#random-class:hover {
-  color: #ffffff; /* White glow when hovered or activated */
-  filter: drop-shadow(0 0 12px #ffffff);
-}
-
-.class-selection, .spin-selection {
-  padding: 10px 10px;
-  margin: 10px auto;
-  width: 430px;  /* Example width—adjust based on your design preference */
-  text-align: center;
-  box-sizing: border-box;
-}
-/* Default styles for desktop */
-.class-selection,
-.spin-selection {
-    width: 100%;
-    max-width: 428px;
-    margin: 10px auto;
-}
-
-/* Media query for smaller screens */
-@media (max-width: 480px) {
-    .class-selection,
-    .spin-selection {
-        width: 90%; /* adjusts width for smaller screens */
-        padding: 10px; /* reduces padding for better fit */
-    }
-}
-@media (max-width: 768px) {
-  .class-selection {
-    padding-top: 10px; /* even more space at the top */
-    padding-bottom: 10px;
-  }
-
-  .class-selection h2 {
-    margin-bottom: 25px; /* increased spacing below the title */
-    font-size: 1.2rem; /* slightly smaller text */
-  }
-
-  .class-selection .class-buttons {
-    margin-top: 20px; /* increased margin to create more space */
-    flex-wrap: wrap; /* allows buttons to wrap nicely if needed */
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .class-selection .class-button {
-    width: 60px; /* control button sizes on mobile */
-    height: auto;
-  }
-}
 
 
 .locked-tag {
@@ -2636,4 +2318,858 @@ html {
     height: 40px !important;
     font-size: 16px !important;
   }
+}
+
+.optional-toggle {
+  display: block;
+  margin: 5px auto;  /* Adds spacing between sections */
+  padding: 5px 5px;
+  background: linear-gradient(45deg, #ff7b00, #ffcc00);
+  color: black;
+  font-size: 13px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  text-decoration: none;
+  box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+}
+
+.optional-toggle:hover {
+  transform: scale(1.05);
+  color: white;
+}
+
+
+
+
+.class-button {
+  width: 126px;
+  height: 300px;
+  padding: 0;
+  margin: 0px;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+  transform: scale(0.35);
+  transform-origin: center center;
+}
+
+.class-button img {
+  width: 126px;
+  height: 300px;
+  object-fit: contain;
+  transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+
+@media (max-width: 480px) {
+  .btnRow {
+    gap: 5px; /* Reduce space between buttons */
+  }
+
+  .class-button {
+    width: 84px;        /* 66% of 126px */
+    height: 200px;      /* 66% of 300px */
+    transform: none;    /* Remove scale, we're using real dimensions */
+  }
+
+  .class-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.class-wrapper {
+  transform: scale(0.5);
+  transform-origin: center center;
+}
+
+.class-button {
+  transform: scale(0.3);
+}
+
+@media (max-width: 480px) {
+  .class-button {
+    transform: scale(0.6);
+  }
+}
+
+/* === KEYFRAMES FOR EACH CLASS === */
+@keyframes pulse-light {
+  0%   { filter: drop-shadow(0 0 3px #00f3ff); }
+  50%  { filter: drop-shadow(0 0 8px #00f3ff); }
+  100% { filter: drop-shadow(0 0 3px #00f3ff); }
+}
+
+@keyframes pulse-medium {
+  0%   { filter: drop-shadow(0 0 3px #ff00ff); }
+  50%  { filter: drop-shadow(0 0 8px #ff00ff); }
+  100% { filter: drop-shadow(0 0 3px #ff00ff); }
+}
+
+@keyframes pulse-heavy {
+  0%   { filter: drop-shadow(0 0 3px #ffaa00); }
+  50%  { filter: drop-shadow(0 0 8px #ffaa00); }
+  100% { filter: drop-shadow(0 0 3px #ffaa00); }
+}
+
+@keyframes pulse-random {
+  0%   { filter: drop-shadow(0 0 3px #ffffff); }
+  50%  { filter: drop-shadow(0 0 8px #ffffff); }
+  100% { filter: drop-shadow(0 0 3px #ffffff); }
+}
+
+/* === CLASS GLOW STYLING + STAGGERED PULSE === */
+
+/* LIGHT */
+#light-class {
+  animation: pulse-light 3s ease-in-out infinite;
+  animation-delay: 0.15s;
+  animation-fill-mode: both;
+  animation-play-state: running;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+#light-class:hover {
+  filter: drop-shadow(0 0 10px #00f3ff) drop-shadow(0 0 16px #00f3ff);
+  transform: scale(1.05);
+}
+#light-class.selected {
+  animation: none;
+  filter: drop-shadow(0 0 12px #00f3ff) drop-shadow(0 0 20px #00f3ff);
+  transform: scale(1.1);
+}
+
+/* MEDIUM */
+#medium-class {
+  animation: pulse-medium 3.03s ease-in-out infinite;
+  animation-delay: 0.45s;
+  animation-fill-mode: both;
+  animation-play-state: running;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+#medium-class:hover {
+  filter: drop-shadow(0 0 10px #ff00ff) drop-shadow(0 0 16px #ff00ff);
+  transform: scale(1.05);
+}
+#medium-class.selected {
+  animation: none;
+  filter: drop-shadow(0 0 12px #ff00ff) drop-shadow(0 0 20px #ff00ff);
+  transform: scale(1.1);
+}
+
+/* HEAVY */
+#heavy-class {
+  animation: pulse-heavy 3.06s ease-in-out infinite;
+  animation-delay: 0.75s;
+  animation-fill-mode: both;
+  animation-play-state: running;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+#heavy-class:hover {
+  filter: drop-shadow(0 0 10px #ffaa00) drop-shadow(0 0 16px #ffaa00);
+  transform: scale(1.05);
+}
+#heavy-class.selected {
+  animation: none;
+  filter: drop-shadow(0 0 12px #ffaa00) drop-shadow(0 0 20px #ffaa00);
+  transform: scale(1.1);
+}
+
+/* RANDOM */
+#random-class {
+  animation: pulse-random 3.09s ease-in-out infinite;
+  animation-delay: 1.05s;
+  animation-fill-mode: both;
+  animation-play-state: running;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+#random-class:hover {
+  filter: drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 16px #ffffff);
+  transform: scale(1.05);
+}
+#random-class.selected {
+  animation: none;
+  filter: drop-shadow(0 0 12px #ffffff) drop-shadow(0 0 20px #ffffff);
+  transform: scale(1.1);
+}
+/* Filter Toggle Button */
+.filter-toggle-container {
+  margin: 15px auto;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+}
+
+.filter-toggle-btn {
+  background: linear-gradient(to right, #ff6e00, #ff9500);
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 25px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 15px auto;
+}
+
+.filter-toggle-btn:hover {
+  background: linear-gradient(to right, #ff9500, #ff6e00);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.toggle-icon {
+  margin-left: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon.open {
+  transform: rotate(45deg);
+}
+
+/* Filter Panel */
+.filter-panel {
+  background-color: rgba(30, 30, 40, 0.95);
+  border-radius: 15px;
+  margin: 0 auto 20px;
+  max-width: 800px;
+  padding: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.3s ease;
+}
+
+.filter-panel.closing {
+  animation: fadeOut 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-20px); }
+}
+
+/* Tabs Navigation */
+.filter-tabs {
+  display: flex;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 15px;
+}
+
+.tab-button {
+  background-color: transparent;
+  color: #aaa;
+  border: none;
+  padding: 10px 20px;
+  margin-right: 5px;
+  cursor: pointer;
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tab-button.active {
+  color: #ff9500;
+  border-bottom: 3px solid #ff9500;
+}
+
+/* Filter Controls */
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.search-input {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-family: 'Oswald', sans-serif;
+  min-width: 200px;
+  margin-right: 10px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #ff9500;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.class-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.class-filter {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 12px;
+  margin: 0 5px 5px 0;
+  cursor: pointer;
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.class-filter:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.class-filter.active {
+  background-color: #ff9500;
+  color: #fff;
+}
+
+/* Tab Content */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Category Styling */
+.item-category {
+  margin-bottom: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+
+.category-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #ff9500;
+}
+
+.category-toggle {
+  background: none;
+  border: none;
+  color: #ff9500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.category-toggle.collapsed {
+  transform: rotate(-90deg);
+}
+
+/* Item Grid */
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  padding: 15px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Item Checkbox */
+.item-checkbox {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.item-checkbox:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.item-checkbox input {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.item-checkbox span {
+  color: white;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Apply Button */
+.filter-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.apply-button {
+  background: linear-gradient(to right, #ff6e00, #ff9500);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 30px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.apply-button:hover {
+  background: linear-gradient(to right, #ff9500, #ff6e00);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Scrollbar styling for item grids */
+.item-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.item-grid::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.item-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 149, 0, 0.5);
+  border-radius: 4px;
+}
+
+.item-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 149, 0, 0.7);
+}
+
+
+
+
+@keyframes slideFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(0.7);
+  }
+}
+
+
+#light-class {
+  animation: slideFadeIn 0.6s ease-out forwards;
+  animation-delay: 0.1s;
+}
+#medium-class {
+  animation: slideFadeIn 0.6s ease-out forwards;
+  animation-delay: 0.25s;
+}
+#heavy-class {
+  animation: slideFadeIn 0.6s ease-out forwards;
+  animation-delay: 0.4s;
+}
+#random-class {
+  animation: slideFadeIn 0.6s ease-out forwards;
+  animation-delay: 0.55s;
+}
+
+
+
+@media (max-width: 480px) {
+  .class-wrapper {
+    padding-top: 30px; /* pushes characters down below heading */
+  }
+}
+
+
+
+
+
+
+@keyframes flicker {
+  0% { opacity: 0.9; transform: rotate(0deg); }
+  25% { opacity: 1; transform: rotate(0.2deg); }
+  50% { opacity: 0.95; transform: rotate(-0.2deg); }
+  75% { opacity: 1; transform: rotate(0.1deg); }
+  100% { opacity: 1; transform: rotate(0deg); }
+}
+.class-button:hover {
+  animation: flicker 0.25s linear;
+}
+
+
+
+/* Filter Toggle Button */
+.filter-toggle-container {
+  margin: 15px auto;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+}
+
+.filter-toggle-btn {
+  background: linear-gradient(to right, #ff6e00, #ff9500);
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 25px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 15px auto;
+}
+
+.filter-toggle-btn:hover {
+  background: linear-gradient(to right, #ff9500, #ff6e00);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.toggle-icon {
+  margin-left: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon.open {
+  transform: rotate(45deg);
+}
+
+/* Filter Panel */
+.filter-panel {
+  background-color: rgba(30, 30, 40, 0.95);
+  border-radius: 15px;
+  margin: 0 auto 20px;
+  max-width: 800px;
+  padding: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.3s ease;
+}
+
+.filter-panel.closing {
+  animation: fadeOut 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-20px); }
+}
+
+/* Tabs Navigation */
+.filter-tabs {
+  display: flex;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 15px;
+}
+
+.tab-button {
+  background-color: transparent;
+  color: #aaa;
+  border: none;
+  padding: 10px 20px;
+  margin-right: 5px;
+  cursor: pointer;
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tab-button.active {
+  color: #ff9500;
+  border-bottom: 3px solid #ff9500;
+}
+
+/* Filter Controls */
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.search-input {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-family: 'Oswald', sans-serif;
+  min-width: 200px;
+  margin-right: 10px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #ff9500;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.class-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.class-filter {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 12px;
+  margin: 0 5px 5px 0;
+  cursor: pointer;
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.class-filter:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.class-filter.active {
+  background-color: #ff9500;
+  color: #fff;
+}
+
+/* Tab Content */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Category Styling */
+.item-category {
+  margin-bottom: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+
+.category-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #ff9500;
+}
+
+.category-toggle {
+  background: none;
+  border: none;
+  color: #ff9500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.category-toggle.collapsed {
+  transform: rotate(-90deg);
+}
+
+/* Item Grid */
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  padding: 15px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Item Checkbox */
+.item-checkbox {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.item-checkbox:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.item-checkbox input {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.item-checkbox span {
+  color: white;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Apply Button */
+.filter-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.apply-button {
+  background: linear-gradient(to right, #ff6e00, #ff9500);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 30px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.apply-button:hover {
+  background: linear-gradient(to right, #ff9500, #ff6e00);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Scrollbar styling for item grids */
+.item-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.item-grid::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.item-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 149, 0, 0.5);
+  border-radius: 4px;
+}
+
+.item-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 149, 0, 0.7);
+}
+.compact-button {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  height: auto !important;
+}
+
+.btnRow {
+  display: flex;
+  justify-content: center;
+  gap: 0px; /* <-- this is the spacing between your class buttons */
+}
+
+
+@keyframes logoBassBounce {
+  0% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 4px #ff00ff) drop-shadow(0 0 6px #00f3ff);
+  }
+  20% {
+    transform: scale(1.05) rotate(-1deg);
+    filter: drop-shadow(0 0 6px #ff00ff) drop-shadow(0 0 10px #00f3ff);
+  }
+  40% {
+    transform: scale(0.98) rotate(1deg);
+    filter: drop-shadow(0 0 5px #ff00ff) drop-shadow(0 0 8px #00f3ff);
+  }
+  60% {
+    transform: scale(1.03) rotate(-0.5deg);
+    filter: drop-shadow(0 0 6px #ff00ff) drop-shadow(0 0 12px #00f3ff);
+  }
+  80% {
+    transform: scale(0.99) rotate(0.5deg);
+    filter: drop-shadow(0 0 5px #ff00ff) drop-shadow(0 0 8px #00f3ff);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 4px #ff00ff) drop-shadow(0 0 6px #00f3ff);
+  }
+}
+
+
+.finals-logo {
+  width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto 30px;
+  animation: logoBassBounce 3.2s ease-in-out infinite;
+  transform-origin: center center;
 }
