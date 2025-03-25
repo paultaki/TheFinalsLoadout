@@ -2902,13 +2902,13 @@ html {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
+  from { opacity: 0; transform: translateY(-50px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeOut {
   from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 0; transform: translateY(-50px); }
 }
 
 /* Tabs Navigation */
@@ -3172,4 +3172,13 @@ html {
   margin: 0 auto 30px;
   animation: logoBassBounce 3.2s ease-in-out infinite;
   transform-origin: center center;
+}
+
+@keyframes idleShift {
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(-1px) rotate(0.5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+.character-idle-animate {
+  animation: idleShift 2s infinite ease-in-out;
 }
