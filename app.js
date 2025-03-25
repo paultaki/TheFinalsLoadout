@@ -63,7 +63,6 @@ const loadouts = {
       "Breach Charge",
       "Gateway",
       "Glitch Grenade",
-      "Gravity Vortex",
       "Sonar Grenade",
       "Thermal Bore",
       "Gas Grenade",
