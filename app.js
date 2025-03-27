@@ -454,14 +454,9 @@ const displayLoadout = (classType) => {
 
   // ✅ Select 3 unique gadgets for final lock-in
   const allGadgets = [...gadgets];
-  const selectedGadgets = [];
-  while (selectedGadgets.length < 3 && allGadgets.length > 0) {
-    const index = Math.floor(Math.random() * allGadgets.length);
-    const picked = allGadgets.splice(index, 1)[0];
-    if (!selectedGadgets.includes(picked)) {
-      selectedGadgets.push(picked);
-    }
-  }
+  const selectedGadgets = allGadgets
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 3);
 
   // 🎰 Fill gadgetChunks with rich spin animation pools (20 items each)
   const gadgetChunks = [[], [], []];
@@ -478,9 +473,9 @@ const displayLoadout = (classType) => {
   const createGadgetSpinSequence = (winningGadget, chunkIndex) => {
     const chunk = gadgetChunks[chunkIndex] || [];
 
-    const uniquePool = [
-      ...new Set(chunk.filter((item) => item !== winningGadget)),
-    ];
+    const uniquePool = [...new Set(chunk)].filter(
+      (item) => item !== winningGadget
+    );
 
     const shuffled = uniquePool.sort(() => Math.random() - 0.5);
 
