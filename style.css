@@ -3182,3 +3182,83 @@ html {
 .character-idle-animate {
   animation: idleShift 2s infinite ease-in-out;
 }
+
+
+
+/* PATCH NOTES SECTION */
+.patch-notes {
+  padding: 2rem;
+  margin-top: 2rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 16px;
+  box-shadow: 0 0 10px #000;
+  max-width: 800px;
+  margin-inline: auto;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.patch-notes h2 {
+  color: #ffcc00;
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.patch-summary {
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+.patch-section {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.patch-section h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #444;
+  padding-bottom: 0.25rem;
+  color: #00f0ff;
+}
+
+.patch-section details {
+  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+}
+
+.patch-section summary {
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0.25rem 0;
+  color: #ff9;
+}
+
+.patch-section summary::marker {
+  color: #ffcc00;
+}
+
+.patch-section ul {
+  margin-top: 0.5rem;
+  padding-left: 1.5rem;
+  list-style-type: disc;
+}
+
+.patch-section ul li {
+  margin-bottom: 0.4rem;
+  line-height: 1.5;
+  color: #ddd;
+}
+
+/* Tooltip or hover highlight idea if needed later */
+.patch-section ul li strong {
+  color: #ffffff;
+}
