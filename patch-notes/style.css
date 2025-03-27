@@ -325,3 +325,77 @@ main {
   transform: scale(1.05);
   background: linear-gradient(45deg, #ff00ff, #ffcc00, #00ffff);
 }
+
+.patch-summary {
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem auto 2rem;
+  color: #e0e0e0;
+  line-height: 1.6;
+  max-width: 700px;
+}
+
+.patch-notes details {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  border-left: 5px solid transparent;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.patch-notes summary {
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
+.patch-notes details[open] {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Color tags */
+.patch-notes .buff {
+  border-left-color: #33ff33;
+}
+.patch-notes .nerf {
+  border-left-color: #ff1a1a;
+}
+.patch-notes .adjustment {
+  border-left-color: #ffbb33;
+}
+.patch-notes .new {
+  border-left-color: #33bbff;
+}
+
+.patch-notes ul {
+  padding-left: 1.5rem;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  text-align: left;
+  color: #ddd;
+}
+
+.patch-notes li strong {
+  color: #fff;
+}
+
+.patch-notes h3 {
+  font-size: 1.4rem;
+  margin: 2rem 0 1rem;
+  color: var(--highlight-color);
+  text-align: left;
+}
+
+.patch-date {
+  font-size: 1.5rem;
+  color: #fff;
+  background: linear-gradient(45deg, #ff00ff, #ffcc00, #00ffff);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+}
