@@ -33,14 +33,13 @@ const PHYSICS = {
       DECELERATION_TIME: 400,
     },
     FINAL_SPIN: {
-      COLUMN_DELAY: 600, // 0.6s between stops for final spin
+      COLUMN_DELAY: 700, // 0.6s between stops for final spin
       BASE_DURATION: 2500,
       DECELERATION_TIME: 800,
     },
   },
 };
 
-// Loadouts object
 const loadouts = {
   Light: {
     weapons: [
@@ -63,6 +62,7 @@ const loadouts = {
       "Breach Charge",
       "Gateway",
       "Glitch Grenade",
+      "Gravity Vortex",
       "Sonar Grenade",
       "Thermal Bore",
       "Gas Grenade",
@@ -147,61 +147,99 @@ const loadouts = {
 
 // Function to get filtered loadouts based on checkbox selections
 function getFilteredLoadouts() {
+  // Create a deep copy of the original loadouts
   const filteredLoadouts = JSON.parse(JSON.stringify(loadouts));
 
+  // Try to get from the new filter system first
+  let checkedWeapons = Array.from(
+    document.querySelectorAll('.item-grid input[data-type="weapon"]:checked')
+  ).map((checkbox) => checkbox.value);
+
+  let checkedSpecializations = Array.from(
+    document.querySelectorAll(
+      '.item-grid input[data-type="specialization"]:checked'
+    )
+  ).map((checkbox) => checkbox.value);
+
+  let checkedGadgets = Array.from(
+    document.querySelectorAll('.item-grid input[data-type="gadget"]:checked')
+  ).map((checkbox) => checkbox.value);
+
+  // If new system doesn't have selections, fallback to old system
+  if (checkedWeapons.length === 0) {
+    checkedWeapons = Array.from(
+      document.querySelectorAll(
+        '#weapon-options input[type="checkbox"]:checked'
+      )
+    ).map((checkbox) => checkbox.value);
+  }
+
+  if (checkedSpecializations.length === 0) {
+    checkedSpecializations = Array.from(
+      document.querySelectorAll(
+        '#specialization-options input[type="checkbox"]:checked'
+      )
+    ).map((checkbox) => checkbox.value);
+  }
+
+  if (checkedGadgets.length === 0) {
+    checkedGadgets = Array.from(
+      document.querySelectorAll(
+        '#gadget-options input[type="checkbox"]:checked'
+      )
+    ).map((checkbox) => checkbox.value);
+  }
+
+  console.log("Filtered weapons:", checkedWeapons);
+  console.log("Filtered specializations:", checkedSpecializations);
+  console.log("Filtered gadgets:", checkedGadgets);
+
+  // Apply filters to each class
   for (const classType of ["Light", "Medium", "Heavy"]) {
-    const typeLower = classType.toLowerCase();
-
-    const checkedWeapons = Array.from(
-      document.querySelectorAll(
-        `.item-grid input[data-type="weapon"][data-class="${typeLower}"]:checked`
-      )
-    ).map((cb) => cb.value);
-
-    const checkedSpecs = Array.from(
-      document.querySelectorAll(
-        `.item-grid input[data-type="specialization"][data-class="${typeLower}"]:checked`
-      )
-    ).map((cb) => cb.value);
-
-    const checkedGadgets = Array.from(
-      document.querySelectorAll(
-        `.item-grid input[data-type="gadget"][data-class="${typeLower}"]:checked`
-      )
-    ).map((cb) => cb.value);
-
-    // Weapons
+    // Filter weapons
     if (checkedWeapons.length > 0) {
       filteredLoadouts[classType].weapons = filteredLoadouts[
         classType
-      ].weapons.filter((w) => checkedWeapons.includes(w));
+      ].weapons.filter((weapon) => checkedWeapons.includes(weapon));
     }
 
-    // Specs
-    if (checkedSpecs.length > 0) {
+    // Filter specializations
+    if (checkedSpecializations.length > 0) {
       filteredLoadouts[classType].specializations = filteredLoadouts[
         classType
-      ].specializations.filter((s) => checkedSpecs.includes(s));
+      ].specializations.filter((spec) => checkedSpecializations.includes(spec));
     }
 
-    // Gadgets (fixed!)
+    // Filter gadgets
     if (checkedGadgets.length > 0) {
       filteredLoadouts[classType].gadgets = filteredLoadouts[
         classType
-      ].gadgets.filter((g) => checkedGadgets.includes(g));
+      ].gadgets.filter((gadget) => checkedGadgets.includes(gadget));
     }
+  }
 
-    // Fallbacks
+  // Verify we have at least one item in each category for each class
+  for (const classType of ["Light", "Medium", "Heavy"]) {
+    // If any category is empty, revert to the original items for that category
     if (filteredLoadouts[classType].weapons.length === 0) {
+      console.warn(
+        `No weapons selected for ${classType} class, reverting to defaults`
+      );
       filteredLoadouts[classType].weapons = loadouts[classType].weapons;
     }
 
     if (filteredLoadouts[classType].specializations.length === 0) {
+      console.warn(
+        `No specializations selected for ${classType} class, reverting to defaults`
+      );
       filteredLoadouts[classType].specializations =
         loadouts[classType].specializations;
     }
 
     if (filteredLoadouts[classType].gadgets.length === 0) {
+      console.warn(
+        `No gadgets selected for ${classType} class, reverting to defaults`
+      );
       filteredLoadouts[classType].gadgets = loadouts[classType].gadgets;
     }
   }
@@ -436,62 +474,66 @@ function populateCheckboxes(items, container, type) {
 
   console.log(`✅ Successfully populated ${type} checkboxes.`);
 }
+
+// Main functions for displaying loadouts
 const displayLoadout = (classType) => {
+  // Get the filtered loadouts
   const filteredLoadouts = getFilteredLoadouts();
   const loadout = filteredLoadouts[classType];
 
   const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
 
-  const gadgets = [...filteredLoadouts[classType].gadgets];
-
-  // ✅ Safety check: if fewer than 3 gadgets, bail and alert
-  if (!gadgets || gadgets.length < 3) {
-    alert("Not enough gadgets selected! Please select at least 3.");
-    state.isSpinning = false;
-    return;
-  }
-
-  // ✅ Select 3 unique gadgets for final lock-in
-  const allGadgets = [...gadgets];
-  const selectedGadgets = allGadgets
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 3);
-
-  // 🎰 Fill gadgetChunks with rich spin animation pools (20 items each)
+  const allGadgets = [...loadout.gadgets];
   const gadgetChunks = [[], [], []];
+  const selectedGadgets = [];
+
   for (let i = 0; i < 3; i++) {
-    const spinPool = [];
-    while (spinPool.length < 20) {
-      const randomItem = gadgets[Math.floor(Math.random() * gadgets.length)];
-      spinPool.push(randomItem);
-    }
-    gadgetChunks[i] = spinPool;
+    if (allGadgets.length === 0) break;
+    const index = Math.floor(Math.random() * allGadgets.length);
+    selectedGadgets.push(allGadgets[index]);
+    allGadgets.splice(index, 1);
   }
 
-  // ✨ Create gadget spin sequence (winner in center, unique shuffle around it)
-  const createGadgetSpinSequence = (winningGadget, chunkIndex) => {
-    const chunk = gadgetChunks[chunkIndex] || [];
-
-    const uniquePool = [...new Set(chunk)].filter(
-      (item) => item !== winningGadget
+  // Make sure we have 3 gadgets - this is a safety measure
+  while (selectedGadgets.length < 3 && loadout.gadgets.length > 0) {
+    selectedGadgets.push(
+      loadout.gadgets[Math.floor(Math.random() * loadout.gadgets.length)]
     );
+  }
 
-    const shuffled = uniquePool.sort(() => Math.random() - 0.5);
+  while (allGadgets.length > 0) {
+    for (let i = 0; i < 3 && allGadgets.length > 0; i++) {
+      const index = Math.floor(Math.random() * allGadgets.length);
+      gadgetChunks[i].push(allGadgets[index]);
+      allGadgets.splice(index, 1);
+    }
+  }
 
-    const result = [];
+  // If any gadget chunk is empty, fill it with the full gadget list
+  for (let i = 0; i < 3; i++) {
+    if (gadgetChunks[i].length === 0) {
+      gadgetChunks[i] = [...loadout.gadgets];
+    }
+  }
+
+  const createGadgetSpinSequence = (winningGadget, chunkIndex) => {
+    const sequence = new Array(8);
+    sequence[4] = winningGadget;
+
+    const chunk =
+      gadgetChunks[chunkIndex].length > 0
+        ? gadgetChunks[chunkIndex]
+        : loadout.gadgets;
     for (let i = 0; i < 8; i++) {
-      if (i === 4) {
-        result.push(winningGadget);
-      } else {
-        result.push(shuffled.length ? shuffled.pop() : winningGadget);
+      if (i !== 4) {
+        const randomIndex = Math.floor(Math.random() * chunk.length);
+        sequence[i] = chunk[randomIndex];
       }
     }
-
-    return result;
+    return sequence;
   };
 
-  // 🧱 Build the HTML output
   const loadoutHTML = `
     <div class="slot-machine-wrapper">
       <div class="items-container">
@@ -508,16 +550,16 @@ const displayLoadout = (classType) => {
         ${selectedGadgets
           .map(
             (gadget, index) => `
-              <div class="item-container">
-                <div class="scroll-container" data-gadget-index="${index}">
-                  ${createItemContainer(
-                    createGadgetSpinSequence(gadget, index),
-                    gadget,
-                    true
-                  )}
-                </div>
+            <div class="item-container">
+              <div class="scroll-container" data-gadget-index="${index}">
+                ${createItemContainer(
+                  createGadgetSpinSequence(gadget, index),
+                  gadget,
+                  true
+                )}
               </div>
-            `
+            </div>
+          `
           )
           .join("")}
       </div>
@@ -855,9 +897,20 @@ function populateFilterItems() {
   if (mediumWeaponsGrid) mediumWeaponsGrid.innerHTML = "";
   if (heavyWeaponsGrid) heavyWeaponsGrid.innerHTML = "";
 
-  // Add weapons
+  // Add weapons with "Select All" option at the top
   if (lightWeaponsGrid && loadouts.Light.weapons) {
     console.log(`✅ Adding ${loadouts.Light.weapons.length} Light weapons`);
+
+    // Add Select All option first
+    const selectAllItem = document.createElement("label");
+    selectAllItem.className = "item-checkbox select-all-checkbox";
+    selectAllItem.innerHTML = `
+      <input type="checkbox" checked data-type="weapon-selectall" data-class="light">
+      <span><strong>Select All Light Weapons</strong></span>
+    `;
+    lightWeaponsGrid.appendChild(selectAllItem);
+
+    // Then add individual weapons
     loadouts.Light.weapons.forEach((weapon) => {
       const item = document.createElement("label");
       item.className = "item-checkbox";
@@ -873,6 +926,17 @@ function populateFilterItems() {
 
   if (mediumWeaponsGrid && loadouts.Medium.weapons) {
     console.log(`✅ Adding ${loadouts.Medium.weapons.length} Medium weapons`);
+
+    // Add Select All option first
+    const selectAllItem = document.createElement("label");
+    selectAllItem.className = "item-checkbox select-all-checkbox";
+    selectAllItem.innerHTML = `
+      <input type="checkbox" checked data-type="weapon-selectall" data-class="medium">
+      <span><strong>Select All Medium Weapons</strong></span>
+    `;
+    mediumWeaponsGrid.appendChild(selectAllItem);
+
+    // Then add individual weapons
     loadouts.Medium.weapons.forEach((weapon) => {
       const item = document.createElement("label");
       item.className = "item-checkbox";
@@ -888,6 +952,17 @@ function populateFilterItems() {
 
   if (heavyWeaponsGrid && loadouts.Heavy.weapons) {
     console.log(`✅ Adding ${loadouts.Heavy.weapons.length} Heavy weapons`);
+
+    // Add Select All option first
+    const selectAllItem = document.createElement("label");
+    selectAllItem.className = "item-checkbox select-all-checkbox";
+    selectAllItem.innerHTML = `
+      <input type="checkbox" checked data-type="weapon-selectall" data-class="heavy">
+      <span><strong>Select All Heavy Weapons</strong></span>
+    `;
+    heavyWeaponsGrid.appendChild(selectAllItem);
+
+    // Then add individual weapons
     loadouts.Heavy.weapons.forEach((weapon) => {
       const item = document.createElement("label");
       item.className = "item-checkbox";
@@ -901,119 +976,10 @@ function populateFilterItems() {
     console.warn("⚠️ Could not find heavy weapons grid or weapons");
   }
 
-  // Populate specializations tab
-  const lightSpecsGrid = document.getElementById("light-specs-grid");
-  const mediumSpecsGrid = document.getElementById("medium-specs-grid");
-  const heavySpecsGrid = document.getElementById("heavy-specs-grid");
-
-  if (lightSpecsGrid && loadouts.Light.specializations) {
-    console.log(
-      `✅ Adding ${loadouts.Light.specializations.length} Light specializations`
-    );
-    loadouts.Light.specializations.forEach((spec) => {
-      const item = document.createElement("label");
-      item.className = "item-checkbox";
-      item.innerHTML = `
-        <input type="checkbox" value="${spec}" checked data-type="specialization" data-class="light">
-        <span>${spec}</span>
-      `;
-      lightSpecsGrid.appendChild(item);
-    });
-  } else {
-    console.warn(
-      "⚠️ Could not find light specializations grid or specializations"
-    );
-  }
-
-  if (mediumSpecsGrid && loadouts.Medium.specializations) {
-    console.log(
-      `✅ Adding ${loadouts.Medium.specializations.length} Medium specializations`
-    );
-    loadouts.Medium.specializations.forEach((spec) => {
-      const item = document.createElement("label");
-      item.className = "item-checkbox";
-      item.innerHTML = `
-        <input type="checkbox" value="${spec}" checked data-type="specialization" data-class="medium">
-        <span>${spec}</span>
-      `;
-      mediumSpecsGrid.appendChild(item);
-    });
-  } else {
-    console.warn(
-      "⚠️ Could not find medium specializations grid or specializations"
-    );
-  }
-
-  if (heavySpecsGrid && loadouts.Heavy.specializations) {
-    console.log(
-      `✅ Adding ${loadouts.Heavy.specializations.length} Heavy specializations`
-    );
-    loadouts.Heavy.specializations.forEach((spec) => {
-      const item = document.createElement("label");
-      item.className = "item-checkbox";
-      item.innerHTML = `
-        <input type="checkbox" value="${spec}" checked data-type="specialization" data-class="heavy">
-        <span>${spec}</span>
-      `;
-      heavySpecsGrid.appendChild(item);
-    });
-  } else {
-    console.warn(
-      "⚠️ Could not find heavy specializations grid or specializations"
-    );
-  }
-
-  // Populate gadgets tab
-  const lightGadgetsGrid = document.getElementById("light-gadgets-grid");
-  const mediumGadgetsGrid = document.getElementById("medium-gadgets-grid");
-  const heavyGadgetsGrid = document.getElementById("heavy-gadgets-grid");
-
-  if (lightGadgetsGrid && loadouts.Light.gadgets) {
-    console.log(`✅ Adding ${loadouts.Light.gadgets.length} Light gadgets`);
-    loadouts.Light.gadgets.forEach((gadget) => {
-      const item = document.createElement("label");
-      item.className = "item-checkbox";
-      item.innerHTML = `
-        <input type="checkbox" value="${gadget}" checked data-type="gadget" data-class="light">
-        <span>${gadget}</span>
-      `;
-      lightGadgetsGrid.appendChild(item);
-    });
-  } else {
-    console.warn("⚠️ Could not find light gadgets grid or gadgets");
-  }
-
-  if (mediumGadgetsGrid && loadouts.Medium.gadgets) {
-    console.log(`✅ Adding ${loadouts.Medium.gadgets.length} Medium gadgets`);
-    loadouts.Medium.gadgets.forEach((gadget) => {
-      const item = document.createElement("label");
-      item.className = "item-checkbox";
-      item.innerHTML = `
-        <input type="checkbox" value="${gadget}" checked data-type="gadget" data-class="medium">
-        <span>${gadget}</span>
-      `;
-      mediumGadgetsGrid.appendChild(item);
-    });
-  } else {
-    console.warn("⚠️ Could not find medium gadgets grid or gadgets");
-  }
-
-  if (heavyGadgetsGrid && loadouts.Heavy.gadgets) {
-    console.log(`✅ Adding ${loadouts.Heavy.gadgets.length} Heavy gadgets`);
-    loadouts.Heavy.gadgets.forEach((gadget) => {
-      const item = document.createElement("label");
-      item.className = "item-checkbox";
-      item.innerHTML = `
-        <input type="checkbox" value="${gadget}" checked data-type="gadget" data-class="heavy">
-        <span>${gadget}</span>
-      `;
-      heavyGadgetsGrid.appendChild(item);
-    });
-  } else {
-    console.warn("⚠️ Could not find heavy gadgets grid or gadgets");
-  }
-
   console.log("✅ Filter items population complete");
+
+  // Setup Select All functionality once items are populated
+  setupSelectAllCheckboxes();
 }
 
 function finalizeSpin(columns) {
@@ -1221,12 +1187,6 @@ const spinLoadout = () => {
     return;
   }
 
-  // ✅ Add idle animation to selected character AFTER we know spin is allowed
-  const selectedCharacter = document.querySelector(".class-button.selected");
-  if (selectedCharacter) {
-    selectedCharacter.classList.add("character-idle-animate");
-  }
-
   console.log(`🌀 Starting spin sequence: ${state.totalSpins} total spins`);
 
   state.isSpinning = true;
@@ -1354,6 +1314,93 @@ document.addEventListener("DOMContentLoaded", () => {
         customizationPanel.style.display === "block" ? "none" : "block";
     });
   }
+
+  // Add this to your existing JavaScript code, after the document is loaded
+  document.addEventListener("DOMContentLoaded", function () {
+    // Set up "Select All" functionality
+    setupSelectAllCheckboxes();
+  });
+
+  function setupSelectAllCheckboxes() {
+    // Get all "Select All" checkboxes
+    const selectAllCheckboxes = document.querySelectorAll(
+      'input[data-type$="selectall"]'
+    );
+
+    console.log(
+      "Setting up Select All checkboxes:",
+      selectAllCheckboxes.length
+    );
+
+    // Add event listeners to each "Select All" checkbox
+    selectAllCheckboxes.forEach((checkbox) => {
+      checkbox.addEventListener("change", function () {
+        const classType = this.dataset.class; // "light", "medium", or "heavy"
+        const selectType = this.dataset.type.replace("-selectall", ""); // "weapon", "specialization", or "gadget"
+        const isChecked = this.checked;
+
+        console.log(
+          `Select All ${classType} ${selectType}s changed to: ${isChecked}`
+        );
+
+        // Find all checkboxes of the same class and type
+        const typeCheckboxes = document.querySelectorAll(
+          `input[data-type="${selectType}"][data-class="${classType}"]`
+        );
+
+        console.log(
+          `Found ${typeCheckboxes.length} ${classType} ${selectType}s to update`
+        );
+
+        // Set all checkboxes to match the "Select All" state
+        typeCheckboxes.forEach((itemCheckbox) => {
+          itemCheckbox.checked = isChecked;
+        });
+      });
+    });
+
+    // Also add listeners to individual checkboxes to update "Select All" state
+    const typeCheckboxes = document.querySelectorAll(
+      'input[data-type="weapon"], input[data-type="specialization"], input[data-type="gadget"]'
+    );
+
+    typeCheckboxes.forEach((checkbox) => {
+      checkbox.addEventListener("change", function () {
+        const classType = this.dataset.class; // "light", "medium", or "heavy"
+        const selectType = this.dataset.type; // "weapon", "specialization", or "gadget"
+
+        // Find all checkboxes of the same class and type
+        const allTypeCheckboxes = document.querySelectorAll(
+          `input[data-type="${selectType}"][data-class="${classType}"]`
+        );
+
+        // Check if all are checked
+        const allChecked = Array.from(allTypeCheckboxes).every(
+          (cb) => cb.checked
+        );
+
+        // Update the "Select All" checkbox state
+        const selectAllCheckbox = document.querySelector(
+          `input[data-type="${selectType}-selectall"][data-class="${classType}"]`
+        );
+
+        if (selectAllCheckbox) {
+          selectAllCheckbox.checked = allChecked;
+          console.log(
+            `Updated Select All ${classType} ${selectType}s to: ${allChecked}`
+          );
+        }
+      });
+    });
+
+    console.log("Select All setup complete");
+  }
+
+  // Make sure this function is called after the DOM is loaded
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM loaded, setting up Select All functionality");
+    setupSelectAllCheckboxes();
+  });
 
   // Spin button logic
   if (spinButtons.length > 0) {
@@ -1606,4 +1653,170 @@ Gadget 3: ${selectedItems[4]}`;
       populateFilterItems();
     })
     .catch((err) => console.error("❌ Error loading JSON", err));
+
+  // This code should be added at the end of your app.js file or
+  // wrapped in a DOMContentLoaded event handler
+
+  // Direct implementation of Select All functionality - no dependencies
+  (function () {
+    // Function to immediately set up Select All checkboxes
+    function initSelectAll() {
+      console.log("🔍 Initializing robust Select All functionality");
+
+      // Find all "Select All" checkboxes
+      const selectAllCheckboxes = document.querySelectorAll(
+        '[data-type$="selectall"]'
+      );
+      console.log(`Found ${selectAllCheckboxes.length} Select All checkboxes`);
+
+      // Process each Select All checkbox
+      selectAllCheckboxes.forEach(function (selectAllBox) {
+        // Get necessary data attributes
+        const classType = selectAllBox.getAttribute("data-class"); // light, medium, heavy
+        const baseType = selectAllBox
+          .getAttribute("data-type")
+          .replace("-selectall", ""); // weapon
+
+        console.log(`Setting up ${classType} ${baseType} Select All`);
+
+        // Add click handler (works more reliably than change in some browsers)
+        selectAllBox.onclick = function () {
+          // Current state of the Select All checkbox
+          const isChecked = this.checked;
+          console.log(
+            `${classType} ${baseType} Select All clicked: ${isChecked}`
+          );
+
+          // Find all related checkboxes
+          const relatedBoxes = document.querySelectorAll(
+            `input[data-type="${baseType}"][data-class="${classType}"]`
+          );
+
+          console.log(
+            `Found ${relatedBoxes.length} ${classType} ${baseType}s to update`
+          );
+
+          // Update all related checkboxes
+          relatedBoxes.forEach(function (box) {
+            box.checked = isChecked;
+          });
+        };
+
+        // Initial setup: Check if all individual items are checked
+        updateSelectAllState(selectAllBox);
+      });
+
+      // Add listeners to individual checkboxes
+      const allItemCheckboxes = document.querySelectorAll(
+        '[data-type="weapon"], [data-type="specialization"], [data-type="gadget"]'
+      );
+      console.log(`Found ${allItemCheckboxes.length} individual checkboxes`);
+
+      allItemCheckboxes.forEach(function (checkbox) {
+        // Add click handler
+        checkbox.onclick = function () {
+          const classType = this.getAttribute("data-class");
+          const itemType = this.getAttribute("data-type");
+
+          // Find related Select All checkbox
+          const selectAllBox = document.querySelector(
+            `input[data-type="${itemType}-selectall"][data-class="${classType}"]`
+          );
+
+          if (selectAllBox) {
+            updateSelectAllState(selectAllBox);
+          }
+        };
+      });
+    }
+
+    // Function to update Select All checkbox state based on individual items
+    function updateSelectAllState(selectAllBox) {
+      const classType = selectAllBox.getAttribute("data-class");
+      const baseType = selectAllBox
+        .getAttribute("data-type")
+        .replace("-selectall", "");
+
+      // Find all related checkboxes
+      const relatedBoxes = document.querySelectorAll(
+        `input[data-type="${baseType}"][data-class="${classType}"]`
+      );
+
+      // Check if all are checked
+      let allChecked = true;
+      relatedBoxes.forEach(function (box) {
+        if (!box.checked) {
+          allChecked = false;
+        }
+      });
+
+      // Update Select All state without triggering its change event
+      selectAllBox.checked = allChecked;
+    }
+
+    // Run the initialization function
+    // Try several approaches to ensure it runs at the right time
+
+    // Approach 1: If document is already loaded
+    if (
+      document.readyState === "complete" ||
+      document.readyState === "interactive"
+    ) {
+      console.log("Document already loaded, initializing Select All");
+      setTimeout(initSelectAll, 100); // Small delay to ensure DOM is fully processed
+    }
+
+    // Approach 2: Wait for DOM content loaded
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log("DOMContentLoaded fired, initializing Select All");
+      initSelectAll();
+    });
+
+    // Approach 3: Fallback to window load event
+    window.addEventListener("load", function () {
+      console.log("Window load event, initializing Select All");
+      initSelectAll();
+    });
+
+    // Approach 4: Try again after a delay as final fallback
+    setTimeout(function () {
+      console.log("Delayed initialization of Select All");
+      initSelectAll();
+    }, 1000);
+  })();
+
+  // Additionally, add a global function to manually trigger setup if needed
+  window.reinitializeSelectAll = function () {
+    console.log("Manually reinitializing Select All functionality");
+    (function () {
+      // Find all "Select All" checkboxes
+      const selectAllCheckboxes = document.querySelectorAll(
+        '[data-type$="selectall"]'
+      );
+
+      // Process each Select All checkbox
+      selectAllCheckboxes.forEach(function (selectAllBox) {
+        // Get necessary data attributes
+        const classType = selectAllBox.getAttribute("data-class");
+        const baseType = selectAllBox
+          .getAttribute("data-type")
+          .replace("-selectall", "");
+
+        // Add click handler
+        selectAllBox.onclick = function () {
+          const isChecked = this.checked;
+
+          // Find all related checkboxes
+          const relatedBoxes = document.querySelectorAll(
+            `input[data-type="${baseType}"][data-class="${classType}"]`
+          );
+
+          // Update all related checkboxes
+          relatedBoxes.forEach(function (box) {
+            box.checked = isChecked;
+          });
+        };
+      });
+    })();
+  };
 });
