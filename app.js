@@ -441,40 +441,6 @@ class SlotColumn {
 let isAddingToHistory = false;
 let lastAddedLoadout = null;
 
-// DOM manipulation functions
-function populateCheckboxes(items, container, type) {
-  console.log(`✅ Populating ${type} checkboxes...`, items);
-
-  if (!container) {
-    console.error(`❌ Container for ${type} not found!`);
-    return;
-  }
-
-  container.innerHTML = "";
-  if (items.length === 0) {
-    container.innerHTML = "<p style='color: gray;'>No options available</p>";
-    return;
-  }
-
-  items.forEach((item) => {
-    const label = document.createElement("label");
-    label.style.display = "block";
-    label.style.marginBottom = "5px";
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.value = item;
-    checkbox.checked = true;
-    checkbox.dataset.type = type;
-
-    label.appendChild(checkbox);
-    label.appendChild(document.createTextNode(` ${item}`));
-    container.appendChild(label);
-  });
-
-  console.log(`✅ Successfully populated ${type} checkboxes.`);
-}
-
 // Main functions for displaying loadouts
 const displayLoadout = (classType) => {
   // Get the filtered loadouts
@@ -1631,24 +1597,7 @@ Gadget 3: ${selectedItems[4]}`;
         ]),
       ];
 
-      // Populate the old checkbox system (for compatibility)
-      populateCheckboxes(
-        allWeapons,
-        document.getElementById("weapon-options"),
-        "weapons"
-      );
-      populateCheckboxes(
-        allSpecializations,
-        document.getElementById("specialization-options"),
-        "specializations"
-      );
-      populateCheckboxes(
-        allGadgets,
-        document.getElementById("gadget-options"),
-        "gadgets"
-      );
-
-      // Initialize the new filter system
+      // ✅ Use new filtering system only
       setupFilterSystem();
       populateFilterItems();
     })
