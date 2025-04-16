@@ -113,7 +113,7 @@
         background: rgba(0, 0, 0, 0.6);
         padding: 20px;
         border-radius: 15px;
-        max-width: 500px;
+        max-width: 550px;
         box-shadow: 0 0 25px rgba(255, 20, 147, 0.5);
         border: 1px solid rgba(255, 20, 147, 0.3);
         position: relative;
@@ -141,16 +141,63 @@
         border-radius: 15px 15px 0 0;
       }
 
-      .days-counter {
-        font-size: 3.5rem;
+      .time-display {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      .time-unit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 80px;
+      }
+
+      .time-value {
+        font-size: 2.5rem;
         font-weight: bold;
         color: var(--neon-pink);
         text-shadow: 0 0 10px rgba(255, 20, 147, 0.7);
-        margin: 5px 0;
-        display: inline-block;
-        padding: 5px 20px;
-        border-radius: 8px;
         animation: pulse 2s infinite alternate;
+      }
+
+      .time-label {
+        font-size: 0.9rem;
+        color: var(--neon-yellow);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .counter-label {
+        font-size: 1.4rem;
+        color: var(--neon-yellow);
+        margin-top: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+      }
+
+      @media screen and (max-width: 768px) {
+        .time-display {
+          gap: 10px;
+        }
+
+        .time-unit {
+          min-width: 60px;
+        }
+
+        .time-value {
+          font-size: 1.8rem;
+        }
+
+        .time-label {
+          font-size: 0.7rem;
+        }
+
+        .counter-label {
+          font-size: 1.1rem;
+        }
       }
 
       @keyframes pulse {
@@ -161,15 +208,6 @@
           text-shadow: 0 0 20px rgba(255, 20, 147, 1),
             0 0 30px rgba(255, 20, 147, 0.7);
         }
-      }
-
-      .counter-label {
-        font-size: 1.4rem;
-        color: var(--neon-yellow);
-        margin-top: 5px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        text-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
       }
 
       nav {
@@ -1000,19 +1038,35 @@
       }
     </style>
     <script>
-      // Calculate days since July 7, 2024
-      document.addEventListener("DOMContentLoaded", function () {
+      // Update the counter in real-time
+      function updateCounter() {
         const startDate = new Date(2024, 6, 7); // July is month 6 (zero-indexed)
         const currentDate = new Date();
 
         // Calculate the difference in milliseconds
         const differenceMs = currentDate - startDate;
 
-        // Convert milliseconds to days
+        // Calculate days, hours, minutes, and seconds
         const days = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (differenceMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor(
+          (differenceMs % (1000 * 60 * 60)) / (1000 * 60)
+        );
+        const seconds = Math.floor((differenceMs % (1000 * 60)) / 1000);
 
-        // Update the counter
+        // Update the counter elements
         document.getElementById("days-count").textContent = days;
+        document.getElementById("hours-count").textContent = hours;
+        document.getElementById("minutes-count").textContent = minutes;
+        document.getElementById("seconds-count").textContent = seconds;
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Start the counter immediately and update every second
+        updateCounter();
+        setInterval(updateCounter, 1000);
 
         // Intersection Observer for animation on scroll
         const observer = new IntersectionObserver(
@@ -1145,8 +1199,25 @@
         </p>
 
         <div class="counter-container">
-          <div class="days-counter" id="days-count">288</div>
-          <div class="counter-label">Days of Chaos and Kenny</div>
+          <div class="time-display">
+            <div class="time-unit">
+              <div class="time-value" id="days-count">0</div>
+              <div class="time-label">Days</div>
+            </div>
+            <div class="time-unit">
+              <div class="time-value" id="hours-count">0</div>
+              <div class="time-label">Hours</div>
+            </div>
+            <div class="time-unit">
+              <div class="time-value" id="minutes-count">0</div>
+              <div class="time-label">Minutes</div>
+            </div>
+            <div class="time-unit">
+              <div class="time-value" id="seconds-count">0</div>
+              <div class="time-label">Seconds</div>
+            </div>
+          </div>
+          <div class="counter-label">of Chaos and Kenny</div>
         </div>
       </header>
 
@@ -1483,10 +1554,7 @@
         </div>
 
         <div style="text-align: center; margin-top: 30px">
-          <button
-            class="nav-btn pulse"
-            onclick="scrollToSection('member-cards-full')"
-          >
+          <button class="nav-btn pulse" id="toggle-members-btn">
             See All Members
           </button>
         </div>
@@ -1755,7 +1823,376 @@
 
       <!-- Additional sections hidden by default -->
       <section id="member-cards-full" class="section" style="display: none">
-        <!-- Full member cards would go here -->
+        <h2>👥 Complete Member Directory</h2>
+        <div class="mem-grid">
+          <div class="mem-card">
+            <h3>Momentum</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~370+</li>
+              <li>
+                <span class="stat">Most Interacted With:</span> forple.,
+                teddysback509
+              </li>
+              <li>
+                <span class="stat">Funny:</span> Asked ChatGPT to summarize his
+                own server
+              </li>
+              <li>
+                <span class="stat">Fact:</span> Server founder, lore master,
+                chaos architect
+              </li>
+              <li>
+                <span class="stat">Joke 1:</span> Drops "Kenneth" more than
+                Wi-Fi
+              </li>
+              <li>
+                <span class="stat">Joke 2:</span> Narrator *and* main character
+              </li>
+              <li>
+                <span class="stat">Flex:</span> Built a culture out of nonsense
+                and made it last 289+ days
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>foRple.</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~600+</li>
+              <li>
+                <span class="stat">Most Interacted With:</span> Kaleido & Teddy
+              </li>
+              <li><span class="stat">Funny:</span> "CHYNA RAKE."</li>
+              <li>
+                <span class="stat">Fact:</span> Meme dropper & meta philosopher
+              </li>
+              <li>
+                <span class="stat">Joke 1:</span> Said "need 2 men" more than
+                Craigslist
+              </li>
+              <li>
+                <span class="stat">Joke 2:</span> Posted more shorts than
+                YouTube
+              </li>
+              <li>
+                <span class="stat">Flex:</span> Server's go-to for deep takes
+                and deeper chaos
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>teddysback509</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~200+</li>
+              <li>
+                <span class="stat">Most Interacted With:</span> StepBro &
+                Momentum
+              </li>
+              <li>
+                <span class="stat">Funny:</span> Says "kenny" like it's
+                punctuation
+              </li>
+              <li>
+                <span class="stat">Fact:</span> First to greet, last to quit
+              </li>
+              <li>
+                <span class="stat">Joke 1:</span> Reacts faster to memes than
+                bullets
+              </li>
+              <li>
+                <span class="stat">Joke 2:</span> Laughs exclusively in
+                lowercase
+              </li>
+              <li>
+                <span class="stat">Flex:</span> Holds the glue that keeps the
+                server chill
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>pTahhh</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~120+</li>
+              <li><span class="stat">Most Interacted With:</span> Kaleido</li>
+              <li>
+                <span class="stat">Funny:</span> Tosses Kenny memes like
+                grenades
+              </li>
+              <li><span class="stat">Fact:</span> Meme-ready at all times</li>
+              <li>
+                <span class="stat">Joke 1:</span> Drops memes like smoke bombs
+              </li>
+              <li>
+                <span class="stat">Joke 2:</span> Makes jokes out of ellipses
+              </li>
+              <li><span class="stat">Flex:</span> OG meme architect</li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>1-800-STEP-BRO</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~220+</li>
+              <li><span class="stat">Most Interacted With:</span> Teddy</li>
+              <li>
+                <span class="stat">Funny:</span> Appears like a DLC unlock
+              </li>
+              <li>
+                <span class="stat">Fact:</span> Killer instincts, minimal motion
+              </li>
+              <li>
+                <span class="stat">Joke 1:</span> Returns like Batman, but
+                louder
+              </li>
+              <li><span class="stat">Joke 2:</span> Kenny incarnate</li>
+              <li>
+                <span class="stat">Flex:</span> Gets quoted even when offline
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>1-800-FAT-DABS</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~450+</li>
+              <li>
+                <span class="stat">Most Interacted With:</span> forple., Kush
+              </li>
+              <li>
+                <span class="stat">Funny:</span> $1k per kill dagger brags
+              </li>
+              <li><span class="stat">Fact:</span> Flew houses into EM1</li>
+              <li>
+                <span class="stat">Joke 1:</span> Loadout is chaos… and it works
+              </li>
+              <li>
+                <span class="stat">Joke 2:</span> Patches the game with memes
+              </li>
+              <li>
+                <span class="stat">Flex:</span> EM1 via troll loadouts =
+                legendary
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>1-800-FAT-DADS</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~160+</li>
+              <li>
+                <span class="stat">Most Interacted With:</span> StepBro, Teddy
+              </li>
+              <li><span class="stat">Funny:</span> Quietest savage</li>
+              <li>
+                <span class="stat">Fact:</span> Might be the only adult here
+              </li>
+              <li><span class="stat">Joke 1:</span> Posts like a sniper</li>
+              <li>
+                <span class="stat">Joke 2:</span> Humor so dry it's powdered
+              </li>
+              <li>
+                <span class="stat">Flex:</span> Dropped the name FAT-DADS and no
+                one questioned it
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>1-800-FAT-KUSH</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~200+</li>
+              <li>
+                <span class="stat">Most Interacted With:</span> Siah & Kaleido
+              </li>
+              <li>
+                <span class="stat">Funny:</span> Explains slang like a TED Talk
+              </li>
+              <li>
+                <span class="stat">Fact:</span> Types exactly like he talks
+              </li>
+              <li>
+                <span class="stat">Joke 1:</span> Probably wears sunglasses to
+                type
+              </li>
+              <li>
+                <span class="stat">Joke 2:</span> Missed a match but still hit
+                'W'
+              </li>
+              <li>
+                <span class="stat">Flex:</span> Authored most of the server's
+                inside slang
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>siahbitch</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~60+</li>
+              <li>
+                <span class="stat">Most Interacted With:</span> forple., Kush
+              </li>
+              <li>
+                <span class="stat">Funny:</span> "I need all the Easter stuff
+                and a week's worth of wine."
+              </li>
+              <li>
+                <span class="stat">Fact:</span> Fully integrated within minutes
+              </li>
+              <li>
+                <span class="stat">Joke 1:</span> Name alone gets Discord
+                flagged
+              </li>
+              <li><span class="stat">Joke 2:</span> Speedran vibe check</li>
+              <li>
+                <span class="stat">Flex:</span> Instant crew status on arrival
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>Ghost</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~15</li>
+              <li><span class="stat">Most Interacted With:</span> FAT-ROBO</li>
+              <li>
+                <span class="stat">Funny:</span> Entered like an NPC ghost
+              </li>
+              <li>
+                <span class="stat">Fact:</span> Lives in the shadows of the chat
+              </li>
+              <li>
+                <span class="stat">Joke 1:</span> Most consistent in being
+                inconsistent
+              </li>
+              <li>
+                <span class="stat">Joke 2:</span> Discord's version of
+                Slenderman
+              </li>
+              <li>
+                <span class="stat">Flex:</span> Drops one-liners that become
+                lore
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>JerseyDrive</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~10</li>
+              <li><span class="stat">Most Interacted With:</span> Momentum</li>
+              <li>
+                <span class="stat">Funny:</span> Entered chat like a subway
+                train
+              </li>
+              <li>
+                <span class="stat">Fact:</span> East coast energy, max chill
+              </li>
+              <li>
+                <span class="stat">Joke 1:</span> Uses turn signals… probably
+              </li>
+              <li><span class="stat">Joke 2:</span> Roasts with emoji-only</li>
+              <li>
+                <span class="stat">Flex:</span> Got instant respect with 3 lines
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>colonelshaggy</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~30</li>
+              <li>
+                <span class="stat">Most Interacted With:</span> Teddy, Kaleido
+              </li>
+              <li>
+                <span class="stat">Funny:</span> Triggered meat jokes instantly
+              </li>
+              <li>
+                <span class="stat">Fact:</span> Probably grilling while gaming
+              </li>
+              <li>
+                <span class="stat">Joke 1:</span> Says "gg" mid-steak flip
+              </li>
+              <li>
+                <span class="stat">Joke 2:</span> Most grounded chaos
+                contributor
+              </li>
+              <li>
+                <span class="stat">Flex:</span> Silent, deadly, and always
+                accurate
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>Fancy</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~100+</li>
+              <li><span class="stat">Most Interacted With:</span> Kush</li>
+              <li>
+                <span class="stat">Funny:</span> "We went Amish and won 2 WTs"
+              </li>
+              <li>
+                <span class="stat">Fact:</span> Logged in post-tornado like it
+                was NBD
+              </li>
+              <li>
+                <span class="stat">Joke 1:</span> Plays like a ghost, jokes like
+                a bard
+              </li>
+              <li>
+                <span class="stat">Joke 2:</span> Treats hailstorms like warmups
+              </li>
+              <li>
+                <span class="stat">Flex:</span> Server storm survivor + lowkey
+                MVP
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>Tre4TheTiger</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~10</li>
+              <li><span class="stat">Most Interacted With:</span> Kaleido</li>
+              <li>
+                <span class="stat">Funny:</span> Ghosted like a pro assassin
+              </li>
+              <li><span class="stat">Fact:</span> Says little, does much</li>
+              <li><span class="stat">Joke 1:</span> Won a match, vanished</li>
+              <li>
+                <span class="stat">Joke 2:</span> Possibly a tiger, definitely a
+                sniper
+              </li>
+              <li>
+                <span class="stat">Flex:</span> Minimal words, maximum impact
+              </li>
+            </ul>
+          </div>
+
+          <div class="mem-card">
+            <h3>BigPhatDawg</h3>
+            <ul>
+              <li><span class="stat">Messages:</span> ~25</li>
+              <li><span class="stat">Most Interacted With:</span> Kush</li>
+              <li>
+                <span class="stat">Funny:</span> "Just in the hot tub, loading
+                up"
+              </li>
+              <li><span class="stat">Fact:</span> Most relaxed gamer alive</li>
+              <li><span class="stat">Joke 1:</span> Queues from spa day</li>
+              <li>
+                <span class="stat">Joke 2:</span> Has a loading screen with AC
+              </li>
+              <li>
+                <span class="stat">Flex:</span> Vibes through every scenario
+              </li>
+            </ul>
+          </div>
+        </div>
       </section>
 
       <footer class="footer">
@@ -1764,25 +2201,31 @@
         </h3>
         <p>Stay cherry, stay dangerous • See you next week!</p>
         <p style="margin-top: 15px; font-size: 0.9rem; color: #aaa">
-          Created April 15, 2025
+          Created April 16, 2025
         </p>
       </footer>
     </div>
 
     <script>
       // Show/hide full member cards
-      document
-        .querySelector("[onclick=\"scrollToSection('member-cards-full')\"]")
-        .addEventListener("click", function () {
-          const fullSection = document.getElementById("member-cards-full");
-          if (fullSection.style.display === "none") {
-            fullSection.style.display = "block";
-            this.textContent = "Hide Full Member List";
-          } else {
-            fullSection.style.display = "none";
-            this.textContent = "See All Members";
-          }
-        });
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("toggle-members-btn")
+          .addEventListener("click", function () {
+            const fullSection = document.getElementById("member-cards-full");
+            if (fullSection.style.display === "none") {
+              fullSection.style.display = "block";
+              fullSection.scrollIntoView({ behavior: "smooth" });
+              this.textContent = "Hide Full Member List";
+            } else {
+              fullSection.style.display = "none";
+              document
+                .getElementById("member-cards")
+                .scrollIntoView({ behavior: "smooth" });
+              this.textContent = "See All Members";
+            }
+          });
+      });
     </script>
   </body>
 </html>
