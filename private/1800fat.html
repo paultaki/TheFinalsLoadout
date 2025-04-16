@@ -107,6 +107,71 @@
         color: var(--neon-yellow);
       }
 
+      .counter-container {
+        text-align: center;
+        margin: 25px auto 35px;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 20px;
+        border-radius: 15px;
+        max-width: 500px;
+        box-shadow: 0 0 25px rgba(255, 20, 147, 0.5);
+        border: 1px solid rgba(255, 20, 147, 0.3);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .counter-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 35px rgba(255, 20, 147, 0.7);
+      }
+
+      .counter-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          to right,
+          var(--neon-pink),
+          var(--neon-blue)
+        );
+        border-radius: 15px 15px 0 0;
+      }
+
+      .days-counter {
+        font-size: 3.5rem;
+        font-weight: bold;
+        color: var(--neon-pink);
+        text-shadow: 0 0 10px rgba(255, 20, 147, 0.7);
+        margin: 5px 0;
+        display: inline-block;
+        padding: 5px 20px;
+        border-radius: 8px;
+        animation: pulse 2s infinite alternate;
+      }
+
+      @keyframes pulse {
+        from {
+          text-shadow: 0 0 10px rgba(255, 20, 147, 0.7);
+        }
+        to {
+          text-shadow: 0 0 20px rgba(255, 20, 147, 1),
+            0 0 30px rgba(255, 20, 147, 0.7);
+        }
+      }
+
+      .counter-label {
+        font-size: 1.4rem;
+        color: var(--neon-yellow);
+        margin-top: 5px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+      }
+
       nav {
         background: rgba(0, 0, 0, 0.5);
         border-radius: 15px;
@@ -154,6 +219,12 @@
         box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
         position: relative;
         overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
       }
 
       .section::before {
@@ -277,12 +348,19 @@
         border-radius: 10px;
         text-align: center;
         position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        font-size: 1.5rem; /* Add or increase this value */
+      }
+
+      .quote:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 15px rgba(255, 20, 147, 0.3);
       }
 
       .quote::before,
       .quote::after {
         content: '"';
-        font-size: 2rem;
+        font-size: 4rem;
         color: var(--neon-pink);
         position: absolute;
         opacity: 0.5;
@@ -481,6 +559,12 @@
         border-radius: 10px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
         position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .timeline-content:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 25px rgba(255, 20, 147, 0.4);
       }
 
       .left .timeline-content::before {
@@ -569,6 +653,11 @@
       .slang-item {
         display: flex;
         margin-bottom: 15px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .slang-item:hover {
+        transform: translateX(5px);
       }
 
       .slang-term {
@@ -644,32 +733,6 @@
         margin-right: 10px;
       }
 
-      .section {
-        margin: 0 auto;
-        max-width: 1200px;
-        padding: 30px;
-        background: rgba(20, 20, 40, 0.8);
-        border-radius: 15px;
-        box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .section::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 5px;
-        background: linear-gradient(
-          to right,
-          var(--neon-pink),
-          var(--neon-blue)
-        );
-        border-radius: 15px 15px 0 0;
-      }
-
       h2 {
         color: var(--neon-yellow);
         font-size: 2rem;
@@ -720,7 +783,7 @@
 
       .meme-container:hover {
         transform: scale(1.03);
-        box-shadow: 0 0 25px rgba(var(--neon-pink), 0.6);
+        box-shadow: 0 0 25px rgba(255, 20, 147, 0.6);
       }
 
       .meme-container img {
@@ -821,6 +884,18 @@
         .left .timeline-content {
           text-align: left;
         }
+
+        .logo {
+          font-size: 2.8rem;
+        }
+
+        .days-counter {
+          font-size: 2.5rem;
+        }
+
+        .counter-label {
+          font-size: 1.2rem;
+        }
       }
 
       /* Animations */
@@ -885,6 +960,33 @@
           opacity: 1;
         }
       }
+      @media screen and (max-width: 768px) {
+        nav {
+          display: grid;
+          grid-template-columns: 1fr 1fr; /* Two columns per row */
+          gap: 10px;
+          padding: 10px;
+        }
+
+        .nav-btn {
+          margin: 0;
+          padding: 8px;
+          font-size: 0.9rem;
+          white-space: nowrap; /* Prevents text wrapping */
+          overflow: hidden;
+          text-overflow: ellipsis; /* Shows ... if text is too long */
+        }
+      }
+      @keyframes kennyDisappear {
+        0% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100px);
+          opacity: 0;
+        }
+      }
 
       .kenny-summon {
         position: fixed;
@@ -911,11 +1013,41 @@
 
         // Update the counter
         document.getElementById("days-count").textContent = days;
+
+        // Intersection Observer for animation on scroll
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("fade-in");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+
+        document
+          .querySelectorAll(
+            ".section, .mem-card, .gallery-item, .timeline-item, .event-item, .slang-item, .quote"
+          )
+          .forEach((item) => {
+            observer.observe(item);
+          });
       });
 
       function summonKenny() {
-        // Play danger zone sound
+        // Try to play danger zone sound with a fallback
         const kennySound = new Audio("danger.mp3");
+
+        kennySound.onerror = function () {
+          // Fallback to online source if local file not found
+          const fallbackSound = new Audio(
+            "https://www.myinstants.com/media/sounds/kenny-loggins-danger-zone.mp3"
+          );
+          fallbackSound.volume = 0.4;
+          fallbackSound.play();
+        };
 
         kennySound.volume = 0.4;
         kennySound.play();
@@ -927,6 +1059,9 @@
         kennyGif.className = "kenny-summon";
         document.body.appendChild(kennyGif);
 
+        // Create particle effects
+        createParticles();
+
         // Remove Kenny after animation completes
         setTimeout(() => {
           kennyGif.style.animation = "kennyDisappear 0.5s ease-in forwards";
@@ -934,11 +1069,72 @@
         }, 5500);
       }
 
+      function createParticles() {
+        const particleContainer = document.createElement("div");
+        particleContainer.style.position = "fixed";
+        particleContainer.style.top = "0";
+        particleContainer.style.left = "0";
+        particleContainer.style.width = "100%";
+        particleContainer.style.height = "100%";
+        particleContainer.style.pointerEvents = "none";
+        particleContainer.style.zIndex = "9998";
+        document.body.appendChild(particleContainer);
+
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement("div");
+          particle.style.position = "absolute";
+          particle.style.width = "5px";
+          particle.style.height = "5px";
+          particle.style.background = i % 2 === 0 ? "#ff1493" : "#00bfff";
+          particle.style.borderRadius = "50%";
+          particle.style.boxShadow = `0 0 10px ${
+            i % 2 === 0 ? "#ff1493" : "#00bfff"
+          }`;
+
+          const posX = Math.random() * window.innerWidth;
+          const posY = window.innerHeight + 10;
+
+          particle.style.left = `${posX}px`;
+          particle.style.top = `${posY}px`;
+
+          const animDuration = 2 + Math.random() * 3;
+
+          particle.style.animation = `
+                particleRise ${animDuration}s ease-out forwards,
+                particleFade ${animDuration}s ease-in forwards
+            `;
+
+          particleContainer.appendChild(particle);
+        }
+
+        // Clean up particles after animation
+        setTimeout(() => particleContainer.remove(), 5000);
+      }
+
       function scrollToSection(sectionId) {
         const section = document.getElementById(sectionId);
         section.scrollIntoView({ behavior: "smooth" });
       }
     </script>
+    <style>
+      @keyframes particleRise {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-100vh);
+        }
+      }
+
+      @keyframes particleFade {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -968,13 +1164,13 @@
           Kenny Lore
         </button>
         <button class="nav-btn" onclick="scrollToSection('gameplay')">
-          Gameplay & Events
+          Events
         </button>
         <button class="nav-btn" onclick="scrollToSection('slang')">
           Slang School
         </button>
         <button class="nav-btn" onclick="scrollToSection('quotes')">
-          Memorable Quotes
+          Quotes
         </button>
         <button class="nav-btn" onclick="scrollToSection('memes')">
           Meme Gallery
@@ -987,8 +1183,8 @@
         <div class="highlights">
           <ul>
             <li>
-              <strong>Start Date:</strong> July 2, 2024 &ndash; momentum_1 makes
-              his first appearance.
+              <strong>Start Date:</strong> July 2, 2024 &ndash; Momentum (Mom)
+              and Nobody (Dad) make their first appearance.
             </li>
             <li>
               The 1-800 energy slowly builds. Kenny becomes a religion. Cherry
@@ -1284,8 +1480,6 @@
               </li>
             </ul>
           </div>
-
-          <!-- Add more member cards as needed -->
         </div>
 
         <div style="text-align: center; margin-top: 30px">
