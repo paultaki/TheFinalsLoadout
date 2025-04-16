@@ -898,6 +898,21 @@
       }
     </style>
     <script>
+      // Calculate days since July 7, 2024
+      document.addEventListener("DOMContentLoaded", function () {
+        const startDate = new Date(2024, 6, 7); // July is month 6 (zero-indexed)
+        const currentDate = new Date();
+
+        // Calculate the difference in milliseconds
+        const differenceMs = currentDate - startDate;
+
+        // Convert milliseconds to days
+        const days = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
+
+        // Update the counter
+        document.getElementById("days-count").textContent = days;
+      });
+
       function summonKenny() {
         // Play danger zone sound
         const kennySound = new Audio("danger.mp3");
@@ -912,9 +927,6 @@
         kennyGif.className = "kenny-summon";
         document.body.appendChild(kennyGif);
 
-        // Create particle effects
-        createParticles();
-
         // Remove Kenny after animation completes
         setTimeout(() => {
           kennyGif.style.animation = "kennyDisappear 0.5s ease-in forwards";
@@ -922,106 +934,11 @@
         }, 5500);
       }
 
-      function createParticles() {
-        const particleContainer = document.createElement("div");
-        particleContainer.style.position = "fixed";
-        particleContainer.style.top = "0";
-        particleContainer.style.left = "0";
-        particleContainer.style.width = "100%";
-        particleContainer.style.height = "100%";
-        particleContainer.style.pointerEvents = "none";
-        particleContainer.style.zIndex = "9998";
-        document.body.appendChild(particleContainer);
-
-        for (let i = 0; i < 100; i++) {
-          const particle = document.createElement("div");
-          particle.style.position = "absolute";
-          particle.style.width = "5px";
-          particle.style.height = "5px";
-          particle.style.background = i % 2 === 0 ? "#ff1493" : "#00bfff";
-          particle.style.borderRadius = "50%";
-          particle.style.boxShadow = `0 0 10px ${
-            i % 2 === 0 ? "#ff1493" : "#00bfff"
-          }`;
-
-          const posX = Math.random() * window.innerWidth;
-          const posY = window.innerHeight + 10;
-
-          particle.style.left = `${posX}px`;
-          particle.style.top = `${posY}px`;
-
-          const animDuration = 2 + Math.random() * 3;
-
-          particle.style.animation = `
-                    particleRise ${animDuration}s ease-out forwards,
-                    particleFade ${animDuration}s ease-in forwards
-                `;
-
-          particleContainer.appendChild(particle);
-        }
-
-        // Clean up particles after animation
-        setTimeout(() => particleContainer.remove(), 5000);
-      }
-
       function scrollToSection(sectionId) {
         const section = document.getElementById(sectionId);
         section.scrollIntoView({ behavior: "smooth" });
       }
-
-      // Intersection Observer for animation on scroll
-      document.addEventListener("DOMContentLoaded", function () {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("fade-in");
-                observer.unobserve(entry.target);
-              }
-            });
-          },
-          { threshold: 0.1 }
-        );
-
-        document
-          .querySelectorAll(
-            ".section, .mem-card, .gallery-item, .timeline-item"
-          )
-          .forEach((item) => {
-            observer.observe(item);
-          });
-      });
     </script>
-    <style>
-      @keyframes particleRise {
-        from {
-          transform: translateY(0);
-        }
-        to {
-          transform: translateY(-100vh);
-        }
-      }
-
-      @keyframes particleFade {
-        from {
-          opacity: 1;
-        }
-        to {
-          opacity: 0;
-        }
-      }
-
-      @keyframes kennyDisappear {
-        from {
-          transform: translateY(0);
-          opacity: 1;
-        }
-        to {
-          transform: translateY(100px);
-          opacity: 0;
-        }
-      }
-    </style>
   </head>
   <body>
     <div class="container">
@@ -1030,6 +947,11 @@
         <p class="subtitle">
           The Ultimate Memory Archive • July 2024 - April 2025
         </p>
+
+        <div class="counter-container">
+          <div class="days-counter" id="days-count">288</div>
+          <div class="counter-label">Days of Chaos and Kenny</div>
+        </div>
       </header>
 
       <nav>
