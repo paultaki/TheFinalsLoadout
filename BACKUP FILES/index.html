@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-GVGKYFGZ1Z");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      The Finals BEST Random Loadout Generator | Fun & Unique Loadouts
+    </title>
+    <meta
+      name="description"
+      content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles."
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "The Finals Loadout Generator",
+        "description": "A random loadout generator for The Finals game with optimized weapons and gadgets for different playstyles.",
+        "url": "https://www.thefinalsloadout.com",
+        "image": "https://www.thefinalsloadout.com/images/the-finals.webp",
+        "author": {
+          "@type": "Organization",
+          "name": "1-800-FAT-MOMS"
+        }
+      }
+    </script>
+
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+
+    <link
+      rel="preload"
+      as="font"
+      href="https://fonts.gstatic.com/s/oswald/v35/TK3iWkUHHAIjg752GT8G.woff2"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap"
+      />
+    </noscript>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: "Oswald", sans-serif;
+        font-display: swap;
+      }
+    </style>
+
+    <style>
+      html {
+        min-height: 100%;
+        background: linear-gradient(
+          -45deg,
+          #1d1a21,
+          /* Original dark */ #2a1f2d,
+          /* Slightly purple */ #1f2a2d,
+          /* Slightly blue-ish */ #201c24 /* Back to dark */
+        );
+        background-size: 400% 400%;
+        animation: gradientShift 20s ease infinite;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      body {
+        font-family: "Oswald", sans-serif;
+        color: #fff;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+      }
+    </style>
+  </head>
+  <audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
+  <nav class="main-nav">
+    <a href="https://thefinalsloadout.com/" class="active">Home</a>
+    <a href="https://thefinalsloadout.com/ragequit/">Rage Quit Loadout</a>
+    <a href="https://thefinalsloadout.com/patch-notes/">Patch Notes</a>
+    <a href="https://thefinalsloadout.com/feedback/">Feedback</a>
+  </nav>
+
+  <header class="headerSection">
+    <div class="container">
+      <img
+        src="images/roulette.webp"
+        alt="Random Loadout Generator for The Finals Game"
+        class="finals-logo"
+        width="240"
+        height="auto"
+      />
+      <h2 class="subTitle">Season 6 Ready</h2>
+
+        
+    </div>
+  </header>
+  
+  
+
+    <main class="mainContent">
+      <div class="container">
+        <div class="buttons">
+          <!-- New Class & Spin Container -->
+
+          <div class="selection-container">
+            <!-- Class Selection -->
+            <div class="class-selection">
+              <h2>Choose Your Class</h2>
+              <div class="btnRow">
+                <img id="light-class" class="class-button" src="images/light_silhouette.webp" 
+                     data-active="images/light_active.webp" 
+                     data-default="images/light_silhouette.webp" 
+                     data-class="Light" alt="Light Class Loadouts" />
+                
+                <img id="medium-class" class="class-button" src="images/medium_silhouette.webp" 
+                     data-active="images/medium_active.webp" 
+                     data-default="images/medium_silhouette.webp" 
+                     data-class="Medium" alt="Medium Class Loadouts" />
+              
+                <img id="heavy-class" class="class-button" src="images/heavy_silhouette.webp" 
+                     data-active="images/heavy_active.webp" 
+                     data-default="images/heavy_silhouette.webp" 
+                     data-class="Heavy" alt="Heavy Class Loadouts" />
+              
+                     <img id="random-class" class="class-button" 
+                     src="images/dice_silhouette.webp"
+                     data-active="images/dice_active.webp"
+                     data-default="images/dice_silhouette.webp"
+                     data-class="random" 
+                     alt="Random Class Loadouts" />
+              </div>
+                          </div>
+<!-- Add this right after the class selection div, around line 160 -->
+<!-- Collapsible Filter Toggle Button -->
+<button id="toggle-filters" class="filter-toggle-btn compact-button" style="margin: 15px auto; display: block; width: 100%; max-width: 360px; text-align: center;">
+  <span>Optional Filters</span>
+  <span class="toggle-icon">+</span>
+</button>
+
+<!-- Filter Panel (Initially Hidden) -->
+<div id="filter-panel" class="filter-panel" style="display: none;">
+  <!-- Tab Navigation -->
+  <div class="filter-tabs">
+    <button class="tab-button active" data-tab="weapons">Weapons</button>
+    <button class="tab-button" data-tab="gadgets">Gadgets</button>
+  </div>
+  
+  <!-- Search and Class Filter -->
+  <div class="filter-controls">
+    <input type="text" id="filter-search" placeholder="Search items..." class="search-input">
+    <div class="class-filter-buttons">
+      <button class="class-filter active" data-class="all">All</button>
+      <button class="class-filter" data-class="light">Light</button>
+      <button class="class-filter" data-class="medium">Medium</button>
+      <button class="class-filter" data-class="heavy">Heavy</button>
+    </div>
+  </div>
+  
+  <!-- Content Area - Weapons Tab (Active by Default) -->
+  <div class="tab-content active" id="weapons-tab">
+    <!-- Light Weapons Section -->
+<!-- Light Weapons Section with Select All -->
+<div class="item-category light-category">
+  <div class="category-header">
+    <h3>Light Class Weapons</h3>
+    <button class="category-toggle">▼</button>
+  </div>
+  <div class="item-grid" id="light-weapons-grid">
+    <!-- Select All option as first item -->
+    <label class="item-checkbox select-all-checkbox">
+      <input type="checkbox" checked data-type="weapon-selectall" data-class="light">
+      <span><strong>Select All Light Weapons</strong></span>
+    </label>
+    <!-- Individual weapons will be populated here by JavaScript -->
+  </div>
+</div>
+
+<!-- Medium Weapons Section with Select All -->
+<div class="item-category medium-category">
+  <div class="category-header">
+    <h3>Medium Class Weapons</h3>
+    <button class="category-toggle">▼</button>
+  </div>
+  <div class="item-grid" id="medium-weapons-grid">
+    <!-- Select All option as first item -->
+    <label class="item-checkbox select-all-checkbox">
+      <input type="checkbox" checked data-type="weapon-selectall" data-class="medium">
+      <span><strong>Select All Medium Weapons</strong></span>
+    </label>
+    <!-- Individual weapons will be populated here by JavaScript -->
+  </div>
+</div>
+
+<!-- Heavy Weapons Section with Select All -->
+<div class="item-category heavy-category">
+  <div class="category-header">
+    <h3>Heavy Class Weapons</h3>
+    <button class="category-toggle">▼</button>
+  </div>
+  <div class="item-grid" id="heavy-weapons-grid">
+    <!-- Select All option as first item -->
+    <label class="item-checkbox select-all-checkbox">
+      <input type="checkbox" checked data-type="weapon-selectall" data-class="heavy">
+      <span><strong>Select All Heavy Weapons</strong></span>
+    </label>
+    <!-- Individual weapons will be populated here by JavaScript -->
+  </div>
+</div>
+  </div>
+  
+  <!-- Content Area - Gadgets Tab -->
+  <div class="tab-content" id="gadgets-tab">
+    <!-- Light Gadgets Section with Select All -->
+    <div class="item-category light-category">
+      <div class="category-header">
+        <h3>Light Class Gadgets</h3>
+        <button class="category-toggle">▼</button>
+      </div>
+      <div class="item-grid" id="light-gadgets-grid">
+        <!-- Select All option as first item -->
+        <label class="item-checkbox select-all-checkbox">
+          <input type="checkbox" checked data-type="gadget-selectall" data-class="light">
+          <span><strong>Select All Light Gadgets</strong></span>
+        </label>
+        <!-- Individual gadgets will be populated here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Medium Gadgets Section with Select All -->
+    <div class="item-category medium-category">
+      <div class="category-header">
+        <h3>Medium Class Gadgets</h3>
+        <button class="category-toggle">▼</button>
+      </div>
+      <div class="item-grid" id="medium-gadgets-grid">
+        <!-- Select All option as first item -->
+        <label class="item-checkbox select-all-checkbox">
+          <input type="checkbox" checked data-type="gadget-selectall" data-class="medium">
+          <span><strong>Select All Medium Gadgets</strong></span>
+        </label>
+        <!-- Individual gadgets will be populated here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Heavy Gadgets Section with Select All -->
+    <div class="item-category heavy-category">
+      <div class="category-header">
+        <h3>Heavy Class Gadgets</h3>
+        <button class="category-toggle">▼</button>
+      </div>
+      <div class="item-grid" id="heavy-gadgets-grid">
+        <!-- Select All option as first item -->
+        <label class="item-checkbox select-all-checkbox">
+          <input type="checkbox" checked data-type="gadget-selectall" data-class="heavy">
+          <span><strong>Select All Heavy Gadgets</strong></span>
+        </label>
+        <!-- Individual gadgets will be populated here by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Single Apply Button -->
+  <div class="filter-actions">
+    <button id="apply-filters" class="apply-button">Apply Filters</button>
+  </div>
+</div>
+  </div>
+</div>
+
+            <!-- Spin Selection -->
+            <div class="spin-selection" id="spinSelection">
+              <h2>How Many Spins?</h2>
+                <div class="spin-buttons">
+                  <div class="spin-buttons">
+                    <button class="spin-button" data-spins="1">1</button>
+                    <button class="spin-button" data-spins="2">2</button>
+                    <button class="spin-button" data-spins="3">3</button>
+                    <button class="spin-button" data-spins="4">4</button>
+                    <button class="spin-button" data-spins="5">5</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        
+
+          <div id="output">
+            <div class="slot-machine-wrapper">
+              <div class="items-container">
+                <div class="placeholder-container">
+                  <img
+                    src="images/placeholder.webp"
+                    alt="?"
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                  />
+                  <p>Weapon</p>
+                </div>
+                <div class="placeholder-container">
+                  <img
+                    src="images/placeholder.webp"
+                    alt="?"
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                  />
+                  <p>Specialization</p>
+                </div>
+                <div class="placeholder-container">
+                  <img
+                    src="images/placeholder.webp"
+                    alt="?"
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                  />
+                  <p>Gadget 1</p>
+                </div>
+                <div class="placeholder-container">
+                  <img
+                    src="images/placeholder.webp"
+                    alt="?"
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                  />
+                  <p>Gadget 2</p>
+                </div>
+                <div class="placeholder-container">
+                  <img
+                    src="images/placeholder.webp"
+                    alt="?"
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                  />
+                  <p>Gadget 3</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+    <section id="loadout-history" class="loadout-history">
+      <h2>Loadout History</h2>
+      <div id="history-list">
+        <!-- History entries will be populated here -->
+      </div>
+      <button id="clear-history" class="clear-history-btn">
+        Clear History
+      </button>
+    </section>
+    <section class="patch-notes">
+      <div class="notes-container">
+        <h2 class="patch-date">✨ Patch Highlights - April 9, 2025</h2>
+        <p class="patch-summary">
+      <strong>Fixes:</strong> Minigun, SR-84, Revolver (ADS alignment)<br />
+      <strong>Controls:</strong> Minigun wind-up rebind to ADS key
+    </p>
+    
+        <!-- Weapon Changes -->
+        
+    
+        <!-- Gadget Changes -->
+        
+    
+        <!-- Spec Changes -->
+        
+    
+        <!-- Sight Notes -->
+        
+          <!-- Additional Fixes -->
+        <div class="patch-section">
+          <h3>🛠 Additional Fixes & Tweaks</h3>
+          <details class="adjustment">
+            <summary><strong>📌 Miscellaneous Adjustments</strong></summary>
+            <ul>
+              <li><strong>Minigun:</strong> Wind-up now uses the Aim Down Sight keybind (Hold or Toggle) instead of secondary fire.</li>
+              <li><strong>SR-84:</strong> Reduced scope movement to reflect shot accuracy more closely.</li>
+              <li><strong>SR-84:</strong> Improved camera motion when crouching or stopping while scoped.</li>
+              <li><strong>SR-84:</strong> Fixed scope flickering when crouching in first person.</li>
+              <li><strong>Revolver:</strong> Fixed misalignment with the Horizon Hammer skin when aiming down sights.</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </section>
+    
+    
+    <footer class="footerSection">
+      <div class="container">
+        <div class="footerRow">
+          <p class="text-start">
+            © 2025 TheFinalsLoadout.com |
+            <a href="legal/legal.html">Legal Disclaimer</a> | 1-800-FAT-MOMS
+            Production
+          </p>
+          <div
+            style="position: relative; width: 200px; margin-left: 20px"
+          ></div>
+        </div>
+      </div>
+    </footer>
+    <!-- Scripts -->
+    <script defer src="app.js"></script>
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+      integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+      data-cf-beacon='{"rayId":"90d5a0a2197ddbbe","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}'
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      // FAQ Toggle Script
+      document.addEventListener("DOMContentLoaded", function () {
+        var faqToggleButton = document.getElementById("faq-toggle-button");
+        var faqContent = document.getElementById("faq-content");
+        var faqToggle = document.querySelector(".faq-toggle");
+
+        faqToggleButton.addEventListener("click", function () {
+          faqContent.classList.toggle("open");
+          faqToggle.innerText = faqContent.classList.contains("open")
+            ? "−"
+            : "+";
+        });
+      });
+    </script>
+
+
+
+  </body>
+</html>
