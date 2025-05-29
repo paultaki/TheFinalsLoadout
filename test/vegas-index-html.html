@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- SEO Meta Tags -->
+    <title>The Finals Loadout Roulette | Vegas-Style Random Build Generator</title>
+    <meta name="description" content="Experience the thrill of Vegas with our premium loadout randomizer for The Finals. Spin to win unique weapon builds for Light, Medium, and Heavy classes. Season 6 Ready!">
+    <meta name="keywords" content="The Finals, loadout generator, random builds, weapon randomizer, Season 6, Light class, Medium class, Heavy class">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="The Finals Vegas Loadout Roulette">
+    <meta property="og:description" content="Spin to win! Get random loadouts for The Finals with our Vegas-style slot machine.">
+    <meta property="og:image" content="https://www.thefinalsloadout.com/images/og-preview.jpg">
+    <meta property="og:url" content="https://www.thefinalsloadout.com">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Finals Vegas Loadout Roulette">
+    <meta name="twitter:description" content="Spin to win unique loadouts!">
+    <meta name="twitter:image" content="https://www.thefinalsloadout.com/images/twitter-card.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&display=swap" as="style">
+    <link rel="preload" href="app.js" as="script">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'vegas-gold': '#FFB800',
+                        'vegas-red': '#FF0040',
+                        'vegas-purple': '#2A1F2D',
+                        'vegas-dark': '#1A1A2E',
+                        'vegas-darker': '#0A0A1E',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'jackpot': 'jackpot 0.5s ease-out',
+                    },
+                    fontFamily: {
+                        'oswald': ['Oswald', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Base Styles -->
+    <style>
+        /* Animated gradient background */
+        body {
+            background: linear-gradient(-45deg, #1a1a2e, #2a1f2d, #1f2a2d, #201c24);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes jackpot {
+            0% { transform: scale(0.8) rotate(-5deg); opacity: 0; }
+            50% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        
+        /* Neon text effect */
+        .neon-text {
+            text-shadow: 
+                0 0 10px currentColor,
+                0 0 20px currentColor,
+                0 0 30px currentColor,
+                0 0 40px currentColor;
+        }
+        
+        /* Glass morphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Smooth scroll for iOS */
+        * {
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Prevent text selection on buttons */
+        button, .button {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 184, 0, 0.5);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 184, 0, 0.7);
+        }
+    </style>
+    
+    <!-- Enhanced Vegas Styles -->
+    <link rel="stylesheet" href="enhanced-styles.css">
+</head>
+
+<body class="min-h-screen text-white font-oswald overflow-x-hidden">
+    <!-- Premium Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="/" class="flex items-center space-x-2 group">
+                    <div class="w-10 h-10 bg-gradient-to-br from-vegas-gold to-vegas-red rounded-lg flex items-center justify-center transform group-hover:rotate-180 transition-transform duration-500">
+                        <span class="text-xl font-bold">TF</span>
+                    </div>
+                    <span class="hidden sm:block text-lg font-bold text-vegas-gold">LOADOUT ROULETTE</span>
+                </a>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#" class="hover:text-vegas-gold transition-colors">Home</a>
+                    <a href="#loadouts" class="hover:text-vegas-gold transition-colors">Loadouts</a>
+                    <a href="#history" class="hover:text-vegas-gold transition-colors">History</a>
+                    <a href="#patch-notes" class="hover:text-vegas-gold transition-colors">Patch Notes</a>
+                    <button id="sound-toggle" class="p-2 rounded-lg hover:bg-white/10 transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                <a href="#" class="block py-2 hover:text-vegas-gold transition-colors">Home</a>
+                <a href="#loadouts" class="block py-2 hover:text-vegas-gold transition-colors">Loadouts</a>
+                <a href="#history" class="block py-2 hover:text-vegas-gold transition-colors">History</a>
+                <a href="#patch-notes" class="block py-2 hover:text-vegas-gold transition-colors">Patch Notes</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center px-4 pt-20">
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute w-96 h-96 bg-vegas-gold/10 rounded-full blur-3xl -top-48 -left-48 animate-float"></div>
+            <div class="absolute w-96 h-96 bg-vegas-red/10 rounded-full blur-3xl -bottom-48 -right-48 animate-float" style="animation-delay: 3s;"></div>
+        </div>
+        
+        <!-- Hero Content -->
+        <div class="relative z-10 text-center max-w-4xl mx-auto">
+            <!-- Vegas Sign Style Logo -->
+            <div class="mb-8 animate-jackpot">
+                <div class="inline-block relative">
+                    <div class="absolute inset-0 bg-vegas-gold/20 blur-xl animate-glow"></div>
+                    <h1 class="relative text-5xl sm:text-7xl md:text-8xl font-bold">
+                        <span class="text-vegas-gold neon-text">LOADOUT</span>
+                        <br>
+                        <span class="text-white text-3xl sm:text-5xl md:text-6xl">ROULETTE</span>
+                    </h1>
+                </div>
+            </div>
+            
+            <!-- Tagline -->
+            <p class="text-xl sm:text-2xl mb-8 text-gray-300 animate-slide-up" style="animation-delay: 0.2s;">
+                Spin to Win Your Perfect Finals Build
+            </p>
+            
+            <!-- Season Badge -->
+            <div class="inline-flex items-center px-6 py-3 glass rounded-full mb-12 animate-slide-up" style="animation-delay: 0.4s;">
+                <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                <span class="text-sm font-semibold">SEASON 6 READY</span>
+            </div>
+            
+            <!-- CTA Button -->
+            <button id="start-spinning" class="group relative px-8 py-4 text-lg font-bold animate-slide-up" style="animation-delay: 0.6s;">
+                <div class="absolute inset-0 bg-gradient-to-r from-vegas-gold to-vegas-red rounded-lg transform group-hover:scale-105 transition-transform"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-vegas-gold to-vegas-red rounded-lg blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                <span class="relative text-black">START SPINNING</span>
+            </button>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+        </div>
+    </header>
+    
+    <!-- Main Loadout Section -->
+    <main id="loadouts" class="relative py-16 px-4">
+        <div class="container mx-auto max-w-6xl">
+            <!-- Section Header -->
+            <div class="text-center mb-12">
+                <h2 class="text-4xl sm:text-5xl font-bold mb-4">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-vegas-gold to-vegas-red">
+                        Choose Your Destiny
+                    </span>
+                </h2>
+                <p class="text-gray-400">Select a class or let fate decide</p>
+            </div>
+            
+            <!-- Class Selection -->
+            <div class="glass rounded-2xl p-6 sm:p-8 mb-8">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+                    <!-- Light Class -->
+                    <button class="class-button group relative" data-class="Light">
+                        <div class="absolute inset-0 bg-blue-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="relative p-4 glass rounded-xl border-2 border-transparent group-hover:border-blue-500/50 transition-all">
+                            <img src="images/light_silhouette.webp" 
+                                 data-active="images/light_active.webp" 
+                                 data-default="images/light_silhouette.webp"
+                                 alt="Light Class" 
+                                 class="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-2 filter drop-shadow-lg">
+                            <span class="block text-sm font-semibold">LIGHT</span>
+                        </div>
+                    </button>
+                    
+                    <!-- Medium Class -->
+                    <button class="class-button group relative" data-class="Medium">
+                        <div class="absolute inset-0 bg-green-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="relative p-4 glass rounded-xl border-2 border-transparent group-hover:border-green-500/50 transition-all">
+                            <img src="images/medium_silhouette.webp" 
+                                 data-active="images/medium_active.webp" 
+                                 data-default="images/medium_silhouette.webp"
+                                 alt="Medium Class" 
+                                 class="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-2 filter drop-shadow-lg">
+                            <span class="block text-sm font-semibold">MEDIUM</span>
+                        </div>
+                    </button>
+                    
+                    <!-- Heavy Class -->
+                    <button class="class-button group relative" data-class="Heavy">
+                        <div class="absolute inset-0 bg-red-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="relative p-4 glass rounded-xl border-2 border-transparent group-hover:border-red-500/50 transition-all">
+                            <img src="images/heavy_silhouette.webp" 
+                                 data-active="images/heavy_active.webp" 
+                                 data-default="images/heavy_silhouette.webp"
+                                 alt="Heavy Class" 
+                                 class="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-2 filter drop-shadow-lg">
+                            <span class="block text-sm font-semibold">HEAVY</span>
+                        </div>
+                    </button>
+                    
+                    <!-- Random Class -->
+                    <button class="class-button group relative" data-class="random">
+                        <div class="absolute inset-0 bg-vegas-gold/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="relative p-4 glass rounded-xl border-2 border-transparent group-hover:border-vegas-gold/50 transition-all">
+                            <img src="images/dice_silhouette.webp" 
+                                 data-active="images/dice_active.webp" 
+                                 data-default="images/dice_silhouette.webp"
+                                 alt="Random Class" 
+                                 class="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-2 filter drop-shadow-lg">
+                            <span class="block text-sm font-semibold">RANDOM</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Filters Section -->
+            <div class="mb-8">
+                <button id="toggle-filters" class="w-full sm:w-auto mx-auto flex items-center justify-center gap-2 px-6 py-3 glass rounded-lg hover:bg-white/10 transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    <span>Customize Loadout Pool</span>
+                    <span class="toggle-icon transition-transform">+</span>
+                </button>
+                
+                <!-- Filter Panel -->
+                <div id="filter-panel" class="filter-panel mt-4 hidden">
+                    <!-- Filter content from original HTML -->
+                </div>
+            </div>
+            
+            <!-- Spin Selection -->
+            <div id="spinSelection" class="glass rounded-2xl p-6 sm:p-8 mb-8 transition-opacity disabled:opacity-50">
+                <h3 class="text-2xl font-bold mb-6 text-center">Number of Spins</h3>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button class="spin-button" data-spins="1">
+                        <span class="text-2xl font-bold">1</span>
+                        <span class="block text-xs">SPIN</span>
+                    </button>
+                    <button class="spin-button" data-spins="2">
+                        <span class="text-2xl font-bold">2</span>
+                        <span class="block text-xs">SPINS</span>
+                    </button>
+                    <button class="spin-button" data-spins="3">
+                        <span class="text-2xl font-bold">3</span>
+                        <span class="block text-xs">SPINS</span>
+                    </button>
+                    <button class="spin-button" data-spins="4">
+                        <span class="text-2xl font-bold">4</span>
+                        <span class="block text-xs">SPINS</span>
+                    </button>
+                    <button class="spin-button" data-spins="5">
+                        <span class="text-2xl font-bold">5</span>
+                        <span class="block text-xs">SPINS</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Slot Machine Output -->
+            <div id="output" class="mb-16">
+                <!-- Initial placeholder state -->
+                <div class="slot-machine-wrapper">
+                    <div class="glass rounded-2xl p-8 text-center">
+                        <div class="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-vegas-gold/20 to-vegas-red/20 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-400">Ready to Roll?</h3>
+                        <p class="text-gray-500">Select a class and number of spins to begin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- History Section -->
+    <section id="history" class="py-16 px-4 bg-black/20">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-8">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-vegas-gold to-white">
+                    Loadout History
+                </span>
+            </h2>
+            
+            <div id="history-list" class="space-y-4 mb-6">
+                <!-- History entries will be populated here -->
+            </div>
+            
+            <button id="clear-history" class="mx-auto flex items-center gap-2 px-6 py-3 bg-red-600/20 hover:bg-red-600/30 rounded-lg transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                <span>Clear History</span>
+            </button>
+        </div>
+    </section>
+    
+    <!-- Patch Notes Preview -->
+    <section id="patch-notes" class="py-16 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <div class="glass rounded-2xl p-8">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-6 text-center">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-vegas-gold to-vegas-red">
+                        Latest Updates
+                    </span>
+                </h2>
+                
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <div>
+                            <h3 class="font-semibold text-vegas-gold">New: Vegas-Style Slot Machine</h3>
+                            <p class="text-gray-400 text-sm">Experience the thrill with enhanced animations and effects</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <div>
+                            <h3 class="font-semibold text-blue-400">Improved: Mobile Experience</h3>
+                            <p class="text-gray-400 text-sm">Optimized for all devices with touch-friendly controls</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="w-2 h-2 bg-vegas-gold rounded-full mt-2 flex-shrink-0"></div>
+                        <div>
+                            <h3 class="font-semibold text-vegas-gold">Enhanced: Filter System</h3>
+                            <p class="text-gray-400 text-sm">Customize your loadout pool with advanced filters</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="/patch-notes" class="inline-flex items-center gap-2 mt-6 text-vegas-gold hover:text-white transition-colors">
+                    <span>View All Patch Notes</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-8 px-4 border-t border-white/10">
+        <div class="container mx-auto max-w-4xl text-center">
+            <p class="text-gray-400 mb-4">
+                © 2025 TheFinalsLoadout.com | Created by 
+                <a href="https://www.paultakisaki.com" class="text-vegas-gold hover:text-white transition-colors">Paul Takisaki</a>
+            </p>
+            
+            <div class="flex justify-center gap-6 text-sm">
+                <a href="/legal" class="text-gray-400 hover:text-white transition-colors">Legal</a>
+                <a href="/privacy" class="text-gray-400 hover:text-white transition-colors">Privacy</a>
+                <a href="/feedback" class="text-gray-400 hover:text-white transition-colors">Feedback</a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Mobile Touch Feedback -->
+    <div id="touch-feedback" class="fixed pointer-events-none opacity-0 w-16 h-16 rounded-full bg-white/20 transform -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300"></div>
+    
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    
+    <!-- Additional Mobile Enhancements -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        
+        // Smooth scroll to loadouts when clicking start
+        document.getElementById('start-spinning')?.addEventListener('click', () => {
+            document.getElementById('loadouts').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // Touch feedback for mobile
+        if ('ontouchstart' in window) {
+            const touchFeedback = document.getElementById('touch-feedback');
+            
+            document.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                touchFeedback.style.left = touch.clientX + 'px';
+                touchFeedback.style.top = touch.clientY + 'px';
+                touchFeedback.classList.remove('opacity-0');
+                touchFeedback.classList.add('opacity-100');
+            });
+            
+            document.addEventListener('touchend', () => {
+                touchFeedback.classList.remove('opacity-100');
+                touchFeedback.classList.add('opacity-0');
+            });
+        }
+        
+        // Sound toggle
+        let soundEnabled = true;
+        document.getElementById('sound-toggle')?.addEventListener('click', (e) => {
+            soundEnabled = !soundEnabled;
+            e.currentTarget.classList.toggle('opacity-50');
+            // Update state in main app
+            if (window.state) {
+                window.state.audioEnabled = soundEnabled;
+            }
+        });
+        
+        // Prevent zoom on double tap for iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // Add haptic feedback for supported devices
+        function triggerHaptic(style = 'light') {
+            if ('vibrate' in navigator) {
+                switch(style) {
+                    case 'light': navigator.vibrate(10); break;
+                    case 'medium': navigator.vibrate(20); break;
+                    case 'heavy': navigator.vibrate(30); break;
+                    case 'success': navigator.vibrate([20, 50, 20]); break;
+                }
+            }
+        }
+        
+        // Add haptic feedback to buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => triggerHaptic('light'));
+        });
+        
+        // Performance optimization: Lazy load images
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+            
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+    </script>
+</body>
+</html>
