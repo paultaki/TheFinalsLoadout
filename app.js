@@ -148,10 +148,12 @@ const loadouts = {
 
 // Function to get filtered loadouts based on checkbox selections
 function getFilteredLoadouts() {
+  console.log("📋 Getting filtered loadouts...");
+  
   // Create a deep copy of the original loadouts
   const filteredLoadouts = JSON.parse(JSON.stringify(loadouts));
 
-  // Try to get from the new filter system first
+  // Always use the new filter system
   let checkedWeapons = Array.from(
     document.querySelectorAll('.item-grid input[data-type="weapon"]:checked')
   ).map((checkbox) => checkbox.value);
@@ -163,87 +165,82 @@ function getFilteredLoadouts() {
   ).map((checkbox) => checkbox.value);
 
   let checkedGadgets = Array.from(
-    document.querySelectorAll('.item-grid input[data-type="gadget"]:checked')
+    document.querySelectorAll(
+      '.item-grid input[data-type="gadget"]:checked'
+    )
   ).map((checkbox) => checkbox.value);
 
-  // If new system doesn't have selections, fallback to old system
-  if (checkedWeapons.length === 0) {
-    checkedWeapons = Array.from(
-      document.querySelectorAll(
-        '#weapon-options input[type="checkbox"]:checked'
-      )
-    ).map((checkbox) => checkbox.value);
-  }
-
-  if (checkedSpecializations.length === 0) {
-    checkedSpecializations = Array.from(
-      document.querySelectorAll(
-        '#specialization-options input[type="checkbox"]:checked'
-      )
-    ).map((checkbox) => checkbox.value);
-  }
-
-  if (checkedGadgets.length === 0) {
-    checkedGadgets = Array.from(
-      document.querySelectorAll(
-        '#gadget-options input[type="checkbox"]:checked'
-      )
-    ).map((checkbox) => checkbox.value);
-  }
-
-  console.log("Filtered weapons:", checkedWeapons);
-  console.log("Filtered specializations:", checkedSpecializations);
-  console.log("Filtered gadgets:", checkedGadgets);
+  console.log("🔸 Filtered weapons:", checkedWeapons);
+  console.log("🔸 Filtered specializations:", checkedSpecializations);
+  console.log("🔸 Filtered gadgets:", checkedGadgets);
 
   // Apply filters to each class
   for (const classType of ["Light", "Medium", "Heavy"]) {
-    // Filter weapons
+    // Get the original items for this class
+    const originalWeapons = loadouts[classType].weapons;
+    const originalSpecs = loadouts[classType].specializations;
+    const originalGadgets = loadouts[classType].gadgets;
+    
+    // For each category, only keep items from this class that are checked
     if (checkedWeapons.length > 0) {
-      filteredLoadouts[classType].weapons = filteredLoadouts[
-        classType
-      ].weapons.filter((weapon) => checkedWeapons.includes(weapon));
+      filteredLoadouts[classType].weapons = originalWeapons.filter(
+        (weapon) => checkedWeapons.includes(weapon)
+      );
+      console.log(`${classType} weapons filtered from ${originalWeapons.length} to ${filteredLoadouts[classType].weapons.length}`);
     }
 
-    // Filter specializations
     if (checkedSpecializations.length > 0) {
-      filteredLoadouts[classType].specializations = filteredLoadouts[
-        classType
-      ].specializations.filter((spec) => checkedSpecializations.includes(spec));
+      filteredLoadouts[classType].specializations = originalSpecs.filter(
+        (spec) => checkedSpecializations.includes(spec)
+      );
+      console.log(`${classType} specializations filtered from ${originalSpecs.length} to ${filteredLoadouts[classType].specializations.length}`);
     }
 
-    // Filter gadgets
     if (checkedGadgets.length > 0) {
-      filteredLoadouts[classType].gadgets = filteredLoadouts[
-        classType
-      ].gadgets.filter((gadget) => checkedGadgets.includes(gadget));
+      filteredLoadouts[classType].gadgets = originalGadgets.filter(
+        (gadget) => checkedGadgets.includes(gadget)
+      );
+      console.log(`${classType} gadgets filtered from ${originalGadgets.length} to ${filteredLoadouts[classType].gadgets.length}`);
     }
   }
 
-  // Verify we have at least one item in each category for each class
+  // Safety check: make sure we have at least one item in each category for each class
   for (const classType of ["Light", "Medium", "Heavy"]) {
     // If any category is empty, revert to the original items for that category
     if (filteredLoadouts[classType].weapons.length === 0) {
-      console.warn(
-        `No weapons selected for ${classType} class, reverting to defaults`
-      );
+      console.warn(`⚠️ No weapons selected for ${classType} class, reverting to defaults`);
       filteredLoadouts[classType].weapons = loadouts[classType].weapons;
     }
 
     if (filteredLoadouts[classType].specializations.length === 0) {
-      console.warn(
-        `No specializations selected for ${classType} class, reverting to defaults`
-      );
-      filteredLoadouts[classType].specializations =
-        loadouts[classType].specializations;
+      console.warn(`⚠️ No specializations selected for ${classType} class, reverting to defaults`);
+      filteredLoadouts[classType].specializations = loadouts[classType].specializations;
     }
 
     if (filteredLoadouts[classType].gadgets.length === 0) {
-      console.warn(
-        `No gadgets selected for ${classType} class, reverting to defaults`
-      );
+      console.warn(`⚠️ No gadgets selected for ${classType} class, reverting to defaults`);
       filteredLoadouts[classType].gadgets = loadouts[classType].gadgets;
     }
   }
+
+  // Debug output
+  console.log("Final filtered loadouts:", {
+    Light: {
+      weapons: filteredLoadouts.Light.weapons.length,
+      specializations: filteredLoadouts.Light.specializations.length,
+      gadgets: filteredLoadouts.Light.gadgets.length
+    },
+    Medium: {
+      weapons: filteredLoadouts.Medium.weapons.length,
+      specializations: filteredLoadouts.Medium.specializations.length,
+      gadgets: filteredLoadouts.Medium.gadgets.length
+    },
+    Heavy: {
+      weapons: filteredLoadouts.Heavy.weapons.length,
+      specializations: filteredLoadouts.Heavy.specializations.length,
+      gadgets: filteredLoadouts.Heavy.gadgets.length
+    }
+  });
 
   return filteredLoadouts;
 }
@@ -255,13 +252,22 @@ const getRandomUniqueItems = (array, n) => {
 };
 
 const getUniqueGadgets = (classType, loadout) => {
+  // If we don't have enough gadgets in the queue, refill it
   if (state.gadgetQueue[classType].length < 3) {
-    state.gadgetQueue[classType] = [...loadout.gadgets].sort(
-      () => Math.random() - 0.5
-    );
+    // Get a fresh shuffled copy of all gadgets
+    state.gadgetQueue[classType] = [...loadout.gadgets]
+      .sort(() => Math.random() - 0.5);
+    
+    console.log(`Refilled ${classType} gadget queue with ${state.gadgetQueue[classType].length} gadgets`);
   }
+  
+  // Take 3 unique gadgets from the queue
   const selectedGadgets = state.gadgetQueue[classType].splice(0, 3);
+  
+  // Store current set of selected gadgets
   state.currentGadgetPool = new Set(selectedGadgets);
+  
+  console.log(`Selected gadgets for ${classType}:`, selectedGadgets);
   return selectedGadgets;
 };
 
@@ -448,56 +454,61 @@ const displayLoadout = (classType) => {
   const filteredLoadouts = getFilteredLoadouts();
   const loadout = filteredLoadouts[classType];
 
+  console.log(`Displaying loadout for ${classType} class`);
+  
+  // Select random weapon and specialization
   const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
-
-  const allGadgets = [...loadout.gadgets];
-  const gadgetChunks = [[], [], []];
+  
+  // Select three unique gadgets
+  console.log(`Available gadgets for ${classType}:`, loadout.gadgets);
+  
+  // Use simple selection to guarantee uniqueness
+  const availableGadgets = [...loadout.gadgets];
   const selectedGadgets = [];
-
-  for (let i = 0; i < 3; i++) {
-    if (allGadgets.length === 0) break;
-    const index = Math.floor(Math.random() * allGadgets.length);
-    selectedGadgets.push(allGadgets[index]);
-    allGadgets.splice(index, 1);
+  
+  // Select exactly 3 unique gadgets (or fewer if not enough available)
+  while (selectedGadgets.length < 3 && availableGadgets.length > 0) {
+    // Pick a random gadget from remaining pool
+    const randomIndex = Math.floor(Math.random() * availableGadgets.length);
+    const selectedGadget = availableGadgets[randomIndex];
+    
+    // Add to selected gadgets
+    selectedGadgets.push(selectedGadget);
+    
+    // Remove from available pool to ensure uniqueness
+    availableGadgets.splice(randomIndex, 1);
   }
-
-  // Make sure we have 3 gadgets - this is a safety measure
-  while (selectedGadgets.length < 3 && loadout.gadgets.length > 0) {
-    selectedGadgets.push(
-      loadout.gadgets[Math.floor(Math.random() * loadout.gadgets.length)]
-    );
-  }
-
-  while (allGadgets.length > 0) {
-    for (let i = 0; i < 3 && allGadgets.length > 0; i++) {
-      const index = Math.floor(Math.random() * allGadgets.length);
-      gadgetChunks[i].push(allGadgets[index]);
-      allGadgets.splice(index, 1);
-    }
-  }
-
-  // If any gadget chunk is empty, fill it with the full gadget list
-  for (let i = 0; i < 3; i++) {
-    if (gadgetChunks[i].length === 0) {
-      gadgetChunks[i] = [...loadout.gadgets];
-    }
-  }
-
-  const createGadgetSpinSequence = (winningGadget, chunkIndex) => {
+  
+  console.log(`Selected gadgets: ${selectedGadgets.join(', ')}`);
+  
+  // Create animation sequences for each gadget
+  const createGadgetSpinSequence = (winningGadget, gadgetIndex) => {
+    // Create a fixed-length array for the spin sequence
     const sequence = new Array(8);
+    
+    // The winning item is always at position 4 (the center)
     sequence[4] = winningGadget;
-
-    const chunk =
-      gadgetChunks[chunkIndex].length > 0
-        ? gadgetChunks[chunkIndex]
-        : loadout.gadgets;
+    
+    // Create a pool of gadgets for this specific animation slot that excludes the selected gadgets
+    const otherSelectedGadgets = selectedGadgets.filter(g => g !== winningGadget);
+    const availableForAnimation = loadout.gadgets.filter(g => !otherSelectedGadgets.includes(g));
+    
+    console.log(`Animation pool for ${winningGadget} has ${availableForAnimation.length} gadgets`);
+    
+    // Fill the other positions with random gadgets that aren't the selected gadgets for other slots
     for (let i = 0; i < 8; i++) {
-      if (i !== 4) {
-        const randomIndex = Math.floor(Math.random() * chunk.length);
-        sequence[i] = chunk[randomIndex];
+      if (i !== 4) { // Skip position 4 (winner)
+        if (availableForAnimation.length > 0) {
+          const randomIndex = Math.floor(Math.random() * availableForAnimation.length);
+          sequence[i] = availableForAnimation[randomIndex];
+        } else {
+          // Fallback if no other gadgets available
+          sequence[i] = winningGadget;
+        }
       }
     }
+    
     return sequence;
   };
 
@@ -833,7 +844,18 @@ function setupFilterSystem() {
         console.log("⚠️ Cannot apply filters during spin");
         return;
       }
+      
+      // Force a test calculation of filtered loadouts to make sure filters work
+      const testFiltered = getFilteredLoadouts();
+      console.log("Filter test result:", testFiltered);
 
+      // Clear any existing gadget queues to ensure fresh selection with new filters
+      state.gadgetQueue = {
+        Light: [],
+        Medium: [],
+        Heavy: [],
+      };
+      
       // Close the filter panel
       if (filterPanel) {
         filterPanel.style.display = "none";
@@ -842,6 +864,19 @@ function setupFilterSystem() {
           toggleIcon.classList.remove("open");
         }
       }
+      
+      // Show confirmation message
+      const filterStatus = document.createElement("div");
+      filterStatus.className = "filter-status";
+      filterStatus.textContent = "Filters applied!";
+      document.body.appendChild(filterStatus);
+      
+      // Remove after 2 seconds
+      setTimeout(() => {
+        if (filterStatus && filterStatus.parentNode) {
+          filterStatus.parentNode.removeChild(filterStatus);
+        }
+      }, 2000);
     });
   } else {
     console.error("❌ Could not find apply button");
@@ -854,99 +889,103 @@ function setupFilterSystem() {
 function populateFilterItems() {
   console.log("🔄 Populating filter items...");
 
-  // Get item containers
+  // Get weapon grid containers
   const lightWeaponsGrid = document.getElementById("light-weapons-grid");
   const mediumWeaponsGrid = document.getElementById("medium-weapons-grid");
   const heavyWeaponsGrid = document.getElementById("heavy-weapons-grid");
+  
+  // Get specialization grid containers
+  const lightSpecsGrid = document.getElementById("light-specializations-grid");
+  const mediumSpecsGrid = document.getElementById("medium-specializations-grid");
+  const heavySpecsGrid = document.getElementById("heavy-specializations-grid");
+  
+  // Get gadgets grid containers
+  const lightGadgetsGrid = document.getElementById("light-gadgets-grid");
+  const mediumGadgetsGrid = document.getElementById("medium-gadgets-grid");
+  const heavyGadgetsGrid = document.getElementById("heavy-gadgets-grid");
 
   // Clear existing items if any
   if (lightWeaponsGrid) lightWeaponsGrid.innerHTML = "";
   if (mediumWeaponsGrid) mediumWeaponsGrid.innerHTML = "";
   if (heavyWeaponsGrid) heavyWeaponsGrid.innerHTML = "";
+  if (lightSpecsGrid) lightSpecsGrid.innerHTML = "";
+  if (mediumSpecsGrid) mediumSpecsGrid.innerHTML = "";
+  if (heavySpecsGrid) heavySpecsGrid.innerHTML = "";
+  if (lightGadgetsGrid) lightGadgetsGrid.innerHTML = "";
+  if (mediumGadgetsGrid) mediumGadgetsGrid.innerHTML = "";
+  if (heavyGadgetsGrid) heavyGadgetsGrid.innerHTML = "";
 
-  // Add weapons with "Select All" option at the top
-  if (lightWeaponsGrid && loadouts.Light.weapons) {
-    console.log(`✅ Adding ${loadouts.Light.weapons.length} Light weapons`);
-
-    // Add Select All option first
-    const selectAllItem = document.createElement("label");
-    selectAllItem.className = "item-checkbox select-all-checkbox";
-    selectAllItem.innerHTML = `
-      <input type="checkbox" checked data-type="weapon-selectall" data-class="light">
-      <span><strong>Select All Light Weapons</strong></span>
-    `;
-    lightWeaponsGrid.appendChild(selectAllItem);
-
-    // Then add individual weapons
-    loadouts.Light.weapons.forEach((weapon) => {
-      const item = document.createElement("label");
-      item.className = "item-checkbox";
-      item.innerHTML = `
-        <input type="checkbox" value="${weapon}" checked data-type="weapon" data-class="light">
-        <span>${weapon}</span>
-      `;
-      lightWeaponsGrid.appendChild(item);
-    });
-  } else {
-    console.warn("⚠️ Could not find light weapons grid or weapons");
-  }
-
-  if (mediumWeaponsGrid && loadouts.Medium.weapons) {
-    console.log(`✅ Adding ${loadouts.Medium.weapons.length} Medium weapons`);
-
-    // Add Select All option first
-    const selectAllItem = document.createElement("label");
-    selectAllItem.className = "item-checkbox select-all-checkbox";
-    selectAllItem.innerHTML = `
-      <input type="checkbox" checked data-type="weapon-selectall" data-class="medium">
-      <span><strong>Select All Medium Weapons</strong></span>
-    `;
-    mediumWeaponsGrid.appendChild(selectAllItem);
-
-    // Then add individual weapons
-    loadouts.Medium.weapons.forEach((weapon) => {
-      const item = document.createElement("label");
-      item.className = "item-checkbox";
-      item.innerHTML = `
-        <input type="checkbox" value="${weapon}" checked data-type="weapon" data-class="medium">
-        <span>${weapon}</span>
-      `;
-      mediumWeaponsGrid.appendChild(item);
-    });
-  } else {
-    console.warn("⚠️ Could not find medium weapons grid or weapons");
-  }
-
-  if (heavyWeaponsGrid && loadouts.Heavy.weapons) {
-    console.log(`✅ Adding ${loadouts.Heavy.weapons.length} Heavy weapons`);
-
-    // Add Select All option first
-    const selectAllItem = document.createElement("label");
-    selectAllItem.className = "item-checkbox select-all-checkbox";
-    selectAllItem.innerHTML = `
-      <input type="checkbox" checked data-type="weapon-selectall" data-class="heavy">
-      <span><strong>Select All Heavy Weapons</strong></span>
-    `;
-    heavyWeaponsGrid.appendChild(selectAllItem);
-
-    // Then add individual weapons
-    loadouts.Heavy.weapons.forEach((weapon) => {
-      const item = document.createElement("label");
-      item.className = "item-checkbox";
-      item.innerHTML = `
-        <input type="checkbox" value="${weapon}" checked data-type="weapon" data-class="heavy">
-        <span>${weapon}</span>
-      `;
-      heavyWeaponsGrid.appendChild(item);
-    });
-  } else {
-    console.warn("⚠️ Could not find heavy weapons grid or weapons");
-  }
-
+  // Populate weapons
+  populateItemGrid(lightWeaponsGrid, loadouts.Light.weapons, "weapon", "light", "Light Weapons");
+  populateItemGrid(mediumWeaponsGrid, loadouts.Medium.weapons, "weapon", "medium", "Medium Weapons");
+  populateItemGrid(heavyWeaponsGrid, loadouts.Heavy.weapons, "weapon", "heavy", "Heavy Weapons");
+  
+  // Populate specializations
+  populateItemGrid(lightSpecsGrid, loadouts.Light.specializations, "specialization", "light", "Light Specializations");
+  populateItemGrid(mediumSpecsGrid, loadouts.Medium.specializations, "specialization", "medium", "Medium Specializations");
+  populateItemGrid(heavySpecsGrid, loadouts.Heavy.specializations, "specialization", "heavy", "Heavy Specializations");
+  
+  // Populate gadgets
+  populateItemGrid(lightGadgetsGrid, loadouts.Light.gadgets, "gadget", "light", "Light Gadgets");
+  populateItemGrid(mediumGadgetsGrid, loadouts.Medium.gadgets, "gadget", "medium", "Medium Gadgets");
+  populateItemGrid(heavyGadgetsGrid, loadouts.Heavy.gadgets, "gadget", "heavy", "Heavy Gadgets");
+  
   console.log("✅ Filter items population complete");
 
   // Setup Select All functionality once items are populated
   setupSelectAllCheckboxes();
+  
+  // Setup tab content search placeholder update
+  setupTabSearchPlaceholder();
+}
+
+// Helper function to populate item grids
+function populateItemGrid(gridElement, items, type, classType, labelText) {
+  if (!gridElement || !items || items.length === 0) {
+    console.warn(`⚠️ Could not populate ${classType} ${type} grid`);
+    return;
+  }
+  
+  console.log(`✅ Adding ${items.length} ${classType} ${type}s`);
+  
+  // Add Select All option first
+  const selectAllItem = document.createElement("label");
+  selectAllItem.className = "item-checkbox select-all-checkbox";
+  selectAllItem.innerHTML = `
+    <input type="checkbox" checked data-type="${type}-selectall" data-class="${classType}">
+    <span><strong>Select All ${labelText}</strong></span>
+  `;
+  gridElement.appendChild(selectAllItem);
+  
+  // Then add individual items
+  items.forEach((item) => {
+    const itemElement = document.createElement("label");
+    itemElement.className = "item-checkbox";
+    itemElement.innerHTML = `
+      <input type="checkbox" value="${item}" checked data-type="${type}" data-class="${classType}">
+      <span>${item}</span>
+    `;
+    gridElement.appendChild(itemElement);
+  });
+}
+
+// Function to update search placeholder based on active tab
+function setupTabSearchPlaceholder() {
+  const searchInput = document.getElementById("filter-search");
+  const tabButtons = document.querySelectorAll(".tab-button");
+  
+  if (!searchInput || tabButtons.length === 0) return;
+  
+  // Set initial placeholder
+  searchInput.placeholder = "Search weapons...";
+  
+  // Update placeholder when tab changes
+  tabButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      const tabName = button.getAttribute("data-tab");
+      searchInput.placeholder = `Search ${tabName}...`;
+    });
+  });
 }
 
 function finalizeSpin(columns) {

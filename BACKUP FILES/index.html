@@ -16,6 +16,12 @@
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+  <!-- Add these two lines right here -->
+    <meta name="author" content="Paul Takisaki">
+    <link rel="author" href="https://www.paultakisaki.com">
+
     <title>
       The Finals BEST Random Loadout Generator | Fun & Unique Loadouts
     </title>
@@ -24,19 +30,22 @@
       content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles."
     />
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "The Finals Loadout Generator",
-        "description": "A random loadout generator for The Finals game with optimized weapons and gadgets for different playstyles.",
-        "url": "https://www.thefinalsloadout.com",
-        "image": "https://www.thefinalsloadout.com/images/the-finals.webp",
-        "author": {
-          "@type": "Organization",
-          "name": "1-800-FAT-MOMS"
-        }
-      }
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "The Finals Loadout Generator",
+  "url": "https://www.thefinalsloadout.com",
+  "description": "A random loadout generator for The Finals game with optimized weapons and gadgets for different playstyles.",
+  "image": "https://www.thefinalsloadout.com/images/the-finals-logo.webp",
+  "author": {
+    "@type": "Person",
+    "name": "Paul Takisaki",
+    "url": "https://www.paultakisaki.com"
+  }
+}
+</script>
+
     </script>
 
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
@@ -102,63 +111,58 @@
     </style>
   </head>
   <audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
-  <nav class="main-nav">
-    <a href="https://thefinalsloadout.com/" class="active">Home</a>
-    <a href="https://thefinalsloadout.com/ragequit/">Rage Quit Loadout</a>
-    <a href="https://thefinalsloadout.com/patch-notes/">Patch Notes</a>
-    <a href="https://thefinalsloadout.com/feedback/">Feedback</a>
-  </nav>
 
-  <header class="headerSection">
-    <div class="container">
-      <img
-        src="images/roulette.webp"
-        alt="Random Loadout Generator for The Finals Game"
-        class="finals-logo"
-        width="240"
-        height="auto"
-      />
-      <h2 class="subTitle">Season 6 Ready</h2>
+<nav class="main-nav">
+  <a href="https://thefinalsloadout.com/" class="active">Home</a>
+  <a href="https://thefinalsloadout.com/ragequit/">Rage Quit Loadout</a>
+  <a href="https://thefinalsloadout.com/patch-notes/">Patch Notes</a>
+  <a href="https://thefinalsloadout.com/feedback/">Feedback</a>
+</nav>
 
+<header class="headerSection">
+  <div class="container">
+    <img
+      src="images/roulette.webp"
+      alt="Random Loadout Generator for The Finals Game"
+      class="finals-logo"
+      width="240"
+      height="auto"
+    />
+    <h2 class="subTitle">Season 6 Ready</h2>
+  </div>
+</header>
+  
+
+<main class="mainContent">
+  <div class="container">
+    <div class="selection-container">
+      <!-- Class Selection -->
+      <div class="class-selection">
+        <h2>Choose Your Class</h2>
+        <div class="btnRow">
+          <img id="light-class" class="class-button" src="images/light_silhouette.webp" 
+               data-active="images/light_active.webp" 
+               data-default="images/light_silhouette.webp" 
+               data-class="Light" alt="Light Class Loadouts" />
+          
+          <img id="medium-class" class="class-button" src="images/medium_silhouette.webp" 
+               data-active="images/medium_active.webp" 
+               data-default="images/medium_silhouette.webp" 
+               data-class="Medium" alt="Medium Class Loadouts" />
         
-    </div>
-  </header>
-  
-  
-
-    <main class="mainContent">
-      <div class="container">
-        <div class="buttons">
-          <!-- New Class & Spin Container -->
-
-          <div class="selection-container">
-            <!-- Class Selection -->
-            <div class="class-selection">
-              <h2>Choose Your Class</h2>
-              <div class="btnRow">
-                <img id="light-class" class="class-button" src="images/light_silhouette.webp" 
-                     data-active="images/light_active.webp" 
-                     data-default="images/light_silhouette.webp" 
-                     data-class="Light" alt="Light Class Loadouts" />
-                
-                <img id="medium-class" class="class-button" src="images/medium_silhouette.webp" 
-                     data-active="images/medium_active.webp" 
-                     data-default="images/medium_silhouette.webp" 
-                     data-class="Medium" alt="Medium Class Loadouts" />
-              
-                <img id="heavy-class" class="class-button" src="images/heavy_silhouette.webp" 
-                     data-active="images/heavy_active.webp" 
-                     data-default="images/heavy_silhouette.webp" 
-                     data-class="Heavy" alt="Heavy Class Loadouts" />
-              
-                     <img id="random-class" class="class-button" 
-                     src="images/dice_silhouette.webp"
-                     data-active="images/dice_active.webp"
-                     data-default="images/dice_silhouette.webp"
-                     data-class="random" 
-                     alt="Random Class Loadouts" />
-              </div>
-                          </div>
+          <img id="heavy-class" class="class-button" src="images/heavy_silhouette.webp" 
+               data-active="images/heavy_active.webp" 
+               data-default="images/heavy_silhouette.webp" 
+               data-class="Heavy" alt="Heavy Class Loadouts" />
+        
+          <img id="random-class" class="class-button" 
+               src="images/dice_silhouette.webp"
+               data-active="images/dice_active.webp"
+               data-default="images/dice_silhouette.webp"
+               data-class="random" 
+               alt="Random Class Loadouts" />
+        </div>
+      </div>
 <!-- Add this right after the class selection div, around line 160 -->
 <!-- Collapsible Filter Toggle Button -->
 <button id="toggle-filters" class="filter-toggle-btn compact-button" style="margin: 15px auto; display: block; width: 100%; max-width: 360px; text-align: center;">
@@ -171,12 +175,11 @@
   <!-- Tab Navigation -->
   <div class="filter-tabs">
     <button class="tab-button active" data-tab="weapons">Weapons</button>
-    <button class="tab-button" data-tab="gadgets">Gadgets</button>
   </div>
   
   <!-- Search and Class Filter -->
   <div class="filter-controls">
-    <input type="text" id="filter-search" placeholder="Search items..." class="search-input">
+    <input type="text" id="filter-search" placeholder="Search weapons..." class="search-input">
     <div class="class-filter-buttons">
       <button class="class-filter active" data-class="all">All</button>
       <button class="class-filter" data-class="light">Light</button>
@@ -235,57 +238,6 @@
     <!-- Individual weapons will be populated here by JavaScript -->
   </div>
 </div>
-  </div>
-  
-  <!-- Content Area - Gadgets Tab -->
-  <div class="tab-content" id="gadgets-tab">
-    <!-- Light Gadgets Section with Select All -->
-    <div class="item-category light-category">
-      <div class="category-header">
-        <h3>Light Class Gadgets</h3>
-        <button class="category-toggle">▼</button>
-      </div>
-      <div class="item-grid" id="light-gadgets-grid">
-        <!-- Select All option as first item -->
-        <label class="item-checkbox select-all-checkbox">
-          <input type="checkbox" checked data-type="gadget-selectall" data-class="light">
-          <span><strong>Select All Light Gadgets</strong></span>
-        </label>
-        <!-- Individual gadgets will be populated here by JavaScript -->
-      </div>
-    </div>
-
-    <!-- Medium Gadgets Section with Select All -->
-    <div class="item-category medium-category">
-      <div class="category-header">
-        <h3>Medium Class Gadgets</h3>
-        <button class="category-toggle">▼</button>
-      </div>
-      <div class="item-grid" id="medium-gadgets-grid">
-        <!-- Select All option as first item -->
-        <label class="item-checkbox select-all-checkbox">
-          <input type="checkbox" checked data-type="gadget-selectall" data-class="medium">
-          <span><strong>Select All Medium Gadgets</strong></span>
-        </label>
-        <!-- Individual gadgets will be populated here by JavaScript -->
-      </div>
-    </div>
-
-    <!-- Heavy Gadgets Section with Select All -->
-    <div class="item-category heavy-category">
-      <div class="category-header">
-        <h3>Heavy Class Gadgets</h3>
-        <button class="category-toggle">▼</button>
-      </div>
-      <div class="item-grid" id="heavy-gadgets-grid">
-        <!-- Select All option as first item -->
-        <label class="item-checkbox select-all-checkbox">
-          <input type="checkbox" checked data-type="gadget-selectall" data-class="heavy">
-          <span><strong>Select All Heavy Gadgets</strong></span>
-        </label>
-        <!-- Individual gadgets will be populated here by JavaScript -->
-      </div>
-    </div>
   </div>
 
   <!-- Single Apply Button -->
@@ -381,57 +333,231 @@
         Clear History
       </button>
     </section>
-    <section class="patch-notes">
-      <div class="notes-container">
-        <h2 class="patch-date">✨ Patch Highlights - April 9, 2025</h2>
-        <p class="patch-summary">
-      <strong>Fixes:</strong> Minigun, SR-84, Revolver (ADS alignment)<br />
-      <strong>Controls:</strong> Minigun wind-up rebind to ADS key
-    </p>
+   
+   
+ <section class="patch-notes">
+  <div class="notes-container">
+    <h2 class="patch-date">✨ PATCH HIGHLIGHTS - MAY 1, 2025</h2>
+    <div class="patch-summary">
+      <strong>New:</strong> Close Quarters Event, Nullifier (renamed Stun Gun), Health Canister<br />
+      <strong>Returning:</strong> Las Vegas 2032 map back in rotation<br />
+      <strong>Improved:</strong> Club size increased to 100 members, multi-channel chat
+    </div>
     
-        <!-- Weapon Changes -->
+    <!-- Weapon Changes - Main Toggle -->
+    <details class="category-toggle">
+      <summary><h3><span class="emoji">🔫</span> Weapon Adjustments</h3></summary>
+      <div class="category-content">
+        <!-- Buffs Section -->
+        <div class="adjustment">
+          <h4 class="buff-text">📈 Buffs</h4>
+          <ul>
+            <li><strong>93R:</strong> Effective range increased (32-40m, up from 28-35m)</li>
+            <li><strong>ARN-220:</strong> Quick reload animation reduced from 0.95s to 0.75s</li>
+            <li><strong>Model 1887:</strong> Pump-action duration decreased (0.78s from 0.8s), effective range increased (20-30m, up from 15-25m)</li>
+            <li><strong>R.357:</strong> Effective range increased (27.5-44m, up from 23-40m)</li>
+          </ul>
+        </div>
         
-    
-        <!-- Gadget Changes -->
-        
-    
-        <!-- Spec Changes -->
-        
-    
-        <!-- Sight Notes -->
-        
-          <!-- Additional Fixes -->
-        <div class="patch-section">
-          <h3>🛠 Additional Fixes & Tweaks</h3>
-          <details class="adjustment">
-            <summary><strong>📌 Miscellaneous Adjustments</strong></summary>
-            <ul>
-              <li><strong>Minigun:</strong> Wind-up now uses the Aim Down Sight keybind (Hold or Toggle) instead of secondary fire.</li>
-              <li><strong>SR-84:</strong> Reduced scope movement to reflect shot accuracy more closely.</li>
-              <li><strong>SR-84:</strong> Improved camera motion when crouching or stopping while scoped.</li>
-              <li><strong>SR-84:</strong> Fixed scope flickering when crouching in first person.</li>
-              <li><strong>Revolver:</strong> Fixed misalignment with the Horizon Hammer skin when aiming down sights.</li>
-            </ul>
-          </details>
+        <!-- Nerfs Section -->
+        <div class="adjustment">
+          <h4 class="nerf-text">📉 Nerfs</h4>
+          <ul>
+            <li><strong>.50 Akimbo:</strong> Effective range decreased (35-42m, down from 37.5-47.5m)</li>
+            <li><strong>Cerberus:</strong> Pellet count reduced from 12 to 11 (max damage decreased from 120 to 110)</li>
+            <li><strong>FAMAS:</strong> Effective range decreased (35-42.5m, down from 37.5-47.5m)</li>
+            <li><strong>SA1216:</strong> Rate of fire decreased from 200RPM to 190RPM</li>
+          </ul>
         </div>
       </div>
-    </section>
+    </details>
     
-    
-    <footer class="footerSection">
-      <div class="container">
-        <div class="footerRow">
-          <p class="text-start">
-            © 2025 TheFinalsLoadout.com |
-            <a href="legal/legal.html">Legal Disclaimer</a> | 1-800-FAT-MOMS
-            Production
-          </p>
-          <div
-            style="position: relative; width: 200px; margin-left: 20px"
-          ></div>
+    <!-- Specialization & Gadget Changes - Main Toggle -->
+    <details class="category-toggle">
+      <summary><h3><span class="emoji">🧰</span> Specializations & Gadgets</h3></summary>
+      <div class="category-content">
+        <!-- Winch Claw -->
+        <div class="adjustment">
+          <h4>Winch Claw</h4>
+          <ul>
+            <li>Players now enter 'uncontrolled' state when winched</li>
+            <li>Victims now have increased bullet dispersion and recoil while being winched</li>
+            <li>Fixed an issue where winched players weren't pulled through smoke</li>
+          </ul>
+        </div>
+        
+        <!-- Nullifier -->
+        <div class="adjustment">
+          <h4>Nullifier</h4>
+          <ul>
+            <li>Stun Gun completely reworked and renamed</li>
+            <li>Players hit by the Nullifier enter a "nullified" state for several seconds</li>
+            <li>Nullified players cannot attack or use items, but can still move</li>
+            <li>Nullified players are completely immune to damage or item effects</li>
+          </ul>
+        </div>
+        
+        <!-- Proximity Sensor -->
+        <div class="adjustment">
+          <h4>Proximity Sensor</h4>
+          <ul>
+            <li>Increased size for easier targeting</li>
+            <li>Larger hitbox makes the sensor easier to hit and destroy</li>
+          </ul>
         </div>
       </div>
-    </footer>
+    </details>
+    
+    <!-- New Features - Main Toggle -->
+    <details class="category-toggle">
+      <summary><h3><span class="emoji">🆕</span> New Features</h3></summary>
+      <div class="category-content">
+        <!-- Close Quarters Event -->
+        <div class="adjustment">
+          <h4>Close Quarters Event</h4>
+          <ul>
+            <li>Limited-time event with a new map</li>
+            <li>ALFA ACTA P.E.A.C.E. Center map for close-range combat</li>
+            <li>Team Deathmatch mode with faster, more intense fights</li>
+            <li>"Wheel of Trust" with 20 potential rewards including BULL'S EYE BARRY dummy</li>
+          </ul>
+        </div>
+        
+        <!-- Health Canister -->
+        <div class="adjustment">
+          <h4>Health Canister</h4>
+          <ul>
+            <li>New throwable carriable for healing</li>
+            <li>Blue spherical container that smashes on impact</li>
+            <li>Creates a healing mist that triggers health regeneration for players in the area</li>
+            <li>Available in all game modes except Terminal Attack</li>
+          </ul>
+        </div>
+        
+        <!-- Expanded Customization -->
+        <div class="adjustment">
+          <h4>Expanded Customization</h4>
+          <ul>
+            <li>Body Paint now split into 4 categories</li>
+            <li>Face Paint: For facial decorations</li>
+            <li>Body Paint: For body decorations</li>
+            <li>Nails: New nail polish category</li>
+            <li>Tattoos: Can now be worn under any paint</li>
+          </ul>
+        </div>
+        
+        <!-- Social Improvements -->
+        <div class="adjustment">
+          <h4>Social Improvements</h4>
+          <ul>
+            <li>Enhanced club and chat features</li>
+            <li>Club size increased from 35 to 100 members</li>
+            <li>Multi-channel chat between party, team, private lobby, and club</li>
+            <li>New chat settings: Background Opacity, Text Size, Channel Icons toggle</li>
+          </ul>
+        </div>
+        
+        <!-- Practice Range -->
+        <div class="adjustment">
+          <h4>Practice Range</h4>
+          <ul>
+            <li>Now supports parties</li>
+            <li>Enter with up to 5 friends to practice together</li>
+            <li>Added Health Canister dispenser to the range</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+    
+    <!-- Map Changes - Main Toggle -->
+    <details class="category-toggle">
+      <summary><h3><span class="emoji">🗺️</span> Map Updates</h3></summary>
+      <div class="category-content">
+        <!-- Las Vegas -->
+        <div class="adjustment">
+          <h4>Las Vegas 2032</h4>
+          <ul>
+            <li>Returns to the public map rotation</li>
+            <li>Available in Quick Cash, Terminal Attack, and Ranked Tournament</li>
+            <li>Fixed floating signs and invisible collision issues</li>
+          </ul>
+        </div>
+        
+        <!-- Kyoto -->
+        <div class="adjustment">
+          <h4>Kyoto</h4>
+          <ul>
+            <li>Cashout Station location adjustments</li>
+            <li>Several Cashout Station locations removed or adjusted in Bamboo Forest and Villa Compound</li>
+            <li>Carriables can now be thrown through lattice windows without bouncing back</li>
+          </ul>
+        </div>
+        
+        <!-- Seoul -->
+        <div class="adjustment">
+          <h4>Seoul</h4>
+          <ul>
+            <li>Destruction improvements</li>
+            <li>Re-balanced structural strain for more refined and varied destruction</li>
+            <li>Fixed rare issues with horizontal ziplines</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+    
+    <!-- Bug Fixes - Main Toggle -->
+    <details class="category-toggle">
+      <summary><h3><span class="emoji">🛠️</span> Bug Fixes & Quality of Life</h3></summary>
+      <div class="category-content">
+        <!-- Animation Improvements -->
+        <div class="adjustment">
+          <h4>Animation Improvements</h4>
+          <ul>
+            <li>Fixed M134 Minigun crouch pose during interactions</li>
+            <li>Fixed Sword animation issues causing "phantom strikes"</li>
+            <li>Fixed issues with Spear attack animations</li>
+            <li>Improved weapon position during vaulting with Sledgehammer and Spear</li>
+            <li>Fixed Riot Shield sometimes blocking the view</li>
+          </ul>
+        </div>
+        
+        <!-- Gameplay Fixes -->
+        <div class="adjustment">
+          <h4>Gameplay Fixes</h4>
+          <ul>
+            <li>Carriable pickup range increased from 6m to 6.5m</li>
+            <li>Carriables throw force increased by 10%</li>
+            <li>Improved optimization to reduce "shot around corners" feeling</li>
+            <li>Fixed various respawn and spectator issues</li>
+          </ul>
+        </div>
+        
+        <!-- Fun Updates -->
+        <div class="adjustment">
+          <h4>Fun Updates</h4>
+          <ul>
+            <li><strong>Little Chief Moolah:</strong> Now moos on 100% of kills (up from 25%)</li>
+            <li>Little Chief will now moo when the attached weapon is inspected</li>
+            <li>New Twitch Drops available in blue camo theme</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<footer class="footerSection" style="text-align: center;">
+  <div class="container" style="text-align: center;">
+    <div class="footerRow" style="justify-content: center; text-align: center;">
+      <p style="text-align: center; width: 100%; margin: 0 auto;">
+        © 2025 TheFinalsLoadout.com | Created by <strong><a href="https://www.paultakisaki.com" rel="author" style="color: #ffb700;">Paul Takisaki</a></strong> | 
+        <a href="legal/legal.html" style="color: #ffb700;">Legal Disclaimer</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+
     <!-- Scripts -->
     <script defer src="app.js"></script>
     <script
