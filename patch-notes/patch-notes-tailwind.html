@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patch Notes | The Finals Loadout</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'oswald': ['Oswald', 'sans-serif'],
+                    },
+                    colors: {
+                        'neon-yellow': '#ffb700',
+                        'neon-pink': '#ff1493',
+                        'neon-cyan': '#00f3ff',
+                        'neon-green': '#44ff44',
+                        'neon-red': '#ff4444',
+                        'neon-orange': '#ff7b00',
+                        'neon-purple': '#7b2fe3',
+                    },
+                    animation: {
+                        'gradient-shift': 'gradientShift 20s ease infinite',
+                        'logo-glow': 'logoGlow 3s infinite alternate',
+                        'emoji-rotate': 'emojiRotate 0.5s ease',
+                        'neon-pulse': 'neonPulse 2s infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes logoGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(255, 0, 255, 0.7)); }
+            33% { filter: drop-shadow(0 0 15px rgba(255, 183, 0, 0.7)); }
+            66% { filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.7)); }
+            100% { filter: drop-shadow(0 0 18px rgba(255, 0, 255, 0.7)); }
+        }
+        
+        @keyframes emojiRotate {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.3); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        
+        @keyframes neonPulse {
+            0% { text-shadow: 0 0 5px rgba(255, 183, 0, 0.5); }
+            50% { text-shadow: 0 0 15px rgba(255, 183, 0, 0.8), 0 0 20px rgba(255, 183, 0, 0.5); }
+            100% { text-shadow: 0 0 5px rgba(255, 183, 0, 0.5); }
+        }
+        
+        .emoji-rotate {
+            animation: emojiRotate 0.5s ease;
+        }
+        
+        details[open] summary h3 {
+            animation: neonPulse 2s infinite;
+        }
+        
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #12002b, #1b1035, #2a004d, #12002b);
+            background-size: 300% 300%;
+            animation: gradientShift 20s ease infinite;
+        }
+    </style>
+</head>
+<body class="font-oswald m-0 p-0 text-white gradient-bg min-h-screen leading-relaxed">
+    <!-- Cyber Grid Overlay -->
+    <div class="fixed inset-0 pointer-events-none opacity-10 -z-10" 
+         style="background: linear-gradient(90deg, rgba(0,0,0,.1) 1px, transparent 1px), linear-gradient(0deg, rgba(0,0,0,.1) 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-black/80 px-6 py-4 flex gap-6 shadow-lg backdrop-blur-sm">
+        <a href="/" class="text-white text-lg font-medium hover:text-neon-yellow transition-all duration-300 hover:-translate-y-0.5">Home</a>
+        <a href="/ragequit/" class="text-white text-lg font-medium hover:text-neon-yellow transition-all duration-300 hover:-translate-y-0.5">Rage Quit Loadout</a>
+        <a href="/patch-notes/" class="text-neon-yellow text-lg font-medium relative">
+            Patch Notes
+            <span class="absolute -bottom-1 left-0 right-0 h-0.5 bg-neon-yellow shadow-[0_0_8px_rgba(255,183,0,0.8)]"></span>
+        </a>
+        <a href="/feedback/" class="text-white text-lg font-medium hover:text-neon-yellow transition-all duration-300 hover:-translate-y-0.5">Feedback</a>
+    </nav>
+
+    <!-- Header -->
+    <header class="pt-24 pb-10 px-5 text-center bg-gradient-to-r from-neon-pink via-neon-yellow to-neon-cyan mb-8 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/70 to-black/30 pointer-events-none"></div>
+        <div class="relative z-10">
+            <img src="images/patch-logo.webp" alt="Patch Notes Logo" 
+                 class="w-44 mx-auto mb-5 animate-logo-glow">
+            <h1 class="text-4xl md:text-5xl mb-2 text-white font-bold tracking-wider uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]">
+                PATCH NOTES SUMMARY
+            </h1>
+            <h2 class="text-xl text-white/90 uppercase tracking-[3px] font-normal">
+                BUFFS • NERFS • UPDATES
+            </h2>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto mb-12 px-5">
+        <div class="bg-gray-900/95 rounded-xl p-8 shadow-2xl border border-neon-yellow/20 backdrop-blur-sm">
+            
+            <!-- Patch Header -->
+            <h2 class="text-neon-yellow text-center p-4 mb-6 text-3xl font-semibold tracking-wide border-b border-white/10 relative bg-gradient-to-r from-neon-pink/20 via-neon-yellow/20 to-neon-cyan/20 rounded-lg">
+                ✨ UPDATE 6.9.0 - MAY 22, 2025
+                <span class="absolute bottom-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-neon-yellow/80 to-transparent shadow-[0_0_10px_rgba(255,183,0,0.8)]"></span>
+            </h2>
+
+            <!-- Patch Summary -->
+            <div class="bg-black/30 rounded-lg px-6 py-4 mb-8 text-center border-l-4 border-r-4 border-neon-yellow">
+                <p class="text-gray-300 leading-relaxed">
+                    <strong class="text-white">New:</strong> Heavy Hitters LTE, Pop Drop Arena, Sledgehammer weapons, Tiger Juice rewards<br>
+                    <strong class="text-white">Features:</strong> XP Dash active, Sponsor Showdown, New Twitch Drops<br>
+                    <strong class="text-white">Major Fix:</strong> Persistent effects bug finally eliminated!
+                </p>
+            </div>
+
+            <!-- Limited Time Events -->
+            <details class="mb-5 rounded-lg overflow-hidden bg-gray-800/50 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl border border-white/5 group">
+                <summary class="cursor-pointer list-none p-0 relative transition-all duration-300">
+                    <h3 class="text-neon-yellow m-0 px-5 py-4 text-xl flex items-center gap-3 font-semibold relative">
+                        <span class="text-2xl transition-transform duration-300 group-hover:scale-110">🎮</span>
+                        Limited Time Events
+                        <span class="absolute right-5 text-2xl text-neon-yellow/80 transition-transform duration-300 group-open:rotate-45">+</span>
+                    </h3>
+                </summary>
+                <div class="px-5 pb-5 animate-[slideDown_0.4s_ease-out]">
+                    <!-- Heavy Hitters -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-neon-cyan shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">🔨 HEAVY HITTERS</h4>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• High-impact 5v5 Platform Fighter mode - knock opponents off the edge!</li>
+                            <li>• All-new Pop Drop Arena designed for aerial combat</li>
+                            <li>• Everyone uses sledgehammer loadouts for maximum bonking</li>
+                            <li>• Powered by OSPUZE's explosive new Tiger Juice flavor</li>
+                            <li>• Complete contracts to unlock exclusive Tiger-themed rewards</li>
+                        </ul>
+                    </div>
+
+                    <!-- XP Dash -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-neon-green">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">⚡ XP DASH</h4>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• Bonus XP and Fans active through end of season</li>
+                            <li>• Perfect for catching up or charging ahead</li>
+                            <li>• Stack rewards before the season ends</li>
+                        </ul>
+                    </div>
+
+                    <!-- Sponsor Showdown -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-neon-pink">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">🏆 SPONSOR SHOWDOWN</h4>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• OSPUZE vs ENGIMO vs ALFA ACTA final battle</li>
+                            <li>• Every match contributes to your sponsor's daily standings</li>
+                            <li>• Visual takeovers spread across maps as sponsors gain dominance</li>
+                            <li>• Daily winners claim map control with billboards and branding</li>
+                            <li>• Only one sponsor will tower above the rest by season's end</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Weapon Adjustments -->
+            <details class="mb-5 rounded-lg overflow-hidden bg-gray-800/50 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl border border-white/5 group">
+                <summary class="cursor-pointer list-none p-0 relative transition-all duration-300">
+                    <h3 class="text-neon-yellow m-0 px-5 py-4 text-xl flex items-center gap-3 font-semibold relative">
+                        <span class="text-2xl transition-transform duration-300 group-hover:scale-110">🔫</span>
+                        Weapon Adjustments
+                        <span class="absolute right-5 text-2xl text-neon-yellow/80 transition-transform duration-300 group-open:rotate-45">+</span>
+                    </h3>
+                </summary>
+                <div class="px-5 pb-5 animate-[slideDown_0.4s_ease-out]">
+                    <!-- Weapon Changes -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-neon-yellow">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">Balance Updates</h4>
+                        
+                        <div class="space-y-3">
+                            <div class="pl-5">
+                                <strong class="text-white">ARN-220:</strong>
+                                <span class="text-gray-300"> Recoil pattern unified for both magazines - more consistent aiming</span>
+                            </div>
+                            
+                            <div class="pl-5">
+                                <strong class="text-white">FAMAS:</strong>
+                                <span class="text-gray-300"> Reduced visual recoil for less screen shake</span>
+                            </div>
+                            
+                            <div class="pl-5">
+                                <strong class="text-white">KS-23:</strong>
+                                <span class="text-gray-300"> Major accuracy improvements across all movement states</span>
+                                <ul class="mt-1 ml-5 text-sm text-gray-400">
+                                    <li>• Better hip-fire accuracy while moving</li>
+                                    <li>• Improved ADS accuracy in all stances</li>
+                                    <li>• Dev Note: "Should significantly increase viability"</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="pl-5">
+                                <strong class="text-white">M11:</strong>
+                                <span class="text-gray-300"> Smoother recoil pattern at end of bursts + less visual shake</span>
+                            </div>
+                            
+                            <div class="pl-5">
+                                <strong class="text-white">XP-54:</strong>
+                                <span class="text-neon-red"> Damage: 17 → 16</span> | 
+                                <span class="text-neon-green"> Fire rate: 850 → 860 RPM</span>
+                                <ul class="mt-1 ml-5 text-sm text-gray-400">
+                                    <li>• Dev Note: "Bringing overperforming weapon back in line"</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="pl-5">
+                                <strong class="text-white">Melee Weapons:</strong>
+                                <span class="text-gray-300"> Improved hit registration - fewer sweeps lost to collision</span>
+                            </div>
+                            
+                            <div class="pl-5">
+                                <strong class="text-white">Minigun:</strong>
+                                <span class="text-gray-300"> Fixed wind-up while being pulled by Winch Claw</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- New Features & Content -->
+            <details class="mb-5 rounded-lg overflow-hidden bg-gray-800/50 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl border border-white/5 group">
+                <summary class="cursor-pointer list-none p-0 relative transition-all duration-300">
+                    <h3 class="text-neon-yellow m-0 px-5 py-4 text-xl flex items-center gap-3 font-semibold relative">
+                        <span class="text-2xl transition-transform duration-300 group-hover:scale-110">🆕</span>
+                        New Features & Content
+                        <span class="absolute right-5 text-2xl text-neon-yellow/80 transition-transform duration-300 group-open:rotate-45">+</span>
+                    </h3>
+                </summary>
+                <div class="px-5 pb-5 animate-[slideDown_0.4s_ease-out]">
+                    <!-- New Twitch Drops -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-neon-purple">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">📺 New Twitch Drops</h4>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• Broadcast Blaze weapon skins collection</li>
+                            <li>• Watch any stream of THE FINALS on Twitch to unlock</li>
+                            <li>• Multiple skins available - collect them all!</li>
+                        </ul>
+                    </div>
+
+                    <!-- Sledgehammer Customization -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-neon-orange">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">🔨 Sledgehammer Collection</h4>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• Multiple hammer variants for Heavy Hitters event</li>
+                            <li>• Equip your favorite on Heavy contestants</li>
+                            <li>• OSPUZE Tiger Juice themed accessories</li>
+                        </ul>
+                    </div>
+
+                    <!-- Season 3 Ruby Rewards -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-neon-pink">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">💎 Season 3 Ruby Rewards</h4>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• Player Card background and Emblem now available</li>
+                            <li>• Player Card badge coming in next major update</li>
+                            <li>• Dev Note: "Thanks to all S3 Ruby players who signed the petition!"</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Map Updates -->
+            <details class="mb-5 rounded-lg overflow-hidden bg-gray-800/50 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl border border-white/5 group">
+                <summary class="cursor-pointer list-none p-0 relative transition-all duration-300">
+                    <h3 class="text-neon-yellow m-0 px-5 py-4 text-xl flex items-center gap-3 font-semibold relative">
+                        <span class="text-2xl transition-transform duration-300 group-hover:scale-110">🗺️</span>
+                        Map Updates
+                        <span class="absolute right-5 text-2xl text-neon-yellow/80 transition-transform duration-300 group-open:rotate-45">+</span>
+                    </h3>
+                </summary>
+                <div class="px-5 pb-5 animate-[slideDown_0.4s_ease-out]">
+                    <!-- Arena News -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-neon-cyan">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">📰 Arena News</h4>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• <strong class="text-white">Kyoto:</strong> Water no longer slows movement - swim freely!</li>
+                            <li>• <strong class="text-white">P.E.A.C.E. Center:</strong> Now available in Team Deathmatch</li>
+                            <li>• <strong class="text-white">General:</strong> Fixed vegetation vault triggers and asset health values</li>
+                        </ul>
+                    </div>
+
+                    <!-- Specific Map Fixes -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-white/30">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">Map-Specific Fixes</h4>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• <strong class="text-white">Kyoto:</strong> Added missing destruction on small props</li>
+                            <li>• <strong class="text-white">Seoul:</strong> Fixed accidental pipe vaulting and missing staircase collision</li>
+                            <li>• <strong class="text-white">Practice Range:</strong> Fixed floating floor after destruction</li>
+                            <li>• <strong class="text-white">All Maps:</strong> Rare zipline loading issues resolved</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Bug Fixes & Quality of Life -->
+            <details class="mb-5 rounded-lg overflow-hidden bg-gray-800/50 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl border border-white/5 group" open>
+                <summary class="cursor-pointer list-none p-0 relative transition-all duration-300">
+                    <h3 class="text-neon-yellow m-0 px-5 py-4 text-xl flex items-center gap-3 font-semibold relative">
+                        <span class="text-2xl transition-transform duration-300 group-hover:scale-110">🔧</span>
+                        Bug Fixes & Quality of Life
+                        <span class="absolute right-5 text-2xl text-neon-yellow/80 transition-transform duration-300 group-open:rotate-45">+</span>
+                    </h3>
+                </summary>
+                <div class="px-5 pb-5 animate-[slideDown_0.4s_ease-out]">
+                    <!-- Major Fix -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-neon-green shadow-[0_0_15px_rgba(68,255,68,0.2)]">
+                        <h4 class="text-neon-green mb-3 text-lg font-medium border-b border-white/10 pb-2">
+                            🎉 MAJOR FIX: The End of Endless Effects!
+                        </h4>
+                        <p class="text-gray-300 mb-2">Finally tracked down and eliminated one of the most annoying bugs in the game!</p>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• No more permanent burning, tracking, or invisibility effects</li>
+                            <li>• Fixed sonar pings, tracking dart, motion detector getting stuck</li>
+                            <li>• No more enemies permanently tracked through walls!</li>
+                            <li>• Dev Note: "Game-breaking? Occasionally. Annoying? Always."</li>
+                        </ul>
+                    </div>
+
+                    <!-- Game Mode Fixes -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-white/30">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">Game Mode Improvements</h4>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• <strong class="text-white">Cashout:</strong> Fixed disappearing Game Show Event widget</li>
+                            <li>• <strong class="text-white">Power Shift:</strong> Overtime winner display fixed + $25K cash reward added</li>
+                            <li>• <strong class="text-white">Team Deathmatch:</strong> Self-kills now properly penalized (-$25 to enemy team)</li>
+                            <li>• <strong class="text-white">Terminal Attack:</strong> Health regeneration restored to proper behavior</li>
+                            <li>• <strong class="text-white">Quick Cash:</strong> Fixed incorrect respawn timer messages</li>
+                        </ul>
+                    </div>
+
+                    <!-- Performance -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-white/30">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">Performance & Stability</h4>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• Optimized network data for destruction events</li>
+                            <li>• Improved animation performance</li>
+                            <li>• Shader pipeline optimization</li>
+                            <li>• Changed DLSS CNN model to preset E</li>
+                            <li>• Multiple crash fixes</li>
+                        </ul>
+                    </div>
+
+                    <!-- UI & Quality of Life -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-white/30">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">UI & Quality of Life</h4>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• New loading screen rules layout</li>
+                            <li>• Expression screen filters added</li>
+                            <li>• Improved club filter reset functionality</li>
+                            <li>• Fixed Xbox PC video settings saving</li>
+                            <li>• Bespoke HUD element for Game Show Events</li>
+                            <li>• Club messages respect "Show Club Channel" toggle in-game</li>
+                        </ul>
+                    </div>
+
+                    <!-- Animation & Visual Fixes -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-white/30">
+                        <h4 class="text-white mb-3 text-lg font-medium border-b border-white/10 pb-2">Animation & Visual Fixes</h4>
+                        <ul class="pl-5 text-gray-300 space-y-2">
+                            <li>• Fixed aim blocking after Jump Pad launches</li>
+                            <li>• M60 Lid Lifter reload animation corrected</li>
+                            <li>• Melee strike animations visible in third person</li>
+                            <li>• Fixed A-pose when nullified and looking down</li>
+                            <li>• Ladder animations work properly with Dual Blades/Riot Shield</li>
+                            <li>• Vanish Bomb inspect animation hand poses fixed</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Past Patch Notes -->
+            <details class="mt-10 rounded-lg overflow-hidden bg-gray-800/50 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl border border-white/5 group border-t-2 border-t-white/10 pt-5">
+                <summary class="cursor-pointer list-none p-0 relative transition-all duration-300">
+                    <h3 class="text-neon-yellow m-0 px-5 py-4 text-xl flex items-center gap-3 font-semibold relative">
+                        <span class="text-2xl transition-transform duration-300 group-hover:scale-110">📅</span>
+                        Past Patch Notes
+                        <span class="absolute right-5 text-2xl text-neon-yellow/80 transition-transform duration-300 group-open:rotate-45">+</span>
+                    </h3>
+                </summary>
+                <div class="px-5 pb-5 animate-[slideDown_0.4s_ease-out]">
+                    <!-- Previous patches -->
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-white/30 opacity-80 hover:opacity-100 hover:border-l-neon-yellow transition-all duration-300">
+                        <h4 class="text-white mb-3 text-lg font-medium">Update 6.0 – April 9, 2025</h4>
+                        <ul class="pl-5 text-gray-300 space-y-1 text-sm">
+                            <li>• <strong>Minigun:</strong> Wind-up now uses ADS keybind</li>
+                            <li>• <strong>SR-84:</strong> Improved scope accuracy and camera motion</li>
+                            <li>• <strong>Revolver:</strong> Fixed Horizon Hammer skin alignment</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-white/30 opacity-80 hover:opacity-100 hover:border-l-neon-yellow transition-all duration-300">
+                        <h4 class="text-white mb-3 text-lg font-medium">Update 5.12.0 – March 19, 2025</h4>
+                        <ul class="pl-5 text-gray-300 space-y-1 text-sm">
+                            <li>• <strong>M60:</strong> +1 damage, better range</li>
+                            <li>• <strong>Dagger:</strong> Increased melee damage</li>
+                            <li>• <strong>New Weapons:</strong> The Eraser (Railgun), V9S (SMG)</li>
+                            <li>• <strong>New Gadget:</strong> Echo Decoy</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-4 p-4 rounded-lg bg-black/20 border-l-4 border-white/30 opacity-80 hover:opacity-100 hover:border-l-neon-yellow transition-all duration-300">
+                        <h4 class="text-white mb-3 text-lg font-medium">Update 5.8.0 – March 6, 2025</h4>
+                        <ul class="pl-5 text-gray-300 space-y-1 text-sm">
+                            <li>• <strong>Model 1887:</strong> Damage per pellet 11 → 12</li>
+                            <li>• <strong>Recurve Bow:</strong> Max draw damage 120 → 124</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black/80 py-5 mt-10 border-t border-white/10">
+        <div class="max-w-5xl mx-auto px-5 text-center">
+            <p class="text-gray-400 text-sm">
+                © 2025 TheFinalsLoadout.com | Created by 
+                <a href="https://www.paultakisaki.com" rel="author" 
+                   class="text-neon-yellow hover:text-neon-cyan transition-all duration-300">
+                    Paul Takisaki
+                </a> | 
+                <a href="/legal/legal.html" 
+                   class="text-neon-yellow hover:text-neon-cyan transition-all duration-300">
+                    Legal Disclaimer
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Initialize with the bug fixes section open
+            document.querySelectorAll("details").forEach((detail, index) => {
+                if (index === 4) { // Bug fixes section
+                    detail.setAttribute("open", "");
+                }
+            });
+
+            // Add emoji rotation animation on click
+            document.querySelectorAll("details > summary").forEach(summary => {
+                summary.addEventListener("click", function() {
+                    const emoji = this.querySelector("span:first-child");
+                    if (emoji) {
+                        emoji.classList.add("emoji-rotate");
+                        setTimeout(() => {
+                            emoji.classList.remove("emoji-rotate");
+                        }, 500);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
