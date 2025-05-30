@@ -101,17 +101,22 @@
 /* Scroll container */
 .scroll-container {
   @apply relative h-full;
+  overflow: hidden;
 }
 
 /* Item column */
 .itemCol {
   @apply flex items-center justify-center transition-transform duration-100;
   height: 188px;
+  position: absolute;
+  width: 100%;
+  top: 0;
 }
 
 /* Item inner container */
 .item-inner {
   @apply p-3 text-center rounded-lg transition-all duration-300;
+  width: 100%;
 }
 
 /* Winner item styling */

@@ -175,9 +175,9 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
   }
 
   return sequence.map((item, index) => `
-    <div class="itemCol ${index === 7 ? "winner" : ""}" data-item="${item}">
+    <div class="itemCol ${index === 7 ? "winner" : ""}" data-item="${item}" style="transform: translateY(${index * PHYSICS.ITEM_HEIGHT}px);">
       <div class="item-inner">
-        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}" onerror="this.src='images/placeholder.webp'">
         <p>${item}</p>
       </div>
     </div>
@@ -197,6 +197,8 @@ class SlotColumn {
     this.isFinalSpin = isFinalSpin;
     this.animationStartTime = null;
     this.maxAnimationDuration = 15000;
+    
+    console.log(`🎰 SlotColumn ${index} initialized, isFinalSpin: ${isFinalSpin}`);
     
     // Staggered timing for cascade effect
     const timing = isFinalSpin ? PHYSICS.TIMING.FINAL_SPIN : PHYSICS.TIMING.REGULAR_SPIN;
@@ -244,8 +246,11 @@ class SlotColumn {
         if (elapsed >= this.totalDuration - this.decelerationTime) {
           this.state = "decelerating";
           // Calculate target to land on winner (index 7)
-          const currentOffset = this.position % (PHYSICS.ITEM_HEIGHT * 12);
-          this.targetPosition = this.position - currentOffset + (PHYSICS.ITEM_HEIGHT * 7);
+          // We want to show the item at index 7 in the center of the view
+          // Since items move up (negative transform), we need positive position
+          const totalHeight = PHYSICS.ITEM_HEIGHT * 12;
+          const currentCycles = Math.floor(this.position / totalHeight);
+          this.targetPosition = (currentCycles + 1) * totalHeight - (PHYSICS.ITEM_HEIGHT * 7);
         }
         break;
 
@@ -262,6 +267,7 @@ class SlotColumn {
           this.position = this.targetPosition;
           this.velocity = 0;
           this.state = "landing";
+          console.log(`🎯 Column ${this.index} landed at position ${this.position}`);
         }
         break;
 
@@ -310,7 +316,7 @@ class SlotColumn {
       shakeX = Math.sin(performance.now() / 50) * 3 * (1 - (performance.now() - this.landingStartTime) / 300);
     }
 
-    this.element.style.transform = `translate(${shakeX}px, ${this.position}px) scale(${scale})`;
+    this.element.style.transform = `translate(${shakeX}px, ${-this.position}px) scale(${scale})`;
     this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
   }
 
@@ -390,10 +396,21 @@ const displayLoadout = (classType) => {
 
   // Add enhanced styles
   addVegasStyles();
+  
+  console.log("🎲 Loadout HTML set, items created:", {
+    weapon: selectedWeapon,
+    spec: selectedSpec,
+    gadgets: selectedGadgets
+  });
 
   setTimeout(() => {
     const scrollContainers = Array.from(document.querySelectorAll(".scroll-container"));
-    startEnhancedSpinAnimation(scrollContainers);
+    console.log(`🎯 Found ${scrollContainers.length} scroll containers`);
+    if (scrollContainers.length > 0) {
+      startEnhancedSpinAnimation(scrollContainers);
+    } else {
+      console.error("❌ No scroll containers found!");
+    }
   }, 100);
 };
 
@@ -474,11 +491,19 @@ function onSpinComplete(columns, isFinalSpin) {
       winIndicator.classList.add('show');
     }
     
-    // Flash winning items
+    // Flash winning items and ensure winner class is properly set
     columns.forEach((column, index) => {
       setTimeout(() => {
         const container = column.closest(".item-container");
         container.classList.add("winner-flash");
+        
+        // Ensure the winner item is properly marked
+        const items = column.querySelectorAll('.itemCol');
+        items.forEach((item, idx) => {
+          if (idx === 7) { // Winner is at index 7
+            item.classList.add('winner');
+          }
+        });
         
         // Add locked tag with animation
         const lockedTag = document.createElement("div");
@@ -561,12 +586,22 @@ function finalizeSpin(columns) {
     
     // If we're using the random class mode, get the actual selected class
     if (savedClass && savedClass.toLowerCase() === "random") {
-      const activeClassButton = document.querySelector('.class-button.selected:not([data-class="Random"])');
-      savedClass = activeClassButton ? activeClassButton.dataset.class : savedClass;
+      const slotTitle = document.querySelector('.slot-title');
+      if (slotTitle) {
+        const titleText = slotTitle.textContent.trim();
+        savedClass = titleText.replace(' LOADOUT', '').toLowerCase();
+        savedClass = savedClass.charAt(0).toUpperCase() + savedClass.slice(1);
+      }
     }
     
     const selectedItems = Array.from(itemContainers).map((container) => {
-      const winnerItem = container.querySelector('.itemCol.winner');
+      const scrollContainer = container.querySelector('.scroll-container');
+      if (!scrollContainer) return "Unknown";
+      
+      // Get all items and find the one at index 7 (winner position)
+      const items = scrollContainer.querySelectorAll('.itemCol');
+      const winnerItem = items[7]; // Winner is always at index 7
+      
       if (!winnerItem) return "Unknown";
       
       const itemText = winnerItem.querySelector('p')?.innerText.trim();
@@ -665,7 +700,7 @@ const spinLoadout = () => {
 function addToHistory(classType, selectedWeapon, selectedSpec, selectedGadgets) {
   const historyList = document.getElementById("history-list");
   const newEntry = document.createElement("div");
-  newEntry.classList.add("history-entry");
+  newEntry.classList.add("history-entry", "glass");
 
   newEntry.innerHTML = `
     <p><strong>Class:</strong> ${classType}</p>
@@ -698,7 +733,7 @@ function loadHistory() {
   historyList.innerHTML = "";
   savedEntries.forEach((html) => {
     const entry = document.createElement("div");
-    entry.classList.add("history-entry");
+    entry.classList.add("history-entry", "glass");
     entry.innerHTML = html;
     historyList.appendChild(entry);
   });
@@ -997,11 +1032,13 @@ document.addEventListener("DOMContentLoaded", () => {
       
       classButtons.forEach((b) => {
         b.classList.remove("selected", "active");
-        b.src = b.dataset.default;
+        const img = b.querySelector('img');
+        if (img) img.src = img.dataset.default;
       });
       
       button.classList.add("selected", "active");
-      button.src = button.dataset.active;
+      const buttonImg = button.querySelector('img');
+      if (buttonImg) buttonImg.src = buttonImg.dataset.active;
       
       if (button.dataset.class.toLowerCase() === "random") {
         const classes = ["Light", "Medium", "Heavy"];
@@ -1016,7 +1053,8 @@ document.addEventListener("DOMContentLoaded", () => {
         classButtons.forEach((b) => {
           if (b.dataset.class.toLowerCase() === randomClass.toLowerCase()) {
             b.classList.add("selected");
-            b.src = b.dataset.active;
+            const img = b.querySelector('img');
+            if (img) img.src = img.dataset.active;
           }
         });
         
@@ -1044,12 +1082,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     
     button.addEventListener("mouseenter", () => {
-      button.src = button.dataset.active;
+      const img = button.querySelector('img');
+      if (img) img.src = img.dataset.active;
     });
     
     button.addEventListener("mouseleave", () => {
       if (!button.classList.contains("selected")) {
-        button.src = button.dataset.default;
+        const img = button.querySelector('img');
+        if (img) img.src = img.dataset.default;
       }
     });
   });
