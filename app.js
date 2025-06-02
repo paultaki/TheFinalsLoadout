@@ -1384,14 +1384,6 @@ document.addEventListener("DOMContentLoaded", () => {
     mainSpinButton.addEventListener('click', async () => {
       if (state.isSpinning || rouletteSystem.animating) return;
       
-      // Play start spin sound
-      const startSpinSound = document.getElementById('startSpinSound');
-      if (startSpinSound) {
-        startSpinSound.currentTime = 0;
-        startSpinSound.volume = 0.8;
-        startSpinSound.play().catch(() => {});
-      }
-      
       // Start the full roulette sequence
       await rouletteSystem.startFullSequence();
     });
