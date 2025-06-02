@@ -575,7 +575,7 @@ function startSpinAnimation(columns) {
   const spinningSound = document.getElementById('spinningSound');
   if (spinningSound) {
     spinningSound.currentTime = 0;
-    spinningSound.volume = 0.5;
+    spinningSound.volume = 0.25; // Reduced by 50%
     spinningSound.play().catch(() => {});
   }
 
