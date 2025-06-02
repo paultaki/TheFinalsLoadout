@@ -911,6 +911,49 @@ function setupFilterSystem() {
   } else {
     console.error("❌ Could not find apply button");
   }
+  
+  // Reset button functionality
+  const resetBtn = document.getElementById("reset-filters");
+  if (resetBtn) {
+    console.log("✅ Found reset button");
+    
+    resetBtn.addEventListener("click", () => {
+      console.log("🔄 Resetting all filters...");
+      
+      // Select all checkboxes in the filter panel
+      const allCheckboxes = document.querySelectorAll('#filter-panel input[type="checkbox"]');
+      
+      // Check all checkboxes
+      allCheckboxes.forEach(checkbox => {
+        checkbox.checked = true;
+      });
+      
+      // Clear any existing gadget queues to ensure fresh selection
+      state.gadgetQueue = {
+        Light: [],
+        Medium: [],
+        Heavy: [],
+      };
+      
+      // Show confirmation message
+      const filterStatus = document.createElement("div");
+      filterStatus.className = "filter-status";
+      filterStatus.textContent = "All filters reset!";
+      filterStatus.style.background = "linear-gradient(to right, #666, #888)";
+      document.body.appendChild(filterStatus);
+      
+      // Remove after 2 seconds
+      setTimeout(() => {
+        if (filterStatus && filterStatus.parentNode) {
+          filterStatus.parentNode.removeChild(filterStatus);
+        }
+      }, 2000);
+      
+      console.log("✅ All filters have been reset");
+    });
+  } else {
+    console.error("❌ Could not find reset button");
+  }
 
   console.log("✅ Filter system setup complete");
 }
