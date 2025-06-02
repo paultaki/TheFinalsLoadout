@@ -3173,3 +3173,764 @@ html {
   animation: logoBassBounce 3.2s ease-in-out infinite;
   transform-origin: center center;
 }
+
+/* Enhanced Patch Notes Container */
+.patch-notes {
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 15px;
+}
+
+.notes-container {
+  background: rgba(21, 23, 28, 0.95);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 30px rgba(123, 47, 227, 0.2);
+  border: 1px solid rgba(255, 183, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Header Styling */
+.patch-date {
+  color: #ffb700;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  letter-spacing: 1px;
+}
+
+/* Create a glowing effect on the header */
+.patch-date::before {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    rgba(255, 183, 0, 0), 
+    rgba(255, 183, 0, 0.8), 
+    rgba(255, 183, 0, 0));
+}
+
+/* Summary box styling */
+.patch-summary {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  color: #eee;
+  font-size: 0.95rem;
+  text-align: center;
+  border-left: 3px solid #ffb700;
+  border-right: 3px solid #ffb700;
+}
+
+/* Section headers */
+.patch-section {
+  margin: 1.8rem 0;
+  position: relative;
+}
+
+.patch-section h3 {
+  color: #ffb700;
+  text-align: center;
+  margin: 1.2rem 0;
+  font-size: 1.2rem;
+  padding: 0.7rem 0;
+  text-shadow: 0 0 8px rgba(255, 183, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Enhanced details/summary (dropdown) styling */
+details.adjustment {
+  background: rgba(26, 28, 35, 0.95);
+  padding: 0;
+  margin: 0.8rem 0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+details.adjustment:hover {
+  background: rgba(36, 38, 45, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+details.adjustment summary {
+  padding: 1rem 1rem 1rem 1.5rem;
+  position: relative;
+  cursor: pointer;
+  font-weight: 500;
+  list-style: none;
+  color: #fff;
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
+}
+
+/* Remove default summary arrow */
+details.adjustment summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Custom dropdown arrow */
+details.adjustment summary::before {
+  content: '►';
+  position: absolute;
+  left: 0.5rem;
+  color: #ffb700;
+  transition: transform 0.3s ease;
+}
+
+details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+/* Style for content inside the details */
+details.adjustment[open] summary {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 0.5rem;
+}
+
+details.adjustment ul {
+  padding: 0.5rem 1rem 1rem 2rem;
+  margin: 0;
+  color: #cccccc;
+}
+
+details.adjustment li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+details.adjustment strong {
+  color: #ffb700;
+  font-weight: 600;
+}
+
+/* Buff style */
+details.adjustment summary strong:contains("Buffs") {
+  color: #44ff44;
+}
+
+/* Nerf style */
+details.adjustment summary strong:contains("Nerfs") {
+  color: #ff4444;
+}
+
+/* Hover effects for bullets */
+details.adjustment li:hover {
+  color: #ffffff;
+}
+
+/* Add animation for opening/closing details */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+details.adjustment[open] > :not(summary) {
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .patch-section h3 {
+    font-size: 1.1rem;
+  }
+  
+  .patch-date {
+    font-size: 1.2rem;
+  }
+  
+  details.adjustment summary {
+    padding: 0.8rem 0.8rem 0.8rem 1.5rem;
+  }
+  
+  details.adjustment ul {
+    padding: 0.5rem 0.8rem 0.8rem 1.8rem;
+  }
+}
+
+/* Add special styling for specific content based on keywords */
+/* Buff items */
+details.adjustment li:has(strong:contains("ARN-220")),
+details.adjustment li:has(strong:contains("93R")),
+details.adjustment li:has(strong:contains("Model 1887")),
+details.adjustment li:has(strong:contains("R.357")) {
+  border-left: 2px solid #44ff44;
+  padding-left: 8px;
+  background: rgba(68, 255, 68, 0.05);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Nerf items */
+details.adjustment li:has(strong:contains(".50 Akimbo")),
+details.adjustment li:has(strong:contains("Cerberus")),
+details.adjustment li:has(strong:contains("FAMAS")),
+details.adjustment li:has(strong:contains("SA1216")) {
+  border-left: 2px solid #ff4444;
+  padding-left: 8px;
+  background: rgba(255, 68, 68, 0.05);
+  border-radius: 0 4px 4px 0;
+}
+
+/* New features have a special highlight */
+details.adjustment summary:has(strong:contains("Nullifier")),
+details.adjustment summary:has(strong:contains("Health Canister")),
+details.adjustment summary:has(strong:contains("Close Quarters")) {
+  border-left: 4px solid #00f3ff;
+}
+
+/* Emoji animations */
+.patch-section h3:has(span:contains("🔫")),
+.patch-section h3:has(span:contains("🧰")),
+.patch-section h3:has(span:contains("🆕")),
+.patch-section h3:has(span:contains("🗺️")),
+.patch-section h3:has(span:contains("🛠️")) {
+  animation: emojiPulse 2s infinite alternate;
+}
+
+@keyframes emojiPulse {
+  0% { text-shadow: 0 0 8px rgba(255, 183, 0, 0.3); }
+  100% { text-shadow: 0 0 15px rgba(255, 183, 0, 0.7); }
+}
+
+/* Additional interactive elements and animations */
+
+/* Color classes for buffs and nerfs */
+.buff-text {
+  color: #44ff44;
+  text-shadow: 0 0 5px rgba(68, 255, 68, 0.5);
+}
+
+.nerf-text {
+  color: #ff4444;
+  text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
+}
+
+/* Section transition effects */
+.patch-section {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.patch-section:hover h3 {
+  background: rgba(255, 183, 0, 0.05);
+}
+
+/* Fancy hover effect for section headers */
+.patch-section h3 .emoji {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.patch-section:hover h3 .emoji {
+  transform: scale(1.3) rotate(5deg);
+}
+
+/* Better focus for keyboard navigation */
+details.adjustment summary:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 183, 0, 0.5);
+  border-radius: 6px;
+}
+
+/* Animated indicator for expandable sections */
+details.adjustment summary::after {
+  content: '+';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+details[open].adjustment summary::after {
+  content: '−';
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Section fade-in effect on page load */
+@keyframes sectionFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.patch-section {
+  opacity: 0;
+  animation: sectionFadeIn 0.5s ease forwards;
+}
+
+.patch-section:nth-child(1) { animation-delay: 0.1s; }
+.patch-section:nth-child(2) { animation-delay: 0.2s; }
+.patch-section:nth-child(3) { animation-delay: 0.3s; }
+.patch-section:nth-child(4) { animation-delay: 0.4s; }
+.patch-section:nth-child(5) { animation-delay: 0.5s; }
+
+/* Highlight effect for new items */
+@keyframes newItemPulse {
+  0% { background-color: rgba(0, 243, 255, 0); }
+  50% { background-color: rgba(0, 243, 255, 0.07); }
+  100% { background-color: rgba(0, 243, 255, 0); }
+}
+
+.adjustment li:has(strong:contains("Health Canister")),
+.adjustment li:has(strong:contains("Nullifier")),
+.adjustment li:has(strong:contains("Wheel of Trust")),
+.adjustment li:has(strong:contains("P.E.A.C.E")) {
+  animation: newItemPulse 2s infinite;
+  border-radius: 4px;
+  padding-left: 5px;
+}
+
+/* Adjustments for dark mode compatibility */
+@media (prefers-color-scheme: dark) {
+  .notes-container {
+    background: rgba(15, 17, 22, 0.95);
+  }
+  
+  details.adjustment {
+    background: rgba(20, 22, 30, 0.95);
+  }
+  
+  details.adjustment:hover {
+    background: rgba(25, 28, 35, 0.95);
+  }
+}
+
+/* Improve mobile experience */
+@media (max-width: 480px) {
+  .patch-date {
+    font-size: 1.1rem;
+  }
+  
+  .patch-section h3 {
+    font-size: 1rem;
+  }
+  
+  details.adjustment summary {
+    padding: 0.7rem 0.7rem 0.7rem 1.3rem;
+    font-size: 0.9rem;
+  }
+  
+  details.adjustment ul {
+    padding: 0.4rem 0.6rem 0.6rem 1.5rem;
+    font-size: 0.85rem;
+  }
+  
+  details.adjustment summary::before {
+    left: 0.3rem;
+    font-size: 0.8rem;
+  }
+  
+  /* Stack summary content on mobile */
+  details.adjustment summary strong {
+    display: block;
+    margin-bottom: 3px;
+  }
+}
+
+/* Print-friendly version */
+@media print {
+  .patch-notes {
+    color: #000;
+    background: #fff;
+  }
+  
+  .notes-container {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  .patch-date, .patch-section h3, details.adjustment strong {
+    color: #000;
+    text-shadow: none;
+  }
+  
+  /* Force-open all details when printing */
+  details.adjustment {
+    display: block;
+  }
+  
+  details.adjustment > * {
+    display: block !important;
+  }
+  
+  details.adjustment summary::before,
+  details.adjustment summary::after {
+    display: none;
+  }
+}
+/* Enhanced Patch Notes Container */
+.patch-notes {
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 15px;
+}
+
+.notes-container {
+  background: rgba(21, 23, 28, 0.95);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 30px rgba(123, 47, 227, 0.2);
+  border: 1px solid rgba(255, 183, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Header Styling */
+.patch-date {
+  color: #ffb700;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  letter-spacing: 1px;
+}
+
+/* Create a glowing effect on the header */
+.patch-date::before {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    rgba(255, 183, 0, 0), 
+    rgba(255, 183, 0, 0.8), 
+    rgba(255, 183, 0, 0));
+}
+
+/* Summary box styling */
+.patch-summary {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  color: #eee;
+  font-size: 0.95rem;
+  text-align: center;
+  border-left: 3px solid #ffb700;
+  border-right: 3px solid #ffb700;
+}
+
+/* Top-Level Category Toggle Styling */
+.category-toggle {
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(26, 28, 35, 0.8);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.category-toggle:hover {
+  background: rgba(30, 32, 40, 0.8);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Summary styling - this will be the clickable header */
+.category-toggle summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Remove default summary arrow */
+.category-toggle summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Section headers inside summary */
+.category-toggle summary h3 {
+  color: #ffb700;
+  text-align: center;
+  margin: 0;
+  padding: 0.7rem 0;
+  font-size: 1.2rem;
+  text-shadow: 0 0 8px rgba(255, 183, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Add expand/collapse indicator */
+.category-toggle summary h3::after {
+  content: '+';
+  position: absolute;
+  right: 1.5rem;
+  font-size: 1.3rem;
+  color: rgba(255, 183, 0, 0.8);
+  transition: transform 0.3s ease;
+}
+
+.category-toggle[open] summary h3::after {
+  content: '−';
+}
+
+/* Emoji in headers */
+.category-toggle summary h3 .emoji {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.category-toggle:hover summary h3 .emoji {
+  transform: scale(1.2) rotate(5deg);
+}
+
+/* Category content container */
+.category-content {
+  padding: 0.5rem 1rem 1.5rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Adjustment sections */
+.adjustment {
+  margin: 1.5rem 0;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.adjustment:first-child {
+  margin-top: 0.5rem;
+}
+
+.adjustment:hover {
+  background: rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Headings for sub-sections */
+.adjustment h4 {
+  color: white;
+  margin: 0.5rem 0;
+  padding: 0.5rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.adjustment .buff-text {
+  color: #44ff44;
+  text-shadow: 0 0 5px rgba(68, 255, 68, 0.5);
+}
+
+.adjustment .nerf-text {
+  color: #ff4444;
+  text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
+}
+
+/* List styling */
+.adjustment ul {
+  padding: 0.5rem 1rem 0.5rem 2rem;
+  margin: 0;
+  color: #cccccc;
+}
+
+.adjustment li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.adjustment li:last-child {
+  margin-bottom: 0;
+}
+
+.adjustment strong {
+  color: #ffb700;
+  font-weight: 600;
+}
+
+/* Buff items */
+.adjustment li:has(strong:contains("93R")),
+.adjustment li:has(strong:contains("ARN-220")),
+.adjustment li:has(strong:contains("Model 1887")),
+.adjustment li:has(strong:contains("R.357")),
+.adjustment li:contains("93R"),
+.adjustment li:contains("ARN-220"),
+.adjustment li:contains("Model 1887"),
+.adjustment li:contains("R.357") {
+  border-left: 2px solid #44ff44;
+  padding-left: 8px;
+  background: rgba(68, 255, 68, 0.05);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Nerf items */
+.adjustment li:has(strong:contains(".50 Akimbo")),
+.adjustment li:has(strong:contains("Cerberus")),
+.adjustment li:has(strong:contains("FAMAS")),
+.adjustment li:has(strong:contains("SA1216")),
+.adjustment li:contains(".50 Akimbo"),
+.adjustment li:contains("Cerberus"),
+.adjustment li:contains("FAMAS"),
+.adjustment li:contains("SA1216") {
+  border-left: 2px solid #ff4444;
+  padding-left: 8px;
+  background: rgba(255, 68, 68, 0.05);
+  border-radius: 0 4px 4px 0;
+}
+
+/* New features highlight */
+.adjustment li:contains("Nullifier"),
+.adjustment li:contains("Health Canister"),
+.adjustment li:contains("Wheel of Trust"),
+.adjustment li:contains("P.E.A.C.E") {
+  border-left: 2px solid #00f3ff;
+  padding-left: 8px;
+  background: rgba(0, 243, 255, 0.05);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Fun updates */
+.adjustment li:contains("Little Chief"),
+.adjustment li:contains("moo"),
+.adjustment li:contains("Twitch Drops") {
+  border-left: 2px solid #ff00ff;
+  padding-left: 8px;
+  background: rgba(255, 0, 255, 0.05);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Animation for section entry */
+@keyframes categoryFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.category-toggle {
+  opacity: 0;
+  animation: categoryFadeIn 0.5s ease forwards;
+}
+
+.category-toggle:nth-child(2) { animation-delay: 0.1s; }
+.category-toggle:nth-child(3) { animation-delay: 0.2s; }
+.category-toggle:nth-child(4) { animation-delay: 0.3s; }
+.category-toggle:nth-child(5) { animation-delay: 0.4s; }
+.category-toggle:nth-child(6) { animation-delay: 0.5s; }
+
+/* Hover animation for list items */
+.adjustment li {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.adjustment li:hover {
+  transform: translateX(5px);
+  color: #ffffff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .patch-date {
+    font-size: 1.2rem;
+  }
+  
+  .category-toggle summary h3 {
+    font-size: 1.1rem;
+    padding: 0.6rem 0;
+  }
+  
+  .adjustment h4 {
+    font-size: 1rem;
+  }
+  
+  .adjustment ul {
+    padding-left: 1.5rem;
+  }
+  
+  .category-content {
+    padding: 0.5rem 0.5rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .patch-date {
+    font-size: 1.1rem;
+  }
+  
+  .patch-summary {
+    font-size: 0.9rem;
+    padding: 0.8rem;
+  }
+  
+  .category-toggle summary h3 {
+    font-size: 1rem;
+    padding: 0.5rem 0;
+  }
+  
+  .category-toggle summary h3::after {
+    right: 0.8rem;
+    font-size: 1.1rem;
+  }
+  
+  .adjustment h4 {
+    font-size: 0.95rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .adjustment ul {
+    padding: 0.3rem 0.5rem 0.3rem 1.3rem;
+  }
+  
+  .adjustment li {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+}
+
+/* Filter status message */
+.filter-status {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(51, 204, 51, 0.9);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  animation: fadeInOut 2s ease-in-out;
+  z-index: 1000;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}

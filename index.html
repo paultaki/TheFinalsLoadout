@@ -111,6 +111,13 @@
     </style>
   </head>
   <audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
+  <audio id="tickSound" src="sounds/click.mp3" preload="auto"></audio>
+  <audio id="startSpinSound" src="sounds/start-spin.mp3" preload="auto"></audio>
+  <audio id="classWinSound" src="sounds/chang.mp3" preload="auto"></audio>
+  <audio id="spinWinSound" src="sounds/Tabby Tune.mp3" preload="auto"></audio>
+  <audio id="spinningSound" src="sounds/spinning.mp3" preload="auto"></audio>
+  <audio id="transitionSound" src="sounds/transition.mp3" preload="auto"></audio>
+  <audio id="finalSound" src="sounds/final-sound.mp3" preload="auto"></audio>
 
 <nav class="main-nav">
   <a href="https://thefinalsloadout.com/" class="active">Home</a>
@@ -136,9 +143,8 @@
 <main class="mainContent">
   <div class="container">
     <div class="selection-container">
-      <!-- Class Selection -->
-      <div class="class-selection">
-        <h2>Choose Your Class</h2>
+      <!-- Hidden Class Selection (for internal use) -->
+      <div class="class-selection hidden">
         <div class="btnRow">
           <img id="light-class" class="class-button" src="images/light_silhouette.webp" 
                data-active="images/light_active.webp" 
@@ -154,13 +160,6 @@
                data-active="images/heavy_active.webp" 
                data-default="images/heavy_silhouette.webp" 
                data-class="Heavy" alt="Heavy Class Loadouts" />
-        
-          <img id="random-class" class="class-button" 
-               src="images/dice_silhouette.webp"
-               data-active="images/dice_active.webp"
-               data-default="images/dice_silhouette.webp"
-               data-class="random" 
-               alt="Random Class Loadouts" />
         </div>
       </div>
 <!-- Add this right after the class selection div, around line 160 -->
@@ -351,18 +350,56 @@
   </div>
 </div>
 
-            <!-- Spin Selection -->
-            <div class="spin-selection" id="spinSelection">
-              <h2>How Many Spins?</h2>
-                <div class="spin-buttons">
-                  <div class="spin-buttons">
-                    <button class="spin-button" data-spins="1">1</button>
-                    <button class="spin-button" data-spins="2">2</button>
-                    <button class="spin-button" data-spins="3">3</button>
-                    <button class="spin-button" data-spins="4">4</button>
-                    <button class="spin-button" data-spins="5">5</button>
+            <!-- Main SPIN Button -->
+            <div class="spin-control">
+              <button id="main-spin-button" class="main-spin-button">
+                <span class="spin-text">SPIN</span>
+                <div class="spin-energy"></div>
+              </button>
+              <div class="spin-status" id="spinStatus"></div>
+              
+              <!-- Selection Display -->
+              <div id="selection-display" class="selection-display hidden">
+                <div class="selection-info">
+                  <span class="selection-class"></span>
+                  <span class="selection-divider">•</span>
+                  <span class="selection-spins"></span>
                 </div>
+              </div>
+            </div>
+            
+            <!-- Animation Stages Container -->
+            <div id="roulette-container" class="roulette-container hidden">
+              <!-- Class Roulette -->
+              <div id="class-roulette" class="roulette-section hidden">
+                <h2 class="roulette-title">SELECTING CLASS...</h2>
+                <div class="class-roulette-wheel">
+                  <div class="class-option light-option" data-class="Light">
+                    <img src="images/light_active.webp" alt="Light">
+                    <span>LIGHT</span>
+                  </div>
+                  <div class="class-option medium-option" data-class="Medium">
+                    <img src="images/medium_active.webp" alt="Medium">
+                    <span>MEDIUM</span>
+                  </div>
+                  <div class="class-option heavy-option" data-class="Heavy">
+                    <img src="images/heavy_active.webp" alt="Heavy">
+                    <span>HEAVY</span>
+                  </div>
                 </div>
+              </div>
+              
+              <!-- Spin Count Roulette -->
+              <div id="spin-roulette" class="roulette-section hidden">
+                <h2 class="roulette-title">CHOOSING SPINS...</h2>
+                <div class="spin-roulette-wheel">
+                  <div class="spin-option" data-spins="1"><span>1</span></div>
+                  <div class="spin-option" data-spins="2"><span>2</span></div>
+                  <div class="spin-option" data-spins="3"><span>3</span></div>
+                  <div class="spin-option" data-spins="4"><span>4</span></div>
+                  <div class="spin-option" data-spins="5"><span>5</span></div>
+                </div>
+              </div>
             </div>
         </div>
         
@@ -665,6 +702,7 @@ details {
 
 
     <!-- Scripts -->
+    <script defer src="roulette-animations.js"></script>
     <script defer src="app.js"></script>
     <script
       defer

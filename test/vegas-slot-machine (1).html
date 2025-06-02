@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Finals Loadout Roulette - Vegas Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            background: linear-gradient(-45deg, #1a1a2e, #2a1f2d, #1f2a2d, #201c24);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        h1 {
+            font-size: 4rem;
+            color: #FFB800;
+            text-shadow: 0 0 20px rgba(255, 184, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #888;
+        }
+
+        /* Class Selection */
+        .class-selection {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .class-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .class-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .class-btn:hover {
+            transform: scale(1.05);
+            border-color: #FFB800;
+            box-shadow: 0 0 20px rgba(255, 184, 0, 0.3);
+        }
+
+        .class-btn.selected {
+            border-color: #FFB800;
+            background: rgba(255, 184, 0, 0.2);
+            box-shadow: 0 0 30px rgba(255, 184, 0, 0.5);
+        }
+
+        .class-btn img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+            filter: brightness(0.7);
+            transition: filter 0.3s;
+        }
+
+        .class-btn.selected img,
+        .class-btn:hover img {
+            filter: brightness(1);
+        }
+
+        .class-btn span {
+            display: block;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Spin Selection */
+        .spin-selection {
+            text-align: center;
+            margin-bottom: 40px;
+            opacity: 0.5;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .spin-selection.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .spin-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .spin-btn {
+            background: linear-gradient(145deg, #2a2a3e, #1a1a2e);
+            border: 2px solid transparent;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .spin-btn:hover:not(:disabled) {
+            border-color: #FFB800;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 184, 0, 0.3);
+        }
+
+        .spin-btn.selected {
+            background: linear-gradient(145deg, #FFB800, #FFA000);
+            color: #000;
+            border-color: #FFB800;
+        }
+
+        .spin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Filter Toggle */
+        .filter-toggle {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-toggle-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .filter-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Filter Panel */
+        .filter-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 40px;
+            display: none;
+        }
+
+        .filter-panel.active {
+            display: block;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-section h3 {
+            color: #FFB800;
+            margin-bottom: 10px;
+        }
+
+        .filter-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .filter-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Slot Machine */
+        .slot-machine {
+            background: linear-gradient(145deg, #2a2a3e, #1a1a2e);
+            border-radius: 20px;
+            padding: 0;
+            box-shadow: 0 0 50px rgba(255, 184, 0, 0.3);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .slot-header {
+            background: linear-gradient(to bottom, #3a3a4e, #2a2a3e);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #FFB800;
+        }
+
+        .lights {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #444;
+            transition: all 0.2s;
+        }
+
+        .light.active-red { background: #ff0000; box-shadow: 0 0 15px #ff0000; }
+        .light.active-yellow { background: #FFB800; box-shadow: 0 0 15px #FFB800; }
+        .light.active-green { background: #00ff00; box-shadow: 0 0 15px #00ff00; }
+
+        .slot-title {
+            font-size: 2rem;
+            color: #FFB800;
+            text-shadow: 0 0 20px rgba(255, 184, 0, 0.5);
+            margin: 0;
+        }
+
+        .reels-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px;
+            background: #1a1a2e;
+        }
+
+        .reel {
+            background: #0a0a1e;
+            border-radius: 10px;
+            width: 140px;
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .reel-window {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reel-item {
+            text-align: center;
+            padding: 10px;
+            position: absolute;
+            width: 100%;
+            transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .reel-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 5px;
+        }
+
+        .reel-item p {
+            font-size: 0.9rem;
+            margin: 0;
+            color: #fff;
+        }
+
+        .reel-item.winner {
+            background: rgba(255, 184, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .reel-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Slot Footer */
+        .slot-footer {
+            background: linear-gradient(to top, #3a3a4e, #2a2a3e);
+            padding: 20px;
+            text-align: center;
+            border-top: 3px solid #FFB800;
+        }
+
+        .win-message {
+            font-size: 1.5rem;
+            color: #FFB800;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .win-message.show {
+            opacity: 1;
+        }
+
+        /* History */
+        .history {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .history h2 {
+            color: #FFB800;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .history-item p {
+            margin: 5px 0;
+        }
+
+        .copy-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #45a049;
+        }
+
+        .clear-history-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .clear-history-btn:hover {
+            background: #da190b;
+        }
+
+        /* Spinning animation */
+        @keyframes spin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-300%); }
+        }
+
+        .reel.spinning .reel-item {
+            animation: spin 0.1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LOADOUT ROULETTE</h1>
+            <p class="subtitle">The Finals - Season 6 Ready</p>
+        </header>
+
+        <!-- Class Selection -->
+        <div class="class-selection">
+            <h2>Choose Your Class</h2>
+            <div class="class-buttons">
+                <div class="class-btn" data-class="Light">
+                    <img src="images/light_silhouette.webp" alt="Light">
+                    <span>LIGHT</span>
+                </div>
+                <div class="class-btn" data-class="Medium">
+                    <img src="images/medium_silhouette.webp" alt="Medium">
+                    <span>MEDIUM</span>
+                </div>
+                <div class="class-btn" data-class="Heavy">
+                    <img src="images/heavy_silhouette.webp" alt="Heavy">
+                    <span>HEAVY</span>
+                </div>
+                <div class="class-btn" data-class="Random">
+                    <img src="images/dice_silhouette.webp" alt="Random">
+                    <span>RANDOM</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Toggle -->
+        <div class="filter-toggle">
+            <button class="filter-toggle-btn" onclick="toggleFilters()">
+                ⚙️ Customize Loadout Pool
+            </button>
+        </div>
+
+        <!-- Filter Panel -->
+        <div class="filter-panel" id="filterPanel">
+            <div class="filter-section">
+                <h3>Weapons</h3>
+                <div class="filter-items" id="weaponFilters"></div>
+            </div>
+            <div class="filter-section">
+                <h3>Specializations</h3>
+                <div class="filter-items" id="specFilters"></div>
+            </div>
+            <div class="filter-section">
+                <h3>Gadgets</h3>
+                <div class="filter-items" id="gadgetFilters"></div>
+            </div>
+        </div>
+
+        <!-- Spin Selection -->
+        <div class="spin-selection" id="spinSelection">
+            <h2>Number of Spins</h2>
+            <div class="spin-buttons">
+                <button class="spin-btn" data-spins="1">1</button>
+                <button class="spin-btn" data-spins="2">2</button>
+                <button class="spin-btn" data-spins="3">3</button>
+                <button class="spin-btn" data-spins="4">4</button>
+                <button class="spin-btn" data-spins="5">5</button>
+            </div>
+        </div>
+
+        <!-- Slot Machine -->
+        <div class="slot-machine" id="slotMachine">
+            <div class="slot-header">
+                <div class="lights" id="lights"></div>
+                <h2 class="slot-title" id="slotTitle">SELECT A CLASS TO BEGIN</h2>
+            </div>
+            <div class="reels-container">
+                <div class="reel" id="weaponReel">
+                    <div class="reel-window">
+                        <div class="reel-item">
+                            <img src="images/placeholder.webp" alt="?" style="opacity: 0.3;">
+                            <p>?</p>
+                        </div>
+                    </div>
+                    <div class="reel-label">WEAPON</div>
+                </div>
+                <div class="reel" id="specReel">
+                    <div class="reel-window">
+                        <div class="reel-item">
+                            <img src="images/placeholder.webp" alt="?" style="opacity: 0.3;">
+                            <p>?</p>
+                        </div>
+                    </div>
+                    <div class="reel-label">SPECIAL</div>
+                </div>
+                <div class="reel" id="gadget1Reel">
+                    <div class="reel-window">
+                        <div class="reel-item">
+                            <img src="images/placeholder.webp" alt="?" style="opacity: 0.3;">
+                            <p>?</p>
+                        </div>
+                    </div>
+                    <div class="reel-label">GADGET 1</div>
+                </div>
+                <div class="reel" id="gadget2Reel">
+                    <div class="reel-window">
+                        <div class="reel-item">
+                            <img src="images/placeholder.webp" alt="?" style="opacity: 0.3;">
+                            <p>?</p>
+                        </div>
+                    </div>
+                    <div class="reel-label">GADGET 2</div>
+                </div>
+                <div class="reel" id="gadget3Reel">
+                    <div class="reel-window">
+                        <div class="reel-item">
+                            <img src="images/placeholder.webp" alt="?" style="opacity: 0.3;">
+                            <p>?</p>
+                        </div>
+                    </div>
+                    <div class="reel-label">GADGET 3</div>
+                </div>
+            </div>
+            <div class="slot-footer">
+                <div class="win-message" id="winMessage">🎉 LOADOUT READY! 🎉</div>
+            </div>
+        </div>
+
+        <!-- History -->
+        <div class="history">
+            <h2>Loadout History</h2>
+            <div id="historyList"></div>
+            <button class="clear-history-btn" onclick="clearHistory()">Clear History</button>
+        </div>
+    </div>
+
+    <script>
+        // Game Data
+        const loadouts = {
+            Light: {
+                weapons: ["93R", "Dagger", "SR-84", "SH1900", "LH1", "M26 Matter", "Recurve Bow", "Sword", "M11", "ARN-220", "V9S", "XP-54", "Throwing Knives"],
+                specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
+                gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Nullifier", "Sonar Grenade", "Thermal Bore", "Gas Grenade", "Thermal Vision", "Tracking Dart", "Vanishing Bomb", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade", "Flashbang"]
+            },
+            Medium: {
+                weapons: ["AKM", "Cerberus 12GA", "Dual Blades", "FAMAS", "CL-40", "CB-01 Repeater", "FCAR", "Model 1887", "Pike-556", "R.357", "Riot Shield"],
+                specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
+                gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade", "Flashbang", "Proximity Sensor"]
+            },
+            Heavy: {
+                weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "M134 Minigun", "M32GL", "SA 1216", "Sledgehammer", "SHAK-50", "Spear"],
+                specializations: ["Charge N Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+                gadgets: ["Anti-Gravity Cube", "Barricade", "C4", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Proximity Sensor", "RPG-7", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade", "Flashbang", "Explosive Mine", "Gas Grenade"]
+            }
+        };
+
+        // State
+        let selectedClass = null;
+        let selectedSpins = 0;
+        let currentSpin = 0;
+        let history = JSON.parse(localStorage.getItem('loadoutHistory') || '[]');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeLights();
+            initializeFilters();
+            loadHistory();
+            
+            // Class selection
+            document.querySelectorAll('.class-btn').forEach(btn => {
+                btn.addEventListener('click', () => selectClass(btn.dataset.class));
+            });
+            
+            // Spin selection
+            document.querySelectorAll('.spin-btn').forEach(btn => {
+                btn.addEventListener('click', () => selectSpins(parseInt(btn.dataset.spins)));
+            });
+        });
+
+        function initializeLights() {
+            const lightsContainer = document.getElementById('lights');
+            for (let i = 0; i < 15; i++) {
+                const light = document.createElement('div');
+                light.className = 'light';
+                lightsContainer.appendChild(light);
+            }
+        }
+
+        function initializeFilters() {
+            // Initialize weapon filters
+            const allWeapons = [...new Set([...loadouts.Light.weapons, ...loadouts.Medium.weapons, ...loadouts.Heavy.weapons])];
+            const weaponFilters = document.getElementById('weaponFilters');
+            allWeapons.forEach(weapon => {
+                weaponFilters.innerHTML += `
+                    <label class="filter-item">
+                        <input type="checkbox" value="${weapon}" checked>
+                        <span>${weapon}</span>
+                    </label>
+                `;
+            });
+            
+            // Initialize specialization filters
+            const allSpecs = [...new Set([...loadouts.Light.specializations, ...loadouts.Medium.specializations, ...loadouts.Heavy.specializations])];
+            const specFilters = document.getElementById('specFilters');
+            allSpecs.forEach(spec => {
+                specFilters.innerHTML += `
+                    <label class="filter-item">
+                        <input type="checkbox" value="${spec}" checked>
+                        <span>${spec}</span>
+                    </label>
+                `;
+            });
+            
+            // Initialize gadget filters
+            const allGadgets = [...new Set([...loadouts.Light.gadgets, ...loadouts.Medium.gadgets, ...loadouts.Heavy.gadgets])];
+            const gadgetFilters = document.getElementById('gadgetFilters');
+            allGadgets.forEach(gadget => {
+                gadgetFilters.innerHTML += `
+                    <label class="filter-item">
+                        <input type="checkbox" value="${gadget}" checked>
+                        <span>${gadget}</span>
+                    </label>
+                `;
+            });
+        }
+
+        function toggleFilters() {
+            const panel = document.getElementById('filterPanel');
+            panel.classList.toggle('active');
+        }
+
+        function selectClass(className) {
+            selectedClass = className;
+            
+            // Update UI
+            document.querySelectorAll('.class-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.querySelector(`[data-class="${className}"]`).classList.add('selected');
+            
+            // Enable spin selection
+            document.getElementById('spinSelection').classList.add('active');
+        }
+
+        function selectSpins(spins) {
+            selectedSpins = spins;
+            currentSpin = spins;
+            
+            // Update UI
+            document.querySelectorAll('.spin-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            // Start spinning
+            startSpinning();
+        }
+
+        function getFilteredLoadout(classType) {
+            const filtered = {
+                weapons: [],
+                specializations: [],
+                gadgets: []
+            };
+            
+            // Get checked weapons
+            document.querySelectorAll('#weaponFilters input:checked').forEach(input => {
+                if (loadouts[classType].weapons.includes(input.value)) {
+                    filtered.weapons.push(input.value);
+                }
+            });
+            
+            // Get checked specializations
+            document.querySelectorAll('#specFilters input:checked').forEach(input => {
+                if (loadouts[classType].specializations.includes(input.value)) {
+                    filtered.specializations.push(input.value);
+                }
+            });
+            
+            // Get checked gadgets
+            document.querySelectorAll('#gadgetFilters input:checked').forEach(input => {
+                if (loadouts[classType].gadgets.includes(input.value)) {
+                    filtered.gadgets.push(input.value);
+                }
+            });
+            
+            // Fallback to full loadout if nothing selected
+            if (filtered.weapons.length === 0) filtered.weapons = loadouts[classType].weapons;
+            if (filtered.specializations.length === 0) filtered.specializations = loadouts[classType].specializations;
+            if (filtered.gadgets.length === 0) filtered.gadgets = loadouts[classType].gadgets;
+            
+            return filtered;
+        }
+
+        function startSpinning() {
+            // Determine actual class if random
+            let actualClass = selectedClass;
+            if (selectedClass === 'Random') {
+                const classes = ['Light', 'Medium', 'Heavy'];
+                actualClass = classes[Math.floor(Math.random() * classes.length)];
+            }
+            
+            // Update slot title
+            document.getElementById('slotTitle').textContent = `${actualClass.toUpperCase()} LOADOUT`;
+            
+            // Get filtered loadout
+            const loadout = getFilteredLoadout(actualClass);
+            
+            // Select random items
+            const weapon = loadout.weapons[Math.floor(Math.random() * loadout.weapons.length)];
+            const spec = loadout.specializations[Math.floor(Math.random() * loadout.specializations.length)];
+            
+            // Select 3 unique gadgets
+            const gadgetsCopy = [...loadout.gadgets];
+            const selectedGadgets = [];
+            for (let i = 0; i < 3 && gadgetsCopy.length > 0; i++) {
+                const index = Math.floor(Math.random() * gadgetsCopy.length);
+                selectedGadgets.push(gadgetsCopy[index]);
+                gadgetsCopy.splice(index, 1);
+            }
+            
+            // Animate lights
+            animateLights();
+            
+            // Spin reels
+            spinReel('weaponReel', weapon);
+            setTimeout(() => spinReel('specReel', spec), 200);
+            setTimeout(() => spinReel('gadget1Reel', selectedGadgets[0]), 400);
+            setTimeout(() => spinReel('gadget2Reel', selectedGadgets[1]), 600);
+            setTimeout(() => spinReel('gadget3Reel', selectedGadgets[2]), 800);
+            
+            // Show win message after all reels stop
+            setTimeout(() => {
+                document.getElementById('winMessage').classList.add('show');
+                
+                // Add to history
+                addToHistory(actualClass, weapon, spec, selectedGadgets);
+                
+                // Handle multiple spins
+                currentSpin--;
+                if (currentSpin > 0) {
+                    setTimeout(() => {
+                        document.getElementById('winMessage').classList.remove('show');
+                        startSpinning();
+                    }, 2000);
+                }
+            }, 2500);
+        }
+
+        function animateLights() {
+            const lights = document.querySelectorAll('.light');
+            let lightInterval = setInterval(() => {
+                lights.forEach((light, i) => {
+                    light.className = 'light';
+                    const rand = Math.random();
+                    if (rand > 0.7) {
+                        const colors = ['active-red', 'active-yellow', 'active-green'];
+                        light.classList.add(colors[i % 3]);
+                    }
+                });
+            }, 100);
+            
+            // Stop after 2.5 seconds
+            setTimeout(() => clearInterval(lightInterval), 2500);
+        }
+
+        function spinReel(reelId, finalItem) {
+            const reel = document.getElementById(reelId);
+            const window = reel.querySelector('.reel-window');
+            
+            // Clear previous items
+            window.innerHTML = '';
+            
+            // Create item element
+            const itemEl = document.createElement('div');
+            itemEl.className = 'reel-item';
+            itemEl.innerHTML = `
+                <img src="images/${finalItem.replace(/ /g, '_')}.webp" alt="${finalItem}">
+                <p>${finalItem}</p>
+            `;
+            
+            // Add spinning effect
+            reel.classList.add('spinning');
+            
+            // Stop spinning and show final item
+            setTimeout(() => {
+                reel.classList.remove('spinning');
+                itemEl.classList.add('winner');
+                window.appendChild(itemEl);
+            }, 1500);
+        }
+
+        function addToHistory(classType, weapon, spec, gadgets) {
+            const entry = {
+                class: classType,
+                weapon: weapon,
+                specialization: spec,
+                gadgets: gadgets,
+                timestamp: new Date().toISOString()
+            };
+            
+            history.unshift(entry);
+            if (history.length > 5) history = history.slice(0, 5);
+            
+            localStorage.setItem('loadoutHistory', JSON.stringify(history));
+            loadHistory();
+        }
+
+        function loadHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            
+            history.forEach((entry, index) => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'history-item';
+                itemEl.innerHTML = `
+                    <p><strong>Class:</strong> ${entry.class}</p>
+                    <p><strong>Weapon:</strong> ${entry.weapon}</p>
+                    <p><strong>Specialization:</strong> ${entry.specialization}</p>
+                    <p><strong>Gadgets:</strong> ${entry.gadgets.join(', ')}</p>
+                    <button class="copy-btn" onclick="copyLoadout(${index})">Copy</button>
+                `;
+                historyList.appendChild(itemEl);
+            });
+        }
+
+        function copyLoadout(index) {
+            const entry = history[index];
+            const text = `Class: ${entry.class}\nWeapon: ${entry.weapon}\nSpecialization: ${entry.specialization}\nGadgets: ${entry.gadgets.join(', ')}`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                event.target.textContent = 'Copied!';
+                setTimeout(() => {
+                    event.target.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+
+        function clearHistory() {
+            history = [];
+            localStorage.removeItem('loadoutHistory');
+            loadHistory();
+        }
+    </script>
+</body>
+</html>

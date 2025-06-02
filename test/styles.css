@@ -76,7 +76,7 @@
 .item-container.reel {
   @apply relative rounded-xl overflow-hidden;
   width: 140px;
-  height: 180px;
+  height: 188px; /* Match PHYSICS.ITEM_HEIGHT */
   background: #0a0a1e;
   box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 184, 0, 0.1);
 }
@@ -110,7 +110,8 @@
   height: 188px;
   position: absolute;
   width: 100%;
-  top: 0;
+  left: 0;
+  /* Remove top: 0 to allow transform to work properly */
 }
 
 /* Item inner container */

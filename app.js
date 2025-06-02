@@ -13,6 +13,9 @@ const state = {
   currentGadgetPool: new Set(),
 };
 
+// Make state globally accessible
+window.state = state;
+
 // Global variables for DOM elements
 let spinButtons;
 let classButtons;
@@ -567,6 +570,14 @@ function startSpinAnimation(columns) {
   console.log(
     `🎲 Animation starting with currentSpin = ${state.currentSpin}, isFinalSpin = ${isFinalSpin}`
   );
+  
+  // Play spinning sound
+  const spinningSound = document.getElementById('spinningSound');
+  if (spinningSound) {
+    spinningSound.currentTime = 0;
+    spinningSound.volume = 0.5;
+    spinningSound.play().catch(() => {});
+  }
 
   const startTime = performance.now();
 
@@ -613,6 +624,13 @@ function startSpinAnimation(columns) {
       requestAnimationFrame(animate);
     } else {
       console.log("✅ All columns stopped, calling finalizeSpin");
+      
+      // Stop spinning sound
+      const spinningSound = document.getElementById('spinningSound');
+      if (spinningSound) {
+        spinningSound.pause();
+        spinningSound.currentTime = 0;
+      }
 
       // Add visual effects only for final spin
       if (isFinalSpin) {
@@ -630,6 +648,18 @@ function startSpinAnimation(columns) {
                 lockedTag.className = "locked-tag show";
                 lockedTag.textContent = "Locked In!";
                 container.appendChild(lockedTag);
+              }
+
+              // Play final sound on FIRST locked tag
+              if (index === 0) {
+                const finalSound = document.getElementById('finalSound');
+                if (finalSound) {
+                  finalSound.currentTime = 0;
+                  finalSound.volume = 0.7;
+                  finalSound.play().catch((err) => {
+                    console.log("Could not play final sound:", err);
+                  });
+                }
               }
 
               // If this is the last column, disable buttons when its tag appears
@@ -997,6 +1027,14 @@ function finalizeSpin(columns) {
       "🔄 Not final spin, continue sequence. Current spin:",
       state.currentSpin
     );
+    
+    // Play transition sound between spins
+    const transitionSound = document.getElementById('transitionSound');
+    if (transitionSound) {
+      transitionSound.currentTime = 0;
+      transitionSound.volume = 0.6;
+      transitionSound.play().catch(() => {});
+    }
 
     // Decrement spin counter
     state.currentSpin--;
@@ -1221,6 +1259,9 @@ const spinLoadout = () => {
   }
 };
 
+// Make spinLoadout globally accessible
+window.spinLoadout = spinLoadout;
+
 // Loadout history functions
 function addToHistory(
   classType,
@@ -1309,6 +1350,28 @@ document.addEventListener("DOMContentLoaded", () => {
   spinButtons = document.querySelectorAll(".spin-button");
   spinSelection = document.getElementById("spinSelection");
   outputDiv = document.getElementById("output");
+  
+  // Initialize the roulette animation system
+  const rouletteSystem = new window.RouletteAnimationSystem();
+  
+  // Set up the main SPIN button
+  const mainSpinButton = document.getElementById('main-spin-button');
+  if (mainSpinButton) {
+    mainSpinButton.addEventListener('click', async () => {
+      if (state.isSpinning || rouletteSystem.animating) return;
+      
+      // Play start spin sound
+      const startSpinSound = document.getElementById('startSpinSound');
+      if (startSpinSound) {
+        startSpinSound.currentTime = 0;
+        startSpinSound.volume = 0.8;
+        startSpinSound.play().catch(() => {});
+      }
+      
+      // Start the full roulette sequence
+      await rouletteSystem.startFullSequence();
+    });
+  }
 
   const toggleBtn = document.getElementById("toggle-customization");
   const customizationPanel = document.getElementById("customization-panel");
@@ -1408,7 +1471,12 @@ document.addEventListener("DOMContentLoaded", () => {
     setupSelectAllCheckboxes();
   });
 
-  // Spin button logic
+  // Hide original spin selection UI
+  if (spinSelection) {
+    spinSelection.style.display = 'none';
+  }
+  
+  // Spin button logic (kept for internal use but hidden)
   if (spinButtons.length > 0) {
     spinButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -1431,7 +1499,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Class button event listeners
+  // Hide original class selection UI
+  const classSelection = document.querySelector('.class-selection');
+  if (classSelection) {
+    classSelection.style.display = 'none';
+  }
+  
+  // Class button event listeners (kept for internal use)
   classButtons.forEach((button) => {
     button.addEventListener("click", () => {
       if (state.isSpinning) return;

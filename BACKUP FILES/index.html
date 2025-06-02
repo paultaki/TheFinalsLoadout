@@ -175,6 +175,8 @@
   <!-- Tab Navigation -->
   <div class="filter-tabs">
     <button class="tab-button active" data-tab="weapons">Weapons</button>
+    <button class="tab-button" data-tab="specializations">Specializations</button>
+    <button class="tab-button" data-tab="gadgets">Gadgets</button>
   </div>
   
   <!-- Search and Class Filter -->
@@ -191,53 +193,154 @@
   <!-- Content Area - Weapons Tab (Active by Default) -->
   <div class="tab-content active" id="weapons-tab">
     <!-- Light Weapons Section -->
-<!-- Light Weapons Section with Select All -->
-<div class="item-category light-category">
-  <div class="category-header">
-    <h3>Light Class Weapons</h3>
-    <button class="category-toggle">▼</button>
-  </div>
-  <div class="item-grid" id="light-weapons-grid">
-    <!-- Select All option as first item -->
-    <label class="item-checkbox select-all-checkbox">
-      <input type="checkbox" checked data-type="weapon-selectall" data-class="light">
-      <span><strong>Select All Light Weapons</strong></span>
-    </label>
-    <!-- Individual weapons will be populated here by JavaScript -->
-  </div>
-</div>
+    <div class="item-category light-category">
+      <div class="category-header">
+        <h3>Light Class Weapons</h3>
+        <button class="category-toggle">▼</button>
+      </div>
+      <div class="item-grid" id="light-weapons-grid">
+        <!-- Select All option as first item -->
+        <label class="item-checkbox select-all-checkbox">
+          <input type="checkbox" checked data-type="weapon-selectall" data-class="light">
+          <span><strong>Select All Light Weapons</strong></span>
+        </label>
+        <!-- Individual weapons will be populated here by JavaScript -->
+      </div>
+    </div>
 
-<!-- Medium Weapons Section with Select All -->
-<div class="item-category medium-category">
-  <div class="category-header">
-    <h3>Medium Class Weapons</h3>
-    <button class="category-toggle">▼</button>
-  </div>
-  <div class="item-grid" id="medium-weapons-grid">
-    <!-- Select All option as first item -->
-    <label class="item-checkbox select-all-checkbox">
-      <input type="checkbox" checked data-type="weapon-selectall" data-class="medium">
-      <span><strong>Select All Medium Weapons</strong></span>
-    </label>
-    <!-- Individual weapons will be populated here by JavaScript -->
-  </div>
-</div>
+    <!-- Medium Weapons Section with Select All -->
+    <div class="item-category medium-category">
+      <div class="category-header">
+        <h3>Medium Class Weapons</h3>
+        <button class="category-toggle">▼</button>
+      </div>
+      <div class="item-grid" id="medium-weapons-grid">
+        <!-- Select All option as first item -->
+        <label class="item-checkbox select-all-checkbox">
+          <input type="checkbox" checked data-type="weapon-selectall" data-class="medium">
+          <span><strong>Select All Medium Weapons</strong></span>
+        </label>
+        <!-- Individual weapons will be populated here by JavaScript -->
+      </div>
+    </div>
 
-<!-- Heavy Weapons Section with Select All -->
-<div class="item-category heavy-category">
-  <div class="category-header">
-    <h3>Heavy Class Weapons</h3>
-    <button class="category-toggle">▼</button>
+    <!-- Heavy Weapons Section with Select All -->
+    <div class="item-category heavy-category">
+      <div class="category-header">
+        <h3>Heavy Class Weapons</h3>
+        <button class="category-toggle">▼</button>
+      </div>
+      <div class="item-grid" id="heavy-weapons-grid">
+        <!-- Select All option as first item -->
+        <label class="item-checkbox select-all-checkbox">
+          <input type="checkbox" checked data-type="weapon-selectall" data-class="heavy">
+          <span><strong>Select All Heavy Weapons</strong></span>
+        </label>
+        <!-- Individual weapons will be populated here by JavaScript -->
+      </div>
+    </div>
   </div>
-  <div class="item-grid" id="heavy-weapons-grid">
-    <!-- Select All option as first item -->
-    <label class="item-checkbox select-all-checkbox">
-      <input type="checkbox" checked data-type="weapon-selectall" data-class="heavy">
-      <span><strong>Select All Heavy Weapons</strong></span>
-    </label>
-    <!-- Individual weapons will be populated here by JavaScript -->
+  
+  <!-- Specializations Tab (Hidden by Default) -->
+  <div class="tab-content" id="specializations-tab" style="display: none;">
+    <!-- Light Specializations Section -->
+    <div class="item-category light-category">
+      <div class="category-header">
+        <h3>Light Class Specializations</h3>
+        <button class="category-toggle">▼</button>
+      </div>
+      <div class="item-grid" id="light-specializations-grid">
+        <!-- Select All option as first item -->
+        <label class="item-checkbox select-all-checkbox">
+          <input type="checkbox" checked data-type="specialization-selectall" data-class="light">
+          <span><strong>Select All Light Specializations</strong></span>
+        </label>
+        <!-- Individual specializations will be populated here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Medium Specializations Section -->
+    <div class="item-category medium-category">
+      <div class="category-header">
+        <h3>Medium Class Specializations</h3>
+        <button class="category-toggle">▼</button>
+      </div>
+      <div class="item-grid" id="medium-specializations-grid">
+        <!-- Select All option as first item -->
+        <label class="item-checkbox select-all-checkbox">
+          <input type="checkbox" checked data-type="specialization-selectall" data-class="medium">
+          <span><strong>Select All Medium Specializations</strong></span>
+        </label>
+        <!-- Individual specializations will be populated here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Heavy Specializations Section -->
+    <div class="item-category heavy-category">
+      <div class="category-header">
+        <h3>Heavy Class Specializations</h3>
+        <button class="category-toggle">▼</button>
+      </div>
+      <div class="item-grid" id="heavy-specializations-grid">
+        <!-- Select All option as first item -->
+        <label class="item-checkbox select-all-checkbox">
+          <input type="checkbox" checked data-type="specialization-selectall" data-class="heavy">
+          <span><strong>Select All Heavy Specializations</strong></span>
+        </label>
+        <!-- Individual specializations will be populated here by JavaScript -->
+      </div>
+    </div>
   </div>
-</div>
+  
+  <!-- Gadgets Tab (Hidden by Default) -->
+  <div class="tab-content" id="gadgets-tab" style="display: none;">
+    <!-- Light Gadgets Section -->
+    <div class="item-category light-category">
+      <div class="category-header">
+        <h3>Light Class Gadgets</h3>
+        <button class="category-toggle">▼</button>
+      </div>
+      <div class="item-grid" id="light-gadgets-grid">
+        <!-- Select All option as first item -->
+        <label class="item-checkbox select-all-checkbox">
+          <input type="checkbox" checked data-type="gadget-selectall" data-class="light">
+          <span><strong>Select All Light Gadgets</strong></span>
+        </label>
+        <!-- Individual gadgets will be populated here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Medium Gadgets Section -->
+    <div class="item-category medium-category">
+      <div class="category-header">
+        <h3>Medium Class Gadgets</h3>
+        <button class="category-toggle">▼</button>
+      </div>
+      <div class="item-grid" id="medium-gadgets-grid">
+        <!-- Select All option as first item -->
+        <label class="item-checkbox select-all-checkbox">
+          <input type="checkbox" checked data-type="gadget-selectall" data-class="medium">
+          <span><strong>Select All Medium Gadgets</strong></span>
+        </label>
+        <!-- Individual gadgets will be populated here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Heavy Gadgets Section -->
+    <div class="item-category heavy-category">
+      <div class="category-header">
+        <h3>Heavy Class Gadgets</h3>
+        <button class="category-toggle">▼</button>
+      </div>
+      <div class="item-grid" id="heavy-gadgets-grid">
+        <!-- Select All option as first item -->
+        <label class="item-checkbox select-all-checkbox">
+          <input type="checkbox" checked data-type="gadget-selectall" data-class="heavy">
+          <span><strong>Select All Heavy Gadgets</strong></span>
+        </label>
+        <!-- Individual gadgets will be populated here by JavaScript -->
+      </div>
+    </div>
   </div>
 
   <!-- Single Apply Button -->
@@ -335,216 +438,219 @@
     </section>
    
    
- <section class="patch-notes">
-  <div class="notes-container">
-    <h2 class="patch-date">✨ PATCH HIGHLIGHTS - MAY 1, 2025</h2>
-    <div class="patch-summary">
-      <strong>New:</strong> Close Quarters Event, Nullifier (renamed Stun Gun), Health Canister<br />
-      <strong>Returning:</strong> Las Vegas 2032 map back in rotation<br />
-      <strong>Improved:</strong> Club size increased to 100 members, multi-channel chat
+ <!-- PATCH NOTES SECTION -->
+<div class="patch-notes-container" style="background: #1a1a2e; border-radius: 12px; padding: 2rem; margin: 2rem auto; max-width: 900px; border: 2px solid #333;">
+    
+    <!-- Patch Header -->
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="color: #ffb800; font-size: 2rem; margin-bottom: 1rem;">
+            ✨ PATCH HIGHLIGHTS - MAY 1, 2025
+        </h2>
+        <div style="background: #2a2a3e; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+            <p style="color: #fff; font-weight: bold; margin-bottom: 0.5rem;">
+                New: Close Quarters Event, Nullifier (renamed Stun Gun), Health Canister
+            </p>
+            <p style="color: #fff; font-weight: bold; margin-bottom: 0.5rem;">
+                Returning: Las Vegas 2032 map back in rotation
+            </p>
+            <p style="color: #fff; font-weight: bold;">
+                Improved: Club size increased to 100 members, multi-channel chat
+            </p>
+        </div>
     </div>
-    
-    <!-- Weapon Changes - Main Toggle -->
-    <details class="category-toggle">
-      <summary><h3><span class="emoji">🔫</span> Weapon Adjustments</h3></summary>
-      <div class="category-content">
-        <!-- Buffs Section -->
-        <div class="adjustment">
-          <h4 class="buff-text">📈 Buffs</h4>
-          <ul>
-            <li><strong>93R:</strong> Effective range increased (32-40m, up from 28-35m)</li>
-            <li><strong>ARN-220:</strong> Quick reload animation reduced from 0.95s to 0.75s</li>
-            <li><strong>Model 1887:</strong> Pump-action duration decreased (0.78s from 0.8s), effective range increased (20-30m, up from 15-25m)</li>
-            <li><strong>R.357:</strong> Effective range increased (27.5-44m, up from 23-40m)</li>
-          </ul>
-        </div>
+
+    <!-- Collapsible Sections -->
+    <div class="patch-sections">
         
-        <!-- Nerfs Section -->
-        <div class="adjustment">
-          <h4 class="nerf-text">📉 Nerfs</h4>
-          <ul>
-            <li><strong>.50 Akimbo:</strong> Effective range decreased (35-42m, down from 37.5-47.5m)</li>
-            <li><strong>Cerberus:</strong> Pellet count reduced from 12 to 11 (max damage decreased from 120 to 110)</li>
-            <li><strong>FAMAS:</strong> Effective range decreased (35-42.5m, down from 37.5-47.5m)</li>
-            <li><strong>SA1216:</strong> Rate of fire decreased from 200RPM to 190RPM</li>
-          </ul>
-        </div>
-      </div>
-    </details>
-    
-    <!-- Specialization & Gadget Changes - Main Toggle -->
-    <details class="category-toggle">
-      <summary><h3><span class="emoji">🧰</span> Specializations & Gadgets</h3></summary>
-      <div class="category-content">
-        <!-- Winch Claw -->
-        <div class="adjustment">
-          <h4>Winch Claw</h4>
-          <ul>
-            <li>Players now enter 'uncontrolled' state when winched</li>
-            <li>Victims now have increased bullet dispersion and recoil while being winched</li>
-            <li>Fixed an issue where winched players weren't pulled through smoke</li>
-          </ul>
-        </div>
-        
-        <!-- Nullifier -->
-        <div class="adjustment">
-          <h4>Nullifier</h4>
-          <ul>
-            <li>Stun Gun completely reworked and renamed</li>
-            <li>Players hit by the Nullifier enter a "nullified" state for several seconds</li>
-            <li>Nullified players cannot attack or use items, but can still move</li>
-            <li>Nullified players are completely immune to damage or item effects</li>
-          </ul>
-        </div>
-        
-        <!-- Proximity Sensor -->
-        <div class="adjustment">
-          <h4>Proximity Sensor</h4>
-          <ul>
-            <li>Increased size for easier targeting</li>
-            <li>Larger hitbox makes the sensor easier to hit and destroy</li>
-          </ul>
-        </div>
-      </div>
-    </details>
-    
-    <!-- New Features - Main Toggle -->
-    <details class="category-toggle">
-      <summary><h3><span class="emoji">🆕</span> New Features</h3></summary>
-      <div class="category-content">
-        <!-- Close Quarters Event -->
-        <div class="adjustment">
-          <h4>Close Quarters Event</h4>
-          <ul>
-            <li>Limited-time event with a new map</li>
-            <li>ALFA ACTA P.E.A.C.E. Center map for close-range combat</li>
-            <li>Team Deathmatch mode with faster, more intense fights</li>
-            <li>"Wheel of Trust" with 20 potential rewards including BULL'S EYE BARRY dummy</li>
-          </ul>
-        </div>
-        
-        <!-- Health Canister -->
-        <div class="adjustment">
-          <h4>Health Canister</h4>
-          <ul>
-            <li>New throwable carriable for healing</li>
-            <li>Blue spherical container that smashes on impact</li>
-            <li>Creates a healing mist that triggers health regeneration for players in the area</li>
-            <li>Available in all game modes except Terminal Attack</li>
-          </ul>
-        </div>
-        
-        <!-- Expanded Customization -->
-        <div class="adjustment">
-          <h4>Expanded Customization</h4>
-          <ul>
-            <li>Body Paint now split into 4 categories</li>
-            <li>Face Paint: For facial decorations</li>
-            <li>Body Paint: For body decorations</li>
-            <li>Nails: New nail polish category</li>
-            <li>Tattoos: Can now be worn under any paint</li>
-          </ul>
-        </div>
-        
-        <!-- Social Improvements -->
-        <div class="adjustment">
-          <h4>Social Improvements</h4>
-          <ul>
-            <li>Enhanced club and chat features</li>
-            <li>Club size increased from 35 to 100 members</li>
-            <li>Multi-channel chat between party, team, private lobby, and club</li>
-            <li>New chat settings: Background Opacity, Text Size, Channel Icons toggle</li>
-          </ul>
-        </div>
-        
-        <!-- Practice Range -->
-        <div class="adjustment">
-          <h4>Practice Range</h4>
-          <ul>
-            <li>Now supports parties</li>
-            <li>Enter with up to 5 friends to practice together</li>
-            <li>Added Health Canister dispenser to the range</li>
-          </ul>
-        </div>
-      </div>
-    </details>
-    
-    <!-- Map Changes - Main Toggle -->
-    <details class="category-toggle">
-      <summary><h3><span class="emoji">🗺️</span> Map Updates</h3></summary>
-      <div class="category-content">
-        <!-- Las Vegas -->
-        <div class="adjustment">
-          <h4>Las Vegas 2032</h4>
-          <ul>
-            <li>Returns to the public map rotation</li>
-            <li>Available in Quick Cash, Terminal Attack, and Ranked Tournament</li>
-            <li>Fixed floating signs and invisible collision issues</li>
-          </ul>
-        </div>
-        
-        <!-- Kyoto -->
-        <div class="adjustment">
-          <h4>Kyoto</h4>
-          <ul>
-            <li>Cashout Station location adjustments</li>
-            <li>Several Cashout Station locations removed or adjusted in Bamboo Forest and Villa Compound</li>
-            <li>Carriables can now be thrown through lattice windows without bouncing back</li>
-          </ul>
-        </div>
-        
-        <!-- Seoul -->
-        <div class="adjustment">
-          <h4>Seoul</h4>
-          <ul>
-            <li>Destruction improvements</li>
-            <li>Re-balanced structural strain for more refined and varied destruction</li>
-            <li>Fixed rare issues with horizontal ziplines</li>
-          </ul>
-        </div>
-      </div>
-    </details>
-    
-    <!-- Bug Fixes - Main Toggle -->
-    <details class="category-toggle">
-      <summary><h3><span class="emoji">🛠️</span> Bug Fixes & Quality of Life</h3></summary>
-      <div class="category-content">
-        <!-- Animation Improvements -->
-        <div class="adjustment">
-          <h4>Animation Improvements</h4>
-          <ul>
-            <li>Fixed M134 Minigun crouch pose during interactions</li>
-            <li>Fixed Sword animation issues causing "phantom strikes"</li>
-            <li>Fixed issues with Spear attack animations</li>
-            <li>Improved weapon position during vaulting with Sledgehammer and Spear</li>
-            <li>Fixed Riot Shield sometimes blocking the view</li>
-          </ul>
-        </div>
-        
-        <!-- Gameplay Fixes -->
-        <div class="adjustment">
-          <h4>Gameplay Fixes</h4>
-          <ul>
-            <li>Carriable pickup range increased from 6m to 6.5m</li>
-            <li>Carriables throw force increased by 10%</li>
-            <li>Improved optimization to reduce "shot around corners" feeling</li>
-            <li>Fixed various respawn and spectator issues</li>
-          </ul>
-        </div>
-        
-        <!-- Fun Updates -->
-        <div class="adjustment">
-          <h4>Fun Updates</h4>
-          <ul>
-            <li><strong>Little Chief Moolah:</strong> Now moos on 100% of kills (up from 25%)</li>
-            <li>Little Chief will now moo when the attached weapon is inspected</li>
-            <li>New Twitch Drops available in blue camo theme</li>
-          </ul>
-        </div>
-      </div>
-    </details>
-  </div>
-</section>
+        <!-- Weapon Adjustments -->
+        <details class="patch-category" style="margin-bottom: 1rem;">
+            <summary style="background: #2a2a3e; padding: 1rem; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #4ecdc4; font-weight: bold; font-size: 1.2rem;">🔫 Weapon Adjustments</span>
+                <span style="color: #ffb800;">+</span>
+            </summary>
+            <div style="padding: 1rem; background: #222; border-radius: 0 0 8px 8px; margin-top: -4px;">
+                <h4 style="color: #4ecdc4; margin-bottom: 0.5rem;">FAMAS</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Reduced visual recoil for better stability</li>
+                </ul>
+                
+                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">KS-23</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Increased accuracy across all movement states</li>
+                    <li>• Improved hip-fire and ADS accuracy while moving</li>
+                </ul>
+                
+                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">M11</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Reduced recoil jitter at end of burst</li>
+                    <li>• Decreased visual recoil</li>
+                </ul>
+                
+                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">XP-54</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Damage decreased: 17 → 16</li>
+                    <li>• Fire rate increased: 850 → 860 RPM</li>
+                </ul>
+                
+                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">Melee Weapons</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Improved hit registration and sweep reliability</li>
+                    <li>• Fixed wall-hit detection issues</li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- Specializations & Gadgets -->
+        <details class="patch-category" style="margin-bottom: 1rem;">
+            <summary style="background: #2a2a3e; padding: 1rem; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #ff6b6b; font-weight: bold; font-size: 1.2rem;">🎯 Specializations & Gadgets</span>
+                <span style="color: #ffb800;">+</span>
+            </summary>
+            <div style="padding: 1rem; background: #222; border-radius: 0 0 8px 8px; margin-top: -4px;">
+                <h4 style="color: #ff6b6b; margin-bottom: 0.5rem;">Nullifier (formerly Stun Gun)</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Renamed for clarity</li>
+                    <li>• No functional changes</li>
+                </ul>
+                
+                <h4 style="color: #ff6b6b; margin: 1rem 0 0.5rem 0;">Health Canister</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• New tactical equipment</li>
+                    <li>• Provides area healing for team support</li>
+                </ul>
+                
+                <h4 style="color: #ff6b6b; margin: 1rem 0 0.5rem 0;">Cloaking Device</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Fixed: No longer canceled by emotes</li>
+                    <li>• Fixed: Activation not interrupted when holding props</li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- New Features -->
+        <details class="patch-category" style="margin-bottom: 1rem;">
+            <summary style="background: #2a2a3e; padding: 1rem; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #4a90e2; font-weight: bold; font-size: 1.2rem;">🆕 New Features</span>
+                <span style="color: #ffb800;">+</span>
+            </summary>
+            <div style="padding: 1rem; background: #222; border-radius: 0 0 8px 8px; margin-top: -4px;">
+                <h4 style="color: #4a90e2; margin-bottom: 0.5rem;">Close Quarters Event</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Limited-time intense CQB mode</li>
+                    <li>• Exclusive rewards and challenges</li>
+                </ul>
+                
+                <h4 style="color: #4a90e2; margin: 1rem 0 0.5rem 0;">Club Improvements</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Club size increased to 100 members</li>
+                    <li>• Multi-channel chat support added</li>
+                    <li>• Improved filter reset functionality</li>
+                </ul>
+                
+                <h4 style="color: #4a90e2; margin: 1rem 0 0.5rem 0;">UI Enhancements</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• New loading screen rules layout</li>
+                    <li>• Expression screen filters added</li>
+                    <li>• Improved gamepad navigation in customization</li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- Map Updates -->
+        <details class="patch-category" style="margin-bottom: 1rem;">
+            <summary style="background: #2a2a3e; padding: 1rem; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #4ecdc4; font-weight: bold; font-size: 1.2rem;">🗺️ Map Updates</span>
+                <span style="color: #ffb800;">+</span>
+            </summary>
+            <div style="padding: 1rem; background: #222; border-radius: 0 0 8px 8px; margin-top: -4px;">
+                <h4 style="color: #4ecdc4; margin-bottom: 0.5rem;">Las Vegas 2032</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Map returned to rotation</li>
+                    <li>• Fixed Dematerializer VFX in parking garage</li>
+                </ul>
+                
+                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">Kyoto</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Added missing destruction on small props</li>
+                    <li>• Movement in water no longer slowed</li>
+                </ul>
+                
+                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">Seoul</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Fixed accidental vault on pipes under catwalks</li>
+                    <li>• Fixed missing collision on staircase pillars</li>
+                </ul>
+                
+                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">General</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Fixed vegetation vault triggers</li>
+                    <li>• Adjusted asset health values for consistency</li>
+                    <li>• Fixed rare zipline loading issues</li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- Bug Fixes & Quality of Life -->
+        <details class="patch-category" style="margin-bottom: 1rem;">
+            <summary style="background: #2a2a3e; padding: 1rem; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #ffb800; font-weight: bold; font-size: 1.2rem;">🔧 Bug Fixes & Quality of Life</span>
+                <span style="color: #ffb800;">+</span>
+            </summary>
+            <div style="padding: 1rem; background: #222; border-radius: 0 0 8px 8px; margin-top: -4px;">
+                <h4 style="color: #ffb800; margin-bottom: 0.5rem;">Major Fix: Persistent Effects Bug</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Fixed effects getting permanently stuck on players</li>
+                    <li>• Affected: burning, tracking, sonar, gas, invisibility</li>
+                    <li>• No more permanent enemy tracking through walls!</li>
+                </ul>
+                
+                <h4 style="color: #ffb800; margin: 1rem 0 0.5rem 0;">Game Modes</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Power Shift: Fixed overtime winner display</li>
+                    <li>• Team Deathmatch: Self-kills now penalized properly</li>
+                    <li>• Terminal Attack: Health regeneration restored</li>
+                    <li>• Quick Cash: Fixed respawn timer message</li>
+                </ul>
+                
+                <h4 style="color: #ffb800; margin: 1rem 0 0.5rem 0;">Performance</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Optimized network data for destruction</li>
+                    <li>• Improved animation performance</li>
+                    <li>• Shader pipeline optimization</li>
+                    <li>• Various crash fixes</li>
+                </ul>
+                
+                <h4 style="color: #ffb800; margin: 1rem 0 0.5rem 0;">Customization</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Season 3 Ruby rewards added</li>
+                    <li>• Fixed Heavy body type on low settings</li>
+                    <li>• Various cosmetic clipping fixes</li>
+                    <li>• Store outfit preview improvements</li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</div>
+
+<!-- Optional: Add this CSS to make the expandable sections interactive -->
+<style>
+details[open] summary span:last-child {
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+}
+
+details summary span:last-child {
+    transition: transform 0.3s ease;
+}
+
+details summary:hover {
+    opacity: 0.8;
+}
+
+details {
+    transition: all 0.3s ease;
+}
+</style>
 
 <footer class="footerSection" style="text-align: center;">
   <div class="container" style="text-align: center;">

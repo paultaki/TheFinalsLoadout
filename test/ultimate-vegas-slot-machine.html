@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Finals Loadout Roulette - Ultimate Vegas Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS RESET */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* CSS VARIABLES FOR EASY THEMING */
+        :root {
+            --primary-gold: #FFB800;
+            --secondary-red: #FF0040;
+            --bg-dark: #1a1a2e;
+            --bg-darker: #0a0a1e;
+            --bg-purple: #2a1f2d;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --success: #4CAF50;
+            --danger: #f44336;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        /* BASE STYLES */
+        body {
+            font-family: 'Oswald', sans-serif;
+            background: linear-gradient(-45deg, var(--bg-dark), var(--bg-purple), #1f2a2d, #201c24);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* HEADER STYLES */
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        .logo {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            color: var(--primary-gold);
+            text-shadow: 
+                0 0 10px rgba(255, 184, 0, 0.5),
+                0 0 20px rgba(255, 184, 0, 0.3),
+                0 0 30px rgba(255, 184, 0, 0.2);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
+
+        /* DEBUG PANEL */
+        .debug-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--primary-gold);
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 12px;
+            font-family: monospace;
+            z-index: 9999;
+            max-width: 300px;
+        }
+
+        .debug-panel h3 {
+            color: var(--primary-gold);
+            margin-bottom: 10px;
+        }
+
+        .debug-log {
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 10px;
+        }
+
+        .debug-log p {
+            margin: 2px 0;
+            padding: 2px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .debug-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            z-index: 10000;
+            font-size: 12px;
+        }
+
+        /* CLASS SELECTION */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .class-card {
+            background: var(--glass-bg);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .class-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--primary-gold) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .class-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            border-color: var(--primary-gold);
+            box-shadow: 
+                0 10px 30px rgba(255, 184, 0, 0.3),
+                inset 0 0 20px rgba(255, 184, 0, 0.1);
+        }
+
+        .class-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .class-card.selected {
+            border-color: var(--primary-gold);
+            background: rgba(255, 184, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        .class-card.selected::before {
+            opacity: 0.2;
+        }
+
+        .class-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            background: var(--glass-bg);
+            border-radius: 50%;
+        }
+
+        .class-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        /* SPIN CONTROLS */
+        .spin-controls {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .spin-controls.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .spin-grid {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .spin-btn {
+            background: linear-gradient(145deg, #2a2a3e, #1a1a2e);
+            border: 2px solid transparent;
+            color: var(--text-primary);
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spin-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--primary-gold);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .spin-btn:hover:not(:disabled) {
+            border-color: var(--primary-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 184, 0, 0.3);
+        }
+
+        .spin-btn:hover:not(:disabled)::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .spin-btn.selected {
+            background: var(--primary-gold);
+            color: var(--bg-dark);
+            border-color: var(--primary-gold);
+        }
+
+        .spin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .spin-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .spin-text {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* FILTER SYSTEM */
+        .filter-section {
+            margin-bottom: 30px;
+        }
+
+        .filter-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin: 0 auto;
+        }
+
+        .filter-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary-gold);
+        }
+
+        .filter-toggle-icon {
+            transition: transform 0.3s;
+        }
+
+        .filter-toggle.active .filter-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .filter-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.3s;
+            opacity: 0;
+        }
+
+        .filter-panel.active {
+            max-height: 1000px;
+            opacity: 1;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+        .filter-tab {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .filter-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gold);
+            transition: width 0.3s;
+        }
+
+        .filter-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .filter-tab.active {
+            color: var(--primary-gold);
+        }
+
+        .filter-tab.active::after {
+            width: 100%;
+        }
+
+        .filter-content {
+            display: none;
+        }
+
+        .filter-content.active {
+            display: block;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: var(--glass-bg);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .select-all-btn {
+            background: var(--primary-gold);
+            color: var(--bg-dark);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .select-all-btn:hover {
+            background: #FFA000;
+        }
+
+        /* SLOT MACHINE */
+        .slot-machine {
+            background: linear-gradient(145deg, #2a2a3e, #1a1a2e);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 100px rgba(255, 184, 0, 0.2),
+                inset 0 0 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+            transform: perspective(1000px) rotateX(2deg);
+            transition: transform 0.3s;
+        }
+
+        .slot-machine:hover {
+            transform: perspective(1000px) rotateX(0deg);
+        }
+
+        .slot-header {
+            background: linear-gradient(to bottom, #3a3a4e, #2a2a3e);
+            padding: 25px;
+            text-align: center;
+            border-bottom: 4px solid var(--primary-gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slot-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 184, 0, 0.1) 10px,
+                rgba(255, 184, 0, 0.1) 20px
+            );
+            animation: stripes 20s linear infinite;
+        }
+
+        @keyframes stripes {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(28px, 28px); }
+        }
+
+        .lights-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .light-bulb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #333;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .light-bulb::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: inherit;
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .light-bulb.on-red {
+            background: #ff0000;
+            box-shadow: 
+                0 0 20px #ff0000,
+                0 0 40px #ff0000,
+                inset 0 0 10px #ff6666;
+        }
+
+        .light-bulb.on-red::before {
+            opacity: 1;
+        }
+
+        .light-bulb.on-yellow {
+            background: var(--primary-gold);
+            box-shadow: 
+                0 0 20px var(--primary-gold),
+                0 0 40px var(--primary-gold),
+                inset 0 0 10px #ffcc00;
+        }
+
+        .light-bulb.on-yellow::before {
+            opacity: 1;
+        }
+
+        .light-bulb.on-green {
+            background: #00ff00;
+            box-shadow: 
+                0 0 20px #00ff00,
+                0 0 40px #00ff00,
+                inset 0 0 10px #66ff66;
+        }
+
+        .light-bulb.on-green::before {
+            opacity: 1;
+        }
+
+        .slot-title {
+            font-size: 2.5rem;
+            color: var(--primary-gold);
+            text-shadow: 
+                0 0 20px rgba(255, 184, 0, 0.8),
+                0 0 40px rgba(255, 184, 0, 0.4);
+            margin: 0;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reels-wrapper {
+            background: var(--bg-dark);
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .reels-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .reel-column {
+            position: relative;
+        }
+
+        .reel {
+            background: var(--bg-darker);
+            border-radius: 15px;
+            width: 150px;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 0 50px rgba(0, 0, 0, 0.8),
+                0 0 30px rgba(255, 184, 0, 0.1);
+            border: 2px solid #111;
+        }
+
+        .reel::before,
+        .reel::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 50px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .reel::before {
+            top: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
+        }
+
+        .reel::after {
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        }
+
+        .reel-strip {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .reel-item {
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .reel-item.winner {
+            background: linear-gradient(135deg, rgba(255, 184, 0, 0.3), rgba(255, 184, 0, 0.1));
+        }
+
+        .reel-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+        }
+
+        .reel-item-name {
+            font-size: 0.9rem;
+            text-align: center;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .reel-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Spinning animation */
+        @keyframes reelSpin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-1000px); }
+        }
+
+        .reel-strip.spinning {
+            animation: reelSpin 2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+
+        /* Win animation */
+        .reel-column.winner::after {
+            content: '✓';
+            position: absolute;
+            top: -40px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            background: var(--success);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 20;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) rotate(0);
+                opacity: 1;
+            }
+        }
+
+        .slot-footer {
+            background: linear-gradient(to top, #3a3a4e, #2a2a3e);
+            padding: 30px;
+            text-align: center;
+            border-top: 4px solid var(--primary-gold);
+        }
+
+        .win-message {
+            font-size: 2rem;
+            color: var(--primary-gold);
+            font-weight: 700;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .win-message.show {
+            opacity: 1;
+            transform: scale(1);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* HISTORY */
+        .history-section {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .history-grid {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .history-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .history-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 184, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .history-item:hover::before {
+            left: 100%;
+        }
+
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 184, 0, 0.2);
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .history-class {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-gold);
+        }
+
+        .history-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .history-details {
+            display: grid;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .history-detail {
+            display: flex;
+            gap: 10px;
+        }
+
+        .history-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 100px;
+        }
+
+        .history-value {
+            color: var(--text-primary);
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-copy {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-copy:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-clear {
+            background: var(--danger);
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-clear:hover {
+            background: #da190b;
+        }
+
+        /* UTILITY CLASSES */
+        .hidden {
+            display: none !important;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .logo {
+                font-size: 3rem;
+            }
+
+            .class-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .reel {
+                width: 120px;
+                height: 160px;
+            }
+
+            .reel-item {
+                height: 160px;
+            }
+
+            .reel-item img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .debug-panel {
+                display: none;
+            }
+        }
+
+        /* LOADING STATES */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* ERROR STATES */
+        .error {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Debug Toggle -->
+    <button class="debug-toggle" onclick="SlotMachine.toggleDebug()">Debug</button>
+    
+    <!-- Debug Panel -->
+    <div class="debug-panel hidden" id="debugPanel">
+        <h3>Debug Console</h3>
+        <div class="debug-log" id="debugLog"></div>
+        <button onclick="SlotMachine.clearDebugLog()">Clear Log</button>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header fade-in">
+            <h1 class="logo">LOADOUT ROULETTE</h1>
+            <p class="subtitle">The Finals - Season 6 Ready</p>
+        </header>
+
+        <!-- Class Selection -->
+        <section class="section fade-in">
+            <h2 class="section-title">Choose Your Class</h2>
+            <div class="class-grid" id="classGrid">
+                <div class="class-card" data-class="Light" onclick="SlotMachine.selectClass('Light')">
+                    <div class="class-icon">⚡</div>
+                    <div class="class-name">LIGHT</div>
+                </div>
+                <div class="class-card" data-class="Medium" onclick="SlotMachine.selectClass('Medium')">
+                    <div class="class-icon">⚔️</div>
+                    <div class="class-name">MEDIUM</div>
+                </div>
+                <div class="class-card" data-class="Heavy" onclick="SlotMachine.selectClass('Heavy')">
+                    <div class="class-icon">🛡️</div>
+                    <div class="class-name">HEAVY</div>
+                </div>
+                <div class="class-card" data-class="Random" onclick="SlotMachine.selectClass('Random')">
+                    <div class="class-icon">🎲</div>
+                    <div class="class-name">RANDOM</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter System -->
+        <section class="filter-section fade-in">
+            <button class="filter-toggle" id="filterToggle" onclick="SlotMachine.toggleFilters()">
+                <span>⚙️</span>
+                <span>Customize Loadout Pool</span>
+                <span class="filter-toggle-icon">▼</span>
+            </button>
+            
+            <div class="filter-panel" id="filterPanel">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="SlotMachine.switchFilterTab('weapons')">Weapons</button>
+                    <button class="filter-tab" onclick="SlotMachine.switchFilterTab('specializations')">Specializations</button>
+                    <button class="filter-tab" onclick="SlotMachine.switchFilterTab('gadgets')">Gadgets</button>
+                </div>
+                
+                <div class="filter-content active" id="weaponsFilter">
+                    <button class="select-all-btn" onclick="SlotMachine.toggleAllFilters('weapons')">Toggle All</button>
+                    <div class="filter-grid" id="weaponsGrid"></div>
+                </div>
+                
+                <div class="filter-content" id="specializationsFilter">
+                    <button class="select-all-btn" onclick="SlotMachine.toggleAllFilters('specializations')">Toggle All</button>
+                    <div class="filter-grid" id="specializationsGrid"></div>
+                </div>
+                
+                <div class="filter-content" id="gadgetsFilter">
+                    <button class="select-all-btn" onclick="SlotMachine.toggleAllFilters('gadgets')">Toggle All</button>
+                    <div class="filter-grid" id="gadgetsGrid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spin Controls -->
+        <section class="section fade-in">
+            <div class="spin-controls" id="spinControls">
+                <h2 class="section-title">Number of Spins</h2>
+                <div class="spin-grid">
+                    <button class="spin-btn" onclick="SlotMachine.selectSpins(1)">
+                        <span class="spin-number">1</span>
+                        <span class="spin-text">SPIN</span>
+                    </button>
+                    <button class="spin-btn" onclick="SlotMachine.selectSpins(2)">
+                        <span class="spin-number">2</span>
+                        <span class="spin-text">SPINS</span>
+                    </button>
+                    <button class="spin-btn" onclick="SlotMachine.selectSpins(3)">
+                        <span class="spin-number">3</span>
+                        <span class="spin-text">SPINS</span>
+                    </button>
+                    <button class="spin-btn" onclick="SlotMachine.selectSpins(4)">
+                        <span class="spin-number">4</span>
+                        <span class="spin-text">SPINS</span>
+                    </button>
+                    <button class="spin-btn" onclick="SlotMachine.selectSpins(5)">
+                        <span class="spin-number">5</span>
+                        <span class="spin-text">SPINS</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slot Machine -->
+        <section class="section fade-in">
+            <div class="slot-machine">
+                <div class="slot-header">
+                    <div class="lights-container" id="lightsContainer"></div>
+                    <h2 class="slot-title" id="slotTitle">SELECT A CLASS</h2>
+                </div>
+                
+                <div class="reels-wrapper">
+                    <div class="reels-container">
+                        <!-- Weapon Reel -->
+                        <div class="reel-column">
+                            <div class="reel" id="weaponReel">
+                                <div class="reel-strip" id="weaponStrip"></div>
+                            </div>
+                            <div class="reel-label">WEAPON</div>
+                        </div>
+                        
+                        <!-- Specialization Reel -->
+                        <div class="reel-column">
+                            <div class="reel" id="specReel">
+                                <div class="reel-strip" id="specStrip"></div>
+                            </div>
+                            <div class="reel-label">SPECIAL</div>
+                        </div>
+                        
+                        <!-- Gadget 1 Reel -->
+                        <div class="reel-column">
+                            <div class="reel" id="gadget1Reel">
+                                <div class="reel-strip" id="gadget1Strip"></div>
+                            </div>
+                            <div class="reel-label">GADGET 1</div>
+                        </div>
+                        
+                        <!-- Gadget 2 Reel -->
+                        <div class="reel-column">
+                            <div class="reel" id="gadget2Reel">
+                                <div class="reel-strip" id="gadget2Strip"></div>
+                            </div>
+                            <div class="reel-label">GADGET 2</div>
+                        </div>
+                        
+                        <!-- Gadget 3 Reel -->
+                        <div class="reel-column">
+                            <div class="reel" id="gadget3Reel">
+                                <div class="reel-strip" id="gadget3Strip"></div>
+                            </div>
+                            <div class="reel-label">GADGET 3</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slot-footer">
+                    <div class="win-message" id="winMessage">🎉 LOADOUT READY! 🎉</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- History -->
+        <section class="section fade-in">
+            <div class="history-section">
+                <h2 class="section-title">Loadout History</h2>
+                <div class="history-grid" id="historyGrid"></div>
+                <button class="btn btn-clear" onclick="SlotMachine.clearHistory()">Clear History</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // OVER-ENGINEERED SLOT MACHINE WITH PROPER ARCHITECTURE
+        const SlotMachine = (function() {
+            'use strict';
+
+            // Constants
+            const CONSTANTS = {
+                REEL_ITEM_HEIGHT: 200,
+                SPIN_DURATION: 2000,
+                SPIN_DELAY: 200,
+                WIN_MESSAGE_DELAY: 500,
+                LIGHTS_COUNT: 15,
+                MAX_HISTORY: 5,
+                DEBUG_ENABLED: false
+            };
+
+            // Game Data
+            const LOADOUTS = {
+                Light: {
+                    weapons: ["93R", "Dagger", "SR-84", "SH1900", "LH1", "M26 Matter", "Recurve Bow", "Sword", "M11", "ARN-220", "V9S", "XP-54", "Throwing Knives"],
+                    specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
+                    gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex", "Nullifier", "Sonar Grenade", "Thermal Bore", "Gas Grenade", "Thermal Vision", "Tracking Dart", "Vanishing Bomb", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade", "Flashbang"]
+                },
+                Medium: {
+                    weapons: ["AKM", "Cerberus 12GA", "Dual Blades", "FAMAS", "CL-40", "CB-01 Repeater", "FCAR", "Model 1887", "Pike-556", "R.357", "Riot Shield"],
+                    specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
+                    gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad", "Zipline", "Gas Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade", "Flashbang", "Proximity Sensor"]
+                },
+                Heavy: {
+                    weapons: ["50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60", "M134 Minigun", "M32GL", "SA 1216", "Sledgehammer", "SHAK-50", "Spear"],
+                    specializations: ["Charge N Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
+                    gadgets: ["Anti-Gravity Cube", "Barricade", "C4", "Dome Shield", "Lockbolt Launcher", "Pyro Mine", "Proximity Sensor", "RPG-7", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade", "Flashbang", "Explosive Mine", "Gas Grenade"]
+                }
+            };
+
+            // State Management
+            const state = {
+                selectedClass: null,
+                selectedSpins: 0,
+                currentSpin: 0,
+                isSpinning: false,
+                filters: {
+                    weapons: new Set(),
+                    specializations: new Set(),
+                    gadgets: new Set()
+                },
+                history: [],
+                debugMode: CONSTANTS.DEBUG_ENABLED
+            };
+
+            // Debug Logger
+            const debug = {
+                log: function(message, data = null) {
+                    if (!state.debugMode) return;
+                    
+                    const timestamp = new Date().toLocaleTimeString();
+                    const logEntry = `[${timestamp}] ${message}`;
+                    
+                    console.log(logEntry, data || '');
+                    
+                    const debugLog = document.getElementById('debugLog');
+                    if (debugLog) {
+                        const p = document.createElement('p');
+                        p.textContent = logEntry + (data ? ` - ${JSON.stringify(data)}` : '');
+                        debugLog.appendChild(p);
+                        debugLog.scrollTop = debugLog.scrollHeight;
+                    }
+                }
+            };
+
+            // Initialize
+            function init() {
+                debug.log('Initializing Slot Machine');
+                
+                loadHistory();
+                initializeLights();
+                initializeFilters();
+                initializeReels();
+                
+                debug.log('Initialization complete');
+            }
+
+            // Initialize Lights
+            function initializeLights() {
+                debug.log('Initializing lights');
+                
+                const container = document.getElementById('lightsContainer');
+                if (!container) {
+                    debug.log('ERROR: Lights container not found');
+                    return;
+                }
+                
+                for (let i = 0; i < CONSTANTS.LIGHTS_COUNT; i++) {
+                    const light = document.createElement('div');
+                    light.className = 'light-bulb';
+                    light.id = `light-${i}`;
+                    container.appendChild(light);
+                }
+                
+                debug.log(`Created ${CONSTANTS.LIGHTS_COUNT} lights`);
+            }
+
+            // Initialize Filters
+            function initializeFilters() {
+                debug.log('Initializing filters');
+                
+                // Collect all unique items
+                const allItems = {
+                    weapons: new Set(),
+                    specializations: new Set(),
+                    gadgets: new Set()
+                };
+                
+                Object.values(LOADOUTS).forEach(loadout => {
+                    loadout.weapons.forEach(w => allItems.weapons.add(w));
+                    loadout.specializations.forEach(s => allItems.specializations.add(s));
+                    loadout.gadgets.forEach(g => allItems.gadgets.add(g));
+                });
+                
+                // Create filter UI
+                createFilterGrid('weapons', allItems.weapons);
+                createFilterGrid('specializations', allItems.specializations);
+                createFilterGrid('gadgets', allItems.gadgets);
+                
+                // Initialize all filters as checked
+                allItems.weapons.forEach(w => state.filters.weapons.add(w));
+                allItems.specializations.forEach(s => state.filters.specializations.add(s));
+                allItems.gadgets.forEach(g => state.filters.gadgets.add(g));
+                
+                debug.log('Filters initialized', {
+                    weapons: allItems.weapons.size,
+                    specializations: allItems.specializations.size,
+                    gadgets: allItems.gadgets.size
+                });
+            }
+
+            // Create Filter Grid
+            function createFilterGrid(type, items) {
+                const grid = document.getElementById(`${type}Grid`);
+                if (!grid) {
+                    debug.log(`ERROR: Grid not found for ${type}`);
+                    return;
+                }
+                
+                items.forEach(item => {
+                    const label = document.createElement('label');
+                    label.className = 'filter-item';
+                    label.innerHTML = `
+                        <input type="checkbox" 
+                               class="filter-checkbox" 
+                               data-type="${type}" 
+                               data-value="${item}" 
+                               checked 
+                               onchange="SlotMachine.updateFilter('${type}', '${item}', this.checked)">
+                        <span>${item}</span>
+                    `;
+                    grid.appendChild(label);
+                });
+            }
+
+            // Initialize Reels
+            function initializeReels() {
+                debug.log('Initializing reels');
+                
+                const reels = ['weapon', 'spec', 'gadget1', 'gadget2', 'gadget3'];
+                
+                reels.forEach(reel => {
+                    const strip = document.getElementById(`${reel}Strip`);
+                    if (strip) {
+                        // Add placeholder
+                        const placeholder = createReelItem('?', 'placeholder.webp');
+                        strip.appendChild(placeholder);
+                    }
+                });
+            }
+
+            // Create Reel Item
+            function createReelItem(name, image, isWinner = false) {
+                const item = document.createElement('div');
+                item.className = `reel-item ${isWinner ? 'winner' : ''}`;
+                item.innerHTML = `
+                    <img src="images/${image}" alt="${name}" onerror="this.src='images/placeholder.webp'">
+                    <div class="reel-item-name">${name}</div>
+                `;
+                return item;
+            }
+
+            // Class Selection
+            function selectClass(className) {
+                debug.log('Class selected', className);
+                
+                if (state.isSpinning) {
+                    debug.log('Cannot select class while spinning');
+                    return;
+                }
+                
+                state.selectedClass = className;
+                
+                // Update UI
+                document.querySelectorAll('.class-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                document.querySelector(`[data-class="${className}"]`).classList.add('selected');
+                
+                // Enable spin controls
+                document.getElementById('spinControls').classList.add('active');
+                
+                // Update slot title
+                const title = className === 'Random' ? 'RANDOM CLASS' : `${className.toUpperCase()} CLASS`;
+                document.getElementById('slotTitle').textContent = title;
+            }
+
+            // Spin Selection
+            function selectSpins(count) {
+                debug.log('Spins selected', count);
+                
+                if (state.isSpinning || !state.selectedClass) {
+                    debug.log('Cannot select spins', { isSpinning: state.isSpinning, selectedClass: state.selectedClass });
+                    return;
+                }
+                
+                state.selectedSpins = count;
+                state.currentSpin = count;
+                
+                // Update UI
+                document.querySelectorAll('.spin-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                event.target.closest('.spin-btn').classList.add('selected');
+                
+                // Start spinning
+                startSpinSequence();
+            }
+
+            // Start Spin Sequence
+            function startSpinSequence() {
+                debug.log('Starting spin sequence', { 
+                    selectedClass: state.selectedClass, 
+                    currentSpin: state.currentSpin 
+                });
+                
+                if (state.isSpinning) return;
+                
+                state.isSpinning = true;
+                
+                // Determine actual class if random
+                let actualClass = state.selectedClass;
+                if (state.selectedClass === 'Random') {
+                    const classes = ['Light', 'Medium', 'Heavy'];
+                    actualClass = classes[Math.floor(Math.random() * classes.length)];
+                    debug.log('Random class selected', actualClass);
+                }
+                
+                // Update title
+                document.getElementById('slotTitle').textContent = `${actualClass.toUpperCase()} LOADOUT`;
+                
+                // Get filtered loadout
+                const loadout = getFilteredLoadout(actualClass);
+                debug.log('Filtered loadout', loadout);
+                
+                // Select random items
+                const selections = {
+                    weapon: selectRandom(loadout.weapons),
+                    specialization: selectRandom(loadout.specializations),
+                    gadgets: selectUniqueRandom(loadout.gadgets, 3)
+                };
+                
+                debug.log('Selected items', selections);
+                
+                // Clear win message
+                document.getElementById('winMessage').classList.remove('show');
+                
+                // Start lights animation
+                animateLights();
+                
+                // Spin reels
+                spinReel('weapon', selections.weapon, loadout.weapons, 0);
+                spinReel('spec', selections.specialization, loadout.specializations, 1);
+                spinReel('gadget1', selections.gadgets[0], loadout.gadgets, 2);
+                spinReel('gadget2', selections.gadgets[1], loadout.gadgets, 3);
+                spinReel('gadget3', selections.gadgets[2], loadout.gadgets, 4);
+                
+                // Handle completion
+                setTimeout(() => {
+                    onSpinComplete(actualClass, selections);
+                }, CONSTANTS.SPIN_DURATION + (5 * CONSTANTS.SPIN_DELAY) + CONSTANTS.WIN_MESSAGE_DELAY);
+            }
+
+            // Get Filtered Loadout
+            function getFilteredLoadout(className) {
+                const loadout = LOADOUTS[className];
+                const filtered = {
+                    weapons: [],
+                    specializations: [],
+                    gadgets: []
+                };
+                
+                // Filter based on checkboxes
+                filtered.weapons = loadout.weapons.filter(w => state.filters.weapons.has(w));
+                filtered.specializations = loadout.specializations.filter(s => state.filters.specializations.has(s));
+                filtered.gadgets = loadout.gadgets.filter(g => state.filters.gadgets.has(g));
+                
+                // Fallback to full loadout if nothing selected
+                if (filtered.weapons.length === 0) filtered.weapons = loadout.weapons;
+                if (filtered.specializations.length === 0) filtered.specializations = loadout.specializations;
+                if (filtered.gadgets.length < 3) filtered.gadgets = loadout.gadgets;
+                
+                return filtered;
+            }
+
+            // Select Random Item
+            function selectRandom(array) {
+                return array[Math.floor(Math.random() * array.length)];
+            }
+
+            // Select Unique Random Items
+            function selectUniqueRandom(array, count) {
+                const shuffled = [...array].sort(() => Math.random() - 0.5);
+                return shuffled.slice(0, count);
+            }
+
+            // Animate Lights
+            function animateLights() {
+                const lights = document.querySelectorAll('.light-bulb');
+                const colors = ['on-red', 'on-yellow', 'on-green'];
+                
+                const interval = setInterval(() => {
+                    lights.forEach((light, index) => {
+                        // Clear all colors
+                        light.classList.remove(...colors);
+                        
+                        // Random chance to light up
+                        if (Math.random() > 0.5) {
+                            const color = colors[index % 3];
+                            light.classList.add(color);
+                        }
+                    });
+                }, 100);
+                
+                // Stop after spin duration
+                setTimeout(() => {
+                    clearInterval(interval);
+                    lights.forEach(light => light.classList.remove(...colors));
+                }, CONSTANTS.SPIN_DURATION + (5 * CONSTANTS.SPIN_DELAY));
+            }
+
+            // Spin Reel
+            function spinReel(reelName, winner, allItems, index) {
+                debug.log(`Spinning reel ${reelName}`, winner);
+                
+                const strip = document.getElementById(`${reelName}Strip`);
+                const column = strip.closest('.reel-column');
+                
+                if (!strip) {
+                    debug.log(`ERROR: Strip not found for ${reelName}`);
+                    return;
+                }
+                
+                // Clear existing items
+                strip.innerHTML = '';
+                
+                // Create reel items (5 items with winner in the middle)
+                const items = [];
+                for (let i = 0; i < 5; i++) {
+                    if (i === 2) {
+                        // Winner in the middle
+                        items.push(winner);
+                    } else {
+                        // Random other items
+                        let item;
+                        do {
+                            item = selectRandom(allItems);
+                        } while (item === winner || (i > 0 && item === items[i - 1]));
+                        items.push(item);
+                    }
+                }
+                
+                // Add items to strip
+                items.forEach((item, i) => {
+                    const imageName = item.replace(/ /g, '_') + '.webp';
+                    const reelItem = createReelItem(item, imageName, i === 2);
+                    strip.appendChild(reelItem);
+                });
+                
+                // Position strip to show first item
+                strip.style.transform = 'translateY(0)';
+                
+                // Start spinning after delay
+                setTimeout(() => {
+                    // Add spinning class
+                    strip.classList.add('spinning');
+                    
+                    // Calculate final position (show middle item)
+                    const finalPosition = -2 * CONSTANTS.REEL_ITEM_HEIGHT;
+                    
+                    // Animate to final position
+                    setTimeout(() => {
+                        strip.classList.remove('spinning');
+                        strip.style.transform = `translateY(${finalPosition}px)`;
+                        
+                        // Add winner indicator
+                        if (column) {
+                            setTimeout(() => {
+                                column.classList.add('winner');
+                            }, 300);
+                        }
+                    }, CONSTANTS.SPIN_DURATION);
+                    
+                }, index * CONSTANTS.SPIN_DELAY);
+            }
+
+            // On Spin Complete
+            function onSpinComplete(className, selections) {
+                debug.log('Spin complete', { className, selections });
+                
+                // Show win message
+                document.getElementById('winMessage').classList.add('show');
+                
+                // Add to history
+                addToHistory(className, selections);
+                
+                // Handle multiple spins
+                state.currentSpin--;
+                
+                if (state.currentSpin > 0) {
+                    debug.log('Starting next spin', state.currentSpin);
+                    
+                    setTimeout(() => {
+                        // Reset UI
+                        document.querySelectorAll('.reel-column').forEach(col => {
+                            col.classList.remove('winner');
+                        });
+                        
+                        // Start next spin
+                        state.isSpinning = false;
+                        startSpinSequence();
+                    }, 2000);
+                } else {
+                    state.isSpinning = false;
+                    debug.log('All spins complete');
+                }
+            }
+
+            // Add to History
+            function addToHistory(className, selections) {
+                const entry = {
+                    id: Date.now(),
+                    class: className,
+                    weapon: selections.weapon,
+                    specialization: selections.specialization,
+                    gadgets: selections.gadgets,
+                    timestamp: new Date().toISOString()
+                };
+                
+                state.history.unshift(entry);
+                
+                // Limit history
+                if (state.history.length > CONSTANTS.MAX_HISTORY) {
+                    state.history = state.history.slice(0, CONSTANTS.MAX_HISTORY);
+                }
+                
+                // Save to localStorage
+                localStorage.setItem('loadoutHistory', JSON.stringify(state.history));
+                
+                // Update UI
+                renderHistory();
+                
+                debug.log('Added to history', entry);
+            }
+
+            // Render History
+            function renderHistory() {
+                const grid = document.getElementById('historyGrid');
+                if (!grid) return;
+                
+                grid.innerHTML = '';
+                
+                state.history.forEach((entry, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'history-item';
+                    
+                    const time = new Date(entry.timestamp).toLocaleString();
+                    
+                    item.innerHTML = `
+                        <div class="history-item-header">
+                            <div class="history-class">${entry.class} Class</div>
+                            <div class="history-time">${time}</div>
+                        </div>
+                        <div class="history-details">
+                            <div class="history-detail">
+                                <span class="history-label">Weapon:</span>
+                                <span class="history-value">${entry.weapon}</span>
+                            </div>
+                            <div class="history-detail">
+                                <span class="history-label">Specialization:</span>
+                                <span class="history-value">${entry.specialization}</span>
+                            </div>
+                            <div class="history-detail">
+                                <span class="history-label">Gadgets:</span>
+                                <span class="history-value">${entry.gadgets.join(', ')}</span>
+                            </div>
+                        </div>
+                        <div class="history-actions">
+                            <button class="btn btn-copy" onclick="SlotMachine.copyLoadout(${index})">Copy</button>
+                        </div>
+                    `;
+                    
+                    grid.appendChild(item);
+                });
+            }
+
+            // Load History
+            function loadHistory() {
+                const saved = localStorage.getItem('loadoutHistory');
+                if (saved) {
+                    try {
+                        state.history = JSON.parse(saved);
+                        renderHistory();
+                        debug.log('History loaded', state.history.length);
+                    } catch (e) {
+                        debug.log('ERROR: Failed to load history', e);
+                    }
+                }
+            }
+
+            // Copy Loadout
+            function copyLoadout(index) {
+                const entry = state.history[index];
+                if (!entry) return;
+                
+                const text = `${entry.class} Class
+Weapon: ${entry.weapon}
+Specialization: ${entry.specialization}
+Gadgets: ${entry.gadgets.join(', ')}`;
+                
+                navigator.clipboard.writeText(text).then(() => {
+                    event.target.textContent = 'Copied!';
+                    setTimeout(() => {
+                        event.target.textContent = 'Copy';
+                    }, 2000);
+                    
+                    debug.log('Loadout copied');
+                }).catch(err => {
+                    debug.log('ERROR: Failed to copy', err);
+                });
+            }
+
+            // Clear History
+            function clearHistory() {
+                if (confirm('Clear all loadout history?')) {
+                    state.history = [];
+                    localStorage.removeItem('loadoutHistory');
+                    renderHistory();
+                    debug.log('History cleared');
+                }
+            }
+
+            // Toggle Filters
+            function toggleFilters() {
+                const panel = document.getElementById('filterPanel');
+                const toggle = document.getElementById('filterToggle');
+                
+                panel.classList.toggle('active');
+                toggle.classList.toggle('active');
+                
+                debug.log('Filters toggled', panel.classList.contains('active'));
+            }
+
+            // Switch Filter Tab
+            function switchFilterTab(tab) {
+                // Update tabs
+                document.querySelectorAll('.filter-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                // Update content
+                document.querySelectorAll('.filter-content').forEach(c => {
+                    c.classList.remove('active');
+                });
+                document.getElementById(`${tab}Filter`).classList.add('active');
+                
+                debug.log('Filter tab switched', tab);
+            }
+
+            // Update Filter
+            function updateFilter(type, value, checked) {
+                if (checked) {
+                    state.filters[type].add(value);
+                } else {
+                    state.filters[type].delete(value);
+                }
+                
+                debug.log('Filter updated', { type, value, checked });
+            }
+
+            // Toggle All Filters
+            function toggleAllFilters(type) {
+                const checkboxes = document.querySelectorAll(`input[data-type="${type}"]`);
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                
+                checkboxes.forEach(cb => {
+                    cb.checked = !allChecked;
+                    updateFilter(type, cb.dataset.value, cb.checked);
+                });
+                
+                debug.log('Toggled all filters', { type, checked: !allChecked });
+            }
+
+            // Debug Functions
+            function toggleDebug() {
+                state.debugMode = !state.debugMode;
+                document.getElementById('debugPanel').classList.toggle('hidden');
+                debug.log('Debug mode', state.debugMode ? 'enabled' : 'disabled');
+            }
+
+            function clearDebugLog() {
+                const log = document.getElementById('debugLog');
+                if (log) log.innerHTML = '';
+            }
+
+            // Public API
+            return {
+                init,
+                selectClass,
+                selectSpins,
+                toggleFilters,
+                switchFilterTab,
+                updateFilter,
+                toggleAllFilters,
+                copyLoadout,
+                clearHistory,
+                toggleDebug,
+                clearDebugLog
+            };
+        })();
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            SlotMachine.init();
+        });
+    </script>
+</body>
+</html>

@@ -74,7 +74,7 @@ const loadouts = {
   Heavy: {
     weapons: [
       "50 Akimbo", "Flamethrower", "KS-23", "Lewis Gun", "M60",
-      "M134 Minigun", "M32GL", "SA 1216", "Sledgehammer", "SHAK-50", "Spear"
+      "M134 Minigun", "M32GL", "SA_1216", "Sledgehammer", "SHAK-50", "Spear"
     ],
     specializations: ["Charge N Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
     gadgets: [
@@ -177,7 +177,7 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
   return sequence.map((item, index) => `
     <div class="itemCol ${index === 7 ? "winner" : ""}" data-item="${item}" style="transform: translateY(${index * PHYSICS.ITEM_HEIGHT}px);">
       <div class="item-inner">
-        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}" onerror="this.src='images/placeholder.webp'">
+        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}" onerror="this.src='images/placeholder.webp'; console.error('Failed to load image:', this.src);">
         <p>${item}</p>
       </div>
     </div>
@@ -403,15 +403,24 @@ const displayLoadout = (classType) => {
     gadgets: selectedGadgets
   });
 
-  setTimeout(() => {
-    const scrollContainers = Array.from(document.querySelectorAll(".scroll-container"));
-    console.log(`🎯 Found ${scrollContainers.length} scroll containers`);
-    if (scrollContainers.length > 0) {
-      startEnhancedSpinAnimation(scrollContainers);
-    } else {
-      console.error("❌ No scroll containers found!");
-    }
-  }, 100);
+  // Use requestAnimationFrame to ensure DOM is ready
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const scrollContainers = Array.from(document.querySelectorAll(".scroll-container"));
+      console.log(`🎯 Found ${scrollContainers.length} scroll containers`);
+      console.log("Scroll container details:", scrollContainers.map(c => ({
+        element: c,
+        children: c.children.length,
+        innerHTML: c.innerHTML.substring(0, 100) + "..."
+      })));
+      
+      if (scrollContainers.length > 0) {
+        startEnhancedSpinAnimation(scrollContainers);
+      } else {
+        console.error("❌ No scroll containers found!");
+      }
+    });
+  });
 };
 
 const displayRandomLoadout = () => {
@@ -876,6 +885,7 @@ function addVegasStyles() {
     .scroll-container {
       position: relative;
       height: 100%;
+      width: 100%;
     }
     
     .item-inner {
@@ -902,6 +912,9 @@ function addVegasStyles() {
       align-items: center;
       justify-content: center;
       transition: transform 0.1s;
+      position: absolute;
+      width: 100%;
+      left: 0;
     }
     
     .itemCol.winner .item-inner {
