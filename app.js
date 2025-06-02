@@ -1062,6 +1062,22 @@ function finalizeSpin(columns) {
   }
 
   console.log("🎯 Final spin, recording loadout");
+  
+  // Stop background music when final spin completes
+  const spinBackgroundSound = document.getElementById('spinBackgroundSound');
+  if (spinBackgroundSound) {
+    // Fade out the background sound
+    const fadeOut = setInterval(() => {
+      if (spinBackgroundSound.volume > 0.05) {
+        spinBackgroundSound.volume -= 0.05;
+      } else {
+        spinBackgroundSound.pause();
+        spinBackgroundSound.currentTime = 0;
+        spinBackgroundSound.volume = 0.3; // Reset volume for next time
+        clearInterval(fadeOut);
+      }
+    }, 100);
+  }
 
   // Prevent duplicate processing
   if (isAddingToHistory) {
@@ -1235,6 +1251,14 @@ const spinLoadout = () => {
 
   state.isSpinning = true;
   state.currentSpin = state.totalSpins;
+  
+  // Start background music for the entire spin sequence
+  const spinBackgroundSound = document.getElementById('spinBackgroundSound');
+  if (spinBackgroundSound) {
+    spinBackgroundSound.currentTime = 0;
+    spinBackgroundSound.volume = 0.3; // Lower volume for background
+    spinBackgroundSound.play().catch(() => {});
+  }
 
   // Disable ONLY class buttons during the spin, leave spin buttons enabled
   document.querySelectorAll(".class-button").forEach((btn) => {
