@@ -4531,24 +4531,35 @@ details[open].adjustment summary::after {
   }
   
   .class-roulette-wheel {
-    flex-direction: column;
+    flex-direction: row; /* Keep horizontal */
     height: auto;
-    gap: 20px;
+    gap: 10px; /* Smaller gap for mobile */
   }
   
   .class-option {
-    width: 150px;
-    height: 200px;
+    width: 100px; /* Smaller width */
+    height: 130px; /* Smaller height */
+  }
+  
+  .class-option img {
+    width: 60px; /* Smaller images */
+    height: 60px;
+  }
+  
+  .class-option span {
+    font-size: 14px; /* Smaller text */
+    letter-spacing: 1px;
   }
   
   .spin-roulette-wheel {
-    gap: 20px;
+    gap: 15px;
   }
   
   .spin-option {
-    width: 80px;
-    height: 80px;
-    font-size: 32px;
+    width: 60px; /* Ensure equal width and height for circles */
+    height: 60px; /* Equal to width to maintain round shape */
+    font-size: 24px;
+    min-width: 60px; /* Prevent shrinking */
   }
   
   .main-spin-button {
@@ -4558,5 +4569,42 @@ details[open].adjustment summary::after {
   
   .spin-text {
     font-size: 28px;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .class-roulette-wheel {
+    gap: 5px; /* Even smaller gap */
+  }
+  
+  .class-option {
+    width: 80px; /* Even smaller for tiny screens */
+    height: 110px;
+  }
+  
+  .class-option img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .class-option span {
+    font-size: 12px;
+  }
+  
+  .spin-option {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    min-width: 50px;
+  }
+  
+  .main-spin-button {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .spin-text {
+    font-size: 24px;
   }
 }
