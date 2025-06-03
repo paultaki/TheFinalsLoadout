@@ -250,51 +250,37 @@ const getRandomUniqueItems = (array, n) => {
 };
 
 const getUniqueGadgets = (classType, loadout) => {
-  console.log(`🔍 Starting gadget selection for ${classType}`);
+  console.log(`🔍 Starting FOOLPROOF gadget selection for ${classType}`);
   console.log(`Available gadgets (${loadout.gadgets.length}):`, loadout.gadgets);
   
-  // More robust approach using Fisher-Yates shuffle and explicit selection
-  const availableGadgets = [...loadout.gadgets];
-  const selectedGadgets = [];
+  // Use a Set to guarantee uniqueness from the start
+  const availableGadgetsSet = new Set(loadout.gadgets);
+  const availableGadgetsArray = Array.from(availableGadgetsSet);
   
-  console.log(`📋 Initial available pool:`, availableGadgets);
-  
-  // Select exactly 3 unique gadgets
-  for (let i = 0; i < 3 && i < availableGadgets.length; i++) {
-    console.log(`🎯 Selection round ${i + 1}:`);
-    console.log(`  - Available pool size: ${availableGadgets.length}`);
-    console.log(`  - Available gadgets:`, availableGadgets);
-    
-    const randomIndex = Math.floor(Math.random() * availableGadgets.length);
-    const selectedGadget = availableGadgets[randomIndex];
-    
-    console.log(`  - Random index: ${randomIndex}`);
-    console.log(`  - Selected gadget: "${selectedGadget}"`);
-    
-    selectedGadgets.push(selectedGadget);
-    
-    // Remove the selected gadget to ensure no duplicates
-    availableGadgets.splice(randomIndex, 1);
-    
-    console.log(`  - Removed from pool, new size: ${availableGadgets.length}`);
-    console.log(`  - Current selection:`, selectedGadgets);
+  // Fisher-Yates shuffle for true randomness
+  for (let i = availableGadgetsArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [availableGadgetsArray[i], availableGadgetsArray[j]] = [availableGadgetsArray[j], availableGadgetsArray[i]];
   }
   
-  console.log(`✅ Final selected gadgets:`, selectedGadgets);
+  // Take the first 3 items from the shuffled array
+  const selectedGadgets = availableGadgetsArray.slice(0, 3);
   
-  // Verify uniqueness
+  console.log(`✅ Selected gadgets (GUARANTEED UNIQUE):`, selectedGadgets);
+  
+  // Triple-check uniqueness (this should NEVER fail)
   const uniqueSet = new Set(selectedGadgets);
-  console.log(`🔍 Uniqueness check: ${uniqueSet.size} unique out of ${selectedGadgets.length} total`);
-  
   if (uniqueSet.size !== selectedGadgets.length) {
-    console.error("🚨 CRITICAL: Duplicate gadgets detected in selection!");
-    console.error("Selected array:", selectedGadgets);
-    console.error("Unique set:", Array.from(uniqueSet));
-    console.error("Original loadout gadgets:", loadout.gadgets);
+    console.error("🚨 IMPOSSIBLE ERROR: Duplicates found after guaranteed unique selection!");
+    console.error("This is a critical bug in the JavaScript engine itself.");
   }
   
-  // Store current set of selected gadgets
+  // Store for reference
   state.currentGadgetPool = new Set(selectedGadgets);
+  
+  // Store in window for debugging
+  window.lastSelectedGadgets = [...selectedGadgets];
+  console.log(`💾 Stored in window.lastSelectedGadgets for debugging`);
   
   return selectedGadgets;
 };
@@ -503,7 +489,10 @@ const displayLoadout = (classType) => {
   // Make a defensive copy and ensure it's truly immutable
   const selectedGadgets = Object.freeze([...selectedGadgetsRaw]);
   
-  console.log(`Selected gadgets: ${selectedGadgets.join(', ')}`);
+  console.log(`🎯 Final gadgets for display: ${selectedGadgets.join(', ')}`);
+  console.log(`🎯 Gadget 1: "${selectedGadgets[0]}"`);
+  console.log(`🎯 Gadget 2: "${selectedGadgets[1]}"`);
+  console.log(`🎯 Gadget 3: "${selectedGadgets[2]}"`);
   
   // Final uniqueness verification
   const uniqueCheck = new Set(selectedGadgets);
@@ -511,7 +500,8 @@ const displayLoadout = (classType) => {
     console.error("⚠️ CRITICAL ERROR: Duplicate gadgets detected!");
     console.error("This should be impossible with the current algorithm.");
     console.error("Selected:", selectedGadgets);
-    console.error("Please report this bug with the console log.");
+    console.error("Selected Raw:", selectedGadgetsRaw);
+    console.error("Window stored:", window.lastSelectedGadgets);
   }
   
   // Create animation sequences for each gadget
@@ -572,9 +562,13 @@ const displayLoadout = (classType) => {
         </div>
         ${selectedGadgets
           .map(
-            (gadget, index) => `
-            <div class="item-container" data-winning-gadget="${gadget}">
-              <div class="scroll-container" data-gadget-index="${index}" data-winning-gadget="${gadget}">
+            (gadget, index) => {
+              // Escape the gadget name for HTML attributes
+              const escapedGadget = gadget.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+              console.log(`🏷️ Gadget ${index + 1} HTML attribute: "${escapedGadget}"`);
+              return `
+            <div class="item-container" data-winning-gadget="${escapedGadget}">
+              <div class="scroll-container" data-gadget-index="${index}" data-winning-gadget="${escapedGadget}">
                 ${createItemContainer(
                   createGadgetSpinSequence(gadget, index),
                   gadget,
@@ -582,7 +576,8 @@ const displayLoadout = (classType) => {
                 )}
               </div>
             </div>
-          `
+          `;
+            }
           )
           .join("")}
       </div>
