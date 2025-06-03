@@ -250,31 +250,52 @@ const getRandomUniqueItems = (array, n) => {
 };
 
 const getUniqueGadgets = (classType, loadout) => {
+  console.log(`🔍 Starting gadget selection for ${classType}`);
+  console.log(`Available gadgets (${loadout.gadgets.length}):`, loadout.gadgets);
+  
   // More robust approach using Fisher-Yates shuffle and explicit selection
   const availableGadgets = [...loadout.gadgets];
   const selectedGadgets = [];
   
+  console.log(`📋 Initial available pool:`, availableGadgets);
+  
   // Select exactly 3 unique gadgets
   for (let i = 0; i < 3 && i < availableGadgets.length; i++) {
+    console.log(`🎯 Selection round ${i + 1}:`);
+    console.log(`  - Available pool size: ${availableGadgets.length}`);
+    console.log(`  - Available gadgets:`, availableGadgets);
+    
     const randomIndex = Math.floor(Math.random() * availableGadgets.length);
-    selectedGadgets.push(availableGadgets[randomIndex]);
+    const selectedGadget = availableGadgets[randomIndex];
+    
+    console.log(`  - Random index: ${randomIndex}`);
+    console.log(`  - Selected gadget: "${selectedGadget}"`);
+    
+    selectedGadgets.push(selectedGadget);
+    
     // Remove the selected gadget to ensure no duplicates
     availableGadgets.splice(randomIndex, 1);
+    
+    console.log(`  - Removed from pool, new size: ${availableGadgets.length}`);
+    console.log(`  - Current selection:`, selectedGadgets);
   }
+  
+  console.log(`✅ Final selected gadgets:`, selectedGadgets);
   
   // Verify uniqueness
   const uniqueSet = new Set(selectedGadgets);
+  console.log(`🔍 Uniqueness check: ${uniqueSet.size} unique out of ${selectedGadgets.length} total`);
+  
   if (uniqueSet.size !== selectedGadgets.length) {
-    console.error("⚠️ CRITICAL: Duplicate gadgets in selection!");
-    console.error("Selected:", selectedGadgets);
+    console.error("🚨 CRITICAL: Duplicate gadgets detected in selection!");
+    console.error("Selected array:", selectedGadgets);
     console.error("Unique set:", Array.from(uniqueSet));
+    console.error("Original loadout gadgets:", loadout.gadgets);
   }
   
   // Store current set of selected gadgets
   state.currentGadgetPool = new Set(selectedGadgets);
   
-  console.log(`Selected gadgets for ${classType}:`, selectedGadgets);
-  console.log(`Unique check: ${uniqueSet.size} unique items out of ${selectedGadgets.length} selected`);
   return selectedGadgets;
 };
 
@@ -507,17 +528,22 @@ const displayLoadout = (classType) => {
   
   // Create animation sequences for each gadget
   const createGadgetSpinSequence = (winningGadget, gadgetIndex) => {
+    console.log(`🎬 Creating animation for gadget ${gadgetIndex + 1}: "${winningGadget}"`);
+    console.log(`🎬 All selected gadgets:`, selectedGadgets);
+    
     // Create a fixed-length array for the spin sequence
     const sequence = new Array(8);
     
     // The winning item is always at position 4 (the center)
     sequence[4] = winningGadget;
+    console.log(`🎬 Set position 4 (winner) to: "${winningGadget}"`);
     
     // Create a pool of gadgets for this specific animation slot that excludes the selected gadgets
     const otherSelectedGadgets = selectedGadgets.filter(g => g !== winningGadget);
     const availableForAnimation = loadout.gadgets.filter(g => !otherSelectedGadgets.includes(g));
     
-    console.log(`Animation pool for ${winningGadget} has ${availableForAnimation.length} gadgets`);
+    console.log(`🎬 Other selected gadgets to exclude:`, otherSelectedGadgets);
+    console.log(`🎬 Animation pool for ${winningGadget} has ${availableForAnimation.length} gadgets:`, availableForAnimation);
     
     // Fill the other positions with random gadgets that aren't the selected gadgets for other slots
     // Shuffle the available gadgets to ensure variety
@@ -535,7 +561,8 @@ const displayLoadout = (classType) => {
       }
     }
     
-    console.log(`Gadget ${gadgetIndex + 1} animation sequence:`, sequence);
+    console.log(`🎬 Final animation sequence for gadget ${gadgetIndex + 1}:`, sequence);
+    console.log(`🎬 Checking for "${winningGadget}" duplicates in sequence:`, sequence.filter(item => item === winningGadget));
     return sequence;
   };
 
