@@ -1049,7 +1049,9 @@ function populateFilterItems() {
   console.log("✅ Filter items population complete");
 
   // Setup Select All functionality once items are populated
-  setupSelectAllCheckboxes();
+  if (typeof setupSelectAllCheckboxes === 'function') {
+    setupSelectAllCheckboxes();
+  }
   
   // Setup tab content search placeholder update
   setupTabSearchPlaceholder();
@@ -1560,80 +1562,81 @@ document.addEventListener("DOMContentLoaded", () => {
     setupSelectAllCheckboxes();
   });
 
-  function setupSelectAllCheckboxes() {
-    // Get all "Select All" checkboxes
-    const selectAllCheckboxes = document.querySelectorAll(
-      'input[data-type$="selectall"]'
-    );
+// Function to setup Select All checkboxes (moved outside event listener)
+function setupSelectAllCheckboxes() {
+  // Get all "Select All" checkboxes
+  const selectAllCheckboxes = document.querySelectorAll(
+    'input[data-type$="selectall"]'
+  );
 
-    console.log(
-      "Setting up Select All checkboxes:",
-      selectAllCheckboxes.length
-    );
+  console.log(
+    "Setting up Select All checkboxes:",
+    selectAllCheckboxes.length
+  );
 
-    // Add event listeners to each "Select All" checkbox
-    selectAllCheckboxes.forEach((checkbox) => {
-      checkbox.addEventListener("change", function () {
-        const classType = this.dataset.class; // "light", "medium", or "heavy"
-        const selectType = this.dataset.type.replace("-selectall", ""); // "weapon", "specialization", or "gadget"
-        const isChecked = this.checked;
+  // Add event listeners to each "Select All" checkbox
+  selectAllCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", function () {
+      const classType = this.dataset.class; // "light", "medium", or "heavy"
+      const selectType = this.dataset.type.replace("-selectall", ""); // "weapon", "specialization", or "gadget"
+      const isChecked = this.checked;
 
-        console.log(
-          `Select All ${classType} ${selectType}s changed to: ${isChecked}`
-        );
+      console.log(
+        `Select All ${classType} ${selectType}s changed to: ${isChecked}`
+      );
 
-        // Find all checkboxes of the same class and type
-        const typeCheckboxes = document.querySelectorAll(
-          `input[data-type="${selectType}"][data-class="${classType}"]`
-        );
+      // Find all checkboxes of the same class and type
+      const typeCheckboxes = document.querySelectorAll(
+        `input[data-type="${selectType}"][data-class="${classType}"]`
+      );
 
-        console.log(
-          `Found ${typeCheckboxes.length} ${classType} ${selectType}s to update`
-        );
+      console.log(
+        `Found ${typeCheckboxes.length} ${classType} ${selectType}s to update`
+      );
 
-        // Set all checkboxes to match the "Select All" state
-        typeCheckboxes.forEach((itemCheckbox) => {
-          itemCheckbox.checked = isChecked;
-        });
+      // Set all checkboxes to match the "Select All" state
+      typeCheckboxes.forEach((itemCheckbox) => {
+        itemCheckbox.checked = isChecked;
       });
     });
+  });
 
-    // Also add listeners to individual checkboxes to update "Select All" state
-    const typeCheckboxes = document.querySelectorAll(
-      'input[data-type="weapon"], input[data-type="specialization"], input[data-type="gadget"]'
-    );
+  // Also add listeners to individual checkboxes to update "Select All" state
+  const typeCheckboxes = document.querySelectorAll(
+    'input[data-type="weapon"], input[data-type="specialization"], input[data-type="gadget"]'
+  );
 
-    typeCheckboxes.forEach((checkbox) => {
-      checkbox.addEventListener("change", function () {
-        const classType = this.dataset.class; // "light", "medium", or "heavy"
-        const selectType = this.dataset.type; // "weapon", "specialization", or "gadget"
+  typeCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", function () {
+      const classType = this.dataset.class; // "light", "medium", or "heavy"
+      const selectType = this.dataset.type; // "weapon", "specialization", or "gadget"
 
-        // Find all checkboxes of the same class and type
-        const allTypeCheckboxes = document.querySelectorAll(
-          `input[data-type="${selectType}"][data-class="${classType}"]`
+      // Find all checkboxes of the same class and type
+      const allTypeCheckboxes = document.querySelectorAll(
+        `input[data-type="${selectType}"][data-class="${classType}"]`
+      );
+
+      // Check if all are checked
+      const allChecked = Array.from(allTypeCheckboxes).every(
+        (cb) => cb.checked
+      );
+
+      // Update the "Select All" checkbox state
+      const selectAllCheckbox = document.querySelector(
+        `input[data-type="${selectType}-selectall"][data-class="${classType}"]`
+      );
+
+      if (selectAllCheckbox) {
+        selectAllCheckbox.checked = allChecked;
+        console.log(
+          `Updated Select All ${classType} ${selectType}s to: ${allChecked}`
         );
-
-        // Check if all are checked
-        const allChecked = Array.from(allTypeCheckboxes).every(
-          (cb) => cb.checked
-        );
-
-        // Update the "Select All" checkbox state
-        const selectAllCheckbox = document.querySelector(
-          `input[data-type="${selectType}-selectall"][data-class="${classType}"]`
-        );
-
-        if (selectAllCheckbox) {
-          selectAllCheckbox.checked = allChecked;
-          console.log(
-            `Updated Select All ${classType} ${selectType}s to: ${allChecked}`
-          );
-        }
-      });
+      }
     });
+  });
 
-    console.log("Select All setup complete");
-  }
+  console.log("Select All setup complete");
+}
 
   // Make sure this function is called after the DOM is loaded
   document.addEventListener("DOMContentLoaded", function () {

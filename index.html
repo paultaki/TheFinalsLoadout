@@ -719,12 +719,14 @@ details {
         var faqContent = document.getElementById("faq-content");
         var faqToggle = document.querySelector(".faq-toggle");
 
-        faqToggleButton.addEventListener("click", function () {
-          faqContent.classList.toggle("open");
-          faqToggle.innerText = faqContent.classList.contains("open")
-            ? "−"
-            : "+";
-        });
+        if (faqToggleButton && faqContent && faqToggle) {
+          faqToggleButton.addEventListener("click", function () {
+            faqContent.classList.toggle("open");
+            faqToggle.innerText = faqContent.classList.contains("open")
+              ? "−"
+              : "+";
+          });
+        }
       });
     </script>
 
