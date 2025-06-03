@@ -250,10 +250,17 @@ const getRandomUniqueItems = (array, n) => {
 };
 
 const getUniqueGadgets = (classType, loadout) => {
-  // Simple approach: just shuffle and take the first 3
-  // This guarantees uniqueness within a single selection
-  const shuffledGadgets = [...loadout.gadgets].sort(() => Math.random() - 0.5);
-  const selectedGadgets = shuffledGadgets.slice(0, 3);
+  // More robust approach using Fisher-Yates shuffle and explicit selection
+  const availableGadgets = [...loadout.gadgets];
+  const selectedGadgets = [];
+  
+  // Select exactly 3 unique gadgets
+  for (let i = 0; i < 3 && i < availableGadgets.length; i++) {
+    const randomIndex = Math.floor(Math.random() * availableGadgets.length);
+    selectedGadgets.push(availableGadgets[randomIndex]);
+    // Remove the selected gadget to ensure no duplicates
+    availableGadgets.splice(randomIndex, 1);
+  }
   
   // Verify uniqueness
   const uniqueSet = new Set(selectedGadgets);
@@ -470,7 +477,10 @@ const displayLoadout = (classType) => {
   }
   
   // Use the getUniqueGadgets function to ensure uniqueness
-  const selectedGadgets = getUniqueGadgets(classType, loadout);
+  let selectedGadgets = getUniqueGadgets(classType, loadout);
+  
+  // Make a defensive copy to prevent any accidental modifications
+  selectedGadgets = [...selectedGadgets];
   
   console.log(`Selected gadgets: ${selectedGadgets.join(', ')}`);
   
@@ -530,6 +540,9 @@ const displayLoadout = (classType) => {
   };
 
   const loadoutHTML = `
+    <div class="class-info-display" style="text-align: center; margin-bottom: 20px; font-size: 24px; font-weight: bold; color: #fff;">
+      ${classType} Class${state.currentSpin > 1 ? ` - ${state.currentSpin} spins remaining` : ''}
+    </div>
     <div class="slot-machine-wrapper">
       <div class="items-container">
         <div class="item-container">
