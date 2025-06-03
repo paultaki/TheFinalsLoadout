@@ -463,28 +463,12 @@ const displayLoadout = (classType) => {
   const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
   
-  // Select three unique gadgets
+  // Select three unique gadgets using the gadget queue system
   console.log(`Available gadgets for ${classType}:`, loadout.gadgets);
   console.log(`Total available gadgets: ${loadout.gadgets.length}`);
   
-  // Use simple selection to guarantee uniqueness
-  const availableGadgets = [...loadout.gadgets];
-  const selectedGadgets = [];
-  
-  // Select exactly 3 unique gadgets (or fewer if not enough available)
-  while (selectedGadgets.length < 3 && availableGadgets.length > 0) {
-    // Pick a random gadget from remaining pool
-    const randomIndex = Math.floor(Math.random() * availableGadgets.length);
-    const selectedGadget = availableGadgets[randomIndex];
-    
-    // Add to selected gadgets
-    selectedGadgets.push(selectedGadget);
-    
-    // Remove from available pool to ensure uniqueness
-    availableGadgets.splice(randomIndex, 1);
-    
-    console.log(`Selected gadget ${selectedGadgets.length}: ${selectedGadget}, remaining pool: ${availableGadgets.length}`);
-  }
+  // Use the getUniqueGadgets function to ensure uniqueness across spins
+  const selectedGadgets = getUniqueGadgets(classType, loadout);
   
   console.log(`Selected gadgets: ${selectedGadgets.join(', ')}`);
   
@@ -1689,6 +1673,14 @@ document.addEventListener("DOMContentLoaded", () => {
       // Select current button
       button.classList.add("selected", "active");
       button.src = button.dataset.active; // Change image to active
+      
+      // Reset gadget queues when changing class to ensure fresh selection
+      state.gadgetQueue = {
+        Light: [],
+        Medium: [],
+        Heavy: [],
+      };
+      console.log("🔄 Gadget queues reset for class change");
 
       // Handle "Random" class selection
       if (button.dataset.class.toLowerCase() === "random") {
