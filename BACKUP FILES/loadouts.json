@@ -25,7 +25,6 @@
       "Sonar Grenade",
       "Thermal Bore",
       "Gas Grenade",
-      "Gravity Vortex",
       "Thermal Vision",
       "Tracking Dart",
       "Vanishing Bomb",
@@ -66,7 +65,8 @@
       "Smoke Grenade",
       "Frag Grenade",
       "Flashbang",
-      "Proximity Sensor"
+      "Proximity Sensor",
+      "Health Canister"
     ]
   },
   "Heavy": {

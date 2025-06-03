@@ -13,6 +13,9 @@ const state = {
   currentGadgetPool: new Set(),
 };
 
+// Make state globally accessible
+window.state = state;
+
 // Global variables for DOM elements
 let spinButtons;
 let classButtons;
@@ -67,7 +70,6 @@ const loadouts = {
       "Sonar Grenade",
       "Thermal Bore",
       "Gas Grenade",
-      "Gravity Vortex",
       "Thermal Vision",
       "Tracking Dart",
       "Vanishing Bomb",
@@ -109,6 +111,7 @@ const loadouts = {
       "Frag Grenade",
       "Flashbang",
       "Proximity Sensor",
+      "Health Canister",
     ],
   },
   Heavy: {
@@ -460,27 +463,22 @@ const displayLoadout = (classType) => {
   const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
   
-  // Select three unique gadgets
+  // Select three unique gadgets using the gadget queue system
   console.log(`Available gadgets for ${classType}:`, loadout.gadgets);
+  console.log(`Total available gadgets: ${loadout.gadgets.length}`);
   
-  // Use simple selection to guarantee uniqueness
-  const availableGadgets = [...loadout.gadgets];
-  const selectedGadgets = [];
-  
-  // Select exactly 3 unique gadgets (or fewer if not enough available)
-  while (selectedGadgets.length < 3 && availableGadgets.length > 0) {
-    // Pick a random gadget from remaining pool
-    const randomIndex = Math.floor(Math.random() * availableGadgets.length);
-    const selectedGadget = availableGadgets[randomIndex];
-    
-    // Add to selected gadgets
-    selectedGadgets.push(selectedGadget);
-    
-    // Remove from available pool to ensure uniqueness
-    availableGadgets.splice(randomIndex, 1);
-  }
+  // Use the getUniqueGadgets function to ensure uniqueness across spins
+  const selectedGadgets = getUniqueGadgets(classType, loadout);
   
   console.log(`Selected gadgets: ${selectedGadgets.join(', ')}`);
+  
+  // Verify uniqueness
+  const uniqueCheck = new Set(selectedGadgets);
+  if (uniqueCheck.size !== selectedGadgets.length) {
+    console.error("⚠️ DUPLICATE GADGETS DETECTED!");
+    console.error("Selected:", selectedGadgets);
+    console.error("Unique:", Array.from(uniqueCheck));
+  }
   
   // Create animation sequences for each gadget
   const createGadgetSpinSequence = (winningGadget, gadgetIndex) => {
@@ -497,11 +495,14 @@ const displayLoadout = (classType) => {
     console.log(`Animation pool for ${winningGadget} has ${availableForAnimation.length} gadgets`);
     
     // Fill the other positions with random gadgets that aren't the selected gadgets for other slots
+    // Shuffle the available gadgets to ensure variety
+    const shuffledAnimation = [...availableForAnimation].sort(() => Math.random() - 0.5);
+    
     for (let i = 0; i < 8; i++) {
       if (i !== 4) { // Skip position 4 (winner)
-        if (availableForAnimation.length > 0) {
-          const randomIndex = Math.floor(Math.random() * availableForAnimation.length);
-          sequence[i] = availableForAnimation[randomIndex];
+        if (shuffledAnimation.length > 0) {
+          // Use modulo to cycle through shuffled gadgets if we have fewer than needed
+          sequence[i] = shuffledAnimation[i % shuffledAnimation.length];
         } else {
           // Fallback if no other gadgets available
           sequence[i] = winningGadget;
@@ -509,6 +510,7 @@ const displayLoadout = (classType) => {
       }
     }
     
+    console.log(`Gadget ${gadgetIndex + 1} animation sequence:`, sequence);
     return sequence;
   };
 
@@ -567,6 +569,14 @@ function startSpinAnimation(columns) {
   console.log(
     `🎲 Animation starting with currentSpin = ${state.currentSpin}, isFinalSpin = ${isFinalSpin}`
   );
+  
+  // Play spinning sound
+  const spinningSound = document.getElementById('spinningSound');
+  if (spinningSound) {
+    spinningSound.currentTime = 0;
+    spinningSound.volume = 0.25; // Reduced by 50%
+    spinningSound.play().catch(() => {});
+  }
 
   const startTime = performance.now();
 
@@ -613,6 +623,39 @@ function startSpinAnimation(columns) {
       requestAnimationFrame(animate);
     } else {
       console.log("✅ All columns stopped, calling finalizeSpin");
+      
+      // Stop spinning sound with mobile fix
+      const spinningSound = document.getElementById('spinningSound');
+      if (spinningSound) {
+        spinningSound.pause();
+        spinningSound.currentTime = 0;
+        // Additional stop mechanism for mobile browsers
+        try {
+          spinningSound.src = spinningSound.src; // Force reload on mobile
+        } catch (e) {
+          console.log("Mobile audio reload failed:", e);
+        }
+      }
+
+      // Also stop background sound immediately (mobile fix)
+      const spinBackgroundSound = document.getElementById('spinBackgroundSound');
+      if (spinBackgroundSound && !spinBackgroundSound.paused) {
+        spinBackgroundSound.pause();
+        spinBackgroundSound.currentTime = 0;
+        spinBackgroundSound.volume = 0;
+        try {
+          // Force stop on mobile by removing and re-adding src
+          const originalSrc = spinBackgroundSound.src;
+          spinBackgroundSound.removeAttribute('src');
+          spinBackgroundSound.load();
+          setTimeout(() => {
+            spinBackgroundSound.src = originalSrc;
+            spinBackgroundSound.volume = 0.3; // Reset volume for next time
+          }, 100);
+        } catch (e) {
+          console.log("Mobile background audio stop failed:", e);
+        }
+      }
 
       // Add visual effects only for final spin
       if (isFinalSpin) {
@@ -630,6 +673,18 @@ function startSpinAnimation(columns) {
                 lockedTag.className = "locked-tag show";
                 lockedTag.textContent = "Locked In!";
                 container.appendChild(lockedTag);
+              }
+
+              // Play final sound on FIRST locked tag
+              if (index === 0) {
+                const finalSound = document.getElementById('finalSound');
+                if (finalSound) {
+                  finalSound.currentTime = 0;
+                  finalSound.volume = 0.7;
+                  finalSound.play().catch((err) => {
+                    console.log("Could not play final sound:", err);
+                  });
+                }
               }
 
               // If this is the last column, disable buttons when its tag appears
@@ -881,6 +936,49 @@ function setupFilterSystem() {
   } else {
     console.error("❌ Could not find apply button");
   }
+  
+  // Reset button functionality
+  const resetBtn = document.getElementById("reset-filters");
+  if (resetBtn) {
+    console.log("✅ Found reset button");
+    
+    resetBtn.addEventListener("click", () => {
+      console.log("🔄 Resetting all filters...");
+      
+      // Select all checkboxes in the filter panel
+      const allCheckboxes = document.querySelectorAll('#filter-panel input[type="checkbox"]');
+      
+      // Check all checkboxes
+      allCheckboxes.forEach(checkbox => {
+        checkbox.checked = true;
+      });
+      
+      // Clear any existing gadget queues to ensure fresh selection
+      state.gadgetQueue = {
+        Light: [],
+        Medium: [],
+        Heavy: [],
+      };
+      
+      // Show confirmation message
+      const filterStatus = document.createElement("div");
+      filterStatus.className = "filter-status";
+      filterStatus.textContent = "All filters reset!";
+      filterStatus.style.background = "linear-gradient(to right, #666, #888)";
+      document.body.appendChild(filterStatus);
+      
+      // Remove after 2 seconds
+      setTimeout(() => {
+        if (filterStatus && filterStatus.parentNode) {
+          filterStatus.parentNode.removeChild(filterStatus);
+        }
+      }, 2000);
+      
+      console.log("✅ All filters have been reset");
+    });
+  } else {
+    console.error("❌ Could not find reset button");
+  }
 
   console.log("✅ Filter system setup complete");
 }
@@ -997,6 +1095,14 @@ function finalizeSpin(columns) {
       "🔄 Not final spin, continue sequence. Current spin:",
       state.currentSpin
     );
+    
+    // Play transition sound between spins
+    const transitionSound = document.getElementById('transitionSound');
+    if (transitionSound) {
+      transitionSound.currentTime = 0;
+      transitionSound.volume = 0.6;
+      transitionSound.play().catch(() => {});
+    }
 
     // Decrement spin counter
     state.currentSpin--;
@@ -1024,6 +1130,46 @@ function finalizeSpin(columns) {
   }
 
   console.log("🎯 Final spin, recording loadout");
+  
+  // Stop background music when final spin completes
+  const spinBackgroundSound = document.getElementById('spinBackgroundSound');
+  if (spinBackgroundSound) {
+    // Immediately stop sound for mobile compatibility
+    spinBackgroundSound.pause();
+    spinBackgroundSound.currentTime = 0;
+    
+    // For mobile browsers, force a complete stop
+    try {
+      // Remove loop attribute temporarily
+      spinBackgroundSound.loop = false;
+      
+      // Force stop on mobile by clearing and reloading
+      const originalSrc = spinBackgroundSound.src;
+      spinBackgroundSound.removeAttribute('src');
+      spinBackgroundSound.load();
+      
+      // Restore src and loop after a delay
+      setTimeout(() => {
+        spinBackgroundSound.src = originalSrc;
+        spinBackgroundSound.loop = true;
+        spinBackgroundSound.volume = 0.3; // Reset volume for next time
+      }, 200);
+    } catch (e) {
+      console.log("Mobile background audio force stop failed:", e);
+    }
+  }
+  
+  // Also ensure spinning sound is fully stopped (mobile fix)
+  const spinningSound = document.getElementById('spinningSound');
+  if (spinningSound && !spinningSound.paused) {
+    spinningSound.pause();
+    spinningSound.currentTime = 0;
+    try {
+      spinningSound.src = spinningSound.src; // Force reload on mobile
+    } catch (e) {
+      console.log("Mobile audio reload failed:", e);
+    }
+  }
 
   // Prevent duplicate processing
   if (isAddingToHistory) {
@@ -1197,6 +1343,14 @@ const spinLoadout = () => {
 
   state.isSpinning = true;
   state.currentSpin = state.totalSpins;
+  
+  // Start background music for the entire spin sequence
+  const spinBackgroundSound = document.getElementById('spinBackgroundSound');
+  if (spinBackgroundSound) {
+    spinBackgroundSound.currentTime = 0;
+    spinBackgroundSound.volume = 0.3; // Lower volume for background
+    spinBackgroundSound.play().catch(() => {});
+  }
 
   // Disable ONLY class buttons during the spin, leave spin buttons enabled
   document.querySelectorAll(".class-button").forEach((btn) => {
@@ -1219,6 +1373,30 @@ const spinLoadout = () => {
   } else {
     displayLoadout(state.selectedClass);
   }
+};
+
+// Make spinLoadout globally accessible
+window.spinLoadout = spinLoadout;
+
+// Global function to stop all audio (useful for mobile)
+window.stopAllAudio = function() {
+  const allAudio = document.querySelectorAll('audio');
+  allAudio.forEach(audio => {
+    audio.pause();
+    audio.currentTime = 0;
+    // Special handling for looped audio
+    if (audio.loop) {
+      audio.loop = false;
+      const src = audio.src;
+      audio.removeAttribute('src');
+      audio.load();
+      setTimeout(() => {
+        audio.src = src;
+        audio.loop = true;
+      }, 100);
+    }
+  });
+  console.log('All audio stopped');
 };
 
 // Loadout history functions
@@ -1309,6 +1487,43 @@ document.addEventListener("DOMContentLoaded", () => {
   spinButtons = document.querySelectorAll(".spin-button");
   spinSelection = document.getElementById("spinSelection");
   outputDiv = document.getElementById("output");
+  
+  // Mobile audio failsafe - stop all sounds when page loses focus
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      // Stop all audio when page is hidden
+      const allAudio = document.querySelectorAll('audio');
+      allAudio.forEach(audio => {
+        if (!audio.paused) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      });
+    }
+  });
+  
+  // Additional mobile failsafe for iOS
+  window.addEventListener('pagehide', () => {
+    const allAudio = document.querySelectorAll('audio');
+    allAudio.forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+  });
+  
+  // Initialize the roulette animation system
+  const rouletteSystem = new window.RouletteAnimationSystem();
+  
+  // Set up the main SPIN button
+  const mainSpinButton = document.getElementById('main-spin-button');
+  if (mainSpinButton) {
+    mainSpinButton.addEventListener('click', async () => {
+      if (state.isSpinning || rouletteSystem.animating) return;
+      
+      // Start the full roulette sequence
+      await rouletteSystem.startFullSequence();
+    });
+  }
 
   const toggleBtn = document.getElementById("toggle-customization");
   const customizationPanel = document.getElementById("customization-panel");
@@ -1408,7 +1623,12 @@ document.addEventListener("DOMContentLoaded", () => {
     setupSelectAllCheckboxes();
   });
 
-  // Spin button logic
+  // Hide original spin selection UI
+  if (spinSelection) {
+    spinSelection.style.display = 'none';
+  }
+  
+  // Spin button logic (kept for internal use but hidden)
   if (spinButtons.length > 0) {
     spinButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -1431,7 +1651,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Class button event listeners
+  // Hide original class selection UI
+  const classSelection = document.querySelector('.class-selection');
+  if (classSelection) {
+    classSelection.style.display = 'none';
+  }
+  
+  // Class button event listeners (kept for internal use)
   classButtons.forEach((button) => {
     button.addEventListener("click", () => {
       if (state.isSpinning) return;
@@ -1447,6 +1673,14 @@ document.addEventListener("DOMContentLoaded", () => {
       // Select current button
       button.classList.add("selected", "active");
       button.src = button.dataset.active; // Change image to active
+      
+      // Reset gadget queues when changing class to ensure fresh selection
+      state.gadgetQueue = {
+        Light: [],
+        Medium: [],
+        Heavy: [],
+      };
+      console.log("🔄 Gadget queues reset for class change");
 
       // Handle "Random" class selection
       if (button.dataset.class.toLowerCase() === "random") {

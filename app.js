@@ -5,11 +5,6 @@ const state = {
   currentSpin: 1,
   totalSpins: 0,
   selectedGadgets: new Set(),
-  gadgetQueue: {
-    Light: [],
-    Medium: [],
-    Heavy: [],
-  },
   currentGadgetPool: new Set(),
 };
 
@@ -255,17 +250,10 @@ const getRandomUniqueItems = (array, n) => {
 };
 
 const getUniqueGadgets = (classType, loadout) => {
-  // If we don't have enough gadgets in the queue, refill it
-  if (state.gadgetQueue[classType].length < 3) {
-    // Get a fresh shuffled copy of all gadgets
-    state.gadgetQueue[classType] = [...loadout.gadgets]
-      .sort(() => Math.random() - 0.5);
-    
-    console.log(`Refilled ${classType} gadget queue with ${state.gadgetQueue[classType].length} gadgets`);
-  }
-  
-  // Take 3 unique gadgets from the queue
-  const selectedGadgets = state.gadgetQueue[classType].splice(0, 3);
+  // Simple approach: just shuffle and take the first 3
+  // This guarantees uniqueness within a single selection
+  const shuffledGadgets = [...loadout.gadgets].sort(() => Math.random() - 0.5);
+  const selectedGadgets = shuffledGadgets.slice(0, 3);
   
   // Store current set of selected gadgets
   state.currentGadgetPool = new Set(selectedGadgets);
@@ -904,12 +892,7 @@ function setupFilterSystem() {
       const testFiltered = getFilteredLoadouts();
       console.log("Filter test result:", testFiltered);
 
-      // Clear any existing gadget queues to ensure fresh selection with new filters
-      state.gadgetQueue = {
-        Light: [],
-        Medium: [],
-        Heavy: [],
-      };
+      // No longer using gadget queues - each spin gets fresh random selection
       
       // Close the filter panel
       if (filterPanel) {
@@ -953,12 +936,7 @@ function setupFilterSystem() {
         checkbox.checked = true;
       });
       
-      // Clear any existing gadget queues to ensure fresh selection
-      state.gadgetQueue = {
-        Light: [],
-        Medium: [],
-        Heavy: [],
-      };
+      // No longer using gadget queues - each spin gets fresh random selection
       
       // Show confirmation message
       const filterStatus = document.createElement("div");
@@ -1674,13 +1652,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.classList.add("selected", "active");
       button.src = button.dataset.active; // Change image to active
       
-      // Reset gadget queues when changing class to ensure fresh selection
-      state.gadgetQueue = {
-        Light: [],
-        Medium: [],
-        Heavy: [],
-      };
-      console.log("🔄 Gadget queues reset for class change");
+      // No longer using gadget queues - each spin gets fresh random selection
 
       // Handle "Random" class selection
       if (button.dataset.class.toLowerCase() === "random") {
