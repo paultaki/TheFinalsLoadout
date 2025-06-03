@@ -625,11 +625,17 @@ function startSpinAnimation(columns) {
     } else {
       console.log("✅ All columns stopped, calling finalizeSpin");
       
-      // Stop spinning sound
+      // Stop spinning sound with mobile fix
       const spinningSound = document.getElementById('spinningSound');
       if (spinningSound) {
         spinningSound.pause();
         spinningSound.currentTime = 0;
+        // Additional stop mechanism for mobile browsers
+        try {
+          spinningSound.src = spinningSound.src; // Force reload on mobile
+        } catch (e) {
+          console.log("Mobile audio reload failed:", e);
+        }
       }
 
       // Add visual effects only for final spin
