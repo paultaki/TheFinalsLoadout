@@ -573,8 +573,8 @@ const displayLoadout = (classType) => {
         ${selectedGadgets
           .map(
             (gadget, index) => `
-            <div class="item-container">
-              <div class="scroll-container" data-gadget-index="${index}">
+            <div class="item-container" data-winning-gadget="${gadget}">
+              <div class="scroll-container" data-gadget-index="${index}" data-winning-gadget="${gadget}">
                 ${createItemContainer(
                   createGadgetSpinSequence(gadget, index),
                   gadget,
@@ -1264,8 +1264,15 @@ function finalizeSpin(columns) {
         : savedClass;
     }
 
-    // Get all the selected items using the OLD working method
-    const selectedItems = Array.from(itemContainers).map((container) => {
+    // Get all the selected items - use data attributes for gadgets to ensure accuracy
+    const selectedItems = Array.from(itemContainers).map((container, index) => {
+      // For gadgets (index 2, 3, 4), use the data attribute
+      if (index >= 2 && container.dataset.winningGadget) {
+        console.log(`📋 Gadget ${index - 1} from data attribute: ${container.dataset.winningGadget}`);
+        return container.dataset.winningGadget;
+      }
+      
+      // For weapons and specializations, use the visible item method
       const scrollContainer = container.querySelector(".scroll-container");
       if (!scrollContainer) return "Unknown";
 
