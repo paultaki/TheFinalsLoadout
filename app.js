@@ -498,32 +498,20 @@ const displayLoadout = (classType) => {
   }
   
   // Use the getUniqueGadgets function to ensure uniqueness
-  let selectedGadgets = getUniqueGadgets(classType, loadout);
+  const selectedGadgetsRaw = getUniqueGadgets(classType, loadout);
   
-  // Make a defensive copy to prevent any accidental modifications
-  selectedGadgets = [...selectedGadgets];
+  // Make a defensive copy and ensure it's truly immutable
+  const selectedGadgets = Object.freeze([...selectedGadgetsRaw]);
   
   console.log(`Selected gadgets: ${selectedGadgets.join(', ')}`);
   
-  // Double-check uniqueness
+  // Final uniqueness verification
   const uniqueCheck = new Set(selectedGadgets);
   if (uniqueCheck.size !== selectedGadgets.length) {
-    console.error("⚠️ DUPLICATE GADGETS DETECTED AFTER SELECTION!");
+    console.error("⚠️ CRITICAL ERROR: Duplicate gadgets detected!");
+    console.error("This should be impossible with the current algorithm.");
     console.error("Selected:", selectedGadgets);
-    console.error("Unique:", Array.from(uniqueCheck));
-    // Force fix by removing duplicates
-    const fixedGadgets = Array.from(uniqueCheck);
-    while (fixedGadgets.length < 3 && fixedGadgets.length < loadout.gadgets.length) {
-      const remaining = loadout.gadgets.filter(g => !fixedGadgets.includes(g));
-      if (remaining.length > 0) {
-        fixedGadgets.push(remaining[Math.floor(Math.random() * remaining.length)]);
-      } else {
-        break;
-      }
-    }
-    selectedGadgets.length = 0;
-    selectedGadgets.push(...fixedGadgets);
-    console.log("Fixed gadgets:", selectedGadgets);
+    console.error("Please report this bug with the console log.");
   }
   
   // Create animation sequences for each gadget
@@ -1312,11 +1300,20 @@ function finalizeSpin(columns) {
       const weapon = selectedItems[0];
       const specialization = selectedItems[1];
       const gadgets = selectedItems.slice(2, 5);
+      
+      // Check for duplicate gadgets in the final result
+      const gadgetSet = new Set(gadgets);
+      if (gadgetSet.size !== gadgets.length) {
+        console.error("🚨 DUPLICATE GADGETS IN FINAL RESULT!");
+        console.error("Gadgets from DOM:", gadgets);
+        console.error("Unique gadgets:", Array.from(gadgetSet));
+      }
 
       const loadoutString = `${savedClass}-${weapon}-${specialization}-${gadgets.join(
         "-"
       )}`;
       console.log("🚨 Loadout to be recorded:", loadoutString);
+      console.log("Gadgets being recorded:", gadgets);
       console.log("Last Added Loadout:", lastAddedLoadout);
 
       if (loadoutString === lastAddedLoadout) {
