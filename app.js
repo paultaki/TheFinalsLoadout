@@ -255,10 +255,19 @@ const getUniqueGadgets = (classType, loadout) => {
   const shuffledGadgets = [...loadout.gadgets].sort(() => Math.random() - 0.5);
   const selectedGadgets = shuffledGadgets.slice(0, 3);
   
+  // Verify uniqueness
+  const uniqueSet = new Set(selectedGadgets);
+  if (uniqueSet.size !== selectedGadgets.length) {
+    console.error("⚠️ CRITICAL: Duplicate gadgets in selection!");
+    console.error("Selected:", selectedGadgets);
+    console.error("Unique set:", Array.from(uniqueSet));
+  }
+  
   // Store current set of selected gadgets
   state.currentGadgetPool = new Set(selectedGadgets);
   
   console.log(`Selected gadgets for ${classType}:`, selectedGadgets);
+  console.log(`Unique check: ${uniqueSet.size} unique items out of ${selectedGadgets.length} selected`);
   return selectedGadgets;
 };
 
@@ -451,21 +460,39 @@ const displayLoadout = (classType) => {
   const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
   
-  // Select three unique gadgets using the gadget queue system
+  // Select three unique gadgets
   console.log(`Available gadgets for ${classType}:`, loadout.gadgets);
   console.log(`Total available gadgets: ${loadout.gadgets.length}`);
   
-  // Use the getUniqueGadgets function to ensure uniqueness across spins
+  // Ensure we have enough gadgets available
+  if (loadout.gadgets.length < 3) {
+    console.error(`⚠️ Not enough gadgets for ${classType}! Only ${loadout.gadgets.length} available.`);
+  }
+  
+  // Use the getUniqueGadgets function to ensure uniqueness
   const selectedGadgets = getUniqueGadgets(classType, loadout);
   
   console.log(`Selected gadgets: ${selectedGadgets.join(', ')}`);
   
-  // Verify uniqueness
+  // Double-check uniqueness
   const uniqueCheck = new Set(selectedGadgets);
   if (uniqueCheck.size !== selectedGadgets.length) {
-    console.error("⚠️ DUPLICATE GADGETS DETECTED!");
+    console.error("⚠️ DUPLICATE GADGETS DETECTED AFTER SELECTION!");
     console.error("Selected:", selectedGadgets);
     console.error("Unique:", Array.from(uniqueCheck));
+    // Force fix by removing duplicates
+    const fixedGadgets = Array.from(uniqueCheck);
+    while (fixedGadgets.length < 3 && fixedGadgets.length < loadout.gadgets.length) {
+      const remaining = loadout.gadgets.filter(g => !fixedGadgets.includes(g));
+      if (remaining.length > 0) {
+        fixedGadgets.push(remaining[Math.floor(Math.random() * remaining.length)]);
+      } else {
+        break;
+      }
+    }
+    selectedGadgets.length = 0;
+    selectedGadgets.push(...fixedGadgets);
+    console.log("Fixed gadgets:", selectedGadgets);
   }
   
   // Create animation sequences for each gadget
