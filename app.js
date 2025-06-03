@@ -70,7 +70,6 @@ const loadouts = {
       "Sonar Grenade",
       "Thermal Bore",
       "Gas Grenade",
-      "Gravity Vortex",
       "Thermal Vision",
       "Tracking Dart",
       "Vanishing Bomb",
@@ -112,6 +111,7 @@ const loadouts = {
       "Frag Grenade",
       "Flashbang",
       "Proximity Sensor",
+      "Health Canister",
     ],
   },
   Heavy: {
@@ -465,6 +465,7 @@ const displayLoadout = (classType) => {
   
   // Select three unique gadgets
   console.log(`Available gadgets for ${classType}:`, loadout.gadgets);
+  console.log(`Total available gadgets: ${loadout.gadgets.length}`);
   
   // Use simple selection to guarantee uniqueness
   const availableGadgets = [...loadout.gadgets];
@@ -481,9 +482,19 @@ const displayLoadout = (classType) => {
     
     // Remove from available pool to ensure uniqueness
     availableGadgets.splice(randomIndex, 1);
+    
+    console.log(`Selected gadget ${selectedGadgets.length}: ${selectedGadget}, remaining pool: ${availableGadgets.length}`);
   }
   
   console.log(`Selected gadgets: ${selectedGadgets.join(', ')}`);
+  
+  // Verify uniqueness
+  const uniqueCheck = new Set(selectedGadgets);
+  if (uniqueCheck.size !== selectedGadgets.length) {
+    console.error("⚠️ DUPLICATE GADGETS DETECTED!");
+    console.error("Selected:", selectedGadgets);
+    console.error("Unique:", Array.from(uniqueCheck));
+  }
   
   // Create animation sequences for each gadget
   const createGadgetSpinSequence = (winningGadget, gadgetIndex) => {
@@ -500,11 +511,14 @@ const displayLoadout = (classType) => {
     console.log(`Animation pool for ${winningGadget} has ${availableForAnimation.length} gadgets`);
     
     // Fill the other positions with random gadgets that aren't the selected gadgets for other slots
+    // Shuffle the available gadgets to ensure variety
+    const shuffledAnimation = [...availableForAnimation].sort(() => Math.random() - 0.5);
+    
     for (let i = 0; i < 8; i++) {
       if (i !== 4) { // Skip position 4 (winner)
-        if (availableForAnimation.length > 0) {
-          const randomIndex = Math.floor(Math.random() * availableForAnimation.length);
-          sequence[i] = availableForAnimation[randomIndex];
+        if (shuffledAnimation.length > 0) {
+          // Use modulo to cycle through shuffled gadgets if we have fewer than needed
+          sequence[i] = shuffledAnimation[i % shuffledAnimation.length];
         } else {
           // Fallback if no other gadgets available
           sequence[i] = winningGadget;
@@ -512,6 +526,7 @@ const displayLoadout = (classType) => {
       }
     }
     
+    console.log(`Gadget ${gadgetIndex + 1} animation sequence:`, sequence);
     return sequence;
   };
 
@@ -1126,6 +1141,18 @@ function finalizeSpin(columns) {
         clearInterval(fadeOut);
       }
     }, 100);
+  }
+  
+  // Also ensure spinning sound is fully stopped (mobile fix)
+  const spinningSound = document.getElementById('spinningSound');
+  if (spinningSound && !spinningSound.paused) {
+    spinningSound.pause();
+    spinningSound.currentTime = 0;
+    try {
+      spinningSound.src = spinningSound.src; // Force reload on mobile
+    } catch (e) {
+      console.log("Mobile audio reload failed:", e);
+    }
   }
 
   // Prevent duplicate processing
