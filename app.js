@@ -653,6 +653,26 @@ function startSpinAnimation(columns) {
         }
       }
 
+      // Also stop background sound immediately (mobile fix)
+      const spinBackgroundSound = document.getElementById('spinBackgroundSound');
+      if (spinBackgroundSound && !spinBackgroundSound.paused) {
+        spinBackgroundSound.pause();
+        spinBackgroundSound.currentTime = 0;
+        spinBackgroundSound.volume = 0;
+        try {
+          // Force stop on mobile by removing and re-adding src
+          const originalSrc = spinBackgroundSound.src;
+          spinBackgroundSound.removeAttribute('src');
+          spinBackgroundSound.load();
+          setTimeout(() => {
+            spinBackgroundSound.src = originalSrc;
+            spinBackgroundSound.volume = 0.3; // Reset volume for next time
+          }, 100);
+        } catch (e) {
+          console.log("Mobile background audio stop failed:", e);
+        }
+      }
+
       // Add visual effects only for final spin
       if (isFinalSpin) {
         let lastColumnIndex = columns.length - 1;
@@ -1130,17 +1150,29 @@ function finalizeSpin(columns) {
   // Stop background music when final spin completes
   const spinBackgroundSound = document.getElementById('spinBackgroundSound');
   if (spinBackgroundSound) {
-    // Fade out the background sound
-    const fadeOut = setInterval(() => {
-      if (spinBackgroundSound.volume > 0.05) {
-        spinBackgroundSound.volume -= 0.05;
-      } else {
-        spinBackgroundSound.pause();
-        spinBackgroundSound.currentTime = 0;
+    // Immediately stop sound for mobile compatibility
+    spinBackgroundSound.pause();
+    spinBackgroundSound.currentTime = 0;
+    
+    // For mobile browsers, force a complete stop
+    try {
+      // Remove loop attribute temporarily
+      spinBackgroundSound.loop = false;
+      
+      // Force stop on mobile by clearing and reloading
+      const originalSrc = spinBackgroundSound.src;
+      spinBackgroundSound.removeAttribute('src');
+      spinBackgroundSound.load();
+      
+      // Restore src and loop after a delay
+      setTimeout(() => {
+        spinBackgroundSound.src = originalSrc;
+        spinBackgroundSound.loop = true;
         spinBackgroundSound.volume = 0.3; // Reset volume for next time
-        clearInterval(fadeOut);
-      }
-    }, 100);
+      }, 200);
+    } catch (e) {
+      console.log("Mobile background audio force stop failed:", e);
+    }
   }
   
   // Also ensure spinning sound is fully stopped (mobile fix)
@@ -1362,6 +1394,27 @@ const spinLoadout = () => {
 // Make spinLoadout globally accessible
 window.spinLoadout = spinLoadout;
 
+// Global function to stop all audio (useful for mobile)
+window.stopAllAudio = function() {
+  const allAudio = document.querySelectorAll('audio');
+  allAudio.forEach(audio => {
+    audio.pause();
+    audio.currentTime = 0;
+    // Special handling for looped audio
+    if (audio.loop) {
+      audio.loop = false;
+      const src = audio.src;
+      audio.removeAttribute('src');
+      audio.load();
+      setTimeout(() => {
+        audio.src = src;
+        audio.loop = true;
+      }, 100);
+    }
+  });
+  console.log('All audio stopped');
+};
+
 // Loadout history functions
 function addToHistory(
   classType,
@@ -1450,6 +1503,29 @@ document.addEventListener("DOMContentLoaded", () => {
   spinButtons = document.querySelectorAll(".spin-button");
   spinSelection = document.getElementById("spinSelection");
   outputDiv = document.getElementById("output");
+  
+  // Mobile audio failsafe - stop all sounds when page loses focus
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      // Stop all audio when page is hidden
+      const allAudio = document.querySelectorAll('audio');
+      allAudio.forEach(audio => {
+        if (!audio.paused) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      });
+    }
+  });
+  
+  // Additional mobile failsafe for iOS
+  window.addEventListener('pagehide', () => {
+    const allAudio = document.querySelectorAll('audio');
+    allAudio.forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+  });
   
   // Initialize the roulette animation system
   const rouletteSystem = new window.RouletteAnimationSystem();
