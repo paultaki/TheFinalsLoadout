@@ -1,21 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-GVGKYFGZ1Z");
-    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Resource hints for faster loading -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://static.cloudflareinsights.com">
 
 
   <!-- Add these two lines right here -->
@@ -58,21 +50,36 @@
       crossorigin="anonymous"
     />
 
+    <!-- Optimized font loading -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="stylesheet" href="style.css" />
+    
+    <style>
+      /* Critical inline styles for faster initial render */
+      body {
+        font-family: "Oswald", system-ui, -apple-system, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #fff;
+        text-align: center;
+        min-height: 100vh;
+        background: #1d1a21;
+      }
+      
+      /* Font loading with fallback */
+      @font-face {
+        font-family: 'Oswald';
+        font-display: swap;
+        src: local('Oswald'), url('https://fonts.gstatic.com/s/oswald/v35/TK3iWkUHHAIjg752GT8G.woff2') format('woff2');
+      }
+    </style>
+    
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
       />
     </noscript>
-
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css" />
-    <style>
-      body {
-        font-family: "Oswald", sans-serif;
-        font-display: swap;
-      }
-    </style>
 
     <style>
       html {
@@ -133,7 +140,8 @@
       alt="Random Loadout Generator for The Finals Game"
       class="finals-logo"
       width="240"
-      height="auto"
+      height="240"
+      fetchpriority="high"
     />
     <h2 class="subTitle">Season 6 Ready</h2>
   </div>
@@ -695,15 +703,10 @@ details {
 
 
     <!-- Scripts -->
+    <script defer src="performance-utils.js"></script>
     <script defer src="roulette-animations.js"></script>
     <script defer src="app.js"></script>
-    <script
-      defer
-      src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-      integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-      data-cf-beacon='{"rayId":"90d5a0a2197ddbbe","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}'
-      crossorigin="anonymous"
-    ></script>
+    <script defer src="performance-init.js"></script>
     <script>
       // FAQ Toggle Script
       document.addEventListener("DOMContentLoaded", function () {
@@ -722,7 +725,57 @@ details {
       });
     </script>
 
+    <!-- Web Vitals for performance monitoring -->
+    <script>
+      // Simple Web Vitals tracking
+      if ('PerformanceObserver' in window) {
+        // Track Largest Contentful Paint (LCP)
+        new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          console.log('LCP:', lastEntry.startTime.toFixed(2) + 'ms');
+        }).observe({entryTypes: ['largest-contentful-paint']});
+        
+        // Track First Input Delay (FID)
+        new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach(entry => {
+            console.log('FID:', entry.processingStart - entry.startTime + 'ms');
+          });
+        }).observe({entryTypes: ['first-input']});
+        
+        // Track Cumulative Layout Shift (CLS)
+        let clsValue = 0;
+        new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (!entry.hadRecentInput) {
+              clsValue += entry.value;
+              console.log('Current CLS:', clsValue.toFixed(3));
+            }
+          }
+        }).observe({entryTypes: ['layout-shift']});
+      }
+    </script>
 
+    <!-- Google Analytics - moved to end of body for better performance -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-GVGKYFGZ1Z");
+    </script>
+    
+    <!-- Cloudflare Insights -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+      integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+      data-cf-beacon='{"rayId":"90d5a0a2197ddbbe","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}'
+      crossorigin="anonymous"
+    ></script>
 
   </body>
 </html>

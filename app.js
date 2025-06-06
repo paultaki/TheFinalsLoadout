@@ -1557,6 +1557,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
   
+  // Optimize audio for mobile by reducing concurrent sounds
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (isMobile) {
+    // Override tick sound frequency on mobile
+    const originalPlayTick = window.RouletteAnimationSystem.prototype.playTickSound;
+    window.RouletteAnimationSystem.prototype.playTickSound = function() {
+      // Only play every 3rd tick on mobile to reduce audio overhead
+      if (!this._tickCounter) this._tickCounter = 0;
+      this._tickCounter++;
+      if (this._tickCounter % 3 === 0) {
+        originalPlayTick.call(this);
+      }
+    };
+  }
+  
   // Initialize the roulette animation system
   const rouletteSystem = new window.RouletteAnimationSystem();
   
