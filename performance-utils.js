@@ -1,5 +1,26 @@
 // Performance utilities for The Finals Loadout Generator
 
+// Enhanced mobile detection
+const DeviceDetector = {
+  isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+  isTablet: /iPad|Android(?!.*Mobile)/i.test(navigator.userAgent),
+  isLowEnd: () => {
+    // Detect low-end devices based on hardware capabilities
+    const memory = navigator.deviceMemory || 4; // Default to 4GB if not available
+    const cores = navigator.hardwareConcurrency || 2; // Default to 2 cores
+    return memory <= 2 || cores <= 2;
+  },
+  isSlowConnection: () => {
+    // Use Network Information API if available
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (connection) {
+      return connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g';
+    }
+    return false;
+  },
+  reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+};
+
 // DOM Cache Manager
 class DOMCache {
   constructor() {
@@ -265,6 +286,127 @@ class AudioManager {
   }
 }
 
+// CSS Animation Replacer - Convert JS animations to CSS where possible
+class CSSAnimationReplacer {
+  constructor() {
+    this.replacements = new Map();
+  }
+
+  // Replace JavaScript transform animations with CSS classes
+  replaceTransformAnimation(element, properties) {
+    if (DeviceDetector.isMobile || DeviceDetector.isLowEnd()) {
+      // Use simplified CSS animations on mobile/low-end devices
+      const animationClass = this.createOptimizedCSSAnimation(properties);
+      element.classList.add(animationClass);
+      return animationClass;
+    }
+    return null;
+  }
+
+  createOptimizedCSSAnimation(properties) {
+    const animationId = `opt-anim-${Math.random().toString(36).substr(2, 9)}`;
+    const duration = DeviceDetector.isMobile ? '0.3s' : '0.6s';
+    
+    const style = document.createElement('style');
+    style.textContent = `
+      .${animationId} {
+        animation: ${animationId}-keyframes ${duration} ease-out;
+        transform: ${properties.transform || 'none'};
+      }
+      
+      @keyframes ${animationId}-keyframes {
+        from { 
+          transform: ${properties.from || 'scale(1)'}; 
+          opacity: ${properties.fromOpacity || '1'};
+        }
+        to { 
+          transform: ${properties.to || 'scale(1.05)'}; 
+          opacity: ${properties.toOpacity || '1'};
+        }
+      }
+    `;
+    
+    document.head.appendChild(style);
+    this.replacements.set(animationId, style);
+    return animationId;
+  }
+
+  cleanup() {
+    this.replacements.forEach((style, id) => {
+      if (style.parentNode) {
+        style.parentNode.removeChild(style);
+      }
+    });
+    this.replacements.clear();
+  }
+}
+
+// Adaptive Performance Manager
+class AdaptivePerformanceManager {
+  constructor() {
+    this.performanceLevel = this.detectPerformanceLevel();
+    this.applyOptimizations();
+  }
+
+  detectPerformanceLevel() {
+    let score = 100;
+    
+    // Reduce score based on device capabilities
+    if (DeviceDetector.isMobile) score -= 30;
+    if (DeviceDetector.isLowEnd()) score -= 40;
+    if (DeviceDetector.isSlowConnection()) score -= 20;
+    if (DeviceDetector.reducedMotion) score -= 10;
+    
+    // Return performance tier
+    if (score >= 80) return 'high';
+    if (score >= 50) return 'medium';
+    return 'low';
+  }
+
+  applyOptimizations() {
+    console.log(`🔧 Applying ${this.performanceLevel} performance optimizations`);
+    
+    const style = document.createElement('style');
+    style.id = 'adaptive-performance-styles';
+    
+    let optimizations = '';
+    
+    if (this.performanceLevel === 'low') {
+      optimizations += `
+        * {
+          animation-duration: 0.2s !important;
+          transition-duration: 0.1s !important;
+        }
+        
+        .high-speed-blur,
+        .extreme-blur,
+        .velocity-blur {
+          filter: none !important;
+        }
+        
+        .particle,
+        .celebration-animation {
+          display: none !important;
+        }
+      `;
+    } else if (this.performanceLevel === 'medium') {
+      optimizations += `
+        * {
+          animation-duration: 0.4s !important;
+          transition-duration: 0.2s !important;
+        }
+        
+        .extreme-blur {
+          filter: blur(2px) !important;
+        }
+      `;
+    }
+    
+    style.textContent = optimizations;
+    document.head.appendChild(style);
+  }
+}
+
 // Export utilities
 window.PerformanceUtils = {
   DOMCache: new DOMCache(),
@@ -272,5 +414,10 @@ window.PerformanceUtils = {
   AnimationManager: new AnimationManager(),
   ImagePreloader: new ImagePreloader(),
   PerformanceMonitor: new PerformanceMonitor(),
-  AudioManager: new AudioManager()
+  AudioManager: new AudioManager(),
+  CSSAnimationReplacer: new CSSAnimationReplacer(),
+  AdaptivePerformanceManager: new AdaptivePerformanceManager()
 };
+
+// Export device detector globally
+window.DeviceDetector = DeviceDetector;

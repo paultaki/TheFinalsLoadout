@@ -1,3 +1,6 @@
+// Mobile detection and performance state
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
 // Global state
 const state = {
   selectedClass: null,
@@ -7,6 +10,8 @@ const state = {
   selectedGadgets: new Set(),
   currentGadgetPool: new Set(),
   soundEnabled: localStorage.getItem('soundEnabled') !== 'false', // Default to true
+  isMobile: isMobile,
+  sidebarOpen: false,
 };
 
 // Make state globally accessible
@@ -2196,11 +2201,173 @@ function initializeSeasonCountdown() {
   const countdownInterval = setInterval(updateCountdown, 1000 * 60 * 60);
 }
 
+// Sidebar functionality
+function initializeSidebar() {
+  const sidebar = document.getElementById('filter-sidebar');
+  const mobileToggle = document.getElementById('mobile-filter-toggle');
+  const closeSidebar = document.getElementById('close-sidebar');
+  
+  if (!sidebar || !mobileToggle || !closeSidebar) return;
+  
+  // Mobile toggle functionality
+  mobileToggle.addEventListener('click', () => {
+    state.sidebarOpen = !state.sidebarOpen;
+    sidebar.classList.toggle('open', state.sidebarOpen);
+    
+    // Animate hamburger lines
+    const lines = mobileToggle.querySelectorAll('.hamburger-line');
+    if (state.sidebarOpen) {
+      lines[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+      lines[1].style.opacity = '0';
+      lines[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+    } else {
+      lines.forEach(line => {
+        line.style.transform = '';
+        line.style.opacity = '';
+      });
+    }
+  });
+  
+  // Close sidebar
+  closeSidebar.addEventListener('click', () => {
+    state.sidebarOpen = false;
+    sidebar.classList.remove('open');
+    const lines = mobileToggle.querySelectorAll('.hamburger-line');
+    lines.forEach(line => {
+      line.style.transform = '';
+      line.style.opacity = '';
+    });
+  });
+  
+  // Close sidebar on backdrop click (mobile)
+  sidebar.addEventListener('click', (e) => {
+    if (e.target === sidebar && state.isMobile) {
+      closeSidebar.click();
+    }
+  });
+  
+  // Close sidebar on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && state.sidebarOpen) {
+      closeSidebar.click();
+    }
+  });
+}
+
+// Mobile performance optimizations
+function initializeMobileOptimizations() {
+  if (!state.isMobile) return;
+  
+  console.log('🔧 Applying mobile optimizations');
+  
+  // Add mobile-optimized class to body
+  document.body.classList.add('mobile-optimized');
+  
+  // Disable blur effects on mobile
+  disableBlurEffectsOnMobile();
+  
+  // Reduce animation durations by 50%
+  reduceMobileAnimationDurations();
+  
+  // Add will-change to animated elements
+  optimizeAnimatedElements();
+  
+  // Implement lazy loading with Intersection Observer
+  initializeLazyLoading();
+}
+
+// Disable blur effects on mobile for performance
+function disableBlurEffectsOnMobile() {
+  const style = document.createElement('style');
+  style.textContent = `
+    @media (max-width: 768px) {
+      .high-speed-blur,
+      .extreme-blur,
+      .velocity-blur {
+        filter: none !important;
+      }
+      
+      .item-container.spinning {
+        filter: none !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// Reduce animation durations by 50% on mobile
+function reduceMobileAnimationDurations() {
+  const style = document.createElement('style');
+  style.textContent = `
+    @media (max-width: 768px) {
+      .item-container,
+      .slot-column,
+      .spin-button,
+      .celebration-animation,
+      .particle {
+        animation-duration: 0.5s !important;
+        transition-duration: 0.15s !important;
+      }
+      
+      .winner {
+        animation-duration: 0.5s !important;
+      }
+      
+      @keyframes winnerFlash {
+        0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
+        50% { box-shadow: 0 0 25px rgba(255, 183, 0, 0.7); }
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// Add will-change property to animated elements
+function optimizeAnimatedElements() {
+  const animatedElements = document.querySelectorAll(
+    '.item-container, .slot-column, .spin-button, .main-spin-button'
+  );
+  
+  animatedElements.forEach(element => {
+    element.style.willChange = 'transform';
+  });
+}
+
+// Implement Intersection Observer for lazy loading
+function initializeLazyLoading() {
+  const images = document.querySelectorAll('img[loading="lazy"]');
+  
+  if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          img.src = img.dataset.src || img.src;
+          img.classList.remove('lazy');
+          observer.unobserve(img);
+        }
+      });
+    }, {
+      rootMargin: '50px'
+    });
+    
+    images.forEach(img => {
+      imageObserver.observe(img);
+    });
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded");
 
   // Initialize sound toggle
   initializeSoundToggle();
+  
+  // Initialize sidebar functionality
+  initializeSidebar();
+  
+  // Initialize mobile performance optimizations
+  initializeMobileOptimizations();
   
   // Initialize season countdown
   initializeSeasonCountdown();

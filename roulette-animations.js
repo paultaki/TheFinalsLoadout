@@ -262,14 +262,17 @@ class RouletteAnimationSystem {
     particlesContainer.className = 'particles';
     document.body.appendChild(particlesContainer);
     
-    for (let i = 0; i < 10; i++) {
+    // Reduce particle count on mobile for performance
+    const particleCount = window.state?.isMobile ? 3 : 10;
+    
+    for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement('div');
       particle.className = 'particle';
       particle.style.left = centerX + 'px';
       particle.style.top = centerY + 'px';
       
       // Random direction
-      const angle = (Math.PI * 2 * i) / 10;
+      const angle = (Math.PI * 2 * i) / particleCount;
       const distance = 100 + Math.random() * 100;
       particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
       particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
