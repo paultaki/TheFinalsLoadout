@@ -1895,34 +1895,85 @@ function loadHistory() {
 }
 
 function generateLoadoutName(classType, weapon, spec) {
-  const names = {
-    // Light combos
-    "Light_Sword_Cloaking Device": "The Ghost Blade",
-    "Light_SH1900_Grappling Hook": "The Flying Shotgunner",
-    "Light_Throwing Knives_Evasive Dash": "The Circus Act",
-    "Light_Dagger_Cloaking Device": "The Shadow Striker",
-    "Light_SR-84_Thermal Vision": "The Silent Sniper",
-    "Light_M11_Evasive Dash": "The Speed Demon",
+  // Weapon-based adjectives
+  const weaponAdjectives = {
+    // Light weapons
+    "93R": "Burst",
+    "Dagger": "Shadow",
+    "SR-84": "Sniper",
+    "SH1900": "Boom",
+    "LH1": "Laser",
+    "M26 Matter": "Matter",
+    "Recurve Bow": "Archer",
+    "Sword": "Blade",
+    "M11": "Spray",
+    "ARN-220": "Tactical",
+    "V9S": "Silent",
+    "XP-54": "Rapid",
+    "Throwing Knives": "Knife",
     
-    // Medium combos
-    "Medium_Riot Shield_Healing Beam": "The Combat Medic",
-    "Medium_Dual Blades_Dematerializer": "The Phase Slicer",
-    "Medium_Model 1887_Guardian Turret": "The Bunker Down",
-    "Medium_AKM_Guardian Turret": "The Fortress Builder",
-    "Medium_FAMAS_Healing Beam": "The Support Warrior",
-    "Medium_CL-40_Dematerializer": "The Boom Phantom",
+    // Medium weapons
+    "AKM": "Classic",
+    "Cerberus 12GA": "Triple",
+    "Dual Blades": "Twin",
+    "FAMAS": "Burst",
+    "CL-40": "Launcher",
+    "CB-01 Repeater": "Repeater",
+    "FCAR": "Assault",
+    "Model 1887": "Lever",
+    "Pike-556": "Pike",
+    "R.357": "Revolver",
+    "Riot Shield": "Shield",
     
-    // Heavy combos
-    "Heavy_Sledgehammer_Goo Gun": "The Sticky Situation",
-    "Heavy_Flamethrower_Charge N Slam": "The Meteor",
-    "Heavy_M32GL_Mesh Shield": "The Walking Tank",
-    "Heavy_M134 Minigun_Winch Claw": "The Death Machine",
-    "Heavy_Lewis Gun_Mesh Shield": "The Fortress",
-    "Heavy_KS-23_Charge N Slam": "The Chaos Cannon"
+    // Heavy weapons
+    "50 Akimbo": "Dual",
+    "Flamethrower": "Pyro",
+    "KS-23": "Pump",
+    "Lewis Gun": "Vintage",
+    "M60": "Support",
+    "M134 Minigun": "Minigun",
+    "M32GL": "Grenade",
+    "SA 1216": "Auto",
+    "Sledgehammer": "Hammer",
+    "SHAK-50": "Shak",
+    "Spear": "Spear"
   };
   
-  const key = `${classType}_${weapon}_${spec}`;
-  return names[key] || `${classType} Chaos Build`;
+  // Specialization-based roles
+  const specRoles = {
+    // Light
+    "Cloaking Device": "Ghost",
+    "Evasive Dash": "Dasher",
+    "Grappling Hook": "Spider",
+    
+    // Medium
+    "Dematerializer": "Phaser",
+    "Guardian Turret": "Engineer",
+    "Healing Beam": "Medic",
+    
+    // Heavy
+    "Charge N Slam": "Meteor",
+    "Goo Gun": "Gooer",
+    "Mesh Shield": "Fortress",
+    "Winch Claw": "Grappler"
+  };
+  
+  const adjective = weaponAdjectives[weapon] || "Chaos";
+  const role = specRoles[spec] || "Agent";
+  
+  // Create variations to avoid repetition
+  const templates = [
+    `The ${adjective} ${role}`,
+    `${role} of ${adjective}`,
+    `${adjective} ${classType}`,
+    `${role}'s ${adjective}`
+  ];
+  
+  // Use a consistent template based on hash of weapon+spec
+  const hash = (weapon + spec).split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+  const template = templates[hash % templates.length];
+  
+  return template;
 }
 
 function isSpicyLoadout(weapon, spec, gadgets) {
