@@ -414,11 +414,10 @@ class SlotColumn {
             Math.ceil(this.position / PHYSICS.ITEM_HEIGHT) *
             PHYSICS.ITEM_HEIGHT;
             
-          // For gadget columns, force position to exactly 0 to show first item
+          // For gadget columns, use normal positioning and see which index is visible
           if (this.index >= 2) {
-            // Force exact position 0 to show the winner (first item)
-            this.targetPosition = 0;
-            console.log(`🎯 Gadget column ${this.index} targeting position ${this.targetPosition} to show winner at index 0`);
+            this.targetPosition = 0; // Back to normal positioning to find out which index is visible
+            console.log(`🎯 Gadget column ${this.index} targeting position ${this.targetPosition} - let's see which index shows up`);
           } else {
             console.log(`🎯 Column ${this.index} targeting position ${this.targetPosition}`);
           }
@@ -430,8 +429,8 @@ class SlotColumn {
         
         // Use consistent stopping logic for all columns
         if (
-          Math.abs(this.position - this.targetPosition) < 3 &&
-          Math.abs(this.velocity) < 50
+          Math.abs(this.position - this.targetPosition) < 10 &&
+          Math.abs(this.velocity) < 100
         ) {
           this.forceStop();
           return;
@@ -583,15 +582,16 @@ const displayLoadout = (classType) => {
     // Shuffle the available gadgets to ensure variety
     const shuffledAnimation = [...availableForAnimation].sort(() => Math.random() - 0.5);
     
-    // Create sequence with winning gadget at the START (index 0)
-    // This is where the animation will stop and what will be visually displayed
-    const sequence = [winningGadget]; // Winner goes first
+    // Create sequence with winning gadget at index 7 (last position)
+    // Since position 0 shows index 7, we need to put the winner at the end
+    const sequence = new Array(8); // Create array with 8 slots
+    sequence[7] = winningGadget; // Winner goes at index 7
     
     // Fill remaining 7 positions with unique gadgets (no duplicates)
     const usedGadgets = new Set([winningGadget]);
     let availableIndex = 0;
     
-    for (let i = 1; i < 8; i++) {
+    for (let i = 0; i < 7; i++) { // Fill indices 0-6
       if (shuffledAnimation.length > 0) {
         // Find next unused gadget
         let attempts = 0;
@@ -618,7 +618,7 @@ const displayLoadout = (classType) => {
     }
     
     console.log(`🎬 Final animation sequence for gadget ${gadgetIndex + 1}:`, sequence);
-    console.log(`🎬 Winner at index 0: "${sequence[0]}" (should match "${winningGadget}")`);
+    console.log(`🎬 Winner at index 7: "${sequence[7]}" (should match "${winningGadget}")`);
     console.log(`🎬 Full sequence:`, sequence);
     
     // Check for duplicates in sequence
@@ -1394,13 +1394,32 @@ function finalizeSpin(columns) {
         const allItems = scrollContainer?.querySelectorAll(".itemCol");
         if (allItems && allItems.length > 0) {
           console.log(`🔍 Visual debug for gadget ${gadgetIndex + 1} - found ${allItems.length} items:`);
+          const containerRect = container.getBoundingClientRect();
           const visibleTexts = Array.from(allItems).map((item, i) => {
             const text = item.querySelector("p")?.textContent;
             const isVisible = item.getBoundingClientRect().height > 0;
-            return `[${i}] ${text} (visible: ${isVisible})`;
+            const rect = item.getBoundingClientRect();
+            const isInViewport = rect.top >= containerRect.top && rect.bottom <= containerRect.bottom;
+            return `[${i}] ${text} (visible: ${isVisible}, inViewport: ${isInViewport}, transform: ${getComputedStyle(item.parentElement).transform})`;
           });
           console.log(`🔍 All items in container:`, visibleTexts);
           console.log(`🔍 First item should be: "${winningGadget}"`);
+          console.log(`🔍 Container transform: ${getComputedStyle(scrollContainer).transform}`);
+          
+          // Check what's actually in the center of the container
+          const containerCenter = containerRect.top + containerRect.height / 2;
+          const actualVisibleItem = Array.from(allItems).find(item => {
+            const itemRect = item.getBoundingClientRect();
+            return itemRect.top <= containerCenter && itemRect.bottom >= containerCenter;
+          });
+          
+          if (actualVisibleItem) {
+            const actualText = actualVisibleItem.querySelector("p")?.textContent;
+            console.log(`🎯 ACTUAL VISIBLE ITEM IN CENTER: "${actualText}"`);
+            if (actualText !== winningGadget) {
+              console.error(`🚨 MISMATCH! Expected: "${winningGadget}", Actually visible: "${actualText}"`);
+            }
+          }
         }
         
         console.log(`📋 All gadget retrieval methods for gadget ${gadgetIndex + 1}:`, {
