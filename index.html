@@ -169,9 +169,8 @@
       }
     </style>
     
-    <!-- Load optimized CSS asynchronously -->
-    <link rel="preload" href="style-optimized.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="style-optimized.css"></noscript>
+    <!-- Load original CSS synchronously to fix broken layout -->
+    <link rel="stylesheet" href="style.css" />
     
     <noscript>
       <link
@@ -234,23 +233,13 @@
 
 <header class="headerSection">
   <div class="container">
-    <picture>
-      <source 
-        srcset="images/roulette-480.webp 480w,
-                images/roulette-240.webp 240w,
-                images/roulette-120.webp 120w"
-        sizes="(max-width: 768px) 120px, (max-width: 1024px) 240px, 240px"
-        type="image/webp">
-      <img
-        src="images/roulette.webp"
-        alt="Random Loadout Generator for The Finals Game"
-        class="finals-logo"
-        width="240"
-        height="240"
-        fetchpriority="high"
-        decoding="async"
-      />
-    </picture>
+    <img
+      src="images/roulette.webp"
+      alt="Random Loadout Generator for The Finals Game"
+      class="finals-logo"
+      width="240"
+      height="240"
+    />
     <h2 class="subTitle">Season 6 Ready</h2>
   </div>
 </header>
@@ -525,73 +514,53 @@
             <div class="slot-machine-wrapper">
               <div class="items-container">
                 <div class="placeholder-container">
-                  <picture>
-                    <source srcset="images/placeholder-80.webp" type="image/webp">
-                    <img
-                      src="images/placeholder.webp"
-                      alt="?"
-                      width="80"
-                      height="80"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
+                  <img
+                    src="images/placeholder.webp"
+                    alt="?"
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                  />
                   <p>Weapon</p>
                 </div>
                 <div class="placeholder-container">
-                  <picture>
-                    <source srcset="images/placeholder-80.webp" type="image/webp">
-                    <img
-                      src="images/placeholder.webp"
-                      alt="?"
-                      width="80"
-                      height="80"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
+                  <img
+                    src="images/placeholder.webp"
+                    alt="?"
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                  />
                   <p>Specialization</p>
                 </div>
                 <div class="placeholder-container">
-                  <picture>
-                    <source srcset="images/placeholder-80.webp" type="image/webp">
-                    <img
-                      src="images/placeholder.webp"
-                      alt="?"
-                      width="80"
-                      height="80"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
+                  <img
+                    src="images/placeholder.webp"
+                    alt="?"
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                  />
                   <p>Gadget 1</p>
                 </div>
                 <div class="placeholder-container">
-                  <picture>
-                    <source srcset="images/placeholder-80.webp" type="image/webp">
-                    <img
-                      src="images/placeholder.webp"
-                      alt="?"
-                      width="80"
-                      height="80"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
+                  <img
+                    src="images/placeholder.webp"
+                    alt="?"
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                  />
                   <p>Gadget 2</p>
                 </div>
                 <div class="placeholder-container">
-                  <picture>
-                    <source srcset="images/placeholder-80.webp" type="image/webp">
-                    <img
-                      src="images/placeholder.webp"
-                      alt="?"
-                      width="80"
-                      height="80"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
+                  <img
+                    src="images/placeholder.webp"
+                    alt="?"
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                  />
                   <p>Gadget 3</p>
                 </div>
               </div>
@@ -830,46 +799,11 @@ details {
 </footer>
 
 
-    <!-- Critical scripts only -->
-    <script>
-      // Minimal performance utils inline for critical path
-      window.PerformanceUtils = {
-        preloadImages: function(srcs) {
-          srcs.forEach(src => {
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.as = 'image';
-            link.href = src;
-            document.head.appendChild(link);
-          });
-        }
-      };
-      
-      // Preload critical images
-      window.PerformanceUtils.preloadImages([
-        'images/light_active.webp',
-        'images/medium_active.webp', 
-        'images/heavy_active.webp'
-      ]);
-    </script>
-    
-    <!-- Load non-critical scripts asynchronously -->
-    <script>
-      function loadScript(src) {
-        const script = document.createElement('script');
-        script.src = src;
-        script.async = true;
-        document.head.appendChild(script);
-      }
-      
-      // Load scripts after initial render
-      window.addEventListener('load', function() {
-        loadScript('performance-utils.js');
-        loadScript('roulette-animations.js');
-        loadScript('app.js');
-        loadScript('performance-init.js');
-      });
-    </script>
+    <!-- Scripts - restored to working order -->
+    <script defer src="performance-utils.js"></script>
+    <script defer src="roulette-animations.js"></script>
+    <script defer src="app.js"></script>
+    <script defer src="performance-init.js"></script>
     <script>
       // FAQ Toggle Script
       document.addEventListener("DOMContentLoaded", function () {

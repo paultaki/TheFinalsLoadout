@@ -106,7 +106,6 @@ const loadouts = {
       "Frag Grenade",
       "Flashbang",
       "Proximity Sensor",
-      "Health Canister",
     ],
   },
   Heavy: {
@@ -311,34 +310,19 @@ const getUniqueGadgets = (classType, loadout) => {
 };
 
 function createItemContainer(items, winningItem = null, isGadget = false) {
-  // Optimized image creation with modern formats and lazy loading
-  const createOptimizedImage = (item, isWinner = false) => {
-    const imageName = item.replace(/ /g, "_");
-    return `
-      <picture>
-        <source srcset="images/${imageName}-80.webp 80w" type="image/webp">
-        <img 
-          src="images/${imageName}.webp" 
-          alt="${item}"
-          width="80"
-          height="80"
-          loading="lazy"
-          decoding="async"
-          ${isWinner ? 'fetchpriority="high"' : ''}
-        >
-      </picture>`;
-  };
-
   if (isGadget) {
+    // For gadgets, the first item in the array should be the winner (displayed in center)
+    // The animation will be set up to land on the first item (index 0)
+    console.log(`🎰 Creating gadget container with winner: "${items[0]}" and full sequence:`, items);
     return items
-      .map((item, index) => {
-        const isWinner = index === 4;
-        return `
-        <div class="itemCol ${isWinner ? "winner" : ""}">
-          ${createOptimizedImage(item, isWinner)}
+      .map(
+        (item, index) => `
+        <div class="itemCol ${index === 0 ? "winner" : ""}" data-item-name="${item}">
+          <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
           <p>${item}</p>
-        </div>`;
-      })
+        </div>
+      `
+      )
       .join("");
   }
 
@@ -360,14 +344,14 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
   }
 
   return repeatedItems
-    .map((item, index) => {
-      const isWinner = index === 4;
-      return `
-      <div class="itemCol ${isWinner ? "winner" : ""}">
-        ${createOptimizedImage(item, isWinner)}
+    .map(
+      (item, index) => `
+      <div class="itemCol ${index === 4 ? "winner" : ""}">
+        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
         <p>${item}</p>
-      </div>`;
-    })
+      </div>
+    `
+    )
     .join("");
 }
 
@@ -425,15 +409,26 @@ class SlotColumn {
       case "spinning":
         if (elapsed >= this.totalDuration - this.decelerationTime) {
           this.state = "decelerating";
-          // Ensure target position is aligned with item height
+          // Calculate target position for all columns
           this.targetPosition =
             Math.ceil(this.position / PHYSICS.ITEM_HEIGHT) *
             PHYSICS.ITEM_HEIGHT;
+            
+          // For gadget columns, force position to exactly 0 to show first item
+          if (this.index >= 2) {
+            // Force exact position 0 to show the winner (first item)
+            this.targetPosition = 0;
+            console.log(`🎯 Gadget column ${this.index} targeting position ${this.targetPosition} to show winner at index 0`);
+          } else {
+            console.log(`🎯 Column ${this.index} targeting position ${this.targetPosition}`);
+          }
         }
         break;
 
       case "decelerating":
         this.velocity += PHYSICS.DECELERATION * dt * 1.2; // Smoother deceleration
+        
+        // Use consistent stopping logic for all columns
         if (
           Math.abs(this.position - this.targetPosition) < 3 &&
           Math.abs(this.velocity) < 50
@@ -441,6 +436,7 @@ class SlotColumn {
           this.forceStop();
           return;
         }
+        
         if (this.velocity <= 0) {
           if (Math.abs(this.velocity) < 150) {
             // Make stopping less abrupt
@@ -455,7 +451,7 @@ class SlotColumn {
       case "bouncing":
         this.velocity += PHYSICS.DECELERATION * 1.2 * dt;
 
-        // Enhanced bounce completion check
+        // Enhanced bounce completion check for all columns
         if (
           Math.abs(this.velocity) < 50 ||
           Math.abs(this.position - this.targetPosition) < 5
@@ -468,7 +464,15 @@ class SlotColumn {
 
     // Update position with boundary checking
     this.position += this.velocity * dt;
-    this.position = this.normalizePosition(this.position);
+    
+    // Don't normalize position for gadget columns when targeting position 0
+    if (this.index >= 2 && this.targetPosition === 0 && this.state === "stopped") {
+      // Keep exact position for gadgets targeting 0
+      console.log(`🔒 Gadget column ${this.index} keeping exact position: ${this.position}`);
+    } else {
+      this.position = this.normalizePosition(this.position);
+    }
+    
     this.updateVisuals();
   }
 
@@ -483,7 +487,20 @@ class SlotColumn {
     this.velocity = 0;
     this.position = this.targetPosition;
     this.state = "stopped";
+    
+    // Debug logging for gadget columns
+    if (this.index >= 2) {
+      console.log(`🛑 Gadget column ${this.index} FORCE STOPPED at position: ${this.position} (target: ${this.targetPosition})`);
+      console.log(`🎯 Setting visual transform: translateY(${this.position}px)`);
+    }
+    
     this.updateVisuals();
+    
+    // Additional debug after visual update
+    if (this.index >= 2) {
+      const currentTransform = this.element.style.transform;
+      console.log(`🔍 Gadget column ${this.index} final transform: ${currentTransform}`);
+    }
   }
 
   updateVisuals() {
@@ -537,6 +554,10 @@ const displayLoadout = (classType) => {
   console.log(`🎯 Gadget 2: "${selectedGadgets[1]}"`);
   console.log(`🎯 Gadget 3: "${selectedGadgets[2]}"`);
   
+  // Store the selected gadgets globally for history recording
+  window.currentDisplayedGadgets = [...selectedGadgets];
+  console.log(`💾 Stored globally: window.currentDisplayedGadgets =`, window.currentDisplayedGadgets);
+  
   // Final uniqueness verification
   const uniqueCheck = new Set(selectedGadgets);
   if (uniqueCheck.size !== selectedGadgets.length) {
@@ -552,13 +573,6 @@ const displayLoadout = (classType) => {
     console.log(`🎬 Creating animation for gadget ${gadgetIndex + 1}: "${winningGadget}"`);
     console.log(`🎬 All selected gadgets:`, selectedGadgets);
     
-    // Create a fixed-length array for the spin sequence
-    const sequence = new Array(8);
-    
-    // The winning item is always at position 4 (the center)
-    sequence[4] = winningGadget;
-    console.log(`🎬 Set position 4 (winner) to: "${winningGadget}"`);
-    
     // Create a pool of gadgets for this specific animation slot that excludes the selected gadgets
     const otherSelectedGadgets = selectedGadgets.filter(g => g !== winningGadget);
     const availableForAnimation = loadout.gadgets.filter(g => !otherSelectedGadgets.includes(g));
@@ -566,24 +580,57 @@ const displayLoadout = (classType) => {
     console.log(`🎬 Other selected gadgets to exclude:`, otherSelectedGadgets);
     console.log(`🎬 Animation pool for ${winningGadget} has ${availableForAnimation.length} gadgets:`, availableForAnimation);
     
-    // Fill the other positions with random gadgets that aren't the selected gadgets for other slots
     // Shuffle the available gadgets to ensure variety
     const shuffledAnimation = [...availableForAnimation].sort(() => Math.random() - 0.5);
     
-    for (let i = 0; i < 8; i++) {
-      if (i !== 4) { // Skip position 4 (winner)
-        if (shuffledAnimation.length > 0) {
-          // Use modulo to cycle through shuffled gadgets if we have fewer than needed
-          sequence[i] = shuffledAnimation[i % shuffledAnimation.length];
-        } else {
-          // Fallback if no other gadgets available
-          sequence[i] = winningGadget;
+    // Create sequence with winning gadget at the START (index 0)
+    // This is where the animation will stop and what will be visually displayed
+    const sequence = [winningGadget]; // Winner goes first
+    
+    // Fill remaining 7 positions with unique gadgets (no duplicates)
+    const usedGadgets = new Set([winningGadget]);
+    let availableIndex = 0;
+    
+    for (let i = 1; i < 8; i++) {
+      if (shuffledAnimation.length > 0) {
+        // Find next unused gadget
+        let attempts = 0;
+        while (attempts < shuffledAnimation.length * 2) {
+          const candidateGadget = shuffledAnimation[availableIndex % shuffledAnimation.length];
+          availableIndex++;
+          
+          if (!usedGadgets.has(candidateGadget)) {
+            sequence[i] = candidateGadget;
+            usedGadgets.add(candidateGadget);
+            break;
+          }
+          attempts++;
         }
+        
+        // If we couldn't find a unique gadget, use any available one
+        if (!sequence[i]) {
+          sequence[i] = shuffledAnimation[(i - 1) % shuffledAnimation.length];
+        }
+      } else {
+        // Fallback if no other gadgets available
+        sequence[i] = winningGadget;
       }
     }
     
     console.log(`🎬 Final animation sequence for gadget ${gadgetIndex + 1}:`, sequence);
-    console.log(`🎬 Checking for "${winningGadget}" duplicates in sequence:`, sequence.filter(item => item === winningGadget));
+    console.log(`🎬 Winner at index 0: "${sequence[0]}" (should match "${winningGadget}")`);
+    console.log(`🎬 Full sequence:`, sequence);
+    
+    // Check for duplicates in sequence
+    const uniqueInSequence = new Set(sequence);
+    if (uniqueInSequence.size !== sequence.length) {
+      console.warn(`⚠️ DUPLICATES in animation sequence for gadget ${gadgetIndex + 1}!`);
+      console.warn('Sequence:', sequence);
+      console.warn('Unique items:', Array.from(uniqueInSequence));
+    } else {
+      console.log(`✅ No duplicates in animation sequence for gadget ${gadgetIndex + 1}`);
+    }
+    
     return sequence;
   };
 
@@ -1322,23 +1369,62 @@ function finalizeSpin(columns) {
     const selectedItems = Array.from(itemContainers).map((container, index) => {
       console.log(`📋 Processing container ${index}:`, container);
       
-      // For gadgets (index 2, 3, 4), use the data attribute
+      // For gadgets (index 2, 3, 4), use multiple fallback methods
       if (index >= 2) {
+        const gadgetIndex = index - 2; // Convert to 0-based gadget index
+        
+        // Method 1: Try data attribute on container
         const winningGadget = container.dataset.winningGadget;
         const originalGadget = container.dataset.originalGadget;
-        console.log(`📋 Gadget ${index - 1} data attributes:`, {
+        
+        console.log(`📋 Gadget ${gadgetIndex + 1} data attributes:`, {
           winningGadget,
           originalGadget,
           position: container.dataset.gadgetPosition
         });
         
+        // Method 2: Try data attribute on scroll container
+        const scrollContainer = container.querySelector('.scroll-container');
+        const scrollWinningGadget = scrollContainer?.dataset.winningGadget;
+        
+        // Method 3: Use global storage as ultimate fallback
+        const globalGadget = window.currentDisplayedGadgets && window.currentDisplayedGadgets[gadgetIndex];
+        
+        // Debug what's actually visible in this container
+        const allItems = scrollContainer?.querySelectorAll(".itemCol");
+        if (allItems && allItems.length > 0) {
+          console.log(`🔍 Visual debug for gadget ${gadgetIndex + 1} - found ${allItems.length} items:`);
+          const visibleTexts = Array.from(allItems).map((item, i) => {
+            const text = item.querySelector("p")?.textContent;
+            const isVisible = item.getBoundingClientRect().height > 0;
+            return `[${i}] ${text} (visible: ${isVisible})`;
+          });
+          console.log(`🔍 All items in container:`, visibleTexts);
+          console.log(`🔍 First item should be: "${winningGadget}"`);
+        }
+        
+        console.log(`📋 All gadget retrieval methods for gadget ${gadgetIndex + 1}:`, {
+          containerData: winningGadget,
+          originalData: originalGadget,
+          scrollData: scrollWinningGadget,
+          globalFallback: globalGadget
+        });
+        
+        // Use the first available method
         if (winningGadget) {
+          console.log(`✅ Using container data: "${winningGadget}"`);
           return winningGadget;
         } else if (originalGadget) {
-          console.warn(`⚠️ Using original-gadget fallback for container ${index}: "${originalGadget}"`);
+          console.log(`⚠️ Using original-gadget fallback: "${originalGadget}"`);
           return originalGadget;
+        } else if (scrollWinningGadget) {
+          console.log(`⚠️ Using scroll container data: "${scrollWinningGadget}"`);
+          return scrollWinningGadget;
+        } else if (globalGadget) {
+          console.log(`🔄 Using global fallback: "${globalGadget}"`);
+          return globalGadget;
         } else {
-          console.error(`❌ No gadget data found for container ${index}`);
+          console.error(`❌ All methods failed for gadget ${gadgetIndex + 1}`);
           return "Unknown";
         }
       }
