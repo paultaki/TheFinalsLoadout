@@ -6,6 +6,7 @@ const state = {
   totalSpins: 0,
   selectedGadgets: new Set(),
   currentGadgetPool: new Set(),
+  soundEnabled: localStorage.getItem('soundEnabled') !== 'false', // Default to true
 };
 
 // Make state globally accessible
@@ -704,11 +705,13 @@ function startSpinAnimation(columns) {
   );
   
   // Play spinning sound
-  const spinningSound = document.getElementById('spinningSound');
-  if (spinningSound) {
-    spinningSound.currentTime = 0;
-    spinningSound.volume = 0.25; // Reduced by 50%
-    spinningSound.play().catch(() => {});
+  if (state.soundEnabled) {
+    const spinningSound = document.getElementById('spinningSound');
+    if (spinningSound) {
+      spinningSound.currentTime = 0;
+      spinningSound.volume = 0.25; // Reduced by 50%
+      spinningSound.play().catch(() => {});
+    }
   }
 
   const startTime = performance.now();
@@ -790,7 +793,7 @@ function startSpinAnimation(columns) {
               }
 
               // Play final sound on FIRST locked tag
-              if (index === 0) {
+              if (index === 0 && state.soundEnabled) {
                 const finalSound = document.getElementById('finalSound');
                 if (finalSound) {
                   finalSound.currentTime = 0;
@@ -1203,11 +1206,13 @@ function finalizeSpin(columns) {
     );
     
     // Play transition sound between spins
-    const transitionSound = document.getElementById('transitionSound');
-    if (transitionSound) {
-      transitionSound.currentTime = 0;
-      transitionSound.volume = 0.6;
-      transitionSound.play().catch(() => {});
+    if (state.soundEnabled) {
+      const transitionSound = document.getElementById('transitionSound');
+      if (transitionSound) {
+        transitionSound.currentTime = 0;
+        transitionSound.volume = 0.6;
+        transitionSound.play().catch(() => {});
+      }
     }
 
     // Decrement spin counter
@@ -1533,13 +1538,6 @@ const spinLoadout = () => {
   state.isSpinning = true;
   state.currentSpin = state.totalSpins;
   
-  // Start background music for the entire spin sequence
-  const spinBackgroundSound = document.getElementById('spinBackgroundSound');
-  if (spinBackgroundSound) {
-    spinBackgroundSound.currentTime = 0;
-    spinBackgroundSound.volume = 0.3; // Lower volume for background
-    spinBackgroundSound.play().catch(() => {});
-  }
 
   // Disable ONLY class buttons during the spin, leave spin buttons enabled
   document.querySelectorAll(".class-button").forEach((btn) => {
@@ -1668,8 +1666,50 @@ window.copyLoadoutText = function (button) {
 };
 
 // Initialize everything when DOM is ready
+// Sound helper function
+function playSound(soundId) {
+  if (!state.soundEnabled) return;
+  
+  const sound = document.getElementById(soundId);
+  if (sound) {
+    sound.play().catch(() => {});
+  }
+}
+
+// Initialize sound toggle functionality
+function initializeSoundToggle() {
+  const soundToggle = document.getElementById('sound-toggle');
+  if (!soundToggle) return;
+  
+  // Set initial state
+  if (!state.soundEnabled) {
+    soundToggle.classList.add('muted');
+  }
+  
+  // Add click handler
+  soundToggle.addEventListener('click', () => {
+    state.soundEnabled = !state.soundEnabled;
+    localStorage.setItem('soundEnabled', state.soundEnabled);
+    
+    if (state.soundEnabled) {
+      soundToggle.classList.remove('muted');
+    } else {
+      soundToggle.classList.add('muted');
+      // Stop all currently playing sounds
+      const allAudio = document.querySelectorAll('audio');
+      allAudio.forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded");
+
+  // Initialize sound toggle
+  initializeSoundToggle();
 
   // Get DOM elements
   classButtons = document.querySelectorAll(".class-button");

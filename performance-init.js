@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Preload critical audio files
   const audioFiles = [
     'clickSound', 'tickSound', 'classWinSound', 'spinWinSound',
-    'spinningSound', 'spinBackgroundSound', 'transitionSound', 'finalSound'
+    'spinningSound', 'transitionSound', 'finalSound'
   ];
   
   audioFiles.forEach(id => AudioManager.preload(id));

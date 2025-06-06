@@ -278,6 +278,9 @@ class RouletteAnimationSystem {
   
   // Sound effects (placeholders - implement with actual audio files)
   playTickSound() {
+    // Check if sound is enabled
+    if (!window.state || !window.state.soundEnabled) return;
+    
     // Create a tick sound using Web Audio API or play an audio file
     const audio = document.getElementById('tickSound');
     if (audio && !this._lastTickTime || Date.now() - this._lastTickTime > 30) {
@@ -290,6 +293,9 @@ class RouletteAnimationSystem {
   }
   
   playClassWinSound() {
+    // Check if sound is enabled
+    if (!window.state || !window.state.soundEnabled) return;
+    
     // Play chang.mp3 for class selection
     const audio = document.getElementById('classWinSound');
     if (audio) {
@@ -300,6 +306,9 @@ class RouletteAnimationSystem {
   }
   
   playSpinWinSound() {
+    // Check if sound is enabled
+    if (!window.state || !window.state.soundEnabled) return;
+    
     // Play Tabby Tune.mp3 for spin selection
     const audio = document.getElementById('spinWinSound');
     if (audio) {
