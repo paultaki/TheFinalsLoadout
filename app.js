@@ -1261,18 +1261,29 @@ function finalizeSpin(columns) {
 
     // Get all the selected items - use data attributes for gadgets to ensure accuracy
     const selectedItems = Array.from(itemContainers).map((container, index) => {
+      console.log(`📋 Processing container ${index}:`, container);
+      
       // For gadgets (index 2, 3, 4), use the data attribute
-      if (index >= 2 && container.dataset.winningGadget) {
-        console.log(`📋 Gadget ${index - 1} from data attribute: ${container.dataset.winningGadget}`);
-        return container.dataset.winningGadget;
+      if (index >= 2) {
+        const winningGadget = container.dataset.winningGadget;
+        console.log(`📋 Gadget ${index - 1} from data attribute: "${winningGadget}"`);
+        if (winningGadget) {
+          return winningGadget;
+        } else {
+          console.error(`❌ No data-winning-gadget found for container ${index}`);
+        }
       }
       
       // For weapons and specializations, use the visible item method
       const scrollContainer = container.querySelector(".scroll-container");
-      if (!scrollContainer) return "Unknown";
+      if (!scrollContainer) {
+        console.error(`❌ No scroll container found for index ${index}`);
+        return "Unknown";
+      }
 
       // Find all item columns
       const allItems = scrollContainer.querySelectorAll(".itemCol");
+      console.log(`📋 Found ${allItems.length} items in container ${index}`);
 
       // Use the EXACT method from old working version
       const visibleItem = Array.from(allItems).find((item) => {
@@ -1286,8 +1297,12 @@ function finalizeSpin(columns) {
         );
       });
 
-      if (!visibleItem) return "Unknown";
+      if (!visibleItem) {
+        console.error(`❌ No visible item found for index ${index}`);
+        return "Unknown";
+      }
       const itemText = visibleItem.querySelector("p")?.innerText.trim();
+      console.log(`📋 ${index === 0 ? 'Weapon' : 'Specialization'} from visible item: "${itemText}"`);
       return itemText || "Unknown";
     });
 
