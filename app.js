@@ -1743,7 +1743,7 @@ window.stopAllAudio = function() {
 };
 
 // Loadout history functions
-function addToHistory(
+async function addToHistory(
   classType,
   selectedWeapon,
   selectedSpec,
@@ -1761,6 +1761,7 @@ function addToHistory(
     newEntry.classList.add("spicy-loadout");
   }
   
+  // Create initial entry with loading roast state
   newEntry.innerHTML = `
     <div class="loadout-header">
       <span class="class-badge ${classType.toLowerCase()}">${classType.toUpperCase()}</span>
@@ -1785,6 +1786,12 @@ function addToHistory(
         `).join('')}
       </div>
     </div>
+    <div class="roast-section loading">
+      <div class="roast-content">
+        <span class="fire-emoji">🔥</span>
+        <span class="roast-text">Analyzing loadout cringe level...</span>
+      </div>
+    </div>
     <div class="loadout-actions">
       <button class="copy-build" onclick="copyLoadoutText(this)">
         <span>📋</span> COPY
@@ -1800,6 +1807,9 @@ function addToHistory(
   // Animate entry
   setTimeout(() => newEntry.classList.add('visible'), 10);
   
+  // Generate roast asynchronously
+  generateRoast(newEntry, classType, selectedWeapon, selectedSpec, selectedGadgets);
+  
   // Update timestamp every minute
   updateTimestamps();
   
@@ -1807,7 +1817,66 @@ function addToHistory(
   while (historyList.children.length > 5) {
     historyList.removeChild(historyList.lastChild);
   }
+}
+
+// Generate AI roast for loadout
+async function generateRoast(entryElement, classType, weapon, specialization, gadgets) {
+  const roastSection = entryElement.querySelector('.roast-section');
+  const roastText = entryElement.querySelector('.roast-text');
   
+  try {
+    // Debug - log what we're sending to the API
+    const requestData = {
+      class: classType,
+      weapon: weapon,
+      specialization: specialization,
+      gadgets: gadgets
+    };
+    console.log('🚀 Sending roast request:', requestData);
+    
+    // Call our Vercel API endpoint
+    const response = await fetch('/api/roast', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log('🔥 Received roast response:', data);
+    
+    // Update the roast section with the AI-generated roast
+    roastSection.classList.remove('loading');
+    roastText.textContent = data.roast;
+    
+    // Add fallback indicator if API failed
+    if (data.fallback) {
+      roastSection.classList.add('fallback');
+    }
+    
+  } catch (error) {
+    console.error('Error generating roast:', error);
+    
+    // Fallback to a generic roast
+    const fallbackRoasts = [
+      "This loadout speaks for itself. 1/10",
+      "Bold strategy, questionable execution. 2/10",
+      "Chaos incarnate, not in a good way. 1/10",
+      "Your enemies will die... from laughter. 0/10",
+      "Creative, I'll give you that. Still terrible. 2/10"
+    ];
+    
+    roastSection.classList.remove('loading');
+    roastSection.classList.add('fallback');
+    roastText.textContent = fallbackRoasts[Math.floor(Math.random() * fallbackRoasts.length)];
+  }
+  
+  // Save history after roast is generated
   saveHistory();
 }
 
@@ -1823,6 +1892,12 @@ function saveHistory() {
         .map(el => el.textContent);
       const isSpicy = entry.classList.contains('spicy-loadout');
       
+      // Extract roast data
+      const roastSection = entry.querySelector('.roast-section');
+      const roastText = entry.querySelector('.roast-text')?.textContent;
+      const isRoastLoading = roastSection?.classList.contains('loading');
+      const isRoastFallback = roastSection?.classList.contains('fallback');
+      
       return {
         classType,
         loadoutName,
@@ -1830,6 +1905,8 @@ function saveHistory() {
         specialization,
         gadgets,
         isSpicy,
+        roast: isRoastLoading ? null : roastText,
+        roastFallback: isRoastFallback,
         timestamp: Date.now()
       };
     }
@@ -1861,6 +1938,30 @@ function loadHistory() {
     // Calculate relative timestamp
     const timeAgo = index === 0 ? 'Just now' : `${index + 1} min ago`;
     
+    // Determine roast section content
+    let roastSectionHTML = '';
+    if (entryData.roast) {
+      const fallbackClass = entryData.roastFallback ? ' fallback' : '';
+      roastSectionHTML = `
+        <div class="roast-section${fallbackClass}">
+          <div class="roast-content">
+            <span class="fire-emoji">🔥</span>
+            <span class="roast-text">${entryData.roast}</span>
+          </div>
+        </div>
+      `;
+    } else {
+      // No roast available (older entries or failed to load)
+      roastSectionHTML = `
+        <div class="roast-section fallback">
+          <div class="roast-content">
+            <span class="fire-emoji">🔥</span>
+            <span class="roast-text">Roast unavailable. Still terrible though. 1/10</span>
+          </div>
+        </div>
+      `;
+    }
+    
     entry.innerHTML = `
       <div class="loadout-header">
         <span class="class-badge ${entryData.classType.toLowerCase()}">${entryData.classType.toUpperCase()}</span>
@@ -1885,6 +1986,7 @@ function loadHistory() {
           `).join('')}
         </div>
       </div>
+      ${roastSectionHTML}
       <div class="loadout-actions">
         <button class="copy-build" onclick="copyLoadoutText(this)">
           <span>📋</span> COPY
@@ -2400,6 +2502,16 @@ document.addEventListener("DOMContentLoaded", () => {
       audio.currentTime = 0;
     });
   });
+  
+  // Initialize roulette system with retry mechanism
+  function initializeRouletteSystem() {
+    if (!window.RouletteAnimationSystem) {
+      console.warn('RouletteAnimationSystem not yet available, retrying in 100ms...');
+      setTimeout(initializeRouletteSystem, 100);
+      return;
+    }
+    
+    console.log('✅ RouletteAnimationSystem loaded successfully');
   
   // Optimize audio for mobile by reducing concurrent sounds
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

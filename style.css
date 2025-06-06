@@ -2992,6 +2992,163 @@ html {
     gap: 0.5rem;
   }
 }
+
+/* Roast Section Styling */
+.roast-section {
+  margin: 0.75rem 0;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #ff4500, #ff6b00, #ff8c00);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
+  border: 1px solid rgba(255, 140, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.roast-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.8s ease;
+}
+
+.roast-section:hover::before {
+  left: 100%;
+}
+
+.roast-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.fire-emoji {
+  font-size: 1.2rem;
+  animation: flicker 1.5s infinite alternate;
+  filter: drop-shadow(0 0 4px rgba(255, 69, 0, 0.8));
+}
+
+@keyframes flicker {
+  0% { 
+    transform: scale(1) rotate(-2deg);
+    filter: drop-shadow(0 0 4px rgba(255, 69, 0, 0.8));
+  }
+  25% { 
+    transform: scale(1.05) rotate(1deg);
+    filter: drop-shadow(0 0 6px rgba(255, 100, 0, 0.9));
+  }
+  50% { 
+    transform: scale(0.98) rotate(-1deg);
+    filter: drop-shadow(0 0 3px rgba(255, 69, 0, 0.7));
+  }
+  75% { 
+    transform: scale(1.02) rotate(2deg);
+    filter: drop-shadow(0 0 5px rgba(255, 140, 0, 0.8));
+  }
+  100% { 
+    transform: scale(1) rotate(-1deg);
+    filter: drop-shadow(0 0 4px rgba(255, 69, 0, 0.8));
+  }
+}
+
+.roast-text {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  line-height: 1.3;
+  flex: 1;
+}
+
+/* Loading State */
+.roast-section.loading {
+  background: linear-gradient(135deg, #666, #888, #666);
+  background-size: 200% 200%;
+  animation: loadingGradient 2s ease-in-out infinite;
+}
+
+@keyframes loadingGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.roast-section.loading .fire-emoji {
+  animation: loadingPulse 1s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+  0%, 100% { 
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.roast-section.loading .roast-text {
+  color: #ccc;
+  animation: loadingDots 1.5s infinite;
+}
+
+@keyframes loadingDots {
+  0%, 20% { content: 'Analyzing loadout cringe level...'; }
+  40% { content: 'Analyzing loadout cringe level....'; }
+  60% { content: 'Analyzing loadout cringe level.....'; }
+  80%, 100% { content: 'Analyzing loadout cringe level......'; }
+}
+
+/* Fallback State */
+.roast-section.fallback {
+  background: linear-gradient(135deg, #555, #777, #555);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.roast-section.fallback .fire-emoji {
+  opacity: 0.7;
+  animation: none;
+}
+
+.roast-section.fallback .roast-text {
+  color: #ddd;
+  opacity: 0.9;
+}
+
+/* Mobile optimizations for roast section */
+@media (max-width: 768px) {
+  .roast-section {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+  }
+  
+  .fire-emoji {
+    font-size: 1rem;
+  }
+  
+  .roast-text {
+    font-size: 0.8rem;
+  }
+  
+  /* Disable complex animations on mobile for performance */
+  .mobile-optimized .roast-section::before,
+  .mobile-optimized .fire-emoji {
+    animation: none;
+  }
+  
+  .mobile-optimized .roast-section.loading {
+    background: #666;
+    animation: none;
+  }
+}
 .copy-button {
   background: linear-gradient(45deg, #ff1493, #1e90ff);
   box-shadow: 0 4px 12px rgba(255, 20, 147, 0.6);
