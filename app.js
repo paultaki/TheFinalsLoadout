@@ -770,25 +770,6 @@ function startSpinAnimation(columns) {
         }
       }
 
-      // Also stop background sound immediately (mobile fix)
-      const spinBackgroundSound = document.getElementById('spinBackgroundSound');
-      if (spinBackgroundSound && !spinBackgroundSound.paused) {
-        spinBackgroundSound.pause();
-        spinBackgroundSound.currentTime = 0;
-        spinBackgroundSound.volume = 0;
-        try {
-          // Force stop on mobile by removing and re-adding src
-          const originalSrc = spinBackgroundSound.src;
-          spinBackgroundSound.removeAttribute('src');
-          spinBackgroundSound.load();
-          setTimeout(() => {
-            spinBackgroundSound.src = originalSrc;
-            spinBackgroundSound.volume = 0.3; // Reset volume for next time
-          }, 100);
-        } catch (e) {
-          console.log("Mobile background audio stop failed:", e);
-        }
-      }
 
       // Add visual effects only for final spin
       if (isFinalSpin) {
@@ -1256,33 +1237,6 @@ function finalizeSpin(columns) {
 
   console.log("🎯 Final spin, recording loadout");
   
-  // Stop background music when final spin completes
-  const spinBackgroundSound = document.getElementById('spinBackgroundSound');
-  if (spinBackgroundSound) {
-    // Immediately stop sound for mobile compatibility
-    spinBackgroundSound.pause();
-    spinBackgroundSound.currentTime = 0;
-    
-    // For mobile browsers, force a complete stop
-    try {
-      // Remove loop attribute temporarily
-      spinBackgroundSound.loop = false;
-      
-      // Force stop on mobile by clearing and reloading
-      const originalSrc = spinBackgroundSound.src;
-      spinBackgroundSound.removeAttribute('src');
-      spinBackgroundSound.load();
-      
-      // Restore src and loop after a delay
-      setTimeout(() => {
-        spinBackgroundSound.src = originalSrc;
-        spinBackgroundSound.loop = true;
-        spinBackgroundSound.volume = 0.3; // Reset volume for next time
-      }, 200);
-    } catch (e) {
-      console.log("Mobile background audio force stop failed:", e);
-    }
-  }
   
   // Also ensure spinning sound is fully stopped (mobile fix)
   const spinningSound = document.getElementById('spinningSound');
