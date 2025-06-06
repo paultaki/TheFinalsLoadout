@@ -1762,13 +1762,22 @@ function addToHistory(
       <span class="loadout-name">${loadoutName}</span>
       <span class="timestamp">Just now</span>
     </div>
-    <div class="loadout-items">
-      <div class="item-row">
-        <img src="images/${selectedWeapon.replace(/ /g, "_")}.webp" alt="${selectedWeapon}" class="item-icon" title="${selectedWeapon}">
-        <img src="images/${selectedSpec.replace(/ /g, "_")}.webp" alt="${selectedSpec}" class="item-icon" title="${selectedSpec}">
-        <div class="gadget-icons">
-          ${selectedGadgets.map(g => `<img src="images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small" title="${g}">`).join('')}
-        </div>
+    <div class="loadout-details">
+      <div class="loadout-item weapon-item">
+        <img src="images/${selectedWeapon.replace(/ /g, "_")}.webp" alt="${selectedWeapon}" class="item-icon">
+        <span class="item-name">${selectedWeapon}</span>
+      </div>
+      <div class="loadout-item spec-item">
+        <img src="images/${selectedSpec.replace(/ /g, "_")}.webp" alt="${selectedSpec}" class="item-icon">
+        <span class="item-name">${selectedSpec}</span>
+      </div>
+      <div class="gadget-group">
+        ${selectedGadgets.map(g => `
+          <div class="loadout-item gadget-item">
+            <img src="images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small">
+            <span class="item-name small">${g}</span>
+          </div>
+        `).join('')}
       </div>
     </div>
     <div class="loadout-actions">
@@ -1886,14 +1895,13 @@ window.challengeWithLoadout = function(button) {
   const classType = entry.querySelector('.class-badge').textContent.trim();
   const loadoutName = entry.querySelector('.loadout-name').textContent.trim();
   
-  // Get weapon and specialization from images
-  const itemIcons = entry.querySelectorAll('.item-icon:not(.small)');
-  const weaponName = itemIcons[0]?.getAttribute('title') || 'Unknown Weapon';
-  const specName = itemIcons[1]?.getAttribute('title') || 'Unknown Specialization';
+  // Get weapon and specialization from text
+  const weaponName = entry.querySelector('.weapon-item .item-name')?.textContent || 'Unknown Weapon';
+  const specName = entry.querySelector('.spec-item .item-name')?.textContent || 'Unknown Specialization';
   
-  // Get gadgets from small icons
-  const gadgetIcons = entry.querySelectorAll('.item-icon.small');
-  const gadgetNames = Array.from(gadgetIcons).map(icon => icon.getAttribute('title')).filter(Boolean);
+  // Get gadgets from text
+  const gadgetNames = Array.from(entry.querySelectorAll('.gadget-item .item-name'))
+    .map(el => el.textContent);
   
   // Create shareable challenge text
   const challengeText = `🎯 THE FINALS CHALLENGE:
@@ -1937,14 +1945,13 @@ window.copyLoadoutText = function (button) {
   const classType = entry.querySelector('.class-badge').textContent.trim();
   const loadoutName = entry.querySelector('.loadout-name').textContent.trim();
   
-  // Get weapon and specialization from images
-  const itemIcons = entry.querySelectorAll('.item-icon:not(.small)');
-  const weapon = itemIcons[0]?.getAttribute('title') || 'Unknown Weapon';
-  const specialization = itemIcons[1]?.getAttribute('title') || 'Unknown Specialization';
+  // Get weapon and specialization from text
+  const weapon = entry.querySelector('.weapon-item .item-name')?.textContent || 'Unknown Weapon';
+  const specialization = entry.querySelector('.spec-item .item-name')?.textContent || 'Unknown Specialization';
   
-  // Get gadgets from small icons
-  const gadgetIcons = entry.querySelectorAll('.item-icon.small');
-  const gadgets = Array.from(gadgetIcons).map(icon => icon.getAttribute('title')).filter(Boolean);
+  // Get gadgets from text
+  const gadgets = Array.from(entry.querySelectorAll('.gadget-item .item-name'))
+    .map(el => el.textContent);
 
   // Create the copy text
   const copyText = `${loadoutName}
