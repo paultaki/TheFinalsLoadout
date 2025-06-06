@@ -237,6 +237,9 @@
   <audio id="spinningSound" src="sounds/spinning.mp3" preload="auto"></audio>
   <audio id="transitionSound" src="sounds/transition.mp3" preload="auto"></audio>
   <audio id="finalSound" src="sounds/final-sound.mp3" preload="auto"></audio>
+  <audio id="spinStart" src="sounds/start-spin.mp3" preload="auto"></audio>
+  <audio id="columnStop" src="sounds/click.mp3" preload="auto"></audio>
+  <audio id="finalLock" src="sounds/final-sound.mp3" preload="auto"></audio>
 
 <nav class="main-nav">
   <a href="https://thefinalsloadout.com/" class="active">Home</a>
@@ -254,7 +257,7 @@
       width="240"
       height="240"
     />
-    <h2 class="subTitle">Season 6 Ready</h2>
+    <h2 class="season-status" id="seasonStatus">Season 6 ends in <span class="days-remaining">5</span> days</h2>
     <!-- Sound Toggle Button -->
     <button id="sound-toggle" class="sound-toggle" aria-label="Toggle sound" title="Toggle sound on/off">
       <svg class="sound-on" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -597,7 +600,7 @@
       </div>
     </main>
     <section id="loadout-history" class="loadout-history">
-      <h2>Loadout History</h2>
+      <h2>🏆 Recent Chaos</h2>
       <div id="history-list">
         <!-- History entries will be populated here -->
       </div>

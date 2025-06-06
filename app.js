@@ -20,10 +20,10 @@ let outputDiv;
 
 // Physics constants for animations
 const PHYSICS = {
-  ACCELERATION: 6000,
-  MAX_VELOCITY: 4000,
-  DECELERATION: -3000,
-  BOUNCE_DAMPENING: 0.3,
+  ACCELERATION: 8000,  // Increased for more dramatic start
+  MAX_VELOCITY: 5000,  // Higher max speed for blur effect
+  DECELERATION: -3500, // Smoother deceleration
+  BOUNCE_DAMPENING: 0.4, // More pronounced bounce
   ITEM_HEIGHT: 188,
   TIMING: {
     REGULAR_SPIN: {
@@ -32,9 +32,10 @@ const PHYSICS = {
       DECELERATION_TIME: 400,
     },
     FINAL_SPIN: {
-      COLUMN_DELAY: 700, // 0.6s between stops for final spin
+      COLUMN_DELAY: 200, // Base delay (not used with explicit stops)
       BASE_DURATION: 2500,
       DECELERATION_TIME: 800,
+      COLUMN_STOPS: [3000, 4000, 5200, 6000, 7000] // More dramatic timing for final spin
     },
   },
 };
@@ -368,16 +369,27 @@ class SlotColumn {
     this.isFinalSpin = isFinalSpin;
     this.animationStartTime = null;
     this.maxAnimationDuration = 10000; // 10 second safety timeout
+    this.overshootAmount = 0;
+    this.snapbackComplete = false;
 
     const timing = isFinalSpin
       ? PHYSICS.TIMING.FINAL_SPIN
       : PHYSICS.TIMING.REGULAR_SPIN;
-    this.stopDelay = timing.COLUMN_DELAY * index;
-    this.totalDuration = timing.BASE_DURATION + this.stopDelay;
+    
+    // Use explicit stop times for final spin columns
+    if (isFinalSpin && timing.COLUMN_STOPS && timing.COLUMN_STOPS[index]) {
+      this.totalDuration = timing.COLUMN_STOPS[index];
+    } else {
+      this.stopDelay = timing.COLUMN_DELAY * index;
+      this.totalDuration = timing.BASE_DURATION + this.stopDelay;
+    }
+    
     this.decelerationTime = timing.DECELERATION_TIME;
-
     this.targetPosition = 0;
     this.initialPosition = 0;
+    
+    // Add reference to container for visual effects
+    this.container = element.closest('.item-container');
   }
 
   update(elapsed, deltaTime) {
@@ -398,78 +410,85 @@ class SlotColumn {
     // Ensure deltaTime is reasonable
     const dt = Math.min(deltaTime, 50) / 1000; // Cap at 50ms, convert to seconds
 
+    // Vegas-style physics with distinct phases
+    const accelerationPhase = 500; // 0-500ms
+    const maxSpeedPhase = this.totalDuration - this.decelerationTime - 200; // Account for overshoot
+    
     switch (this.state) {
       case "accelerating":
-        this.velocity += PHYSICS.ACCELERATION * dt * 1.5; // Increased acceleration
-        if (this.velocity >= PHYSICS.MAX_VELOCITY) {
+        // Exponential acceleration for dramatic start
+        const accelProgress = Math.min(elapsed / accelerationPhase, 1);
+        const accelMultiplier = 1 + Math.pow(accelProgress, 2) * 2; // Up to 3x acceleration
+        
+        this.velocity += PHYSICS.ACCELERATION * dt * accelMultiplier;
+        
+        if (elapsed >= accelerationPhase || this.velocity >= PHYSICS.MAX_VELOCITY) {
           this.velocity = PHYSICS.MAX_VELOCITY;
           this.state = "spinning";
         }
         break;
 
       case "spinning":
-        if (elapsed >= this.totalDuration - this.decelerationTime) {
+        // Maintain max velocity with slight variations for realism
+        this.velocity = PHYSICS.MAX_VELOCITY + Math.sin(elapsed / 100) * 200;
+        
+        if (elapsed >= maxSpeedPhase) {
           this.state = "decelerating";
-          // Calculate target position for all columns
-          this.targetPosition =
-            Math.ceil(this.position / PHYSICS.ITEM_HEIGHT) *
-            PHYSICS.ITEM_HEIGHT;
+          // Calculate target position with overshoot
+          const baseTarget = Math.ceil(this.position / PHYSICS.ITEM_HEIGHT) * PHYSICS.ITEM_HEIGHT;
+          this.overshootAmount = PHYSICS.ITEM_HEIGHT * 0.3; // 30% overshoot
+          this.targetPosition = baseTarget;
             
-          // For gadget columns, use normal positioning and see which index is visible
+          // For gadget columns, use normal positioning
           if (this.index >= 2) {
-            this.targetPosition = 0; // Back to normal positioning to find out which index is visible
-            console.log(`🎯 Gadget column ${this.index} targeting position ${this.targetPosition} - let's see which index shows up`);
-          } else {
-            console.log(`🎯 Column ${this.index} targeting position ${this.targetPosition}`);
+            this.targetPosition = 0;
+            this.overshootAmount = PHYSICS.ITEM_HEIGHT * 0.2;
           }
         }
         break;
 
       case "decelerating":
-        this.velocity += PHYSICS.DECELERATION * dt * 1.2; // Smoother deceleration
+        // Smooth exponential deceleration
+        const decelProgress = (elapsed - maxSpeedPhase) / this.decelerationTime;
+        const decelMultiplier = Math.pow(1 - Math.min(decelProgress, 1), 2);
         
-        // Use consistent stopping logic for all columns
-        if (
-          Math.abs(this.position - this.targetPosition) < 10 &&
-          Math.abs(this.velocity) < 100
-        ) {
+        this.velocity = PHYSICS.MAX_VELOCITY * decelMultiplier;
+        
+        // Check if we've reached the overshoot point
+        if (!this.snapbackComplete && this.position >= this.targetPosition + this.overshootAmount) {
+          this.state = "snapback";
+          this.velocity = -Math.abs(this.velocity) * 0.5; // Reverse at 50% speed
+        } else if (this.velocity < 100) {
           this.forceStop();
-          return;
         }
+        break;
+
+      case "snapback":
+        // Snap back to final position
+        this.velocity += PHYSICS.ACCELERATION * dt * 0.8; // Gentler snapback
         
-        if (this.velocity <= 0) {
-          if (Math.abs(this.velocity) < 150) {
-            // Make stopping less abrupt
-            this.forceStop();
-          } else {
-            this.velocity = -this.velocity * (PHYSICS.BOUNCE_DAMPENING * 1.2);
-            this.state = "bouncing";
-          }
+        if (this.position <= this.targetPosition || Math.abs(this.velocity) < 50) {
+          this.position = this.targetPosition;
+          this.forceStop();
         }
         break;
 
       case "bouncing":
+        // Legacy bounce state (kept for compatibility)
         this.velocity += PHYSICS.DECELERATION * 1.2 * dt;
-
-        // Enhanced bounce completion check for all columns
-        if (
-          Math.abs(this.velocity) < 50 ||
-          Math.abs(this.position - this.targetPosition) < 5
-        ) {
+        if (Math.abs(this.velocity) < 50) {
           this.forceStop();
-          return;
         }
         break;
     }
 
-    // Update position with boundary checking
+    // Update position
     this.position += this.velocity * dt;
     
     // Don't normalize position for gadget columns when targeting position 0
     if (this.index >= 2 && this.targetPosition === 0 && this.state === "stopped") {
-      // Keep exact position for gadgets targeting 0
-      console.log(`🔒 Gadget column ${this.index} keeping exact position: ${this.position}`);
-    } else {
+      // Keep exact position for gadgets
+    } else if (this.state !== "snapback") {
       this.position = this.normalizePosition(this.position);
     }
     
@@ -488,33 +507,85 @@ class SlotColumn {
     this.position = this.targetPosition;
     this.state = "stopped";
     
-    // Debug logging for gadget columns
-    if (this.index >= 2) {
-      console.log(`🛑 Gadget column ${this.index} FORCE STOPPED at position: ${this.position} (target: ${this.targetPosition})`);
-      console.log(`🎯 Setting visual transform: translateY(${this.position}px)`);
+    // Remove blur classes
+    if (this.container) {
+      this.container.classList.remove('high-speed-blur', 'extreme-blur');
+      
+      // Add lock-in animation
+      this.container.classList.add('locked', 'locking');
+      
+      // Flash effect
+      setTimeout(() => {
+        this.container.classList.remove('locking');
+      }, 300);
+      
+      // Play column stop sound
+      if (window.state && window.state.soundEnabled) {
+        const columnStopSound = document.getElementById('columnStop');
+        if (columnStopSound) {
+          columnStopSound.currentTime = 0;
+          columnStopSound.volume = 0.5;
+          columnStopSound.play().catch(() => {});
+        }
+      }
+      
+      // Add screen shake for dramatic effect (only on final spin)
+      if (this.isFinalSpin && this.index === 0) {
+        document.querySelector('.slot-machine-wrapper')?.classList.add('screen-shake');
+        setTimeout(() => {
+          document.querySelector('.slot-machine-wrapper')?.classList.remove('screen-shake');
+        }, 200);
+      }
     }
     
     this.updateVisuals();
     
-    // Additional debug after visual update
-    if (this.index >= 2) {
-      const currentTransform = this.element.style.transform;
-      console.log(`🔍 Gadget column ${this.index} final transform: ${currentTransform}`);
+    // Reset box shadow
+    if (this.container) {
+      this.container.style.boxShadow = '';
     }
   }
 
   updateVisuals() {
+    // Vegas-style blur effects based on velocity
     let blur = 0;
-    if (Math.abs(this.velocity) > 3500)
-      blur = 15; // Increased blur for high-speed effect
-    else if (Math.abs(this.velocity) > 2500) blur = 10;
-    else if (Math.abs(this.velocity) > 1500) blur = 6;
-    // Shake effect when stopping
-    let shakeX =
-      this.state === "bouncing" ? Math.sin(performance.now() / 100) * 2 : 0;
-
+    let containerClass = '';
+    
+    if (Math.abs(this.velocity) > 3500) {
+      blur = 8;
+      containerClass = 'extreme-blur';
+    } else if (Math.abs(this.velocity) > 2000) {
+      blur = 3;
+      containerClass = 'high-speed-blur';
+    } else if (Math.abs(this.velocity) > 1000) {
+      blur = 1;
+    }
+    
+    // Add/remove blur classes on container
+    if (this.container) {
+      this.container.classList.remove('high-speed-blur', 'extreme-blur');
+      if (containerClass) {
+        this.container.classList.add(containerClass);
+      }
+    }
+    
+    // Shake effect during snapback
+    let shakeX = 0;
+    if (this.state === "snapback") {
+      shakeX = Math.sin(performance.now() / 50) * 3;
+    }
+    
+    // Apply transform and filter
     this.element.style.transform = `translate(${shakeX}px, ${this.position}px)`;
     this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
+    
+    // Add slot glow effect at high speeds
+    if (this.container && Math.abs(this.velocity) > 2000) {
+      this.container.style.boxShadow = `
+        inset 0 10px 30px rgba(0,0,0,0.8),
+        0 0 ${20 + Math.abs(this.velocity) / 100}px rgba(255, 215, 0, ${0.2 + Math.abs(this.velocity) / 10000})
+      `;
+    }
   }
 }
 
@@ -704,6 +775,16 @@ function startSpinAnimation(columns) {
     `🎲 Animation starting with currentSpin = ${state.currentSpin}, isFinalSpin = ${isFinalSpin}`
   );
   
+  // Play spin start sound
+  if (state.soundEnabled) {
+    const spinStartSound = document.getElementById('spinStart');
+    if (spinStartSound) {
+      spinStartSound.currentTime = 0;
+      spinStartSound.volume = 0.6;
+      spinStartSound.play().catch(() => {});
+    }
+  }
+  
   // Play spinning sound
   if (state.soundEnabled) {
     const spinningSound = document.getElementById('spinningSound');
@@ -804,7 +885,7 @@ function startSpinAnimation(columns) {
                 }
               }
 
-              // If this is the last column, disable buttons when its tag appears
+              // If this is the last column, add celebration effects
               if (index === lastColumnIndex) {
                 console.log("🔒 Last locked tag added, disabling spin buttons");
                 const spinBtns = document.querySelectorAll(".spin-button");
@@ -814,6 +895,11 @@ function startSpinAnimation(columns) {
                   button.classList.add("dimmed");
                 });
                 console.log(`Disabled ${spinBtns.length} spin buttons`);
+                
+                // Add celebration effects
+                setTimeout(() => {
+                  addCelebrationEffects();
+                }, 500);
               }
 
               setTimeout(() => container.classList.add("winner-pulsate"), 300);
@@ -1565,6 +1651,71 @@ const spinLoadout = () => {
 // Make spinLoadout globally accessible
 window.spinLoadout = spinLoadout;
 
+// Celebration effects function
+function addCelebrationEffects() {
+  const slotMachineWrapper = document.querySelector('.slot-machine-wrapper');
+  if (!slotMachineWrapper) return;
+  
+  // Add a "LOADOUT LOCKED!" banner
+  const banner = document.createElement('div');
+  banner.className = 'celebration-banner';
+  banner.innerHTML = `
+    <div class="banner-text">LOADOUT LOCKED!</div>
+    <div class="banner-subtext">Ready to dominate The Finals</div>
+  `;
+  slotMachineWrapper.appendChild(banner);
+  
+  // Flash the entire loadout container
+  slotMachineWrapper.classList.add('celebration-flash');
+  
+  // Celebration words array
+  const celebrationWords = [
+    'LETSGO!',
+    'WOW!',
+    'OZPUZE!',
+    'SCOTTY!',
+    'JUNE!',
+    'OH MY!',
+    'HOLTOW',
+    'DISSUN',
+    'ISSULT',
+    'VAIIYA',
+    'CNS',
+    'ENSIMO'
+  ];
+  
+  // Add floating celebration words
+  const positions = [
+    { x: '20%', y: '30%' },
+    { x: '80%', y: '40%' },
+    { x: '50%', y: '20%' },
+    { x: '30%', y: '60%' },
+    { x: '70%', y: '50%' }
+  ];
+  
+  positions.forEach((pos, index) => {
+    setTimeout(() => {
+      const floatingText = document.createElement('div');
+      floatingText.className = 'floating-celebration-text';
+      // Pick a random word from the celebration words
+      floatingText.textContent = celebrationWords[Math.floor(Math.random() * celebrationWords.length)];
+      floatingText.style.left = pos.x;
+      floatingText.style.top = pos.y;
+      slotMachineWrapper.appendChild(floatingText);
+      
+      // Remove after animation
+      setTimeout(() => floatingText.remove(), 2000);
+    }, index * 100);
+  });
+  
+  // Remove banner after 3 seconds
+  setTimeout(() => {
+    banner.classList.add('fade-out');
+    setTimeout(() => banner.remove(), 500);
+    slotMachineWrapper.classList.remove('celebration-flash');
+  }, 3000);
+}
+
 // Global function to stop all audio (useful for mobile)
 window.stopAllAudio = function() {
   const allAudio = document.querySelectorAll('audio');
@@ -1596,22 +1747,53 @@ function addToHistory(
   const historyList = document.getElementById("history-list");
   const newEntry = document.createElement("div");
   newEntry.classList.add("history-entry");
-
+  
+  // Generate a fun name based on the loadout
+  const loadoutName = generateLoadoutName(classType, selectedWeapon, selectedSpec);
+  
+  // Add spicy class if it's a weird combo
+  if (isSpicyLoadout(selectedWeapon, selectedSpec, selectedGadgets)) {
+    newEntry.classList.add("spicy-loadout");
+  }
+  
   newEntry.innerHTML = `
-    <p><strong>Class:</strong> ${classType}</p>
-    <p><strong>Weapon:</strong> ${selectedWeapon}</p>
-    <p><strong>Specialization:</strong> ${selectedSpec}</p>
-    <p><strong>Gadgets:</strong> ${selectedGadgets.join(", ")}</p>
-    <button class="copy-loadout" onclick="copyLoadoutText(this)">Copy</button>
+    <div class="loadout-header">
+      <span class="class-badge ${classType.toLowerCase()}">${classType.toUpperCase()}</span>
+      <span class="loadout-name">${loadoutName}</span>
+      <span class="timestamp">Just now</span>
+    </div>
+    <div class="loadout-items">
+      <div class="item-row">
+        <img src="images/${selectedWeapon.replace(/ /g, "_")}.webp" alt="${selectedWeapon}" class="item-icon" title="${selectedWeapon}">
+        <img src="images/${selectedSpec.replace(/ /g, "_")}.webp" alt="${selectedSpec}" class="item-icon" title="${selectedSpec}">
+        <div class="gadget-icons">
+          ${selectedGadgets.map(g => `<img src="images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small" title="${g}">`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="loadout-actions">
+      <button class="copy-build" onclick="copyLoadoutText(this)">
+        <span>📋</span> COPY
+      </button>
+      <button class="challenge-build" onclick="challengeWithLoadout(this)">
+        <span>🎯</span> CHALLENGE
+      </button>
+    </div>
   `;
-
+  
   historyList.prepend(newEntry);
-
-  // Remove excess entries beyond 5
+  
+  // Animate entry
+  setTimeout(() => newEntry.classList.add('visible'), 10);
+  
+  // Update timestamp every minute
+  updateTimestamps();
+  
+  // Keep only 5 entries
   while (historyList.children.length > 5) {
     historyList.removeChild(historyList.lastChild);
   }
-
+  
   saveHistory();
 }
 
@@ -1636,6 +1818,83 @@ function loadHistory() {
     entry.innerHTML = html;
     historyList.appendChild(entry);
   });
+}
+
+function generateLoadoutName(classType, weapon, spec) {
+  const names = {
+    // Light combos
+    "Light_Sword_Cloaking Device": "The Ghost Blade",
+    "Light_SH1900_Grappling Hook": "The Flying Shotgunner",
+    "Light_Throwing Knives_Evasive Dash": "The Circus Act",
+    "Light_Dagger_Cloaking Device": "The Shadow Striker",
+    "Light_SR-84_Thermal Vision": "The Silent Sniper",
+    "Light_M11_Evasive Dash": "The Speed Demon",
+    
+    // Medium combos
+    "Medium_Riot Shield_Healing Beam": "The Combat Medic",
+    "Medium_Dual Blades_Dematerializer": "The Phase Slicer",
+    "Medium_Model 1887_Guardian Turret": "The Bunker Down",
+    "Medium_AKM_Guardian Turret": "The Fortress Builder",
+    "Medium_FAMAS_Healing Beam": "The Support Warrior",
+    "Medium_CL-40_Dematerializer": "The Boom Phantom",
+    
+    // Heavy combos
+    "Heavy_Sledgehammer_Goo Gun": "The Sticky Situation",
+    "Heavy_Flamethrower_Charge N Slam": "The Meteor",
+    "Heavy_M32GL_Mesh Shield": "The Walking Tank",
+    "Heavy_M134 Minigun_Winch Claw": "The Death Machine",
+    "Heavy_Lewis Gun_Mesh Shield": "The Fortress",
+    "Heavy_KS-23_Charge N Slam": "The Chaos Cannon"
+  };
+  
+  const key = `${classType}_${weapon}_${spec}`;
+  return names[key] || `${classType} Chaos Build`;
+}
+
+function isSpicyLoadout(weapon, spec, gadgets) {
+  // Flag weird combos as "spicy"
+  const spicyCombos = [
+    weapon.includes("Sledgehammer") && gadgets.some(g => g.includes("Smoke Grenade")),
+    weapon.includes("SR-84") && spec.includes("Charge N Slam"),
+    weapon.includes("Throwing Knives") && spec.includes("Grappling Hook"),
+    gadgets.filter(g => g.includes("Mine")).length >= 2,
+    weapon.includes("Flamethrower") && gadgets.some(g => g.includes("Gas")),
+    weapon.includes("Sword") && spec.includes("Evasive Dash"),
+    gadgets.filter(g => g.includes("Grenade")).length >= 2
+  ];
+  
+  return spicyCombos.some(combo => combo);
+}
+
+function updateTimestamps() {
+  // Simple implementation for now - could be enhanced with real relative time
+  const timestamps = document.querySelectorAll('.timestamp');
+  timestamps.forEach((timestamp, index) => {
+    if (index === 0) {
+      timestamp.textContent = 'Just now';
+    } else {
+      timestamp.textContent = `${index + 1} min ago`;
+    }
+  });
+}
+
+function challengeWithLoadout(button) {
+  const entry = button.closest('.history-entry');
+  const loadoutName = entry.querySelector('.loadout-name').textContent;
+  
+  // Create a challenge message
+  const challengeText = `🎯 Challenge accepted! Try this loadout: "${loadoutName}" - Can you handle the chaos?`;
+  
+  navigator.clipboard.writeText(challengeText)
+    .then(() => {
+      button.innerHTML = '<span>✅</span> COPIED!';
+      setTimeout(() => {
+        button.innerHTML = '<span>🎯</span> CHALLENGE';
+      }, 2000);
+    })
+    .catch(() => {
+      alert("Challenge link copied! Send it to a friend!");
+    });
 }
 
 // Make copyLoadoutText available globally
@@ -1705,11 +1964,80 @@ function initializeSoundToggle() {
   });
 }
 
+// Season 6 countdown function
+function initializeSeasonCountdown() {
+  const seasonStatus = document.getElementById('seasonStatus');
+  const daysSpan = seasonStatus.querySelector('.days-remaining');
+  
+  // Calculate end date at midnight PST, 5 days from now
+  function getEndDate() {
+    const storedEndDate = localStorage.getItem('season6EndDatePST');
+    
+    if (storedEndDate) {
+      return new Date(storedEndDate);
+    } else {
+      // Create new end date at midnight PST
+      const now = new Date();
+      const pstOffset = -8; // PST is UTC-8
+      
+      // Get current time in PST
+      const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const pstTime = new Date(utcTime + (3600000 * pstOffset));
+      
+      // Set to 5 days from now at midnight PST
+      const endDate = new Date(pstTime);
+      endDate.setDate(endDate.getDate() + 5);
+      endDate.setHours(0, 0, 0, 0); // Midnight
+      
+      // Store it
+      localStorage.setItem('season6EndDatePST', endDate.toISOString());
+      return endDate;
+    }
+  }
+  
+  function updateCountdown() {
+    const endDate = getEndDate();
+    const now = new Date();
+    
+    // Calculate difference in milliseconds
+    const diff = endDate.getTime() - now.getTime();
+    
+    if (diff <= 0) {
+      // Season has ended
+      seasonStatus.textContent = 'Season 6 Has Ended!';
+      seasonStatus.classList.add('ended');
+      clearInterval(countdownInterval);
+      return;
+    }
+    
+    // Calculate days remaining (round up to show "1 day" until the very end)
+    const daysRemaining = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    
+    // Update the display
+    if (daysRemaining === 1) {
+      seasonStatus.innerHTML = 'Season 6 ends in <span class="days-remaining">1</span> day';
+      seasonStatus.classList.add('urgent');
+    } else {
+      seasonStatus.innerHTML = `Season 6 ends in <span class="days-remaining">${daysRemaining}</span> days`;
+      seasonStatus.classList.remove('urgent');
+    }
+  }
+  
+  // Update immediately
+  updateCountdown();
+  
+  // Update every hour (more frequent updates aren't needed for day-based countdown)
+  const countdownInterval = setInterval(updateCountdown, 1000 * 60 * 60);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded");
 
   // Initialize sound toggle
   initializeSoundToggle();
+  
+  // Initialize season countdown
+  initializeSeasonCountdown();
 
   // Get DOM elements
   classButtons = document.querySelectorAll(".class-button");
@@ -1764,8 +2092,14 @@ document.addEventListener("DOMContentLoaded", () => {
     mainSpinButton.addEventListener('click', async () => {
       if (state.isSpinning || rouletteSystem.animating) return;
       
+      // Add spinning animation
+      mainSpinButton.classList.add('spinning');
+      
       // Start the full roulette sequence
       await rouletteSystem.startFullSequence();
+      
+      // Remove spinning animation when done
+      mainSpinButton.classList.remove('spinning');
     });
   }
 

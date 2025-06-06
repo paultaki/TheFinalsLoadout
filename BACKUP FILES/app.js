@@ -5,12 +5,8 @@ const state = {
   currentSpin: 1,
   totalSpins: 0,
   selectedGadgets: new Set(),
-  gadgetQueue: {
-    Light: [],
-    Medium: [],
-    Heavy: [],
-  },
   currentGadgetPool: new Set(),
+  soundEnabled: localStorage.getItem('soundEnabled') !== 'false', // Default to true
 };
 
 // Make state globally accessible
@@ -111,7 +107,6 @@ const loadouts = {
       "Frag Grenade",
       "Flashbang",
       "Proximity Sensor",
-      "Health Canister",
     ],
   },
   Heavy: {
@@ -255,31 +250,75 @@ const getRandomUniqueItems = (array, n) => {
 };
 
 const getUniqueGadgets = (classType, loadout) => {
-  // If we don't have enough gadgets in the queue, refill it
-  if (state.gadgetQueue[classType].length < 3) {
-    // Get a fresh shuffled copy of all gadgets
-    state.gadgetQueue[classType] = [...loadout.gadgets]
-      .sort(() => Math.random() - 0.5);
-    
-    console.log(`Refilled ${classType} gadget queue with ${state.gadgetQueue[classType].length} gadgets`);
+  console.log(`🔍 Starting BULLETPROOF gadget selection for ${classType}`);
+  console.log(`Available gadgets (${loadout.gadgets.length}):`, loadout.gadgets);
+  
+  // First, ensure the input array itself has no duplicates
+  const cleanedGadgets = [...new Set(loadout.gadgets)];
+  console.log(`🧹 Cleaned gadgets (${cleanedGadgets.length}):`, cleanedGadgets);
+  
+  if (cleanedGadgets.length < 3) {
+    console.error(`❌ Not enough unique gadgets for ${classType}! Only ${cleanedGadgets.length} available.`);
+    // Fallback: return what we have
+    return cleanedGadgets;
   }
   
-  // Take 3 unique gadgets from the queue
-  const selectedGadgets = state.gadgetQueue[classType].splice(0, 3);
+  // Create multiple attempts to ensure we never get duplicates
+  let attempts = 0;
+  let selectedGadgets = [];
   
-  // Store current set of selected gadgets
+  while (attempts < 10) { // Maximum 10 attempts
+    attempts++;
+    
+    // Fisher-Yates shuffle for true randomness
+    const shuffledGadgets = [...cleanedGadgets];
+    for (let i = shuffledGadgets.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledGadgets[i], shuffledGadgets[j]] = [shuffledGadgets[j], shuffledGadgets[i]];
+    }
+    
+    // Take the first 3 items from the shuffled array
+    selectedGadgets = shuffledGadgets.slice(0, 3);
+    
+    // Verify uniqueness (this should ALWAYS pass, but let's be 100% sure)
+    const uniqueSet = new Set(selectedGadgets);
+    if (uniqueSet.size === 3) {
+      console.log(`✅ SUCCESS on attempt ${attempts}! Selected gadgets:`, selectedGadgets);
+      break;
+    } else {
+      console.error(`🚨 ATTEMPT ${attempts} FAILED! Duplicates found:`, selectedGadgets);
+    }
+  }
+  
+  // Final safety check
+  const finalUniqueSet = new Set(selectedGadgets);
+  if (finalUniqueSet.size !== 3) {
+    console.error("🚨 CRITICAL FAILURE: Could not select 3 unique gadgets after 10 attempts!");
+    console.error("Selected:", selectedGadgets);
+    console.error("Available:", cleanedGadgets);
+    // Emergency fallback: manually pick first 3
+    selectedGadgets = cleanedGadgets.slice(0, 3);
+  }
+  
+  // Store for reference and debugging
   state.currentGadgetPool = new Set(selectedGadgets);
+  window.lastSelectedGadgets = [...selectedGadgets];
   
-  console.log(`Selected gadgets for ${classType}:`, selectedGadgets);
+  console.log(`🎯 FINAL RESULT: ${classType} gadgets:`, selectedGadgets);
+  console.log(`🔐 Stored in window.lastSelectedGadgets:`, window.lastSelectedGadgets);
+  
   return selectedGadgets;
 };
 
 function createItemContainer(items, winningItem = null, isGadget = false) {
   if (isGadget) {
+    // For gadgets, the first item in the array should be the winner (displayed in center)
+    // The animation will be set up to land on the first item (index 0)
+    console.log(`🎰 Creating gadget container with winner: "${items[0]}" and full sequence:`, items);
     return items
       .map(
         (item, index) => `
-        <div class="itemCol ${index === 4 ? "winner" : ""}">
+        <div class="itemCol ${index === 0 ? "winner" : ""}" data-item-name="${item}">
           <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
           <p>${item}</p>
         </div>
@@ -371,22 +410,33 @@ class SlotColumn {
       case "spinning":
         if (elapsed >= this.totalDuration - this.decelerationTime) {
           this.state = "decelerating";
-          // Ensure target position is aligned with item height
+          // Calculate target position for all columns
           this.targetPosition =
             Math.ceil(this.position / PHYSICS.ITEM_HEIGHT) *
             PHYSICS.ITEM_HEIGHT;
+            
+          // For gadget columns, use normal positioning and see which index is visible
+          if (this.index >= 2) {
+            this.targetPosition = 0; // Back to normal positioning to find out which index is visible
+            console.log(`🎯 Gadget column ${this.index} targeting position ${this.targetPosition} - let's see which index shows up`);
+          } else {
+            console.log(`🎯 Column ${this.index} targeting position ${this.targetPosition}`);
+          }
         }
         break;
 
       case "decelerating":
         this.velocity += PHYSICS.DECELERATION * dt * 1.2; // Smoother deceleration
+        
+        // Use consistent stopping logic for all columns
         if (
-          Math.abs(this.position - this.targetPosition) < 3 &&
-          Math.abs(this.velocity) < 50
+          Math.abs(this.position - this.targetPosition) < 10 &&
+          Math.abs(this.velocity) < 100
         ) {
           this.forceStop();
           return;
         }
+        
         if (this.velocity <= 0) {
           if (Math.abs(this.velocity) < 150) {
             // Make stopping less abrupt
@@ -401,7 +451,7 @@ class SlotColumn {
       case "bouncing":
         this.velocity += PHYSICS.DECELERATION * 1.2 * dt;
 
-        // Enhanced bounce completion check
+        // Enhanced bounce completion check for all columns
         if (
           Math.abs(this.velocity) < 50 ||
           Math.abs(this.position - this.targetPosition) < 5
@@ -414,7 +464,15 @@ class SlotColumn {
 
     // Update position with boundary checking
     this.position += this.velocity * dt;
-    this.position = this.normalizePosition(this.position);
+    
+    // Don't normalize position for gadget columns when targeting position 0
+    if (this.index >= 2 && this.targetPosition === 0 && this.state === "stopped") {
+      // Keep exact position for gadgets targeting 0
+      console.log(`🔒 Gadget column ${this.index} keeping exact position: ${this.position}`);
+    } else {
+      this.position = this.normalizePosition(this.position);
+    }
+    
     this.updateVisuals();
   }
 
@@ -429,7 +487,20 @@ class SlotColumn {
     this.velocity = 0;
     this.position = this.targetPosition;
     this.state = "stopped";
+    
+    // Debug logging for gadget columns
+    if (this.index >= 2) {
+      console.log(`🛑 Gadget column ${this.index} FORCE STOPPED at position: ${this.position} (target: ${this.targetPosition})`);
+      console.log(`🎯 Setting visual transform: translateY(${this.position}px)`);
+    }
+    
     this.updateVisuals();
+    
+    // Additional debug after visual update
+    if (this.index >= 2) {
+      const currentTransform = this.element.style.transform;
+      console.log(`🔍 Gadget column ${this.index} final transform: ${currentTransform}`);
+    }
   }
 
   updateVisuals() {
@@ -463,58 +534,111 @@ const displayLoadout = (classType) => {
   const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
   
-  // Select three unique gadgets using the gadget queue system
+  // Select three unique gadgets
   console.log(`Available gadgets for ${classType}:`, loadout.gadgets);
   console.log(`Total available gadgets: ${loadout.gadgets.length}`);
   
-  // Use the getUniqueGadgets function to ensure uniqueness across spins
-  const selectedGadgets = getUniqueGadgets(classType, loadout);
+  // Ensure we have enough gadgets available
+  if (loadout.gadgets.length < 3) {
+    console.error(`⚠️ Not enough gadgets for ${classType}! Only ${loadout.gadgets.length} available.`);
+  }
   
-  console.log(`Selected gadgets: ${selectedGadgets.join(', ')}`);
+  // Use the getUniqueGadgets function to ensure uniqueness
+  const selectedGadgetsRaw = getUniqueGadgets(classType, loadout);
   
-  // Verify uniqueness
+  // Make a defensive copy and ensure it's truly immutable
+  const selectedGadgets = Object.freeze([...selectedGadgetsRaw]);
+  
+  console.log(`🎯 Final gadgets for display: ${selectedGadgets.join(', ')}`);
+  console.log(`🎯 Gadget 1: "${selectedGadgets[0]}"`);
+  console.log(`🎯 Gadget 2: "${selectedGadgets[1]}"`);
+  console.log(`🎯 Gadget 3: "${selectedGadgets[2]}"`);
+  
+  // Store the selected gadgets globally for history recording
+  window.currentDisplayedGadgets = [...selectedGadgets];
+  console.log(`💾 Stored globally: window.currentDisplayedGadgets =`, window.currentDisplayedGadgets);
+  
+  // Final uniqueness verification
   const uniqueCheck = new Set(selectedGadgets);
   if (uniqueCheck.size !== selectedGadgets.length) {
-    console.error("⚠️ DUPLICATE GADGETS DETECTED!");
+    console.error("⚠️ CRITICAL ERROR: Duplicate gadgets detected!");
+    console.error("This should be impossible with the current algorithm.");
     console.error("Selected:", selectedGadgets);
-    console.error("Unique:", Array.from(uniqueCheck));
+    console.error("Selected Raw:", selectedGadgetsRaw);
+    console.error("Window stored:", window.lastSelectedGadgets);
   }
   
   // Create animation sequences for each gadget
   const createGadgetSpinSequence = (winningGadget, gadgetIndex) => {
-    // Create a fixed-length array for the spin sequence
-    const sequence = new Array(8);
-    
-    // The winning item is always at position 4 (the center)
-    sequence[4] = winningGadget;
+    console.log(`🎬 Creating animation for gadget ${gadgetIndex + 1}: "${winningGadget}"`);
+    console.log(`🎬 All selected gadgets:`, selectedGadgets);
     
     // Create a pool of gadgets for this specific animation slot that excludes the selected gadgets
     const otherSelectedGadgets = selectedGadgets.filter(g => g !== winningGadget);
     const availableForAnimation = loadout.gadgets.filter(g => !otherSelectedGadgets.includes(g));
     
-    console.log(`Animation pool for ${winningGadget} has ${availableForAnimation.length} gadgets`);
+    console.log(`🎬 Other selected gadgets to exclude:`, otherSelectedGadgets);
+    console.log(`🎬 Animation pool for ${winningGadget} has ${availableForAnimation.length} gadgets:`, availableForAnimation);
     
-    // Fill the other positions with random gadgets that aren't the selected gadgets for other slots
     // Shuffle the available gadgets to ensure variety
     const shuffledAnimation = [...availableForAnimation].sort(() => Math.random() - 0.5);
     
-    for (let i = 0; i < 8; i++) {
-      if (i !== 4) { // Skip position 4 (winner)
-        if (shuffledAnimation.length > 0) {
-          // Use modulo to cycle through shuffled gadgets if we have fewer than needed
-          sequence[i] = shuffledAnimation[i % shuffledAnimation.length];
-        } else {
-          // Fallback if no other gadgets available
-          sequence[i] = winningGadget;
+    // Create sequence with winning gadget at index 7 (last position)
+    // Since position 0 shows index 7, we need to put the winner at the end
+    const sequence = new Array(8); // Create array with 8 slots
+    sequence[7] = winningGadget; // Winner goes at index 7
+    
+    // Fill remaining 7 positions with unique gadgets (no duplicates)
+    const usedGadgets = new Set([winningGadget]);
+    let availableIndex = 0;
+    
+    for (let i = 0; i < 7; i++) { // Fill indices 0-6
+      if (shuffledAnimation.length > 0) {
+        // Find next unused gadget
+        let attempts = 0;
+        while (attempts < shuffledAnimation.length * 2) {
+          const candidateGadget = shuffledAnimation[availableIndex % shuffledAnimation.length];
+          availableIndex++;
+          
+          if (!usedGadgets.has(candidateGadget)) {
+            sequence[i] = candidateGadget;
+            usedGadgets.add(candidateGadget);
+            break;
+          }
+          attempts++;
         }
+        
+        // If we couldn't find a unique gadget, use any available one
+        if (!sequence[i]) {
+          sequence[i] = shuffledAnimation[(i - 1) % shuffledAnimation.length];
+        }
+      } else {
+        // Fallback if no other gadgets available
+        sequence[i] = winningGadget;
       }
     }
     
-    console.log(`Gadget ${gadgetIndex + 1} animation sequence:`, sequence);
+    console.log(`🎬 Final animation sequence for gadget ${gadgetIndex + 1}:`, sequence);
+    console.log(`🎬 Winner at index 7: "${sequence[7]}" (should match "${winningGadget}")`);
+    console.log(`🎬 Full sequence:`, sequence);
+    
+    // Check for duplicates in sequence
+    const uniqueInSequence = new Set(sequence);
+    if (uniqueInSequence.size !== sequence.length) {
+      console.warn(`⚠️ DUPLICATES in animation sequence for gadget ${gadgetIndex + 1}!`);
+      console.warn('Sequence:', sequence);
+      console.warn('Unique items:', Array.from(uniqueInSequence));
+    } else {
+      console.log(`✅ No duplicates in animation sequence for gadget ${gadgetIndex + 1}`);
+    }
+    
     return sequence;
   };
 
   const loadoutHTML = `
+    <div class="class-info-display" style="text-align: center; margin-bottom: 20px; font-size: 24px; font-weight: bold; color: #fff;">
+      ${classType} Class${state.currentSpin > 1 ? ` - ${state.currentSpin} spins remaining` : ''}
+    </div>
     <div class="slot-machine-wrapper">
       <div class="items-container">
         <div class="item-container">
@@ -529,9 +653,15 @@ const displayLoadout = (classType) => {
         </div>
         ${selectedGadgets
           .map(
-            (gadget, index) => `
-            <div class="item-container">
-              <div class="scroll-container" data-gadget-index="${index}">
+            (gadget, index) => {
+              // Escape the gadget name for HTML attributes
+              const escapedGadget = gadget.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+              console.log(`🏷️ Creating HTML for Gadget ${index + 1}: Original="${gadget}", Escaped="${escapedGadget}"`);
+              
+              // Debug: Store the original gadget name in a separate attribute for debugging
+              const htmlResult = `
+            <div class="item-container" data-winning-gadget="${escapedGadget}" data-original-gadget="${gadget}" data-gadget-position="${index}">
+              <div class="scroll-container" data-gadget-index="${index}" data-winning-gadget="${escapedGadget}">
                 ${createItemContainer(
                   createGadgetSpinSequence(gadget, index),
                   gadget,
@@ -539,7 +669,11 @@ const displayLoadout = (classType) => {
                 )}
               </div>
             </div>
-          `
+          `;
+              
+              console.log(`🏗️ Generated HTML for gadget ${index + 1}:`, htmlResult.substring(0, 200) + '...');
+              return htmlResult;
+            }
           )
           .join("")}
       </div>
@@ -571,11 +705,13 @@ function startSpinAnimation(columns) {
   );
   
   // Play spinning sound
-  const spinningSound = document.getElementById('spinningSound');
-  if (spinningSound) {
-    spinningSound.currentTime = 0;
-    spinningSound.volume = 0.25; // Reduced by 50%
-    spinningSound.play().catch(() => {});
+  if (state.soundEnabled) {
+    const spinningSound = document.getElementById('spinningSound');
+    if (spinningSound) {
+      spinningSound.currentTime = 0;
+      spinningSound.volume = 0.25; // Reduced by 50%
+      spinningSound.play().catch(() => {});
+    }
   }
 
   const startTime = performance.now();
@@ -637,25 +773,6 @@ function startSpinAnimation(columns) {
         }
       }
 
-      // Also stop background sound immediately (mobile fix)
-      const spinBackgroundSound = document.getElementById('spinBackgroundSound');
-      if (spinBackgroundSound && !spinBackgroundSound.paused) {
-        spinBackgroundSound.pause();
-        spinBackgroundSound.currentTime = 0;
-        spinBackgroundSound.volume = 0;
-        try {
-          // Force stop on mobile by removing and re-adding src
-          const originalSrc = spinBackgroundSound.src;
-          spinBackgroundSound.removeAttribute('src');
-          spinBackgroundSound.load();
-          setTimeout(() => {
-            spinBackgroundSound.src = originalSrc;
-            spinBackgroundSound.volume = 0.3; // Reset volume for next time
-          }, 100);
-        } catch (e) {
-          console.log("Mobile background audio stop failed:", e);
-        }
-      }
 
       // Add visual effects only for final spin
       if (isFinalSpin) {
@@ -676,7 +793,7 @@ function startSpinAnimation(columns) {
               }
 
               // Play final sound on FIRST locked tag
-              if (index === 0) {
+              if (index === 0 && state.soundEnabled) {
                 const finalSound = document.getElementById('finalSound');
                 if (finalSound) {
                   finalSound.currentTime = 0;
@@ -904,12 +1021,7 @@ function setupFilterSystem() {
       const testFiltered = getFilteredLoadouts();
       console.log("Filter test result:", testFiltered);
 
-      // Clear any existing gadget queues to ensure fresh selection with new filters
-      state.gadgetQueue = {
-        Light: [],
-        Medium: [],
-        Heavy: [],
-      };
+      // No longer using gadget queues - each spin gets fresh random selection
       
       // Close the filter panel
       if (filterPanel) {
@@ -953,12 +1065,7 @@ function setupFilterSystem() {
         checkbox.checked = true;
       });
       
-      // Clear any existing gadget queues to ensure fresh selection
-      state.gadgetQueue = {
-        Light: [],
-        Medium: [],
-        Heavy: [],
-      };
+      // No longer using gadget queues - each spin gets fresh random selection
       
       // Show confirmation message
       const filterStatus = document.createElement("div");
@@ -1031,7 +1138,9 @@ function populateFilterItems() {
   console.log("✅ Filter items population complete");
 
   // Setup Select All functionality once items are populated
-  setupSelectAllCheckboxes();
+  if (typeof setupSelectAllCheckboxes === 'function') {
+    setupSelectAllCheckboxes();
+  }
   
   // Setup tab content search placeholder update
   setupTabSearchPlaceholder();
@@ -1097,11 +1206,13 @@ function finalizeSpin(columns) {
     );
     
     // Play transition sound between spins
-    const transitionSound = document.getElementById('transitionSound');
-    if (transitionSound) {
-      transitionSound.currentTime = 0;
-      transitionSound.volume = 0.6;
-      transitionSound.play().catch(() => {});
+    if (state.soundEnabled) {
+      const transitionSound = document.getElementById('transitionSound');
+      if (transitionSound) {
+        transitionSound.currentTime = 0;
+        transitionSound.volume = 0.6;
+        transitionSound.play().catch(() => {});
+      }
     }
 
     // Decrement spin counter
@@ -1131,33 +1242,6 @@ function finalizeSpin(columns) {
 
   console.log("🎯 Final spin, recording loadout");
   
-  // Stop background music when final spin completes
-  const spinBackgroundSound = document.getElementById('spinBackgroundSound');
-  if (spinBackgroundSound) {
-    // Immediately stop sound for mobile compatibility
-    spinBackgroundSound.pause();
-    spinBackgroundSound.currentTime = 0;
-    
-    // For mobile browsers, force a complete stop
-    try {
-      // Remove loop attribute temporarily
-      spinBackgroundSound.loop = false;
-      
-      // Force stop on mobile by clearing and reloading
-      const originalSrc = spinBackgroundSound.src;
-      spinBackgroundSound.removeAttribute('src');
-      spinBackgroundSound.load();
-      
-      // Restore src and loop after a delay
-      setTimeout(() => {
-        spinBackgroundSound.src = originalSrc;
-        spinBackgroundSound.loop = true;
-        spinBackgroundSound.volume = 0.3; // Reset volume for next time
-      }, 200);
-    } catch (e) {
-      console.log("Mobile background audio force stop failed:", e);
-    }
-  }
   
   // Also ensure spinning sound is fully stopped (mobile fix)
   const spinningSound = document.getElementById('spinningSound');
@@ -1229,13 +1313,110 @@ function finalizeSpin(columns) {
         : savedClass;
     }
 
-    // Get all the selected items using the OLD working method
-    const selectedItems = Array.from(itemContainers).map((container) => {
+    // BEFORE processing anything, let's debug the containers
+    console.log(`🔍 DEBUGGING: Found ${itemContainers.length} item containers`);
+    itemContainers.forEach((container, index) => {
+      console.log(`Container ${index}:`, {
+        'data-winning-gadget': container.dataset.winningGadget,
+        'data-original-gadget': container.dataset.originalGadget,
+        'data-gadget-position': container.dataset.gadgetPosition,
+        classList: Array.from(container.classList)
+      });
+    });
+
+    // Get all the selected items - use data attributes for gadgets to ensure accuracy
+    const selectedItems = Array.from(itemContainers).map((container, index) => {
+      console.log(`📋 Processing container ${index}:`, container);
+      
+      // For gadgets (index 2, 3, 4), use multiple fallback methods
+      if (index >= 2) {
+        const gadgetIndex = index - 2; // Convert to 0-based gadget index
+        
+        // Method 1: Try data attribute on container
+        const winningGadget = container.dataset.winningGadget;
+        const originalGadget = container.dataset.originalGadget;
+        
+        console.log(`📋 Gadget ${gadgetIndex + 1} data attributes:`, {
+          winningGadget,
+          originalGadget,
+          position: container.dataset.gadgetPosition
+        });
+        
+        // Method 2: Try data attribute on scroll container
+        const scrollContainer = container.querySelector('.scroll-container');
+        const scrollWinningGadget = scrollContainer?.dataset.winningGadget;
+        
+        // Method 3: Use global storage as ultimate fallback
+        const globalGadget = window.currentDisplayedGadgets && window.currentDisplayedGadgets[gadgetIndex];
+        
+        // Debug what's actually visible in this container
+        const allItems = scrollContainer?.querySelectorAll(".itemCol");
+        if (allItems && allItems.length > 0) {
+          console.log(`🔍 Visual debug for gadget ${gadgetIndex + 1} - found ${allItems.length} items:`);
+          const containerRect = container.getBoundingClientRect();
+          const visibleTexts = Array.from(allItems).map((item, i) => {
+            const text = item.querySelector("p")?.textContent;
+            const isVisible = item.getBoundingClientRect().height > 0;
+            const rect = item.getBoundingClientRect();
+            const isInViewport = rect.top >= containerRect.top && rect.bottom <= containerRect.bottom;
+            return `[${i}] ${text} (visible: ${isVisible}, inViewport: ${isInViewport}, transform: ${getComputedStyle(item.parentElement).transform})`;
+          });
+          console.log(`🔍 All items in container:`, visibleTexts);
+          console.log(`🔍 First item should be: "${winningGadget}"`);
+          console.log(`🔍 Container transform: ${getComputedStyle(scrollContainer).transform}`);
+          
+          // Check what's actually in the center of the container
+          const containerCenter = containerRect.top + containerRect.height / 2;
+          const actualVisibleItem = Array.from(allItems).find(item => {
+            const itemRect = item.getBoundingClientRect();
+            return itemRect.top <= containerCenter && itemRect.bottom >= containerCenter;
+          });
+          
+          if (actualVisibleItem) {
+            const actualText = actualVisibleItem.querySelector("p")?.textContent;
+            console.log(`🎯 ACTUAL VISIBLE ITEM IN CENTER: "${actualText}"`);
+            if (actualText !== winningGadget) {
+              console.error(`🚨 MISMATCH! Expected: "${winningGadget}", Actually visible: "${actualText}"`);
+            }
+          }
+        }
+        
+        console.log(`📋 All gadget retrieval methods for gadget ${gadgetIndex + 1}:`, {
+          containerData: winningGadget,
+          originalData: originalGadget,
+          scrollData: scrollWinningGadget,
+          globalFallback: globalGadget
+        });
+        
+        // Use the first available method
+        if (winningGadget) {
+          console.log(`✅ Using container data: "${winningGadget}"`);
+          return winningGadget;
+        } else if (originalGadget) {
+          console.log(`⚠️ Using original-gadget fallback: "${originalGadget}"`);
+          return originalGadget;
+        } else if (scrollWinningGadget) {
+          console.log(`⚠️ Using scroll container data: "${scrollWinningGadget}"`);
+          return scrollWinningGadget;
+        } else if (globalGadget) {
+          console.log(`🔄 Using global fallback: "${globalGadget}"`);
+          return globalGadget;
+        } else {
+          console.error(`❌ All methods failed for gadget ${gadgetIndex + 1}`);
+          return "Unknown";
+        }
+      }
+      
+      // For weapons and specializations, use the visible item method
       const scrollContainer = container.querySelector(".scroll-container");
-      if (!scrollContainer) return "Unknown";
+      if (!scrollContainer) {
+        console.error(`❌ No scroll container found for index ${index}`);
+        return "Unknown";
+      }
 
       // Find all item columns
       const allItems = scrollContainer.querySelectorAll(".itemCol");
+      console.log(`📋 Found ${allItems.length} items in container ${index}`);
 
       // Use the EXACT method from old working version
       const visibleItem = Array.from(allItems).find((item) => {
@@ -1249,8 +1430,12 @@ function finalizeSpin(columns) {
         );
       });
 
-      if (!visibleItem) return "Unknown";
+      if (!visibleItem) {
+        console.error(`❌ No visible item found for index ${index}`);
+        return "Unknown";
+      }
       const itemText = visibleItem.querySelector("p")?.innerText.trim();
+      console.log(`📋 ${index === 0 ? 'Weapon' : 'Specialization'} from visible item: "${itemText}"`);
       return itemText || "Unknown";
     });
 
@@ -1265,11 +1450,20 @@ function finalizeSpin(columns) {
       const weapon = selectedItems[0];
       const specialization = selectedItems[1];
       const gadgets = selectedItems.slice(2, 5);
+      
+      // Check for duplicate gadgets in the final result
+      const gadgetSet = new Set(gadgets);
+      if (gadgetSet.size !== gadgets.length) {
+        console.error("🚨 DUPLICATE GADGETS IN FINAL RESULT!");
+        console.error("Gadgets from DOM:", gadgets);
+        console.error("Unique gadgets:", Array.from(gadgetSet));
+      }
 
       const loadoutString = `${savedClass}-${weapon}-${specialization}-${gadgets.join(
         "-"
       )}`;
       console.log("🚨 Loadout to be recorded:", loadoutString);
+      console.log("Gadgets being recorded:", gadgets);
       console.log("Last Added Loadout:", lastAddedLoadout);
 
       if (loadoutString === lastAddedLoadout) {
@@ -1344,13 +1538,6 @@ const spinLoadout = () => {
   state.isSpinning = true;
   state.currentSpin = state.totalSpins;
   
-  // Start background music for the entire spin sequence
-  const spinBackgroundSound = document.getElementById('spinBackgroundSound');
-  if (spinBackgroundSound) {
-    spinBackgroundSound.currentTime = 0;
-    spinBackgroundSound.volume = 0.3; // Lower volume for background
-    spinBackgroundSound.play().catch(() => {});
-  }
 
   // Disable ONLY class buttons during the spin, leave spin buttons enabled
   document.querySelectorAll(".class-button").forEach((btn) => {
@@ -1479,8 +1666,50 @@ window.copyLoadoutText = function (button) {
 };
 
 // Initialize everything when DOM is ready
+// Sound helper function
+function playSound(soundId) {
+  if (!state.soundEnabled) return;
+  
+  const sound = document.getElementById(soundId);
+  if (sound) {
+    sound.play().catch(() => {});
+  }
+}
+
+// Initialize sound toggle functionality
+function initializeSoundToggle() {
+  const soundToggle = document.getElementById('sound-toggle');
+  if (!soundToggle) return;
+  
+  // Set initial state
+  if (!state.soundEnabled) {
+    soundToggle.classList.add('muted');
+  }
+  
+  // Add click handler
+  soundToggle.addEventListener('click', () => {
+    state.soundEnabled = !state.soundEnabled;
+    localStorage.setItem('soundEnabled', state.soundEnabled);
+    
+    if (state.soundEnabled) {
+      soundToggle.classList.remove('muted');
+    } else {
+      soundToggle.classList.add('muted');
+      // Stop all currently playing sounds
+      const allAudio = document.querySelectorAll('audio');
+      allAudio.forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded");
+
+  // Initialize sound toggle
+  initializeSoundToggle();
 
   // Get DOM elements
   classButtons = document.querySelectorAll(".class-button");
@@ -1510,6 +1739,21 @@ document.addEventListener("DOMContentLoaded", () => {
       audio.currentTime = 0;
     });
   });
+  
+  // Optimize audio for mobile by reducing concurrent sounds
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (isMobile) {
+    // Override tick sound frequency on mobile
+    const originalPlayTick = window.RouletteAnimationSystem.prototype.playTickSound;
+    window.RouletteAnimationSystem.prototype.playTickSound = function() {
+      // Only play every 3rd tick on mobile to reduce audio overhead
+      if (!this._tickCounter) this._tickCounter = 0;
+      this._tickCounter++;
+      if (this._tickCounter % 3 === 0) {
+        originalPlayTick.call(this);
+      }
+    };
+  }
   
   // Initialize the roulette animation system
   const rouletteSystem = new window.RouletteAnimationSystem();
@@ -1542,80 +1786,81 @@ document.addEventListener("DOMContentLoaded", () => {
     setupSelectAllCheckboxes();
   });
 
-  function setupSelectAllCheckboxes() {
-    // Get all "Select All" checkboxes
-    const selectAllCheckboxes = document.querySelectorAll(
-      'input[data-type$="selectall"]'
-    );
+// Function to setup Select All checkboxes (moved outside event listener)
+function setupSelectAllCheckboxes() {
+  // Get all "Select All" checkboxes
+  const selectAllCheckboxes = document.querySelectorAll(
+    'input[data-type$="selectall"]'
+  );
 
-    console.log(
-      "Setting up Select All checkboxes:",
-      selectAllCheckboxes.length
-    );
+  console.log(
+    "Setting up Select All checkboxes:",
+    selectAllCheckboxes.length
+  );
 
-    // Add event listeners to each "Select All" checkbox
-    selectAllCheckboxes.forEach((checkbox) => {
-      checkbox.addEventListener("change", function () {
-        const classType = this.dataset.class; // "light", "medium", or "heavy"
-        const selectType = this.dataset.type.replace("-selectall", ""); // "weapon", "specialization", or "gadget"
-        const isChecked = this.checked;
+  // Add event listeners to each "Select All" checkbox
+  selectAllCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", function () {
+      const classType = this.dataset.class; // "light", "medium", or "heavy"
+      const selectType = this.dataset.type.replace("-selectall", ""); // "weapon", "specialization", or "gadget"
+      const isChecked = this.checked;
 
-        console.log(
-          `Select All ${classType} ${selectType}s changed to: ${isChecked}`
-        );
+      console.log(
+        `Select All ${classType} ${selectType}s changed to: ${isChecked}`
+      );
 
-        // Find all checkboxes of the same class and type
-        const typeCheckboxes = document.querySelectorAll(
-          `input[data-type="${selectType}"][data-class="${classType}"]`
-        );
+      // Find all checkboxes of the same class and type
+      const typeCheckboxes = document.querySelectorAll(
+        `input[data-type="${selectType}"][data-class="${classType}"]`
+      );
 
-        console.log(
-          `Found ${typeCheckboxes.length} ${classType} ${selectType}s to update`
-        );
+      console.log(
+        `Found ${typeCheckboxes.length} ${classType} ${selectType}s to update`
+      );
 
-        // Set all checkboxes to match the "Select All" state
-        typeCheckboxes.forEach((itemCheckbox) => {
-          itemCheckbox.checked = isChecked;
-        });
+      // Set all checkboxes to match the "Select All" state
+      typeCheckboxes.forEach((itemCheckbox) => {
+        itemCheckbox.checked = isChecked;
       });
     });
+  });
 
-    // Also add listeners to individual checkboxes to update "Select All" state
-    const typeCheckboxes = document.querySelectorAll(
-      'input[data-type="weapon"], input[data-type="specialization"], input[data-type="gadget"]'
-    );
+  // Also add listeners to individual checkboxes to update "Select All" state
+  const typeCheckboxes = document.querySelectorAll(
+    'input[data-type="weapon"], input[data-type="specialization"], input[data-type="gadget"]'
+  );
 
-    typeCheckboxes.forEach((checkbox) => {
-      checkbox.addEventListener("change", function () {
-        const classType = this.dataset.class; // "light", "medium", or "heavy"
-        const selectType = this.dataset.type; // "weapon", "specialization", or "gadget"
+  typeCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", function () {
+      const classType = this.dataset.class; // "light", "medium", or "heavy"
+      const selectType = this.dataset.type; // "weapon", "specialization", or "gadget"
 
-        // Find all checkboxes of the same class and type
-        const allTypeCheckboxes = document.querySelectorAll(
-          `input[data-type="${selectType}"][data-class="${classType}"]`
+      // Find all checkboxes of the same class and type
+      const allTypeCheckboxes = document.querySelectorAll(
+        `input[data-type="${selectType}"][data-class="${classType}"]`
+      );
+
+      // Check if all are checked
+      const allChecked = Array.from(allTypeCheckboxes).every(
+        (cb) => cb.checked
+      );
+
+      // Update the "Select All" checkbox state
+      const selectAllCheckbox = document.querySelector(
+        `input[data-type="${selectType}-selectall"][data-class="${classType}"]`
+      );
+
+      if (selectAllCheckbox) {
+        selectAllCheckbox.checked = allChecked;
+        console.log(
+          `Updated Select All ${classType} ${selectType}s to: ${allChecked}`
         );
-
-        // Check if all are checked
-        const allChecked = Array.from(allTypeCheckboxes).every(
-          (cb) => cb.checked
-        );
-
-        // Update the "Select All" checkbox state
-        const selectAllCheckbox = document.querySelector(
-          `input[data-type="${selectType}-selectall"][data-class="${classType}"]`
-        );
-
-        if (selectAllCheckbox) {
-          selectAllCheckbox.checked = allChecked;
-          console.log(
-            `Updated Select All ${classType} ${selectType}s to: ${allChecked}`
-          );
-        }
-      });
+      }
     });
+  });
 
-    console.log("Select All setup complete");
-  }
+  console.log("Select All setup complete");
+}
 
   // Make sure this function is called after the DOM is loaded
   document.addEventListener("DOMContentLoaded", function () {
@@ -1674,13 +1919,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.classList.add("selected", "active");
       button.src = button.dataset.active; // Change image to active
       
-      // Reset gadget queues when changing class to ensure fresh selection
-      state.gadgetQueue = {
-        Light: [],
-        Medium: [],
-        Heavy: [],
-      };
-      console.log("🔄 Gadget queues reset for class change");
+      // No longer using gadget queues - each spin gets fresh random selection
 
       // Handle "Random" class selection
       if (button.dataset.class.toLowerCase() === "random") {

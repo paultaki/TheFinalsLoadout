@@ -113,6 +113,7 @@ body.flexStyle {
 /* Header Section */
 .headerSection {
   padding: 10px 0 10px;
+  position: relative;
 }
 
 .mainTitle {
@@ -128,6 +129,48 @@ body.flexStyle {
   font-weight: 300;
   letter-spacing: 1px;
   margin: 0;
+}
+
+/* Sound Toggle Button */
+.sound-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--neon-yellow);
+}
+
+.sound-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--neon-yellow);
+  transform: scale(1.1);
+}
+
+.sound-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sound-toggle.muted .sound-on {
+  display: none;
+}
+
+.sound-toggle.muted .sound-off {
+  display: block !important;
+}
+
+.sound-toggle.muted {
+  color: #999;
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Button Styles */
@@ -499,6 +542,80 @@ body {
   position: relative;
 }
 
+/* Mobile Performance Optimizations */
+@media (max-width: 768px) {
+  /* Reduce animation complexity on mobile */
+  body.mobile-optimized .particle {
+    animation-duration: 0.8s !important; /* Faster animations */
+  }
+  
+  body.mobile-optimized .flash-overlay {
+    animation-duration: 0.3s !important;
+  }
+  
+  /* Disable blur effects on mobile for better performance */
+  body.mobile-optimized .scroll-container {
+    filter: none !important;
+  }
+  
+  /* Simplify box shadows on mobile */
+  body.mobile-optimized .item-container {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  /* Reduce gradient animation complexity */
+  body.mobile-optimized {
+    animation-duration: 25s; /* Slower animation */
+  }
+}
+
+/* Optimize animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  /* Keep essential animations but make them instant */
+  .scroll-container {
+    transition: transform 0.01ms !important;
+  }
+  
+  .class-option.active,
+  .spin-option.active {
+    transition: all 0.01ms !important;
+  }
+}
+
+/* Hardware acceleration for smooth animations */
+.scroll-container,
+.itemCol,
+.class-option,
+.spin-option,
+.particle {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
+/* Optimize font rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Reduce repaints for fixed elements */
+.main-nav {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
 /* Winner effect for selected items */
 .winner {
   border: 3px solid var(--neon-orange);
@@ -590,6 +707,19 @@ body {
 
 /* Mobile Styles - Improved Layout */
 @media (max-width: 768px) {
+  /* Sound toggle button - mobile adjustments */
+  .sound-toggle {
+    top: 10px;
+    right: 10px;
+    width: 35px;
+    height: 35px;
+  }
+  
+  .sound-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+  
   /* Container for slot machine - adjusted scaling and width */
   .items-container {
     transform: scale(0.45);

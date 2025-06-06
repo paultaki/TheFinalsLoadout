@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Slot Machine</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .status {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Slot Machine Test Page</h1>
+        
+        <div class="status">
+            <h2>Test Controls</h2>
+            <button onclick="testMainSpin()">Test Main SPIN Button</button>
+            <button onclick="testClassRoulette()">Test Class Roulette Only</button>
+            <button onclick="testSpinRoulette()">Test Spin Count Roulette Only</button>
+            <button onclick="location.href='index.html'">Go to Main Page</button>
+        </div>
+        
+        <div id="test-output" class="status">
+            <h3>Test Output</h3>
+            <p>Click a test button to see results...</p>
+        </div>
+    </div>
+    
+    <script>
+        function log(message) {
+            const output = document.getElementById('test-output');
+            output.innerHTML += `<p>${new Date().toLocaleTimeString()}: ${message}</p>`;
+        }
+        
+        function testMainSpin() {
+            log('Testing main SPIN button functionality...');
+            // This would trigger the actual spin button click
+            window.location.href = 'index.html#spin';
+        }
+        
+        function testClassRoulette() {
+            log('Testing class roulette animation...');
+            window.location.href = 'index.html#test-class';
+        }
+        
+        function testSpinRoulette() {
+            log('Testing spin count roulette...');
+            window.location.href = 'index.html#test-spin';
+        }
+    </script>
+</body>
+</html>

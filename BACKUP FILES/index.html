@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-GVGKYFGZ1Z");
-    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Enhanced resource hints for optimal loading -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://static.cloudflareinsights.com">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="images/roulette.webp" as="image" fetchpriority="high">
+    <link rel="preload" href="style-optimized.css" as="style">
+    <link rel="preload" href="app.js" as="script">
+    
+    <!-- Prefetch likely-to-be-used resources -->
+    <link rel="prefetch" href="images/light_active.webp">
+    <link rel="prefetch" href="images/medium_active.webp">
+    <link rel="prefetch" href="images/heavy_active.webp">
 
 
   <!-- Add these two lines right here -->
@@ -29,6 +31,21 @@
       name="description"
       content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles."
     />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="The Finals Loadout Roulette" />
+    <meta property="og:description" content="Randomize your loadout and dominate The Finals with style." />
+    <meta property="og:image" content="https://thefinalsloadout.com/assets/loadout-social-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://thefinalsloadout.com" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Finals Loadout Roulette" />
+    <meta name="twitter:description" content="Spin the wheel. Wreck the arena." />
+    <meta name="twitter:image" content="https://thefinalsloadout.com/assets/loadout-social-card.png" />
 
 <script type="application/ld+json">
 {
@@ -58,21 +75,124 @@
       crossorigin="anonymous"
     />
 
+    <!-- Critical CSS inlined for fastest render -->
+    <style>
+      /* Critical above-the-fold styles */
+      :root {
+        --neon-purple: #7b2fe3;
+        --neon-blue: #1e90ff;
+        --neon-cyan: #00f3ff;
+        --neon-pink: #ff1493;
+        --neon-orange: #ff7b00;
+        --neon-yellow: #ffb700;
+      }
+      
+      * { box-sizing: border-box; }
+      
+      html {
+        min-height: 100%;
+        background: linear-gradient(135deg, #1b1b3a, #34003d, #240049, #003d66);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+      }
+      
+      @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      body {
+        font-family: "Oswald", system-ui, -apple-system, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #fff;
+        text-align: center;
+        min-height: 100vh;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      /* Font loading with fallback */
+      @font-face {
+        font-family: 'Oswald';
+        font-display: swap;
+        src: local('Oswald'), url('https://fonts.gstatic.com/s/oswald/v35/TK3iWkUHHAIjg752GT8G.woff2') format('woff2');
+      }
+      
+      /* Critical navigation styles */
+      .main-nav {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        padding: 1rem 0;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+      }
+      
+      .main-nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+      
+      .main-nav a:hover,
+      .main-nav a.active {
+        background-color: var(--neon-blue);
+      }
+      
+      /* Critical header styles */
+      .headerSection {
+        padding: 2rem 0;
+      }
+      
+      .container {
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+      
+      .finals-logo {
+        max-width: 240px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+      
+      .subTitle {
+        font-size: 1.5rem;
+        margin: 1rem 0;
+        color: var(--neon-yellow);
+        font-weight: 500;
+      }
+      
+      /* Loading placeholder */
+      .loading-placeholder {
+        background: linear-gradient(90deg, #333, #555, #333);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+        border-radius: 8px;
+      }
+      
+      @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+    </style>
+    
+    <!-- Load original CSS synchronously to fix broken layout -->
+    <link rel="stylesheet" href="style.css" />
+    
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
       />
     </noscript>
-
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css" />
-    <style>
-      body {
-        font-family: "Oswald", sans-serif;
-        font-display: swap;
-      }
-    </style>
 
     <style>
       html {
@@ -115,7 +235,6 @@
   <audio id="classWinSound" src="sounds/chang.mp3" preload="auto"></audio>
   <audio id="spinWinSound" src="sounds/Tabby Tune.mp3" preload="auto"></audio>
   <audio id="spinningSound" src="sounds/spinning.mp3" preload="auto"></audio>
-  <audio id="spinBackgroundSound" src="sounds/spin-background.mp3" preload="auto" loop></audio>
   <audio id="transitionSound" src="sounds/transition.mp3" preload="auto"></audio>
   <audio id="finalSound" src="sounds/final-sound.mp3" preload="auto"></audio>
 
@@ -133,9 +252,21 @@
       alt="Random Loadout Generator for The Finals Game"
       class="finals-logo"
       width="240"
-      height="auto"
+      height="240"
     />
     <h2 class="subTitle">Season 6 Ready</h2>
+    <!-- Sound Toggle Button -->
+    <button id="sound-toggle" class="sound-toggle" aria-label="Toggle sound" title="Toggle sound on/off">
+      <svg class="sound-on" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      </svg>
+      <svg class="sound-off" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <line x1="23" y1="9" x2="17" y2="15"></line>
+        <line x1="17" y1="9" x2="23" y2="15"></line>
+      </svg>
+    </button>
   </div>
 </header>
   
@@ -482,17 +613,17 @@
     <!-- Patch Header -->
     <div style="text-align: center; margin-bottom: 2rem;">
         <h2 style="color: #ffb800; font-size: 2rem; margin-bottom: 1rem;">
-            ✨ PATCH HIGHLIGHTS - MAY 1, 2025
+            🔨 UPDATE 6.9.0 - MAY 22, 2025
         </h2>
         <div style="background: #2a2a3e; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
             <p style="color: #fff; font-weight: bold; margin-bottom: 0.5rem;">
-                New: Close Quarters Event, Nullifier (renamed Stun Gun), Health Canister
+                New: Heavy Hitters 5v5 Platform Fighter Event, Pop Drop Arena, Tiger Juice rewards
             </p>
             <p style="color: #fff; font-weight: bold; margin-bottom: 0.5rem;">
-                Returning: Las Vegas 2032 map back in rotation
+                Major Fix: Persistent effects bug finally resolved (no more permanent tracking!)
             </p>
             <p style="color: #fff; font-weight: bold;">
-                Improved: Club size increased to 100 members, multi-channel chat
+                Active: XP Dash bonus event + Sponsor Showdown + New Twitch Drops
             </p>
         </div>
     </div>
@@ -500,175 +631,167 @@
     <!-- Collapsible Sections -->
     <div class="patch-sections">
         
-        <!-- Weapon Adjustments -->
+        <!-- New Content -->
         <details class="patch-category" style="margin-bottom: 1rem;">
             <summary style="background: #2a2a3e; padding: 1rem; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #4ecdc4; font-weight: bold; font-size: 1.2rem;">🔫 Weapon Adjustments</span>
+                <span style="color: #4ecdc4; font-weight: bold; font-size: 1.2rem;">⚡ New Content & Events</span>
                 <span style="color: #ffb800;">+</span>
             </summary>
             <div style="padding: 1rem; background: #222; border-radius: 0 0 8px 8px; margin-top: -4px;">
-                <h4 style="color: #4ecdc4; margin-bottom: 0.5rem;">FAMAS</h4>
+                <h4 style="color: #4ecdc4; margin-bottom: 0.5rem;">Heavy Hitters Event</h4>
                 <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Reduced visual recoil for better stability</li>
+                    <li>• New 5v5 Platform Fighter mode with Sledgehammers only</li>
+                    <li>• Knock opponents off the edge in the new Pop Drop Arena</li>
+                    <li>• OSPUZE Tiger Juice themed rewards and accessories</li>
                 </ul>
                 
-                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">KS-23</h4>
+                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">Active Events</h4>
                 <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Increased accuracy across all movement states</li>
-                    <li>• Improved hip-fire and ADS accuracy while moving</li>
+                    <li>• XP Dash: Bonus XP and Fans through end of season</li>
+                    <li>• Sponsor Showdown: Daily battles for map control</li>
+                    <li>• New Twitch Drops: Broadcast Blaze weapon skins</li>
                 </ul>
                 
-                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">M11</h4>
+                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">Map Updates</h4>
                 <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Reduced recoil jitter at end of burst</li>
-                    <li>• Decreased visual recoil</li>
-                </ul>
-                
-                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">XP-54</h4>
-                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Damage decreased: 17 → 16</li>
-                    <li>• Fire rate increased: 850 → 860 RPM</li>
-                </ul>
-                
-                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">Melee Weapons</h4>
-                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Improved hit registration and sweep reliability</li>
-                    <li>• Fixed wall-hit detection issues</li>
+                    <li>• Kyoto: Water no longer slows movement</li>
+                    <li>• P.E.A.C.E. Center added to Team Deathmatch</li>
                 </ul>
             </div>
         </details>
 
-        <!-- Specializations & Gadgets -->
+        <!-- Major Bug Fix -->
         <details class="patch-category" style="margin-bottom: 1rem;">
             <summary style="background: #2a2a3e; padding: 1rem; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #ff6b6b; font-weight: bold; font-size: 1.2rem;">🎯 Specializations & Gadgets</span>
+                <span style="color: #ff6b6b; font-weight: bold; font-size: 1.2rem;">🛠️ Major Bug Fixes</span>
                 <span style="color: #ffb800;">+</span>
             </summary>
             <div style="padding: 1rem; background: #222; border-radius: 0 0 8px 8px; margin-top: -4px;">
-                <h4 style="color: #ff6b6b; margin-bottom: 0.5rem;">Nullifier (formerly Stun Gun)</h4>
+                <h4 style="color: #ff6b6b; margin-bottom: 0.5rem;">Persistent Effects Bug FIXED</h4>
                 <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Renamed for clarity</li>
-                    <li>• No functional changes</li>
+                    <li>• Fixed the 6-season-old bug causing effects to stick permanently</li>
+                    <li>• No more permanent tracking through walls!</li>
+                    <li>• No more teammates constantly on fire</li>
+                    <li>• Affected: Sonar, tracking dart, burning, gas, invisibility, etc.</li>
                 </ul>
                 
-                <h4 style="color: #ff6b6b; margin: 1rem 0 0.5rem 0;">Health Canister</h4>
+                <h4 style="color: #ff6b6b; margin: 1rem 0 0.5rem 0;">Other Fixes</h4>
                 <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• New tactical equipment</li>
-                    <li>• Provides area healing for team support</li>
-                </ul>
-                
-                <h4 style="color: #ff6b6b; margin: 1rem 0 0.5rem 0;">Cloaking Device</h4>
-                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Fixed: No longer canceled by emotes</li>
-                    <li>• Fixed: Activation not interrupted when holding props</li>
+                    <li>• Melee weapons: Better hit detection and reliability</li>
+                    <li>• Fixed unfair spawn locations near objectives</li>
+                    <li>• Season 3 Ruby rewards finally added</li>
+                    <li>• Power Shift overtime winner display fixed</li>
                 </ul>
             </div>
         </details>
 
-        <!-- New Features -->
+        <!-- Weapon Balance -->
         <details class="patch-category" style="margin-bottom: 1rem;">
             <summary style="background: #2a2a3e; padding: 1rem; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #4a90e2; font-weight: bold; font-size: 1.2rem;">🆕 New Features</span>
+                <span style="color: #4a90e2; font-weight: bold; font-size: 1.2rem;">🔫 Weapon Balance</span>
                 <span style="color: #ffb800;">+</span>
             </summary>
             <div style="padding: 1rem; background: #222; border-radius: 0 0 8px 8px; margin-top: -4px;">
-                <h4 style="color: #4a90e2; margin-bottom: 0.5rem;">Close Quarters Event</h4>
+                <h4 style="color: #4a90e2; margin-bottom: 0.5rem;">Buffs</h4>
                 <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Limited-time intense CQB mode</li>
-                    <li>• Exclusive rewards and challenges</li>
+                    <li>• <strong>KS-23:</strong> Massive accuracy improvements across all movement states</li>
+                    <li>• <strong>ARN-220:</strong> Consistent recoil pattern between magazines</li>
+                    <li>• <strong>FAMAS:</strong> Reduced visual recoil</li>
+                    <li>• <strong>M11:</strong> Smoother recoil pattern, less visual shake</li>
                 </ul>
                 
-                <h4 style="color: #4a90e2; margin: 1rem 0 0.5rem 0;">Club Improvements</h4>
+                <h4 style="color: #4a90e2; margin: 1rem 0 0.5rem 0;">Nerfs</h4>
                 <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Club size increased to 100 members</li>
-                    <li>• Multi-channel chat support added</li>
-                    <li>• Improved filter reset functionality</li>
+                    <li>• <strong>XP-54:</strong> Damage 17 → 16, but fire rate 850 → 860 RPM</li>
+                    <li>• (Balancing after its recent dominance)</li>
                 </ul>
                 
-                <h4 style="color: #4a90e2; margin: 1rem 0 0.5rem 0;">UI Enhancements</h4>
+                <h4 style="color: #4a90e2; margin: 1rem 0 0.5rem 0;">Melee Improvements</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Better hit sweeps across all melee weapons</li>
+                    <li>• More reliable collision detection</li>
+                    <li>• Riot Shields now block melee attacks more consistently</li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- Quality of Life -->
+        <details class="patch-category" style="margin-bottom: 1rem;">
+            <summary style="background: #2a2a3e; padding: 1rem; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #ffb800; font-weight: bold; font-size: 1.2rem;">⚙️ Quality of Life</span>
+                <span style="color: #ffb800;">+</span>
+            </summary>
+            <div style="padding: 1rem; background: #222; border-radius: 0 0 8px 8px; margin-top: -4px;">
+                <h4 style="color: #ffb800; margin-bottom: 0.5rem;">Specializations</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Cloaking Device: No longer canceled by emotes</li>
+                    <li>• Cloaking Device: Works properly when holding props</li>
+                </ul>
+                
+                <h4 style="color: #ffb800; margin: 1rem 0 0.5rem 0;">UI & Performance</h4>
                 <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
                     <li>• New loading screen rules layout</li>
-                    <li>• Expression screen filters added</li>
+                    <li>• Added Expression screen filters</li>
                     <li>• Improved gamepad navigation in customization</li>
-                </ul>
-            </div>
-        </details>
-
-        <!-- Map Updates -->
-        <details class="patch-category" style="margin-bottom: 1rem;">
-            <summary style="background: #2a2a3e; padding: 1rem; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #4ecdc4; font-weight: bold; font-size: 1.2rem;">🗺️ Map Updates</span>
-                <span style="color: #ffb800;">+</span>
-            </summary>
-            <div style="padding: 1rem; background: #222; border-radius: 0 0 8px 8px; margin-top: -4px;">
-                <h4 style="color: #4ecdc4; margin-bottom: 0.5rem;">Las Vegas 2032</h4>
-                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Map returned to rotation</li>
-                    <li>• Fixed Dematerializer VFX in parking garage</li>
-                </ul>
-                
-                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">Kyoto</h4>
-                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Added missing destruction on small props</li>
-                    <li>• Movement in water no longer slowed</li>
-                </ul>
-                
-                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">Seoul</h4>
-                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Fixed accidental vault on pipes under catwalks</li>
-                    <li>• Fixed missing collision on staircase pillars</li>
-                </ul>
-                
-                <h4 style="color: #4ecdc4; margin: 1rem 0 0.5rem 0;">General</h4>
-                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Fixed vegetation vault triggers</li>
-                    <li>• Adjusted asset health values for consistency</li>
-                    <li>• Fixed rare zipline loading issues</li>
-                </ul>
-            </div>
-        </details>
-
-        <!-- Bug Fixes & Quality of Life -->
-        <details class="patch-category" style="margin-bottom: 1rem;">
-            <summary style="background: #2a2a3e; padding: 1rem; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #ffb800; font-weight: bold; font-size: 1.2rem;">🔧 Bug Fixes & Quality of Life</span>
-                <span style="color: #ffb800;">+</span>
-            </summary>
-            <div style="padding: 1rem; background: #222; border-radius: 0 0 8px 8px; margin-top: -4px;">
-                <h4 style="color: #ffb800; margin-bottom: 0.5rem;">Major Fix: Persistent Effects Bug</h4>
-                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Fixed effects getting permanently stuck on players</li>
-                    <li>• Affected: burning, tracking, sonar, gas, invisibility</li>
-                    <li>• No more permanent enemy tracking through walls!</li>
+                    <li>• Club filter reset now works properly</li>
+                    <li>• Performance optimizations for shaders and animations</li>
                 </ul>
                 
                 <h4 style="color: #ffb800; margin: 1rem 0 0.5rem 0;">Game Modes</h4>
                 <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Power Shift: Fixed overtime winner display</li>
-                    <li>• Team Deathmatch: Self-kills now penalized properly</li>
+                    <li>• Team Deathmatch: Self-kills now properly penalized</li>
                     <li>• Terminal Attack: Health regeneration restored</li>
-                    <li>• Quick Cash: Fixed respawn timer message</li>
+                    <li>• Quick Cash: Fixed respawn timer messages</li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- Cosmetics & Rewards -->
+        <details class="patch-category" style="margin-bottom: 1rem;">
+            <summary style="background: #2a2a3e; padding: 1rem; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #9c6fff; font-weight: bold; font-size: 1.2rem;">👕 Cosmetics & Rewards</span>
+                <span style="color: #ffb800;">+</span>
+            </summary>
+            <div style="padding: 1rem; background: #222; border-radius: 0 0 8px 8px; margin-top: -4px;">
+                <h4 style="color: #9c6fff; margin-bottom: 0.5rem;">New Content</h4>
+                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
+                    <li>• Heavy Hitters sledgehammer collection</li>
+                    <li>• OSPUZE Tiger Juice themed accessories</li>
+                    <li>• Broadcast Blaze weapon skins (Twitch Drops)</li>
+                    <li>• Season 3 Ruby rewards finally added</li>
                 </ul>
                 
-                <h4 style="color: #ffb800; margin: 1rem 0 0.5rem 0;">Performance</h4>
+                <h4 style="color: #9c6fff; margin: 1rem 0 0.5rem 0;">Fixes</h4>
                 <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Optimized network data for destruction</li>
-                    <li>• Improved animation performance</li>
-                    <li>• Shader pipeline optimization</li>
-                    <li>• Various crash fixes</li>
-                </ul>
-                
-                <h4 style="color: #ffb800; margin: 1rem 0 0.5rem 0;">Customization</h4>
-                <ul style="color: #ccc; list-style: none; padding-left: 1rem;">
-                    <li>• Season 3 Ruby rewards added</li>
-                    <li>• Fixed Heavy body type on low settings</li>
-                    <li>• Various cosmetic clipping fixes</li>
-                    <li>• Store outfit preview improvements</li>
+                    <li>• Fixed Heavy body type on low/medium settings</li>
+                    <li>• Various shoe clipping issues resolved</li>
+                    <li>• Hologram display fixes for Heavy Muscular body type</li>
+                    <li>• Multiple clothing item clipping fixes</li>
                 </ul>
             </div>
         </details>
     </div>
 </div>
+
+<!-- Optional: Add this CSS to make the expandable sections interactive -->
+<style>
+details[open] summary span:last-child {
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+}
+
+details summary span:last-child {
+    transition: transform 0.3s ease;
+}
+
+details summary:hover {
+    opacity: 0.8;
+}
+
+details {
+    transition: all 0.3s ease;
+}
+</style>
 
 <!-- Optional: Add this CSS to make the expandable sections interactive -->
 <style>
@@ -702,16 +825,11 @@ details {
 </footer>
 
 
-    <!-- Scripts -->
+    <!-- Scripts - restored to working order -->
+    <script defer src="performance-utils.js"></script>
     <script defer src="roulette-animations.js"></script>
     <script defer src="app.js"></script>
-    <script
-      defer
-      src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-      integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-      data-cf-beacon='{"rayId":"90d5a0a2197ddbbe","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}'
-      crossorigin="anonymous"
-    ></script>
+    <script defer src="performance-init.js"></script>
     <script>
       // FAQ Toggle Script
       document.addEventListener("DOMContentLoaded", function () {
@@ -719,16 +837,92 @@ details {
         var faqContent = document.getElementById("faq-content");
         var faqToggle = document.querySelector(".faq-toggle");
 
-        faqToggleButton.addEventListener("click", function () {
-          faqContent.classList.toggle("open");
-          faqToggle.innerText = faqContent.classList.contains("open")
-            ? "−"
-            : "+";
-        });
+        if (faqToggleButton && faqContent && faqToggle) {
+          faqToggleButton.addEventListener("click", function () {
+            faqContent.classList.toggle("open");
+            faqToggle.innerText = faqContent.classList.contains("open")
+              ? "−"
+              : "+";
+          });
+        }
       });
     </script>
 
+    <!-- Web Vitals for performance monitoring -->
+    <script>
+      // Simple Web Vitals tracking
+      if ('PerformanceObserver' in window) {
+        // Track Largest Contentful Paint (LCP)
+        new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          console.log('LCP:', lastEntry.startTime.toFixed(2) + 'ms');
+        }).observe({entryTypes: ['largest-contentful-paint']});
+        
+        // Track First Input Delay (FID)
+        new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach(entry => {
+            console.log('FID:', entry.processingStart - entry.startTime + 'ms');
+          });
+        }).observe({entryTypes: ['first-input']});
+        
+        // Track Cumulative Layout Shift (CLS)
+        let clsValue = 0;
+        new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (!entry.hadRecentInput) {
+              clsValue += entry.value;
+              console.log('Current CLS:', clsValue.toFixed(3));
+            }
+          }
+        }).observe({entryTypes: ['layout-shift']});
+      }
+    </script>
 
+    <!-- Optimized Google Analytics - load after user interaction -->
+    <script>
+      // Initialize dataLayer early but delay actual GA loading
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      
+      // Load GA after user interaction or 3 seconds (whichever comes first)
+      let gaLoaded = false;
+      function loadGA() {
+        if (gaLoaded) return;
+        gaLoaded = true;
+        
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z';
+        document.head.appendChild(script);
+        
+        script.onload = function() {
+          gtag('config', 'G-GVGKYFGZ1Z', {
+            page_title: document.title,
+            page_location: window.location.href
+          });
+        };
+      }
+      
+      // Load on user interaction
+      ['click', 'scroll', 'touchstart', 'keydown'].forEach(event => {
+        document.addEventListener(event, loadGA, { once: true, passive: true });
+      });
+      
+      // Fallback: load after 3 seconds
+      setTimeout(loadGA, 3000);
+    </script>
+    
+    <!-- Cloudflare Insights -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+      integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+      data-cf-beacon='{"rayId":"90d5a0a2197ddbbe","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}'
+      crossorigin="anonymous"
+    ></script>
 
   </body>
 </html>
