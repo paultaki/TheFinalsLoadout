@@ -1808,7 +1808,26 @@ function addToHistory(
 
 function saveHistory() {
   const entries = Array.from(document.querySelectorAll(".history-entry")).map(
-    (entry) => entry.innerHTML
+    (entry) => {
+      // Extract data from each entry to save as structured data
+      const classType = entry.querySelector('.class-badge')?.textContent.trim();
+      const loadoutName = entry.querySelector('.loadout-name')?.textContent.trim();
+      const weapon = entry.querySelector('.weapon-item .item-name')?.textContent;
+      const specialization = entry.querySelector('.spec-item .item-name')?.textContent;
+      const gadgets = Array.from(entry.querySelectorAll('.gadget-item .item-name'))
+        .map(el => el.textContent);
+      const isSpicy = entry.classList.contains('spicy-loadout');
+      
+      return {
+        classType,
+        loadoutName,
+        weapon,
+        specialization,
+        gadgets,
+        isSpicy,
+        timestamp: Date.now()
+      };
+    }
   );
 
   // Limit to the most recent 5 entries
@@ -1821,10 +1840,56 @@ function loadHistory() {
   const historyList = document.getElementById("history-list");
   const savedEntries = JSON.parse(localStorage.getItem("loadoutHistory")) || [];
   historyList.innerHTML = "";
-  savedEntries.forEach((html) => {
+  
+  savedEntries.forEach((entryData, index) => {
+    // Skip if data is malformed
+    if (!entryData.classType || !entryData.weapon) return;
+    
     const entry = document.createElement("div");
-    entry.classList.add("history-entry");
-    entry.innerHTML = html;
+    entry.classList.add("history-entry", "visible"); // Add visible class immediately
+    
+    // Add spicy class if needed
+    if (entryData.isSpicy) {
+      entry.classList.add("spicy-loadout");
+    }
+    
+    // Calculate relative timestamp
+    const timeAgo = index === 0 ? 'Just now' : `${index + 1} min ago`;
+    
+    entry.innerHTML = `
+      <div class="loadout-header">
+        <span class="class-badge ${entryData.classType.toLowerCase()}">${entryData.classType.toUpperCase()}</span>
+        <span class="loadout-name">${entryData.loadoutName}</span>
+        <span class="timestamp">${timeAgo}</span>
+      </div>
+      <div class="loadout-details">
+        <div class="loadout-item weapon-item">
+          <img src="images/${entryData.weapon.replace(/ /g, "_")}.webp" alt="${entryData.weapon}" class="item-icon">
+          <span class="item-name">${entryData.weapon}</span>
+        </div>
+        <div class="loadout-item spec-item">
+          <img src="images/${entryData.specialization.replace(/ /g, "_")}.webp" alt="${entryData.specialization}" class="item-icon">
+          <span class="item-name">${entryData.specialization}</span>
+        </div>
+        <div class="gadget-group">
+          ${entryData.gadgets.map(g => `
+            <div class="loadout-item gadget-item">
+              <img src="images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small">
+              <span class="item-name small">${g}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="loadout-actions">
+        <button class="copy-build" onclick="copyLoadoutText(this)">
+          <span>📋</span> COPY
+        </button>
+        <button class="challenge-build" onclick="challengeWithLoadout(this)">
+          <span>🎯</span> CHALLENGE
+        </button>
+      </div>
+    `;
+    
     historyList.appendChild(entry);
   });
 }
