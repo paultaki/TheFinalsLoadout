@@ -110,6 +110,8 @@ class RouletteAnimationSystem {
           this.createFlashEffect();
           
           setTimeout(() => {
+            // Clean up winner class to prevent persistent effects
+            classElements.forEach(el => el.classList.remove('winner'));
             classSection.classList.add('hidden');
             resolve();
           }, 500);
@@ -191,6 +193,8 @@ class RouletteAnimationSystem {
           statusEl.classList.add('neon-cycle');
           
           setTimeout(() => {
+            // Clean up winner class to prevent persistent effects
+            spinElements.forEach(el => el.classList.remove('winner'));
             spinSection.classList.add('hidden');
             statusEl.textContent = '';
             resolve();

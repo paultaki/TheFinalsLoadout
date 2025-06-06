@@ -2755,7 +2755,7 @@ iframe#bmc-button {
 }
 
 .winner {
-  animation: winnerFlash 1s ease-in-out infinite alternate;
+  animation: winnerFlash 1s ease-in-out 2 alternate;
 }
 
 @keyframes shakeScreen {
@@ -2767,6 +2767,44 @@ iframe#bmc-button {
 
 .screen-shake {
   animation: shakeScreen 0.4s ease-in-out;
+}
+
+/* Patch Notes Ticker */
+.patch-ticker-container {
+  background: #1a1a2e;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 2rem auto;
+  max-width: 900px;
+  border: 1px solid #333;
+  overflow: hidden;
+  position: relative;
+}
+
+.patch-ticker {
+  display: flex;
+  animation: tickerScroll 30s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 2rem;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.ticker-item:first-child {
+  color: var(--neon-orange);
+  font-weight: bold;
+}
+
+@keyframes tickerScroll {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
 }
 
 html {
