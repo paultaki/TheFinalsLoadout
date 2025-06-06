@@ -1878,7 +1878,8 @@ function updateTimestamps() {
   });
 }
 
-function challengeWithLoadout(button) {
+// Make challengeWithLoadout globally accessible
+window.challengeWithLoadout = function(button) {
   const entry = button.closest('.history-entry');
   const loadoutName = entry.querySelector('.loadout-name').textContent;
   
@@ -1895,7 +1896,7 @@ function challengeWithLoadout(button) {
     .catch(() => {
       alert("Challenge link copied! Send it to a friend!");
     });
-}
+};
 
 // Make copyLoadoutText available globally
 window.copyLoadoutText = function (button) {
@@ -1906,16 +1907,32 @@ window.copyLoadoutText = function (button) {
     return;
   }
 
-  const text = Array.from(entry.querySelectorAll("p"))
-    .map((p) => p.textContent)
-    .join("\n");
+  // Extract data from the new card structure
+  const classType = entry.querySelector('.class-badge').textContent.trim();
+  const loadoutName = entry.querySelector('.loadout-name').textContent.trim();
+  
+  // Get weapon and specialization from images
+  const itemIcons = entry.querySelectorAll('.item-icon:not(.small)');
+  const weapon = itemIcons[0]?.getAttribute('title') || 'Unknown Weapon';
+  const specialization = itemIcons[1]?.getAttribute('title') || 'Unknown Specialization';
+  
+  // Get gadgets from small icons
+  const gadgetIcons = entry.querySelectorAll('.item-icon.small');
+  const gadgets = Array.from(gadgetIcons).map(icon => icon.getAttribute('title')).filter(Boolean);
+
+  // Create the copy text
+  const copyText = `${loadoutName}
+Class: ${classType}
+Weapon: ${weapon}
+Specialization: ${specialization}
+Gadgets: ${gadgets.join(', ')}`;
 
   navigator.clipboard
-    .writeText(text)
+    .writeText(copyText)
     .then(() => {
-      button.textContent = "Copied!";
+      button.innerHTML = '<span>✅</span> COPIED!';
       setTimeout(() => {
-        button.textContent = "Copy";
+        button.innerHTML = '<span>📋</span> COPY';
       }, 2000);
     })
     .catch((err) => {
