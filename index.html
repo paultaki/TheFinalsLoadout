@@ -4,10 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <!-- Resource hints for faster loading -->
+    <!-- Enhanced resource hints for optimal loading -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://static.cloudflareinsights.com">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="images/roulette.webp" as="image" fetchpriority="high">
+    <link rel="preload" href="style-optimized.css" as="style">
+    <link rel="preload" href="app.js" as="script">
+    
+    <!-- Prefetch likely-to-be-used resources -->
+    <link rel="prefetch" href="images/light_active.webp">
+    <link rel="prefetch" href="images/medium_active.webp">
+    <link rel="prefetch" href="images/heavy_active.webp">
 
 
   <!-- Add these two lines right here -->
@@ -50,12 +60,33 @@
       crossorigin="anonymous"
     />
 
-    <!-- Optimized font loading -->
-    <link rel="preload" href="style.css" as="style">
-    <link rel="stylesheet" href="style.css" />
-    
+    <!-- Critical CSS inlined for fastest render -->
     <style>
-      /* Critical inline styles for faster initial render */
+      /* Critical above-the-fold styles */
+      :root {
+        --neon-purple: #7b2fe3;
+        --neon-blue: #1e90ff;
+        --neon-cyan: #00f3ff;
+        --neon-pink: #ff1493;
+        --neon-orange: #ff7b00;
+        --neon-yellow: #ffb700;
+      }
+      
+      * { box-sizing: border-box; }
+      
+      html {
+        min-height: 100%;
+        background: linear-gradient(135deg, #1b1b3a, #34003d, #240049, #003d66);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+      }
+      
+      @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
       body {
         font-family: "Oswald", system-ui, -apple-system, sans-serif;
         margin: 0;
@@ -63,7 +94,9 @@
         color: #fff;
         text-align: center;
         min-height: 100vh;
-        background: #1d1a21;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
       
       /* Font loading with fallback */
@@ -72,7 +105,73 @@
         font-display: swap;
         src: local('Oswald'), url('https://fonts.gstatic.com/s/oswald/v35/TK3iWkUHHAIjg752GT8G.woff2') format('woff2');
       }
+      
+      /* Critical navigation styles */
+      .main-nav {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        padding: 1rem 0;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+      }
+      
+      .main-nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+      
+      .main-nav a:hover,
+      .main-nav a.active {
+        background-color: var(--neon-blue);
+      }
+      
+      /* Critical header styles */
+      .headerSection {
+        padding: 2rem 0;
+      }
+      
+      .container {
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+      
+      .finals-logo {
+        max-width: 240px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+      
+      .subTitle {
+        font-size: 1.5rem;
+        margin: 1rem 0;
+        color: var(--neon-yellow);
+        font-weight: 500;
+      }
+      
+      /* Loading placeholder */
+      .loading-placeholder {
+        background: linear-gradient(90deg, #333, #555, #333);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+        border-radius: 8px;
+      }
+      
+      @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
     </style>
+    
+    <!-- Load optimized CSS asynchronously -->
+    <link rel="preload" href="style-optimized.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="style-optimized.css"></noscript>
     
     <noscript>
       <link
@@ -135,14 +234,23 @@
 
 <header class="headerSection">
   <div class="container">
-    <img
-      src="images/roulette.webp"
-      alt="Random Loadout Generator for The Finals Game"
-      class="finals-logo"
-      width="240"
-      height="240"
-      fetchpriority="high"
-    />
+    <picture>
+      <source 
+        srcset="images/roulette-480.webp 480w,
+                images/roulette-240.webp 240w,
+                images/roulette-120.webp 120w"
+        sizes="(max-width: 768px) 120px, (max-width: 1024px) 240px, 240px"
+        type="image/webp">
+      <img
+        src="images/roulette.webp"
+        alt="Random Loadout Generator for The Finals Game"
+        class="finals-logo"
+        width="240"
+        height="240"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
     <h2 class="subTitle">Season 6 Ready</h2>
   </div>
 </header>
@@ -417,53 +525,73 @@
             <div class="slot-machine-wrapper">
               <div class="items-container">
                 <div class="placeholder-container">
-                  <img
-                    src="images/placeholder.webp"
-                    alt="?"
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                  />
+                  <picture>
+                    <source srcset="images/placeholder-80.webp" type="image/webp">
+                    <img
+                      src="images/placeholder.webp"
+                      alt="?"
+                      width="80"
+                      height="80"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
                   <p>Weapon</p>
                 </div>
                 <div class="placeholder-container">
-                  <img
-                    src="images/placeholder.webp"
-                    alt="?"
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                  />
+                  <picture>
+                    <source srcset="images/placeholder-80.webp" type="image/webp">
+                    <img
+                      src="images/placeholder.webp"
+                      alt="?"
+                      width="80"
+                      height="80"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
                   <p>Specialization</p>
                 </div>
                 <div class="placeholder-container">
-                  <img
-                    src="images/placeholder.webp"
-                    alt="?"
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                  />
+                  <picture>
+                    <source srcset="images/placeholder-80.webp" type="image/webp">
+                    <img
+                      src="images/placeholder.webp"
+                      alt="?"
+                      width="80"
+                      height="80"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
                   <p>Gadget 1</p>
                 </div>
                 <div class="placeholder-container">
-                  <img
-                    src="images/placeholder.webp"
-                    alt="?"
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                  />
+                  <picture>
+                    <source srcset="images/placeholder-80.webp" type="image/webp">
+                    <img
+                      src="images/placeholder.webp"
+                      alt="?"
+                      width="80"
+                      height="80"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
                   <p>Gadget 2</p>
                 </div>
                 <div class="placeholder-container">
-                  <img
-                    src="images/placeholder.webp"
-                    alt="?"
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                  />
+                  <picture>
+                    <source srcset="images/placeholder-80.webp" type="image/webp">
+                    <img
+                      src="images/placeholder.webp"
+                      alt="?"
+                      width="80"
+                      height="80"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
                   <p>Gadget 3</p>
                 </div>
               </div>
@@ -702,11 +830,46 @@ details {
 </footer>
 
 
-    <!-- Scripts -->
-    <script defer src="performance-utils.js"></script>
-    <script defer src="roulette-animations.js"></script>
-    <script defer src="app.js"></script>
-    <script defer src="performance-init.js"></script>
+    <!-- Critical scripts only -->
+    <script>
+      // Minimal performance utils inline for critical path
+      window.PerformanceUtils = {
+        preloadImages: function(srcs) {
+          srcs.forEach(src => {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.as = 'image';
+            link.href = src;
+            document.head.appendChild(link);
+          });
+        }
+      };
+      
+      // Preload critical images
+      window.PerformanceUtils.preloadImages([
+        'images/light_active.webp',
+        'images/medium_active.webp', 
+        'images/heavy_active.webp'
+      ]);
+    </script>
+    
+    <!-- Load non-critical scripts asynchronously -->
+    <script>
+      function loadScript(src) {
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        document.head.appendChild(script);
+      }
+      
+      // Load scripts after initial render
+      window.addEventListener('load', function() {
+        loadScript('performance-utils.js');
+        loadScript('roulette-animations.js');
+        loadScript('app.js');
+        loadScript('performance-init.js');
+      });
+    </script>
     <script>
       // FAQ Toggle Script
       document.addEventListener("DOMContentLoaded", function () {
@@ -757,15 +920,39 @@ details {
       }
     </script>
 
-    <!-- Google Analytics - moved to end of body for better performance -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
+    <!-- Optimized Google Analytics - load after user interaction -->
     <script>
+      // Initialize dataLayer early but delay actual GA loading
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      
+      // Load GA after user interaction or 3 seconds (whichever comes first)
+      let gaLoaded = false;
+      function loadGA() {
+        if (gaLoaded) return;
+        gaLoaded = true;
+        
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z';
+        document.head.appendChild(script);
+        
+        script.onload = function() {
+          gtag('config', 'G-GVGKYFGZ1Z', {
+            page_title: document.title,
+            page_location: window.location.href
+          });
+        };
       }
-      gtag("js", new Date());
-      gtag("config", "G-GVGKYFGZ1Z");
+      
+      // Load on user interaction
+      ['click', 'scroll', 'touchstart', 'keydown'].forEach(event => {
+        document.addEventListener(event, loadGA, { once: true, passive: true });
+      });
+      
+      // Fallback: load after 3 seconds
+      setTimeout(loadGA, 3000);
     </script>
     
     <!-- Cloudflare Insights -->

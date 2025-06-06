@@ -250,52 +250,95 @@ const getRandomUniqueItems = (array, n) => {
 };
 
 const getUniqueGadgets = (classType, loadout) => {
-  console.log(`🔍 Starting FOOLPROOF gadget selection for ${classType}`);
+  console.log(`🔍 Starting BULLETPROOF gadget selection for ${classType}`);
   console.log(`Available gadgets (${loadout.gadgets.length}):`, loadout.gadgets);
   
-  // Use a Set to guarantee uniqueness from the start
-  const availableGadgetsSet = new Set(loadout.gadgets);
-  const availableGadgetsArray = Array.from(availableGadgetsSet);
+  // First, ensure the input array itself has no duplicates
+  const cleanedGadgets = [...new Set(loadout.gadgets)];
+  console.log(`🧹 Cleaned gadgets (${cleanedGadgets.length}):`, cleanedGadgets);
   
-  // Fisher-Yates shuffle for true randomness
-  for (let i = availableGadgetsArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [availableGadgetsArray[i], availableGadgetsArray[j]] = [availableGadgetsArray[j], availableGadgetsArray[i]];
+  if (cleanedGadgets.length < 3) {
+    console.error(`❌ Not enough unique gadgets for ${classType}! Only ${cleanedGadgets.length} available.`);
+    // Fallback: return what we have
+    return cleanedGadgets;
   }
   
-  // Take the first 3 items from the shuffled array
-  const selectedGadgets = availableGadgetsArray.slice(0, 3);
+  // Create multiple attempts to ensure we never get duplicates
+  let attempts = 0;
+  let selectedGadgets = [];
   
-  console.log(`✅ Selected gadgets (GUARANTEED UNIQUE):`, selectedGadgets);
-  
-  // Triple-check uniqueness (this should NEVER fail)
-  const uniqueSet = new Set(selectedGadgets);
-  if (uniqueSet.size !== selectedGadgets.length) {
-    console.error("🚨 IMPOSSIBLE ERROR: Duplicates found after guaranteed unique selection!");
-    console.error("This is a critical bug in the JavaScript engine itself.");
+  while (attempts < 10) { // Maximum 10 attempts
+    attempts++;
+    
+    // Fisher-Yates shuffle for true randomness
+    const shuffledGadgets = [...cleanedGadgets];
+    for (let i = shuffledGadgets.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledGadgets[i], shuffledGadgets[j]] = [shuffledGadgets[j], shuffledGadgets[i]];
+    }
+    
+    // Take the first 3 items from the shuffled array
+    selectedGadgets = shuffledGadgets.slice(0, 3);
+    
+    // Verify uniqueness (this should ALWAYS pass, but let's be 100% sure)
+    const uniqueSet = new Set(selectedGadgets);
+    if (uniqueSet.size === 3) {
+      console.log(`✅ SUCCESS on attempt ${attempts}! Selected gadgets:`, selectedGadgets);
+      break;
+    } else {
+      console.error(`🚨 ATTEMPT ${attempts} FAILED! Duplicates found:`, selectedGadgets);
+    }
   }
   
-  // Store for reference
+  // Final safety check
+  const finalUniqueSet = new Set(selectedGadgets);
+  if (finalUniqueSet.size !== 3) {
+    console.error("🚨 CRITICAL FAILURE: Could not select 3 unique gadgets after 10 attempts!");
+    console.error("Selected:", selectedGadgets);
+    console.error("Available:", cleanedGadgets);
+    // Emergency fallback: manually pick first 3
+    selectedGadgets = cleanedGadgets.slice(0, 3);
+  }
+  
+  // Store for reference and debugging
   state.currentGadgetPool = new Set(selectedGadgets);
-  
-  // Store in window for debugging
   window.lastSelectedGadgets = [...selectedGadgets];
-  console.log(`💾 Stored in window.lastSelectedGadgets for debugging`);
+  
+  console.log(`🎯 FINAL RESULT: ${classType} gadgets:`, selectedGadgets);
+  console.log(`🔐 Stored in window.lastSelectedGadgets:`, window.lastSelectedGadgets);
   
   return selectedGadgets;
 };
 
 function createItemContainer(items, winningItem = null, isGadget = false) {
+  // Optimized image creation with modern formats and lazy loading
+  const createOptimizedImage = (item, isWinner = false) => {
+    const imageName = item.replace(/ /g, "_");
+    return `
+      <picture>
+        <source srcset="images/${imageName}-80.webp 80w" type="image/webp">
+        <img 
+          src="images/${imageName}.webp" 
+          alt="${item}"
+          width="80"
+          height="80"
+          loading="lazy"
+          decoding="async"
+          ${isWinner ? 'fetchpriority="high"' : ''}
+        >
+      </picture>`;
+  };
+
   if (isGadget) {
     return items
-      .map(
-        (item, index) => `
-        <div class="itemCol ${index === 4 ? "winner" : ""}">
-          <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+      .map((item, index) => {
+        const isWinner = index === 4;
+        return `
+        <div class="itemCol ${isWinner ? "winner" : ""}">
+          ${createOptimizedImage(item, isWinner)}
           <p>${item}</p>
-        </div>
-      `
-      )
+        </div>`;
+      })
       .join("");
   }
 
@@ -317,14 +360,14 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
   }
 
   return repeatedItems
-    .map(
-      (item, index) => `
-      <div class="itemCol ${index === 4 ? "winner" : ""}">
-        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
+    .map((item, index) => {
+      const isWinner = index === 4;
+      return `
+      <div class="itemCol ${isWinner ? "winner" : ""}">
+        ${createOptimizedImage(item, isWinner)}
         <p>${item}</p>
-      </div>
-    `
-    )
+      </div>`;
+    })
     .join("");
 }
 
@@ -565,9 +608,11 @@ const displayLoadout = (classType) => {
             (gadget, index) => {
               // Escape the gadget name for HTML attributes
               const escapedGadget = gadget.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-              console.log(`🏷️ Gadget ${index + 1} HTML attribute: "${escapedGadget}"`);
-              return `
-            <div class="item-container" data-winning-gadget="${escapedGadget}">
+              console.log(`🏷️ Creating HTML for Gadget ${index + 1}: Original="${gadget}", Escaped="${escapedGadget}"`);
+              
+              // Debug: Store the original gadget name in a separate attribute for debugging
+              const htmlResult = `
+            <div class="item-container" data-winning-gadget="${escapedGadget}" data-original-gadget="${gadget}" data-gadget-position="${index}">
               <div class="scroll-container" data-gadget-index="${index}" data-winning-gadget="${escapedGadget}">
                 ${createItemContainer(
                   createGadgetSpinSequence(gadget, index),
@@ -577,6 +622,9 @@ const displayLoadout = (classType) => {
               </div>
             </div>
           `;
+              
+              console.log(`🏗️ Generated HTML for gadget ${index + 1}:`, htmlResult.substring(0, 200) + '...');
+              return htmlResult;
             }
           )
           .join("")}
@@ -1259,6 +1307,17 @@ function finalizeSpin(columns) {
         : savedClass;
     }
 
+    // BEFORE processing anything, let's debug the containers
+    console.log(`🔍 DEBUGGING: Found ${itemContainers.length} item containers`);
+    itemContainers.forEach((container, index) => {
+      console.log(`Container ${index}:`, {
+        'data-winning-gadget': container.dataset.winningGadget,
+        'data-original-gadget': container.dataset.originalGadget,
+        'data-gadget-position': container.dataset.gadgetPosition,
+        classList: Array.from(container.classList)
+      });
+    });
+
     // Get all the selected items - use data attributes for gadgets to ensure accuracy
     const selectedItems = Array.from(itemContainers).map((container, index) => {
       console.log(`📋 Processing container ${index}:`, container);
@@ -1266,11 +1325,21 @@ function finalizeSpin(columns) {
       // For gadgets (index 2, 3, 4), use the data attribute
       if (index >= 2) {
         const winningGadget = container.dataset.winningGadget;
-        console.log(`📋 Gadget ${index - 1} from data attribute: "${winningGadget}"`);
+        const originalGadget = container.dataset.originalGadget;
+        console.log(`📋 Gadget ${index - 1} data attributes:`, {
+          winningGadget,
+          originalGadget,
+          position: container.dataset.gadgetPosition
+        });
+        
         if (winningGadget) {
           return winningGadget;
+        } else if (originalGadget) {
+          console.warn(`⚠️ Using original-gadget fallback for container ${index}: "${originalGadget}"`);
+          return originalGadget;
         } else {
-          console.error(`❌ No data-winning-gadget found for container ${index}`);
+          console.error(`❌ No gadget data found for container ${index}`);
+          return "Unknown";
         }
       }
       

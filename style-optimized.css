@@ -1,0 +1,502 @@
+/* Optimized CSS - Only necessary styles for performance */
+
+/* Remove duplicate CSS variables that are already inlined */
+/* Keep only the most essential styles */
+
+/* Slot machine and animation styles */
+.slot-machine-wrapper {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.items-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.item-container {
+  position: relative;
+  background: linear-gradient(135deg, #2a2a3e, #1a1a2e);
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  height: 190px;
+  width: 140px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.item-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+.scroll-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.itemCol {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 188px;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.itemCol img,
+.itemCol picture {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.itemCol p {
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.itemCol.winner {
+  background: linear-gradient(45deg, var(--neon-orange), var(--neon-yellow));
+  border-radius: 8px;
+}
+
+/* Roulette animation styles */
+.roulette-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.roulette-container.hidden {
+  display: none;
+}
+
+.roulette-section {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.roulette-section.hidden {
+  display: none;
+}
+
+.roulette-title {
+  font-size: 2rem;
+  color: var(--neon-yellow);
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px var(--neon-yellow);
+}
+
+.class-roulette-wheel {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin: 2rem 0;
+}
+
+.class-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  border: 3px solid transparent;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.class-option.active {
+  border-color: var(--neon-blue);
+  background: rgba(30, 144, 255, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 0 30px var(--neon-blue);
+}
+
+.class-option.winner {
+  border-color: var(--neon-yellow);
+  background: rgba(255, 183, 0, 0.3);
+  animation: winnerPulse 1s ease-in-out infinite;
+}
+
+.class-option img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+}
+
+.class-option span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.spin-roulette-wheel {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.spin-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.spin-option.active {
+  border-color: var(--neon-cyan);
+  background: rgba(0, 243, 255, 0.2);
+  transform: scale(1.2);
+  box-shadow: 0 0 30px var(--neon-cyan);
+}
+
+.spin-option.winner {
+  border-color: var(--neon-yellow);
+  background: rgba(255, 183, 0, 0.3);
+  animation: winnerPulse 1s ease-in-out infinite;
+}
+
+/* Main button styles */
+.main-spin-button {
+  position: relative;
+  background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+  border: none;
+  color: white;
+  padding: 20px 40px;
+  font-size: 24px;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  overflow: hidden;
+  margin: 2rem auto;
+  display: block;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(123, 47, 227, 0.4);
+}
+
+.main-spin-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(123, 47, 227, 0.6);
+  background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+}
+
+.main-spin-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Selection display */
+.selection-display {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.selection-display.hidden {
+  display: none;
+}
+
+.selection-info {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.selection-class {
+  color: var(--neon-blue);
+}
+
+.selection-class.light {
+  color: var(--neon-cyan);
+}
+
+.selection-class.medium {
+  color: var(--neon-yellow);
+}
+
+.selection-class.heavy {
+  color: var(--neon-orange);
+}
+
+.selection-spins {
+  color: var(--neon-pink);
+}
+
+/* Filter system - only essential styles */
+.filter-toggle-btn {
+  background: linear-gradient(45deg, #666, #888);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-toggle-btn:hover {
+  background: linear-gradient(45deg, #777, #999);
+}
+
+.filter-panel {
+  background: rgba(26, 26, 46, 0.95);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 1rem 0;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.tab-button {
+  padding: 0.8rem 1.5rem;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-button.active,
+.tab-button:hover {
+  border-color: var(--neon-blue);
+  background: rgba(30, 144, 255, 0.2);
+}
+
+/* History section */
+.loadout-history {
+  margin: 3rem auto;
+  max-width: 800px;
+  padding: 0 1rem;
+}
+
+.loadout-history h2 {
+  text-align: center;
+  color: var(--neon-yellow);
+  margin-bottom: 2rem;
+}
+
+.history-entry {
+  background: rgba(42, 48, 64, 0.8);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--neon-blue);
+}
+
+.history-entry p {
+  margin: 0.5rem 0;
+  color: #ddd;
+}
+
+.copy-loadout {
+  background: var(--neon-blue);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.copy-loadout:hover {
+  background: var(--neon-purple);
+}
+
+/* Animations */
+@keyframes winnerPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Screen shake effect */
+@keyframes screenShake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+
+.screen-shake {
+  animation: screenShake 0.5s ease-in-out;
+}
+
+/* Flash overlay */
+.flash-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 9999;
+  animation: flashFade 0.5s ease-out;
+}
+
+@keyframes flashFade {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Particles */
+.particles {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1001;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--neon-yellow);
+  border-radius: 50%;
+  animation: particleMove 1s ease-out forwards;
+}
+
+@keyframes particleMove {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .items-container {
+    gap: 10px;
+  }
+  
+  .item-container {
+    width: 120px;
+    height: 160px;
+  }
+  
+  .itemCol img,
+  .itemCol picture {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .class-roulette-wheel {
+    gap: 1.5rem;
+  }
+  
+  .class-option {
+    padding: 1rem;
+  }
+  
+  .class-option img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .main-spin-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    min-width: 150px;
+  }
+  
+  .roulette-title {
+    font-size: 1.5rem;
+  }
+  
+  /* Reduce animation complexity on mobile */
+  .particle {
+    animation-duration: 0.8s;
+  }
+  
+  .flash-overlay {
+    animation-duration: 0.3s;
+  }
+}
+
+/* Accessibility - respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .scroll-container {
+    transition: transform 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .item-container {
+    border: 3px solid #fff;
+  }
+  
+  .itemCol p {
+    text-shadow: 1px 1px 2px #000;
+  }
+}
