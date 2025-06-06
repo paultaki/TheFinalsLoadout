@@ -1881,21 +1881,47 @@ function updateTimestamps() {
 // Make challengeWithLoadout globally accessible
 window.challengeWithLoadout = function(button) {
   const entry = button.closest('.history-entry');
-  const loadoutName = entry.querySelector('.loadout-name').textContent;
   
-  // Create a challenge message
-  const challengeText = `🎯 Challenge accepted! Try this loadout: "${loadoutName}" - Can you handle the chaos?`;
+  // Extract the actual loadout data from the entry
+  const classType = entry.querySelector('.class-badge').textContent.trim();
+  const loadoutName = entry.querySelector('.loadout-name').textContent.trim();
   
-  navigator.clipboard.writeText(challengeText)
-    .then(() => {
-      button.innerHTML = '<span>✅</span> COPIED!';
-      setTimeout(() => {
-        button.innerHTML = '<span>🎯</span> CHALLENGE';
-      }, 2000);
-    })
-    .catch(() => {
-      alert("Challenge link copied! Send it to a friend!");
-    });
+  // Get weapon and specialization from images
+  const itemIcons = entry.querySelectorAll('.item-icon:not(.small)');
+  const weaponName = itemIcons[0]?.getAttribute('title') || 'Unknown Weapon';
+  const specName = itemIcons[1]?.getAttribute('title') || 'Unknown Specialization';
+  
+  // Get gadgets from small icons
+  const gadgetIcons = entry.querySelectorAll('.item-icon.small');
+  const gadgetNames = Array.from(gadgetIcons).map(icon => icon.getAttribute('title')).filter(Boolean);
+  
+  // Create shareable challenge text
+  const challengeText = `🎯 THE FINALS CHALLENGE:
+
+"${loadoutName}"
+
+Class: ${classType}
+Weapon: ${weaponName}
+Specialization: ${specName}
+Gadgets: ${gadgetNames.join(', ')}
+
+Can you win with this loadout? Try it at thefinalsloadout.com`;
+  
+  // Copy to clipboard
+  navigator.clipboard.writeText(challengeText).then(() => {
+    // Visual feedback
+    const originalText = button.innerHTML;
+    button.innerHTML = '<span>✅</span> COPIED!';
+    button.style.background = '#4CAF50';
+    
+    setTimeout(() => {
+      button.innerHTML = originalText;
+      button.style.background = '';
+    }, 2000);
+  }).catch(err => {
+    console.error('Failed to copy challenge text:', err);
+    alert('Could not copy challenge text');
+  });
 };
 
 // Make copyLoadoutText available globally
