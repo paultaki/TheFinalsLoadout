@@ -1610,17 +1610,17 @@ function finalizeSpin(columns) {
       }
       lastAddedLoadout = loadoutString;
 
-      // Add to history after a delay (helps prevent race conditions)
-      setTimeout(() => {
-        // Use savedClass instead of state.selectedClass
-        addToHistory(savedClass, weapon, specialization, gadgets);
+      // Display roast immediately below the slot machine and get the generated roast
+      displayRoastBelowSlotMachine(savedClass, weapon, specialization, gadgets).then(generatedRoast => {
+        // Add to history after a delay (helps prevent race conditions) with the same roast
+        setTimeout(() => {
+          // Use savedClass instead of state.selectedClass and pass the generated roast
+          addToHistory(savedClass, weapon, specialization, gadgets, generatedRoast);
 
-        console.log("✅ Successfully added to history:", loadoutString);
-        isAddingToHistory = false; // Reset the flag
-      }, 500);
-      
-      // Display roast immediately below the slot machine
-      displayRoastBelowSlotMachine(savedClass, weapon, specialization, gadgets);
+          console.log("✅ Successfully added to history:", loadoutString);
+          isAddingToHistory = false; // Reset the flag
+        }, 500);
+      });
 
       // Reset the class AFTER saving it
       state.selectedClass = null;
@@ -1797,7 +1797,8 @@ async function addToHistory(
   classType,
   selectedWeapon,
   selectedSpec,
-  selectedGadgets
+  selectedGadgets,
+  providedRoast = null
 ) {
   const historyList = document.getElementById("history-list");
   const newEntry = document.createElement("div");
@@ -1857,8 +1858,17 @@ async function addToHistory(
   // Animate entry
   setTimeout(() => newEntry.classList.add('visible'), 10);
   
-  // Generate roast asynchronously
-  generateRoast(newEntry, classType, selectedWeapon, selectedSpec, selectedGadgets);
+  // Use provided roast or generate new one
+  if (providedRoast) {
+    // Use the roast that was already generated
+    const roastSection = newEntry.querySelector('.roast-section');
+    const roastText = newEntry.querySelector('.roast-text');
+    roastSection.classList.remove('loading');
+    roastText.textContent = providedRoast;
+  } else {
+    // Generate roast asynchronously (fallback for cases where no roast is provided)
+    generateRoast(newEntry, classType, selectedWeapon, selectedSpec, selectedGadgets);
+  }
   
   // Update timestamp every minute
   updateTimestamps();
@@ -1872,7 +1882,7 @@ async function addToHistory(
 // Display roast below slot machine
 async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
   const slotMachineWrapper = document.querySelector('.slot-machine-wrapper');
-  if (!slotMachineWrapper) return;
+  if (!slotMachineWrapper) return null;
   
   // Remove any existing roast display
   const existingRoast = document.getElementById('slot-machine-roast');
@@ -1893,6 +1903,8 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
   
   // Insert after slot machine
   slotMachineWrapper.insertAdjacentElement('afterend', roastContainer);
+  
+  let generatedRoast = null;
   
   // Generate roast
   try {
@@ -1920,10 +1932,12 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
     const data = await response.json();
     console.log('🔥 Received roast response:', data);
     
+    generatedRoast = data.roast;
+    
     // Update the roast display
     roastContainer.classList.remove('loading');
     const roastText = roastContainer.querySelector('.roast-text');
-    roastText.textContent = data.roast;
+    roastText.textContent = generatedRoast;
     
     // Remove roast after 10 seconds
     setTimeout(() => {
@@ -1943,10 +1957,12 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
       `${weapon} + ${spec} = Mathematical proof that some combinations shouldn't exist.`
     ];
     
+    generatedRoast = fallbackRoasts[Math.floor(Math.random() * fallbackRoasts.length)];
+    
     roastContainer.classList.remove('loading');
     roastContainer.classList.add('fallback');
     const roastText = roastContainer.querySelector('.roast-text');
-    roastText.textContent = fallbackRoasts[Math.floor(Math.random() * fallbackRoasts.length)];
+    roastText.textContent = generatedRoast;
     
     // Remove roast after 10 seconds
     setTimeout(() => {
@@ -1954,6 +1970,8 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
       setTimeout(() => roastContainer.remove(), 500);
     }, 10000);
   }
+  
+  return generatedRoast;
 }
 
 // Generate AI roast for loadout
