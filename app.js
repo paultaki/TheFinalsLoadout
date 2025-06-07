@@ -928,45 +928,87 @@ function startSpinAnimation(columns) {
 
 // Filter Tab System
 function setupFilterSystem() {
-  console.log("🔍 Setting up filter system...");
+  console.log("🔍 Setting up slide-out filter panel system...");
 
-  // Toggle filter panel visibility
-  const toggleBtn = document.getElementById("toggle-filters");
+  // Get panel elements
+  const filterToggleBtn = document.getElementById("filter-toggle");
   const filterPanel = document.getElementById("filter-panel");
-  const toggleIcon = document.querySelector(".toggle-icon");
+  const filterOverlay = document.getElementById("filter-panel-overlay");
+  const closePanelBtn = document.getElementById("close-filter-panel");
+  const applyFiltersBtn = document.getElementById("apply-filters");
 
-  if (toggleBtn && filterPanel) {
-    console.log("✅ Found toggle button and filter panel");
-
-    toggleBtn.addEventListener("click", () => {
-      console.log("🖱️ Filter toggle button clicked");
-      const isVisible = filterPanel.style.display === "block";
-
-      if (isVisible) {
-        toggleIcon.textContent = "+";
-        toggleIcon.classList.remove("open");
-        filterPanel.classList.add("closing");
-
-        // Allow animation to complete before hiding
-        setTimeout(() => {
-          filterPanel.style.display = "none";
-          filterPanel.classList.remove("closing");
-        }, 300);
-      } else {
-        filterPanel.style.display = "block";
-        toggleIcon.textContent = "×";
-        toggleIcon.classList.add("open");
-
-        // Force reflow to ensure animation works
-        filterPanel.offsetHeight;
-        filterPanel.classList.remove("closing");
-      }
-    });
-  } else {
-    console.error("❌ Could not find toggle button or filter panel");
-    console.log("Toggle button:", toggleBtn);
-    console.log("Filter panel:", filterPanel);
+  if (!filterToggleBtn || !filterPanel || !filterOverlay || !closePanelBtn) {
+    console.error("❌ Could not find required panel elements");
+    return;
   }
+
+  console.log("✅ Found all slide-out panel elements");
+
+  // Panel state
+  let isPanelOpen = false;
+
+  // Function to open panel
+  function openPanel() {
+    if (isPanelOpen) return;
+    
+    isPanelOpen = true;
+    console.log("🖱️ Opening filter panel");
+    
+    // Show overlay
+    filterOverlay.classList.add('active');
+    
+    // Slide in panel
+    filterPanel.classList.add('active');
+    
+    // Lock body scroll
+    document.body.style.overflow = 'hidden';
+    
+    // Focus management
+    filterPanel.setAttribute('aria-hidden', 'false');
+    closePanelBtn.focus();
+  }
+
+  // Function to close panel
+  function closePanel() {
+    if (!isPanelOpen) return;
+    
+    isPanelOpen = false;
+    console.log("🖱️ Closing filter panel");
+    
+    // Hide overlay
+    filterOverlay.classList.remove('active');
+    
+    // Slide out panel
+    filterPanel.classList.remove('active');
+    
+    // Restore body scroll
+    document.body.style.overflow = '';
+    
+    // Focus management
+    filterPanel.setAttribute('aria-hidden', 'true');
+    filterToggleBtn.focus();
+  }
+
+  // Event listeners
+  filterToggleBtn.addEventListener("click", openPanel);
+  closePanelBtn.addEventListener("click", closePanel);
+  filterOverlay.addEventListener("click", closePanel);
+  
+  // Apply button closes panel
+  applyFiltersBtn.addEventListener("click", () => {
+    console.log("🔄 Applying filters and closing panel");
+    closePanel();
+  });
+
+  // Escape key closes panel
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isPanelOpen) {
+      closePanel();
+    }
+  });
+
+  // Initialize panel as closed
+  filterPanel.setAttribute('aria-hidden', 'true');
 
   // Tab switching
   const tabButtons = document.querySelectorAll(".tab-button");
@@ -1602,6 +1644,8 @@ function finalizeSpin(columns) {
 function updateSpinCountdown(spinsRemaining) {
   console.log(`🔢 Updating spin countdown: ${spinsRemaining} spins left`);
 
+  // Disabled - using RouletteAnimationSystem instead
+  /*
   const spinButtons = document.querySelectorAll(".spin-button");
 
   spinButtons.forEach((button) => {
@@ -1615,6 +1659,7 @@ function updateSpinCountdown(spinsRemaining) {
       button.style.animation = "none";
     }
   });
+  */
 }
 
 // Main spin function
@@ -1862,13 +1907,14 @@ async function generateRoast(entryElement, classType, weapon, specialization, ga
   } catch (error) {
     console.error('Error generating roast:', error);
     
-    // Fallback to a generic roast
+    // Fallback to a generic roast that tries to be more specific
     const fallbackRoasts = [
-      "This loadout speaks for itself. 1/10",
-      "Bold strategy, questionable execution. 2/10",
-      "Chaos incarnate, not in a good way. 1/10",
-      "Your enemies will die... from laughter. 0/10",
-      "Creative, I'll give you that. Still terrible. 2/10"
+      `${weapon} and ${specialization}? Bold choice, terrible execution. 1/10`,
+      `${classType} with ${weapon}? Your enemies are laughing already. 0/10`,
+      `${specialization} + ${gadgets[0]}? Creative chaos, emphasis on chaos. 2/10`,
+      `This ${weapon} combo broke our roast generator. That says enough. 0/10`,
+      `${classType} class deserves better than this mess. 1/10`,
+      `${weapon} with these gadgets? Identity crisis much? 2/10`
     ];
     
     roastSection.classList.remove('loading');
@@ -2474,10 +2520,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize season countdown
   initializeSeasonCountdown();
 
-  // Get DOM elements
-  classButtons = document.querySelectorAll(".class-button");
-  spinButtons = document.querySelectorAll(".spin-button");
-  spinSelection = document.getElementById("spinSelection");
+  // Get DOM elements (disabled - using RouletteAnimationSystem instead)
+  // classButtons = document.querySelectorAll(".class-button");
+  // spinButtons = document.querySelectorAll(".spin-button");
+  // spinSelection = document.getElementById("spinSelection");
   outputDiv = document.getElementById("output");
   
   // Mobile audio failsafe - stop all sounds when page loses focus
@@ -2512,41 +2558,45 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     console.log('✅ RouletteAnimationSystem loaded successfully');
-  
-  // Optimize audio for mobile by reducing concurrent sounds
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  if (isMobile) {
-    // Override tick sound frequency on mobile
-    const originalPlayTick = window.RouletteAnimationSystem.prototype.playTickSound;
-    window.RouletteAnimationSystem.prototype.playTickSound = function() {
-      // Only play every 3rd tick on mobile to reduce audio overhead
-      if (!this._tickCounter) this._tickCounter = 0;
-      this._tickCounter++;
-      if (this._tickCounter % 3 === 0) {
-        originalPlayTick.call(this);
-      }
-    };
+    
+    // Optimize audio for mobile by reducing concurrent sounds
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobile) {
+      // Override tick sound frequency on mobile
+      const originalPlayTick = window.RouletteAnimationSystem.prototype.playTickSound;
+      window.RouletteAnimationSystem.prototype.playTickSound = function() {
+        // Only play every 3rd tick on mobile to reduce audio overhead
+        if (!this._tickCounter) this._tickCounter = 0;
+        this._tickCounter++;
+        if (this._tickCounter % 3 === 0) {
+          originalPlayTick.call(this);
+        }
+      };
+    }
+    
+    // Initialize the roulette animation system
+    const rouletteSystem = new window.RouletteAnimationSystem();
+    
+    // Set up the main SPIN button
+    const mainSpinButton = document.getElementById('main-spin-button');
+    if (mainSpinButton) {
+      mainSpinButton.addEventListener('click', async () => {
+        if (state.isSpinning || rouletteSystem.animating) return;
+        
+        // Add spinning animation
+        mainSpinButton.classList.add('spinning');
+        
+        // Start the full roulette sequence
+        await rouletteSystem.startFullSequence();
+        
+        // Remove spinning animation when done
+        mainSpinButton.classList.remove('spinning');
+      });
+    }
   }
   
-  // Initialize the roulette animation system
-  const rouletteSystem = new window.RouletteAnimationSystem();
-  
-  // Set up the main SPIN button
-  const mainSpinButton = document.getElementById('main-spin-button');
-  if (mainSpinButton) {
-    mainSpinButton.addEventListener('click', async () => {
-      if (state.isSpinning || rouletteSystem.animating) return;
-      
-      // Add spinning animation
-      mainSpinButton.classList.add('spinning');
-      
-      // Start the full roulette sequence
-      await rouletteSystem.startFullSequence();
-      
-      // Remove spinning animation when done
-      mainSpinButton.classList.remove('spinning');
-    });
-  }
+  // Start the initialization process
+  initializeRouletteSystem();
 
   const toggleBtn = document.getElementById("toggle-customization");
   const customizationPanel = document.getElementById("customization-panel");
@@ -2647,33 +2697,33 @@ function setupSelectAllCheckboxes() {
     setupSelectAllCheckboxes();
   });
 
-  // Hide original spin selection UI
-  if (spinSelection) {
-    spinSelection.style.display = 'none';
-  }
+  // Hide original spin selection UI (disabled - using RouletteAnimationSystem)
+  // if (spinSelection) {
+  //   spinSelection.style.display = 'none';
+  // }
   
-  // Spin button logic (kept for internal use but hidden)
-  if (spinButtons.length > 0) {
-    spinButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        if (button.disabled || state.isSpinning) return;
+  // Spin button logic (disabled - using RouletteAnimationSystem instead)
+  // if (spinButtons && spinButtons.length > 0) {
+  //   spinButtons.forEach((button) => {
+  //     button.addEventListener("click", () => {
+  //       if (button.disabled || state.isSpinning) return;
 
-        console.log(`🎲 Spin button clicked: ${button.dataset.spins} spins`);
+  //       console.log(`🎲 Spin button clicked: ${button.dataset.spins} spins`);
 
-        // Update the selected number of spins
-        state.totalSpins = parseInt(button.dataset.spins);
+  //       // Update the selected number of spins
+  //       state.totalSpins = parseInt(button.dataset.spins);
 
-        // Visual feedback - highlight the selected button
-        spinButtons.forEach((btn) =>
-          btn.classList.remove("selected", "active")
-        );
-        button.classList.add("selected", "active");
+  //       // Visual feedback - highlight the selected button
+  //       spinButtons.forEach((btn) =>
+  //         btn.classList.remove("selected", "active")
+  //       );
+  //       button.classList.add("selected", "active");
 
-        // Start the spin process
-        spinLoadout();
-      });
-    });
-  }
+  //       // Start the spin process
+  //       spinLoadout();
+  //     });
+  //   });
+  // }
 
   // Hide original class selection UI
   const classSelection = document.querySelector('.class-selection');
@@ -2681,7 +2731,8 @@ function setupSelectAllCheckboxes() {
     classSelection.style.display = 'none';
   }
   
-  // Class button event listeners (kept for internal use)
+  // Class button event listeners (disabled - using RouletteAnimationSystem instead)
+  /*
   classButtons.forEach((button) => {
     button.addEventListener("click", () => {
       if (state.isSpinning) return;
@@ -2765,6 +2816,7 @@ function setupSelectAllCheckboxes() {
       }
     });
   });
+  */
 
   // Copy loadout functionality
   document

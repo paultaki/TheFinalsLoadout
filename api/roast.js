@@ -51,6 +51,20 @@ Example for "Heavy with Sledgehammer and Healing Beam":
     res.status(200).json({ roast: roastText });
   } catch (error) {
     console.error('❌ Error calling Claude API:', error);
-    res.status(200).json({ roast: "This loadout broke our roast generator. 0/10" });
+    
+    // Try to provide a more specific fallback using the loadout data
+    let specificFallback = "This loadout broke our roast generator. 0/10";
+    if (weapon && specialization) {
+      const fallbacks = [
+        `${weapon} with ${specialization}? Someone's confused. 1/10`,
+        `${classType} running ${weapon}? Your enemies aren't even worried. 0/10`,
+        `${specialization} and these gadgets? Pick a strategy! 2/10`,
+        `${weapon} combo so bad it crashed our AI. 0/10`,
+        `${classType} class deserves better than this chaos. 1/10`
+      ];
+      specificFallback = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+    }
+    
+    res.status(200).json({ roast: specificFallback });
   }
 }

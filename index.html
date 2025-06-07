@@ -274,206 +274,207 @@
 </header>
   
 
-<!-- Page Layout Container -->
-<div class="page-container">
-  <!-- Mobile Filter Toggle Button -->
-  <button id="mobile-filter-toggle" class="mobile-filter-toggle" aria-label="Toggle filters">
-    <span class="hamburger-line"></span>
-    <span class="hamburger-line"></span>
-    <span class="hamburger-line"></span>
-  </button>
+<!-- Filter Toggle Button -->
+<button id="filter-toggle" class="filter-toggle-button" aria-label="Toggle filters">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+  </svg>
+</button>
 
-  <!-- Filter Sidebar -->
-  <aside id="filter-sidebar" class="filter-sidebar">
-    <div class="sidebar-header">
-      <h3>Filters</h3>
-      <button id="close-sidebar" class="close-sidebar" aria-label="Close filters">×</button>
+<!-- Filter Panel Overlay -->
+<div id="filter-panel-overlay" class="filter-panel-overlay"></div>
+
+<!-- Slide-out Filter Panel -->
+<div id="filter-panel" class="filter-panel slide-out">
+  <div class="panel-header">
+    <h3>Filters</h3>
+    <button id="close-filter-panel" class="close-panel" aria-label="Close filters">×</button>
+  </div>
+  
+  <!-- Tab Navigation -->
+  <div class="filter-tabs">
+    <button class="tab-button active" data-tab="weapons">Weapons</button>
+    <button class="tab-button" data-tab="specializations">Specs</button>
+    <button class="tab-button" data-tab="gadgets">Gadgets</button>
+  </div>
+  
+  <!-- Search and Class Filter -->
+  <div class="filter-controls">
+    <input type="text" id="filter-search" placeholder="Search weapons..." class="search-input">
+    <div class="class-filter-buttons">
+      <button class="class-filter active" data-class="all">All</button>
+      <button class="class-filter" data-class="light">Light</button>
+      <button class="class-filter" data-class="medium">Medium</button>
+      <button class="class-filter" data-class="heavy">Heavy</button>
     </div>
-    
-    <!-- Tab Navigation -->
-    <div class="filter-tabs">
-      <button class="tab-button active" data-tab="weapons">Weapons</button>
-      <button class="tab-button" data-tab="specializations">Specializations</button>
-      <button class="tab-button" data-tab="gadgets">Gadgets</button>
-    </div>
-    
-    <!-- Search and Class Filter -->
-    <div class="filter-controls">
-      <input type="text" id="filter-search" placeholder="Search weapons..." class="search-input">
-      <div class="class-filter-buttons">
-        <button class="class-filter active" data-class="all">All</button>
-        <button class="class-filter" data-class="light">Light</button>
-        <button class="class-filter" data-class="medium">Medium</button>
-        <button class="class-filter" data-class="heavy">Heavy</button>
+  </div>
+  
+  <!-- Filter Content Container -->
+  <div class="filter-content-container">
+    <!-- Content Area - Weapons Tab (Active by Default) -->
+    <div class="tab-content active" id="weapons-tab">
+      <!-- Light Weapons Section -->
+      <div class="item-category light-category">
+        <div class="category-header">
+          <h3>Light Class Weapons</h3>
+          <button class="category-toggle">▼</button>
+        </div>
+        <div class="item-grid" id="light-weapons-grid">
+          <!-- Select All option as first item -->
+          <label class="item-checkbox select-all-checkbox">
+            <input type="checkbox" checked data-type="weapon-selectall" data-class="light">
+            <span><strong>Select All Light Weapons</strong></span>
+          </label>
+          <!-- Individual weapons will be populated here by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Medium Weapons Section with Select All -->
+      <div class="item-category medium-category">
+        <div class="category-header">
+          <h3>Medium Class Weapons</h3>
+          <button class="category-toggle">▼</button>
+        </div>
+        <div class="item-grid" id="medium-weapons-grid">
+          <!-- Select All option as first item -->
+          <label class="item-checkbox select-all-checkbox">
+            <input type="checkbox" checked data-type="weapon-selectall" data-class="medium">
+            <span><strong>Select All Medium Weapons</strong></span>
+          </label>
+          <!-- Individual weapons will be populated here by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Heavy Weapons Section with Select All -->
+      <div class="item-category heavy-category">
+        <div class="category-header">
+          <h3>Heavy Class Weapons</h3>
+          <button class="category-toggle">▼</button>
+        </div>
+        <div class="item-grid" id="heavy-weapons-grid">
+          <!-- Select All option as first item -->
+          <label class="item-checkbox select-all-checkbox">
+            <input type="checkbox" checked data-type="weapon-selectall" data-class="heavy">
+            <span><strong>Select All Heavy Weapons</strong></span>
+          </label>
+          <!-- Individual weapons will be populated here by JavaScript -->
+        </div>
       </div>
     </div>
     
-    <!-- Filter Content Container -->
-    <div class="filter-content-container">
-      <!-- Content Area - Weapons Tab (Active by Default) -->
-      <div class="tab-content active" id="weapons-tab">
-        <!-- Light Weapons Section -->
-        <div class="item-category light-category">
-          <div class="category-header">
-            <h3>Light Class Weapons</h3>
-            <button class="category-toggle">▼</button>
-          </div>
-          <div class="item-grid" id="light-weapons-grid">
-            <!-- Select All option as first item -->
-            <label class="item-checkbox select-all-checkbox">
-              <input type="checkbox" checked data-type="weapon-selectall" data-class="light">
-              <span><strong>Select All Light Weapons</strong></span>
-            </label>
-            <!-- Individual weapons will be populated here by JavaScript -->
-          </div>
+    <!-- Specializations Tab (Hidden by Default) -->
+    <div class="tab-content" id="specializations-tab" style="display: none;">
+      <!-- Light Specializations Section -->
+      <div class="item-category light-category">
+        <div class="category-header">
+          <h3>Light Class Specializations</h3>
+          <button class="category-toggle">▼</button>
         </div>
-
-        <!-- Medium Weapons Section with Select All -->
-        <div class="item-category medium-category">
-          <div class="category-header">
-            <h3>Medium Class Weapons</h3>
-            <button class="category-toggle">▼</button>
-          </div>
-          <div class="item-grid" id="medium-weapons-grid">
-            <!-- Select All option as first item -->
-            <label class="item-checkbox select-all-checkbox">
-              <input type="checkbox" checked data-type="weapon-selectall" data-class="medium">
-              <span><strong>Select All Medium Weapons</strong></span>
-            </label>
-            <!-- Individual weapons will be populated here by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Heavy Weapons Section with Select All -->
-        <div class="item-category heavy-category">
-          <div class="category-header">
-            <h3>Heavy Class Weapons</h3>
-            <button class="category-toggle">▼</button>
-          </div>
-          <div class="item-grid" id="heavy-weapons-grid">
-            <!-- Select All option as first item -->
-            <label class="item-checkbox select-all-checkbox">
-              <input type="checkbox" checked data-type="weapon-selectall" data-class="heavy">
-              <span><strong>Select All Heavy Weapons</strong></span>
-            </label>
-            <!-- Individual weapons will be populated here by JavaScript -->
-          </div>
+        <div class="item-grid" id="light-specializations-grid">
+          <!-- Select All option as first item -->
+          <label class="item-checkbox select-all-checkbox">
+            <input type="checkbox" checked data-type="specialization-selectall" data-class="light">
+            <span><strong>Select All Light Specializations</strong></span>
+          </label>
+          <!-- Individual specializations will be populated here by JavaScript -->
         </div>
       </div>
-      
-      <!-- Specializations Tab (Hidden by Default) -->
-      <div class="tab-content" id="specializations-tab" style="display: none;">
-        <!-- Light Specializations Section -->
-        <div class="item-category light-category">
-          <div class="category-header">
-            <h3>Light Class Specializations</h3>
-            <button class="category-toggle">▼</button>
-          </div>
-          <div class="item-grid" id="light-specializations-grid">
-            <!-- Select All option as first item -->
-            <label class="item-checkbox select-all-checkbox">
-              <input type="checkbox" checked data-type="specialization-selectall" data-class="light">
-              <span><strong>Select All Light Specializations</strong></span>
-            </label>
-            <!-- Individual specializations will be populated here by JavaScript -->
-          </div>
-        </div>
 
-        <!-- Medium Specializations Section -->
-        <div class="item-category medium-category">
-          <div class="category-header">
-            <h3>Medium Class Specializations</h3>
-            <button class="category-toggle">▼</button>
-          </div>
-          <div class="item-grid" id="medium-specializations-grid">
-            <!-- Select All option as first item -->
-            <label class="item-checkbox select-all-checkbox">
-              <input type="checkbox" checked data-type="specialization-selectall" data-class="medium">
-              <span><strong>Select All Medium Specializations</strong></span>
-            </label>
-            <!-- Individual specializations will be populated here by JavaScript -->
-          </div>
+      <!-- Medium Specializations Section -->
+      <div class="item-category medium-category">
+        <div class="category-header">
+          <h3>Medium Class Specializations</h3>
+          <button class="category-toggle">▼</button>
         </div>
-
-        <!-- Heavy Specializations Section -->
-        <div class="item-category heavy-category">
-          <div class="category-header">
-            <h3>Heavy Class Specializations</h3>
-            <button class="category-toggle">▼</button>
-          </div>
-          <div class="item-grid" id="heavy-specializations-grid">
-            <!-- Select All option as first item -->
-            <label class="item-checkbox select-all-checkbox">
-              <input type="checkbox" checked data-type="specialization-selectall" data-class="heavy">
-              <span><strong>Select All Heavy Specializations</strong></span>
-            </label>
-            <!-- Individual specializations will be populated here by JavaScript -->
-          </div>
+        <div class="item-grid" id="medium-specializations-grid">
+          <!-- Select All option as first item -->
+          <label class="item-checkbox select-all-checkbox">
+            <input type="checkbox" checked data-type="specialization-selectall" data-class="medium">
+            <span><strong>Select All Medium Specializations</strong></span>
+          </label>
+          <!-- Individual specializations will be populated here by JavaScript -->
         </div>
       </div>
-      
-      <!-- Gadgets Tab (Hidden by Default) -->
-      <div class="tab-content" id="gadgets-tab" style="display: none;">
-        <!-- Light Gadgets Section -->
-        <div class="item-category light-category">
-          <div class="category-header">
-            <h3>Light Class Gadgets</h3>
-            <button class="category-toggle">▼</button>
-          </div>
-          <div class="item-grid" id="light-gadgets-grid">
-            <!-- Select All option as first item -->
-            <label class="item-checkbox select-all-checkbox">
-              <input type="checkbox" checked data-type="gadget-selectall" data-class="light">
-              <span><strong>Select All Light Gadgets</strong></span>
-            </label>
-            <!-- Individual gadgets will be populated here by JavaScript -->
-          </div>
-        </div>
 
-        <!-- Medium Gadgets Section -->
-        <div class="item-category medium-category">
-          <div class="category-header">
-            <h3>Medium Class Gadgets</h3>
-            <button class="category-toggle">▼</button>
-          </div>
-          <div class="item-grid" id="medium-gadgets-grid">
-            <!-- Select All option as first item -->
-            <label class="item-checkbox select-all-checkbox">
-              <input type="checkbox" checked data-type="gadget-selectall" data-class="medium">
-              <span><strong>Select All Medium Gadgets</strong></span>
-            </label>
-            <!-- Individual gadgets will be populated here by JavaScript -->
-          </div>
+      <!-- Heavy Specializations Section -->
+      <div class="item-category heavy-category">
+        <div class="category-header">
+          <h3>Heavy Class Specializations</h3>
+          <button class="category-toggle">▼</button>
         </div>
-
-        <!-- Heavy Gadgets Section -->
-        <div class="item-category heavy-category">
-          <div class="category-header">
-            <h3>Heavy Class Gadgets</h3>
-            <button class="category-toggle">▼</button>
-          </div>
-          <div class="item-grid" id="heavy-gadgets-grid">
-            <!-- Select All option as first item -->
-            <label class="item-checkbox select-all-checkbox">
-              <input type="checkbox" checked data-type="gadget-selectall" data-class="heavy">
-              <span><strong>Select All Heavy Gadgets</strong></span>
-            </label>
-            <!-- Individual gadgets will be populated here by JavaScript -->
-          </div>
+        <div class="item-grid" id="heavy-specializations-grid">
+          <!-- Select All option as first item -->
+          <label class="item-checkbox select-all-checkbox">
+            <input type="checkbox" checked data-type="specialization-selectall" data-class="heavy">
+            <span><strong>Select All Heavy Specializations</strong></span>
+          </label>
+          <!-- Individual specializations will be populated here by JavaScript -->
         </div>
       </div>
     </div>
+    
+    <!-- Gadgets Tab (Hidden by Default) -->
+    <div class="tab-content" id="gadgets-tab" style="display: none;">
+      <!-- Light Gadgets Section -->
+      <div class="item-category light-category">
+        <div class="category-header">
+          <h3>Light Class Gadgets</h3>
+          <button class="category-toggle">▼</button>
+        </div>
+        <div class="item-grid" id="light-gadgets-grid">
+          <!-- Select All option as first item -->
+          <label class="item-checkbox select-all-checkbox">
+            <input type="checkbox" checked data-type="gadget-selectall" data-class="light">
+            <span><strong>Select All Light Gadgets</strong></span>
+          </label>
+          <!-- Individual gadgets will be populated here by JavaScript -->
+        </div>
+      </div>
 
-    <!-- Filter Action Buttons (Stick to bottom) -->
-    <div class="filter-actions">
-      <button id="reset-filters" class="reset-button">Reset All</button>
-      <button id="apply-filters" class="apply-button">Apply Filters</button>
+      <!-- Medium Gadgets Section -->
+      <div class="item-category medium-category">
+        <div class="category-header">
+          <h3>Medium Class Gadgets</h3>
+          <button class="category-toggle">▼</button>
+        </div>
+        <div class="item-grid" id="medium-gadgets-grid">
+          <!-- Select All option as first item -->
+          <label class="item-checkbox select-all-checkbox">
+            <input type="checkbox" checked data-type="gadget-selectall" data-class="medium">
+            <span><strong>Select All Medium Gadgets</strong></span>
+          </label>
+          <!-- Individual gadgets will be populated here by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Heavy Gadgets Section -->
+      <div class="item-category heavy-category">
+        <div class="category-header">
+          <h3>Heavy Class Gadgets</h3>
+          <button class="category-toggle">▼</button>
+        </div>
+        <div class="item-grid" id="heavy-gadgets-grid">
+          <!-- Select All option as first item -->
+          <label class="item-checkbox select-all-checkbox">
+            <input type="checkbox" checked data-type="gadget-selectall" data-class="heavy">
+            <span><strong>Select All Heavy Gadgets</strong></span>
+          </label>
+          <!-- Individual gadgets will be populated here by JavaScript -->
+        </div>
+      </div>
     </div>
-  </aside>
+  </div>
 
-  <!-- Main Content Area -->
-  <main class="main-content">
-    <div class="container">
+  <!-- Filter Action Buttons -->
+  <div class="filter-actions">
+    <button id="reset-filters" class="reset-button">Reset All</button>
+    <button id="apply-filters" class="apply-button">Apply Filters</button>
+  </div>
+</div>
+
+<!-- Main Content Area -->
+<main class="main-content">
+  <div class="container">
     <div class="selection-container">
       <!-- Hidden Class Selection (for internal use) -->
       <div class="class-selection hidden">
@@ -618,9 +619,8 @@
         Clear History
       </button>
     </section>
-    </div>
-  </main>
-</div>
+  </div>
+</main>
 
 
 <footer class="footerSection" style="text-align: center;">
