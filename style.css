@@ -5057,6 +5057,16 @@ details[open].adjustment summary::after {
   display: none;
 }
 
+/* Explicit visibility for roulette elements when not hidden */
+#roulette-container:not(.hidden) {
+  display: flex !important;
+}
+
+#class-roulette:not(.hidden),
+#spin-roulette:not(.hidden) {
+  display: block !important;
+}
+
 /* Main SPIN Button */
 .spin-control {
   margin: 40px auto;
@@ -5169,6 +5179,10 @@ details[open].adjustment summary::after {
   overflow: hidden; /* Prevent any scrolling */
 }
 
+.roulette-container.hidden {
+  display: none !important;
+}
+
 .roulette-section {
   width: 100%;
   max-width: 800px;
@@ -5177,6 +5191,11 @@ details[open].adjustment summary::after {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: block; /* Explicit display when not hidden */
+}
+
+.roulette-section.hidden {
+  display: none;
 }
 
 .roulette-title {
