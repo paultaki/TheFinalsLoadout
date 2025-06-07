@@ -5052,19 +5052,34 @@ details[open].adjustment summary::after {
    IMMERSIVE SLOT MACHINE STYLES
    ============================ */
 
-/* Hide elements during roulette animations */
-.hidden {
-  display: none;
+/* Make .hidden class win over everything */
+.hidden,
+#roulette-container.hidden,
+#class-roulette.hidden,
+#spin-roulette.hidden,
+.roulette-section.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
 }
 
-/* Explicit visibility for roulette elements when not hidden */
+/* Force roulette elements to be visible when not hidden */
 #roulette-container:not(.hidden) {
   display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
-#class-roulette:not(.hidden),
+#class-roulette:not(.hidden) {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 #spin-roulette:not(.hidden) {
   display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Main SPIN Button */
@@ -5163,38 +5178,53 @@ details[open].adjustment summary::after {
   }
 }
 
-/* Roulette Container */
-.roulette-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.95);
-  z-index: 9999;
-  display: flex;
+/* Roulette Container - using ID selector for consistency */
+#roulette-container {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+  z-index: 999999 !important;
+  background: rgba(0, 0, 0, 0.95) !important;
+  display: flex !important;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden; /* Prevent any scrolling */
 }
 
-.roulette-container.hidden {
-  display: none !important;
+#roulette-container.hidden {
+  display: none;
 }
 
+/* Remove display: block !important from .roulette-section */
 .roulette-section {
   width: 100%;
+  min-height: 100vh;
+  /* Remove: display: block !important; */
+}
+
+#class-roulette,
+#spin-roulette {
+  width: 100% !important;
+  min-height: 100vh !important;
   max-width: 800px;
   padding: 40px;
-  position: absolute;
+  position: relative !important;
+  z-index: 1000000 !important;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: block; /* Explicit display when not hidden */
+  display: block;
+  visibility: visible;
+  opacity: 1;
 }
 
-.roulette-section.hidden {
+#class-roulette.hidden,
+#spin-roulette.hidden {
   display: none;
 }
 
@@ -5711,4 +5741,33 @@ details[open].adjustment summary::after {
   .spin-text {
     font-size: 24px;
   }
+}
+
+#roulette-container:not(.hidden) {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: rgba(0, 0, 0, 0.95) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+#class-roulette:not(.hidden),
+#spin-roulette:not(.hidden) {
+  display: block !important;
+  width: 100% !important;
+  max-width: 800px !important;
+  padding: 40px !important;
+}
+
+.class-roulette-wheel {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 40px !important;
+  min-height: 300px !important;
 }

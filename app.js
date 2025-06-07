@@ -1397,9 +1397,9 @@ function finalizeSpin(columns) {
   state.isSpinning = false;
 
   // Re-enable class buttons after spin is complete
-  classButtons.forEach((button) => {
-    button.removeAttribute("disabled");
-  });
+  // classButtons.forEach((button) => {
+  //   button.removeAttribute("disabled");
+  // });
 
   // DIRECT BUTTON MANIPULATION - 100% reliable method
   console.log("🔒 Getting direct references to all spin buttons");
