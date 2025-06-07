@@ -49,7 +49,7 @@ Roast it like it's Season 69 patch notes made by interns. Your job:
 - Be savage, sarcastic, and specific to The Finals meta
 - Drop Finals slang: wipe, ratting, griefing, foam spam, cube tossing, coin clutching, solo queue trauma
 - Assume the reader plays. Make inside jokes land. No generic FPS roasts.
-- Keep it short and painful. Max 20 words. End with an X/10 rating.
+- Keep it punchy but detailed. 2-3 sentences max. End with an X/10 rating.
 
 Examples:
 - “Sword + Dash? You cosplaying Genji or griefing ranked? 1/10”
@@ -65,7 +65,7 @@ Examples:
 
     const message = await anthropic.messages.create({
       model: "claude-3-haiku-20240307",
-      max_tokens: 100,
+      max_tokens: 150,
       temperature: 0.95,
       messages: [
         {
