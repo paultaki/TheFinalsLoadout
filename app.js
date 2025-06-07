@@ -1375,6 +1375,8 @@ function finalizeSpin(columns) {
 
   console.log("🎯 Final spin, recording loadout");
   
+  // Add celebration effects
+  addCelebrationEffects();
   
   // Also ensure spinning sound is fully stopped (mobile fix)
   const spinningSound = document.getElementById('spinningSound');
@@ -1616,6 +1618,9 @@ function finalizeSpin(columns) {
         console.log("✅ Successfully added to history:", loadoutString);
         isAddingToHistory = false; // Reset the flag
       }, 500);
+      
+      // Display roast immediately below the slot machine
+      displayRoastBelowSlotMachine(savedClass, weapon, specialization, gadgets);
 
       // Reset the class AFTER saving it
       state.selectedClass = null;
@@ -1861,6 +1866,93 @@ async function addToHistory(
   // Keep only 5 entries
   while (historyList.children.length > 5) {
     historyList.removeChild(historyList.lastChild);
+  }
+}
+
+// Display roast below slot machine
+async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
+  const slotMachineWrapper = document.querySelector('.slot-machine-wrapper');
+  if (!slotMachineWrapper) return;
+  
+  // Remove any existing roast display
+  const existingRoast = document.getElementById('slot-machine-roast');
+  if (existingRoast) {
+    existingRoast.remove();
+  }
+  
+  // Create roast container
+  const roastContainer = document.createElement('div');
+  roastContainer.id = 'slot-machine-roast';
+  roastContainer.className = 'slot-machine-roast loading';
+  roastContainer.innerHTML = `
+    <div class="roast-content">
+      <span class="fire-emoji">🔥</span>
+      <span class="roast-text">Analyzing loadout cringe level...</span>
+    </div>
+  `;
+  
+  // Insert after slot machine
+  slotMachineWrapper.insertAdjacentElement('afterend', roastContainer);
+  
+  // Generate roast
+  try {
+    const requestData = {
+      class: classType,
+      weapon: weapon,
+      specialization: spec,
+      gadgets: gadgets
+    };
+    
+    console.log('🚀 Sending roast request:', requestData);
+    
+    const response = await fetch('/api/roast', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log('🔥 Received roast response:', data);
+    
+    // Update the roast display
+    roastContainer.classList.remove('loading');
+    const roastText = roastContainer.querySelector('.roast-text');
+    roastText.textContent = data.roast;
+    
+    // Remove roast after 10 seconds
+    setTimeout(() => {
+      roastContainer.classList.add('fade-out');
+      setTimeout(() => roastContainer.remove(), 500);
+    }, 10000);
+    
+  } catch (error) {
+    console.error('Error generating roast:', error);
+    
+    // Fallback roast
+    const fallbackRoasts = [
+      `That ${weapon} on ${classType}? The Finals servers just crashed from cringe. -10/10`,
+      `This ${weapon} combo broke our roast generator. That says enough. 0/10`,
+      `${classType} with ${weapon}? Even the AI is speechless. That's a new low.`,
+      `I've seen bad loadouts, but ${weapon} with ${spec}? This is a war crime.`,
+      `${weapon} + ${spec} = Mathematical proof that some combinations shouldn't exist.`
+    ];
+    
+    roastContainer.classList.remove('loading');
+    roastContainer.classList.add('fallback');
+    const roastText = roastContainer.querySelector('.roast-text');
+    roastText.textContent = fallbackRoasts[Math.floor(Math.random() * fallbackRoasts.length)];
+    
+    // Remove roast after 10 seconds
+    setTimeout(() => {
+      roastContainer.classList.add('fade-out');
+      setTimeout(() => roastContainer.remove(), 500);
+    }, 10000);
   }
 }
 

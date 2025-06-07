@@ -5827,3 +5827,81 @@ details[open].adjustment summary::after {
   gap: 40px !important;
   min-height: 300px !important;
 }
+
+/* Slot Machine Roast Display */
+.slot-machine-roast {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 183, 0, 0.1), rgba(255, 100, 0, 0.1));
+  border: 2px solid rgba(255, 183, 0, 0.3);
+  border-radius: 15px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-out;
+  transition: all 0.5s ease;
+}
+
+.slot-machine-roast.loading .roast-text {
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.slot-machine-roast .roast-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.slot-machine-roast .fire-emoji {
+  font-size: 2rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.slot-machine-roast .roast-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffb700;
+  text-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
+  line-height: 1.4;
+  max-width: 600px;
+}
+
+.slot-machine-roast.fallback {
+  border-color: rgba(255, 100, 100, 0.3);
+  background: linear-gradient(135deg, rgba(255, 100, 100, 0.1), rgba(255, 50, 50, 0.1));
+}
+
+.slot-machine-roast.fallback .roast-text {
+  color: #ff6464;
+  text-shadow: 0 0 10px rgba(255, 100, 100, 0.5);
+}
+
+.slot-machine-roast.fade-out {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .slot-machine-roast {
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+  
+  .slot-machine-roast .fire-emoji {
+    font-size: 1.5rem;
+  }
+  
+  .slot-machine-roast .roast-text {
+    font-size: 1rem;
+  }
+}
