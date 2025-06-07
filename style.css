@@ -1,10 +1,32 @@
 :root {
+  /* Match The Finals' actual brand colors */
+  --finals-black: #0A0A0A;
+  --finals-white: #F5F5F5;
+  --finals-red: #FF3366;
+  --finals-blue: #00D4FF;
+  --finals-yellow: #FFE500;
+  
+  /* Class-specific (from the game) */
+  --light-blue: #00D4FF;
+  --medium-magenta: #FF00FF;
+  --heavy-orange: #FF6600;
+  
+  /* UI states */
+  --bg-primary: #0F0F0F;
+  --bg-card: #1A1A1A;
+  --border-subtle: #2A2A2A;
+  
+  /* Legacy neon colors for backward compatibility */
   --neon-purple: #7b2fe3;
-  --neon-blue: #1e90ff;
-  --neon-cyan: #00f3ff;
+  --neon-blue: var(--finals-blue);
+  --neon-cyan: var(--finals-blue);
   --neon-pink: #ff1493;
-  --neon-orange: #ff7b00;
-  --neon-yellow: #ffb700;
+  --neon-orange: var(--heavy-orange);
+  --neon-yellow: var(--finals-yellow);
+  
+  /* Typography */
+  --base-font: 'Inter', sans-serif;
+  --impact-font: 'Bebas Neue', sans-serif;
 }
 
 
@@ -237,9 +259,9 @@ html {
 
 /* History Entry Cards */
 .history-entry {
-  background: linear-gradient(135deg, #1a1a2e, #2a1a3e);
-  border: 2px solid #333;
-  border-radius: 12px;
+  background: #0F0F0F !important; /* Darker than page bg */
+  border: 1px solid #1A1A1A !important;
+  border-radius: 0; /* Sharp edges like The Finals UI */
   padding: 18px;
   margin: 12px 0;
   position: relative;
@@ -248,6 +270,37 @@ html {
   transform: translateY(20px);
   transition: all 0.3s ease;
   min-height: 140px;
+}
+
+/* Class accent strips - subtle and thin */
+.history-entry::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: #666; /* Subtle default */
+}
+
+/* Class-specific accent colors - muted */
+.history-entry:has(.class-badge.light)::before {
+  background: #0099cc; /* Muted blue */
+}
+
+.history-entry:has(.class-badge.medium)::before {
+  background: #cc6699; /* Muted magenta */
+}
+
+.history-entry:has(.class-badge.heavy)::before {
+  background: #cc6600; /* Muted orange */
+}
+
+/* Orange nav button needs to go */
+.main-nav a[href*="ragequit"] {
+  background: transparent !important;
+  border: 1px solid #FF6600 !important;
+  color: #FF6600 !important;
 }
 
 .history-entry.visible {
@@ -267,21 +320,6 @@ html {
   position: relative;
 }
 
-/* Make the NEW tag more prominent */
-.history-entry:first-child::before {
-  content: '🔥 NEW';
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: linear-gradient(45deg, #ff6b6b, #ffd700);
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  animation: pulse 2s infinite;
-  z-index: 10;
-}
 
 @keyframes pulse {
   0%, 100% { transform: scale(1); }
@@ -442,15 +480,17 @@ html {
 .copy-build,
 .challenge-build {
   flex: 1;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--finals-white);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: 0; /* Sharp edges like The Finals UI */
   cursor: pointer;
   font-size: 12px;
-  font-weight: bold;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -459,17 +499,15 @@ html {
 }
 
 .copy-build:hover {
-  background: #4CAF50;
-  border-color: #4CAF50;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+  background: var(--finals-blue);
+  border-color: var(--finals-blue);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
 }
 
 .challenge-build:hover {
-  background: #ff6b6b;
-  border-color: #ff6b6b;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+  background: var(--finals-red);
+  border-color: var(--finals-red);
+  box-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
 }
 
 /* Clear History Button Update */
@@ -625,7 +663,8 @@ html {
 }
 
 body {
-  font-family: var(--baseFont);
+  font-family: var(--base-font);
+  font-weight: 400;
   color: #fff;
   text-align: center;
   margin: 0;
@@ -958,52 +997,49 @@ div[style*="display: inline-block"] {
 
 
 
-/* Mystery Placeholder Styling */
+/* Clean Placeholder Styling - The Finals Style */
 .placeholder-container {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, #444, #222); /* Dark gradient */
-  border-radius: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column; /* Stack image and text */
-  justify-content: center;
-  align-items: center;
-  height: 190px;
+  background: #1A1A1A !important;
+  border: 1px solid #333 !important;
+  height: 200px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+  color: #666 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
   width: 140px;
+  border-radius: 0;
+  padding: 2rem;
   text-align: center;
-  padding: 10px 0;
+  flex-direction: column;
+  position: relative;
 }
 
+.placeholder-container::before {
+  content: '?';
+  font-size: 3rem;
+  font-weight: 800;
+  color: #666;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: var(--impact-font);
+}
+
+/* Remove those cube images entirely */
 .placeholder-container img {
-  width: 80px;
-  height: 80px; /* Explicit height to prevent shifting */
-  object-fit: contain; /* Ensures it scales properly */
-  opacity: 0.7;
-  margin-bottom: 8px;
+  display: none;
 }
 
 .placeholder-container p {
-  font-size: 14px;
-  color: #fff;
+  font-size: 14px !important;
+  color: #666 !important;
   margin: 0;
-}
-
-/* Shine Effect */
-.placeholder-container::after {
-  content: "";
-  position: absolute;
-  top: -100%;
-  left: -100%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.15) 0%,
-    rgba(0, 0, 0, 0) 70%
-  );
-  animation: shineEffect 3s infinite linear;
+  font-family: var(--base-font);
+  font-weight: 600;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
 }
 
 .step {
@@ -1024,7 +1060,7 @@ div[style*="display: inline-block"] {
 
 
 body {
-  font-family: var(--baseFont);
+  font-family: var(--base-font);
   color: #fff;
   text-align: center;
   margin: 0;
@@ -1199,10 +1235,10 @@ body {
   align-items: flex-start;
   gap: 12px;
   background: rgba(255, 255, 255, 0.12);
-  padding: 15px;
+  padding: 8px 15px;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  margin: 20px auto;
+  margin: 15px auto;
   width: 100%;
   max-width: 800px;
   min-width: 800px;
@@ -1262,7 +1298,7 @@ body {
     transform-origin: center top;
     width: 600px; /* Reduced from 700px */
     margin: 0 auto;
-    padding: 10px 15px;
+    padding: 5px 15px;
   }
 
   /* Wrapper to contain the overflow */
@@ -1578,7 +1614,7 @@ body {
     transform-origin: center top;
     width: 600px;
     margin: 0 auto;
-    padding: 10px 15px;
+    padding: 5px 15px;
   }
 
   .slot-machine-wrapper {
@@ -2415,7 +2451,7 @@ iframe#bmc-button {
     transform-origin: center top;
     width: 600px !important;
     margin: 0 auto 10px !important;
-    padding: 0 !important;
+    padding: 3px 10px !important;
   }
 
   .rage-icon {
@@ -3076,11 +3112,15 @@ html {
 
 .roast-text {
   color: #fff;
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  font-weight: 700;
+  font-size: 1rem;
+  text-shadow: 
+    0 0 8px rgba(255, 69, 0, 0.6),
+    1px 1px 3px rgba(0, 0, 0, 0.8);
   line-height: 1.3;
   flex: 1;
+  letter-spacing: 0.3px;
+  text-decoration: none;
 }
 
 /* Loading State */
@@ -3152,7 +3192,7 @@ html {
   }
   
   .roast-text {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
   
   /* Disable complex animations on mobile for performance */
@@ -3575,7 +3615,7 @@ html {
   border: none;
   border-radius: 25px;
   padding: 10px 25px;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--impact-font);
   font-size: 16px;
   text-transform: uppercase;
   cursor: pointer;
@@ -3645,7 +3685,7 @@ html {
   border: none;
   padding: 8px 12px;
   cursor: pointer;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--impact-font);
   font-size: 13px;
   text-transform: uppercase;
   transition: all 0.2s ease;
@@ -3682,7 +3722,7 @@ html {
   color: white;
   padding: 8px 15px;
   border-radius: 20px;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--impact-font);
   min-width: 200px;
   margin-right: 10px;
 }
@@ -3706,7 +3746,7 @@ html {
   padding: 5px 12px;
   margin: 0 5px 5px 0;
   cursor: pointer;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--impact-font);
   font-size: 14px;
   transition: all 0.2s ease;
 }
@@ -3817,7 +3857,7 @@ html {
   border: none;
   border-radius: 25px;
   padding: 10px 30px;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--impact-font);
   font-size: 16px;
   text-transform: uppercase;
   cursor: pointer;
@@ -3837,7 +3877,7 @@ html {
   border: none;
   border-radius: 25px;
   padding: 10px 30px;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--impact-font);
   font-size: 16px;
   text-transform: uppercase;
   cursor: pointer;
@@ -3943,7 +3983,7 @@ html {
   border: none;
   border-radius: 25px;
   padding: 10px 25px;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--impact-font);
   font-size: 16px;
   text-transform: uppercase;
   cursor: pointer;
@@ -4013,7 +4053,7 @@ html {
   border: none;
   padding: 8px 12px;
   cursor: pointer;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--impact-font);
   font-size: 13px;
   text-transform: uppercase;
   transition: all 0.2s ease;
@@ -4050,7 +4090,7 @@ html {
   color: white;
   padding: 8px 15px;
   border-radius: 20px;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--impact-font);
   min-width: 200px;
   margin-right: 10px;
 }
@@ -4074,7 +4114,7 @@ html {
   padding: 5px 12px;
   margin: 0 5px 5px 0;
   cursor: pointer;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--impact-font);
   font-size: 14px;
   transition: all 0.2s ease;
 }
@@ -4185,7 +4225,7 @@ html {
   border: none;
   border-radius: 25px;
   padding: 10px 30px;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--impact-font);
   font-size: 16px;
   text-transform: uppercase;
   cursor: pointer;
@@ -4205,7 +4245,7 @@ html {
   border: none;
   border-radius: 25px;
   padding: 10px 30px;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--impact-font);
   font-size: 16px;
   text-transform: uppercase;
   cursor: pointer;
@@ -4284,7 +4324,7 @@ html {
   height: auto;
   display: block;
   margin: 0 auto 30px;
-  animation: logoBassBounce 3.2s ease-in-out infinite;
+  animation: logoBassBounce 8s ease-in-out infinite;
   transform-origin: center center;
 }
 
@@ -5089,45 +5129,53 @@ details[open].adjustment summary::after {
 }
 
 .main-spin-button {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #ff6b6b, #ffd700);
-  border: 5px solid #ffd700;
-  box-shadow: 
-    0 0 50px rgba(255, 215, 0, 0.5),
-    inset 0 0 30px rgba(0, 0, 0, 0.3);
-  font-size: 32px;
-  font-weight: 900;
-  letter-spacing: 3px;
+  background: #FF3366 !important; /* Solid Finals red */
+  border: none !important;
+  border-radius: 0 !important; /* Sharp edges */
+  padding: 1rem 3rem !important;
+  font-family: 'Bebas Neue', sans-serif !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 200px;
+  max-width: 300px;
+  box-shadow: none !important;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  animation: spinButtonPulse 2s ease-in-out infinite;
+  z-index: 1;
+  display: inline-block;
+  /* Remove ALL gradients and effects */
 }
 
 .main-spin-button:hover {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 
-    0 0 80px rgba(255, 215, 0, 0.8),
-    inset 0 0 30px rgba(0, 0, 0, 0.3);
+  background: #FF3366 !important;
+  opacity: 0.9;
 }
 
 .main-spin-button:active {
-  transform: scale(0.95);
+  opacity: 0.8;
 }
 
 /* Spinning state */
 .main-spin-button.spinning {
-  animation: spinButtonRotate 0.5s ease-out;
+  animation: continuousSpin 1s linear infinite;
   pointer-events: none;
-  opacity: 0.7;
+  opacity: 0.8;
+  background: #CC2952 !important; /* Slightly darker red */
 }
 
-@keyframes spinButtonRotate {
-  0% { transform: rotate(0deg) scale(1); }
-  100% { transform: rotate(360deg) scale(0.9); }
+.main-spin-button.spinning::before {
+  opacity: 1 !important;
+  animation: buttonSpinEffect 0.5s linear infinite;
+}
+
+@keyframes continuousSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .spin-text {
@@ -5142,22 +5190,37 @@ details[open].adjustment summary::after {
     0 0 40px rgba(255, 255, 255, 0.8);
 }
 
-.spin-energy {
+.main-spin-button::before {
+  content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 300%;
-  height: 300%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: conic-gradient(
     from 0deg,
     transparent,
-    rgba(255, 0, 255, 0.4),
+    rgba(255, 255, 255, 0.2),
     transparent,
-    rgba(0, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.1),
     transparent
   );
-  transform: translate(-50%, -50%) rotate(0deg);
-  animation: energyRotate 3s linear infinite;
+  animation: buttonSpinEffect 2s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.main-spin-button:hover::before {
+  opacity: 1;
+}
+
+@keyframes buttonSpinEffect {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes spinButtonPulse {
@@ -5169,14 +5232,7 @@ details[open].adjustment summary::after {
   }
 }
 
-@keyframes energyRotate {
-  from {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
+/* Removed energyRotate animation */
 
 /* Roulette Container - using ID selector for consistency */
 #roulette-container {

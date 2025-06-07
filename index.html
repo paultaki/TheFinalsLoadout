@@ -35,9 +35,9 @@
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="The Finals Loadout Roulette" />
     <meta property="og:description" content="Randomize your loadout and dominate The Finals with style." />
-    <meta property="og:image" content="https://thefinalsloadout.com/assets/loadout-social-card.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image" content="https://thefinalsloadout.com/assets/loadout-social-card@2x.png" />
+    <meta property="og:image:width" content="2400" />
+    <meta property="og:image:height" content="1260" />
     <meta property="og:url" content="https://thefinalsloadout.com" />
     <meta property="og:type" content="website" />
 
@@ -45,7 +45,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="The Finals Loadout Roulette" />
     <meta name="twitter:description" content="Spin the wheel. Wreck the arena." />
-    <meta name="twitter:image" content="https://thefinalsloadout.com/assets/loadout-social-card.png" />
+    <meta name="twitter:image" content="https://thefinalsloadout.com/assets/loadout-social-card@2x.png" />
 
 <script type="application/ld+json">
 {
@@ -67,13 +67,25 @@
 
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
 
+    <!-- Import The Finals' actual font style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link
       rel="preload"
-      as="font"
-      href="https://fonts.gstatic.com/s/oswald/v35/TK3iWkUHHAIjg752GT8G.woff2"
-      type="font/woff2"
-      crossorigin="anonymous"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap"
+      />
+    </noscript>
 
     <!-- Critical CSS inlined for fastest render -->
     <style>
@@ -90,20 +102,14 @@
       * { box-sizing: border-box; }
       
       html {
+        background: #0A0A0A !important; /* Flat black */
         min-height: 100%;
-        background: linear-gradient(135deg, #1b1b3a, #34003d, #240049, #003d66);
-        background-size: 400% 400%;
-        animation: gradientShift 15s ease infinite;
-      }
-      
-      @keyframes gradientShift {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
       }
       
       body {
-        font-family: "Oswald", system-ui, -apple-system, sans-serif;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        font-weight: 400;
+        background: transparent !important;
         margin: 0;
         padding: 0;
         color: #fff;
@@ -114,11 +120,10 @@
         -moz-osx-font-smoothing: grayscale;
       }
       
-      /* Font loading with fallback */
-      @font-face {
-        font-family: 'Oswald';
-        font-display: swap;
-        src: local('Oswald'), url('https://fonts.gstatic.com/s/oswald/v35/TK3iWkUHHAIjg752GT8G.woff2') format('woff2');
+      h1, h2, .impact-text {
+        font-family: 'Bebas Neue', sans-serif;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
       }
       
       /* Critical navigation styles */

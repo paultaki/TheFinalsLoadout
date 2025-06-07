@@ -127,21 +127,25 @@ class RouletteAnimationSystem {
     const title = document.createElement("h2");
     title.textContent = "SELECTING CLASS...";
     title.style.cssText = `
-    font-size: 48px;
+    font-size: clamp(28px, 8vw, 48px);
     font-weight: 900;
-    letter-spacing: 8px;
-    margin-bottom: 50px;
+    letter-spacing: clamp(2px, 2vw, 8px);
+    margin-bottom: clamp(20px, 8vw, 50px);
     color: #ffb700;
     text-shadow: 0 0 20px rgba(255, 183, 0, 0.8);
+    text-align: center;
+    padding: 0 20px;
   `;
 
     const wheel = document.createElement("div");
     wheel.style.cssText = `
     display: flex;
     justify-content: center;
-    gap: 40px;
+    gap: clamp(10px, 5vw, 40px);
     height: 300px;
     align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
   `;
 
     // Create class options
@@ -151,8 +155,9 @@ class RouletteAnimationSystem {
     classes.forEach((className, index) => {
       const option = document.createElement("div");
       option.style.cssText = `
-      width: 200px;
-      height: 250px;
+      width: clamp(120px, 25vw, 200px);
+      height: clamp(150px, 30vw, 250px);
+      max-width: 200px;
       background: linear-gradient(135deg, #1a1a2e, #2a2a4e);
       border-radius: 20px;
       display: flex;
@@ -167,18 +172,21 @@ class RouletteAnimationSystem {
       const img = document.createElement("img");
       img.src = `images/${className.toLowerCase()}_active.webp`;
       img.style.cssText = `
-      width: 120px;
-      height: 120px;
-      margin-bottom: 20px;
+      width: clamp(60px, 15vw, 120px);
+      height: clamp(60px, 15vw, 120px);
+      margin-bottom: clamp(10px, 3vw, 20px);
       filter: brightness(0.5);
+      object-fit: contain;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
     `;
 
       const label = document.createElement("span");
       label.textContent = className.toUpperCase();
       label.style.cssText = `
-      font-size: 24px;
+      font-size: clamp(16px, 4vw, 24px);
       font-weight: 700;
-      letter-spacing: 3px;
+      letter-spacing: clamp(1px, 0.5vw, 3px);
       color: #fff;
       opacity: 0.5;
     `;
@@ -291,21 +299,27 @@ class RouletteAnimationSystem {
     const title = document.createElement("h2");
     title.textContent = "CHOOSING SPINS...";
     title.style.cssText = `
-    font-size: 48px;
+    font-size: clamp(28px, 8vw, 48px);
     font-weight: 900;
-    letter-spacing: 8px;
-    margin-bottom: 50px;
+    letter-spacing: clamp(2px, 2vw, 8px);
+    margin-bottom: clamp(20px, 8vw, 50px);
     color: #ffb700;
     text-shadow: 0 0 20px rgba(255, 183, 0, 0.8);
+    text-align: center;
+    padding: 0 20px;
   `;
 
     const wheel = document.createElement("div");
     wheel.style.cssText = `
     display: flex;
     justify-content: center;
-    gap: 30px;
+    gap: clamp(5px, 2vw, 20px);
     height: 200px;
     align-items: center;
+    padding: 0 30px;
+    box-sizing: border-box;
+    overflow-x: auto;
+    width: 100%;
   `;
 
     const spinElements = [];
@@ -313,19 +327,21 @@ class RouletteAnimationSystem {
     this.spinOptions.forEach((num) => {
       const option = document.createElement("div");
       option.style.cssText = `
-      width: 120px;
-      height: 120px;
+      width: clamp(65px, 15vw, 100px);
+      height: clamp(65px, 15vw, 100px);
+      min-width: 65px;
       background: linear-gradient(135deg, #1a1a2e, #2a2a4e);
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 48px;
+      font-size: clamp(24px, 6vw, 40px);
       font-weight: 900;
       color: #fff;
       transition: all 0.3s ease;
       opacity: 0.5;
       transform: scale(0.8);
+      flex-shrink: 0;
     `;
 
       const span = document.createElement("span");
@@ -387,6 +403,11 @@ class RouletteAnimationSystem {
             el.style.opacity = "1";
             el.style.transform = "scale(1.2)";
             el.style.background = "linear-gradient(135deg, #7b2fe3, #1e90ff)";
+            
+            // Create particle effect (less frequent to avoid overwhelming)
+            if (elapsed % 100 < 50) {
+              this.createParticleEffect(el);
+            }
           } else {
             el.style.opacity = "0.5";
             el.style.transform = "scale(0.8)";
@@ -438,29 +459,53 @@ class RouletteAnimationSystem {
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
 
-    const particlesContainer = document.createElement("div");
-    particlesContainer.className = "particles";
-    document.body.appendChild(particlesContainer);
-
     // Reduce particle count on mobile for performance
-    const particleCount = window.state?.isMobile ? 3 : 10;
+    const particleCount = window.state?.isMobile ? 3 : 8;
 
     for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement("div");
-      particle.className = "particle";
-      particle.style.left = centerX + "px";
-      particle.style.top = centerY + "px";
+      particle.style.cssText = `
+        position: fixed;
+        width: 4px;
+        height: 4px;
+        background: #fff;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 1000001;
+        left: ${centerX}px;
+        top: ${centerY}px;
+        box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+      `;
 
       // Random direction
-      const angle = (Math.PI * 2 * i) / particleCount;
-      const distance = 100 + Math.random() * 100;
-      particle.style.setProperty("--tx", Math.cos(angle) * distance + "px");
-      particle.style.setProperty("--ty", Math.sin(angle) * distance + "px");
+      const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
+      const distance = 60 + Math.random() * 80;
+      const targetX = centerX + Math.cos(angle) * distance;
+      const targetY = centerY + Math.sin(angle) * distance;
 
-      particlesContainer.appendChild(particle);
+      document.body.appendChild(particle);
+
+      // Animate the particle
+      const animation = particle.animate([
+        {
+          transform: 'translate(0, 0) scale(1)',
+          opacity: 1
+        },
+        {
+          transform: `translate(${targetX - centerX}px, ${targetY - centerY}px) scale(0)`,
+          opacity: 0
+        }
+      ], {
+        duration: 800,
+        easing: 'ease-out'
+      });
+
+      animation.onfinish = () => {
+        if (particle.parentNode) {
+          particle.parentNode.removeChild(particle);
+        }
+      };
     }
-
-    setTimeout(() => particlesContainer.remove(), 1000);
   }
 
   // Sound effects (placeholders - implement with actual audio files)

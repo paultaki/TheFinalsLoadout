@@ -1,12 +1,8 @@
 {
-  "name": "thefinalsloadout-roasts",
+  "name": "thefinalsloadout",
   "version": "1.0.0",
-  "description": "AI-generated roasts for The Finals loadouts",
-  "main": "index.js",
-  "scripts": {
-    "dev": "vercel dev",
-    "build": "vercel build"
-  },
+  "description": "Fun & optimized loadouts for The Finals",
+  "scripts": {},
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.3"
   },

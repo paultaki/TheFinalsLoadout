@@ -300,8 +300,98 @@ class ShareSystem {
   }
 }
 
+// Add required CSS for search and share
+const additionalStyles = `
+<style>
+  /* Search Styles */
+  .search-container {
+    position: relative;
+    margin-left: auto;
+  }
+  
+  .patch-search {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: var(--space-xs) var(--space-md);
+    padding-right: 2rem;
+    border-radius: 20px;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    width: 200px;
+    transition: all var(--transition-fast);
+  }
+  
+  .patch-search:focus {
+    outline: none;
+    border-color: var(--new-color);
+    background: rgba(255, 255, 255, 0.1);
+    width: 250px;
+  }
+  
+  .search-clear {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: none;
+    padding: 0.25rem;
+  }
+  
+  /* Share Button */
+  .share-button {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    color: var(--text-secondary);
+  }
+  
+  .share-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+  }
+  
+  .share-button.success {
+    background: var(--buff-color);
+    color: var(--bg-primary);
+    border-color: var(--buff-color);
+  }
+  
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .search-container {
+      width: 100%;
+      margin-top: var(--space-sm);
+    }
+    
+    .patch-search {
+      width: 100%;
+    }
+    
+    .patch-search:focus {
+      width: 100%;
+    }
+  }
+</style>
+`;
+
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+  // Add additional styles
+  document.head.insertAdjacentHTML('beforeend', additionalStyles);
+  
   // Initialize systems
   new PatchNotesApp();
   new PatchSearch();
@@ -328,3 +418,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 100);
   }
 });
+
+// Add highlight animation
+const highlightStyle = `
+<style>
+  @keyframes highlight {
+    0% { background: rgba(0, 212, 255, 0.2); }
+    100% { background: var(--bg-card); }
+  }
+  
+  .change-card.highlight {
+    animation: highlight 2s ease-out;
+  }
+</style>
+`;
+
+document.head.insertAdjacentHTML('beforeend', highlightStyle);
