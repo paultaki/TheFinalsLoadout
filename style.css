@@ -478,7 +478,8 @@ html {
 }
 
 .copy-build,
-.challenge-build {
+.challenge-build,
+.roast-again-btn {
   flex: 1;
   background: transparent;
   border: 1px solid var(--border-subtle);
@@ -508,6 +509,20 @@ html {
   background: var(--finals-red);
   border-color: var(--finals-red);
   box-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+}
+
+.roast-again-btn:hover:not(:disabled) {
+  background: #ffb700;
+  border-color: #ffb700;
+  color: #1a1a2e;
+  box-shadow: 0 0 20px rgba(255, 183, 0, 0.5);
+}
+
+.roast-again-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: transparent;
+  box-shadow: none;
 }
 
 /* Clear History Button Update */
@@ -5891,6 +5906,18 @@ details[open].adjustment summary::after {
   }
 }
 
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 @media (max-width: 768px) {
   .slot-machine-roast {
     margin-top: 1rem;
@@ -5903,5 +5930,22 @@ details[open].adjustment summary::after {
   
   .slot-machine-roast .roast-text {
     font-size: 1rem;
+  }
+  
+  .loadout-actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .copy-build,
+  .challenge-build,
+  .roast-again-btn {
+    font-size: 11px;
+    padding: 8px 10px;
+    min-height: 36px;
+  }
+  
+  .roast-again-btn span {
+    font-size: 14px;
   }
 }

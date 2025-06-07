@@ -1850,6 +1850,9 @@ async function addToHistory(
       <button class="challenge-build" onclick="challengeWithLoadout(this)">
         <span>🎯</span> CHALLENGE
       </button>
+      <button class="roast-again-btn" onclick="roastMeAgain(this)" title="Generate a fresh insult for this exact trash">
+        <span>🔁</span> ROAST ME AGAIN
+      </button>
     </div>
   `;
   
@@ -3223,3 +3226,106 @@ Gadget 3: ${selectedItems[4]}`;
     })();
   };
 });
+
+// Roast Me Again functionality
+async function roastMeAgain(button) {
+  const historyEntry = button.closest('.history-entry');
+  if (!historyEntry) {
+    console.error('Could not find history entry');
+    return;
+  }
+  
+  // Extract loadout data from the history entry
+  const classElement = historyEntry.querySelector('.class-badge');
+  const weaponElement = historyEntry.querySelector('.weapon-item .item-name');
+  const specElement = historyEntry.querySelector('.spec-item .item-name');
+  const gadgetElements = historyEntry.querySelectorAll('.gadget-item .item-name');
+  
+  if (!classElement || !weaponElement || !specElement || gadgetElements.length === 0) {
+    console.error('Could not extract loadout data from history entry');
+    return;
+  }
+  
+  const classType = classElement.textContent.trim();
+  const weapon = weaponElement.textContent.trim();
+  const specialization = specElement.textContent.trim();
+  const gadgets = Array.from(gadgetElements).map(el => el.textContent.trim());
+  
+  console.log('🔁 Roasting again:', { classType, weapon, specialization, gadgets });
+  
+  // Find the roast section and text elements
+  const roastSection = historyEntry.querySelector('.roast-section');
+  const roastText = historyEntry.querySelector('.roast-text');
+  
+  if (!roastSection || !roastText) {
+    console.error('Could not find roast elements in history entry');
+    return;
+  }
+  
+  // Disable button and show loading state
+  button.disabled = true;
+  button.style.opacity = '0.5';
+  roastSection.classList.add('loading');
+  roastText.style.opacity = '0.5';
+  roastText.textContent = 'Generating fresh insult...';
+  
+  try {
+    const requestData = {
+      class: classType,
+      weapon: weapon,
+      specialization: specialization,
+      gadgets: gadgets
+    };
+    
+    console.log('🚀 Sending fresh roast request:', requestData);
+    
+    const response = await fetch('/api/roast', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log('🔥 Received fresh roast response:', data);
+    
+    // Update with new roast and add visual feedback
+    roastSection.classList.remove('loading', 'fallback');
+    roastText.style.opacity = '0';
+    
+    setTimeout(() => {
+      roastText.textContent = data.roast;
+      roastText.style.opacity = '1';
+      roastText.style.transition = 'opacity 0.3s ease';
+      
+      // Add a pulse effect to show it's fresh
+      roastSection.style.animation = 'pulse 0.6s ease-in-out';
+      setTimeout(() => {
+        roastSection.style.animation = '';
+      }, 600);
+    }, 150);
+    
+  } catch (error) {
+    console.error('Error generating fresh roast:', error);
+    
+    // Show fallback roast
+    roastSection.classList.remove('loading');
+    roastSection.classList.add('fallback');
+    roastText.style.opacity = '0';
+    
+    setTimeout(() => {
+      roastText.textContent = "Claude's too stunned to respond. Try again later. 0/10";
+      roastText.style.opacity = '1';
+      roastText.style.transition = 'opacity 0.3s ease';
+    }, 150);
+  } finally {
+    // Re-enable button
+    button.disabled = false;
+    button.style.opacity = '1';
+  }
+}
