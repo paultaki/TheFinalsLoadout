@@ -1,6 +1,6 @@
 import { Redis } from "@upstash/redis";
 
-const redis = Redis.fromEnv(); // automatically uses your Vercel env vars
+const redis = Redis.fromEnv();
 
 export default async function handler(req, res) {
   try {
