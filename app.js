@@ -2319,48 +2319,67 @@ function updateTimestamps() {
   });
 }
 
-// Make challengeWithLoadout globally accessible
-window.challengeWithLoadout = function(button) {
+// Make exportMemeCard globally accessible
+window.exportMemeCard = function(button) {
   const entry = button.closest('.history-entry');
+  const memeContainer = entry.querySelector('.meme-export-container');
   
-  // Extract the actual loadout data from the entry
-  const classType = entry.querySelector('.class-badge').textContent.trim();
-  const loadoutName = entry.querySelector('.loadout-name').textContent.trim();
+  if (!memeContainer) {
+    console.error('Meme container not found');
+    return;
+  }
   
-  // Get weapon and specialization from text
-  const weaponName = entry.querySelector('.weapon-item .item-name')?.textContent || 'Unknown Weapon';
-  const specName = entry.querySelector('.spec-item .item-name')?.textContent || 'Unknown Specialization';
+  // Show loading state
+  const originalText = button.innerHTML;
+  button.innerHTML = '<span>⏳</span> GENERATING...';
+  button.disabled = true;
   
-  // Get gadgets from text
-  const gadgetNames = Array.from(entry.querySelectorAll('.gadget-item .item-name'))
-    .map(el => el.textContent);
+  // Configure html2canvas options for better quality
+  const options = {
+    backgroundColor: '#000000',
+    scale: 2, // Higher quality
+    useCORS: true,
+    allowTaint: true,
+    width: memeContainer.offsetWidth,
+    height: memeContainer.offsetHeight,
+    scrollX: 0,
+    scrollY: 0
+  };
   
-  // Create shareable challenge text
-  const challengeText = `🎯 THE FINALS CHALLENGE:
-
-"${loadoutName}"
-
-Class: ${classType}
-Weapon: ${weaponName}
-Specialization: ${specName}
-Gadgets: ${gadgetNames.join(', ')}
-
-Can you win with this loadout? Try it at thefinalsloadout.com`;
-  
-  // Copy to clipboard
-  navigator.clipboard.writeText(challengeText).then(() => {
-    // Visual feedback
-    const originalText = button.innerHTML;
-    button.innerHTML = '<span>✅</span> COPIED!';
+  html2canvas(memeContainer, options).then(canvas => {
+    // Create download link
+    const link = document.createElement('a');
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+    link.download = `loadout-roast-${timestamp}.png`;
+    link.href = canvas.toDataURL('image/png', 1.0);
+    
+    // Trigger download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Success feedback
+    button.innerHTML = '<span>✅</span> DOWNLOADED!';
     button.style.background = '#4CAF50';
     
     setTimeout(() => {
       button.innerHTML = originalText;
       button.style.background = '';
+      button.disabled = false;
     }, 2000);
+    
   }).catch(err => {
-    console.error('Failed to copy challenge text:', err);
-    alert('Could not copy challenge text');
+    console.error('Failed to generate meme card:', err);
+    
+    // Error feedback
+    button.innerHTML = '<span>❌</span> FAILED';
+    button.style.background = '#f44336';
+    
+    setTimeout(() => {
+      button.innerHTML = originalText;
+      button.style.background = '';
+      button.disabled = false;
+    }, 2000);
   });
 };
 
