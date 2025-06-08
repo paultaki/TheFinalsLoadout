@@ -1431,26 +1431,26 @@ async function finalizeSpin(columns) {
   // });
 
   // DIRECT BUTTON MANIPULATION - 100% reliable method
-  // console.log("🔒 Getting direct references to all spin buttons");
-  // // Get a direct reference to each button by ID if possible
-  // const spinBtns = document.querySelectorAll(".spin-button");
-  // console.log(`Found ${spinBtns.length} spin buttons`);
+  console.log("🔒 Getting direct references to all spin buttons");
+  // Get a direct reference to each button by ID if possible
+  const spinBtns = document.querySelectorAll(".spin-button");
+  console.log(`Found ${spinBtns.length} spin buttons`);
 
-  // // Force disable ALL spin buttons
-  // spinBtns.forEach((btn, index) => {
-  //   console.log(`Disabling spin button ${index + 1}`);
-  //   // Use all possible disabling methods to guarantee they work
-  //   btn.disabled = true;
-  //   btn.setAttribute("disabled", "disabled");
-  //   btn.classList.add("dimmed");
+  // Force disable ALL spin buttons
+  spinBtns.forEach((btn, index) => {
+    console.log(`Disabling spin button ${index + 1}`);
+    // Use all possible disabling methods to guarantee they work
+    btn.disabled = true;
+    btn.setAttribute("disabled", "disabled");
+    btn.classList.add("dimmed");
 
-  //   // Add a data attribute for debugging
-  //   btn.dataset.disabledAt = new Date().toISOString();
+    // Add a data attribute for debugging
+    btn.dataset.disabledAt = new Date().toISOString();
 
-  //   // Apply inline style as a last resort
-  //   btn.style.opacity = "0.5";
-  //   btn.style.pointerEvents = "none";
-  // });
+    // Apply inline style as a last resort
+    btn.style.opacity = "0.5";
+    btn.style.pointerEvents = "none";
+  });
 
   // Get the final selections from the DOM
   const itemContainers = document.querySelectorAll(
