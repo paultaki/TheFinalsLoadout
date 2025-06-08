@@ -1848,6 +1848,10 @@ async function addToHistory(
     newEntry.classList.add("spicy-loadout");
   }
   
+  // Generate optional badge
+  const optionalBadge = generateOptionalBadge(selectedWeapon, selectedSpec, selectedGadgets, classType);
+  const badgeHTML = optionalBadge ? `<div class="meme-badge">${optionalBadge}</div>` : '';
+  
   // Create initial entry with loading roast state
   newEntry.innerHTML = `
     <div class="meme-export-container">
@@ -1855,7 +1859,7 @@ async function addToHistory(
         <span class="class-badge ${classType.toLowerCase()}">${classType.toUpperCase()}</span>
         <span class="loadout-name">${loadoutName}</span>
         <span class="timestamp">Just now</span>
-        <div class="meme-badge">🔥 LEGENDARY TRASH</div>
+        ${badgeHTML}
       </div>
       <div class="loadout-details">
         <div class="loadout-item weapon-item">
@@ -2097,6 +2101,9 @@ function saveHistory() {
         .map(el => el.textContent);
       const isSpicy = entry.classList.contains('spicy-loadout');
       
+      // Extract badge data
+      const badge = entry.querySelector('.meme-badge')?.textContent || null;
+      
       // Extract roast data
       const roastSection = entry.querySelector('.roast-section');
       const roastText = entry.querySelector('.roast-text')?.textContent;
@@ -2110,6 +2117,7 @@ function saveHistory() {
         specialization,
         gadgets,
         isSpicy,
+        badge,
         roast: isRoastLoading ? null : roastText,
         roastFallback: isRoastFallback,
         timestamp: Date.now()
@@ -2175,13 +2183,16 @@ function loadHistory() {
       `;
     }
     
+    // Generate badge HTML if badge exists
+    const badgeHTML = entryData.badge ? `<div class="meme-badge">${entryData.badge}</div>` : '';
+    
     entry.innerHTML = `
       <div class="meme-export-container">
         <div class="loadout-header">
           <span class="class-badge ${entryData.classType.toLowerCase()}">${entryData.classType.toUpperCase()}</span>
           <span class="loadout-name">${entryData.loadoutName}</span>
           <span class="timestamp">${timeAgo}</span>
-          <div class="meme-badge">🔥 LEGENDARY TRASH</div>
+          ${badgeHTML}
         </div>
         <div class="loadout-details">
           <div class="loadout-item weapon-item">
@@ -2300,6 +2311,27 @@ function generateLoadoutName(classType, weapon, spec) {
   const template = templates[hash % templates.length];
   
   return template;
+}
+
+// Generate optional badge based on loadout characteristics
+function generateOptionalBadge(weapon, spec, gadgets, classType) {
+  // Only show badges for particularly egregious combinations
+  const badges = [
+    { condition: () => weapon === 'Dagger' && gadgets.includes('Riot Shield'), text: '🗡️ KNIFE RIOT' },
+    { condition: () => weapon === 'Sledgehammer' && gadgets.includes('Cloaking Device'), text: '🔨 SNEAKY BONK' },
+    { condition: () => classType === 'Heavy' && weapon === 'LH1', text: '🎯 WRONG CLASS ENERGY' },
+    { condition: () => gadgets.includes('Jump Pad') && gadgets.includes('Zipline'), text: '🚀 MOBILITY OVERKILL' },
+    { condition: () => weapon === 'Flamethrower' && gadgets.includes('Gas Grenade'), text: '🔥 CHAOS INCARNATE' },
+    { condition: () => weapon === 'M60' && spec === 'Evasive Dash', text: '🏃 HEAVY ZOOM' }
+  ];
+  
+  for (const badge of badges) {
+    if (badge.condition()) {
+      return badge.text;
+    }
+  }
+  
+  return null; // No badge for normal combinations
 }
 
 function isSpicyLoadout(weapon, spec, gadgets) {
@@ -3343,10 +3375,17 @@ async function incrementLoadoutCounter() {
 
 // Update counter display on the page
 function updateCounterDisplay(newCount) {
-  if (!newCount) return;
+  if (!newCount) {
+    console.log('⚠️ updateCounterDisplay called with no count:', newCount);
+    return;
+  }
   
+  console.log('📊 Updating counter display to:', newCount);
   const counterElements = document.querySelectorAll('.loadouts-counter');
+  console.log('📊 Found counter elements:', counterElements.length);
+  
   counterElements.forEach(element => {
+    console.log('📊 Updating element:', element);
     if (element.dataset.countup === 'true') {
       // If using countup animation
       animateCounterTo(element, newCount);
