@@ -1638,10 +1638,10 @@ async function finalizeSpin(columns) {
       lastAddedLoadout = loadoutString;
 
       // Increment the global loadouts counter
-      console.log('🚀🚀🚀 ABOUT TO CALL incrementLoadoutCounter 🚀🚀🚀');
-      alert('About to increment counter!');
-      await incrementLoadoutCounter();
-      console.log('✅✅✅ incrementLoadoutCounter COMPLETED ✅✅✅');
+      // console.log('🚀🚀🚀 ABOUT TO CALL incrementLoadoutCounter 🚀🚀🚀');
+      // alert('About to increment counter!');
+      // await incrementLoadoutCounter();
+      // console.log('✅✅✅ incrementLoadoutCounter COMPLETED ✅✅✅');
       
       // Also fetch and update counter display as backup
       console.log('🚀🚀🚀 ABOUT TO CALL fetchAndUpdateCounter 🚀🚀🚀');
