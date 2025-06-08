@@ -1850,16 +1850,17 @@ async function addToHistory(
   
   // Generate optional badge
   const optionalBadge = generateOptionalBadge(selectedWeapon, selectedSpec, selectedGadgets, classType);
-  const badgeHTML = optionalBadge ? `<div class="meme-badge">${optionalBadge}</div>` : '';
+  const badgeHTML = optionalBadge ? 
+    `<div class="loadout-badge ${optionalBadge.type}" title="${optionalBadge.tooltip}">${optionalBadge.text}</div>` : '';
   
   // Create initial entry with loading roast state
   newEntry.innerHTML = `
     <div class="meme-export-container">
+      ${badgeHTML}
       <div class="loadout-header">
         <span class="class-badge ${classType.toLowerCase()}">${classType.toUpperCase()}</span>
         <span class="loadout-name">${loadoutName}</span>
         <span class="timestamp">Just now</span>
-        ${badgeHTML}
       </div>
       <div class="loadout-details">
         <div class="loadout-item weapon-item">
@@ -2102,7 +2103,12 @@ function saveHistory() {
       const isSpicy = entry.classList.contains('spicy-loadout');
       
       // Extract badge data
-      const badge = entry.querySelector('.meme-badge')?.textContent || null;
+      const badgeElement = entry.querySelector('.loadout-badge');
+      const badge = badgeElement ? {
+        text: badgeElement.textContent,
+        type: badgeElement.classList.contains('legendary-trash') ? 'legendary-trash' : 'special',
+        tooltip: badgeElement.getAttribute('title') || ''
+      } : null;
       
       // Extract roast data
       const roastSection = entry.querySelector('.roast-section');
@@ -2184,15 +2190,16 @@ function loadHistory() {
     }
     
     // Generate badge HTML if badge exists
-    const badgeHTML = entryData.badge ? `<div class="meme-badge">${entryData.badge}</div>` : '';
+    const badgeHTML = entryData.badge ? 
+      `<div class="loadout-badge ${entryData.badge.type}" title="${entryData.badge.tooltip}">${entryData.badge.text}</div>` : '';
     
     entry.innerHTML = `
       <div class="meme-export-container">
+        ${badgeHTML}
         <div class="loadout-header">
           <span class="class-badge ${entryData.classType.toLowerCase()}">${entryData.classType.toUpperCase()}</span>
           <span class="loadout-name">${entryData.loadoutName}</span>
           <span class="timestamp">${timeAgo}</span>
-          ${badgeHTML}
         </div>
         <div class="loadout-details">
           <div class="loadout-item weapon-item">
@@ -2313,21 +2320,67 @@ function generateLoadoutName(classType, weapon, spec) {
   return template;
 }
 
-// Generate optional badge based on loadout characteristics
-function generateOptionalBadge(weapon, spec, gadgets, classType) {
-  // Only show badges for particularly egregious combinations
-  const badges = [
-    { condition: () => weapon === 'Dagger' && gadgets.includes('Riot Shield'), text: '🗡️ KNIFE RIOT' },
-    { condition: () => weapon === 'Sledgehammer' && gadgets.includes('Cloaking Device'), text: '🔨 SNEAKY BONK' },
-    { condition: () => classType === 'Heavy' && weapon === 'LH1', text: '🎯 WRONG CLASS ENERGY' },
-    { condition: () => gadgets.includes('Jump Pad') && gadgets.includes('Zipline'), text: '🚀 MOBILITY OVERKILL' },
-    { condition: () => weapon === 'Flamethrower' && gadgets.includes('Gas Grenade'), text: '🔥 CHAOS INCARNATE' },
-    { condition: () => weapon === 'M60' && spec === 'Evasive Dash', text: '🏃 HEAVY ZOOM' }
+// Check if loadout deserves LEGENDARY TRASH badge
+function shouldShowLegendaryTrashBadge(weapon, spec, gadgets, analysisRating = null) {
+  // Define dumpster tier items (notorious bad combinations or items)
+  const dumpsterTier = {
+    weapons: ['Dagger', 'Throwing Knives'], // Melee in a gun game
+    specializations: [], // Add any particularly bad specs
+    gadgets: ['Proximity Sensor'] // Generally considered weak
+  };
+  
+  // Check if analysis rating is 3/10 or lower
+  if (analysisRating !== null && analysisRating <= 3) {
+    return true;
+  }
+  
+  // Check for dumpster tier items
+  if (dumpsterTier.weapons.includes(weapon) ||
+      dumpsterTier.specializations.includes(spec) ||
+      gadgets.some(gadget => dumpsterTier.gadgets.includes(gadget))) {
+    return true;
+  }
+  
+  // Check for particularly bad combinations
+  const trashCombos = [
+    // Heavy class with light weapons
+    weapon === 'LH1' || weapon === 'V9S' || weapon === 'Throwing Knives',
+    // Multiple movement gadgets (overkill)
+    gadgets.includes('Jump Pad') && gadgets.includes('Zipline'),
+    // Contradictory playstyles
+    weapon === 'Sledgehammer' && gadgets.includes('Cloaking Device'),
+    weapon === 'SR-84' && spec === 'Charge N Slam', // Sniper with rush spec
+    // Purely comedic bad choices
+    weapon === 'Dagger' && gadgets.includes('Riot Shield')
   ];
   
-  for (const badge of badges) {
+  return trashCombos.some(combo => combo);
+}
+
+// Generate optional badges based on loadout characteristics  
+function generateOptionalBadge(weapon, spec, gadgets, classType, analysisRating = null) {
+  // Check for LEGENDARY TRASH first (highest priority)
+  if (shouldShowLegendaryTrashBadge(weapon, spec, gadgets, analysisRating)) {
+    return {
+      text: '🔥 LEGENDARY TRASH',
+      type: 'legendary-trash',
+      tooltip: 'This loadout broke the meta—in the worst possible way.'
+    };
+  }
+  
+  // Future: Add other badge types like META MONSTER, CHAOS BUILD, etc.
+  const specialBadges = [
+    { condition: () => weapon === 'M134 Minigun' && spec === 'Dome Shield', text: '🛡️ FORTRESS MODE', type: 'special' },
+    { condition: () => gadgets.includes('Flamethrower') && gadgets.includes('Gas Grenade'), text: '🔥 CHAOS INCARNATE', type: 'special' }
+  ];
+  
+  for (const badge of specialBadges) {
     if (badge.condition()) {
-      return badge.text;
+      return {
+        text: badge.text,
+        type: badge.type || 'special',
+        tooltip: 'Unique combination detected!'
+      };
     }
   }
   

@@ -582,19 +582,67 @@ html {
   z-index: 1;
 }
 
-/* Meme Badge Styling */
-.meme-badge {
-  background: linear-gradient(45deg, #ff1493, #00ffff);
-  color: #000;
+/* Loadout Badge Styling */
+.loadout-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
   font-family: var(--impact-font);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 900;
-  padding: 4px 12px;
+  padding: 6px 12px;
   border-radius: 20px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  box-shadow: 0 0 15px rgba(255, 20, 147, 0.6);
-  animation: pulse 2s infinite;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  cursor: help;
+  transition: all 0.3s ease;
+}
+
+/* LEGENDARY TRASH Badge - Badge of Dishonor */
+.loadout-badge.legendary-trash {
+  background: linear-gradient(to right, #ff4e50, #fc913a);
+  border: 2px solid #fff;
+  box-shadow: 
+    0 0 20px rgba(255, 78, 80, 0.8),
+    0 0 40px rgba(252, 145, 58, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: legendary-pulse 2s ease-in-out infinite;
+}
+
+.loadout-badge.legendary-trash:hover {
+  transform: scale(1.1);
+  box-shadow: 
+    0 0 25px rgba(255, 78, 80, 1),
+    0 0 50px rgba(252, 145, 58, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Special Badge (for future badge types) */
+.loadout-badge.special {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
+}
+
+/* Badge Animation */
+@keyframes legendary-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 
+      0 0 20px rgba(255, 78, 80, 0.8),
+      0 0 40px rgba(252, 145, 58, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  50% { 
+    transform: scale(1.05);
+    box-shadow: 
+      0 0 25px rgba(255, 78, 80, 1),
+      0 0 50px rgba(252, 145, 58, 0.8),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
 }
 
 @keyframes pulse {
@@ -752,6 +800,12 @@ html {
     flex-wrap: wrap;
     justify-content: center;
   }
+  
+  /* Tablet badge scaling */
+  .loadout-badge {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
 }
 
 /* Responsive Mobile Scaling - Small screens */
@@ -814,6 +868,14 @@ html {
   
   .meme-export-container .gadget-item {
     min-width: 65px;
+  }
+  
+  /* Mobile badge scaling */
+  .loadout-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+    top: 6px;
+    right: 6px;
   }
 }
 
