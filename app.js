@@ -33,10 +33,20 @@ async function loadInitialCounter() {
         element.textContent = data.totalGenerated.toLocaleString();
       });
     } else {
-      console.warn('⚠️ Failed to load initial counter');
+      console.warn('⚠️ Failed to load initial counter, using default 1231');
+      // Fallback to 1231
+      const counterElements = document.querySelectorAll('.loadouts-counter');
+      counterElements.forEach(element => {
+        element.textContent = '1231';
+      });
     }
   } catch (error) {
-    console.warn('⚠️ Error loading initial counter:', error);
+    console.warn('⚠️ Error loading initial counter, using default 1231:', error);
+    // Fallback to 1231
+    const counterElements = document.querySelectorAll('.loadouts-counter');
+    counterElements.forEach(element => {
+      element.textContent = '1231';
+    });
   }
 }
 
@@ -1868,11 +1878,11 @@ async function addToHistory(
       <div class="roast-section loading">
         <div class="roast-content">
           <span class="fire-emoji">🔥</span>
-          <span class="roast-text">Analyzing loadout cringe level...</span>
+          <span class="roast-text">Analyzing loadout configuration...</span>
         </div>
       </div>
       <div class="meme-footer">
-        <span class="meme-watermark">Roasted by LoadoutRoulette.ai</span>
+        <span class="meme-watermark">Analyzed by thefinalsloadout.com</span>
       </div>
     </div>
     <div class="loadout-actions">
@@ -1882,8 +1892,8 @@ async function addToHistory(
       <button class="meme-card-btn" onclick="exportMemeCard(this)">
         <span>🧠</span> MEME CARD
       </button>
-      <button class="roast-again-btn" onclick="roastMeAgain(this)" title="Generate a fresh insult for this exact trash">
-        <span>🔁</span> ROAST ME AGAIN
+      <button class="roast-again-btn" onclick="roastMeAgain(this)" title="Get a new breakdown for this exact loadout">
+        <span>🔁</span> RUN ANALYSIS AGAIN
       </button>
     </div>
   `;
@@ -1935,7 +1945,7 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
   roastContainer.innerHTML = `
     <div class="roast-content">
       <span class="fire-emoji">🔥</span>
-      <span class="roast-text">Analyzing loadout cringe level...</span>
+      <span class="roast-text">Analyzing loadout configuration...</span>
     </div>
   `;
   
@@ -1989,7 +1999,7 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
     // Fallback roast
     const fallbackRoasts = [
       `That ${weapon} on ${classType}? The Finals servers just crashed from cringe. -10/10`,
-      `This ${weapon} combo broke our roast generator. That says enough. 0/10`,
+      `This ${weapon} combo broke our analysis system. That says enough. 0/10`,
       `${classType} with ${weapon}? Even the AI is speechless. That's a new low.`,
       `I've seen bad loadouts, but ${weapon} with ${spec}? This is a war crime.`,
       `${weapon} + ${spec} = Mathematical proof that some combinations shouldn't exist.`
@@ -2060,7 +2070,7 @@ async function generateRoast(entryElement, classType, weapon, specialization, ga
       `${weapon} and ${specialization}? Bold choice, terrible execution. 1/10`,
       `${classType} with ${weapon}? Your enemies are laughing already. 0/10`,
       `${specialization} + ${gadgets[0]}? Creative chaos, emphasis on chaos. 2/10`,
-      `This ${weapon} combo broke our roast generator. That says enough. 0/10`,
+      `This ${weapon} combo broke our analysis system. That says enough. 0/10`,
       `${classType} class deserves better than this mess. 1/10`,
       `${weapon} with these gadgets? Identity crisis much? 2/10`
     ];
@@ -2159,7 +2169,7 @@ function loadHistory() {
         <div class="roast-section fallback">
           <div class="roast-content">
             <span class="fire-emoji">🔥</span>
-            <span class="roast-text">Roast unavailable. Still terrible though. 1/10</span>
+            <span class="roast-text">Analysis unavailable. Still questionable though. 1/10</span>
           </div>
         </div>
       `;
@@ -2193,7 +2203,7 @@ function loadHistory() {
         </div>
         ${roastSectionHTML}
         <div class="meme-footer">
-          <span class="meme-watermark">Roasted by LoadoutRoulette.ai</span>
+          <span class="meme-watermark">Analyzed by thefinalsloadout.com</span>
         </div>
       </div>
       <div class="loadout-actions">

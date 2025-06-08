@@ -37,27 +37,8 @@ export default async function handler(req, res) {
     ];
     const persona = personas[Math.floor(Math.random() * personas.length)];
 
-    const prompt = `
-You're ${persona}, forced to critique this loadout after a 0-3 wipe where your team coin-fed and got spawn camped.
-
-Class: ${classType}
-Weapon: ${weapon}
-Specialization: ${specialization}
-Gadgets: ${gadgets.join(", ")}
-
-CRITICAL: Your roast must be 15-25 words total (including the X/10 rating)
-
-Roast it like it's Season 69 patch notes made by interns. Your job:
-- Be savage, sarcastic, and specific to The Finals meta
-- Drop Finals slang: wipe, ratting, griefing, foam spam, cube tossing, coin clutching, solo queue trauma
-- Keep it between 15-25 WORDS. Include an X/10 rating at the end.
-- Stay within the word limit! Too long and you're just rambling.
-
-Examples:
-- “Sword + Dash? You cosplaying Genji or griefing ranked? 1/10”
-- “Pyro Mines + RPG = certified spawn camper loadout. 3/10”
-- “No recon, no aim, no chance. 0/10”
-`;
+// Replaced original prompt logic with dynamic analysis generator
+// See appended updated prompt logic below
 
     const metaSuffix =
       "Everyone knows Pyro + Goo is meta. This? Feels like a cry for help.";
@@ -100,3 +81,147 @@ Examples:
     res.status(200).json({ roast: specificFallback });
   }
 }
+
+const { class: classType, weapon, specialization, gadgets } = req.body;
+
+// Tier definitions (manually managed)
+const tierMap = {
+  weapons: {
+    meta: ["FCAR", "R.357", "M60", "MGL32", "Shotgun", "Cerberus 12GA"],
+    offMeta: ["Recurve Bow", "Sword", "Thermal Scope LMG", "Goo Gun"],
+    dumpster: ["93R", "CB-01 Repeater"]
+  },
+  gadgets: {
+    meta: ["C4", "Pyro Mine", "Defibs"],
+    offMeta: ["Flashbang", "Vanishing Bomb"],
+    dumpster: ["Tracking Dart", "Data Reshaper", "Anti-Gravity Cube"]
+  },
+  specs: {
+    meta: ["Healing Beam", "Glitch Cloak"],
+    offMeta: ["Dematerializer", "Cloaking Device", "Charge 'n' Slash"],
+    dumpster: []
+  }
+};
+
+function getTier(item, type) {
+  const map = tierMap[type];
+  if (map.meta.includes(item)) return "meta";
+  if (map.offMeta.includes(item)) return "off-meta";
+  if (map.dumpster.includes(item)) return "dumpster";
+  return "unknown";
+}
+
+const weaponTier = getTier(weapon, "weapons");
+const specTier = getTier(specialization, "specs");
+const gadgetTiers = gadgets.map(g => getTier(g, "gadgets"));
+
+let tone = "off-meta-challenge"; // default
+
+if (weaponTier === "dumpster" || specTier === "dumpster" || gadgetTiers.includes("dumpster")) {
+  tone = "dumpsterfire";
+} else if (weaponTier === "meta" && specTier === "meta" && gadgetTiers.every(t => t === "meta")) {
+  tone = "meta-edge";
+}
+
+const persona = {
+  "meta-edge": "AI tuned for sarcastic admiration of broken meta abuse",
+  "off-meta-challenge": "brutally honest coach rooting for weird picks",
+  "dumpsterfire": "burned-out Finals ref forced to review bronze-tier disasters"
+}[tone] || "exhausted analyst";
+
+const nsfwTag = (specTier === "off-meta" && ["Dematerializer", "Cloaking Device"].includes(specialization)) ? "sneaky-banger" : "";
+
+const prompt = `
+You are ${persona}. Your job is to deliver a short, witty 15–25 word analysis for this loadout in The Finals. Include a meta rating (X/10).
+
+Class: ${classType}
+Weapon: ${weapon} (${weaponTier})
+Specialization: ${specialization} (${specTier})
+Gadgets: ${gadgets.join(", ")} (${gadgetTiers.join(", ")})
+
+Tone: ${tone}${nsfwTag ? ", " + nsfwTag : ""}
+
+Examples:
+- “You blink in, blast hard, and vanish. Dematerializer isn't a spec—it's a one-night stand. 8/10”
+- “Goo + Pyro = bonfire. Too bad you're the one on fire. 2/10”
+- “You picked Tracking Dart. I didn’t even know that was still in the game. 1/10”
+
+Keep it punchy. Never more than 25 words.
+`;
+// --- Injected Analysis Prompt Logic ---
+
+const { class: classType, weapon, specialization, gadgets } = req.body;
+
+// Tier definitions (manually managed)
+const tierMap = {
+  weapons: {
+    meta: ["FCAR", "R.357", "M60", "MGL32", "Shotgun", "Cerberus 12GA"],
+    offMeta: ["Recurve Bow", "Sword", "Thermal Scope LMG", "Goo Gun"],
+    dumpster: ["93R", "CB-01 Repeater"]
+  },
+  gadgets: {
+    meta: ["C4", "Pyro Mine", "Defibs"],
+    offMeta: ["Flashbang", "Vanishing Bomb"],
+    dumpster: ["Tracking Dart", "Data Reshaper", "Anti-Gravity Cube"]
+  },
+  specs: {
+    meta: ["Healing Beam", "Glitch Cloak"],
+    offMeta: ["Dematerializer", "Cloaking Device", "Charge 'n' Slash"],
+    dumpster: []
+  }
+};
+
+function getTier(item, type) {
+  const map = tierMap[type];
+  if (map.meta.includes(item)) return "meta";
+  if (map.offMeta.includes(item)) return "off-meta";
+  if (map.dumpster.includes(item)) return "dumpster";
+  return "unknown";
+}
+
+const weaponTier = getTier(weapon, "weapons");
+const specTier = getTier(specialization, "specs");
+const gadgetTiers = gadgets.map(g => getTier(g, "gadgets"));
+
+let tone = "off-meta-challenge";
+
+if (weaponTier === "dumpster" || specTier === "dumpster" || gadgetTiers.includes("dumpster")) {
+  tone = "dumpsterfire";
+} else if (weaponTier === "meta" && specTier === "meta" && gadgetTiers.every(t => t === "meta")) {
+  tone = "meta-edge";
+}
+
+const persona = {
+  "meta-edge": "AI tuned for sarcastic admiration of broken meta abuse",
+  "off-meta-challenge": "brutally honest coach rooting for weird picks",
+  "dumpsterfire": "burned-out Finals ref forced to review bronze-tier disasters"
+}[tone] || "exhausted analyst";
+
+const nsfwTag = (specTier === "off-meta" && ["Dematerializer", "Cloaking Device"].includes(specialization)) ? "sneaky-banger" : "";
+
+const prompt = `
+You are ${persona}. Deliver a short, punchy 15–25 word Loadout Analysis. Include a rating at the end (X/10).
+
+Class: ${classType}
+Weapon: ${weapon} (${weaponTier})
+Specialization: ${specialization} (${specTier})
+Gadgets: ${gadgets.join(", ")} (${gadgetTiers.join(", ")})
+
+Tone: ${tone}${nsfwTag ? ", " + nsfwTag : ""}
+
+Examples:
+- “You blink in, blast hard, vanish. Dematerializer isn't a spec—it’s a one-night stand. 8/10”
+- “Goo + Pyro = bonfire. Too bad you're the one on fire. 2/10”
+- “Tracking Dart? The only threat is boredom. 1/10”
+- “Data Reshaper? You turned a turret into a chair. They still shot you. 0/10”
+- “Anti-Gravity Cube: floats well, achieves nothing. 2/10”
+- “Recurve Bow? Quiet. Deadly. Unless you whiff. Then it’s interpretive dance. 5/10”
+- “Dual Blades: no one knows if it’s genius or trolling. Either way, they’re bleeding. 7/10”
+- “Cerberus + Glitch? You could win a fight mid-yawn. 9.5/10”
+- “Cloak + Sword: from behind or not at all. 7.5/10”
+- “93R? There’s a reason no one’s died to this. Keep it that way. 1/10”
+- “Healing Beam + M60 = squad goals. Unless you wander. 8.5/10”
+- “Charge ‘n’ Slash? Enough movement to die with flair. 5.5/10”
+
+Keep it punchy. Never more than 25 words.
+`;
