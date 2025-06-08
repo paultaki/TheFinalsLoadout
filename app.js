@@ -1355,7 +1355,7 @@ function setupTabSearchPlaceholder() {
   });
 }
 
-function finalizeSpin(columns) {
+async function finalizeSpin(columns) {
   console.log("⚠️ Running finalizeSpin with currentSpin:", state.currentSpin);
 
   // Check if there are more spins to do
@@ -1638,7 +1638,10 @@ function finalizeSpin(columns) {
       lastAddedLoadout = loadoutString;
 
       // Increment the global loadouts counter
-      incrementLoadoutCounter();
+      await incrementLoadoutCounter();
+      
+      // Also fetch and update counter display as backup
+      fetchAndUpdateCounter();
 
       // Display roast immediately below the slot machine and get the generated roast
       displayRoastBelowSlotMachine(savedClass, weapon, specialization, gadgets).then(generatedRoast => {
@@ -2781,6 +2784,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Load initial counter value
   loadInitialCounter();
+  
+  // Also fetch counter as backup
+  setTimeout(() => {
+    fetchAndUpdateCounter();
+  }, 1000);
 
   // Initialize sound toggle
   initializeSoundToggle();
@@ -3454,6 +3462,31 @@ async function refreshCounterFromAPI() {
     }
   } catch (error) {
     console.warn('⚠️ Error refreshing counter from API:', error);
+  }
+}
+
+// Simple function to fetch and update counter display
+async function fetchAndUpdateCounter() {
+  try {
+    console.log('🔄 Fetching current counter value...');
+    
+    const response = await fetch('/api/counter');
+    if (response.ok) {
+      const data = await response.json();
+      console.log('✅ Counter fetched:', data.totalGenerated);
+      
+      // Update all elements with class 'loadouts-counter'
+      const counterElements = document.querySelectorAll('.loadouts-counter');
+      counterElements.forEach(element => {
+        element.textContent = data.totalGenerated.toLocaleString();
+      });
+      
+      console.log('✅ Updated', counterElements.length, 'counter elements');
+    } else {
+      console.warn('⚠️ Failed to fetch counter');
+    }
+  } catch (error) {
+    console.warn('⚠️ Error fetching counter:', error);
   }
 }
 
