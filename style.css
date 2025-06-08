@@ -5949,3 +5949,51 @@ details[open].adjustment summary::after {
     font-size: 14px;
   }
 }
+
+/* Loadouts Counter Styling */
+.loadouts-counter-display {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #FFE500;
+  text-shadow: 0 0 8px #FF3366;
+  margin: 2rem 0;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.loadouts-counter {
+  color: #FFE500;
+  font-weight: bold;
+  text-shadow: 0 0 8px #FF3366;
+}
+
+.chaos-counter {
+  font-size: 0.9rem;
+  color: #888;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.chaos-counter .loadouts-counter {
+  color: #FFE500;
+  font-weight: 600;
+}
+
+/* Hero counter animation */
+@keyframes counterPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.loadouts-counter-display:hover {
+  animation: counterPulse 1s ease-in-out;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .loadouts-counter-display {
+    font-size: 1rem;
+    margin: 1.5rem 0;
+  }
+}

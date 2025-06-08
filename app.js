@@ -17,6 +17,29 @@ const state = {
 // Make state globally accessible
 window.state = state;
 
+// Load initial counter value
+async function loadInitialCounter() {
+  try {
+    console.log('📊 Loading initial counter value...');
+    
+    const response = await fetch('/api/counter');
+    if (response.ok) {
+      const data = await response.json();
+      console.log('✅ Initial counter loaded:', data.totalGenerated);
+      
+      // Update all counter displays
+      const counterElements = document.querySelectorAll('.loadouts-counter');
+      counterElements.forEach(element => {
+        element.textContent = data.totalGenerated.toLocaleString();
+      });
+    } else {
+      console.warn('⚠️ Failed to load initial counter');
+    }
+  } catch (error) {
+    console.warn('⚠️ Error loading initial counter:', error);
+  }
+}
+
 // Global variables for DOM elements
 let spinButtons;
 let classButtons;
@@ -1610,6 +1633,9 @@ function finalizeSpin(columns) {
       }
       lastAddedLoadout = loadoutString;
 
+      // Increment the global loadouts counter
+      incrementLoadoutCounter();
+
       // Display roast immediately below the slot machine and get the generated roast
       displayRoastBelowSlotMachine(savedClass, weapon, specialization, gadgets).then(generatedRoast => {
         // Add to history after a delay (helps prevent race conditions) with the same roast
@@ -2621,6 +2647,9 @@ function initializeLazyLoading() {
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded");
 
+  // Load initial counter value
+  loadInitialCounter();
+
   // Initialize sound toggle
   initializeSoundToggle();
   
@@ -3226,6 +3255,65 @@ Gadget 3: ${selectedItems[4]}`;
     })();
   };
 });
+
+// Increment loadout counter on backend
+async function incrementLoadoutCounter() {
+  try {
+    console.log('📊 Incrementing loadout counter...');
+    
+    const response = await fetch('/api/spin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('✅ Counter incremented successfully:', data.totalGenerated);
+      
+      // Update the counter display if it exists
+      updateCounterDisplay(data.totalGenerated);
+    } else {
+      console.warn('⚠️ Failed to increment counter, but continuing...');
+    }
+  } catch (error) {
+    console.warn('⚠️ Error incrementing counter:', error);
+    // Don't throw - this shouldn't break the user experience
+  }
+}
+
+// Update counter display on the page
+function updateCounterDisplay(newCount) {
+  if (!newCount) return;
+  
+  const counterElements = document.querySelectorAll('.loadouts-counter');
+  counterElements.forEach(element => {
+    if (element.dataset.countup === 'true') {
+      // If using countup animation
+      animateCounterTo(element, newCount);
+    } else {
+      // Simple text update
+      element.textContent = newCount.toLocaleString();
+    }
+  });
+}
+
+// Animate counter to new value
+function animateCounterTo(element, targetValue) {
+  const currentValue = parseInt(element.textContent.replace(/,/g, '')) || 0;
+  const increment = Math.ceil((targetValue - currentValue) / 30);
+  let current = currentValue;
+  
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= targetValue) {
+      current = targetValue;
+      clearInterval(timer);
+    }
+    element.textContent = current.toLocaleString();
+  }, 50);
+}
 
 // Roast Me Again functionality
 async function roastMeAgain(button) {

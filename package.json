@@ -4,7 +4,8 @@
   "description": "Fun & optimized loadouts for The Finals",
   "scripts": {},
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.24.3"
+    "@anthropic-ai/sdk": "^0.24.3",
+    "@vercel/kv": "^1.0.1"
   },
   "engines": {
     "node": "18.x"
