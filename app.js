@@ -2069,6 +2069,7 @@ async function generateRoast(entryElement, classType, weapon, specialization, ga
 }
 
 function saveHistory() {
+  console.log("💾 Saving history to localStorage...");
   const entries = Array.from(document.querySelectorAll(".history-entry")).map(
     (entry) => {
       // Extract data from each entry to save as structured data
@@ -2102,8 +2103,10 @@ function saveHistory() {
 
   // Limit to the most recent 5 entries
   const cappedEntries = entries.slice(0, 5);
-
+  
+  console.log("📝 Saving entries to localStorage:", cappedEntries);
   localStorage.setItem("loadoutHistory", JSON.stringify(cappedEntries));
+  console.log("✅ History saved successfully!");
 }
 
 function loadHistory() {
@@ -3037,8 +3040,13 @@ Gadget 3: ${selectedItems[4]}`;
         });
     });
 
-  // Initialize loadout history
-  loadHistory();
+  // Initialize loadout history when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadHistory);
+  } else {
+    // DOM is already loaded
+    loadHistory();
+  }
 
   // Clear history button
   document.getElementById("clear-history")?.addEventListener("click", () => {
