@@ -2787,12 +2787,12 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded");
 
   // Load initial counter value
-  loadInitialCounter();
+  // loadInitialCounter();
   
   // Also fetch counter as backup
-  setTimeout(() => {
-    fetchAndUpdateCounter();
-  }, 1000);
+  // setTimeout(() => {
+  //   fetchAndUpdateCounter();
+  // }, 1000);
 
   // Initialize sound toggle
   initializeSoundToggle();
