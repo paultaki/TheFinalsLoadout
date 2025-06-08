@@ -1436,8 +1436,14 @@ async function finalizeSpin(columns) {
   const spinBtns = document.querySelectorAll(".spin-button");
   console.log(`Found ${spinBtns.length} spin buttons`);
 
-  // Force disable ALL spin buttons
+  // Force disable ALL spin buttons EXCEPT the main spin button
   spinBtns.forEach((btn, index) => {
+    // Skip the main spin button
+    if (btn.id === 'main-spin-button') {
+      console.log(`Skipping main spin button`);
+      return;
+    }
+    
     console.log(`Disabling spin button ${index + 1}`);
     // Use all possible disabling methods to guarantee they work
     btn.disabled = true;
