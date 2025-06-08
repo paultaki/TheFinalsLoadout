@@ -1906,6 +1906,9 @@ async function addToHistory(
   while (historyList.children.length > 5) {
     historyList.removeChild(historyList.lastChild);
   }
+  
+  // Save the updated history to localStorage
+  saveHistory();
 }
 
 // Display roast below slot machine
@@ -2105,7 +2108,13 @@ function saveHistory() {
 
 function loadHistory() {
   const historyList = document.getElementById("history-list");
+  if (!historyList) {
+    console.error("❌ History list element not found. Cannot load history.");
+    return;
+  }
+  
   const savedEntries = JSON.parse(localStorage.getItem("loadoutHistory")) || [];
+  console.log("📚 Loading history from localStorage:", savedEntries.length, "entries");
   historyList.innerHTML = "";
   
   savedEntries.forEach((entryData, index) => {
