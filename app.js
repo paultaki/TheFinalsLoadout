@@ -3679,4 +3679,3 @@ async function roastMeAgain(button) {
     button.style.opacity = '1';
   }
 }
-}
