@@ -3611,7 +3611,7 @@ async function roastMeAgain(button) {
   button.style.opacity = '0.5';
   roastSection.classList.add('loading');
   roastText.style.opacity = '0.5';
-  roastText.textContent = 'Generating fresh insult...';
+  roastText.textContent = 'Generating fresh analysis...';
   
   try {
     const requestData = {
@@ -3621,7 +3621,7 @@ async function roastMeAgain(button) {
       gadgets: gadgets
     };
     
-    console.log('🚀 Sending fresh roast request:', requestData);
+    console.log('🚀 Sending fresh analysis request:', requestData);
     
     const response = await fetch('/api/roast', {
       method: 'POST',
@@ -3636,9 +3636,9 @@ async function roastMeAgain(button) {
     }
     
     const data = await response.json();
-    console.log('🔥 Received fresh roast response:', data);
+    console.log('🔥 Received fresh analysis response:', data);
     
-    // Update with new roast and add visual feedback
+    // Update with new analysis and add visual feedback
     roastSection.classList.remove('loading', 'fallback');
     roastText.style.opacity = '0';
     
@@ -3655,9 +3655,9 @@ async function roastMeAgain(button) {
     }, 150);
     
   } catch (error) {
-    console.error('Error generating fresh roast:', error);
+    console.error('Error generating fresh analysis:', error);
     
-    // Show fallback roast
+    // Show fallback message
     roastSection.classList.remove('loading');
     roastSection.classList.add('fallback');
     roastText.style.opacity = '0';
@@ -3672,4 +3672,5 @@ async function roastMeAgain(button) {
     button.disabled = false;
     button.style.opacity = '1';
   }
+}
 }
