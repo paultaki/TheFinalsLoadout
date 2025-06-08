@@ -1638,9 +1638,13 @@ async function finalizeSpin(columns) {
       lastAddedLoadout = loadoutString;
 
       // Increment the global loadouts counter
+      console.log('🚀🚀🚀 ABOUT TO CALL incrementLoadoutCounter 🚀🚀🚀');
+      alert('About to increment counter!');
       await incrementLoadoutCounter();
+      console.log('✅✅✅ incrementLoadoutCounter COMPLETED ✅✅✅');
       
       // Also fetch and update counter display as backup
+      console.log('🚀🚀🚀 ABOUT TO CALL fetchAndUpdateCounter 🚀🚀🚀');
       fetchAndUpdateCounter();
 
       // Display roast immediately below the slot machine and get the generated roast
@@ -3468,27 +3472,65 @@ async function refreshCounterFromAPI() {
 // Simple function to fetch and update counter display
 async function fetchAndUpdateCounter() {
   try {
-    console.log('🔄 Fetching current counter value...');
+    console.log('🔄🔄🔄 FETCHANDUPDATECOUNTER CALLED 🔄🔄🔄');
+    alert('fetchAndUpdateCounter called!'); // Very visible debugging
     
     const response = await fetch('/api/counter');
+    console.log('📡 Response status:', response.status);
+    
     if (response.ok) {
       const data = await response.json();
       console.log('✅ Counter fetched:', data.totalGenerated);
+      alert(`Counter fetched: ${data.totalGenerated}`); // Very visible debugging
       
       // Update all elements with class 'loadouts-counter'
       const counterElements = document.querySelectorAll('.loadouts-counter');
-      counterElements.forEach(element => {
+      console.log('🎯 Found counter elements:', counterElements.length);
+      
+      counterElements.forEach((element, index) => {
+        const oldValue = element.textContent;
         element.textContent = data.totalGenerated.toLocaleString();
+        console.log(`Updated element ${index}: "${oldValue}" → "${element.textContent}"`);
       });
       
       console.log('✅ Updated', counterElements.length, 'counter elements');
+      alert(`Updated ${counterElements.length} elements to ${data.totalGenerated.toLocaleString()}`);
     } else {
       console.warn('⚠️ Failed to fetch counter');
+      alert('Failed to fetch counter');
     }
   } catch (error) {
     console.warn('⚠️ Error fetching counter:', error);
+    alert(`Error: ${error.message}`);
   }
 }
+
+// Test function to manually update counter (for debugging)
+window.testUpdateCounter = async function() {
+  console.log('🧪 Manual counter test started');
+  alert('Testing counter update...');
+  
+  try {
+    const response = await fetch('/api/counter');
+    const data = await response.json();
+    console.log('Test counter value:', data.totalGenerated);
+    
+    const elements = document.querySelectorAll('.loadouts-counter');
+    console.log('Found elements:', elements.length);
+    
+    elements.forEach(el => {
+      console.log('Updating element:', el);
+      el.textContent = data.totalGenerated.toLocaleString();
+      el.style.color = 'red'; // Make it obvious
+      el.style.fontWeight = 'bold';
+    });
+    
+    alert(`Updated ${elements.length} elements to ${data.totalGenerated}`);
+  } catch (error) {
+    console.error('Test failed:', error);
+    alert('Test failed: ' + error.message);
+  }
+};
 
 // Update counter display on the page
 function updateCounterDisplay(newCount) {
