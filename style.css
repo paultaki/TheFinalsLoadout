@@ -5498,9 +5498,10 @@ details[open].adjustment summary::after {
 }
 
 .main-spin-button {
-  background: #FF3366 !important; /* Solid Finals red */
-  border: none !important;
-  border-radius: 0 !important; /* Sharp edges */
+  background: linear-gradient(135deg, #FF3366, #FF5722, #FF3366) !important;
+  background-size: 200% 200% !important;
+  border: 3px solid transparent !important;
+  border-radius: 12px !important;
   padding: 1rem 3rem !important;
   font-family: 'Bebas Neue', sans-serif !important;
   font-size: 2rem !important;
@@ -5509,10 +5510,18 @@ details[open].adjustment summary::after {
   text-transform: uppercase !important;
   color: #fff !important;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 200px;
   max-width: 300px;
-  box-shadow: none !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 0 30px rgba(255, 51, 102, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  animation: spin-button-glow 2s ease-in-out infinite alternate;
+  background-image: 
+    linear-gradient(135deg, #FF3366, #FF5722, #FF3366);
   position: relative;
   overflow: hidden;
   z-index: 1;
@@ -5521,12 +5530,34 @@ details[open].adjustment summary::after {
 }
 
 .main-spin-button:hover {
-  background: #FF3366 !important;
-  opacity: 0.9;
+  background: linear-gradient(135deg, #FF5722, #FF3366, #FF5722) !important;
+  background-size: 200% 200% !important;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 0 40px rgba(255, 51, 102, 0.8),
+    0 0 60px rgba(255, 87, 34, 0.4),
+    0 12px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  border: 3px solid rgba(255, 255, 255, 0.3) !important;
+  animation: spin-button-glow 1s ease-in-out infinite alternate;
 }
 
 .main-spin-button:active {
-  opacity: 0.8;
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 
+    0 0 35px rgba(255, 51, 102, 0.9),
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  background-position: 100% 0;
+}
+
+.main-spin-button:focus {
+  outline: none;
+  box-shadow: 
+    0 0 50px rgba(255, 51, 102, 1),
+    0 0 80px rgba(255, 87, 34, 0.6),
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Spinning state */
@@ -5562,25 +5593,60 @@ details[open].adjustment summary::after {
 .main-spin-button::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: conic-gradient(
-    from 0deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  animation: buttonSpinEffect 2s linear infinite;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  background: linear-gradient(45deg, 
+    #FFE500, #FF3366, #00FFFF, #FF5722, #FFE500);
+  background-size: 400% 400%;
+  border-radius: 14px;
+  z-index: -1;
+  animation: spin-button-border 3s ease-in-out infinite;
+  opacity: 0.7;
+}
+
+.main-spin-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  animation: float-particles 2.5s ease-in-out infinite;
+  box-shadow: 
+    20px 10px 0 -2px rgba(255, 255, 255, 0.3),
+    -15px -8px 0 -1px rgba(255, 255, 255, 0.2),
+    25px -12px 0 -3px rgba(255, 255, 255, 0.4);
   opacity: 0;
   transition: opacity 0.3s;
 }
 
 .main-spin-button:hover::before {
   opacity: 1;
+  animation: spin-button-border 1.5s ease-in-out infinite;
+}
+
+.main-spin-button:hover::after {
+  opacity: 1;
+  animation: float-particles 1.5s ease-in-out infinite;
+}
+
+/* Border gradient animation */
+@keyframes spin-button-border {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes buttonSpinEffect {
@@ -5589,6 +5655,48 @@ details[open].adjustment summary::after {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Enhanced glow animation for the spin button */
+@keyframes spin-button-glow {
+  0% {
+    box-shadow: 
+      0 0 25px rgba(255, 51, 102, 0.5),
+      0 8px 24px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  100% {
+    box-shadow: 
+      0 0 35px rgba(255, 51, 102, 0.8),
+      0 0 50px rgba(255, 87, 34, 0.3),
+      0 8px 24px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Background gradient animation */
+@keyframes spin-button-bg-slide {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Floating particle effect */
+@keyframes float-particles {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+    opacity: 0.8;
   }
 }
 
@@ -6124,6 +6232,13 @@ details[open].adjustment summary::after {
   .main-spin-button {
     width: 150px;
     height: 150px;
+    padding: 0.8rem 2rem !important;
+    min-width: 150px;
+    max-width: 200px;
+  }
+  
+  .main-spin-button::before {
+    border-radius: 10px;
   }
   
   .spin-text {
@@ -6161,6 +6276,23 @@ details[open].adjustment summary::after {
   .main-spin-button {
     width: 120px;
     height: 120px;
+    padding: 0.6rem 1.5rem !important;
+    min-width: 120px;
+    max-width: 160px;
+    border-radius: 8px !important;
+  }
+  
+  .main-spin-button::before {
+    border-radius: 10px;
+  }
+  
+  .main-spin-button::after {
+    width: 6px;
+    height: 6px;
+    box-shadow: 
+      15px 8px 0 -2px rgba(255, 255, 255, 0.3),
+      -10px -6px 0 -1px rgba(255, 255, 255, 0.2),
+      18px -8px 0 -3px rgba(255, 255, 255, 0.4);
   }
   
   .spin-text {
