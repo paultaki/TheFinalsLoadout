@@ -45,13 +45,13 @@ Weapon: ${weapon}
 Specialization: ${specialization}
 Gadgets: ${gadgets.join(", ")}
 
-CRITICAL: Your roast must be EXACTLY 25 words total (including the X/10 rating)
+CRITICAL: Your roast must be 15-25 words total (including the X/10 rating)
 
 Roast it like it's Season 69 patch notes made by interns. Your job:
 - Be savage, sarcastic, and specific to The Finals meta
 - Drop Finals slang: wipe, ratting, griefing, foam spam, cube tossing, coin clutching, solo queue trauma
-- EXACTLY 25 WORDS. No more, no less. Include an X/10 rating at the end.
-- Count your words! The roast must be precisely 25 words including the rating.
+- Keep it between 15-25 WORDS. Include an X/10 rating at the end.
+- Stay within the word limit! Too long and you're just rambling.
 
 Examples:
 - “Sword + Dash? You cosplaying Genji or griefing ranked? 1/10”
