@@ -1644,8 +1644,8 @@ async function finalizeSpin(columns) {
       // console.log('✅✅✅ incrementLoadoutCounter COMPLETED ✅✅✅');
       
       // Also fetch and update counter display as backup
-      console.log('🚀🚀🚀 ABOUT TO CALL fetchAndUpdateCounter 🚀🚀🚀');
-      fetchAndUpdateCounter();
+      // console.log('🚀🚀🚀 ABOUT TO CALL fetchAndUpdateCounter 🚀🚀🚀');
+      // fetchAndUpdateCounter();
 
       // Display roast immediately below the slot machine and get the generated roast
       displayRoastBelowSlotMachine(savedClass, weapon, specialization, gadgets).then(generatedRoast => {
