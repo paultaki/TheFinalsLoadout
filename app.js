@@ -28,25 +28,19 @@ async function loadInitialCounter() {
       console.log('✅ Initial counter loaded:', data.totalGenerated);
       
       // Update all counter displays
-      const counterElements = document.querySelectorAll('.loadouts-counter');
-      counterElements.forEach(element => {
-        element.textContent = data.totalGenerated.toLocaleString();
-      });
+      updateCounterDisplay(data.totalGenerated);
+      updateTotalLoadoutsDisplay(data.totalGenerated);
     } else {
       console.warn('⚠️ Failed to load initial counter, using default 1231');
       // Fallback to 1231
-      const counterElements = document.querySelectorAll('.loadouts-counter');
-      counterElements.forEach(element => {
-        element.textContent = '1231';
-      });
+      updateCounterDisplay(1231);
+      updateTotalLoadoutsDisplay(1231);
     }
   } catch (error) {
     console.warn('⚠️ Error loading initial counter, using default 1231:', error);
     // Fallback to 1231
-    const counterElements = document.querySelectorAll('.loadouts-counter');
-    counterElements.forEach(element => {
-      element.textContent = '1231';
-    });
+    updateCounterDisplay(1231);
+    updateTotalLoadoutsDisplay(1231);
   }
 }
 
@@ -3400,6 +3394,16 @@ Gadget 3: ${selectedItems[4]}`;
 });
 
 // Increment loadout counter on backend
+// Update the total loadouts counter element specifically
+function updateTotalLoadoutsDisplay(count) {
+  const totalLoadoutsElement = document.getElementById('total-loadouts');
+  if (totalLoadoutsElement) {
+    const formattedCount = count.toLocaleString();
+    totalLoadoutsElement.innerHTML = `🔥 <span class="loadouts-counter">${formattedCount}</span> total analyses delivered`;
+    console.log('✅ Updated total-loadouts display:', formattedCount);
+  }
+}
+
 async function incrementLoadoutCounter() {
   try {
     console.log('📊 Incrementing loadout counter...');
@@ -3415,14 +3419,41 @@ async function incrementLoadoutCounter() {
       const data = await response.json();
       console.log('✅ Counter incremented successfully:', data.totalGenerated);
       
-      // Update the counter display if it exists
+      // Update both the general counter display and the specific total-loadouts element
       updateCounterDisplay(data.totalGenerated);
+      updateTotalLoadoutsDisplay(data.totalGenerated);
+      
+      // Also re-fetch from counter API to ensure accuracy
+      await refreshCounterFromAPI();
     } else {
       console.warn('⚠️ Failed to increment counter, but continuing...');
+      // Try to refresh from API anyway
+      await refreshCounterFromAPI();
     }
   } catch (error) {
     console.warn('⚠️ Error incrementing counter:', error);
-    // Don't throw - this shouldn't break the user experience
+    // Try to refresh from API as fallback
+    await refreshCounterFromAPI();
+  }
+}
+
+// Re-fetch counter from API to ensure accuracy
+async function refreshCounterFromAPI() {
+  try {
+    console.log('🔄 Refreshing counter from API...');
+    
+    const response = await fetch('/api/counter');
+    if (response.ok) {
+      const data = await response.json();
+      console.log('✅ Refreshed counter from API:', data.totalGenerated);
+      
+      updateCounterDisplay(data.totalGenerated);
+      updateTotalLoadoutsDisplay(data.totalGenerated);
+    } else {
+      console.warn('⚠️ Failed to refresh counter from API');
+    }
+  } catch (error) {
+    console.warn('⚠️ Error refreshing counter from API:', error);
   }
 }
 
