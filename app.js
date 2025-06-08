@@ -1840,41 +1840,47 @@ async function addToHistory(
   
   // Create initial entry with loading roast state
   newEntry.innerHTML = `
-    <div class="loadout-header">
-      <span class="class-badge ${classType.toLowerCase()}">${classType.toUpperCase()}</span>
-      <span class="loadout-name">${loadoutName}</span>
-      <span class="timestamp">Just now</span>
-    </div>
-    <div class="loadout-details">
-      <div class="loadout-item weapon-item">
-        <img src="images/${selectedWeapon.replace(/ /g, "_")}.webp" alt="${selectedWeapon}" class="item-icon">
-        <span class="item-name">${selectedWeapon}</span>
+    <div class="meme-export-container">
+      <div class="loadout-header">
+        <span class="class-badge ${classType.toLowerCase()}">${classType.toUpperCase()}</span>
+        <span class="loadout-name">${loadoutName}</span>
+        <span class="timestamp">Just now</span>
+        <div class="meme-badge">🔥 LEGENDARY TRASH</div>
       </div>
-      <div class="loadout-item spec-item">
-        <img src="images/${selectedSpec.replace(/ /g, "_")}.webp" alt="${selectedSpec}" class="item-icon">
-        <span class="item-name">${selectedSpec}</span>
+      <div class="loadout-details">
+        <div class="loadout-item weapon-item">
+          <img src="images/${selectedWeapon.replace(/ /g, "_")}.webp" alt="${selectedWeapon}" class="item-icon">
+          <span class="item-name">${selectedWeapon}</span>
+        </div>
+        <div class="loadout-item spec-item">
+          <img src="images/${selectedSpec.replace(/ /g, "_")}.webp" alt="${selectedSpec}" class="item-icon">
+          <span class="item-name">${selectedSpec}</span>
+        </div>
+        <div class="gadget-group">
+          ${selectedGadgets.map(g => `
+            <div class="loadout-item gadget-item">
+              <img src="images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small">
+              <span class="item-name small">${g}</span>
+            </div>
+          `).join('')}
+        </div>
       </div>
-      <div class="gadget-group">
-        ${selectedGadgets.map(g => `
-          <div class="loadout-item gadget-item">
-            <img src="images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small">
-            <span class="item-name small">${g}</span>
-          </div>
-        `).join('')}
+      <div class="roast-section loading">
+        <div class="roast-content">
+          <span class="fire-emoji">🔥</span>
+          <span class="roast-text">Analyzing loadout cringe level...</span>
+        </div>
       </div>
-    </div>
-    <div class="roast-section loading">
-      <div class="roast-content">
-        <span class="fire-emoji">🔥</span>
-        <span class="roast-text">Analyzing loadout cringe level...</span>
+      <div class="meme-footer">
+        <span class="meme-watermark">Roasted by LoadoutRoulette.ai</span>
       </div>
     </div>
     <div class="loadout-actions">
       <button class="copy-build" onclick="copyLoadoutText(this)">
         <span>📋</span> COPY
       </button>
-      <button class="challenge-build" onclick="challengeWithLoadout(this)">
-        <span>🎯</span> CHALLENGE
+      <button class="meme-card-btn" onclick="exportMemeCard(this)">
+        <span>🧠</span> MEME CARD
       </button>
       <button class="roast-again-btn" onclick="roastMeAgain(this)" title="Generate a fresh insult for this exact trash">
         <span>🔁</span> ROAST ME AGAIN
@@ -2160,36 +2166,42 @@ function loadHistory() {
     }
     
     entry.innerHTML = `
-      <div class="loadout-header">
-        <span class="class-badge ${entryData.classType.toLowerCase()}">${entryData.classType.toUpperCase()}</span>
-        <span class="loadout-name">${entryData.loadoutName}</span>
-        <span class="timestamp">${timeAgo}</span>
+      <div class="meme-export-container">
+        <div class="loadout-header">
+          <span class="class-badge ${entryData.classType.toLowerCase()}">${entryData.classType.toUpperCase()}</span>
+          <span class="loadout-name">${entryData.loadoutName}</span>
+          <span class="timestamp">${timeAgo}</span>
+          <div class="meme-badge">🔥 LEGENDARY TRASH</div>
+        </div>
+        <div class="loadout-details">
+          <div class="loadout-item weapon-item">
+            <img src="images/${entryData.weapon.replace(/ /g, "_")}.webp" alt="${entryData.weapon}" class="item-icon">
+            <span class="item-name">${entryData.weapon}</span>
+          </div>
+          <div class="loadout-item spec-item">
+            <img src="images/${entryData.specialization.replace(/ /g, "_")}.webp" alt="${entryData.specialization}" class="item-icon">
+            <span class="item-name">${entryData.specialization}</span>
+          </div>
+          <div class="gadget-group">
+            ${entryData.gadgets.map(g => `
+              <div class="loadout-item gadget-item">
+                <img src="images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small">
+                <span class="item-name small">${g}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        ${roastSectionHTML}
+        <div class="meme-footer">
+          <span class="meme-watermark">Roasted by LoadoutRoulette.ai</span>
+        </div>
       </div>
-      <div class="loadout-details">
-        <div class="loadout-item weapon-item">
-          <img src="images/${entryData.weapon.replace(/ /g, "_")}.webp" alt="${entryData.weapon}" class="item-icon">
-          <span class="item-name">${entryData.weapon}</span>
-        </div>
-        <div class="loadout-item spec-item">
-          <img src="images/${entryData.specialization.replace(/ /g, "_")}.webp" alt="${entryData.specialization}" class="item-icon">
-          <span class="item-name">${entryData.specialization}</span>
-        </div>
-        <div class="gadget-group">
-          ${entryData.gadgets.map(g => `
-            <div class="loadout-item gadget-item">
-              <img src="images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small">
-              <span class="item-name small">${g}</span>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-      ${roastSectionHTML}
       <div class="loadout-actions">
         <button class="copy-build" onclick="copyLoadoutText(this)">
           <span>📋</span> COPY
         </button>
-        <button class="challenge-build" onclick="challengeWithLoadout(this)">
-          <span>🎯</span> CHALLENGE
+        <button class="meme-card-btn" onclick="exportMemeCard(this)">
+          <span>🧠</span> MEME CARD
         </button>
       </div>
     `;
