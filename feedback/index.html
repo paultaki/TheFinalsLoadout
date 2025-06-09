@@ -158,9 +158,57 @@
     </main>
 
     <script>
-      // Feedback wheel spinning logic
+      // Enhanced feedback system with session tracking
+      let feedbackCount = parseInt(localStorage.getItem('feedbackCount') || '0');
       let isSpinning = false;
       
+      // Enhanced ticker with more variety
+      const feedbackExamples = [
+        { user: "xXSniperXx", feedback: "Found a bug with Medium class loadouts", icon: "🐛" },
+        { user: "RageQuitPro", feedback: "Sledgehammer is completely broken lol", icon: "🔨" },
+        { user: "TacticalGamer", feedback: "Can we get a 'no explosives' mode?", icon: "💡" },
+        { user: "AnimationFan", feedback: "The new roulette animation is sick!", icon: "❤️" },
+        { user: "PunishmentSeeker", feedback: "Rage quit mode needs MORE punishment", icon: "😤" },
+        { user: "BalanceGuru", feedback: "AKM needs a serious nerf", icon: "🔫" },
+        { user: "UIExpert", feedback: "Mobile navigation could be cleaner", icon: "📱" },
+        { user: "FeatureRequest", feedback: "Add loadout favorites system please", icon: "⭐" },
+        { user: "BugHunter", feedback: "Spinner gets stuck on Firefox sometimes", icon: "🐛" },
+        { user: "SoundDesigner", feedback: "Love the new audio effects!", icon: "🔊" }
+      ];
+
+      // Initialize ticker with randomized times
+      function initializeTicker() {
+        const ticker = document.getElementById('feedback-ticker');
+        const shuffled = [...feedbackExamples].sort(() => Math.random() - 0.5);
+        
+        ticker.innerHTML = shuffled.map(item => {
+          const timeAgo = Math.floor(Math.random() * 6) + 2; // 2-8 hours ago
+          return `<span class="ticker-item">
+            <span class="ticker-icon">${item.icon}</span>
+            <strong>${item.user}:</strong> "${item.feedback}" (${timeAgo}h ago)
+          </span>`;
+        }).join('');
+      }
+
+      // Enhanced wheel with hover and sound effects
+      const wheelElement = document.getElementById('feedback-wheel');
+      
+      // Add hover effect to wheel
+      wheelElement.addEventListener('mouseenter', function() {
+        if (!isSpinning) {
+          this.style.transform = 'rotate(5deg) scale(1.02)';
+          this.style.boxShadow = '0 0 40px rgba(255, 183, 0, 1)';
+        }
+      });
+      
+      wheelElement.addEventListener('mouseleave', function() {
+        if (!isSpinning) {
+          this.style.transform = 'rotate(0deg) scale(1)';
+          this.style.boxShadow = '0 0 30px rgba(255, 183, 0, 0.8)';
+        }
+      });
+
+      // Enhanced spinning logic with sound
       document.getElementById('spin-feedback-wheel').addEventListener('click', function() {
         if (isSpinning) return;
         
@@ -169,17 +217,46 @@
         const categories = ['weapons', 'ui', 'bugs', 'ideas', 'rage'];
         const selectedCategory = categories[Math.floor(Math.random() * categories.length)];
         
-        // Spin animation
-        wheel.style.transform = `rotate(${360 * 3 + Math.random() * 360}deg)`;
+        // Play tick sound (simulated)
+        playTickSound();
+        
+        // Enhanced spin animation
+        const spins = 3 + Math.random() * 2; // 3-5 full rotations
+        wheel.style.transition = 'transform 3s cubic-bezier(0.23, 1, 0.32, 1)';
+        wheel.style.transform = `rotate(${360 * spins}deg)`;
         
         setTimeout(() => {
           setTopic(selectedCategory);
+          showSelectedBadge(selectedCategory);
           isSpinning = false;
+          wheel.style.transition = 'transform 0.5s ease';
           wheel.style.transform = 'rotate(0deg)';
         }, 3000);
       });
 
-      // Topic setting function
+      // Show selected topic badge
+      function showSelectedBadge(category) {
+        const badge = document.getElementById('selected-topic-badge');
+        const badgeText = document.getElementById('badge-text');
+        const categoryMap = {
+          'weapons': '🔫 WEAPONS SELECTED',
+          'ui': '🖥️ UI/UX SELECTED', 
+          'bugs': '🐛 BUGS SELECTED',
+          'ideas': '💡 IDEAS SELECTED',
+          'rage': '😤 RAGE QUIT SELECTED'
+        };
+        
+        badgeText.textContent = categoryMap[category] || 'TOPIC SELECTED';
+        badge.style.display = 'block';
+        badge.style.animation = 'badgePop 0.5s ease-out';
+        
+        setTimeout(() => {
+          badge.style.animation = 'badgeFade 0.5s ease-out';
+          setTimeout(() => badge.style.display = 'none', 500);
+        }, 3000);
+      }
+
+      // Enhanced topic setting with glow effects
       function setTopic(category) {
         const typeSelect = document.getElementById('feedback-type');
         const label = document.getElementById('feedback-label');
@@ -191,12 +268,12 @@
             placeholder: "Describe the bug: What happened? What did you expect? Steps to reproduce?",
             value: "bug"
           },
-          'weapon': {
+          'weapons': {
             label: "Which weapon made you rage?",
             placeholder: "Tell us about weapon balance issues, overpowered weapons, or underpowered ones...",
             value: "weapon"
           },
-          'feature': {
+          'ideas': {
             label: "What's your dream feature?",
             placeholder: "Describe your idea: What would make this site amazing? New features, improvements?",
             value: "feature"
@@ -222,6 +299,13 @@
           label.textContent = prompts[category].label;
           textarea.placeholder = prompts[category].placeholder;
           typeSelect.value = prompts[category].value;
+          
+          // Add glow effect to form
+          const form = document.querySelector('.enhanced-form');
+          form.style.boxShadow = '0 0 30px rgba(255, 183, 0, 0.4)';
+          setTimeout(() => {
+            form.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.5)';
+          }, 2000);
         }
       }
 
@@ -243,9 +327,12 @@
         });
       });
 
-      // Enhanced form submission
+      // Enhanced form submission with session tracking
       document.getElementById('feedback-form').addEventListener('submit', function(event) {
         event.preventDefault();
+        
+        feedbackCount++;
+        localStorage.setItem('feedbackCount', feedbackCount.toString());
         
         const sendButton = document.getElementById('send-button');
         sendButton.classList.add('sending');
@@ -253,37 +340,118 @@
         
         // Simulate API call
         setTimeout(() => {
-          document.getElementById('feedback-response').style.display = 'block';
-          document.getElementById('feedback-form').style.display = 'none';
+          showSuccessState();
           
-          // Trigger jackpot animation
-          createJackpotEffect();
+          // Check for feedback frenzy mode
+          if (feedbackCount >= 5) {
+            triggerFeedbackFrenzy();
+          }
         }, 2000);
       });
 
-      // Jackpot animation
+      // Enhanced success state with redirect
+      function showSuccessState() {
+        const form = document.getElementById('feedback-form');
+        const response = document.getElementById('feedback-response');
+        
+        // Generate random lottery number
+        const lotteryNumber = Math.floor(Math.random() * 9999).toString().padStart(4, '0');
+        document.getElementById('lottery-number').textContent = lotteryNumber;
+        
+        form.style.display = 'none';
+        response.style.display = 'block';
+        
+        // Trigger jackpot animation
+        createJackpotEffect();
+        
+        // Start countdown timer
+        let countdown = 3;
+        const countdownElement = document.getElementById('countdown');
+        const timer = setInterval(() => {
+          countdown--;
+          countdownElement.textContent = countdown;
+          if (countdown <= 0) {
+            clearInterval(timer);
+            window.location.href = '../index.html';
+          }
+        }, 1000);
+      }
+
+      // Feedback Frenzy Mode - Easter Egg
+      function triggerFeedbackFrenzy() {
+        // Create confetti effect
+        for (let i = 0; i < 50; i++) {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + '%';
+          confetti.style.backgroundColor = ['#ff4444', '#ffb700', '#4444ff', '#44ff44'][Math.floor(Math.random() * 4)];
+          confetti.style.animationDelay = Math.random() * 3 + 's';
+          document.body.appendChild(confetti);
+          
+          setTimeout(() => confetti.remove(), 5000);
+        }
+        
+        // Show special badge
+        const badge = document.createElement('div');
+        badge.className = 'frenzy-badge';
+        badge.innerHTML = '🏆 FEEDBACK FRENZY UNLOCKED! 🏆';
+        document.body.appendChild(badge);
+        
+        setTimeout(() => badge.remove(), 5000);
+      }
+
+      // Enhanced jackpot animation
       function createJackpotEffect() {
         const container = document.querySelector('.falling-coins');
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 30; i++) {
           const coin = document.createElement('div');
           coin.className = 'coin';
-          coin.textContent = '💰';
+          coin.textContent = ['💰', '🎰', '💎', '🏆'][Math.floor(Math.random() * 4)];
           coin.style.left = Math.random() * 100 + '%';
           coin.style.animationDelay = Math.random() * 2 + 's';
           container.appendChild(coin);
           
-          setTimeout(() => coin.remove(), 3000);
+          setTimeout(() => coin.remove(), 4000);
         }
       }
 
-      // Live ticker animation
-      function animateTicker() {
-        const ticker = document.getElementById('feedback-ticker');
-        ticker.style.animationPlayState = 'running';
+      // Simulated sound effect
+      function playTickSound() {
+        // Create a simple tick sound using Web Audio API
+        try {
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+          gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+          
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.1);
+        } catch (e) {
+          // Fallback for browsers without Web Audio API
+          console.log('Tick sound played');
+        }
       }
+
+      // Form focus glow effect
+      const form = document.querySelector('.enhanced-form');
+      form.addEventListener('focusin', function() {
+        this.style.boxShadow = '0 0 30px rgba(255, 183, 0, 0.4)';
+      });
       
-      // Start ticker on load
-      window.addEventListener('load', animateTicker);
+      form.addEventListener('focusout', function() {
+        this.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.5)';
+      });
+      
+      // Initialize everything on load
+      window.addEventListener('load', function() {
+        initializeTicker();
+      });
     </script>
   </body>
 </html>

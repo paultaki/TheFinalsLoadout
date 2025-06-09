@@ -423,7 +423,7 @@ body {
 .send-button {
   width: 100%;
   padding: 20px;
-  background: linear-gradient(45deg, #ff4444, #ffb700, #ff4444);
+  background: linear-gradient(45deg, #ff6b00, #ffb700);
   background-size: 200% 200%;
   border: none;
   border-radius: 15px;
@@ -436,12 +436,12 @@ body {
   overflow: hidden;
   transition: all 0.3s ease;
   box-shadow: 0 5px 20px rgba(255, 68, 68, 0.5);
+  animation: gradientShift 3s ease infinite;
 }
 
 .send-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(255, 68, 68, 0.7);
-  animation: gradientShift 2s ease infinite;
 }
 
 .send-button.sending {
@@ -457,6 +457,12 @@ body {
 @keyframes pulseGlow {
   0%, 100% { box-shadow: 0 5px 20px rgba(255, 68, 68, 0.5); }
   50% { box-shadow: 0 5px 30px rgba(255, 68, 68, 1); }
+}
+
+/* Form focus glow effect */
+.enhanced-form:focus-within {
+  box-shadow: 0 0 30px rgba(255, 183, 0, 0.4);
+  transition: box-shadow 0.3s ease;
 }
 
 /* Success Animation */
@@ -494,6 +500,153 @@ body {
 @keyframes fall {
   0% { top: -50px; transform: rotate(0deg); }
   100% { top: 150px; transform: rotate(360deg); }
+}
+
+/* Enhanced Ticker Styling */
+.ticker-icon {
+  margin-right: 8px;
+  font-size: 1.1rem;
+}
+
+.ticker-item strong {
+  color: #ffb700;
+}
+
+/* Selected Topic Badge */
+.selected-topic-badge {
+  background: linear-gradient(135deg, #ffb700, #ff4444);
+  color: white;
+  padding: 15px 30px;
+  border-radius: 25px;
+  margin-top: 20px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: 0 5px 20px rgba(255, 183, 0, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.badge-icon {
+  margin-right: 10px;
+  font-size: 1.3rem;
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0) rotate(-5deg); opacity: 0; }
+  50% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes badgeFade {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+
+/* Email Incentive */
+.email-incentive {
+  font-size: 0.9rem;
+  color: #00f3ff;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(0, 243, 255, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 243, 255, 0.3);
+  text-align: center;
+  animation: incentiveGlow 2s ease-in-out infinite;
+}
+
+@keyframes incentiveGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(0, 243, 255, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(0, 243, 255, 0.6); }
+}
+
+/* Enhanced Success State */
+.lottery-ticket {
+  background: linear-gradient(45deg, #4444ff, #6666ff);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 15px;
+  margin: 15px 0;
+  font-weight: 700;
+  font-size: 1.2rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  animation: ticketShine 2s ease-in-out infinite;
+}
+
+@keyframes ticketShine {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.redirect-timer {
+  margin-top: 20px;
+  font-size: 1rem;
+  color: #ccc;
+  font-style: italic;
+}
+
+/* Feedback Frenzy Mode - Easter Egg */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  z-index: 10000;
+  animation: confettiFall 3s linear forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    top: -10px;
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    top: 100vh;
+    transform: rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.frenzy-badge {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(45deg, #ff4444, #ffb700, #4444ff);
+  color: white;
+  padding: 20px 40px;
+  border-radius: 20px;
+  font-size: 1.5rem;
+  font-weight: 900;
+  z-index: 10001;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: frenzyPulse 1s ease-in-out infinite;
+}
+
+@keyframes frenzyPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* Lottery Winner Scroll Effect */
+.last-winner {
+  background: rgba(0, 255, 0, 0.1);
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 0, 0.3);
+  margin: 15px 0;
+  font-weight: 600;
+  color: #00ff88;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.last-winner.long-text {
+  animation: scroll-left 10s linear infinite;
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
 }
 
 /* Mobile Responsiveness */
