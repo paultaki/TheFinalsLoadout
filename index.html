@@ -1180,6 +1180,94 @@
         // Initialize mobile features
         if (window.innerWidth <= 768) {
           initMobileHistory();
+          initMobileSpinEffects();
+        }
+        
+        // Mobile SPIN button particle effects
+        function initMobileSpinEffects() {
+          const spinButton = document.getElementById('main-spin-button');
+          if (!spinButton) return;
+          
+          // Create mobile particle effect
+          function createMobileParticleEffect(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            // Mobile-optimized particle count
+            const particleCount = 6;
+            
+            for (let i = 0; i < particleCount; i++) {
+              const particle = document.createElement("div");
+              particle.style.cssText = `
+                position: fixed;
+                width: 6px;
+                height: 6px;
+                background: linear-gradient(45deg, #7b2fe3, #1e90ff);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1000001;
+                left: ${centerX}px;
+                top: ${centerY}px;
+                box-shadow: 0 0 8px rgba(123, 47, 227, 0.8);
+              `;
+              
+              // Random direction for firework effect
+              const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.3;
+              const distance = 40 + Math.random() * 60;
+              const targetX = centerX + Math.cos(angle) * distance;
+              const targetY = centerY + Math.sin(angle) * distance;
+              
+              document.body.appendChild(particle);
+              
+              // Animate the particle
+              const animation = particle.animate([
+                {
+                  transform: 'translate(0, 0) scale(1)',
+                  opacity: 1
+                },
+                {
+                  transform: `translate(${targetX - centerX}px, ${targetY - centerY}px) scale(0)`,
+                  opacity: 0
+                }
+              ], {
+                duration: 600,
+                easing: 'ease-out'
+              });
+              
+              animation.onfinish = () => {
+                if (particle.parentNode) {
+                  particle.parentNode.removeChild(particle);
+                }
+              };
+            }
+          }
+          
+          // Add click/touch effect for mobile
+          spinButton.addEventListener('click', function(e) {
+            // Create particle effect on click
+            createMobileParticleEffect(this);
+            
+            // Add button scale effect
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+              this.style.transform = 'scale(1)';
+            }, 150);
+            
+            // Trigger haptic feedback if available
+            if (navigator.vibrate) {
+              navigator.vibrate(50);
+            }
+          });
+          
+          // Add touch feedback
+          spinButton.addEventListener('touchstart', function(e) {
+            this.style.transform = 'scale(0.98)';
+          });
+          
+          spinButton.addEventListener('touchend', function(e) {
+            this.style.transform = 'scale(1)';
+          });
         }
       });
     </script>
