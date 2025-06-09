@@ -343,12 +343,15 @@
             // Disable button
             this.disabled = true;
             
-            // Use the existing function if available
-            if (typeof spinRageQuitLoadout === 'function') {
+            // Check if roulette system is available (preferred method)
+            if (window.rageRouletteSystem && typeof window.rageRouletteSystem.startFullSequence === 'function') {
+              console.log("Using roulette system");
+              window.rageRouletteSystem.startFullSequence();
+            } else if (typeof spinRageQuitLoadout === 'function') {
               console.log("Calling spinRageQuitLoadout");
               spinRageQuitLoadout();
             } else {
-              console.error("spinRageQuitLoadout not found");
+              console.error("Neither roulette system nor spinRageQuitLoadout found");
               alert("Error: Could not find spin function. Check the console for details.");
               this.disabled = false;
             }

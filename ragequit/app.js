@@ -5,7 +5,15 @@ let state = {
   currentGadgetPool: new Set(),
   handicap: null, // Legacy - now using window.state.selectedHandicap from roulette
   selectedClass: null, // Add this property
+  soundEnabled: true,
+  isMobile: window.innerWidth <= 768,
+  selectedHandicap: null,
+  selectedHandicapDesc: null,
+  totalSpins: null
 };
+
+// Make state available globally for roulette system
+window.state = state;
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded for Rage Quit Simulator");
 
@@ -39,6 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize the rage roulette animation system
   const rageRouletteSystem = new window.RageRouletteAnimationSystem();
+  
+  // Make roulette system available globally
+  window.rageRouletteSystem = rageRouletteSystem;
   
   // Initialize sound toggle
   initializeRageSoundToggle();
