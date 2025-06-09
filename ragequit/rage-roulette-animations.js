@@ -503,27 +503,15 @@ class RageRouletteAnimationSystem {
     const wheel = document.createElement("div");
     wheel.id = "handicap-wheel";
     wheel.style.cssText = `
-    display: flex;
-    justify-content: flex-start;
-    gap: clamp(3px, 1vw, 8px);
-    height: 200px;
-    align-items: center;
-    padding: 0 5px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: clamp(5px, 2vw, 10px);
+    padding: 10px;
     box-sizing: border-box;
-    overflow-x: auto;
     width: 100%;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    max-width: 100%;
+    justify-items: center;
   `;
-    
-    // Hide scrollbar
-    const style = document.createElement('style');
-    style.textContent = \`
-      #handicap-wheel::-webkit-scrollbar {
-        display: none;
-      }
-    \`;
-    document.head.appendChild(style);
 
     // Define handicaps - expanded selection for more variety
     const handicaps = [
@@ -554,9 +542,9 @@ class RageRouletteAnimationSystem {
     handicaps.forEach((handicap, index) => {
       const option = document.createElement("div");
       option.style.cssText = `
-      width: clamp(70px, 15vw, 100px);
-      height: clamp(90px, 18vw, 130px);
-      min-width: 70px;
+      width: 100%;
+      height: clamp(90px, 18vw, 120px);
+      max-width: 100px;
       background: linear-gradient(135deg, #2e1a1a, #4e2a2a);
       border-radius: 12px;
       display: flex;
@@ -566,10 +554,10 @@ class RageRouletteAnimationSystem {
       transition: all 0.3s ease;
       opacity: 0.5;
       transform: scale(0.8);
-      flex-shrink: 0;
       border: 2px solid #660000;
       text-align: center;
-      padding: 3px;
+      padding: 5px;
+      aspect-ratio: 4/5;
     `;
 
       const icon = document.createElement("div");

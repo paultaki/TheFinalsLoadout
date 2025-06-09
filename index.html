@@ -1,242 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
   
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Enhanced resource hints for optimal loading -->
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com/">
-    <link rel="dns-prefetch" href="https://static.cloudflareinsights.com/">
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="images/roulette.webp" as="image" fetchpriority="high">
-    <link rel="preload" href="style-optimized.css" as="style">
-    <link rel="preload" href="app.js" as="script">
-    
-    <!-- Prefetch likely-to-be-used resources -->
-    <link rel="prefetch" href="images/light_active.webp">
-    <link rel="prefetch" href="images/medium_active.webp">
-    <link rel="prefetch" href="images/heavy_active.webp">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="canonical" href="https://www.thefinalsloadout.com/" />
+
+  <!-- Performance Hints -->
+  <link rel="preconnect" href="https://fonts.googleapis.com/" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com/" />
+  <link rel="dns-prefetch" href="https://static.cloudflareinsights.com/" />
+
+  <!-- Preload Critical Resources -->
+  <link rel="preload" href="images/roulette.webp" as="image" fetchpriority="high" />
+  <link rel="preload" href="style-optimized.css" as="style" />
+  <link rel="preload" href="app.js" as="script" />
+  <link rel="prefetch" href="images/light_active.webp" />
+  <link rel="prefetch" href="images/medium_active.webp" />
+  <link rel="prefetch" href="images/heavy_active.webp" />
+
+  <!-- Meta Tags -->
+  <title>The Finals BEST Random Loadout Generator | Fun & Unique Loadouts</title>
+  <meta name="description" content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles." />
+  <meta name="author" content="Paul Takisaki" />
+  <link rel="author" href="https://www.paultakisaki.com/" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="The Finals Loadout Roulette" />
+  <meta property="og:description" content="Randomize your loadout and dominate The Finals with style." />
+  <meta property="og:image" content="https://www.thefinalsloadout.com/assets/loadout-social-card@2x.png" />
+  <meta property="og:image:width" content="2400" />
+  <meta property="og:image:height" content="1260" />
+  <meta property="og:url" content="https://www.thefinalsloadout.com/" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Finals Loadout Roulette" />
+  <meta name="twitter:description" content="Spin the wheel. Wreck the arena." />
+  <meta name="twitter:image" content="https://www.thefinalsloadout.com/assets/loadout-social-card@2x.png" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "The Finals Loadout Generator",
+      "url": "https://www.thefinalsloadout.com",
+      "description": "A random loadout generator for The Finals game with optimized weapons and gadgets for different playstyles.",
+      "image": "https://www.thefinalsloadout.com/images/the-finals-logo.webp",
+      "author": {
+        "@type": "Person",
+        "name": "Paul Takisaki",
+        "url": "https://www.paultakisaki.com"
+      }
+    }
+  </script>
+
+  <!-- Fonts -->
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap"
+  />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap"
+    media="print"
+    onload="this.media='all'"
+  />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+
+  <!-- Critical CSS -->
+  <style>
+    :root {
+      --neon-purple: #7b2fe3;
+      --neon-blue: #1e90ff;
+      --neon-cyan: #00f3ff;
+      --neon-pink: #ff1493;
+      --neon-orange: #ff7b00;
+      --neon-yellow: #ffb700;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: linear-gradient(-45deg, #1d1a21, #2a1f2d, #1f2a2d, #201c24);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      min-height: 100%;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      color: #fff;
+      text-align: center;
+      background: transparent;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1, h2, .impact-text {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .main-nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1rem 0;
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .main-nav a {
+      color: #fff;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .main-nav a:hover,
+    .main-nav a.active {
+      background-color: var(--neon-blue);
+    }
+
+    .headerSection {
+      padding: 2rem 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    .finals-logo {
+      max-width: 240px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .subTitle {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+      color: var(--neon-yellow);
+      font-weight: 500;
+    }
+
+    .loading-placeholder {
+      background: linear-gradient(90deg, #333, #555, #333);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+      border-radius: 8px;
+    }
+
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+
+  <!-- Full Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
 
 
-  <!-- Add these two lines right here -->
-    <meta name="author" content="Paul Takisaki">
-    <link rel="author" href="https://www.paultakisaki.com/">
-
-    <title>
-      The Finals BEST Random Loadout Generator | Fun & Unique Loadouts
-    </title>
-    <meta
-      name="description"
-      content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles."
-    />
-
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="The Finals Loadout Roulette" />
-    <meta property="og:description" content="Randomize your loadout and dominate The Finals with style." />
-    <meta property="og:image" content="assets/loadout-social-card%402x.png" />
-    <meta property="og:image:width" content="2400" />
-    <meta property="og:image:height" content="1260" />
-    <meta property="og:url" content="index.html" />
-    <meta property="og:type" content="website" />
-
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="The Finals Loadout Roulette" />
-    <meta name="twitter:description" content="Spin the wheel. Wreck the arena." />
-    <meta name="twitter:image" content="assets/loadout-social-card%402x.png" />
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "The Finals Loadout Generator",
-  "url": "https://www.thefinalsloadout.com",
-  "description": "A random loadout generator for The Finals game with optimized weapons and gadgets for different playstyles.",
-  "image": "https://www.thefinalsloadout.com/images/the-finals-logo.webp",
-  "author": {
-    "@type": "Person",
-    "name": "Paul Takisaki",
-    "url": "https://www.paultakisaki.com"
-  }
-}
-</script>
-
-    </script>
-
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
-
-    <!-- Import The Finals' actual font style -->
-    <link rel="preconnect" href="https://fonts.googleapis.com/" crossorigin>
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;800&amp;display=swap"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;800&amp;display=swap"
-      media="print"
-      onload="this.media='all'"
-    />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;800&amp;display=swap"
-      />
-    </noscript>
-
-    <!-- Critical CSS inlined for fastest render -->
-    <style>
-      /* Critical above-the-fold styles */
-      :root {
-        --neon-purple: #7b2fe3;
-        --neon-blue: #1e90ff;
-        --neon-cyan: #00f3ff;
-        --neon-pink: #ff1493;
-        --neon-orange: #ff7b00;
-        --neon-yellow: #ffb700;
-      }
-      
-      * { box-sizing: border-box; }
-      
-      html {
-        background: #0A0A0A !important; /* Flat black */
-        min-height: 100%;
-      }
-      
-      body {
-        font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        font-weight: 400;
-        background: transparent !important;
-        margin: 0;
-        padding: 0;
-        color: #fff;
-        text-align: center;
-        min-height: 100vh;
-        overflow-x: hidden;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-      
-      h1, h2, .impact-text {
-        font-family: 'Bebas Neue', sans-serif;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-      }
-      
-      /* Critical navigation styles */
-      .main-nav {
-        display: flex;
-        justify-content: center;
-        gap: 2rem;
-        padding: 1rem 0;
-        background: rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(10px);
-      }
-      
-      .main-nav a {
-        color: #fff;
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        transition: background-color 0.3s;
-      }
-      
-      .main-nav a:hover,
-      .main-nav a.active {
-        background-color: var(--neon-blue);
-      }
-      
-      /* Critical header styles */
-      .headerSection {
-        padding: 2rem 0;
-      }
-      
-      .container {
-        width: 100%;
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 0 15px;
-      }
-      
-      .finals-logo {
-        max-width: 240px;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-      }
-      
-      .subTitle {
-        font-size: 1.5rem;
-        margin: 1rem 0;
-        color: var(--neon-yellow);
-        font-weight: 500;
-      }
-      
-      /* Loading placeholder */
-      .loading-placeholder {
-        background: linear-gradient(90deg, #333, #555, #333);
-        background-size: 200% 100%;
-        animation: loading 1.5s infinite;
-        border-radius: 8px;
-      }
-      
-      @keyframes loading {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
-      }
-    </style>
-    
-    <!-- Load original CSS synchronously to fix broken layout -->
-    <link rel="stylesheet" href="style.css" />
-    
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&amp;display=swap"
-      />
-    </noscript>
-
-    <style>
-      html {
-        min-height: 100%;
-        background: linear-gradient(
-          -45deg,
-          #1d1a21,
-          /* Original dark */ #2a1f2d,
-          /* Slightly purple */ #1f2a2d,
-          /* Slightly blue-ish */ #201c24 /* Back to dark */
-        );
-        background-size: 400% 400%;
-        animation: gradientShift 20s ease infinite;
-      }
-
-      @keyframes gradientShift {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
-
-      body {
-        font-family: "Oswald", sans-serif;
-        color: #fff;
-        text-align: center;
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
-      }
-    </style>
-  </head>
   <audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
   <audio id="tickSound" src="sounds/click.mp3" preload="auto"></audio>
   <audio id="classWinSound" src="sounds/chang.mp3" preload="auto"></audio>

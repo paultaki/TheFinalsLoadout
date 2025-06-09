@@ -2,14 +2,92 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <title>Help Us Make This Less Terrible | The Finals Loadout</title>
-    <link rel="stylesheet" href="styles.css" />
+    <meta
+      name="description"
+      content="Spin the wheel, vent your frustrations, and maybe win a reward. Submit your feedback to help us make The Finals Loadout Generator slightly less terrible."
+    />
+    <link rel="canonical" href="https://thefinalsloadout.com/feedback/" />
+
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Help Us Make This Less Terrible | The Finals Loadout"
+    />
+    <meta
+      property="og:description"
+      content="Your feedback powers this site. Report bugs, suggest features, or just scream into the void."
+    />
+    <meta
+      property="og:image"
+      content="https://www.thefinalsloadout.com/images/feedback-logo3.webp"
+    />
+    <meta
+      property="og:url"
+      content="https://www.thefinalsloadout.com/feedback/"
+    />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Help Us Make This Less Terrible | The Finals Loadout"
+    />
+    <meta
+      name="twitter:description"
+      content="Submit feedback and you might just get your ridiculous idea added to the next patch."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.thefinalsloadout.com/images/feedback-logo3.webp"
+    />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Help Us Make This Less Terrible | The Finals Loadout",
+        "description": "Submit feedback to improve The Finals Loadout Generator. Whether it’s bugs, feature requests, or passionate rants — we want to hear it.",
+        "url": "https://www.thefinalsloadout.com/feedback/",
+        "image": "https://www.thefinalsloadout.com/images/feedback-logo3.webp",
+        "author": {
+          "@type": "Organization",
+          "name": "Paul Takisaki"
+        }
+      }
+    </script>
+
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-GVGKYFGZ1Z");
+    </script>
+
+    <!-- Fonts & Favicon -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css" />
   </head>
+
   <body>
     <nav class="main-nav">
       <a href="https://thefinalsloadout.com/">Home</a>
@@ -18,17 +96,27 @@
     </nav>
 
     <header class="headerSection">
-      <img src="images/feedback-logo3.webp" alt="Feedback Roulette" class="feedback-logo" />
+      <img
+        src="images/feedback-logo3.webp"
+        alt="Feedback Roulette"
+        class="feedback-logo"
+      />
       <h1 class="feedback-title">Help Us Make This Less Terrible</h1>
-      <p class="feedback-subtitle">Your feedback directly shapes The Finals experience</p>
+      <p class="feedback-subtitle">
+        Your feedback directly shapes The Finals experience
+      </p>
     </header>
 
     <!-- Feedback Rewards Program -->
     <section class="feedback-incentive">
       <div class="container">
         <h2>🎰 THIS MONTH'S FEEDBACK LOTTERY</h2>
-        <p>Submit feedback to enter. Winner gets their loadout idea implemented!</p>
-        <div class="last-winner">Last winner: xXSniperGodXx - "Throwing Knife Only Mode"</div>
+        <p>
+          Submit feedback to enter. Winner gets their loadout idea implemented!
+        </p>
+        <div class="last-winner">
+          Last winner: xXSniperGodXx - "Throwing Knife Only Mode"
+        </div>
         <div class="progress-container">
           <div class="progress-bar">
             <div class="progress-fill" style="width: 60%"></div>
@@ -77,7 +165,11 @@
           <button class="spin-button" id="spin-feedback-wheel">SPIN IT!</button>
           <div class="wheel-pointer"></div>
         </div>
-        <div class="selected-topic-badge" id="selected-topic-badge" style="display: none;">
+        <div
+          class="selected-topic-badge"
+          id="selected-topic-badge"
+          style="display: none"
+        >
           <span class="badge-icon">🎯</span>
           <span class="badge-text" id="badge-text">Topic Selected!</span>
         </div>
@@ -87,11 +179,21 @@
       <section class="quick-topics">
         <h3>Or pick your poison directly:</h3>
         <div class="topic-buttons">
-          <button class="topic-btn" onclick="setTopic('bug')">🐛 Report Bug</button>
-          <button class="topic-btn" onclick="setTopic('weapon')">🔫 Weapon Balance</button>
-          <button class="topic-btn" onclick="setTopic('feature')">✨ New Feature</button>
-          <button class="topic-btn" onclick="setTopic('rage')">😤 Rage Quit Mode</button>
-          <button class="topic-btn" onclick="setTopic('love')">❤️ Love It</button>
+          <button class="topic-btn" onclick="setTopic('bug')">
+            🐛 Report Bug
+          </button>
+          <button class="topic-btn" onclick="setTopic('weapon')">
+            🔫 Weapon Balance
+          </button>
+          <button class="topic-btn" onclick="setTopic('feature')">
+            ✨ New Feature
+          </button>
+          <button class="topic-btn" onclick="setTopic('rage')">
+            😤 Rage Quit Mode
+          </button>
+          <button class="topic-btn" onclick="setTopic('love')">
+            ❤️ Love It
+          </button>
         </div>
       </section>
 
@@ -112,17 +214,21 @@
           </div>
 
           <div class="form-group">
-            <label for="feedback-text" id="feedback-label">What's broken?</label>
-            <textarea 
-              id="feedback-text" 
-              name="feedback" 
-              placeholder="Spill your guts here..." 
+            <label for="feedback-text" id="feedback-label"
+              >What's broken?</label
+            >
+            <textarea
+              id="feedback-text"
+              name="feedback"
+              placeholder="Spill your guts here..."
               required
             ></textarea>
           </div>
 
           <div class="form-group">
-            <label for="rating">Rate your experience (weapon icons = better)</label>
+            <label for="rating"
+              >Rate your experience (weapon icons = better)</label
+            >
             <div class="weapon-rating" id="weapon-rating">
               <span class="weapon-star" data-rating="1">🔫</span>
               <span class="weapon-star" data-rating="2">🔫</span>
@@ -130,13 +236,20 @@
               <span class="weapon-star" data-rating="4">🔫</span>
               <span class="weapon-star" data-rating="5">🔫</span>
             </div>
-            <input type="hidden" id="rating" name="rating" value="0">
+            <input type="hidden" id="rating" name="rating" value="0" />
           </div>
 
           <div class="form-group">
             <label for="email">Email (optional - for follow-up)</label>
-            <input type="email" id="email" name="email" placeholder="yourname@example.com">
-            <div class="email-incentive">💎 Drop your email for a chance at exclusive Season 7 beta access</div>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="yourname@example.com"
+            />
+            <div class="email-incentive">
+              💎 Drop your email for a chance at exclusive Season 7 beta access
+            </div>
           </div>
 
           <button type="submit" class="send-button" id="send-button">
@@ -145,13 +258,21 @@
           </button>
         </form>
 
-        <div id="feedback-response" class="success-message" style="display: none;">
+        <div
+          id="feedback-response"
+          class="success-message"
+          style="display: none"
+        >
           <div class="jackpot-animation">
             <h2>🎰 JACKPOT! 🎰</h2>
             <p>FEEDBACK RECEIVED! You're now entered in the lottery</p>
-            <div class="lottery-ticket">Your ticket: #<span id="lottery-number">0247</span></div>
+            <div class="lottery-ticket">
+              Your ticket: #<span id="lottery-number">0247</span>
+            </div>
             <div class="falling-coins"></div>
-            <div class="redirect-timer">Redirecting in <span id="countdown">3</span> seconds...</div>
+            <div class="redirect-timer">
+              Redirecting in <span id="countdown">3</span> seconds...
+            </div>
           </div>
         </div>
       </section>
@@ -159,220 +280,278 @@
 
     <script>
       // Enhanced feedback system with session tracking
-      let feedbackCount = parseInt(localStorage.getItem('feedbackCount') || '0');
+      let feedbackCount = parseInt(
+        localStorage.getItem("feedbackCount") || "0"
+      );
       let isSpinning = false;
-      
+
       // Enhanced ticker with more variety
       const feedbackExamples = [
-        { user: "xXSniperXx", feedback: "Found a bug with Medium class loadouts", icon: "🐛" },
-        { user: "RageQuitPro", feedback: "Sledgehammer is completely broken lol", icon: "🔨" },
-        { user: "TacticalGamer", feedback: "Can we get a 'no explosives' mode?", icon: "💡" },
-        { user: "AnimationFan", feedback: "The new roulette animation is sick!", icon: "❤️" },
-        { user: "PunishmentSeeker", feedback: "Rage quit mode needs MORE punishment", icon: "😤" },
-        { user: "BalanceGuru", feedback: "AKM needs a serious nerf", icon: "🔫" },
-        { user: "UIExpert", feedback: "Mobile navigation could be cleaner", icon: "📱" },
-        { user: "FeatureRequest", feedback: "Add loadout favorites system please", icon: "⭐" },
-        { user: "BugHunter", feedback: "Spinner gets stuck on Firefox sometimes", icon: "🐛" },
-        { user: "SoundDesigner", feedback: "Love the new audio effects!", icon: "🔊" }
+        {
+          user: "xXSniperXx",
+          feedback: "Found a bug with Medium class loadouts",
+          icon: "🐛",
+        },
+        {
+          user: "RageQuitPro",
+          feedback: "Sledgehammer is completely broken lol",
+          icon: "🔨",
+        },
+        {
+          user: "TacticalGamer",
+          feedback: "Can we get a 'no explosives' mode?",
+          icon: "💡",
+        },
+        {
+          user: "AnimationFan",
+          feedback: "The new roulette animation is sick!",
+          icon: "❤️",
+        },
+        {
+          user: "PunishmentSeeker",
+          feedback: "Rage quit mode needs MORE punishment",
+          icon: "😤",
+        },
+        {
+          user: "BalanceGuru",
+          feedback: "AKM needs a serious nerf",
+          icon: "🔫",
+        },
+        {
+          user: "UIExpert",
+          feedback: "Mobile navigation could be cleaner",
+          icon: "📱",
+        },
+        {
+          user: "FeatureRequest",
+          feedback: "Add loadout favorites system please",
+          icon: "⭐",
+        },
+        {
+          user: "BugHunter",
+          feedback: "Spinner gets stuck on Firefox sometimes",
+          icon: "🐛",
+        },
+        {
+          user: "SoundDesigner",
+          feedback: "Love the new audio effects!",
+          icon: "🔊",
+        },
       ];
 
       // Initialize ticker with randomized times
       function initializeTicker() {
-        const ticker = document.getElementById('feedback-ticker');
+        const ticker = document.getElementById("feedback-ticker");
         const shuffled = [...feedbackExamples].sort(() => Math.random() - 0.5);
-        
-        ticker.innerHTML = shuffled.map(item => {
-          const timeAgo = Math.floor(Math.random() * 6) + 2; // 2-8 hours ago
-          return `<span class="ticker-item">
+
+        ticker.innerHTML = shuffled
+          .map((item) => {
+            const timeAgo = Math.floor(Math.random() * 6) + 2; // 2-8 hours ago
+            return `<span class="ticker-item">
             <span class="ticker-icon">${item.icon}</span>
             <strong>${item.user}:</strong> "${item.feedback}" (${timeAgo}h ago)
           </span>`;
-        }).join('');
+          })
+          .join("");
       }
 
       // Enhanced wheel with hover and sound effects
-      const wheelElement = document.getElementById('feedback-wheel');
-      
+      const wheelElement = document.getElementById("feedback-wheel");
+
       // Add hover effect to wheel
-      wheelElement.addEventListener('mouseenter', function() {
+      wheelElement.addEventListener("mouseenter", function () {
         if (!isSpinning) {
-          this.style.transform = 'rotate(5deg) scale(1.02)';
-          this.style.boxShadow = '0 0 40px rgba(255, 183, 0, 1)';
+          this.style.transform = "rotate(5deg) scale(1.02)";
+          this.style.boxShadow = "0 0 40px rgba(255, 183, 0, 1)";
         }
       });
-      
-      wheelElement.addEventListener('mouseleave', function() {
+
+      wheelElement.addEventListener("mouseleave", function () {
         if (!isSpinning) {
-          this.style.transform = 'rotate(0deg) scale(1)';
-          this.style.boxShadow = '0 0 30px rgba(255, 183, 0, 0.8)';
+          this.style.transform = "rotate(0deg) scale(1)";
+          this.style.boxShadow = "0 0 30px rgba(255, 183, 0, 0.8)";
         }
       });
 
       // Enhanced spinning logic with sound
-      document.getElementById('spin-feedback-wheel').addEventListener('click', function() {
-        if (isSpinning) return;
-        
-        isSpinning = true;
-        const wheel = document.getElementById('feedback-wheel');
-        const categories = ['weapons', 'ui', 'bugs', 'ideas', 'rage'];
-        const selectedCategory = categories[Math.floor(Math.random() * categories.length)];
-        
-        // Play tick sound (simulated)
-        playTickSound();
-        
-        // Enhanced spin animation
-        const spins = 3 + Math.random() * 2; // 3-5 full rotations
-        wheel.style.transition = 'transform 3s cubic-bezier(0.23, 1, 0.32, 1)';
-        wheel.style.transform = `rotate(${360 * spins}deg)`;
-        
-        setTimeout(() => {
-          setTopic(selectedCategory);
-          showSelectedBadge(selectedCategory);
-          isSpinning = false;
-          wheel.style.transition = 'transform 0.5s ease';
-          wheel.style.transform = 'rotate(0deg)';
-        }, 3000);
-      });
+      document
+        .getElementById("spin-feedback-wheel")
+        .addEventListener("click", function () {
+          if (isSpinning) return;
+
+          isSpinning = true;
+          const wheel = document.getElementById("feedback-wheel");
+          const categories = ["weapons", "ui", "bugs", "ideas", "rage"];
+          const selectedCategory =
+            categories[Math.floor(Math.random() * categories.length)];
+
+          // Play tick sound (simulated)
+          playTickSound();
+
+          // Enhanced spin animation
+          const spins = 3 + Math.random() * 2; // 3-5 full rotations
+          wheel.style.transition =
+            "transform 3s cubic-bezier(0.23, 1, 0.32, 1)";
+          wheel.style.transform = `rotate(${360 * spins}deg)`;
+
+          setTimeout(() => {
+            setTopic(selectedCategory);
+            showSelectedBadge(selectedCategory);
+            isSpinning = false;
+            wheel.style.transition = "transform 0.5s ease";
+            wheel.style.transform = "rotate(0deg)";
+          }, 3000);
+        });
 
       // Show selected topic badge
       function showSelectedBadge(category) {
-        const badge = document.getElementById('selected-topic-badge');
-        const badgeText = document.getElementById('badge-text');
+        const badge = document.getElementById("selected-topic-badge");
+        const badgeText = document.getElementById("badge-text");
         const categoryMap = {
-          'weapons': '🔫 WEAPONS SELECTED',
-          'ui': '🖥️ UI/UX SELECTED', 
-          'bugs': '🐛 BUGS SELECTED',
-          'ideas': '💡 IDEAS SELECTED',
-          'rage': '😤 RAGE QUIT SELECTED'
+          weapons: "🔫 WEAPONS SELECTED",
+          ui: "🖥️ UI/UX SELECTED",
+          bugs: "🐛 BUGS SELECTED",
+          ideas: "💡 IDEAS SELECTED",
+          rage: "😤 RAGE QUIT SELECTED",
         };
-        
-        badgeText.textContent = categoryMap[category] || 'TOPIC SELECTED';
-        badge.style.display = 'block';
-        badge.style.animation = 'badgePop 0.5s ease-out';
-        
+
+        badgeText.textContent = categoryMap[category] || "TOPIC SELECTED";
+        badge.style.display = "block";
+        badge.style.animation = "badgePop 0.5s ease-out";
+
         setTimeout(() => {
-          badge.style.animation = 'badgeFade 0.5s ease-out';
-          setTimeout(() => badge.style.display = 'none', 500);
+          badge.style.animation = "badgeFade 0.5s ease-out";
+          setTimeout(() => (badge.style.display = "none"), 500);
         }, 3000);
       }
 
       // Enhanced topic setting with glow effects
       function setTopic(category) {
-        const typeSelect = document.getElementById('feedback-type');
-        const label = document.getElementById('feedback-label');
-        const textarea = document.getElementById('feedback-text');
-        
+        const typeSelect = document.getElementById("feedback-type");
+        const label = document.getElementById("feedback-label");
+        const textarea = document.getElementById("feedback-text");
+
         const prompts = {
-          'bug': {
+          bug: {
             label: "What's broken?",
-            placeholder: "Describe the bug: What happened? What did you expect? Steps to reproduce?",
-            value: "bug"
+            placeholder:
+              "Describe the bug: What happened? What did you expect? Steps to reproduce?",
+            value: "bug",
           },
-          'weapons': {
+          weapons: {
             label: "Which weapon made you rage?",
-            placeholder: "Tell us about weapon balance issues, overpowered weapons, or underpowered ones...",
-            value: "weapon"
+            placeholder:
+              "Tell us about weapon balance issues, overpowered weapons, or underpowered ones...",
+            value: "weapon",
           },
-          'ideas': {
+          ideas: {
             label: "What's your dream feature?",
-            placeholder: "Describe your idea: What would make this site amazing? New features, improvements?",
-            value: "feature"
+            placeholder:
+              "Describe your idea: What would make this site amazing? New features, improvements?",
+            value: "feature",
           },
-          'ui': {
+          ui: {
             label: "What confused you?",
-            placeholder: "UI/UX feedback: What was confusing? Hard to find? Could be improved?",
-            value: "ui"
+            placeholder:
+              "UI/UX feedback: What was confusing? Hard to find? Could be improved?",
+            value: "ui",
           },
-          'rage': {
+          rage: {
             label: "What made you rage?",
-            placeholder: "Let it all out. What frustrated you about the site or the game?",
-            value: "rage"
+            placeholder:
+              "Let it all out. What frustrated you about the site or the game?",
+            value: "rage",
           },
-          'love': {
+          love: {
             label: "What do you love?",
-            placeholder: "Tell us what's working great! What features do you love?",
-            value: "love"
-          }
+            placeholder:
+              "Tell us what's working great! What features do you love?",
+            value: "love",
+          },
         };
-        
+
         if (prompts[category]) {
           label.textContent = prompts[category].label;
           textarea.placeholder = prompts[category].placeholder;
           typeSelect.value = prompts[category].value;
-          
+
           // Add glow effect to form
-          const form = document.querySelector('.enhanced-form');
-          form.style.boxShadow = '0 0 30px rgba(255, 183, 0, 0.4)';
+          const form = document.querySelector(".enhanced-form");
+          form.style.boxShadow = "0 0 30px rgba(255, 183, 0, 0.4)";
           setTimeout(() => {
-            form.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.5)';
+            form.style.boxShadow = "0 15px 35px rgba(0, 0, 0, 0.5)";
           }, 2000);
         }
       }
 
       // Weapon rating system
-      document.querySelectorAll('.weapon-star').forEach(star => {
-        star.addEventListener('click', function() {
+      document.querySelectorAll(".weapon-star").forEach((star) => {
+        star.addEventListener("click", function () {
           const rating = this.dataset.rating;
-          document.getElementById('rating').value = rating;
-          
-          document.querySelectorAll('.weapon-star').forEach((s, index) => {
+          document.getElementById("rating").value = rating;
+
+          document.querySelectorAll(".weapon-star").forEach((s, index) => {
             if (index < rating) {
-              s.style.filter = 'sepia(1) hue-rotate(45deg) brightness(1.2)';
-              s.style.transform = 'scale(1.2)';
+              s.style.filter = "sepia(1) hue-rotate(45deg) brightness(1.2)";
+              s.style.transform = "scale(1.2)";
             } else {
-              s.style.filter = 'grayscale(1)';
-              s.style.transform = 'scale(1)';
+              s.style.filter = "grayscale(1)";
+              s.style.transform = "scale(1)";
             }
           });
         });
       });
 
       // Enhanced form submission with session tracking
-      document.getElementById('feedback-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        feedbackCount++;
-        localStorage.setItem('feedbackCount', feedbackCount.toString());
-        
-        const sendButton = document.getElementById('send-button');
-        sendButton.classList.add('sending');
-        sendButton.querySelector('.button-text').textContent = 'SENDING...';
-        
-        // Simulate API call
-        setTimeout(() => {
-          showSuccessState();
-          
-          // Check for feedback frenzy mode
-          if (feedbackCount >= 5) {
-            triggerFeedbackFrenzy();
-          }
-        }, 2000);
-      });
+      document
+        .getElementById("feedback-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          feedbackCount++;
+          localStorage.setItem("feedbackCount", feedbackCount.toString());
+
+          const sendButton = document.getElementById("send-button");
+          sendButton.classList.add("sending");
+          sendButton.querySelector(".button-text").textContent = "SENDING...";
+
+          // Simulate API call
+          setTimeout(() => {
+            showSuccessState();
+
+            // Check for feedback frenzy mode
+            if (feedbackCount >= 5) {
+              triggerFeedbackFrenzy();
+            }
+          }, 2000);
+        });
 
       // Enhanced success state with redirect
       function showSuccessState() {
-        const form = document.getElementById('feedback-form');
-        const response = document.getElementById('feedback-response');
-        
+        const form = document.getElementById("feedback-form");
+        const response = document.getElementById("feedback-response");
+
         // Generate random lottery number
-        const lotteryNumber = Math.floor(Math.random() * 9999).toString().padStart(4, '0');
-        document.getElementById('lottery-number').textContent = lotteryNumber;
-        
-        form.style.display = 'none';
-        response.style.display = 'block';
-        
+        const lotteryNumber = Math.floor(Math.random() * 9999)
+          .toString()
+          .padStart(4, "0");
+        document.getElementById("lottery-number").textContent = lotteryNumber;
+
+        form.style.display = "none";
+        response.style.display = "block";
+
         // Trigger jackpot animation
         createJackpotEffect();
-        
+
         // Start countdown timer
         let countdown = 3;
-        const countdownElement = document.getElementById('countdown');
+        const countdownElement = document.getElementById("countdown");
         const timer = setInterval(() => {
           countdown--;
           countdownElement.textContent = countdown;
           if (countdown <= 0) {
             clearInterval(timer);
-            window.location.href = '../index.html';
+            window.location.href = "../index.html";
           }
         }, 1000);
       }
@@ -381,36 +560,43 @@
       function triggerFeedbackFrenzy() {
         // Create confetti effect
         for (let i = 0; i < 50; i++) {
-          const confetti = document.createElement('div');
-          confetti.className = 'confetti';
-          confetti.style.left = Math.random() * 100 + '%';
-          confetti.style.backgroundColor = ['#ff4444', '#ffb700', '#4444ff', '#44ff44'][Math.floor(Math.random() * 4)];
-          confetti.style.animationDelay = Math.random() * 3 + 's';
+          const confetti = document.createElement("div");
+          confetti.className = "confetti";
+          confetti.style.left = Math.random() * 100 + "%";
+          confetti.style.backgroundColor = [
+            "#ff4444",
+            "#ffb700",
+            "#4444ff",
+            "#44ff44",
+          ][Math.floor(Math.random() * 4)];
+          confetti.style.animationDelay = Math.random() * 3 + "s";
           document.body.appendChild(confetti);
-          
+
           setTimeout(() => confetti.remove(), 5000);
         }
-        
+
         // Show special badge
-        const badge = document.createElement('div');
-        badge.className = 'frenzy-badge';
-        badge.innerHTML = '🏆 FEEDBACK FRENZY UNLOCKED! 🏆';
+        const badge = document.createElement("div");
+        badge.className = "frenzy-badge";
+        badge.innerHTML = "🏆 FEEDBACK FRENZY UNLOCKED! 🏆";
         document.body.appendChild(badge);
-        
+
         setTimeout(() => badge.remove(), 5000);
       }
 
       // Enhanced jackpot animation
       function createJackpotEffect() {
-        const container = document.querySelector('.falling-coins');
+        const container = document.querySelector(".falling-coins");
         for (let i = 0; i < 30; i++) {
-          const coin = document.createElement('div');
-          coin.className = 'coin';
-          coin.textContent = ['💰', '🎰', '💎', '🏆'][Math.floor(Math.random() * 4)];
-          coin.style.left = Math.random() * 100 + '%';
-          coin.style.animationDelay = Math.random() * 2 + 's';
+          const coin = document.createElement("div");
+          coin.className = "coin";
+          coin.textContent = ["💰", "🎰", "💎", "🏆"][
+            Math.floor(Math.random() * 4)
+          ];
+          coin.style.left = Math.random() * 100 + "%";
+          coin.style.animationDelay = Math.random() * 2 + "s";
           container.appendChild(coin);
-          
+
           setTimeout(() => coin.remove(), 4000);
         }
       }
@@ -419,37 +605,41 @@
       function playTickSound() {
         // Create a simple tick sound using Web Audio API
         try {
-          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const audioContext = new (window.AudioContext ||
+            window.webkitAudioContext)();
           const oscillator = audioContext.createOscillator();
           const gainNode = audioContext.createGain();
-          
+
           oscillator.connect(gainNode);
           gainNode.connect(audioContext.destination);
-          
+
           oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
           gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-          
+          gainNode.gain.exponentialRampToValueAtTime(
+            0.01,
+            audioContext.currentTime + 0.1
+          );
+
           oscillator.start(audioContext.currentTime);
           oscillator.stop(audioContext.currentTime + 0.1);
         } catch (e) {
           // Fallback for browsers without Web Audio API
-          console.log('Tick sound played');
+          console.log("Tick sound played");
         }
       }
 
       // Form focus glow effect
-      const form = document.querySelector('.enhanced-form');
-      form.addEventListener('focusin', function() {
-        this.style.boxShadow = '0 0 30px rgba(255, 183, 0, 0.4)';
+      const form = document.querySelector(".enhanced-form");
+      form.addEventListener("focusin", function () {
+        this.style.boxShadow = "0 0 30px rgba(255, 183, 0, 0.4)";
       });
-      
-      form.addEventListener('focusout', function() {
-        this.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.5)';
+
+      form.addEventListener("focusout", function () {
+        this.style.boxShadow = "0 15px 35px rgba(0, 0, 0, 0.5)";
       });
-      
+
       // Initialize everything on load
-      window.addEventListener('load', function() {
+      window.addEventListener("load", function () {
         initializeTicker();
       });
     </script>
