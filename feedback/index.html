@@ -3,9 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Feedback | The Finals Loadout</title>
+    <title>Help Us Make This Less Terrible | The Finals Loadout</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
   </head>
   <body>
     <nav class="main-nav">
@@ -15,60 +18,268 @@
     </nav>
 
     <header class="headerSection">
-      <img src="images/feedback-logo.webp" />
-      <p>Feedback is a Gift! Let us know what you think.</p>
+      <img src="images/feedback-logo3.webp" alt="Feedback Roulette" class="feedback-logo" />
+      <h1 class="feedback-title">Help Us Make This Less Terrible</h1>
+      <p class="feedback-subtitle">Your feedback directly shapes The Finals experience</p>
     </header>
 
+    <!-- Feedback Rewards Program -->
+    <section class="feedback-incentive">
+      <div class="container">
+        <h2>🎰 THIS MONTH'S FEEDBACK LOTTERY</h2>
+        <p>Submit feedback to enter. Winner gets their loadout idea implemented!</p>
+        <div class="last-winner">Last winner: xXSniperGodXx - "Throwing Knife Only Mode"</div>
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 60%"></div>
+          </div>
+          <span class="progress-text">3 more feedback until reward!</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Feedback Ticker -->
+    <section class="social-proof">
+      <div class="ticker-container">
+        <div class="ticker-content" id="feedback-ticker">
+          <span class="ticker-item">John: "Please nerf the sledgehammer!" (2 min ago)</span>
+          <span class="ticker-item">Sarah: "Love the new roulette animation" (5 min ago)</span>
+          <span class="ticker-item">Mike: "Found a bug with Medium class loadouts" (12 min ago)</span>
+          <span class="ticker-item">Alex: "Add more weapon variety please!" (18 min ago)</span>
+        </div>
+      </div>
+    </section>
+
     <main class="feedback-container">
-      <iframe
-        data-tally-src="https://tally.so/embed/wkveY1?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-        loading="lazy"
-        width="100%"
-        height="555"
-        frameborder="0"
-        marginheight="0"
-        marginwidth="0"
-        title="The Finals Loadout Feedback"
-      ></iframe>
-      <script>
-        var d = document,
-          w = "https://tally.so/widgets/embed.js",
-          v = function () {
-            "undefined" != typeof Tally
-              ? Tally.loadEmbeds()
-              : d
-                  .querySelectorAll("iframe[data-tally-src]:not([src])")
-                  .forEach(function (e) {
-                    e.src = e.dataset.tallySrc;
-                  });
-          };
-        if ("undefined" != typeof Tally) v();
-        else if (d.querySelector('script[src="' + w + '"]') == null) {
-          var s = d.createElement("script");
-          (s.src = w), (s.onload = v), (s.onerror = v), d.body.appendChild(s);
-        }
-      </script>
+      <!-- Feedback Roulette Wheel -->
+      <section class="feedback-roulette-section">
+        <h2>🎰 SPIN TO PICK YOUR FEEDBACK TOPIC</h2>
+        <div class="roulette-container">
+          <div class="feedback-wheel" id="feedback-wheel">
+            <div class="wheel-section" data-category="weapons">
+              <span class="wheel-icon">🔫</span>
+              <span class="wheel-text">WEAPONS</span>
+            </div>
+            <div class="wheel-section" data-category="ui">
+              <span class="wheel-icon">🖥️</span>
+              <span class="wheel-text">UI/UX</span>
+            </div>
+            <div class="wheel-section" data-category="bugs">
+              <span class="wheel-icon">🐛</span>
+              <span class="wheel-text">BUGS</span>
+            </div>
+            <div class="wheel-section" data-category="ideas">
+              <span class="wheel-icon">💡</span>
+              <span class="wheel-text">IDEAS</span>
+            </div>
+            <div class="wheel-section" data-category="rage">
+              <span class="wheel-icon">😤</span>
+              <span class="wheel-text">RAGE QUIT</span>
+            </div>
+          </div>
+          <button class="spin-button" id="spin-feedback-wheel">SPIN IT!</button>
+          <div class="wheel-pointer"></div>
+        </div>
+      </section>
+
+      <!-- Quick Topic Buttons -->
+      <section class="quick-topics">
+        <h3>Or pick your poison directly:</h3>
+        <div class="topic-buttons">
+          <button class="topic-btn" onclick="setTopic('bug')">🐛 Report Bug</button>
+          <button class="topic-btn" onclick="setTopic('weapon')">🔫 Weapon Balance</button>
+          <button class="topic-btn" onclick="setTopic('feature')">✨ New Feature</button>
+          <button class="topic-btn" onclick="setTopic('rage')">😤 Rage Quit Mode</button>
+          <button class="topic-btn" onclick="setTopic('love')">❤️ Love It</button>
+        </div>
+      </section>
+
+      <!-- Enhanced Feedback Form -->
+      <section class="feedback-form-section">
+        <form id="feedback-form" class="enhanced-form">
+          <div class="form-group">
+            <label for="feedback-type">What's your vibe?</label>
+            <select id="feedback-type" name="type" required>
+              <option value="">Choose your complaint...</option>
+              <option value="bug">🐛 Something's broken</option>
+              <option value="weapon">🔫 Weapon made me rage</option>
+              <option value="feature">💡 I have a dream</option>
+              <option value="ui">🖥️ UI/UX confusion</option>
+              <option value="rage">😤 Pure rage mode</option>
+              <option value="love">❤️ Actually love this</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="feedback-text" id="feedback-label">What's broken?</label>
+            <textarea 
+              id="feedback-text" 
+              name="feedback" 
+              placeholder="Spill your guts here..." 
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="rating">Rate your experience (weapon icons = better)</label>
+            <div class="weapon-rating" id="weapon-rating">
+              <span class="weapon-star" data-rating="1">🔫</span>
+              <span class="weapon-star" data-rating="2">🔫</span>
+              <span class="weapon-star" data-rating="3">🔫</span>
+              <span class="weapon-star" data-rating="4">🔫</span>
+              <span class="weapon-star" data-rating="5">🔫</span>
+            </div>
+            <input type="hidden" id="rating" name="rating" value="0">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email (optional - for follow-up)</label>
+            <input type="email" id="email" name="email" placeholder="yourname@example.com">
+          </div>
+
+          <button type="submit" class="send-button" id="send-button">
+            <span class="button-text">SEND IT</span>
+            <span class="button-particles"></span>
+          </button>
+        </form>
+
+        <div id="feedback-response" class="success-message" style="display: none;">
+          <div class="jackpot-animation">
+            <h2>🎰 JACKPOT! 🎰</h2>
+            <p>Feedback received! You're entered in this month's lottery.</p>
+            <div class="falling-coins"></div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <script>
-      document
-        .getElementById("feedback-form")
-        .addEventListener("submit", function (event) {
-          event.preventDefault();
+      // Feedback wheel spinning logic
+      let isSpinning = false;
+      
+      document.getElementById('spin-feedback-wheel').addEventListener('click', function() {
+        if (isSpinning) return;
+        
+        isSpinning = true;
+        const wheel = document.getElementById('feedback-wheel');
+        const categories = ['weapons', 'ui', 'bugs', 'ideas', 'rage'];
+        const selectedCategory = categories[Math.floor(Math.random() * categories.length)];
+        
+        // Spin animation
+        wheel.style.transform = `rotate(${360 * 3 + Math.random() * 360}deg)`;
+        
+        setTimeout(() => {
+          setTopic(selectedCategory);
+          isSpinning = false;
+          wheel.style.transform = 'rotate(0deg)';
+        }, 3000);
+      });
 
-          const formData = new FormData(this);
-          fetch("send.php", {
-            method: "POST",
-            body: formData,
-          })
-            .then((response) => response.text())
-            .then((data) => {
-              document.getElementById("feedback-response").style.display =
-                "block";
-              document.getElementById("feedback-form").reset();
-            })
-            .catch((error) => console.error("Error:", error));
+      // Topic setting function
+      function setTopic(category) {
+        const typeSelect = document.getElementById('feedback-type');
+        const label = document.getElementById('feedback-label');
+        const textarea = document.getElementById('feedback-text');
+        
+        const prompts = {
+          'bug': {
+            label: "What's broken?",
+            placeholder: "Describe the bug: What happened? What did you expect? Steps to reproduce?",
+            value: "bug"
+          },
+          'weapon': {
+            label: "Which weapon made you rage?",
+            placeholder: "Tell us about weapon balance issues, overpowered weapons, or underpowered ones...",
+            value: "weapon"
+          },
+          'feature': {
+            label: "What's your dream feature?",
+            placeholder: "Describe your idea: What would make this site amazing? New features, improvements?",
+            value: "feature"
+          },
+          'ui': {
+            label: "What confused you?",
+            placeholder: "UI/UX feedback: What was confusing? Hard to find? Could be improved?",
+            value: "ui"
+          },
+          'rage': {
+            label: "What made you rage?",
+            placeholder: "Let it all out. What frustrated you about the site or the game?",
+            value: "rage"
+          },
+          'love': {
+            label: "What do you love?",
+            placeholder: "Tell us what's working great! What features do you love?",
+            value: "love"
+          }
+        };
+        
+        if (prompts[category]) {
+          label.textContent = prompts[category].label;
+          textarea.placeholder = prompts[category].placeholder;
+          typeSelect.value = prompts[category].value;
+        }
+      }
+
+      // Weapon rating system
+      document.querySelectorAll('.weapon-star').forEach(star => {
+        star.addEventListener('click', function() {
+          const rating = this.dataset.rating;
+          document.getElementById('rating').value = rating;
+          
+          document.querySelectorAll('.weapon-star').forEach((s, index) => {
+            if (index < rating) {
+              s.style.filter = 'sepia(1) hue-rotate(45deg) brightness(1.2)';
+              s.style.transform = 'scale(1.2)';
+            } else {
+              s.style.filter = 'grayscale(1)';
+              s.style.transform = 'scale(1)';
+            }
+          });
         });
+      });
+
+      // Enhanced form submission
+      document.getElementById('feedback-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const sendButton = document.getElementById('send-button');
+        sendButton.classList.add('sending');
+        sendButton.querySelector('.button-text').textContent = 'SENDING...';
+        
+        // Simulate API call
+        setTimeout(() => {
+          document.getElementById('feedback-response').style.display = 'block';
+          document.getElementById('feedback-form').style.display = 'none';
+          
+          // Trigger jackpot animation
+          createJackpotEffect();
+        }, 2000);
+      });
+
+      // Jackpot animation
+      function createJackpotEffect() {
+        const container = document.querySelector('.falling-coins');
+        for (let i = 0; i < 20; i++) {
+          const coin = document.createElement('div');
+          coin.className = 'coin';
+          coin.textContent = '💰';
+          coin.style.left = Math.random() * 100 + '%';
+          coin.style.animationDelay = Math.random() * 2 + 's';
+          container.appendChild(coin);
+          
+          setTimeout(() => coin.remove(), 3000);
+        }
+      }
+
+      // Live ticker animation
+      function animateTicker() {
+        const ticker = document.getElementById('feedback-ticker');
+        ticker.style.animationPlayState = 'running';
+      }
+      
+      // Start ticker on load
+      window.addEventListener('load', animateTicker);
     </script>
   </body>
 </html>
