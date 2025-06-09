@@ -1842,7 +1842,7 @@ body {
   /* Fix fast logo animation on mobile */
   .finals-logo {
     /* Use much simpler animation on mobile */
-    animation: logoMobilePulse 3s ease-in-out infinite;
+    animation: logoMobilePulse 3s ease-in-out infinite !important;
     /* Enable hardware acceleration */
     will-change: transform, filter;
     transform: translateZ(0);
