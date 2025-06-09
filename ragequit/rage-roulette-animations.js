@@ -1,24 +1,34 @@
-// Rage Quit Roulette Animation System
+// Rage Quit Roulette Animation System (Copied from main page)
 class RageRouletteAnimationSystem {
   constructor() {
     this.classOptions = ["Light", "Medium", "Heavy"];
     this.spinOptions = [1, 2, 3, 4, 5];
     this.selectedClass = null;
     this.selectedSpins = null;
+    this.selectedHandicap = null;
+    this.selectedHandicapDesc = null;
     this.animating = false;
 
-    // Animation timing configurations (faster for rage mode)
+    // Animation timing configurations (exact copy from main page)
     this.classAnimationConfig = {
-      initialSpeed: 30, // Faster initial speed
-      finalSpeed: 800,
-      totalDuration: 2500, // Shorter duration
-      decelerationStart: 0.3,
+      initialSpeed: 50, // 50ms between cycles initially
+      finalSpeed: 800, // 800ms at the end
+      totalDuration: 3000, // 3 seconds total
+      decelerationStart: 0.4, // Start decelerating at 40% through
     };
 
     this.spinAnimationConfig = {
-      initialSpeed: 30,
-      finalSpeed: 600,
-      totalDuration: 1500, // Even shorter
+      initialSpeed: 50, // 50ms between cycles initially
+      finalSpeed: 600, // 600ms at the end
+      totalDuration: 2000, // 2 seconds total
+      decelerationStart: 0.5, // Start decelerating at 50% through
+    };
+
+    // New handicap animation config
+    this.handicapAnimationConfig = {
+      initialSpeed: 50,
+      finalSpeed: 700,
+      totalDuration: 2500,
       decelerationStart: 0.4,
     };
   }
@@ -33,6 +43,7 @@ class RageRouletteAnimationSystem {
     document.querySelector(".rage-button-container").style.display = "none";
     document.getElementById("output").style.display = "none";
     document.querySelector(".handicap-section").style.display = "none";
+    document.getElementById("double-or-nothing-container").style.display = "none";
 
     // Show roulette container
     const rouletteContainer = document.getElementById("rage-roulette-container");
@@ -41,39 +52,72 @@ class RageRouletteAnimationSystem {
       return;
     }
 
-    // Show container
+    // Show container by removing hidden class
     rouletteContainer.classList.remove("hidden");
+
+    // Force container visible with inline styles
+    console.log("FORCING RAGE ROULETTE CONTAINER VISIBLE");
     rouletteContainer.style.display = "flex";
     rouletteContainer.style.visibility = "visible";
     rouletteContainer.style.opacity = "1";
+    rouletteContainer.style.position = "fixed";
+    rouletteContainer.style.top = "0";
+    rouletteContainer.style.left = "0";
+    rouletteContainer.style.width = "100vw";
+    rouletteContainer.style.height = "100vh";
+    rouletteContainer.style.zIndex = "999999";
+    rouletteContainer.style.background = "rgba(139, 0, 0, 0.95)"; // Dark red for rage theme
 
-    // Play alarm sound
-    this.playAlarmSound();
+    // Debug container visibility
+    console.log("Rage roulette container visibility check:", {
+      element: rouletteContainer,
+      hasHiddenClass: rouletteContainer.classList.contains("hidden"),
+      computedDisplay: window.getComputedStyle(rouletteContainer).display,
+      computedVisibility: window.getComputedStyle(rouletteContainer).visibility,
+      computedOpacity: window.getComputedStyle(rouletteContainer).opacity,
+      computedZIndex: window.getComputedStyle(rouletteContainer).zIndex,
+    });
 
-    // Run class selection
+    // Prevent body scrolling during animation
+    document.body.style.overflow = "hidden";
+
+    // Phase 1: Class Selection
     await this.animateClassSelection();
-    
-    // Short pause
-    await this.delay(500);
-    
-    // Run spin count selection
-    await this.animateSpinSelection();
-    
-    // Short pause before revealing
-    await this.delay(300);
 
-    // Hide roulette and show results
-    rouletteContainer.style.display = "none";
+    // Brief pause between phases
+    await this.delay(500);
+
+    // Phase 2: Spin Count Selection
+    await this.animateSpinSelection();
+
+    // Brief pause before handicap selection
+    await this.delay(500);
+
+    // Phase 3: Handicap Selection (NEW for rage quit)
+    await this.animateHandicapSelection();
+
+    // Brief pause before starting the actual slot machine
+    await this.delay(500);
+
+    // Hide roulette container
+    rouletteContainer.classList.add("hidden");
+
+    // Restore body scrolling
+    document.body.style.overflow = "";
+
+    // Show selection display
+    this.showSelectionDisplay();
+
+    // Show the main container and output
     document.querySelector(".rage-button-container").style.display = "flex";
     document.getElementById("output").style.display = "block";
     document.querySelector(".handicap-section").style.display = "block";
 
-    // Update the selected class display
-    document.getElementById("selected-class").textContent = this.selectedClass.toUpperCase();
-
     // Set the state for the original system
     window.state.selectedClass = this.selectedClass;
     window.state.totalSpins = this.selectedSpins;
+    window.state.selectedHandicap = this.selectedHandicap;
+    window.state.selectedHandicapDesc = this.selectedHandicapDesc;
 
     this.animating = false;
 
@@ -81,155 +125,765 @@ class RageRouletteAnimationSystem {
     window.spinRageQuitLoadout();
   }
 
-  // Animate class selection roulette
+  // Animate class selection roulette (EXACT COPY from main page, with rage styling)
   async animateClassSelection() {
-    const classRouletteSection = document.getElementById("rage-class-roulette");
-    classRouletteSection.classList.remove("hidden");
+    // Create a completely new DOM structure that we control
+    const animationContainer = document.createElement("div");
+    animationContainer.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(139, 0, 0, 0.95);
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  `;
 
-    const classOptions = document.querySelectorAll(".rage-class-option");
-    const config = this.classAnimationConfig;
+    // Create the class selection UI from scratch
+    const title = document.createElement("h2");
+    title.textContent = "SELECTING YOUR DOOM...";
+    title.style.cssText = `
+    font-size: clamp(28px, 8vw, 48px);
+    font-weight: 900;
+    letter-spacing: clamp(2px, 2vw, 8px);
+    margin-bottom: clamp(20px, 8vw, 50px);
+    color: #ff4444;
+    text-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
+    text-align: center;
+    padding: 0 20px;
+  `;
 
-    // Pick a random class
-    const targetIndex = Math.floor(Math.random() * this.classOptions.length);
-    this.selectedClass = this.classOptions[targetIndex];
+    const wheel = document.createElement("div");
+    wheel.style.cssText = `
+    display: flex;
+    justify-content: center;
+    gap: clamp(10px, 5vw, 40px);
+    height: 300px;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+  `;
 
-    // Calculate total cycles for dramatic effect
-    const totalCycles = 15 + targetIndex;
+    // Create class options
+    const classes = ["Light", "Medium", "Heavy"];
+    const classElements = [];
 
-    await this.animateRoulette(classOptions, totalCycles, config);
+    classes.forEach((className, index) => {
+      const option = document.createElement("div");
+      option.style.cssText = `
+      width: clamp(120px, 25vw, 200px);
+      height: clamp(150px, 30vw, 250px);
+      max-width: 200px;
+      background: linear-gradient(135deg, #2e1a1a, #4e2a2a);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+      opacity: 0.5;
+      transform: scale(0.8);
+      border: 2px solid #660000;
+    `;
 
-    // Add punishment effect on selection
-    this.addPunishmentEffect();
+      const img = document.createElement("img");
+      img.src = `../images/${className.toLowerCase()}_active.webp`;
+      img.style.cssText = `
+      width: clamp(60px, 15vw, 120px);
+      height: clamp(60px, 15vw, 120px);
+      margin-bottom: clamp(10px, 3vw, 20px);
+      filter: brightness(0.5) sepia(1) hue-rotate(320deg);
+      object-fit: contain;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    `;
 
-    classRouletteSection.classList.add("hidden");
-  }
+      const label = document.createElement("span");
+      label.textContent = className.toUpperCase();
+      label.style.cssText = `
+      font-size: clamp(16px, 4vw, 24px);
+      font-weight: 700;
+      letter-spacing: clamp(1px, 0.5vw, 3px);
+      color: #fff;
+      opacity: 0.5;
+    `;
 
-  // Animate spin count selection
-  async animateSpinSelection() {
-    const spinRouletteSection = document.getElementById("rage-spin-roulette");
-    spinRouletteSection.classList.remove("hidden");
+      option.appendChild(img);
+      option.appendChild(label);
+      wheel.appendChild(option);
+      classElements.push(option);
+    });
 
-    const spinOptions = document.querySelectorAll(".rage-spin-option");
-    const config = this.spinAnimationConfig;
+    animationContainer.appendChild(title);
+    animationContainer.appendChild(wheel);
+    document.body.appendChild(animationContainer);
 
-    // Pick a random spin count (biased towards higher numbers for more pain)
-    const weights = [1, 2, 3, 4, 5]; // Higher numbers more likely
-    const totalWeight = weights.reduce((a, b) => a + b, 0);
-    let random = Math.random() * totalWeight;
-    let targetIndex = 0;
-    
-    for (let i = 0; i < weights.length; i++) {
-      random -= weights[i];
-      if (random <= 0) {
-        targetIndex = i;
-        break;
-      }
-    }
-
-    this.selectedSpins = this.spinOptions[targetIndex];
-
-    // Calculate total cycles
-    const totalCycles = 12 + targetIndex;
-
-    await this.animateRoulette(spinOptions, totalCycles, config);
-
-    spinRouletteSection.classList.add("hidden");
-  }
-
-  // Generic roulette animation function
-  async animateRoulette(options, totalCycles, config) {
-    const startTime = Date.now();
+    // Now run the animation (EXACT SAME LOGIC as main page)
     let currentIndex = 0;
-
-    // Clear all active states
-    options.forEach(opt => opt.classList.remove("active"));
+    const startTime = Date.now();
+    const winnerIndex = Math.floor(Math.random() * this.classOptions.length);
+    this.selectedClass = this.classOptions[winnerIndex];
 
     return new Promise((resolve) => {
       const animate = () => {
         const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / config.totalDuration, 1);
 
-        // Calculate current speed with easing
-        let speedMultiplier = 1;
-        if (progress > config.decelerationStart) {
-          const decelerationProgress = (progress - config.decelerationStart) / (1 - config.decelerationStart);
-          speedMultiplier = 1 + (decelerationProgress * decelerationProgress) * 20;
+        if (elapsed >= this.classAnimationConfig.totalDuration) {
+          // Final selection
+          classElements.forEach((el, idx) => {
+            if (idx === winnerIndex) {
+              el.style.opacity = "1";
+              el.style.transform = "scale(1.2)";
+              el.style.boxShadow = "0 0 50px rgba(255, 68, 68, 0.8)";
+              el.querySelector("img").style.filter = "brightness(1.2) sepia(1) hue-rotate(320deg)";
+              el.querySelector("span").style.opacity = "1";
+            }
+          });
+
+          this.playClassWinSound();
+
+          setTimeout(() => {
+            document.body.removeChild(animationContainer);
+            resolve();
+          }, 500);
+          return;
         }
 
-        const currentSpeed = config.initialSpeed * speedMultiplier;
+        // Update active state
+        classElements.forEach((el, idx) => {
+          if (idx === currentIndex) {
+            el.style.opacity = "1";
+            el.style.transform = "scale(1.1)";
+            el.querySelector("img").style.filter = "brightness(1) sepia(1) hue-rotate(320deg)";
+            el.querySelector("span").style.opacity = "1";
+          } else {
+            el.style.opacity = "0.5";
+            el.style.transform = "scale(0.8)";
+            el.querySelector("img").style.filter = "brightness(0.5) sepia(1) hue-rotate(320deg)";
+            el.querySelector("span").style.opacity = "0.5";
+          }
+        });
 
-        // Remove previous active class
-        options.forEach(opt => opt.classList.remove("active"));
+        this.playTickSound();
 
-        // Add active class to current option
-        const currentOption = options[currentIndex % options.length];
-        currentOption.classList.add("active");
+        // Calculate speed (EXACT SAME as main page)
+        const progress = elapsed / this.classAnimationConfig.totalDuration;
+        let speed = this.classAnimationConfig.initialSpeed;
 
-        // Check if we should continue
-        const cyclesCompleted = Math.floor(currentIndex / options.length);
-        
-        if (cyclesCompleted >= totalCycles && currentIndex % options.length === totalCycles % options.length) {
-          // Final selection - add rage effects
-          currentOption.classList.add("selected");
-          resolve();
+        if (progress > this.classAnimationConfig.decelerationStart) {
+          const decelerationProgress =
+            (progress - this.classAnimationConfig.decelerationStart) /
+            (1 - this.classAnimationConfig.decelerationStart);
+          speed =
+            this.classAnimationConfig.initialSpeed +
+            (this.classAnimationConfig.finalSpeed -
+              this.classAnimationConfig.initialSpeed) *
+              Math.pow(decelerationProgress, 2);
+        }
+
+        if (elapsed >= this.classAnimationConfig.totalDuration - 500) {
+          currentIndex = winnerIndex;
+          speed = 500;
         } else {
-          currentIndex++;
-          setTimeout(() => animate(), currentSpeed);
+          currentIndex = (currentIndex + 1) % this.classOptions.length;
         }
+
+        setTimeout(animate, speed);
       };
 
       animate();
     });
   }
 
-  // Add punishment visual effects
-  addPunishmentEffect() {
-    // Screen shake
-    document.body.classList.add("rage-shake");
-    setTimeout(() => document.body.classList.remove("rage-shake"), 500);
+  // Animate spin count selection (EXACT COPY from main page, with rage styling)
+  async animateSpinSelection() {
+    // Create a completely new DOM structure
+    const animationContainer = document.createElement("div");
+    animationContainer.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(139, 0, 0, 0.95);
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  `;
 
-    // Red flash
-    const flash = document.createElement("div");
-    flash.className = "rage-flash";
-    document.body.appendChild(flash);
-    setTimeout(() => flash.remove(), 600);
+    const title = document.createElement("h2");
+    title.textContent = "CHOOSING SPINS...";
+    title.style.cssText = `
+    font-size: clamp(28px, 8vw, 48px);
+    font-weight: 900;
+    letter-spacing: clamp(2px, 2vw, 8px);
+    margin-bottom: clamp(20px, 8vw, 50px);
+    color: #ff4444;
+    text-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
+    text-align: center;
+    padding: 0 20px;
+  `;
 
-    // Add skull particles
-    this.createSkullParticles();
+    const wheel = document.createElement("div");
+    wheel.style.cssText = `
+    display: flex;
+    justify-content: center;
+    gap: clamp(5px, 2vw, 20px);
+    height: 200px;
+    align-items: center;
+    padding: 0 30px;
+    box-sizing: border-box;
+    overflow-x: auto;
+    width: 100%;
+  `;
+
+    const spinElements = [];
+
+    this.spinOptions.forEach((num) => {
+      const option = document.createElement("div");
+      option.style.cssText = `
+      width: clamp(65px, 15vw, 100px);
+      height: clamp(65px, 15vw, 100px);
+      min-width: 65px;
+      background: linear-gradient(135deg, #2e1a1a, #4e2a2a);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: clamp(24px, 6vw, 40px);
+      font-weight: 900;
+      color: #fff;
+      transition: all 0.3s ease;
+      opacity: 0.5;
+      transform: scale(0.8);
+      flex-shrink: 0;
+      border: 2px solid #660000;
+    `;
+
+      const span = document.createElement("span");
+      span.textContent = num;
+      option.appendChild(span);
+      wheel.appendChild(option);
+      spinElements.push(option);
+    });
+
+    const statusEl = document.createElement("div");
+    statusEl.id = "spinStatus";
+    statusEl.style.cssText = `
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #ff6666;
+    text-shadow: 0 0 10px rgba(255, 102, 102, 0.8);
+    min-height: 30px;
+  `;
+
+    animationContainer.appendChild(title);
+    animationContainer.appendChild(wheel);
+    animationContainer.appendChild(statusEl);
+    document.body.appendChild(animationContainer);
+
+    // Animation logic (EXACT SAME as main page)
+    let currentIndex = 0;
+    const startTime = Date.now();
+    const winnerIndex = Math.floor(Math.random() * this.spinOptions.length);
+    this.selectedSpins = this.spinOptions[winnerIndex];
+
+    return new Promise((resolve) => {
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+
+        if (elapsed >= this.spinAnimationConfig.totalDuration) {
+          // Final selection
+          spinElements[winnerIndex].style.opacity = "1";
+          spinElements[winnerIndex].style.transform = "scale(1.2)";
+          spinElements[winnerIndex].style.boxShadow =
+            "0 0 40px rgba(255, 68, 68, 0.8)";
+
+          this.playSpinWinSound();
+          statusEl.textContent = `${this.selectedSpins} SPIN${
+            this.selectedSpins > 1 ? "S" : ""
+          } SELECTED!`;
+
+          setTimeout(() => {
+            document.body.removeChild(animationContainer);
+            resolve();
+          }, 500);
+          return;
+        }
+
+        // Update active state
+        spinElements.forEach((el, idx) => {
+          if (idx === currentIndex) {
+            el.style.opacity = "1";
+            el.style.transform = "scale(1.2)";
+            el.style.background = "linear-gradient(135deg, #b83e3e, #ff4444)";
+            
+            // Create particle effect (less frequent to avoid overwhelming)
+            if (elapsed % 100 < 50) {
+              this.createParticleEffect(el);
+            }
+          } else {
+            el.style.opacity = "0.5";
+            el.style.transform = "scale(0.8)";
+            el.style.background = "linear-gradient(135deg, #2e1a1a, #4e2a2a)";
+          }
+        });
+
+        this.playTickSound();
+
+        // Calculate speed (EXACT SAME as main page)
+        const progress = elapsed / this.spinAnimationConfig.totalDuration;
+        let speed = this.spinAnimationConfig.initialSpeed;
+
+        if (progress > this.spinAnimationConfig.decelerationStart) {
+          const decelerationProgress =
+            (progress - this.spinAnimationConfig.decelerationStart) /
+            (1 - this.spinAnimationConfig.decelerationStart);
+          speed =
+            this.spinAnimationConfig.initialSpeed +
+            (this.spinAnimationConfig.finalSpeed -
+              this.spinAnimationConfig.initialSpeed) *
+              Math.pow(decelerationProgress, 2);
+        }
+
+        if (elapsed >= this.spinAnimationConfig.totalDuration - 400) {
+          currentIndex = winnerIndex;
+          speed = 400;
+        } else {
+          currentIndex = (currentIndex + 1) % this.spinOptions.length;
+        }
+
+        setTimeout(animate, speed);
+      };
+
+      animate();
+    });
   }
 
-  // Create skull/fire particles
-  createSkullParticles() {
-    const particlesContainer = document.createElement("div");
-    particlesContainer.className = "rage-particles-container";
-    document.body.appendChild(particlesContainer);
+  // NEW: Animate handicap selection (third phase unique to rage quit)
+  async animateHandicapSelection() {
+    // Create a completely new DOM structure
+    const animationContainer = document.createElement("div");
+    animationContainer.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(139, 0, 0, 0.95);
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  `;
 
-    for (let i = 0; i < 20; i++) {
-      setTimeout(() => {
-        const particle = document.createElement("div");
-        particle.className = "rage-particle";
-        particle.innerHTML = Math.random() > 0.5 ? "💀" : "🔥";
-        particle.style.left = Math.random() * 100 + "%";
-        particle.style.animationDelay = Math.random() * 0.5 + "s";
-        particlesContainer.appendChild(particle);
-      }, i * 50);
+    const title = document.createElement("h2");
+    title.textContent = "ADDING HANDICAP...";
+    title.style.cssText = `
+    font-size: clamp(28px, 8vw, 48px);
+    font-weight: 900;
+    letter-spacing: clamp(2px, 2vw, 8px);
+    margin-bottom: clamp(20px, 8vw, 50px);
+    color: #ff4444;
+    text-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
+    text-align: center;
+    padding: 0 20px;
+    animation: rage-pulse 0.5s ease-in-out infinite alternate;
+  `;
+
+    const wheel = document.createElement("div");
+    wheel.style.cssText = `
+    display: flex;
+    justify-content: center;
+    gap: clamp(5px, 2vw, 15px);
+    height: 200px;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    overflow-x: auto;
+    width: 100%;
+  `;
+
+    // Define handicaps
+    const handicaps = [
+      { name: "ADS Only", desc: "Can only use ADS (Aim Down Sights)", icon: "🎯" },
+      { name: "No Healing", desc: "Cannot use healing items or abilities", icon: "❤️‍🩹" },
+      { name: "Inverted Controls", desc: "Mouse movement is inverted", icon: "🔄" },
+      { name: "Slow Movement", desc: "50% movement speed", icon: "🐌" },
+      { name: "No Jumping", desc: "Jump key is disabled", icon: "🚫" }
+    ];
+
+    const handicapElements = [];
+
+    handicaps.forEach((handicap, index) => {
+      const option = document.createElement("div");
+      option.style.cssText = `
+      width: clamp(80px, 18vw, 120px);
+      height: clamp(100px, 20vw, 150px);
+      min-width: 80px;
+      background: linear-gradient(135deg, #2e1a1a, #4e2a2a);
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+      opacity: 0.5;
+      transform: scale(0.8);
+      flex-shrink: 0;
+      border: 2px solid #660000;
+      text-align: center;
+      padding: 5px;
+    `;
+
+      const icon = document.createElement("div");
+      icon.textContent = handicap.icon;
+      icon.style.cssText = `
+      font-size: clamp(20px, 5vw, 30px);
+      margin-bottom: 5px;
+    `;
+
+      const label = document.createElement("span");
+      label.textContent = handicap.name.toUpperCase();
+      label.style.cssText = `
+      font-size: clamp(8px, 2vw, 12px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    `;
+
+      option.appendChild(icon);
+      option.appendChild(label);
+      wheel.appendChild(option);
+      handicapElements.push(option);
+    });
+
+    const statusEl = document.createElement("div");
+    statusEl.style.cssText = `
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #ff6666;
+    text-shadow: 0 0 10px rgba(255, 102, 102, 0.8);
+    min-height: 30px;
+    text-align: center;
+  `;
+
+    animationContainer.appendChild(title);
+    animationContainer.appendChild(wheel);
+    animationContainer.appendChild(statusEl);
+    document.body.appendChild(animationContainer);
+
+    // Animation logic (same pattern as main page)
+    let currentIndex = 0;
+    const startTime = Date.now();
+    const winnerIndex = Math.floor(Math.random() * handicaps.length);
+    this.selectedHandicap = handicaps[winnerIndex].name;
+    this.selectedHandicapDesc = handicaps[winnerIndex].desc;
+
+    return new Promise((resolve) => {
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+
+        if (elapsed >= this.handicapAnimationConfig.totalDuration) {
+          // Final selection
+          handicapElements[winnerIndex].style.opacity = "1";
+          handicapElements[winnerIndex].style.transform = "scale(1.3)";
+          handicapElements[winnerIndex].style.boxShadow =
+            "0 0 40px rgba(255, 68, 68, 0.8)";
+          handicapElements[winnerIndex].style.background = 
+            "linear-gradient(135deg, #8b0000, #ff4444)";
+
+          this.playHandicapWinSound();
+          statusEl.textContent = `${this.selectedHandicap.toUpperCase()} ACTIVATED!`;
+
+          // Screen shake effect
+          document.body.style.animation = "rage-shake 0.5s ease-in-out";
+          setTimeout(() => {
+            document.body.style.animation = "";
+          }, 500);
+
+          setTimeout(() => {
+            document.body.removeChild(animationContainer);
+            resolve();
+          }, 1000);
+          return;
+        }
+
+        // Update active state
+        handicapElements.forEach((el, idx) => {
+          if (idx === currentIndex) {
+            el.style.opacity = "1";
+            el.style.transform = "scale(1.1)";
+            el.style.background = "linear-gradient(135deg, #b83e3e, #ff4444)";
+            
+            // Create skull particles
+            if (elapsed % 150 < 50) {
+              this.createSkullParticleEffect(el);
+            }
+          } else {
+            el.style.opacity = "0.5";
+            el.style.transform = "scale(0.8)";
+            el.style.background = "linear-gradient(135deg, #2e1a1a, #4e2a2a)";
+          }
+        });
+
+        this.playTickSound();
+
+        // Calculate speed
+        const progress = elapsed / this.handicapAnimationConfig.totalDuration;
+        let speed = this.handicapAnimationConfig.initialSpeed;
+
+        if (progress > this.handicapAnimationConfig.decelerationStart) {
+          const decelerationProgress =
+            (progress - this.handicapAnimationConfig.decelerationStart) /
+            (1 - this.handicapAnimationConfig.decelerationStart);
+          speed =
+            this.handicapAnimationConfig.initialSpeed +
+            (this.handicapAnimationConfig.finalSpeed -
+              this.handicapAnimationConfig.initialSpeed) *
+              Math.pow(decelerationProgress, 2);
+        }
+
+        if (elapsed >= this.handicapAnimationConfig.totalDuration - 500) {
+          currentIndex = winnerIndex;
+          speed = 500;
+        } else {
+          currentIndex = (currentIndex + 1) % handicaps.length;
+        }
+
+        setTimeout(animate, speed);
+      };
+
+      animate();
+    });
+  }
+
+  // Visual effects (EXACT COPY from main page)
+  createFlashEffect() {
+    const flash = document.createElement("div");
+    flash.className = "flash-overlay";
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 500);
+  }
+
+  createParticleEffect(element) {
+    const rect = element.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    // Reduce particle count on mobile for performance
+    const particleCount = window.state?.isMobile ? 3 : 8;
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement("div");
+      particle.style.cssText = `
+        position: fixed;
+        width: 4px;
+        height: 4px;
+        background: #ff4444;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 1000001;
+        left: ${centerX}px;
+        top: ${centerY}px;
+        box-shadow: 0 0 6px rgba(255, 68, 68, 0.8);
+      `;
+
+      // Random direction
+      const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
+      const distance = 60 + Math.random() * 80;
+      const targetX = centerX + Math.cos(angle) * distance;
+      const targetY = centerY + Math.sin(angle) * distance;
+
+      document.body.appendChild(particle);
+
+      // Animate the particle
+      const animation = particle.animate([
+        {
+          transform: 'translate(0, 0) scale(1)',
+          opacity: 1
+        },
+        {
+          transform: `translate(${targetX - centerX}px, ${targetY - centerY}px) scale(0)`,
+          opacity: 0
+        }
+      ], {
+        duration: 800,
+        easing: 'ease-out'
+      });
+
+      animation.onfinish = () => {
+        if (particle.parentNode) {
+          particle.parentNode.removeChild(particle);
+        }
+      };
+    }
+  }
+
+  // NEW: Create skull particles for handicap effect
+  createSkullParticleEffect(element) {
+    const rect = element.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    for (let i = 0; i < 3; i++) {
+      const skull = document.createElement("div");
+      skull.textContent = "💀";
+      skull.style.cssText = `
+        position: fixed;
+        font-size: 16px;
+        pointer-events: none;
+        z-index: 1000001;
+        left: ${centerX}px;
+        top: ${centerY}px;
+      `;
+
+      const angle = (Math.PI * 2 * i) / 3;
+      const distance = 40 + Math.random() * 60;
+      const targetX = centerX + Math.cos(angle) * distance;
+      const targetY = centerY + Math.sin(angle) * distance;
+
+      document.body.appendChild(skull);
+
+      skull.animate([
+        { transform: 'translate(0, 0)', opacity: 1 },
+        { transform: `translate(${targetX - centerX}px, ${targetY - centerY}px)`, opacity: 0 }
+      ], {
+        duration: 1000,
+        easing: 'ease-out'
+      }).onfinish = () => skull.remove();
+    }
+  }
+
+  // Sound effects (adapted for rage theme)
+  playTickSound() {
+    // Check if sound is enabled
+    if (!this.isSoundEnabled()) return;
+
+    // Create a tick sound using Web Audio API or play an audio file
+    const audio = document.getElementById("rageBuzzerSound");
+    if (
+      (audio && !this._lastTickTime) ||
+      Date.now() - this._lastTickTime > 30
+    ) {
+      this._lastTickTime = Date.now();
+      audio.currentTime = 0;
+      audio.volume = 0.1;
+      audio.playbackRate = 3.0;
+      audio.play().catch(() => {});
+    }
+  }
+
+  playClassWinSound() {
+    if (!this.isSoundEnabled()) return;
+
+    const audio = document.getElementById("rageAlarmSound");
+    if (audio) {
+      audio.currentTime = 0;
+      audio.volume = 0.3;
+      audio.play().catch(() => {});
+    }
+  }
+
+  playSpinWinSound() {
+    if (!this.isSoundEnabled()) return;
+
+    const audio = document.getElementById("rageBuzzerSound");
+    if (audio) {
+      audio.currentTime = 0;
+      audio.volume = 0.4;
+      audio.play().catch(() => {});
+    }
+  }
+
+  playHandicapWinSound() {
+    if (!this.isSoundEnabled()) return;
+
+    const audio = document.getElementById("rageLaughSound");
+    if (audio) {
+      audio.currentTime = 0;
+      audio.volume = 0.5;
+      audio.play().catch(() => {});
+    }
+  }
+
+  isSoundEnabled() {
+    const soundToggle = document.getElementById('rage-sound-toggle');
+    return !soundToggle?.classList.contains('muted');
+  }
+
+  // Show selection display (adapted for rage theme)
+  showSelectionDisplay() {
+    const selectedClassElement = document.getElementById("selected-class");
+    if (selectedClassElement) {
+      selectedClassElement.textContent = 
+        `${this.selectedClass.toUpperCase()} • ${this.selectedSpins} SPINS • ${this.selectedHandicap}`;
+      selectedClassElement.style.color = "#ff4444";
     }
 
-    setTimeout(() => particlesContainer.remove(), 3000);
+    // Show handicap warning
+    this.showHandicapWarning();
   }
 
-  // Play alarm/warning sounds
-  playAlarmSound() {
-    const audio = new Audio('sounds/glitch.mp3');
-    audio.volume = 0.5;
-    audio.play().catch(e => console.log("Could not play alarm sound"));
+  // Show handicap warning banner
+  showHandicapWarning() {
+    // Remove existing warning
+    const existingWarning = document.querySelector('.handicap-warning-banner');
+    if (existingWarning) existingWarning.remove();
+
+    // Create warning banner
+    const warningBanner = document.createElement('div');
+    warningBanner.className = 'handicap-warning-banner';
+    warningBanner.innerHTML = `
+      <div class="warning-content">
+        <span class="warning-skull">💀</span>
+        <span class="warning-text">WARNING: ${this.selectedHandicap.toUpperCase()} ACTIVATED</span>
+        <span class="warning-skull">💀</span>
+      </div>
+      <div class="warning-description">${this.selectedHandicapDesc}</div>
+    `;
+
+    // Add styles
+    warningBanner.style.cssText = `
+      position: fixed;
+      top: 120px;
+      left: 0;
+      right: 0;
+      background: linear-gradient(45deg, #8b0000, #ff4444);
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+      z-index: 10000;
+      box-shadow: 0 4px 20px rgba(255, 68, 68, 0.5);
+      animation: rage-warning-flash 1s ease-in-out infinite alternate;
+    `;
+
+    document.body.appendChild(warningBanner);
+
+    // Remove after 8 seconds
+    setTimeout(() => {
+      warningBanner.style.animation = 'rage-warning-fade-out 0.5s ease-out';
+      setTimeout(() => warningBanner.remove(), 500);
+    }, 8000);
   }
 
-  // Utility delay function
+  // Utility
   delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
 
-// Make it globally available
+// Export for use in main app.js
 window.RageRouletteAnimationSystem = RageRouletteAnimationSystem;

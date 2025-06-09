@@ -68,7 +68,12 @@
       }
     </style>
   </head>
+  <!-- Audio Elements for Rage Sounds -->
   <audio id="clickSound" src="sounds/tabby.mp3" preload="auto"></audio>
+  <audio id="rageAlarmSound" src="sounds/glitch.mp3" preload="auto"></audio>
+  <audio id="rageBuzzerSound" src="sounds/metal-clank.mp3" preload="auto"></audio>
+  <audio id="rageLaughSound" src="sounds/whisper.mp3" preload="auto"></audio>
+  <audio id="rageBackgroundMusic" src="sounds/glitch-sound-effect-96251.mp3" preload="auto" loop></audio>
   <nav class="main-nav">
     <a href="https://thefinalsloadout.com/">Home</a>
     <a href="https://thefinalsloadout.com/patch-notes/">Patch Notes</a>
@@ -87,8 +92,29 @@
       />
       <h1 class="mainTitle">The Finals' Most Frustrating Loadouts!</h1>
       <h2 class="subTitle">Think you're good? Prove it with the worst gear and a brutal handicap!</h2>
+      <!-- Sound Toggle Button -->
+      <button id="rage-sound-toggle" class="rage-sound-toggle" aria-label="Toggle sound" title="Toggle rage sounds on/off">
+        <svg class="sound-on" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <svg class="sound-off" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      </button>
     </div>
   </header>
+
+  <!-- Rage Meter -->
+  <div id="rage-meter" class="rage-meter-container">
+    <div class="rage-meter-title">RAGE</div>
+    <div class="rage-meter-bar">
+      <div id="rage-meter-fill" class="rage-meter-fill"></div>
+    </div>
+    <div id="rage-meter-text" class="rage-meter-text">0%</div>
+  </div>
 
   <main class="mainContent">
 
@@ -136,6 +162,33 @@
             <div class="rage-spin-option" data-spins="5">
               <div class="rage-spin-number">5</div>
               <span>HELL</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Handicap Roulette -->
+        <div id="rage-handicap-roulette" class="rage-roulette-section hidden">
+          <h2 class="rage-roulette-title">SELECTING HANDICAP...</h2>
+          <div class="rage-handicap-roulette-wheel">
+            <div class="rage-handicap-option" data-handicap="ads-only">
+              <div class="handicap-icon">🎯</div>
+              <span>ADS ONLY</span>
+            </div>
+            <div class="rage-handicap-option" data-handicap="no-healing">
+              <div class="handicap-icon">❤️‍🩹</div>
+              <span>NO HEALING</span>
+            </div>
+            <div class="rage-handicap-option" data-handicap="inverted-controls">
+              <div class="handicap-icon">🔄</div>
+              <span>INVERTED</span>
+            </div>
+            <div class="rage-handicap-option" data-handicap="slow-movement">
+              <div class="handicap-icon">🐌</div>
+              <span>SLOW</span>
+            </div>
+            <div class="rage-handicap-option" data-handicap="no-jumping">
+              <div class="handicap-icon">🚫</div>
+              <span>NO JUMP</span>
             </div>
           </div>
         </div>
@@ -227,9 +280,40 @@
         </button>
       </div>
 
+      <!-- Double or Nothing -->
+      <div id="double-or-nothing-container" class="double-or-nothing-container" style="display: none;">
+        <button id="double-or-nothing-btn" class="double-or-nothing-btn">
+          💀 Double or Nothing 💀
+        </button>
+        <p style="color: #ff6666; font-style: italic; margin-top: 10px;">
+          Add another random handicap for maximum suffering!
+        </p>
+      </div>
 
     </div>
   </main>
+
+  <!-- Hall of Shame -->
+  <section class="hall-of-shame">
+    <h2>🏆 Hall of Shame 🏆</h2>
+    <div class="shame-grid">
+      <div class="shame-item">
+        <h3>Worst Loadout Today</h3>
+        <div id="worst-loadout" class="shame-value">93R + Tracking Dart</div>
+        <div class="shame-description">This combination has caused 47 rage quits</div>
+      </div>
+      <div class="shame-item">
+        <h3>Most Punishing Handicap</h3>
+        <div id="worst-handicap" class="shame-value">Inverted Controls</div>
+        <div class="shame-description">Makes even pros look like beginners</div>
+      </div>
+      <div class="shame-item">
+        <h3>Players Who Rage Quit</h3>
+        <div id="rage-quit-counter" class="shame-value">1,337</div>
+        <div class="shame-description">And counting...</div>
+      </div>
+    </div>
+  </section>
 
   <section id="loadout-history" class="loadout-history">
     <h2>Save this masterpiece of misery for later.</h2>

@@ -2585,6 +2585,140 @@ body {
   text-shadow: 0 0 5px rgba(255, 136, 136, 0.6);
 }
 
+/* Handicap Roulette Wheel */
+.rage-handicap-roulette-wheel {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.rage-handicap-option {
+  background: linear-gradient(145deg, #331010, #4a0e0e);
+  border: 3px solid #ff4444;
+  border-radius: 15px;
+  width: 140px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(255, 68, 68, 0.3);
+}
+
+.rage-handicap-option:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(255, 68, 68, 0.5);
+}
+
+.rage-handicap-option.active {
+  transform: scale(1.1);
+  background: linear-gradient(145deg, #5a1010, #7a1414);
+  border-color: #ff6666;
+  box-shadow: 
+    0 0 30px rgba(255, 68, 68, 0.8),
+    inset 0 0 20px rgba(255, 68, 68, 0.3);
+  animation: rageHandicapSelection 0.3s ease;
+}
+
+.rage-handicap-option.selected {
+  background: linear-gradient(145deg, #8a1010, #aa1414);
+  border-color: #ff8888;
+  box-shadow: 
+    0 0 50px rgba(255, 68, 68, 1),
+    inset 0 0 30px rgba(255, 68, 68, 0.5);
+}
+
+@keyframes rageHandicapSelection {
+  0% { transform: scale(1.1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1.1); }
+}
+
+.handicap-icon {
+  font-size: 2rem;
+  margin-bottom: 5px;
+  animation: handicapIconBounce 2s ease-in-out infinite;
+}
+
+@keyframes handicapIconBounce {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(-5deg); }
+}
+
+.rage-handicap-option span {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #ff6666;
+  text-shadow: 0 0 8px rgba(255, 102, 102, 0.8);
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Handicap Warning Banner */
+.handicap-warning-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  background: linear-gradient(145deg, #8b0000, #ff4444);
+  color: #fff;
+  padding: 15px 0;
+  text-align: center;
+  z-index: 1001;
+  box-shadow: 0 4px 15px rgba(255, 68, 68, 0.6);
+  animation: warningSlideDown 0.5s ease-out;
+}
+
+@keyframes warningSlideDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+.handicap-warning-banner.fade-out {
+  animation: warningSlideUp 0.5s ease-in;
+}
+
+@keyframes warningSlideUp {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
+}
+
+.warning-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+.warning-skull {
+  font-size: 1.5rem;
+  animation: warningSkullShake 1s ease-in-out infinite;
+}
+
+@keyframes warningSkullShake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
+.warning-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  letter-spacing: 2px;
+}
+
+.warning-description {
+  font-size: 1rem;
+  opacity: 0.9;
+  font-style: italic;
+}
+
 /* Punishment Effects */
 .rage-shake {
   animation: rageShake 0.5s ease-in-out;
@@ -2694,6 +2828,75 @@ body {
   
   .rage-spin-number {
     font-size: 2rem;
+  }
+  
+  .rage-handicap-roulette-wheel {
+    gap: 15px;
+  }
+  
+  .rage-handicap-option {
+    width: 120px;
+    height: 80px;
+  }
+  
+  .handicap-icon {
+    font-size: 1.5rem;
+  }
+  
+  .rage-sound-toggle {
+    width: 40px;
+    height: 40px;
+    top: 10px;
+    right: 10px;
+  }
+  
+  .rage-meter-container {
+    width: 40px;
+    height: 150px;
+    top: 60px;
+    right: 10px;
+  }
+  
+  .rage-meter-bar {
+    width: 20px;
+    height: 100px;
+  }
+  
+  .warning-text {
+    font-size: 1.2rem;
+  }
+  
+  .warning-description {
+    font-size: 0.9rem;
+  }
+  
+  .double-or-nothing-btn {
+    font-size: 1rem;
+    padding: 12px 20px;
+  }
+  
+  .hall-of-shame {
+    margin: 20px 10px;
+    padding: 20px;
+  }
+  
+  .hall-of-shame h2 {
+    font-size: 1.5rem;
+  }
+  
+  .shame-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  /* Reduce particle effects on mobile for performance */
+  .rage-particle {
+    display: none;
+  }
+  
+  /* Keep only essential particles on mobile */
+  .rage-particle:nth-child(-n+5) {
+    display: block;
   }
 }
 
@@ -3053,4 +3256,254 @@ body {
   .punishment-text {
     font-size: 0.9rem;
   }
+}
+
+/* ============================================
+   RAGE SOUND TOGGLE
+   ============================================ */
+
+.rage-sound-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(145deg, #8b0000, #660000);
+  border: 2px solid #ff4444;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+}
+
+.rage-sound-toggle:hover {
+  transform: scale(1.1);
+  background: linear-gradient(145deg, #aa0000, #880000);
+  box-shadow: 0 6px 20px rgba(255, 68, 68, 0.5);
+}
+
+.rage-sound-toggle svg {
+  color: #ff6666;
+  transition: color 0.3s ease;
+}
+
+.rage-sound-toggle:hover svg {
+  color: #ff8888;
+}
+
+.rage-sound-toggle.muted {
+  background: linear-gradient(145deg, #444, #333);
+  border-color: #666;
+}
+
+.rage-sound-toggle.muted svg {
+  color: #999;
+}
+
+/* ============================================
+   RAGE METER
+   ============================================ */
+
+.rage-meter-container {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 60px;
+  height: 200px;
+  background: rgba(139, 0, 0, 0.3);
+  border: 2px solid #8b0000;
+  border-radius: 30px;
+  padding: 5px;
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rage-meter-title {
+  font-size: 0.7rem;
+  color: #ff6666;
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-align: center;
+  line-height: 1;
+}
+
+.rage-meter-bar {
+  width: 30px;
+  height: 150px;
+  background: #2a1515;
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #660000;
+}
+
+.rage-meter-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to top, #8b0000, #ff4444, #ff6666);
+  border-radius: 15px;
+  transition: height 0.5s ease;
+  height: 0%;
+}
+
+.rage-meter-fill.maximum {
+  animation: rageMeterPulse 1s ease-in-out infinite;
+}
+
+@keyframes rageMeterPulse {
+  0%, 100% { 
+    background: linear-gradient(to top, #8b0000, #ff4444, #ff6666);
+    box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+  }
+  50% { 
+    background: linear-gradient(to top, #ff0000, #ff6666, #ff8888);
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
+  }
+}
+
+.rage-meter-text {
+  font-size: 0.6rem;
+  color: #ff6666;
+  font-weight: bold;
+  margin-top: 5px;
+  text-align: center;
+  line-height: 1;
+}
+
+/* ============================================
+   HALL OF SHAME
+   ============================================ */
+
+.hall-of-shame {
+  background: linear-gradient(145deg, #2a1515, #1a1010);
+  border: 2px solid #8b0000;
+  border-radius: 15px;
+  margin: 30px auto;
+  padding: 25px;
+  max-width: 800px;
+  box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+}
+
+.hall-of-shame h2 {
+  color: #ff4444;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-shadow: 0 0 15px rgba(255, 68, 68, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.shame-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.shame-item {
+  background: rgba(139, 0, 0, 0.3);
+  border: 1px solid #660000;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+}
+
+.shame-item h3 {
+  color: #ff6666;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  text-shadow: 0 0 8px rgba(255, 102, 102, 0.6);
+}
+
+.shame-item .shame-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff4444;
+  margin: 10px 0;
+}
+
+.shame-item .shame-description {
+  font-size: 0.9rem;
+  color: #ff9999;
+  font-style: italic;
+}
+
+/* ============================================
+   DOUBLE OR NOTHING
+   ============================================ */
+
+.double-or-nothing-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.double-or-nothing-btn {
+  background: linear-gradient(145deg, #8b0000, #660000);
+  border: 3px solid #ff4444;
+  border-radius: 15px;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 15px 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  animation: doubleOrNothingPulse 2s ease-in-out infinite;
+}
+
+@keyframes doubleOrNothingPulse {
+  0%, 100% { 
+    box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 25px rgba(255, 68, 68, 0.8);
+    transform: scale(1.05);
+  }
+}
+
+.double-or-nothing-btn:hover {
+  background: linear-gradient(145deg, #aa0000, #880000);
+  border-color: #ff6666;
+  transform: scale(1.1);
+  animation: none;
+}
+
+.double-or-nothing-btn:active {
+  transform: scale(0.95);
+}
+
+.double-or-nothing-btn::before {
+  content: "💀";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  animation: skullSpin 3s linear infinite;
+}
+
+.double-or-nothing-btn::after {
+  content: "💀";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  animation: skullSpin 3s linear infinite reverse;
+}
+
+@keyframes skullSpin {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
 }

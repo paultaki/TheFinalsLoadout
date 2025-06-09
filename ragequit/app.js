@@ -3,7 +3,7 @@ let state = {
   selectedGadgets: new Set(),
   gadgetQueue: [],
   currentGadgetPool: new Set(),
-  handicap: null,
+  handicap: null, // Legacy - now using window.state.selectedHandicap from roulette
   selectedClass: null, // Add this property
 };
 document.addEventListener("DOMContentLoaded", () => {
@@ -39,6 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize the rage roulette animation system
   const rageRouletteSystem = new window.RageRouletteAnimationSystem();
+  
+  // Initialize sound toggle
+  initializeRageSoundToggle();
   
   // Rage Quit Button Click Event
   document
@@ -99,10 +102,9 @@ document.addEventListener("DOMContentLoaded", () => {
           return visibleItem.querySelector("p")?.innerText.trim() || "Unknown";
         });
 
-        const handicapElement = document.querySelector(".handicap-result");
-        const handicapText = handicapElement
-          ? handicapElement.textContent
-          : "None";
+        // Get handicap from roulette selection or fallback to UI element
+        const handicapText = window.state?.selectedHandicap || 
+          (document.querySelector(".handicap-result")?.textContent) || "None";
 
         if (selectedItems.includes("Unknown") || selectedItems.length < 5) {
           alert(
@@ -715,6 +717,9 @@ const spinRageQuitLoadout = () => {
   displayRageQuitLoadout();
 };
 
+// Make spinRageQuitLoadout available globally for the roulette system
+window.spinRageQuitLoadout = spinRageQuitLoadout;
+
 // Slightly modified physics constants for the Rage Quit Simulator
 const PHYSICS = {
   ACCELERATION: 3000, // Slower acceleration for gradual build-up
@@ -965,10 +970,11 @@ function startSpinAnimation(columns) {
     if (isAnimating) {
       requestAnimationFrame(animate);
     } else {
-      // When all columns are stopped, trigger the victory flash and spin handicap
+      // When all columns are stopped, trigger the victory flash and finalize spin
       finalVictoryFlash(columns);
       setTimeout(() => {
-        spinHandicap();
+        // Skip spinHandicap since handicap is now selected during roulette phase
+        finalizeSpin();
       }, 1000);
     }
   }
@@ -1045,100 +1051,55 @@ function finalVictoryFlash(columns) {
   }, 800); // Wait for last column's individual animation to finish
 }
 
-// Replace the spinHandicap function in your ragequit-app.js file with this improved version
+// COMMENTED OUT: Old spinHandicap function - now using roulette-selected handicap
+// The handicap is now selected during the roulette animation phase and stored in:
+// - window.state.selectedHandicap (handicap name)
+// - window.state.selectedHandicapDesc (handicap description)
 
-function spinHandicap() {
+// function spinHandicap() {
+//   // This function is no longer used as handicaps are selected during roulette phase
+//   console.log("spinHandicap called but handicap already selected during roulette");
+//   finalizeSpin();
+// }
+
+// Display the roulette-selected handicap in the UI
+function displaySelectedHandicap() {
   const handicapContainer = document.getElementById("handicap-container");
-
+  
   if (!handicapContainer) {
     console.error("Handicap container not found");
-    finalizeSpin();
     return;
   }
 
-  // Select a random handicap
-  const handicaps = rageQuitLoadouts.handicaps;
-  const randomHandicap =
-    handicaps[Math.floor(Math.random() * handicaps.length)];
-  state.handicap = randomHandicap;
-
-  // Placeholder texts to cycle through for suspense
-  const placeholderTexts = [
-    "?? ??????? ????",
-    "MYSTERY HANDICAP...",
-    "SPINNING...",
-    "WHAT WILL IT BE?",
-    "?? ??? ??? ???",
-  ];
-
-  // Create initial spinning UI with placeholder text
+  // Get handicap from roulette selection
+  const handicapName = window.state?.selectedHandicap || "None";
+  const handicapDesc = window.state?.selectedHandicapDesc || "No handicap selected";
+  
+  // Create the handicap display UI
   const wheelHTML = `
     <div class="handicap-wheel-container handicap-glow">
-      <div class="handicap-title">EXTRA HANDICAP</div>
+      <div class="handicap-title">SELECTED HANDICAP</div>
       <div class="handicap-wheel">
         <div class="handicap-spinner">
           <div class="handicap-result">
-            <span class="handicap-icon">🎰</span>
-            <span class="handicap-name">${placeholderTexts[0]}</span>
+            <span class="handicap-icon">💀</span>
+            <span class="handicap-name">${handicapName}</span>
           </div>
         </div>
       </div>
-      <div class="handicap-description"></div> <!-- Empty at first for suspense -->
+      <div class="handicap-description">${handicapDesc}</div>
     </div>
   `;
 
   handicapContainer.innerHTML = wheelHTML;
-
-  const resultName = handicapContainer.querySelector(".handicap-name");
-  const resultDescription = handicapContainer.querySelector(
-    ".handicap-description"
-  );
-  const spinner = handicapContainer.querySelector(".handicap-spinner");
-
-  if (spinner) {
-    // Spin animation
-    spinner.style.animation =
-      "spin-wheel 3s cubic-bezier(0.2, 0.8, 0.3, 1) forwards";
-
-    // Cycle through placeholder texts while spinning
-    let textIndex = 0;
-    const textInterval = setInterval(() => {
-      textIndex = (textIndex + 1) % placeholderTexts.length;
-      resultName.textContent = placeholderTexts[textIndex];
-    }, 250); // Change text every 250ms for more randomness
-
-    // After spin completes
-    setTimeout(() => {
-      clearInterval(textInterval); // Stop placeholder text changes
-
-      // Reveal final handicap
-      resultName.textContent = randomHandicap.name;
-      resultDescription.textContent = randomHandicap.description;
-
-      // Flash effect
-      spinner.style.animation = "flash-handicap 0.5s ease-out";
-
-      // Add a dramatic sound effect (optional)
-      const handicapSound = document.getElementById("handicapSound");
-      if (handicapSound && handicapSound.readyState >= 2) {
-        handicapSound.currentTime = 0;
-        handicapSound
-          .play()
-          .catch((err) => console.warn("Error playing handicap sound:", err));
-      }
-
-      // Finalize the spin and update history
-      setTimeout(() => {
-        handicapContainer.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-        finalizeSpin();
-      }, 1000);
-    }, 3000); // Total spin time before revealing final result
-  } else {
-    finalizeSpin();
-  }
+  
+  // Scroll to show the handicap
+  setTimeout(() => {
+    handicapContainer.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }, 500);
 }
 function addToHistory(
   classType,
@@ -1306,17 +1267,15 @@ function finalizeSpin() {
       return;
     }
 
-    // ✅ Get the class and handicap
+    // ✅ Get the class and handicap (now from roulette selection)
     const selectedClass = state.selectedClass || "Unknown";
-    const handicapName = state.handicap ? state.handicap.name : "None";
-    const handicapDesc = state.handicap
-      ? state.handicap.description
-      : "No handicap selected";
+    const handicapName = window.state?.selectedHandicap || "None";
+    const handicapDesc = window.state?.selectedHandicapDesc || "No handicap selected";
 
     // ✅ Format data correctly
     const weapon = selectedItems[0];
     const specialization = selectedItems[1];
-    const gadgets = selectedItems.slice(2).join(", ");
+    const gadgets = selectedItems.slice(2); // Keep as array for addToHistory
 
     // ✅ Add to history
     addToHistory(
@@ -1328,11 +1287,16 @@ function finalizeSpin() {
       handicapDesc
     );
 
-    // ✅ Re-enable the "Generate Rage Loadout" button
+    // ✅ Display the selected handicap and re-enable button
+    displaySelectedHandicap();
+    
     setTimeout(() => {
       document.getElementById("rage-quit-btn").removeAttribute("disabled");
       state.isSpinning = false; // Reset state to allow new spin
       console.log("✅ Button re-enabled and ready for next spin");
+      
+      // Show Double or Nothing option
+      showDoubleOrNothingOption();
     }, 1000);
   } catch (error) {
     console.error("⚠️ ERROR: Something went wrong finalizing spin:", error);
@@ -1524,3 +1488,235 @@ function markAsSurvived(button) {
     entry.classList.add('survived-entry');
   }
 }
+
+// ============================================
+// SOUND TOGGLE FUNCTIONALITY
+// ============================================
+
+function initializeRageSoundToggle() {
+  const soundToggle = document.getElementById('rage-sound-toggle');
+  if (!soundToggle) return;
+
+  // Load saved sound preference
+  const soundEnabled = localStorage.getItem('rageSoundEnabled') !== 'false';
+  if (!soundEnabled) {
+    soundToggle.classList.add('muted');
+    toggleSoundIcons(soundToggle, false);
+  }
+
+  soundToggle.addEventListener('click', () => {
+    const isMuted = soundToggle.classList.contains('muted');
+    
+    if (isMuted) {
+      soundToggle.classList.remove('muted');
+      localStorage.setItem('rageSoundEnabled', 'true');
+      toggleSoundIcons(soundToggle, true);
+    } else {
+      soundToggle.classList.add('muted');
+      localStorage.setItem('rageSoundEnabled', 'false');
+      toggleSoundIcons(soundToggle, false);
+      // Stop any currently playing sounds
+      stopAllRageSounds();
+    }
+  });
+}
+
+function toggleSoundIcons(button, soundOn) {
+  const soundOnIcon = button.querySelector('.sound-on');
+  const soundOffIcon = button.querySelector('.sound-off');
+  
+  if (soundOn) {
+    soundOnIcon.style.display = 'block';
+    soundOffIcon.style.display = 'none';
+  } else {
+    soundOnIcon.style.display = 'none';
+    soundOffIcon.style.display = 'block';
+  }
+}
+
+function stopAllRageSounds() {
+  const sounds = ['rageAlarmSound', 'rageBuzzerSound', 'rageLaughSound', 'rageBackgroundMusic'];
+  sounds.forEach(soundId => {
+    const audio = document.getElementById(soundId);
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  });
+}
+
+// ============================================
+// DOUBLE OR NOTHING FUNCTIONALITY
+// ============================================
+
+function initializeDoubleOrNothing() {
+  const doubleBtn = document.getElementById('double-or-nothing-btn');
+  if (!doubleBtn) return;
+
+  doubleBtn.addEventListener('click', () => {
+    // Play Russian roulette sound effect
+    playDoubleOrNothingSound();
+    
+    // Add loading state
+    doubleBtn.disabled = true;
+    doubleBtn.textContent = '💀 SPINNING THE WHEEL... 💀';
+    
+    // Generate additional handicap after delay
+    setTimeout(() => {
+      const additionalHandicaps = [
+        { name: "Single Finger", desc: "Can only use one finger to play" },
+        { name: "Eyes Closed", desc: "Must play with eyes closed for 30 seconds" },
+        { name: "Wrong Hand", desc: "Must use non-dominant hand" },
+        { name: "Backwards", desc: "Must face away from screen" },
+        { name: "Standing Up", desc: "Cannot sit while playing" }
+      ];
+      
+      const newHandicap = additionalHandicaps[Math.floor(Math.random() * additionalHandicaps.length)];
+      
+      // Show dramatic reveal
+      showDoubleOrNothingResult(newHandicap);
+      
+      // Update rage meter
+      updateRageMeterForDoubleOrNothing();
+      
+      // Hide button
+      document.getElementById('double-or-nothing-container').style.display = 'none';
+      
+      // Reset button
+      doubleBtn.disabled = false;
+      doubleBtn.textContent = '💀 Double or Nothing 💀';
+    }, 2000);
+  });
+}
+
+function playDoubleOrNothingSound() {
+  const soundToggle = document.getElementById('rage-sound-toggle');
+  if (soundToggle?.classList.contains('muted')) return;
+  
+  // Use the metal clank as Russian roulette sound
+  const audio = document.getElementById('rageBuzzerSound');
+  if (audio) {
+    audio.volume = 0.8;
+    audio.currentTime = 0;
+    audio.play().catch(e => console.log("Could not play double or nothing sound"));
+  }
+}
+
+function showDoubleOrNothingResult(handicap) {
+  // Create dramatic popup
+  const popup = document.createElement('div');
+  popup.className = 'double-or-nothing-result';
+  popup.innerHTML = `
+    <div class="double-result-content">
+      <h2>💀 ADDITIONAL HANDICAP! 💀</h2>
+      <div class="new-handicap-name">${handicap.name}</div>
+      <div class="new-handicap-desc">${handicap.desc}</div>
+      <button onclick="this.parentElement.parentElement.remove()">ACCEPT FATE</button>
+    </div>
+  `;
+  
+  document.body.appendChild(popup);
+  
+  // Add CSS for the popup
+  const style = document.createElement('style');
+  style.textContent = `
+    .double-or-nothing-result {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      animation: doubleResultFadeIn 0.5s ease;
+    }
+    
+    .double-result-content {
+      background: linear-gradient(145deg, #8b0000, #660000);
+      border: 3px solid #ff4444;
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      max-width: 500px;
+      animation: doubleResultShake 0.5s ease;
+    }
+    
+    .double-result-content h2 {
+      color: #ff4444;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px rgba(255, 68, 68, 0.8);
+    }
+    
+    .new-handicap-name {
+      font-size: 1.5rem;
+      color: #ff6666;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    .new-handicap-desc {
+      font-size: 1rem;
+      color: #ff9999;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    
+    .double-result-content button {
+      background: linear-gradient(145deg, #660000, #440000);
+      border: 2px solid #ff4444;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    
+    @keyframes doubleResultFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes doubleResultShake {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function updateRageMeterForDoubleOrNothing() {
+  const rageFill = document.getElementById('rage-meter-fill');
+  const rageText = document.getElementById('rage-meter-text');
+  
+  if (rageFill && rageText) {
+    // Set to maximum rage
+    rageFill.style.height = '100%';
+    rageFill.classList.add('maximum');
+    rageText.textContent = 'MAX';
+    
+    // Store maximum rage level
+    window.state.rageLevel = 100;
+  }
+}
+
+// Show Double or Nothing button after loadout generation
+function showDoubleOrNothingOption() {
+  const container = document.getElementById('double-or-nothing-container');
+  if (container) {
+    container.style.display = 'block';
+    // Auto-hide after 30 seconds
+    setTimeout(() => {
+      container.style.display = 'none';
+    }, 30000);
+  }
+}
+
+// Initialize Double or Nothing when DOM loads
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initializeDoubleOrNothing, 100);
+});
