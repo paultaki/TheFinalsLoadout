@@ -6,15 +6,14 @@ async function loadCounter() {
                    window.location.hostname === '127.0.0.1' || 
                    window.location.hostname === '';
     
-    // TEMPORARILY COMMENTED OUT FOR TESTING - UNCOMMENT FOR PRODUCTION
-    // if (isLocal) {
-    //   // Use fallback counter for local development
-    //   const fallbackCount = localStorage.getItem('localCounter') || '31846';
-    //   document.querySelectorAll('.loadouts-counter').forEach(el => {
-    //     el.textContent = parseInt(fallbackCount).toLocaleString();
-    //   });
-    //   return;
-    // }
+    if (isLocal) {
+      // Use fallback counter for local development
+      const fallbackCount = localStorage.getItem('localCounter') || '5321';
+      document.querySelectorAll('.loadouts-counter').forEach(el => {
+        el.textContent = parseInt(fallbackCount).toLocaleString();
+      });
+      return;
+    }
     
     // Production API call
     const response = await fetch('/api/counter');
