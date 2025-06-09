@@ -136,6 +136,7 @@
           <div class="form-group">
             <label for="email">Email (optional - for follow-up)</label>
             <input type="email" id="email" name="email" placeholder="yourname@example.com">
+            <div class="email-incentive">💎 Drop your email for a chance at exclusive Season 7 beta access</div>
           </div>
 
           <button type="submit" class="send-button" id="send-button">
@@ -147,8 +148,10 @@
         <div id="feedback-response" class="success-message" style="display: none;">
           <div class="jackpot-animation">
             <h2>🎰 JACKPOT! 🎰</h2>
-            <p>Feedback received! You're entered in this month's lottery.</p>
+            <p>FEEDBACK RECEIVED! You're now entered in the lottery</p>
+            <div class="lottery-ticket">Your ticket: #<span id="lottery-number">0247</span></div>
             <div class="falling-coins"></div>
+            <div class="redirect-timer">Redirecting in <span id="countdown">3</span> seconds...</div>
           </div>
         </div>
       </section>
