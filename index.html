@@ -206,57 +206,40 @@
   <audio id="columnStop" src="sounds/click.mp3" preload="auto"></audio>
   <audio id="finalLock" src="sounds/final-sound.mp3" preload="auto"></audio>
 
-<nav class="main-nav">
-  <a href="ragequit/index.html">Rage Quit Loadout</a>
-  <a href="patch-notes/index.html">Patch Notes</a>
-  <a href="feedback/index.html">Feedback</a>
-</nav>
-
-<header class="headerSection">
-  <div class="container">
-    <img
-      src="images/roulette.webp"
-      alt="Random Loadout Generator for The Finals Game"
-      class="finals-logo"
-      width="240"
-      height="240"
-    />
-    <div class="season-countdown-container">
-      <h2 class="season-status">Season 7 Begins In</h2>
-      <div class="countdown-timer" id="seasonCountdown">
-        <div class="countdown-item">
-          <span class="countdown-value" id="countdown-days">02</span>
-          <span class="countdown-label">Days</span>
-        </div>
-        <div class="countdown-item">
-          <span class="countdown-value" id="countdown-hours">11</span>
-          <span class="countdown-label">Hours</span>
-        </div>
-        <div class="countdown-item">
-          <span class="countdown-value" id="countdown-minutes">45</span>
-          <span class="countdown-label">Minutes</span>
-        </div>
-        <div class="countdown-item">
-          <span class="countdown-value" id="countdown-seconds">42</span>
-          <span class="countdown-label">Seconds</span>
-        </div>
-      </div>
-      <p class="countdown-disclaimer">* This countdown is an estimate and may not be accurate to the second.</p>
+<!-- Persistent Top Bar with Countdown -->
+<div class="top-bar">
+  <div class="top-bar-content">
+    <div class="brand-compact">
+      <img src="images/roulette.webp" alt="The Finals" class="brand-logo" width="24" height="24" />
+      <span class="brand-text">The Finals</span>
+    </div>
+    <div class="countdown-compact" id="seasonCountdown">
+      <span class="countdown-text">S7 in </span>
+      <span id="countdown-days">02</span>d 
+      <span id="countdown-hours">11</span>h 
+      <span id="countdown-minutes">45</span>m
     </div>
     <!-- Sound Toggle Button -->
-    <button id="sound-toggle" class="sound-toggle" aria-label="Toggle sound" title="Toggle sound on/off">
-      <svg class="sound-on" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <button id="sound-toggle" class="sound-toggle-compact" aria-label="Toggle sound">
+      <svg class="sound-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
         <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
       </svg>
-      <svg class="sound-off" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+      <svg class="sound-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
         <line x1="23" y1="9" x2="17" y2="15"></line>
         <line x1="17" y1="9" x2="23" y2="15"></line>
       </svg>
     </button>
   </div>
-</header>
+</div>
+
+<!-- Navigation -->
+<nav class="main-nav-mobile">
+  <a href="ragequit/index.html">Rage Quit</a>
+  <a href="patch-notes/index.html">Patch Notes</a>
+  <a href="feedback/index.html">Feedback</a>
+</nav>
   
 
 <!-- Filter Toggle Button -->
@@ -458,159 +441,203 @@
 </div>
 
 <!-- Main Content Area -->
-<main class="main-content">
-  <div class="container">
-    <div class="selection-container">
-      <!-- Hidden Class Selection (for internal use) -->
-      <div class="class-selection hidden">
-        <div class="btnRow">
-          <img id="light-class" class="class-button" src="images/light_silhouette.webp" 
-               data-active="images/light_active.webp" 
-               data-default="images/light_silhouette.webp" 
-               data-class="Light" alt="Light Class Loadouts" 
-               width="120" height="120" />
-          
-          <img id="medium-class" class="class-button" src="images/medium_silhouette.webp" 
-               data-active="images/medium_active.webp" 
-               data-default="images/medium_silhouette.webp" 
-               data-class="Medium" alt="Medium Class Loadouts" 
-               width="120" height="120" />
-        
-          <img id="heavy-class" class="class-button" src="images/heavy_silhouette.webp" 
-               data-active="images/heavy_active.webp" 
-               data-default="images/heavy_silhouette.webp" 
-               data-class="Heavy" alt="Heavy Class Loadouts" 
-               width="120" height="120" />
-        </div>
+<main class="main-content-mobile">
+  
+  <!-- Loadout Selection Strip -->
+  <section class="loadout-strip">
+    <h2 class="section-title">Quick Select</h2>
+    <div class="loadout-cards-container">
+      <div class="loadout-card active" data-class="random">
+        <div class="card-icon">🎲</div>
+        <span class="card-name">Random</span>
       </div>
+      <div class="loadout-card" data-class="light">
+        <div class="card-icon">⚡</div>
+        <span class="card-name">Light</span>
+      </div>
+      <div class="loadout-card" data-class="medium">
+        <div class="card-icon">🛡️</div>
+        <span class="card-name">Medium</span>
+      </div>
+      <div class="loadout-card" data-class="heavy">
+        <div class="card-icon">💥</div>
+        <span class="card-name">Heavy</span>
+      </div>
+      <div class="loadout-card" data-class="rage">
+        <div class="card-icon">😤</div>
+        <span class="card-name">Rage</span>
+      </div>
+    </div>
+    <div class="scroll-dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </section>
 
-            <!-- Main SPIN Button -->
-            <div class="spin-control">
-              <button id="main-spin-button" class="main-spin-button">
-                <span class="spin-text">SPIN</span>
-                <div class="spin-energy"></div>
-              </button>
-              <div class="spin-status" id="spinStatus"></div>
-              
-              <!-- Selection Display -->
-              <div id="selection-display" class="selection-display hidden">
-                <div class="selection-info">
-                  <span class="selection-class"></span>
-                  <span class="selection-divider">•</span>
-                  <span class="selection-spins"></span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Animation Stages Container -->
-            <div id="roulette-container" class="roulette-container hidden">
-              <!-- Class Roulette -->
-              <div id="class-roulette" class="roulette-section hidden">
-                <h2 class="roulette-title">SELECTING CLASS...</h2>
-                <div class="class-roulette-wheel">
-                  <div class="class-option light-option" data-class="Light">
-                    <img src="images/light_active.webp" alt="Light" width="80" height="80">
-                    <span>LIGHT</span>
-                  </div>
-                  <div class="class-option medium-option" data-class="Medium">
-                    <img src="images/medium_active.webp" alt="Medium" width="80" height="80">
-                    <span>MEDIUM</span>
-                  </div>
-                  <div class="class-option heavy-option" data-class="Heavy">
-                    <img src="images/heavy_active.webp" alt="Heavy" width="80" height="80">
-                    <span>HEAVY</span>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Spin Count Roulette -->
-              <div id="spin-roulette" class="roulette-section hidden">
-                <h2 class="roulette-title">CHOOSING SPINS...</h2>
-                <div class="spin-roulette-wheel">
-                  <div class="spin-option" data-spins="1"><span>1</span></div>
-                  <div class="spin-option" data-spins="2"><span>2</span></div>
-                  <div class="spin-option" data-spins="3"><span>3</span></div>
-                  <div class="spin-option" data-spins="4"><span>4</span></div>
-                  <div class="spin-option" data-spins="5"><span>5</span></div>
-                </div>
-              </div>
-            </div>
-        </div>
-        
-
-          <div id="output">
-            <div class="slot-machine-wrapper">
-              <div class="items-container">
-                <div class="placeholder-container">
-                  <img
-                    src="images/placeholder.webp"
-                    alt="?"
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                  />
-                  <p>Weapon</p>
-                </div>
-                <div class="placeholder-container">
-                  <img
-                    src="images/placeholder.webp"
-                    alt="?"
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                  />
-                  <p>Specialization</p>
-                </div>
-                <div class="placeholder-container">
-                  <img
-                    src="images/placeholder.webp"
-                    alt="?"
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                  />
-                  <p>Gadget</p>
-                </div>
-                <div class="placeholder-container">
-                  <img
-                    src="images/placeholder.webp"
-                    alt="?"
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                  />
-                  <p>Gadget</p>
-                </div>
-                <div class="placeholder-container">
-                  <img
-                    src="images/placeholder.webp"
-                    alt="?"
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                  />
-                  <p>Gadget</p>
-                </div>
-              </div>
-            </div>
+  <!-- Analysis Results -->
+  <section class="analysis-results" id="analysis-results">
+    <div class="results-header">
+      <h2 class="section-title">Current Loadout</h2>
+      <span class="loadout-counter">🔥 <span class="loadouts-counter">31,846</span> generated</span>
+    </div>
+    
+    <div class="results-list" id="results-list">
+      <div class="result-group">
+        <h3 class="group-title">Weapons</h3>
+        <div class="result-item">
+          <div class="item-icon">🔫</div>
+          <div class="item-info">
+            <span class="item-name">Tap to generate loadout</span>
+            <span class="item-stat">-</span>
           </div>
-
-
         </div>
       </div>
-    </main>
-    <section id="loadout-history" class="loadout-history">
-      <h2>🏆 Recent Chaos</h2>
-      <p class="chaos-counter" id="total-loadouts">🔥 <span class="loadouts-counter">0</span> total analyses delivered</p>
-      <div id="history-list">
-        <!-- History entries will be populated here -->
+
+      <div class="result-group">
+        <h3 class="group-title">Abilities</h3>
+        <div class="result-item">
+          <div class="item-icon">⚡</div>
+          <div class="item-info">
+            <span class="item-name">-</span>
+            <span class="item-stat">-</span>
+          </div>
+        </div>
       </div>
-      <button id="clear-history" class="clear-history-btn">
-        Clear History
+
+      <div class="result-group">
+        <h3 class="group-title">Gadgets</h3>
+        <div class="result-item">
+          <div class="item-icon">💣</div>
+          <div class="item-info">
+            <span class="item-name">-</span>
+            <span class="item-stat">-</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hidden containers for functionality -->
+  <div class="hidden">
+    <!-- Keep existing containers for functionality -->
+    <div class="class-selection">
+      <div class="btnRow">
+        <img id="light-class" class="class-button" src="images/light_silhouette.webp" 
+             data-active="images/light_active.webp" 
+             data-default="images/light_silhouette.webp" 
+             data-class="Light" alt="Light Class Loadouts" />
+        <img id="medium-class" class="class-button" src="images/medium_silhouette.webp" 
+             data-active="images/medium_active.webp" 
+             data-default="images/medium_silhouette.webp" 
+             data-class="Medium" alt="Medium Class Loadouts" />
+        <img id="heavy-class" class="class-button" src="images/heavy_silhouette.webp" 
+             data-active="images/heavy_active.webp" 
+             data-default="images/heavy_silhouette.webp" 
+             data-class="Heavy" alt="Heavy Class Loadouts" />
+      </div>
+    </div>
+
+    <div class="spin-control">
+      <button id="main-spin-button" class="main-spin-button">
+        <span class="spin-text">SPIN</span>
+        <div class="spin-energy"></div>
       </button>
-    </section>
+      <div class="spin-status" id="spinStatus"></div>
+      <div id="selection-display" class="selection-display">
+        <div class="selection-info">
+          <span class="selection-class"></span>
+          <span class="selection-divider">•</span>
+          <span class="selection-spins"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="roulette-container" class="roulette-container">
+      <div id="class-roulette" class="roulette-section">
+        <h2 class="roulette-title">SELECTING CLASS...</h2>
+        <div class="class-roulette-wheel">
+          <div class="class-option light-option" data-class="Light">
+            <img src="images/light_active.webp" alt="Light" width="80" height="80">
+            <span>LIGHT</span>
+          </div>
+          <div class="class-option medium-option" data-class="Medium">
+            <img src="images/medium_active.webp" alt="Medium" width="80" height="80">
+            <span>MEDIUM</span>
+          </div>
+          <div class="class-option heavy-option" data-class="Heavy">
+            <img src="images/heavy_active.webp" alt="Heavy" width="80" height="80">
+            <span>HEAVY</span>
+          </div>
+        </div>
+      </div>
+      
+      <div id="spin-roulette" class="roulette-section">
+        <h2 class="roulette-title">CHOOSING SPINS...</h2>
+        <div class="spin-roulette-wheel">
+          <div class="spin-option" data-spins="1"><span>1</span></div>
+          <div class="spin-option" data-spins="2"><span>2</span></div>
+          <div class="spin-option" data-spins="3"><span>3</span></div>
+          <div class="spin-option" data-spins="4"><span>4</span></div>
+          <div class="spin-option" data-spins="5"><span>5</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="output">
+      <div class="slot-machine-wrapper">
+        <div class="items-container">
+          <div class="placeholder-container">
+            <img src="images/placeholder.webp" alt="?" width="80" height="80" loading="lazy" />
+            <p>Weapon</p>
+          </div>
+          <div class="placeholder-container">
+            <img src="images/placeholder.webp" alt="?" width="80" height="80" loading="lazy" />
+            <p>Specialization</p>
+          </div>
+          <div class="placeholder-container">
+            <img src="images/placeholder.webp" alt="?" width="80" height="80" loading="lazy" />
+            <p>Gadget</p>
+          </div>
+          <div class="placeholder-container">
+            <img src="images/placeholder.webp" alt="?" width="80" height="80" loading="lazy" />
+            <p>Gadget</p>
+          </div>
+          <div class="placeholder-container">
+            <img src="images/placeholder.webp" alt="?" width="80" height="80" loading="lazy" />
+            <p>Gadget</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
 </main>
+
+<!-- Fixed Bottom Action Sheet -->
+<div class="bottom-sheet">
+  <div class="bottom-sheet-content">
+    <button id="new-analysis-btn" class="secondary-action">New Analysis</button>
+    <button id="generate-meme-btn" class="primary-cta">
+      <span class="cta-text">GENERATE MEME CARD</span>
+      <span class="cta-icon">🎯</span>
+    </button>
+  </div>
+</div>
+
+<!-- Legacy sections - keep for functionality but hidden -->
+<div class="legacy-sections" style="display: none;">
+  <section id="loadout-history" class="loadout-history">
+    <h2>🏆 Recent Chaos</h2>
+    <p class="chaos-counter" id="total-loadouts">🔥 <span class="loadouts-counter">0</span> total analyses delivered</p>
+    <div id="history-list">
+      <!-- History entries will be populated here -->
+    </div>
+    <button id="clear-history" class="clear-history-btn">
+      Clear History
+    </button>
+  </section>
+</div>
 
 
 <footer class="footerSection" style="text-align: center;">
@@ -800,6 +827,216 @@
         // Start countdown if elements exist
         if (document.getElementById('seasonCountdown')) {
           updateCountdown();
+        }
+
+        // Mobile Redesign - Loadout Selection Handlers
+        const loadoutCards = document.querySelectorAll('.loadout-card');
+        const resultsHeader = document.querySelector('.results-header .section-title');
+        const newAnalysisBtn = document.getElementById('new-analysis-btn');
+        const generateMemeBtn = document.getElementById('generate-meme-btn');
+        let selectedClass = 'random';
+
+        // Handle loadout card selection
+        loadoutCards.forEach(card => {
+          card.addEventListener('click', function() {
+            // Remove active class from all cards
+            loadoutCards.forEach(c => c.classList.remove('active'));
+            
+            // Add active class to clicked card
+            this.classList.add('active');
+            
+            // Store selected class
+            selectedClass = this.dataset.class;
+            
+            // Update results header
+            const className = this.querySelector('.card-name').textContent;
+            resultsHeader.textContent = `${className} Loadout`;
+            
+            // Trigger haptic feedback if available
+            if (navigator.vibrate) {
+              navigator.vibrate(50);
+            }
+          });
+        });
+
+        // New Analysis button - triggers loadout generation
+        newAnalysisBtn.addEventListener('click', function() {
+          // Map mobile class selection to original system
+          const classMapping = {
+            'random': null,
+            'light': 'Light',
+            'medium': 'Medium', 
+            'heavy': 'Heavy',
+            'rage': 'rage'
+          };
+
+          if (selectedClass === 'rage') {
+            // Redirect to rage quit page
+            window.location.href = 'ragequit/index.html';
+            return;
+          }
+
+          // Set up state for original system
+          if (window.state) {
+            if (classMapping[selectedClass]) {
+              window.state.selectedClass = classMapping[selectedClass];
+              window.state.totalSpins = 1; // Default to 1 spin for mobile
+            } else {
+              // Random class selection
+              window.state.selectedClass = null;
+              window.state.totalSpins = null;
+            }
+          }
+
+          // Trigger the appropriate generation function
+          if (selectedClass === 'random' && window.RouletteAnimationSystem) {
+            // Full roulette animation for random
+            const roulette = new window.RouletteAnimationSystem();
+            roulette.startFullSequence();
+          } else if (window.spinLoadout) {
+            // Direct spin for specific class
+            window.spinLoadout();
+          }
+
+          // Update button state
+          this.innerHTML = '<span class="loading-spinner"></span>Generating...';
+          this.disabled = true;
+
+          // Re-enable after animation
+          setTimeout(() => {
+            this.innerHTML = 'New Analysis';
+            this.disabled = false;
+          }, 3000);
+        });
+
+        // Generate Meme Card button
+        generateMemeBtn.addEventListener('click', function() {
+          // Check if we have a loadout to share
+          const outputContainer = document.getElementById('output');
+          const items = outputContainer.querySelectorAll('.items-container .item');
+          
+          if (items.length === 0 || !items[0].querySelector('img[src*="images/"]')) {
+            // No loadout generated yet
+            alert('Generate a loadout first!');
+            return;
+          }
+
+          // Trigger the existing meme card generation
+          if (window.shareToSocial) {
+            window.shareToSocial();
+          } else {
+            // Fallback - just copy loadout text
+            const weapon = items[0].querySelector('p').textContent;
+            const spec = items[1].querySelector('p').textContent;
+            const gadgets = Array.from(items).slice(2).map(item => 
+              item.querySelector('p').textContent
+            ).join(', ');
+            
+            const loadoutText = `🎯 My Finals Loadout:\n🔫 ${weapon}\n⚡ ${spec}\n💣 ${gadgets}\n\nGenerated at thefinalsloadout.com`;
+            
+            navigator.clipboard.writeText(loadoutText).then(() => {
+              this.innerHTML = '<span class="cta-text">COPIED!</span><span class="cta-icon">✅</span>';
+              setTimeout(() => {
+                this.innerHTML = '<span class="cta-text">GENERATE MEME CARD</span><span class="cta-icon">🎯</span>';
+              }, 2000);
+            }).catch(() => {
+              alert('Loadout copied to share!');
+            });
+          }
+        });
+
+        // Scroll indicators for loadout cards
+        const container = document.querySelector('.loadout-cards-container');
+        const dots = document.querySelectorAll('.scroll-dots .dot');
+        
+        if (container && dots.length > 0) {
+          container.addEventListener('scroll', function() {
+            const scrollLeft = this.scrollLeft;
+            const cardWidth = this.querySelector('.loadout-card').offsetWidth + 16; // including gap
+            const activeIndex = Math.round(scrollLeft / cardWidth);
+            
+            dots.forEach((dot, index) => {
+              dot.classList.toggle('active', index === Math.floor(activeIndex / 2));
+            });
+          });
+        }
+
+        // Function to update mobile results display
+        window.updateMobileResults = function(loadoutData) {
+          const resultsList = document.getElementById('results-list');
+          if (!resultsList) return;
+
+          // Clear existing results
+          resultsList.innerHTML = '';
+
+          // Weapon group
+          if (loadoutData.weapon) {
+            const weaponGroup = document.createElement('div');
+            weaponGroup.className = 'result-group';
+            weaponGroup.innerHTML = `
+              <h3 class="group-title">Weapons</h3>
+              <div class="result-item">
+                <div class="item-icon">🔫</div>
+                <div class="item-info">
+                  <span class="item-name">${loadoutData.weapon.name}</span>
+                  <span class="item-stat">${loadoutData.weapon.class || 'Weapon'}</span>
+                </div>
+              </div>
+            `;
+            resultsList.appendChild(weaponGroup);
+          }
+
+          // Specialization group
+          if (loadoutData.specialization) {
+            const specGroup = document.createElement('div');
+            specGroup.className = 'result-group';
+            specGroup.innerHTML = `
+              <h3 class="group-title">Abilities</h3>
+              <div class="result-item">
+                <div class="item-icon">⚡</div>
+                <div class="item-info">
+                  <span class="item-name">${loadoutData.specialization.name}</span>
+                  <span class="item-stat">Specialization</span>
+                </div>
+              </div>
+            `;
+            resultsList.appendChild(specGroup);
+          }
+
+          // Gadgets group
+          if (loadoutData.gadgets && loadoutData.gadgets.length > 0) {
+            const gadgetsGroup = document.createElement('div');
+            gadgetsGroup.className = 'result-group';
+            
+            let gadgetItems = '';
+            loadoutData.gadgets.forEach((gadget, index) => {
+              const icons = ['💣', '🛡️', '⚙️'];
+              gadgetItems += `
+                <div class="result-item">
+                  <div class="item-icon">${icons[index] || '⚙️'}</div>
+                  <div class="item-info">
+                    <span class="item-name">${gadget.name}</span>
+                    <span class="item-stat">Gadget ${index + 1}</span>
+                  </div>
+                </div>
+              `;
+            });
+
+            gadgetsGroup.innerHTML = `
+              <h3 class="group-title">Gadgets</h3>
+              ${gadgetItems}
+            `;
+            resultsList.appendChild(gadgetsGroup);
+          }
+        };
+
+        // Listen for loadout updates from the original system
+        if (window.addEventListener) {
+          window.addEventListener('loadoutGenerated', function(event) {
+            if (event.detail && event.detail.loadout) {
+              window.updateMobileResults(event.detail.loadout);
+            }
+          });
         }
       });
     </script>
