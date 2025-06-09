@@ -50,7 +50,11 @@
       <!-- Countdown Timer -->
       <div class="countdown-container">
         <div class="countdown-title">LAUNCHING IN</div>
-        <div class="countdown-timer">
+        <div class="countdown-loading" id="countdown-loading">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">INITIALIZING COUNTDOWN...</div>
+        </div>
+        <div class="countdown-timer" id="countdown-timer" style="display: none;">
           <div class="time-unit">
             <span class="time-value" id="days">00</span>
             <span class="time-label">DAYS</span>

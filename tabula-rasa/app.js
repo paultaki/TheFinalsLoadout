@@ -4,43 +4,58 @@
 
 // Countdown Timer
 function initCountdown() {
-  // Set launch date (30 days from now for demo)
-  const launchDate = new Date();
-  launchDate.setDate(launchDate.getDate() + 30);
+  // Set launch date to January 31st, 2025 at 11:59 PM PST
+  const launchDate = new Date('2025-02-01T07:59:00.000Z'); // UTC time for 11:59 PM PST
   
-  function updateCountdown() {
-    const now = new Date().getTime();
-    const distance = launchDate - now;
+  // Show loading animation first
+  const loadingElement = document.getElementById('countdown-loading');
+  const timerElement = document.getElementById('countdown-timer');
+  
+  // Simulate initialization delay
+  setTimeout(() => {
+    loadingElement.style.display = 'none';
+    timerElement.style.display = 'flex';
+    timerElement.style.animation = 'fadeIn 0.8s ease-out';
     
-    if (distance < 0) {
-      // Launch day!
-      document.querySelector('.countdown-title').textContent = 'NOW AVAILABLE!';
-      document.querySelector('.countdown-timer').style.display = 'none';
-      return;
+    // Start the actual countdown
+    startCountdown();
+  }, 2000);
+  
+  function startCountdown() {
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = launchDate - now;
+      
+      if (distance < 0) {
+        // Launch day!
+        document.querySelector('.countdown-title').textContent = 'NOW AVAILABLE!';
+        document.querySelector('.countdown-timer').style.display = 'none';
+        return;
+      }
+      
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      
+      // Update display with leading zeros
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+      
+      // Add pulse effect on each second
+      const secondsElement = document.getElementById('seconds');
+      secondsElement.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        secondsElement.style.transform = 'scale(1)';
+      }, 100);
     }
     
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    
-    // Update display with leading zeros
-    document.getElementById('days').textContent = String(days).padStart(2, '0');
-    document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-    
-    // Add pulse effect on each second
-    const secondsElement = document.getElementById('seconds');
-    secondsElement.style.transform = 'scale(1.1)';
-    setTimeout(() => {
-      secondsElement.style.transform = 'scale(1)';
-    }, 100);
+    // Update immediately and then every second
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
   }
-  
-  // Update immediately and then every second
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
 }
 
 // Email Signup Handler
@@ -81,8 +96,11 @@ function initEmailSignup() {
 function enhanceMatrixEffect() {
   const matrixBg = document.querySelector('.matrix-bg');
   
+  // Create countdown particle effect
+  createCountdownParticles();
+  
   // Create multiple layers for depth
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 5; i++) {
     const layer = document.createElement('div');
     layer.className = 'matrix-layer';
     layer.style.cssText = `
@@ -91,28 +109,57 @@ function enhanceMatrixEffect() {
       left: 0;
       width: 100%;
       height: 100%;
-      opacity: ${0.05 - i * 0.01};
-      animation: matrixRain ${20 + i * 5}s linear infinite;
-      animation-delay: ${i * 2}s;
+      opacity: ${0.08 - i * 0.015};
+      animation: matrixRain ${15 + i * 3}s linear infinite;
+      animation-delay: ${i * 1.5}s;
+      pointer-events: none;
     `;
     
-    // Create falling characters
-    for (let j = 0; j < 20; j++) {
+    // Create falling characters with more variety
+    for (let j = 0; j < 30; j++) {
       const char = document.createElement('span');
-      char.textContent = Math.random() > 0.5 ? '1' : '0';
+      const chars = ['0', '1', '⚡', '🎲', '●', '▲', '♦'];
+      char.textContent = chars[Math.floor(Math.random() * chars.length)];
       char.style.cssText = `
         position: absolute;
         left: ${Math.random() * 100}%;
         top: ${Math.random() * 100}%;
         color: var(--primary-green);
-        font-family: monospace;
-        font-size: ${10 + Math.random() * 10}px;
-        text-shadow: 0 0 5px currentColor;
+        font-family: 'Orbitron', monospace;
+        font-size: ${8 + Math.random() * 12}px;
+        text-shadow: 0 0 8px currentColor;
+        animation: fall ${10 + Math.random() * 15}s linear infinite;
+        animation-delay: ${Math.random() * 5}s;
       `;
       layer.appendChild(char);
     }
     
     matrixBg.appendChild(layer);
+  }
+}
+
+// Countdown Particle Effect
+function createCountdownParticles() {
+  const countdownContainer = document.querySelector('.countdown-container');
+  
+  // Create floating particles around countdown
+  for (let i = 0; i < 20; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'countdown-particle';
+    particle.style.cssText = `
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--primary-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--primary-green);
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 100}%;
+      animation: float ${3 + Math.random() * 4}s ease-in-out infinite;
+      animation-delay: ${Math.random() * 2}s;
+      pointer-events: none;
+    `;
+    countdownContainer.appendChild(particle);
   }
 }
 
