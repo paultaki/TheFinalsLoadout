@@ -85,10 +85,40 @@
   }
 }
 
-/* Scroll Progress Bar */
-.scroll-progress-bar {
+/* Maintenance Banner */
+.maintenance-banner {
   position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(45deg, #ff4444, #ff6666);
+  color: white;
+  text-align: center;
+  z-index: 10001;
+  padding: 15px 0;
+  box-shadow: 0 2px 10px rgba(255, 68, 68, 0.5);
+  animation: maintenancePulse 2s infinite alternate;
+}
+
+.maintenance-banner p {
+  margin: 0;
+  font-family: var(--impact-font);
+  font-size: 1.8rem;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes maintenancePulse {
+  0% { opacity: 0.9; }
+  100% { opacity: 1; }
+}
+
+/* Adjust scroll progress bar to account for maintenance banner */
+.scroll-progress-bar {
+  position: fixed;
+  top: 70px; /* Moved down to accommodate maintenance banner */
   left: 0;
   height: 4px;
   background: linear-gradient(90deg, var(--finals-blue), var(--finals-yellow));
@@ -96,6 +126,51 @@
   z-index: 10000;
   transition: width 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 212, 255, 0.4);
+}
+
+/* Adjust navigation bar to account for maintenance banner */
+.main-nav {
+  margin-top: 70px !important;
+}
+
+/* Mobile adjustments for maintenance banner */
+@media (max-width: 768px) {
+  .maintenance-banner p {
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    padding: 0 10px;
+  }
+  
+  .maintenance-banner {
+    padding: 12px 0;
+  }
+  
+  .scroll-progress-bar {
+    top: 60px;
+  }
+  
+  .main-nav {
+    margin-top: 60px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .maintenance-banner p {
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+  }
+  
+  .maintenance-banner {
+    padding: 10px 0;
+  }
+  
+  .scroll-progress-bar {
+    top: 50px;
+  }
+  
+  .main-nav {
+    margin-top: 50px !important;
+  }
 }
 
 /* Season Countdown Timer */
