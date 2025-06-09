@@ -136,6 +136,21 @@
     </section>
 
     <main class="feedback-container">
+      <!-- Search Existing Feedback -->
+      <section class="search-feedback-section">
+        <div class="container">
+          <h2>🔍 Search Existing Feedback</h2>
+          <p>Check if someone already reported your issue</p>
+          <div class="search-container">
+            <input type="text" id="feedback-search" placeholder="Search for bugs, features, weapons..." />
+            <button class="search-btn" id="search-btn">
+              <span class="search-icon">🔍</span>
+            </button>
+          </div>
+          <div class="search-results" id="search-results"></div>
+        </div>
+      </section>
+
       <!-- Feedback Roulette Wheel -->
       <section class="feedback-roulette-section">
         <h2>🎰 SPIN TO PICK YOUR FEEDBACK TOPIC</h2>
@@ -214,6 +229,51 @@
           </div>
 
           <div class="form-group">
+            <label for="priority">How urgent is this?</label>
+            <div class="priority-selector">
+              <input type="radio" id="priority-low" name="priority" value="low" checked>
+              <label for="priority-low" class="priority-option low">
+                <span class="priority-icon">😴</span>
+                <span class="priority-text">Whenever</span>
+              </label>
+              
+              <input type="radio" id="priority-medium" name="priority" value="medium">
+              <label for="priority-medium" class="priority-option medium">
+                <span class="priority-icon">⚠️</span>
+                <span class="priority-text">Soon Please</span>
+              </label>
+              
+              <input type="radio" id="priority-high" name="priority" value="high">
+              <label for="priority-high" class="priority-option high">
+                <span class="priority-icon">🔥</span>
+                <span class="priority-text">URGENT!</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="affected-device">What device/platform?</label>
+            <select id="affected-device" name="device">
+              <option value="">Select device...</option>
+              <option value="pc">🖥️ PC (Windows)</option>
+              <option value="mac">🍎 Mac</option>
+              <option value="mobile-ios">📱 iPhone/iPad</option>
+              <option value="mobile-android">🤖 Android</option>
+              <option value="multiple">🌐 Multiple Devices</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="steps-group" style="display: none;">
+            <label for="reproduction-steps">Steps to reproduce (for bugs)</label>
+            <textarea
+              id="reproduction-steps"
+              name="steps"
+              placeholder="1. Go to...&#10;2. Click on...&#10;3. Notice that..."
+              rows="4"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
             <label for="feedback-text" id="feedback-label"
               >What's broken?</label
             >
@@ -240,6 +300,35 @@
           </div>
 
           <div class="form-group">
+            <label for="screenshots">Screenshots/Evidence (optional)</label>
+            <div class="file-upload-area" id="file-upload-area">
+              <input type="file" id="screenshots" name="screenshots" multiple accept="image/*,.mp4,.webm" style="display: none;">
+              <div class="upload-prompt">
+                <span class="upload-icon">📎</span>
+                <span class="upload-text">Drag & drop images/videos or click to browse</span>
+                <span class="upload-formats">Supports: JPG, PNG, GIF, MP4, WebM</span>
+              </div>
+              <div class="uploaded-files" id="uploaded-files"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="tags">Tags (help us categorize)</label>
+            <div class="tags-container">
+              <input type="text" id="tag-input" placeholder="Type a tag and press Enter">
+              <div class="suggested-tags">
+                <span class="tag-suggestion" data-tag="balance">🔧 Balance</span>
+                <span class="tag-suggestion" data-tag="UI">🎨 UI</span>
+                <span class="tag-suggestion" data-tag="mobile">📱 Mobile</span>
+                <span class="tag-suggestion" data-tag="performance">⚡ Performance</span>
+                <span class="tag-suggestion" data-tag="audio">🔊 Audio</span>
+                <span class="tag-suggestion" data-tag="matchmaking">🎯 Matchmaking</span>
+              </div>
+              <div class="selected-tags" id="selected-tags"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
             <label for="email">Email (optional - for follow-up)</label>
             <input
               type="email"
@@ -249,6 +338,34 @@
             />
             <div class="email-incentive">
               💎 Drop your email for a chance at exclusive Season 7 beta access
+            </div>
+          </div>
+
+          <div class="form-group" id="response-prefs" style="display: none;">
+            <label>Response preferences</label>
+            <div class="checkbox-group">
+              <label class="checkbox-option">
+                <input type="checkbox" name="response-type" value="email-updates" checked>
+                <span class="checkmark">✓</span>
+                <span class="checkbox-text">Email me updates on this issue</span>
+              </label>
+              <label class="checkbox-option">
+                <input type="checkbox" name="response-type" value="newsletter">
+                <span class="checkmark">✓</span>
+                <span class="checkbox-text">Subscribe to development newsletter</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Want to submit this anonymously?</label>
+            <div class="toggle-container">
+              <input type="checkbox" id="anonymous-toggle" name="anonymous">
+              <label for="anonymous-toggle" class="toggle-label">
+                <span class="toggle-inner"></span>
+                <span class="toggle-switch"></span>
+              </label>
+              <span class="toggle-text">Submit anonymously</span>
             </div>
           </div>
 
@@ -638,9 +755,334 @@
         this.style.boxShadow = "0 15px 35px rgba(0, 0, 0, 0.5)";
       });
 
+      // ============================================
+      // ENHANCED FUNCTIONALITY
+      // ============================================
+
+      // Search functionality
+      function initSearchFunctionality() {
+        const searchInput = document.getElementById('feedback-search');
+        const searchBtn = document.getElementById('search-btn');
+        const searchResults = document.getElementById('search-results');
+        
+        // Mock feedback database for search
+        const feedbackDatabase = [
+          { title: "AKM overpowered", content: "The AKM does too much damage", type: "weapon", votes: 24 },
+          { title: "Mobile UI issues", content: "Buttons are too small on mobile", type: "ui", votes: 18 },
+          { title: "Loading screen bug", content: "Game gets stuck on loading screen", type: "bug", votes: 31 },
+          { title: "Add crosshair customization", content: "Need more crosshair options", type: "feature", votes: 15 },
+          { title: "Sound cutting out", content: "Audio randomly stops working", type: "bug", votes: 22 },
+          { title: "Rage quit mode improvements", content: "Add more handicap options", type: "feature", votes: 8 }
+        ];
+
+        function performSearch(query) {
+          if (!query.trim()) {
+            searchResults.innerHTML = '';
+            return;
+          }
+
+          const results = feedbackDatabase.filter(item => 
+            item.title.toLowerCase().includes(query.toLowerCase()) ||
+            item.content.toLowerCase().includes(query.toLowerCase())
+          );
+
+          if (results.length === 0) {
+            searchResults.innerHTML = '<div class="search-no-results">No matching feedback found. Yours could be the first!</div>';
+            return;
+          }
+
+          searchResults.innerHTML = results.map(result => `
+            <div class="search-result-item">
+              <div class="search-result-title">${result.title}</div>
+              <div class="search-result-preview">${result.content}</div>
+              <div class="search-result-meta">
+                <span>Type: ${result.type}</span>
+                <span>👍 ${result.votes} votes</span>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        searchInput.addEventListener('input', (e) => {
+          performSearch(e.target.value);
+        });
+
+        searchBtn.addEventListener('click', () => {
+          performSearch(searchInput.value);
+        });
+      }
+
+      // Enhanced form functionality
+      function initEnhancedForm() {
+        // Show/hide conditional fields
+        const feedbackType = document.getElementById('feedback-type');
+        const stepsGroup = document.getElementById('steps-group');
+        const responsePrefs = document.getElementById('response-prefs');
+        const emailInput = document.getElementById('email');
+
+        feedbackType.addEventListener('change', function() {
+          // Show reproduction steps for bugs
+          if (this.value === 'bug') {
+            stepsGroup.style.display = 'block';
+          } else {
+            stepsGroup.style.display = 'none';
+          }
+        });
+
+        emailInput.addEventListener('input', function() {
+          // Show response preferences when email is entered
+          if (this.value.trim()) {
+            responsePrefs.style.display = 'block';
+          } else {
+            responsePrefs.style.display = 'none';
+          }
+        });
+
+        // File upload functionality
+        initFileUpload();
+        
+        // Tags functionality
+        initTagsSystem();
+      }
+
+      // File upload system
+      function initFileUpload() {
+        const fileUploadArea = document.getElementById('file-upload-area');
+        const fileInput = document.getElementById('screenshots');
+        const uploadedFiles = document.getElementById('uploaded-files');
+        let selectedFiles = [];
+
+        // Click to upload
+        fileUploadArea.addEventListener('click', () => {
+          fileInput.click();
+        });
+
+        // Drag and drop
+        fileUploadArea.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          fileUploadArea.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', () => {
+          fileUploadArea.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', (e) => {
+          e.preventDefault();
+          fileUploadArea.classList.remove('dragover');
+          handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+          handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+          Array.from(files).forEach(file => {
+            if (file.size > 10 * 1024 * 1024) { // 10MB limit
+              alert('File too large. Please choose files under 10MB.');
+              return;
+            }
+
+            selectedFiles.push(file);
+            displayFile(file);
+          });
+        }
+
+        function displayFile(file) {
+          const fileDiv = document.createElement('div');
+          fileDiv.className = 'uploaded-file';
+          
+          const isImage = file.type.startsWith('image/');
+          const isVideo = file.type.startsWith('video/');
+          
+          fileDiv.innerHTML = `
+            ${isImage ? `<img src="${URL.createObjectURL(file)}" class="file-preview" alt="Preview">` : 
+              isVideo ? `<video src="${URL.createObjectURL(file)}" class="file-preview" controls></video>` :
+              `<div class="file-preview" style="display: flex; align-items: center; justify-content: center; background: #333;">📄</div>`}
+            <div class="file-name">${file.name}</div>
+            <button class="file-remove" onclick="removeFile(this)">×</button>
+          `;
+          
+          uploadedFiles.appendChild(fileDiv);
+        }
+
+        window.removeFile = function(button) {
+          const fileDiv = button.parentElement;
+          const fileName = fileDiv.querySelector('.file-name').textContent;
+          selectedFiles = selectedFiles.filter(file => file.name !== fileName);
+          fileDiv.remove();
+        };
+      }
+
+      // Tags system
+      function initTagsSystem() {
+        const tagInput = document.getElementById('tag-input');
+        const selectedTags = document.getElementById('selected-tags');
+        const tagSuggestions = document.querySelectorAll('.tag-suggestion');
+        let tags = [];
+
+        // Add tag from input
+        tagInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            addTag(tagInput.value.trim());
+            tagInput.value = '';
+          }
+        });
+
+        // Add tag from suggestions
+        tagSuggestions.forEach(suggestion => {
+          suggestion.addEventListener('click', () => {
+            addTag(suggestion.dataset.tag);
+          });
+        });
+
+        function addTag(tagText) {
+          if (!tagText || tags.includes(tagText)) return;
+          
+          tags.push(tagText);
+          const tagElement = document.createElement('span');
+          tagElement.className = 'selected-tag';
+          tagElement.innerHTML = `
+            ${tagText}
+            <button class="tag-remove" onclick="removeTag('${tagText}')">×</button>
+          `;
+          selectedTags.appendChild(tagElement);
+        }
+
+        window.removeTag = function(tagText) {
+          tags = tags.filter(tag => tag !== tagText);
+          const tagElements = selectedTags.querySelectorAll('.selected-tag');
+          tagElements.forEach(element => {
+            if (element.textContent.includes(tagText)) {
+              element.remove();
+            }
+          });
+        };
+      }
+
+      // Auto-save draft functionality
+      function initAutoSave() {
+        const form = document.getElementById('feedback-form');
+        const inputs = form.querySelectorAll('input, textarea, select');
+        
+        function saveDraft() {
+          const formData = new FormData(form);
+          const draft = {};
+          for (let [key, value] of formData.entries()) {
+            draft[key] = value;
+          }
+          localStorage.setItem('feedbackDraft', JSON.stringify(draft));
+        }
+
+        function loadDraft() {
+          const saved = localStorage.getItem('feedbackDraft');
+          if (saved) {
+            const draft = JSON.parse(saved);
+            Object.keys(draft).forEach(key => {
+              const field = form.querySelector(`[name="${key}"]`);
+              if (field) {
+                field.value = draft[key];
+                if (field.type === 'radio' && field.value === draft[key]) {
+                  field.checked = true;
+                }
+              }
+            });
+          }
+        }
+
+        // Auto-save every 30 seconds
+        inputs.forEach(input => {
+          input.addEventListener('input', () => {
+            clearTimeout(window.autoSaveTimeout);
+            window.autoSaveTimeout = setTimeout(saveDraft, 2000);
+          });
+        });
+
+        // Load draft on page load
+        loadDraft();
+
+        // Clear draft on successful submission
+        form.addEventListener('submit', () => {
+          localStorage.removeItem('feedbackDraft');
+        });
+      }
+
+      // Character counter for textareas
+      function initCharacterCounters() {
+        const textareas = document.querySelectorAll('textarea');
+        
+        textareas.forEach(textarea => {
+          const counter = document.createElement('div');
+          counter.className = 'character-counter';
+          counter.style.cssText = `
+            text-align: right;
+            color: #888;
+            font-size: 0.8rem;
+            margin-top: 5px;
+          `;
+          
+          function updateCounter() {
+            const length = textarea.value.length;
+            const maxLength = textarea.maxLength || 1000;
+            counter.textContent = `${length}/${maxLength}`;
+            
+            if (length > maxLength * 0.9) {
+              counter.style.color = '#ff4444';
+            } else if (length > maxLength * 0.7) {
+              counter.style.color = '#ffb700';
+            } else {
+              counter.style.color = '#888';
+            }
+          }
+          
+          textarea.addEventListener('input', updateCounter);
+          textarea.parentNode.appendChild(counter);
+          updateCounter();
+        });
+      }
+
+      // Form validation enhancements
+      function initFormValidation() {
+        const form = document.getElementById('feedback-form');
+        
+        form.addEventListener('submit', function(e) {
+          let isValid = true;
+          
+          // Validate priority selection
+          const prioritySelected = document.querySelector('input[name="priority"]:checked');
+          if (!prioritySelected) {
+            e.preventDefault();
+            alert('Please select a priority level');
+            isValid = false;
+          }
+          
+          // Validate feedback length
+          const feedbackText = document.getElementById('feedback-text');
+          if (feedbackText.value.trim().length < 10) {
+            e.preventDefault();
+            alert('Please provide more detailed feedback (at least 10 characters)');
+            isValid = false;
+          }
+          
+          if (isValid) {
+            // Show enhanced loading state
+            const submitBtn = document.getElementById('send-button');
+            submitBtn.innerHTML = '<span class="button-text">ANALYZING FEEDBACK...</span>';
+            submitBtn.style.background = 'linear-gradient(45deg, #4444ff, #6666ff)';
+          }
+        });
+      }
+
       // Initialize everything on load
       window.addEventListener("load", function () {
         initializeTicker();
+        initSearchFunctionality();
+        initEnhancedForm();
+        initAutoSave();
+        initCharacterCounters();
+        initFormValidation();
       });
     </script>
   </body>
