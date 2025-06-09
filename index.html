@@ -872,7 +872,7 @@
 
     </script>
 
-    <!-- Season 7 Countdown Timer -->
+    <!-- Season 7 Countdown Timer & Mobile Enhancements -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         function updateCountdown() {
@@ -889,7 +889,6 @@
               document.getElementById('countdown-hours').textContent = '00';
               document.getElementById('countdown-minutes').textContent = '00';
               document.getElementById('countdown-seconds').textContent = '00';
-              document.querySelector('.season-status').textContent = 'Season 7 Is Live!';
               return;
             }
             
@@ -905,9 +904,82 @@
           }, 1000);
         }
         
-        // Start countdown if elements exist
-        if (document.getElementById('seasonCountdown')) {
-          updateCountdown();
+        // Start countdown
+        updateCountdown();
+        
+        // Mobile History Accordion
+        function initMobileHistory() {
+          const historyList = document.getElementById('history-list');
+          if (!historyList) return;
+          
+          // Add click handlers to existing history items
+          const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === 1 && node.classList.contains('history-item')) {
+                  makeHistoryItemCollapsible(node);
+                }
+              });
+            });
+          });
+          
+          observer.observe(historyList, { childList: true });
+          
+          // Handle existing items
+          historyList.querySelectorAll('.history-item').forEach(makeHistoryItemCollapsible);
+        }
+        
+        function makeHistoryItemCollapsible(item) {
+          if (item.classList.contains('mobile-enhanced')) return;
+          
+          item.classList.add('mobile-enhanced', 'collapsed');
+          
+          // Create summary and details structure
+          const originalContent = item.innerHTML;
+          const className = item.querySelector('.class-name')?.textContent || 'Unknown Class';
+          
+          item.innerHTML = `
+            <div class="history-summary">
+              <span>${className}</span>
+              <span class="view-details">View Details ▼</span>
+            </div>
+            <div class="history-details">
+              ${originalContent}
+            </div>
+          `;
+          
+          // Add click handler
+          item.addEventListener('click', function() {
+            const isExpanded = this.classList.contains('expanded');
+            
+            // Collapse all other items
+            document.querySelectorAll('.history-item.expanded').forEach(otherItem => {
+              if (otherItem !== this) {
+                otherItem.classList.remove('expanded');
+                otherItem.classList.add('collapsed');
+                otherItem.querySelector('.view-details').textContent = 'View Details ▼';
+              }
+            });
+            
+            // Toggle current item
+            if (isExpanded) {
+              this.classList.remove('expanded');
+              this.classList.add('collapsed');
+              this.querySelector('.view-details').textContent = 'View Details ▼';
+            } else {
+              this.classList.remove('collapsed');
+              this.classList.add('expanded');
+              this.querySelector('.view-details').textContent = 'Hide Details ▲';
+            }
+          });
+        }
+        
+        // Initialize mobile features
+        if (window.innerWidth <= 768) {
+          initMobileHistory();
+          
+          // Add bottom padding to main content to account for fixed CTA
+          document.querySelector('main').style.paddingBottom = '80px';
         }
       });
     </script>
