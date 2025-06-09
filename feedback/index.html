@@ -478,19 +478,21 @@
       // Add hover effect to wheel
       wheelElement.addEventListener("mouseenter", function () {
         if (!isSpinning) {
-          this.style.transform = "rotate(5deg) scale(1.02)";
+          this.style.transform = `rotate(${currentRotation + 5}deg) scale(1.02)`;
           this.style.boxShadow = "0 0 40px rgba(255, 183, 0, 1)";
         }
       });
 
       wheelElement.addEventListener("mouseleave", function () {
         if (!isSpinning) {
-          this.style.transform = "rotate(0deg) scale(1)";
+          this.style.transform = `rotate(${currentRotation}deg) scale(1)`;
           this.style.boxShadow = "0 0 30px rgba(255, 183, 0, 0.8)";
         }
       });
 
       // Enhanced spinning logic with sound
+      let currentRotation = 0; // Track wheel position
+      
       document
         .getElementById("spin-feedback-wheel")
         .addEventListener("click", function () {
@@ -498,27 +500,88 @@
 
           isSpinning = true;
           const wheel = document.getElementById("feedback-wheel");
-          const categories = ["weapons", "ui", "bugs", "ideas", "rage"];
-          const selectedCategory =
-            categories[Math.floor(Math.random() * categories.length)];
-
+          
           // Play tick sound (simulated)
           playTickSound();
 
-          // Enhanced spin animation
+          // Calculate final landing position
           const spins = 3 + Math.random() * 2; // 3-5 full rotations
-          wheel.style.transition =
-            "transform 3s cubic-bezier(0.23, 1, 0.32, 1)";
-          wheel.style.transform = `rotate(${360 * spins}deg)`;
+          const extraRotation = Math.random() * 360; // Random extra rotation
+          const totalRotation = currentRotation + (360 * spins) + extraRotation;
+          
+          // Enhanced spin animation
+          wheel.style.transition = "transform 3s cubic-bezier(0.23, 1, 0.32, 1)";
+          wheel.style.transform = `rotate(${totalRotation}deg)`;
 
           setTimeout(() => {
+            // Calculate which section the pointer is pointing to
+            // Categories in wheel order: weapons(0°), ui(72°), bugs(144°), ideas(216°), rage(288°)
+            const categories = ["weapons", "ui", "bugs", "ideas", "rage"];
+            
+            // Get the final rotation and normalize it
+            const normalizedRotation = ((totalRotation % 360) + 360) % 360;
+            
+            // Since the wheel rotates but the pointer stays at top, we need to see which section
+            // ends up under the pointer. The sections are 72° each.
+            const sectionSize = 360 / categories.length; // 72 degrees
+            
+            // Calculate which section is under the pointer
+            // We invert the rotation because as the wheel spins clockwise, 
+            // sections move counter-clockwise relative to the fixed pointer
+            const pointerAngle = (360 - normalizedRotation) % 360;
+            const sectionIndex = Math.floor(pointerAngle / sectionSize);
+            const selectedCategory = categories[sectionIndex];
+            
+            // Debug logging (can be removed later)
+            console.log(`Wheel spun to: ${totalRotation.toFixed(1)}°`);
+            console.log(`Normalized: ${normalizedRotation.toFixed(1)}°`);
+            console.log(`Pointer angle: ${pointerAngle.toFixed(1)}°`);
+            console.log(`Section index: ${sectionIndex}, Category: ${selectedCategory}`);
+            
+            // Update current rotation for next spin
+            currentRotation = totalRotation;
+            
+            // Highlight the selected section briefly
+            highlightSelectedSection(selectedCategory);
+            
             setTopic(selectedCategory);
             showSelectedBadge(selectedCategory);
             isSpinning = false;
-            wheel.style.transition = "transform 0.5s ease";
-            wheel.style.transform = "rotate(0deg)";
+            
+            // Add a small bounce effect when stopping
+            wheel.style.transition = "transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)";
+            wheel.style.transform = `rotate(${totalRotation - 5}deg)`;
+            
+            setTimeout(() => {
+              wheel.style.transform = `rotate(${totalRotation}deg)`;
+              setTimeout(() => {
+                // Remove transition to keep wheel in final position
+                wheel.style.transition = "none";
+              }, 500);
+            }, 100);
           }, 3000);
         });
+
+      // Highlight the selected wheel section
+      function highlightSelectedSection(category) {
+        const sections = document.querySelectorAll('.wheel-section');
+        sections.forEach(section => {
+          if (section.dataset.category === category) {
+            // Add highlight effect
+            section.style.background = 'rgba(255, 183, 0, 0.3)';
+            section.style.transform = section.style.transform + ' scale(1.1)';
+            section.style.boxShadow = '0 0 20px rgba(255, 183, 0, 0.8)';
+            section.style.transition = 'all 0.3s ease';
+            
+            // Remove highlight after 2 seconds
+            setTimeout(() => {
+              section.style.background = '';
+              section.style.transform = section.style.transform.replace(' scale(1.1)', '');
+              section.style.boxShadow = '';
+            }, 2000);
+          }
+        });
+      }
 
       // Show selected topic badge
       function showSelectedBadge(category) {
