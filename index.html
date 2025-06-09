@@ -767,43 +767,47 @@
       // Initial check
       toggleReturnToTop();
 
-      // Season 7 Countdown Timer
-      function updateCountdown() {
-        // Set the target date for Season 7 (adjust timezone as needed)
-        // This is a placeholder - you'll need to update with the actual date
-        const now = new Date();
-        const targetDate = new Date(now.getTime() + (2 * 24 * 60 * 60 * 1000) + (11 * 60 * 60 * 1000) + (45 * 60 * 1000) + (42 * 1000));
+    </script>
+
+    <!-- Season 7 Countdown Timer -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        function updateCountdown() {
+          // Set the target date for Season 7 (adjust timezone as needed)
+          const now = new Date();
+          const targetDate = new Date(now.getTime() + (2 * 24 * 60 * 60 * 1000) + (11 * 60 * 60 * 1000) + (45 * 60 * 1000) + (42 * 1000));
+          
+          const interval = setInterval(() => {
+            const currentTime = new Date().getTime();
+            const distance = targetDate - currentTime;
+            
+            if (distance < 0) {
+              clearInterval(interval);
+              document.getElementById('countdown-days').textContent = '00';
+              document.getElementById('countdown-hours').textContent = '00';
+              document.getElementById('countdown-minutes').textContent = '00';
+              document.getElementById('countdown-seconds').textContent = '00';
+              document.querySelector('.season-status').textContent = 'Season 7 Is Live!';
+              return;
+            }
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('countdown-days').textContent = String(days).padStart(2, '0');
+            document.getElementById('countdown-hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('countdown-minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('countdown-seconds').textContent = String(seconds).padStart(2, '0');
+          }, 1000);
+        }
         
-        const interval = setInterval(() => {
-          const currentTime = new Date().getTime();
-          const distance = targetDate - currentTime;
-          
-          if (distance < 0) {
-            clearInterval(interval);
-            document.getElementById('countdown-days').textContent = '00';
-            document.getElementById('countdown-hours').textContent = '00';
-            document.getElementById('countdown-minutes').textContent = '00';
-            document.getElementById('countdown-seconds').textContent = '00';
-            document.querySelector('.season-status').textContent = 'Season 7 Is Live!';
-            return;
-          }
-          
-          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-          
-          document.getElementById('countdown-days').textContent = String(days).padStart(2, '0');
-          document.getElementById('countdown-hours').textContent = String(hours).padStart(2, '0');
-          document.getElementById('countdown-minutes').textContent = String(minutes).padStart(2, '0');
-          document.getElementById('countdown-seconds').textContent = String(seconds).padStart(2, '0');
-        }, 1000);
-      }
-      
-      // Start countdown on page load
-      if (document.getElementById('seasonCountdown')) {
-        updateCountdown();
-      }
+        // Start countdown if elements exist
+        if (document.getElementById('seasonCountdown')) {
+          updateCountdown();
+        }
+      });
     </script>
 
   </body>
