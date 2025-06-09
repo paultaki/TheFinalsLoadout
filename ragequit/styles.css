@@ -3507,3 +3507,65 @@ body {
   from { transform: translateY(-50%) rotate(0deg); }
   to { transform: translateY(-50%) rotate(360deg); }
 }
+
+/* ============================================
+   RAGE SOUND TOGGLE
+   ============================================ */
+
+.rage-sound-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(139, 0, 0, 0.3);
+  border: 2px solid rgba(255, 68, 68, 0.5);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #ff4444;
+  z-index: 100000; /* Very high z-index to appear in front of header */
+}
+
+.rage-sound-toggle:hover {
+  background: rgba(139, 0, 0, 0.6);
+  border-color: #ff4444;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255, 68, 68, 0.6);
+}
+
+.rage-sound-toggle.muted {
+  background: rgba(80, 80, 80, 0.3);
+  border-color: rgba(160, 160, 160, 0.5);
+  color: #888;
+}
+
+.rage-sound-toggle.muted:hover {
+  background: rgba(80, 80, 80, 0.6);
+  border-color: #888;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(160, 160, 160, 0.3);
+}
+
+.rage-sound-toggle svg {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s ease;
+}
+
+.rage-sound-toggle:hover svg {
+  transform: scale(1.1);
+}
+
+/* Ensure the header container allows for positioned children */
+.headerSection {
+  position: relative;
+  z-index: 1;
+}
+
+.headerSection .container {
+  position: relative;
+}
