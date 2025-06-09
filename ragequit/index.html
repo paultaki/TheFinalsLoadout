@@ -70,9 +70,18 @@
   <audio id="rageBuzzerSound" src="sounds/metal-clank.mp3" preload="auto"></audio>
   <audio id="rageLaughSound" src="sounds/whisper.mp3" preload="auto"></audio>
   <audio id="rageBackgroundMusic" src="sounds/glitch-sound-effect-96251.mp3" preload="auto" loop></audio>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+    
+    <!-- Return to Top Button -->
+    <button class="return-to-top" id="returnToTop" aria-label="Return to top" title="Return to top">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+
   <nav class="main-nav">
     <a href="../index.html">Home</a>
-    <a href="index.html" class="active">Rage Quit Loadout</a>
     <a href="../patch-notes/index.html">Patch Notes</a>
     <a href="../feedback/index.html">Feedback</a>
   </nav>
@@ -418,6 +427,44 @@
 <!-- Your other content sections should be here -->
 <script defer src="rage-roulette-animations.js"></script>
 <script defer src="app.js"></script>
+
+    <!-- Scroll Progress Bar and Return to Top Script -->
+    <script>
+      // Scroll Progress Bar
+      function updateScrollProgress() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollProgress = (scrollTop / scrollHeight) * 100;
+        document.getElementById('scrollProgressBar').style.width = scrollProgress + '%';
+      }
+
+      // Return to Top Button
+      const returnToTopBtn = document.getElementById('returnToTop');
+      
+      function toggleReturnToTop() {
+        if (window.pageYOffset > 300) {
+          returnToTopBtn.classList.add('visible');
+        } else {
+          returnToTopBtn.classList.remove('visible');
+        }
+      }
+
+      returnToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+
+      // Add scroll event listeners
+      window.addEventListener('scroll', () => {
+        updateScrollProgress();
+        toggleReturnToTop();
+      });
+
+      // Initial check
+      toggleReturnToTop();
+    </script>
 
 </body>
 
