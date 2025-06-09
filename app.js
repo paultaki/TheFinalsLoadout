@@ -1,3 +1,19 @@
+// Counter loading functionality
+async function loadCounter() {
+  try {
+    const response = await fetch('/api/get-counter');
+    const data = await response.json();
+    document.querySelectorAll('.loadouts-counter').forEach(el => {
+      el.textContent = (data.count || 0).toLocaleString();
+    });
+  } catch (error) {
+    console.error('Counter load failed:', error);
+  }
+}
+
+// Call it when page loads
+document.addEventListener('DOMContentLoaded', loadCounter);
+
 // Mobile detection and performance state
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
