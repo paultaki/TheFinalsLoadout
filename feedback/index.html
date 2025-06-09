@@ -134,179 +134,9 @@
         </div>
       </section>
 
-      <!-- Enhanced Feedback Form -->
+      <!-- Tally Feedback Form -->
       <section class="feedback-form-section">
-        <form id="feedback-form" class="enhanced-form">
-          <div class="form-group">
-            <label for="feedback-type">What's your vibe?</label>
-            <select id="feedback-type" name="type" required>
-              <option value="">Choose your complaint...</option>
-              <option value="bug">🐛 I found a game-breaking bug...</option>
-              <option value="weapon">🔫 This weapon is OP as hell...</option>
-              <option value="feature">💡 I have a dream feature...</option>
-              <option value="ui">🖥️ UI makes me want to cry...</option>
-              <option value="rage">😤 Matchmaking is pure pain...</option>
-              <option value="love">❤️ Actually, I love something...</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="priority">How urgent is this?</label>
-            <div class="priority-selector">
-              <input type="radio" id="priority-low" name="priority" value="low" checked>
-              <label for="priority-low" class="priority-option low">
-                <span class="priority-icon">😴</span>
-                <span class="priority-text">Whenever</span>
-              </label>
-              
-              <input type="radio" id="priority-medium" name="priority" value="medium">
-              <label for="priority-medium" class="priority-option medium">
-                <span class="priority-icon">⚠️</span>
-                <span class="priority-text">Soon Please</span>
-              </label>
-              
-              <input type="radio" id="priority-high" name="priority" value="high">
-              <label for="priority-high" class="priority-option high">
-                <span class="priority-icon">🔥</span>
-                <span class="priority-text">URGENT!</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="affected-device">What device/platform?</label>
-            <select id="affected-device" name="device">
-              <option value="">Select device...</option>
-              <option value="pc">🖥️ PC (Windows)</option>
-              <option value="mac">🍎 Mac</option>
-              <option value="mobile-ios">📱 iPhone/iPad</option>
-              <option value="mobile-android">🤖 Android</option>
-              <option value="multiple">🌐 Multiple Devices</option>
-            </select>
-          </div>
-
-          <div class="form-group" id="steps-group" style="display: none;">
-            <label for="reproduction-steps">Steps to reproduce (for bugs)</label>
-            <textarea
-              id="reproduction-steps"
-              name="steps"
-              placeholder="1. Go to...&#10;2. Click on...&#10;3. Notice that..."
-              rows="4"
-            ></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="feedback-text" id="feedback-label"
-              >What's broken?</label
-            >
-            <textarea
-              id="feedback-text"
-              name="feedback"
-              placeholder="Spill your guts here..."
-              required
-            ></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="rating"
-              >Rate your experience (weapon icons = better)</label
-            >
-            <div class="weapon-rating" id="weapon-rating">
-              <span class="weapon-star" data-rating="1">🔫</span>
-              <span class="weapon-star" data-rating="2">🔫</span>
-              <span class="weapon-star" data-rating="3">🔫</span>
-              <span class="weapon-star" data-rating="4">🔫</span>
-              <span class="weapon-star" data-rating="5">🔫</span>
-            </div>
-            <input type="hidden" id="rating" name="rating" value="0" />
-          </div>
-
-          <div class="form-group">
-            <label for="screenshots">Screenshots/Evidence (optional)</label>
-            <div class="file-upload-area" id="file-upload-area">
-              <input type="file" id="screenshots" name="screenshots" multiple accept="image/*,.mp4,.webm" style="display: none;">
-              <div class="upload-prompt">
-                <span class="upload-icon">📎</span>
-                <span class="upload-text">Drag & drop images/videos or click to browse</span>
-                <span class="upload-formats">Supports: JPG, PNG, GIF, MP4, WebM</span>
-              </div>
-              <div class="uploaded-files" id="uploaded-files"></div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="tags">Tags (help us categorize)</label>
-            <div class="tags-container">
-              <input type="text" id="tag-input" placeholder="Type a tag and press Enter">
-              <div class="suggested-tags">
-                <span class="tag-suggestion" data-tag="balance">🔧 Balance</span>
-                <span class="tag-suggestion" data-tag="UI">🎨 UI</span>
-                <span class="tag-suggestion" data-tag="mobile">📱 Mobile</span>
-                <span class="tag-suggestion" data-tag="performance">⚡ Performance</span>
-                <span class="tag-suggestion" data-tag="audio">🔊 Audio</span>
-                <span class="tag-suggestion" data-tag="matchmaking">🎯 Matchmaking</span>
-              </div>
-              <div class="selected-tags" id="selected-tags"></div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="email">Email (optional - for follow-up)</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="yourname@example.com"
-            />
-          </div>
-
-          <div class="form-group" id="response-prefs" style="display: none;">
-            <label>Response preferences</label>
-            <div class="checkbox-group">
-              <label class="checkbox-option">
-                <input type="checkbox" name="response-type" value="email-updates" checked>
-                <span class="checkmark">✓</span>
-                <span class="checkbox-text">Email me updates on this issue</span>
-              </label>
-              <label class="checkbox-option">
-                <input type="checkbox" name="response-type" value="newsletter">
-                <span class="checkmark">✓</span>
-                <span class="checkbox-text">Subscribe to development newsletter</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Want to submit this anonymously?</label>
-            <div class="toggle-container">
-              <input type="checkbox" id="anonymous-toggle" name="anonymous">
-              <label for="anonymous-toggle" class="toggle-label">
-                <span class="toggle-inner"></span>
-                <span class="toggle-switch"></span>
-              </label>
-              <span class="toggle-text">Submit anonymously</span>
-            </div>
-          </div>
-
-          <button type="submit" class="send-button" id="send-button">
-            <span class="button-text">SEND IT</span>
-            <span class="button-particles"></span>
-          </button>
-        </form>
-
-        <div
-          id="feedback-response"
-          class="success-message"
-          style="display: none"
-        >
-          <div class="success-animation">
-            <h2>✅ SUCCESS!</h2>
-            <p>FEEDBACK RECEIVED! Thank you for your input!</p>
-            <div class="redirect-timer">
-              Redirecting in <span id="countdown">3</span> seconds...
-            </div>
-          </div>
-        </div>
+        <iframe data-tally-src="https://tally.so/r/your-form-id" loading="lazy" width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0" title="Tally Form"></iframe>
       </section>
     </main>
 
@@ -781,6 +611,14 @@
         initCharacterCounters();
         initFormValidation();
       });
+    </script>
+    
+    <!-- Tally Form Script -->
+    <script>
+      let d=document,s=d.createElement("script");
+      s.src="https://tally.so/widgets/embed.js";
+      s.onload=()=>Tally.loadEmbeds();
+      d.body.appendChild(s);
     </script>
   </body>
 </html>
