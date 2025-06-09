@@ -163,7 +163,7 @@
 }
 
 .countdown-disclaimer {
-  font-size: 0.75rem;
+  font-size: 0.65rem; /* Slightly smaller: 0.75rem → 0.65rem */
   color: rgba(255, 255, 255, 0.5);
   font-style: italic;
   margin: 10px 0 0 0;
