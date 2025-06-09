@@ -2809,8 +2809,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize mobile performance optimizations
   initializeMobileOptimizations();
   
-  // Initialize season countdown
-  initializeSeasonCountdown();
+  // Initialize season countdown - DISABLED (using new countdown in HTML)
+  // initializeSeasonCountdown();
 
   // Get DOM elements (disabled - using RouletteAnimationSystem instead)
   // classButtons = document.querySelectorAll(".class-button");
