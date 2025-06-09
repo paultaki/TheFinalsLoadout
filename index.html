@@ -193,6 +193,16 @@
       transform: translateY(0);
     }
 
+    /* Desktop Audio Toggle Positioning */
+    @media (min-width: 769px) {
+      .sound-toggle-button {
+        position: fixed !important;
+        top: 140px !important;
+        right: 16px !important;
+        z-index: 999 !important;
+      }
+    }
+
     /* Mobile Redesign - Clean & Symmetric */
     @media (max-width: 768px) {
       /* Reset and base spacing */
@@ -205,6 +215,12 @@
       .container {
         padding: 0 16px;
         max-width: 100%;
+      }
+      
+      /* Ensure main content has tight spacing */
+      main.container {
+        padding-top: 0;
+        padding-bottom: 16px;
       }
       
       /* Header Section - Centered */
@@ -293,14 +309,22 @@
         transform: scale(1.02);
       }
       
-      /* Section Spacing */
+      /* Section Spacing - Compact */
       .selection-container > div {
-        margin-bottom: 16px;
+        margin-bottom: 10px;
+      }
+      
+      /* Tighten all major section gaps */
+      .class-selection,
+      .spin-control,
+      #output,
+      .loadout-history {
+        margin: 8px 0;
       }
       
       /* Recent Chaos - Clean Cards */
       .loadout-history {
-        margin-top: 16px;
+        margin-top: 10px;
       }
       
       .loadout-history h2 {
@@ -601,6 +625,55 @@
       .sound-toggle-button svg {
         width: 20px;
         height: 20px;
+      }
+      
+      /* Sound Toggle States */
+      .sound-toggle-button.muted {
+        background: rgba(200, 50, 50, 0.8);
+        border-color: rgba(255, 100, 100, 0.4);
+      }
+      
+      .sound-toggle-button.muted:hover {
+        background: rgba(200, 50, 50, 1);
+      }
+
+      /* Slot Machine - Remove Excessive Spacing */
+      .slot-machine-wrapper {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      
+      #output {
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+      }
+      
+      .main-spin-button {
+        margin-bottom: 10px !important;
+      }
+      
+      .items-container {
+        margin: 0 auto !important;
+        padding: 0 !important;
+      }
+      
+      /* Reduce gaps between sections */
+      .selection-container {
+        margin-bottom: 10px !important;
+      }
+      
+      .spin-control {
+        margin-bottom: 10px !important;
+      }
+      
+      /* Remove excessive height constraints */
+      .headerSection {
+        min-height: unset !important;
+      }
+      
+      /* Compact section spacing */
+      .loadout-history {
+        margin-top: 10px !important;
       }
 
       /* Remove margin from main to account for no bottom CTA */
@@ -1343,6 +1416,75 @@
         if (window.innerWidth <= 768) {
           initMobileHistory();
           initMobileSpinEffects();
+        }
+        
+        // Initialize audio toggle for both mobile and desktop
+        initAudioToggle();
+        
+        // Audio Toggle Implementation
+        function initAudioToggle() {
+          const soundToggle = document.getElementById('sound-toggle');
+          if (!soundToggle) {
+            console.warn('Sound toggle button not found');
+            return;
+          }
+          
+          // Get initial state from localStorage or default to enabled
+          const isEnabled = localStorage.getItem('soundEnabled') !== 'false';
+          
+          // Set initial visual state
+          updateAudioToggleVisual(isEnabled);
+          
+          // Add click handler
+          soundToggle.addEventListener('click', function() {
+            const currentState = localStorage.getItem('soundEnabled') !== 'false';
+            const newState = !currentState;
+            
+            // Save new state
+            localStorage.setItem('soundEnabled', newState.toString());
+            
+            // Update visual
+            updateAudioToggleVisual(newState);
+            
+            // Update global state if it exists
+            if (window.state) {
+              window.state.soundEnabled = newState;
+            }
+            
+            // Stop all audio if disabling
+            if (!newState) {
+              stopAllAudio();
+            }
+            
+            console.log('Sound', newState ? 'enabled' : 'disabled');
+          });
+        }
+        
+        function updateAudioToggleVisual(isEnabled) {
+          const soundToggle = document.getElementById('sound-toggle');
+          if (!soundToggle) return;
+          
+          const soundOn = soundToggle.querySelector('.sound-on');
+          const soundOff = soundToggle.querySelector('.sound-off');
+          
+          if (isEnabled) {
+            soundToggle.classList.remove('muted');
+            if (soundOn) soundOn.style.display = 'block';
+            if (soundOff) soundOff.style.display = 'none';
+          } else {
+            soundToggle.classList.add('muted');
+            if (soundOn) soundOn.style.display = 'none';
+            if (soundOff) soundOff.style.display = 'block';
+          }
+        }
+        
+        function stopAllAudio() {
+          // Stop all audio elements
+          const audioElements = document.querySelectorAll('audio');
+          audioElements.forEach(audio => {
+            audio.pause();
+            audio.currentTime = 0;
+          });
         }
         
         // Mobile SPIN button particle effects
