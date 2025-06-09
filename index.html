@@ -235,7 +235,7 @@
 </div>
 
 <!-- Navigation -->
-<nav class="main-nav-mobile">
+<nav class="main-nav">
   <a href="ragequit/index.html">Rage Quit</a>
   <a href="patch-notes/index.html">Patch Notes</a>
   <a href="feedback/index.html">Feedback</a>
@@ -440,87 +440,41 @@
   </div>
 </div>
 
-<!-- Main Content Area -->
-<main class="main-content-mobile">
-  
-  <!-- Loadout Selection Strip -->
-  <section class="loadout-strip">
-    <h2 class="section-title">Quick Select</h2>
-    <div class="loadout-cards-container">
-      <div class="loadout-card active" data-class="random">
-        <div class="card-icon">🎲</div>
-        <span class="card-name">Random</span>
+<!-- Header Section -->
+<section class="headerSection">
+  <div class="container">
+    <img src="images/the-finals-logo.webp" alt="The Finals" class="finals-logo" width="240" height="auto" />
+    <h1 class="subTitle">Random Loadout Generator</h1>
+    <div id="countdown-container" class="countdown-container">
+      <div class="countdown-header">
+        <h2 class="season-status">Season 7 Begins In...</h2>
       </div>
-      <div class="loadout-card" data-class="light">
-        <div class="card-icon">⚡</div>
-        <span class="card-name">Light</span>
-      </div>
-      <div class="loadout-card" data-class="medium">
-        <div class="card-icon">🛡️</div>
-        <span class="card-name">Medium</span>
-      </div>
-      <div class="loadout-card" data-class="heavy">
-        <div class="card-icon">💥</div>
-        <span class="card-name">Heavy</span>
-      </div>
-      <div class="loadout-card" data-class="rage">
-        <div class="card-icon">😤</div>
-        <span class="card-name">Rage</span>
-      </div>
-    </div>
-    <div class="scroll-dots">
-      <span class="dot active"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-    </div>
-  </section>
-
-  <!-- Analysis Results -->
-  <section class="analysis-results" id="analysis-results">
-    <div class="results-header">
-      <h2 class="section-title">Current Loadout</h2>
-      <span class="loadout-counter">🔥 <span class="loadouts-counter">31,846</span> generated</span>
-    </div>
-    
-    <div class="results-list" id="results-list">
-      <div class="result-group">
-        <h3 class="group-title">Weapons</h3>
-        <div class="result-item">
-          <div class="item-icon">🔫</div>
-          <div class="item-info">
-            <span class="item-name">Tap to generate loadout</span>
-            <span class="item-stat">-</span>
-          </div>
+      <div id="seasonCountdown" class="season-countdown">
+        <div class="countdown-item">
+          <span id="countdown-days" class="countdown-number">02</span>
+          <span class="countdown-label">Days</span>
+        </div>
+        <div class="countdown-item">
+          <span id="countdown-hours" class="countdown-number">11</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <div class="countdown-item">
+          <span id="countdown-minutes" class="countdown-number">45</span>
+          <span class="countdown-label">Min</span>
+        </div>
+        <div class="countdown-item">
+          <span id="countdown-seconds" class="countdown-number">30</span>
+          <span class="countdown-label">Sec</span>
         </div>
       </div>
-
-      <div class="result-group">
-        <h3 class="group-title">Abilities</h3>
-        <div class="result-item">
-          <div class="item-icon">⚡</div>
-          <div class="item-info">
-            <span class="item-name">-</span>
-            <span class="item-stat">-</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="result-group">
-        <h3 class="group-title">Gadgets</h3>
-        <div class="result-item">
-          <div class="item-icon">💣</div>
-          <div class="item-info">
-            <span class="item-name">-</span>
-            <span class="item-stat">-</span>
-          </div>
-        </div>
-      </div>
+      <p class="countdown-disclaimer">*Estimated season end = June 11, 2025 at ~5 AM CST</p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Hidden containers for functionality -->
-  <div class="hidden">
-    <!-- Keep existing containers for functionality -->
+<!-- Main Content -->
+<main class="container">
+  <div class="selection-container">
     <div class="class-selection">
       <div class="btnRow">
         <img id="light-class" class="class-button" src="images/light_silhouette.webp" 
@@ -612,21 +566,6 @@
     </div>
   </div>
 
-</main>
-
-<!-- Fixed Bottom Action Sheet -->
-<div class="bottom-sheet">
-  <div class="bottom-sheet-content">
-    <button id="new-analysis-btn" class="secondary-action">New Analysis</button>
-    <button id="generate-meme-btn" class="primary-cta">
-      <span class="cta-text">GENERATE MEME CARD</span>
-      <span class="cta-icon">🎯</span>
-    </button>
-  </div>
-</div>
-
-<!-- Legacy sections - keep for functionality but hidden -->
-<div class="legacy-sections" style="display: none;">
   <section id="loadout-history" class="loadout-history">
     <h2>🏆 Recent Chaos</h2>
     <p class="chaos-counter" id="total-loadouts">🔥 <span class="loadouts-counter">0</span> total analyses delivered</p>
@@ -637,7 +576,8 @@
       Clear History
     </button>
   </section>
-</div>
+</main>
+
 
 
 <footer class="footerSection" style="text-align: center;">
