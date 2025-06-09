@@ -1083,8 +1083,8 @@ function displaySelectedHandicap() {
   }
 
   // Get handicap from roulette selection
-  const handicapName = window.state?.selectedHandicap || "None";
-  const handicapDesc = window.state?.selectedHandicapDesc || "No handicap selected";
+  const handicapName = state.selectedHandicap || "None";
+  const handicapDesc = state.selectedHandicapDesc || "No handicap selected";
   
   // Create the handicap display UI
   const wheelHTML = `
@@ -1280,8 +1280,8 @@ function finalizeSpin() {
 
     // ✅ Get the class and handicap (now from roulette selection)
     const selectedClass = state.selectedClass || "Unknown";
-    const handicapName = window.state?.selectedHandicap || "None";
-    const handicapDesc = window.state?.selectedHandicapDesc || "No handicap selected";
+    const handicapName = state.selectedHandicap || "None";
+    const handicapDesc = state.selectedHandicapDesc || "No handicap selected";
 
     // ✅ Format data correctly
     const weapon = selectedItems[0];
