@@ -1806,6 +1806,18 @@ body {
   }
 }
 
+/* Mobile-specific fix for background animation */
+@media (max-width: 768px) {
+  body::before {
+    /* Use will-change to optimize for mobile GPU acceleration */
+    will-change: transform;
+    /* Ensure hardware acceleration */
+    transform: translateZ(0);
+    /* Reduce animation complexity on mobile if needed */
+    animation: slowMove 20s ease-in-out infinite;
+  }
+}
+
 /* Shine effect for placeholders */
 @keyframes shineEffect {
   0% {
