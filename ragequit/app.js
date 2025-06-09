@@ -37,11 +37,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Initialize the rage roulette animation system
+  const rageRouletteSystem = new window.RageRouletteAnimationSystem();
+  
   // Rage Quit Button Click Event
   document
     .getElementById("rage-quit-btn")
-    ?.addEventListener("click", function () {
-      if (state.isSpinning) return;
+    ?.addEventListener("click", async function () {
+      if (state.isSpinning || rageRouletteSystem.animating) return;
 
       // Play click sound (if file is valid)
       const clickSound = document.getElementById("clickSound");
@@ -52,8 +55,14 @@ document.addEventListener("DOMContentLoaded", () => {
           .catch((err) => console.warn("Error playing sound:", err));
       }
 
-      // Start the spin animation
-      spinRageQuitLoadout();
+      // Add spinning animation to button
+      this.classList.add('spinning');
+      
+      // Start the full roulette sequence
+      await rageRouletteSystem.startFullSequence();
+      
+      // Remove spinning animation when done
+      this.classList.remove('spinning');
     });
 
   // 🔥 Copy Loadout Button
@@ -1143,25 +1152,96 @@ function addToHistory(
   if (!historyList) return;
 
   const newEntry = document.createElement("div");
-  newEntry.classList.add("history-entry");
+  newEntry.classList.add("rage-history-entry");
+  
+  // Generate rage-specific loadout name
+  const loadoutName = generateRageLoadoutName(classType, weapon, specialization);
+  
+  // Generate punishment level based on gear and handicap
+  const punishmentLevel = calculatePunishmentLevel(weapon, specialization, gadgets, handicapName);
+  
+  // Generate random rage roast that references the handicap
+  const rageRoast = generateRageRoast(weapon, specialization, gadgets, handicapName);
+  
+  // Determine if this is a "spicy" (extra bad) loadout
+  const isSpicyLoadout = checkSpicyRageLoadout(weapon, specialization, gadgets, handicapName);
+  if (isSpicyLoadout) {
+    newEntry.classList.add("spicy-rage-loadout");
+  }
 
+  // Create the card structure
   newEntry.innerHTML = `
-    <p><strong>Class:</strong> ${classType}</p>
-    <p><strong>Weapon:</strong> ${weapon || "Unknown"}</p>
-    <p><strong>Specialization:</strong> ${specialization || "Unknown"}</p>
-    <p><strong>Gadgets:</strong> ${gadgets || "Unknown"}</p>
-    <p><strong>Handicap:</strong> ${handicapName || "None"} - ${
-    handicapDesc || "No handicap selected"
-  }</p>
-    <button class="copy-loadout" onclick="copyLoadoutText(this)">Copy</button>
+    <div class="rage-meme-export-container">
+      <div class="rage-loadout-header">
+        <span class="rage-class-badge ${classType.toLowerCase()}">${classType.toUpperCase()}</span>
+        <span class="rage-loadout-name">${loadoutName}</span>
+        <span class="rage-timestamp">Just now</span>
+      </div>
+      <div class="rage-punishment-indicator">
+        <span class="skull-icon">💀</span>
+        <span class="punishment-text">Punishment Level: ${punishmentLevel}</span>
+        <span class="skull-icon">💀</span>
+      </div>
+      <div class="rage-loadout-details">
+        <div class="rage-loadout-item weapon-item">
+          <img src="https://thefinalsloadout.com/images/${weapon.replace(/ /g, "_")}.webp" alt="${weapon}" class="item-icon">
+          <span class="item-name">${weapon}</span>
+        </div>
+        <div class="rage-loadout-item spec-item">
+          <img src="https://thefinalsloadout.com/images/${specialization.replace(/ /g, "_")}.webp" alt="${specialization}" class="item-icon">
+          <span class="item-name">${specialization}</span>
+        </div>
+        <div class="rage-gadget-group">
+          ${gadgets.map(g => `
+            <div class="rage-loadout-item gadget-item">
+              <img src="https://thefinalsloadout.com/images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small">
+              <span class="item-name small">${g}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="rage-handicap-section">
+        <div class="rage-handicap-badge">
+          <span class="skull-icon">💀</span>
+          <span class="handicap-name">${handicapName || "None"}</span>
+        </div>
+        <div class="rage-handicap-desc">${handicapDesc || "No handicap selected"}</div>
+      </div>
+      <div class="rage-roast-section">
+        <div class="rage-roast-content">
+          <span class="rage-fire-emoji">🔥</span>
+          <span class="rage-roast-text">${rageRoast}</span>
+        </div>
+      </div>
+      <div class="rage-meme-footer">
+        <span class="rage-meme-watermark">Rage-analyzed by thefinalsloadout.com</span>
+      </div>
+    </div>
+    <div class="rage-loadout-actions">
+      <button class="rage-copy-build" onclick="copyRageLoadoutText(this)">
+        <span>📋</span> COPY PUNISHMENT
+      </button>
+      <button class="rage-meme-card-btn" onclick="exportRageMemeCard(this)">
+        <span>💀</span> RAGE CARD
+      </button>
+      <button class="rage-survived-btn" onclick="markAsSurvived(this)" title="Mark this loadout as survived">
+        <span>🏆</span> SURVIVED
+      </button>
+    </div>
   `;
 
-  historyList.prepend(newEntry); // ✅ Adds new entry at the top
+  historyList.prepend(newEntry);
+  
+  // Animate entry
+  setTimeout(() => newEntry.classList.add('visible'), 10);
 
   // ✅ Ensure history does not exceed 5 entries
   while (historyList.children.length > 5) {
     historyList.removeChild(historyList.lastChild);
   }
+
+  // Update timestamps
+  updateRageTimestamps();
 
   // ✅ Save updated history to localStorage
   if (typeof saveHistory === "function") {
@@ -1283,4 +1363,164 @@ function copyLoadoutText(button) {
       console.error("Could not copy text: ", err);
       alert("Failed to copy loadout to clipboard");
     });
+}
+
+// ============================================
+// RAGE HISTORY HELPER FUNCTIONS
+// ============================================
+
+function generateRageLoadoutName(classType, weapon, specialization) {
+  const rageNames = [
+    `${classType} Nightmare`,
+    `${weapon} of Suffering`,
+    `Pain Train`,
+    `Torment Build`,
+    `Misery Configuration`,
+    `Doom Setup`,
+    `Agony Assault`,
+    `Punishment Package`,
+    `Suffering Simulator`,
+    `Rage Inducer`
+  ];
+  return rageNames[Math.floor(Math.random() * rageNames.length)];
+}
+
+function calculatePunishmentLevel(weapon, specialization, gadgets, handicapName) {
+  let level = 1;
+  
+  // Base punishment from weapon quality
+  const badWeapons = ["93R", "CB-01 Repeater", "Throwing Knives"];
+  const okWeapons = ["V9S", "Recurve Bow", "Dagger"];
+  
+  if (badWeapons.some(w => weapon.includes(w))) level += 3;
+  else if (okWeapons.some(w => weapon.includes(w))) level += 2;
+  else level += 1;
+  
+  // Punishment from gadgets
+  const badGadgets = ["Tracking Dart", "Data Reshaper", "Anti-Gravity Cube"];
+  gadgets.forEach(gadget => {
+    if (badGadgets.some(g => gadget.includes(g))) level += 2;
+    else level += 1;
+  });
+  
+  // Extra punishment for handicap
+  if (handicapName && handicapName !== "None") level += 3;
+  
+  // Cap at level 10
+  return Math.min(level, 10);
+}
+
+function generateRageRoast(weapon, specialization, gadgets, handicapName) {
+  const roasts = [
+    `This loadout + ${handicapName || "no handicap"} = instant uninstall. -15/10`,
+    `Even masochists think this is too much. -20/10`,
+    `${weapon} with ${handicapName || "this setup"}? Your controller will quit before you do. -12/10`,
+    `This combo makes bronze rank look like pro play. -18/10`,
+    `${specialization} + ${handicapName || "this disaster"} = tutorial difficulty feels impossible. -25/10`,
+    `Your enemies will feel bad for killing you with this setup. -14/10`,
+    `This loadout broke the rage meter. -∞/10`,
+    `${weapon}? More like ${handicapName || "pain generator"}. Time to delete the game. -16/10`,
+    `This setup makes watching paint dry seem exciting. -22/10`,
+    `Your teammates will report you for griefing yourself. -19/10`
+  ];
+  
+  return roasts[Math.floor(Math.random() * roasts.length)];
+}
+
+function checkSpicyRageLoadout(weapon, specialization, gadgets, handicapName) {
+  const badWeapons = ["93R", "CB-01 Repeater", "Throwing Knives"];
+  const badGadgets = ["Tracking Dart", "Data Reshaper", "Anti-Gravity Cube"];
+  
+  const hasBadWeapon = badWeapons.some(w => weapon.includes(w));
+  const hasBadGadgets = gadgets.some(g => badGadgets.some(bg => g.includes(bg)));
+  const hasHandicap = handicapName && handicapName !== "None";
+  
+  return hasBadWeapon && hasBadGadgets && hasHandicap;
+}
+
+function updateRageTimestamps() {
+  const timestamps = document.querySelectorAll('.rage-timestamp');
+  timestamps.forEach(timestamp => {
+    const now = new Date();
+    const elapsed = Math.floor((now - new Date(timestamp.dataset.created || now)) / 1000);
+    
+    if (elapsed < 60) {
+      timestamp.textContent = 'Just now';
+    } else if (elapsed < 3600) {
+      timestamp.textContent = `${Math.floor(elapsed / 60)}m ago`;
+    } else {
+      timestamp.textContent = `${Math.floor(elapsed / 3600)}h ago`;
+    }
+  });
+}
+
+// Update timestamps every minute
+setInterval(updateRageTimestamps, 60000);
+
+// ============================================
+// RAGE CARD ACTION FUNCTIONS
+// ============================================
+
+function copyRageLoadoutText(button) {
+  const entry = button.closest(".rage-history-entry");
+  if (!entry) {
+    console.error("Error: No rage history entry found.");
+    return;
+  }
+
+  const classType = entry.querySelector('.rage-class-badge').textContent;
+  const weapon = entry.querySelector('.weapon-item .item-name').textContent;
+  const specialization = entry.querySelector('.spec-item .item-name').textContent;
+  const gadgets = Array.from(entry.querySelectorAll('.gadget-item .item-name')).map(el => el.textContent);
+  const handicap = entry.querySelector('.handicap-name').textContent;
+  const handicapDesc = entry.querySelector('.rage-handicap-desc').textContent;
+  const punishmentLevel = entry.querySelector('.punishment-text').textContent;
+
+  const text = `🔥 THE FINALS RAGE LOADOUT 🔥
+Class: ${classType}
+Weapon: ${weapon}
+Specialization: ${specialization}
+Gadgets: ${gadgets.join(', ')}
+${punishmentLevel}
+Handicap: ${handicap} - ${handicapDesc}
+
+Generated by thefinalsloadout.com/ragequit/`;
+
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      button.innerHTML = '<span>✅</span> COPIED!';
+      setTimeout(() => {
+        button.innerHTML = '<span>📋</span> COPY PUNISHMENT';
+      }, 2000);
+    })
+    .catch((err) => {
+      console.error("Could not copy text: ", err);
+      alert("Failed to copy rage loadout to clipboard");
+    });
+}
+
+function exportRageMemeCard(button) {
+  // TODO: Implement rage meme card export functionality
+  alert("Rage meme card export coming soon!");
+}
+
+function markAsSurvived(button) {
+  const entry = button.closest(".rage-history-entry");
+  if (!entry) return;
+  
+  // Add survived badge
+  if (!entry.querySelector('.survived-badge')) {
+    const survivedBadge = document.createElement('div');
+    survivedBadge.className = 'survived-badge';
+    survivedBadge.innerHTML = '<span>🏆</span> SURVIVED';
+    entry.querySelector('.rage-loadout-header').appendChild(survivedBadge);
+    
+    // Update button
+    button.innerHTML = '<span>✅</span> SURVIVED';
+    button.disabled = true;
+    button.classList.add('survived');
+    
+    // Add special glow effect
+    entry.classList.add('survived-entry');
+  }
 }

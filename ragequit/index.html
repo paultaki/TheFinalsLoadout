@@ -92,6 +92,54 @@
 
   <main class="mainContent">
 
+      <!-- Rage Roulette Container -->
+      <div id="rage-roulette-container" class="rage-roulette-container hidden">
+        <!-- Class Roulette -->
+        <div id="rage-class-roulette" class="rage-roulette-section hidden">
+          <h2 class="rage-roulette-title">SELECTING YOUR DOOM...</h2>
+          <div class="rage-class-roulette-wheel">
+            <div class="rage-class-option light-option" data-class="Light">
+              <img src="https://thefinalsloadout.com/images/light_active.webp" alt="Light">
+              <span>LIGHT</span>
+            </div>
+            <div class="rage-class-option medium-option" data-class="Medium">
+              <img src="https://thefinalsloadout.com/images/medium_active.webp" alt="Medium">
+              <span>MEDIUM</span>
+            </div>
+            <div class="rage-class-option heavy-option" data-class="Heavy">
+              <img src="https://thefinalsloadout.com/images/heavy_active.webp" alt="Heavy">
+              <span>HEAVY</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Spin Count Roulette -->
+        <div id="rage-spin-roulette" class="rage-roulette-section hidden">
+          <h2 class="rage-roulette-title">HOW MUCH PAIN?</h2>
+          <div class="rage-spin-roulette-wheel">
+            <div class="rage-spin-option" data-spins="1">
+              <div class="rage-spin-number">1</div>
+              <span>MILD</span>
+            </div>
+            <div class="rage-spin-option" data-spins="2">
+              <div class="rage-spin-number">2</div>
+              <span>SPICY</span>
+            </div>
+            <div class="rage-spin-option" data-spins="3">
+              <div class="rage-spin-number">3</div>
+              <span>HOT</span>
+            </div>
+            <div class="rage-spin-option" data-spins="4">
+              <div class="rage-spin-number">4</div>
+              <span>INFERNO</span>
+            </div>
+            <div class="rage-spin-option" data-spins="5">
+              <div class="rage-spin-number">5</div>
+              <span>HELL</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="rage-button-container">
         <button id="rage-quit-btn" class="rage-quit-button">
@@ -284,6 +332,7 @@
   <!-- Scripts -->
 </main>
 <!-- Your other content sections should be here -->
+<script defer src="rage-roulette-animations.js"></script>
 <script defer src="app.js"></script>
 
 </body>
