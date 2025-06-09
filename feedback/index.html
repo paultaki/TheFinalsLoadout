@@ -42,10 +42,7 @@
     <section class="social-proof">
       <div class="ticker-container">
         <div class="ticker-content" id="feedback-ticker">
-          <span class="ticker-item">John: "Please nerf the sledgehammer!" (2 min ago)</span>
-          <span class="ticker-item">Sarah: "Love the new roulette animation" (5 min ago)</span>
-          <span class="ticker-item">Mike: "Found a bug with Medium class loadouts" (12 min ago)</span>
-          <span class="ticker-item">Alex: "Add more weapon variety please!" (18 min ago)</span>
+          <!-- Ticker items will be populated by JavaScript -->
         </div>
       </div>
     </section>
@@ -80,6 +77,10 @@
           <button class="spin-button" id="spin-feedback-wheel">SPIN IT!</button>
           <div class="wheel-pointer"></div>
         </div>
+        <div class="selected-topic-badge" id="selected-topic-badge" style="display: none;">
+          <span class="badge-icon">🎯</span>
+          <span class="badge-text" id="badge-text">Topic Selected!</span>
+        </div>
       </section>
 
       <!-- Quick Topic Buttons -->
@@ -101,12 +102,12 @@
             <label for="feedback-type">What's your vibe?</label>
             <select id="feedback-type" name="type" required>
               <option value="">Choose your complaint...</option>
-              <option value="bug">🐛 Something's broken</option>
-              <option value="weapon">🔫 Weapon made me rage</option>
-              <option value="feature">💡 I have a dream</option>
-              <option value="ui">🖥️ UI/UX confusion</option>
-              <option value="rage">😤 Pure rage mode</option>
-              <option value="love">❤️ Actually love this</option>
+              <option value="bug">🐛 I found a game-breaking bug...</option>
+              <option value="weapon">🔫 This weapon is OP as hell...</option>
+              <option value="feature">💡 I have a dream feature...</option>
+              <option value="ui">🖥️ UI makes me want to cry...</option>
+              <option value="rage">😤 Matchmaking is pure pain...</option>
+              <option value="love">❤️ Actually, I love something...</option>
             </select>
           </div>
 
