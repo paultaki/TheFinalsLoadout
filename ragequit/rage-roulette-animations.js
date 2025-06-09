@@ -513,13 +513,18 @@ class RageRouletteAnimationSystem {
     width: 100%;
   `;
 
-    // Define handicaps
+    // Define handicaps - expanded selection for more variety
     const handicaps = [
       { name: "ADS Only", desc: "Can only use ADS (Aim Down Sights)", icon: "🎯" },
       { name: "No Healing", desc: "Cannot use healing items or abilities", icon: "❤️‍🩹" },
       { name: "Inverted Controls", desc: "Mouse movement is inverted", icon: "🔄" },
-      { name: "Slow Movement", desc: "50% movement speed", icon: "🐌" },
-      { name: "No Jumping", desc: "Jump key is disabled", icon: "🚫" }
+      { name: "Sloth Mode", desc: "No sprinting - must walk everywhere", icon: "🦥" },
+      { name: "Bunny Hop Ban", desc: "No jumping - stairs and ramps only", icon: "🐰" },
+      { name: "Squirrel Mode", desc: "Max out your mouse DPI/sensitivity", icon: "🐿️" },
+      { name: "Snail Aim", desc: "Set sensitivity to the lowest value", icon: "🐌" },
+      { name: "Reload Addict", desc: "Must reload after every kill or 3 shots", icon: "🔄" },
+      { name: "Permanent Crouch", desc: "Must stay crouched the entire game", icon: "🧎" },
+      { name: "Silent Treatment", desc: "Play with all audio muted", icon: "🔇" }
     ];
 
     const handicapElements = [];

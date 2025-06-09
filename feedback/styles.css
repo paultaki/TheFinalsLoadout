@@ -395,6 +395,24 @@ body {
   background: rgba(255, 255, 255, 0.15);
 }
 
+/* Fix dropdown option colors */
+.form-group select option {
+  background: #2a2a2a;
+  color: #fff;
+  padding: 10px;
+  font-family: "Oswald", sans-serif;
+}
+
+.form-group select option:hover {
+  background: #ffb700;
+  color: #000;
+}
+
+.form-group select option:checked {
+  background: #ffb700;
+  color: #000;
+}
+
 .form-group textarea {
   min-height: 120px;
   resize: vertical;
