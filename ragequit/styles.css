@@ -6,11 +6,55 @@
   --neon-pink: #ff1493;
   --neon-orange: #ff7b00;
   --neon-yellow: #ffb700;
+  --rage-red: #ff4444;
+  --rage-dark-red: #8b0000;
+  --rage-orange: #ff7b00;
+  --rage-gradient-dark: linear-gradient(135deg, #2a1a1a, #3e1a1a);
+  --rage-gradient-darker: linear-gradient(135deg, #1a0000, #330000);
+  --card-radius: 12px;
+  --card-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  --glow-red: 0 0 20px rgba(255, 68, 68, 0.6);
+  --glow-orange-hover: 0 0 30px rgba(255, 123, 0, 0.8);
 }
 
 /* Base Styles */
 * {
   box-sizing: border-box;
+}
+
+/* ============================================
+   VISUAL CONSISTENCY UPDATES
+   ============================================ */
+
+/* Global card styling */
+.card-style {
+  background: var(--rage-gradient-dark);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+}
+
+.card-style:hover {
+  box-shadow: var(--glow-orange-hover);
+  transform: translateY(-2px);
+}
+
+/* Red scanning effect animation */
+@keyframes redScan {
+  0% { top: -100%; }
+  100% { top: 100%; }
+}
+
+/* Pulsing glow animation */
+@keyframes pulseGlow {
+  0%, 100% { 
+    filter: drop-shadow(0 0 10px rgba(255, 68, 68, 0.6));
+    transform: scale(1);
+  }
+  50% { 
+    filter: drop-shadow(0 0 20px rgba(255, 68, 68, 1));
+    transform: scale(1.05);
+  }
 }
 .neon-text {
   color: var(--neon-yellow);
@@ -40,6 +84,79 @@ body {
   position: relative;
   width: 100%;
 }
+
+/* ============================================
+   LAYOUT IMPROVEMENTS
+   ============================================ */
+
+/* Main container with consistent spacing */
+.main-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Section spacing */
+section {
+  margin-bottom: 2rem;
+}
+
+/* Slot machine prominence */
+.item-board {
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--rage-gradient-dark);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow), var(--glow-red);
+}
+
+/* Desktop layout grid */
+@media (min-width: 1024px) {
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+  
+  .hall-of-shame,
+  .loadout-history {
+    margin: 0;
+  }
+}
+
+/* Visual hierarchy spacing */
+h1 { margin-bottom: 1rem; }
+h2 { margin-bottom: 1.5rem; }
+h3 { margin-bottom: 1rem; }
+p { margin-bottom: 1rem; line-height: 1.6; }
+
+/* Smooth scrolling for sections */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Section transitions */
+section {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInSection 0.6s ease forwards;
+}
+
+@keyframes fadeInSection {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+section:nth-child(1) { animation-delay: 0.1s; }
+section:nth-child(2) { animation-delay: 0.2s; }
+section:nth-child(3) { animation-delay: 0.3s; }
+section:nth-child(4) { animation-delay: 0.4s; }
+section:nth-child(5) { animation-delay: 0.5s; }
 
 /* Subtle animated cyber grid overlay */
 body::before {
@@ -95,22 +212,104 @@ body.flexStyle {
   margin-top: 20px;
 }
 
-/* Copy Button Style */
+/* Copy Button Style - Rage Theme */
 .copy-button {
-  background: linear-gradient(45deg, #7b2fe3, #1e90ff);
+  background: linear-gradient(45deg, var(--rage-red), var(--rage-orange));
   border: none;
   color: white;
-  padding: 12px 24px;
-  font-size: 14px;
-  border-radius: 8px;
+  padding: 15px 30px;
+  font-size: 16px;
+  border-radius: var(--card-radius);
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 2px;
-  box-shadow: 0 4px 12px rgba(123, 47, 227, 0.3);
+  box-shadow: var(--card-shadow);
+  position: relative;
+  overflow: hidden;
 }
 
-.copy-button:hover,
+.copy-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.copy-button:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+.copy-button:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--glow-red);
+}
+
+/* Double or Nothing Button - Warning Pulse */
+.double-or-nothing-btn {
+  background: linear-gradient(45deg, #8b0000, var(--rage-red), #8b0000);
+  background-size: 200% 200%;
+  border: 2px solid var(--rage-red);
+  color: white;
+  padding: 20px 40px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: var(--card-radius);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  animation: warningPulse 2s infinite, gradientShift 3s infinite;
+  box-shadow: var(--card-shadow), inset 0 0 20px rgba(139, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes warningPulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: var(--card-shadow), inset 0 0 20px rgba(139, 0, 0, 0.5);
+  }
+  50% { 
+    transform: scale(1.02);
+    box-shadow: 0 0 40px rgba(255, 68, 68, 0.8), inset 0 0 30px rgba(255, 0, 0, 0.5);
+  }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.double-or-nothing-btn:hover {
+  animation-duration: 0.5s, 1s;
+  border-color: var(--rage-orange);
+  transform: scale(1.05);
+}
+
+.double-or-nothing-btn::after {
+  content: '⚠️';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 24px;
+  animation: shake 0.5s infinite;
+}
+
+@keyframes shake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
 .rage-quit-button:hover {
   transform: translateY(-3px) scale(1.08);
   box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.8);
@@ -2309,24 +2508,38 @@ body {
     margin: 5px 0;
   }
 }
-/* ✅ Handicap Container - Keep Consistent Size & Spacing */
+/* ✅ Handicap Container - Modern Card Design */
 .handicap-container {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
   flex-direction: column !important;
-  width: 95% !important; /* Keep width within boundaries */
-  max-width: 600px !important; /* Prevent stretching */
-  min-height: 180px !important; /* Ensure consistent height */
-  padding: 15px !important; /* Standardized padding */
-  border-radius: 12px !important;
-  margin: 20px auto !important; /* Adjust spacing */
-  background: rgba(0, 0, 0, 0.8) !important; /* Darker for better contrast */
-  border: 3px solid #ff0000 !important; /* Stronger neon red border */
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.5); /* Neon glow effect */
-  animation: pulseGlow 1.5s infinite alternate !important; /* Subtle glow */
-  transition: all 0.3s ease-in-out !important; /* Smooth animations */
+  width: 80% !important;
+  max-width: 600px !important;
+  min-height: 180px !important;
+  padding: 2rem !important;
+  border-radius: var(--card-radius) !important;
+  margin: 2rem auto !important;
+  background: var(--rage-gradient-darker) !important;
+  border: none !important;
+  box-shadow: var(--card-shadow), var(--glow-red) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Scanning effect overlay */
+.handicap-container::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(transparent, rgba(255,0,0,0.3), transparent);
+  animation: redScan 2s infinite;
+  pointer-events: none;
 }
 
 /* ✅ Handicap Title (EXTRA HANDICAP) */
@@ -2641,7 +2854,8 @@ body {
 .handicap-icon {
   font-size: 2rem;
   margin-bottom: 5px;
-  animation: handicapIconBounce 2s ease-in-out infinite;
+  animation: handicapIconBounce 2s ease-in-out infinite, pulseGlow 1.5s ease-in-out infinite;
+  display: inline-block;
 }
 
 @keyframes handicapIconBounce {
@@ -2853,7 +3067,7 @@ body {
   .rage-meter-container {
     width: 40px;
     height: 150px;
-    top: 110px;
+    top: 130px;
     right: 10px;
   }
   
@@ -3310,7 +3524,7 @@ body {
 
 .rage-meter-container {
   position: fixed;
-  top: 100px;
+  top: 120px;
   right: 20px;
   width: 60px;
   height: 200px;
@@ -3378,37 +3592,475 @@ body {
 }
 
 /* ============================================
-   HALL OF SHAME
+   HALL OF SHAME - Modern Card Layout
    ============================================ */
 
 .hall-of-shame {
-  background: linear-gradient(145deg, #2a1515, #1a1010);
-  border: 2px solid #8b0000;
-  border-radius: 15px;
-  margin: 30px auto;
-  padding: 25px;
-  max-width: 800px;
-  box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+  background: var(--rage-gradient-dark);
+  border-radius: var(--card-radius);
+  margin: 2rem auto;
+  padding: 2rem;
+  max-width: 1200px;
+  box-shadow: var(--card-shadow);
 }
 
 .hall-of-shame h2 {
-  color: #ff4444;
+  color: var(--rage-red);
   text-align: center;
-  font-size: 2rem;
-  margin-bottom: 20px;
-  text-shadow: 0 0 15px rgba(255, 68, 68, 0.8);
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  animation: neonFlicker 2s infinite alternate;
+}
+
+@keyframes neonFlicker {
+  0%, 100% { opacity: 1; text-shadow: 0 0 20px rgba(255, 68, 68, 0.8); }
+  50% { opacity: 0.9; text-shadow: 0 0 30px rgba(255, 68, 68, 1); }
 }
 
 .shame-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
 .shame-item {
-  background: rgba(139, 0, 0, 0.3);
+  background: var(--rage-gradient-darker);
+  border-radius: var(--card-radius);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.shame-item:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: var(--glow-orange-hover);
+}
+
+.shame-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--rage-red), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* ============================================
+   LOADOUT HISTORY - Modern Card Layout
+   ============================================ */
+
+.loadout-history {
+  background: var(--rage-gradient-dark);
+  border-radius: var(--card-radius);
+  margin: 2rem auto;
+  padding: 2rem;
+  max-width: 1200px;
+  box-shadow: var(--card-shadow);
+}
+
+.loadout-history h2 {
+  color: var(--rage-red);
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 15px rgba(255, 68, 68, 0.8);
+}
+
+.rage-history-entry {
+  background: var(--rage-gradient-darker);
+  border-radius: var(--card-radius);
+  padding: 1.5rem;
+  margin: 1rem 0;
+  border-left: 4px solid var(--rage-red);
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: var(--card-shadow);
+}
+
+.rage-history-entry:hover {
+  transform: translateX(5px);
+  box-shadow: var(--glow-red);
+  border-left-color: var(--rage-orange);
+}
+
+.rage-history-entry::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, rgba(255,68,68,0.1), transparent);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.history-class-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--rage-red), var(--rage-orange));
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  margin-right: 1rem;
+  box-shadow: 0 2px 10px rgba(255, 68, 68, 0.4);
+}
+
+.history-timestamp {
+  color: #999;
+  font-size: 0.8rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+/* ============================================
+   RAGE TIPS - Carousel Display
+   ============================================ */
+
+.rage-tips {
+  background: var(--rage-gradient-dark);
+  border-radius: var(--card-radius);
+  margin: 2rem auto;
+  padding: 2rem;
+  max-width: 1200px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  position: relative;
+}
+
+.rage-tips h2 {
+  color: var(--rage-red);
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 15px rgba(255, 68, 68, 0.8);
+}
+
+.tips-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  position: relative;
+}
+
+.tips-container::-webkit-scrollbar {
+  display: none;
+}
+
+.tip-item {
+  flex: 0 0 300px;
+  background: var(--rage-gradient-darker);
+  border-radius: var(--card-radius);
+  padding: 1.5rem;
+  scroll-snap-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: var(--card-shadow);
+  cursor: pointer;
+}
+
+.tip-item:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: var(--glow-orange-hover);
+}
+
+.tip-icon {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  animation: iconFloat 3s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.tip-item:hover .tip-icon {
+  animation: iconShake 0.5s ease-in-out;
+}
+
+@keyframes iconShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px) rotate(-5deg); }
+  75% { transform: translateX(5px) rotate(5deg); }
+}
+
+.tip-content h3 {
+  color: var(--rage-orange);
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.tip-content p {
+  color: #ccc;
+  line-height: 1.5;
+}
+
+/* Auto-cycling animation */
+@keyframes autoScroll {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(0); }
+  25% { transform: translateX(-320px); }
+  45% { transform: translateX(-320px); }
+  50% { transform: translateX(-640px); }
+  70% { transform: translateX(-640px); }
+  75% { transform: translateX(-960px); }
+  95% { transform: translateX(-960px); }
+  100% { transform: translateX(0); }
+}
+
+.tips-container.auto-cycle {
+  animation: autoScroll 20s infinite;
+}
+
+.tips-container:hover {
+  animation-play-state: paused;
+}
+
+/* Navigation dots */
+.tips-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.tip-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tip-dot.active {
+  background: var(--rage-red);
+  box-shadow: 0 0 10px var(--rage-red);
+}
+
+/* ============================================
+   MOBILE RESPONSIVE IMPROVEMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Stack sections vertically */
+  .content-grid {
+    display: block !important;
+  }
+  
+  /* Scale slot machine */
+  .item-board {
+    padding: 1rem;
+    width: 95%;
+  }
+  
+  .itemCol {
+    width: 60px;
+    height: 60px;
+  }
+  
+  /* Horizontal scroll for Hall of Shame */
+  .shame-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1rem;
+  }
+  
+  .shame-item {
+    flex: 0 0 250px;
+    scroll-snap-align: center;
+  }
+  
+  /* Stack history entries */
+  .rage-history-entry {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Adjust section padding */
+  section {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Responsive typography */
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.2rem; }
+  
+  /* Button adjustments */
+  .copy-button,
+  .double-or-nothing-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  /* Tips carousel mobile */
+  .tip-item {
+    flex: 0 0 250px;
+  }
+  
+  /* Handicap container mobile */
+  .handicap-container {
+    width: 95% !important;
+    padding: 1rem !important;
+  }
+}
+
+/* ============================================
+   ANIMATION ENHANCEMENTS & PARTICLE EFFECTS
+   ============================================ */
+
+/* Loading skeleton states */
+.skeleton {
+  background: linear-gradient(90deg, #2a1a1a 25%, #3e1a1a 50%, #2a1a1a 75%);
+  background-size: 200% 100%;
+  animation: skeletonLoading 1.5s infinite;
+}
+
+@keyframes skeletonLoading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Red particle effects for brutal loadouts */
+.brutal-particles {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--rage-red);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--rage-red);
+  animation: particleFloat 3s ease-out forwards;
+}
+
+@keyframes particleFloat {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--x), var(--y)) scale(0);
+  }
+}
+
+/* Screen shake effect */
+@keyframes screenShake {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-2px, -2px); }
+  20% { transform: translate(2px, -2px); }
+  30% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, 2px); }
+  50% { transform: translate(-1px, -1px); }
+  60% { transform: translate(1px, -1px); }
+  70% { transform: translate(-1px, 1px); }
+  80% { transform: translate(1px, 1px); }
+  90% { transform: translate(0, -1px); }
+}
+
+.screen-shake {
+  animation: screenShake 0.5s ease-in-out;
+}
+
+/* Maximum punishment reveal animation */
+.max-punishment-reveal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--rage-red);
+  text-shadow: 0 0 40px var(--rage-red);
+  animation: maxPunishmentReveal 2s ease-out forwards;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+@keyframes maxPunishmentReveal {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+    filter: blur(20px);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.5);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Countdown timer animation */
+.countdown-timer {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--rage-gradient-dark);
+  border: 3px solid var(--rage-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: var(--glow-red);
+  animation: timerPulse 1s infinite;
+}
+
+@keyframes timerPulse {
+  0%, 100% { transform: scale(1); box-shadow: var(--glow-red); }
+  50% { transform: scale(1.05); box-shadow: 0 0 40px var(--rage-red); }
+}
+
+/* Rage level indicator animations */
+.rage-level-extreme {
+  animation: extremeRage 0.3s infinite alternate;
+}
+
+@keyframes extremeRage {
+  0% { filter: hue-rotate(0deg) brightness(1); }
+  100% { filter: hue-rotate(-20deg) brightness(1.2); }
+}
   border: 1px solid #660000;
   border-radius: 10px;
   padding: 15px;
