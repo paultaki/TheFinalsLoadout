@@ -2947,8 +2947,232 @@ body {
   50% { transform: translateX(-6px); }
   60% { transform: translateX(6px); }
   70% { transform: translateX(-4px); }
-  80% { transform: translateX(4px); }
-  90% { transform: translateX(-2px); }
+}
+
+/* ============================================
+   HANDICAP STACK DISPLAY STYLES
+   ============================================ */
+
+.handicap-stack-container {
+  background: var(--rage-gradient-darker);
+  border: 2px solid var(--rage-red);
+  border-radius: var(--card-radius);
+  padding: 20px;
+  margin: 20px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.handicap-stack-container.handicap-glow {
+  box-shadow: var(--glow-red);
+}
+
+.handicap-stack-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.handicap-title {
+  color: var(--rage-red);
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 68, 68, 0.8);
+  letter-spacing: 1px;
+}
+
+.suffering-level {
+  color: var(--neon-orange);
+  font-size: 1rem;
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(255, 123, 0, 0.8);
+  background: rgba(255, 123, 0, 0.1);
+  padding: 5px 10px;
+  border-radius: 15px;
+  border: 1px solid var(--neon-orange);
+  animation: sufferingPulse 2s ease-in-out infinite;
+}
+
+@keyframes sufferingPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+.handicap-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.handicap-stack-item {
+  display: flex;
+  align-items: center;
+  background: rgba(139, 0, 0, 0.3);
+  border: 1px solid rgba(255, 68, 68, 0.5);
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.handicap-stack-item:hover {
+  background: rgba(139, 0, 0, 0.5);
+  border-color: var(--rage-red);
+  transform: translateX(5px);
+}
+
+.handicap-item-icon {
+  font-size: 2rem;
+  margin-right: 15px;
+  animation: handicapIconFloat 3s ease-in-out infinite;
+}
+
+@keyframes handicapIconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.handicap-item-content {
+  flex: 1;
+}
+
+.handicap-item-name {
+  color: #ff6666;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.handicap-item-desc {
+  color: #ff9999;
+  font-size: 0.9rem;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.handicap-item-number {
+  color: var(--neon-orange);
+  font-size: 0.8rem;
+  font-weight: bold;
+  background: rgba(255, 123, 0, 0.2);
+  padding: 3px 8px;
+  border-radius: 50%;
+  border: 1px solid var(--neon-orange);
+  min-width: 25px;
+  text-align: center;
+}
+
+.suffering-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.suffering-emoji {
+  font-size: 1.5rem;
+  animation: sufferingFlame 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes sufferingFlame {
+  0% { transform: scale(1) rotate(-2deg); }
+  100% { transform: scale(1.1) rotate(2deg); }
+}
+
+.suffering-text {
+  color: var(--rage-red);
+  font-size: 1rem;
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(255, 68, 68, 0.8);
+  letter-spacing: 1px;
+}
+
+/* Animation Classes */
+.handicap-update-flash {
+  animation: handicapFlashUpdate 0.6s ease;
+}
+
+@keyframes handicapFlashUpdate {
+  0% { background: rgba(255, 68, 68, 0.1); }
+  50% { background: rgba(255, 68, 68, 0.4); transform: scale(1.02); }
+  100% { background: rgba(139, 0, 0, 0.2); }
+}
+
+.handicap-stack-shake {
+  animation: handicapStackShake 0.6s ease;
+}
+
+@keyframes handicapStackShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px) scale(1.01); }
+  75% { transform: translateX(5px) scale(1.01); }
+}
+
+.handicap-removal-flash {
+  animation: handicapRemovalFlash 0.6s ease;
+}
+
+@keyframes handicapRemovalFlash {
+  0% { background: rgba(0, 255, 0, 0.1); }
+  50% { background: rgba(0, 255, 0, 0.3); transform: scale(0.98); }
+  100% { background: rgba(139, 0, 0, 0.2); }
+}
+
+.handicap-update-pulse {
+  animation: handicapUpdatePulse 1s ease;
+}
+
+@keyframes handicapUpdatePulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 5px rgba(255, 68, 68, 0.3); }
+  50% { transform: scale(1.02); box-shadow: 0 0 15px rgba(255, 68, 68, 0.8); }
+}
+
+.suffering-level-badge {
+  background: linear-gradient(45deg, var(--rage-red), var(--neon-orange));
+  color: white;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  margin-top: 10px;
+  display: inline-block;
+  animation: sufferingBadgePulse 2s ease-in-out infinite;
+}
+
+@keyframes sufferingBadgePulse {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* Responsive Design for Handicap Stack */
+@media (max-width: 768px) {
+  .handicap-stack-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .handicap-stack-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+  
+  .handicap-item-icon {
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+  
+  .handicap-item-number {
+    align-self: center;
+  }
 }
 
 .rage-flash {
