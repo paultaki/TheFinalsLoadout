@@ -906,15 +906,25 @@ html {
 @media (max-width: 768px) {
   .loadout-details {
     grid-template-columns: 1fr;
+    justify-items: center;
   }
   
   .weapon-item,
   .spec-item {
     grid-column: 1;
+    justify-self: center;
+    width: 100%;
+    max-width: 280px;
   }
   
   .gadget-group {
     flex-direction: column;
+    align-items: center;
+  }
+  
+  .gadget-item {
+    width: 100%;
+    max-width: 280px;
   }
   
   .item-name {
@@ -1806,6 +1816,18 @@ body {
   }
 }
 
+/* Simple logo pulse animation for mobile */
+@keyframes logoMobilePulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 4px #ff00ff) drop-shadow(0 0 6px #00f3ff);
+  }
+  50% {
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 6px #ff00ff) drop-shadow(0 0 10px #00f3ff);
+  }
+}
+
 /* Mobile-specific fix for background animation */
 @media (max-width: 768px) {
   body::before {
@@ -1815,6 +1837,15 @@ body {
     transform: translateZ(0);
     /* Reduce animation complexity on mobile if needed */
     animation: slowMove 20s ease-in-out infinite;
+  }
+  
+  /* Fix fast logo animation on mobile */
+  .finals-logo {
+    /* Use much simpler animation on mobile */
+    animation: logoMobilePulse 3s ease-in-out infinite;
+    /* Enable hardware acceleration */
+    will-change: transform, filter;
+    transform: translateZ(0);
   }
 }
 
