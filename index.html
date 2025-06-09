@@ -178,6 +178,157 @@
       0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }
     }
+
+    /* Mobile Optimizations */
+    @media (max-width: 768px) {
+      .headerSection {
+        padding: 8px 0;
+        max-height: 120px;
+      }
+      
+      .finals-logo-mobile {
+        max-width: 144px;
+        height: auto;
+        margin-bottom: 4px;
+      }
+      
+      .subTitle-mobile {
+        font-size: 1.1rem;
+        margin: 4px 0;
+        font-weight: 600;
+      }
+      
+      .countdown-mobile {
+        background: rgba(0, 0, 0, 0.3);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 8px;
+        margin: 8px 0;
+        text-align: center;
+        letter-spacing: 1px;
+      }
+      
+      .countdown-text {
+        opacity: 0.9;
+      }
+      
+      .class-selection .btnRow {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin: 8px 0;
+        overflow-x: auto;
+        padding: 0 8px;
+      }
+      
+      .class-button {
+        width: 70px;
+        height: 100px;
+        flex-shrink: 0;
+        border-radius: 8px;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+      }
+      
+      .class-button.active,
+      .class-button:hover {
+        border-color: #fff;
+        transform: scale(1.05);
+      }
+      
+      .main-spin-button {
+        margin: 8px 0;
+      }
+      
+      .loadout-history {
+        margin-top: 8px;
+      }
+      
+      .loadout-history h2 {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+      }
+      
+      .history-item {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        margin: 4px 0;
+        padding: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .history-item.collapsed {
+        height: 60px;
+        overflow: hidden;
+      }
+      
+      .history-item.expanded {
+        height: auto;
+        max-height: 200px;
+      }
+      
+      .history-summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+      }
+      
+      .history-details {
+        margin-top: 8px;
+        display: none;
+      }
+      
+      .history-item.expanded .history-details {
+        display: block;
+      }
+      
+      .fixed-bottom-cta {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(45deg, #7b2fe3, #1e90ff);
+        padding: 12px 16px;
+        z-index: 1000;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+      }
+      
+      .fixed-bottom-cta button {
+        width: 100%;
+        background: none;
+        border: 2px solid #fff;
+        color: #fff;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .fixed-bottom-cta button:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(1.02);
+      }
+      
+      /* Spacing optimizations */
+      .container {
+        padding: 0 8px;
+      }
+      
+      section {
+        margin-bottom: 8px;
+      }
+      
+      .selection-container > div {
+        margin-bottom: 8px;
+      }
+    }
   </style>
 
   <!-- Full Styles -->
