@@ -768,9 +768,8 @@
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         function updateCountdown() {
-          // Set the target date for Season 7 (adjust timezone as needed)
-          const now = new Date();
-          const targetDate = new Date(now.getTime() + (2 * 24 * 60 * 60 * 1000) + (11 * 60 * 60 * 1000) + (45 * 60 * 1000) + (42 * 1000));
+          // Set the target date for Season 7: June 11, 2025 at 5 AM CST
+          const targetDate = new Date('2025-06-11T05:00:00-06:00'); // CST is UTC-6
           
           const interval = setInterval(() => {
             const currentTime = new Date().getTime();
