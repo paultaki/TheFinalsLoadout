@@ -501,17 +501,29 @@ class RageRouletteAnimationSystem {
   `;
 
     const wheel = document.createElement("div");
+    wheel.id = "handicap-wheel";
     wheel.style.cssText = `
     display: flex;
-    justify-content: center;
-    gap: clamp(5px, 2vw, 15px);
+    justify-content: flex-start;
+    gap: clamp(3px, 1vw, 8px);
     height: 200px;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 5px;
     box-sizing: border-box;
     overflow-x: auto;
     width: 100%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   `;
+    
+    // Hide scrollbar
+    const style = document.createElement('style');
+    style.textContent = \`
+      #handicap-wheel::-webkit-scrollbar {
+        display: none;
+      }
+    \`;
+    document.head.appendChild(style);
 
     // Define handicaps - expanded selection for more variety
     const handicaps = [
@@ -524,7 +536,17 @@ class RageRouletteAnimationSystem {
       { name: "Snail Aim", desc: "Set sensitivity to the lowest value", icon: "🐌" },
       { name: "Reload Addict", desc: "Must reload after every kill or 3 shots", icon: "🔄" },
       { name: "Permanent Crouch", desc: "Must stay crouched the entire game", icon: "🧎" },
-      { name: "Silent Treatment", desc: "Play with all audio muted", icon: "🔇" }
+      { name: "Silent Treatment", desc: "Play with all audio muted", icon: "🔇" },
+      { name: "One Life", desc: "No respawning - death ends the round", icon: "💀" },
+      { name: "Melee Only", desc: "Can only use melee weapons", icon: "⚔️" },
+      { name: "Backwards Mode", desc: "Can only move backwards", icon: "⏪" },
+      { name: "No Minimap", desc: "Cover your minimap completely", icon: "📍" },
+      { name: "Pacifist Run", desc: "Win without eliminating anyone", icon: "☮️" },
+      { name: "Blind Spots", desc: "Cover corners of your screen", icon: "👁️" },
+      { name: "Shake Vision", desc: "Constantly shake your mouse/controller", icon: "📳" },
+      { name: "Wrong Hand", desc: "Use opposite hand for mouse/controller", icon: "👋" },
+      { name: "No Cover", desc: "Cannot hide behind objects", icon: "🚫" },
+      { name: "Panic Mode", desc: "Must constantly move - no standing still", icon: "🏃" }
     ];
 
     const handicapElements = [];
@@ -532,11 +554,11 @@ class RageRouletteAnimationSystem {
     handicaps.forEach((handicap, index) => {
       const option = document.createElement("div");
       option.style.cssText = `
-      width: clamp(80px, 18vw, 120px);
-      height: clamp(100px, 20vw, 150px);
-      min-width: 80px;
+      width: clamp(70px, 15vw, 100px);
+      height: clamp(90px, 18vw, 130px);
+      min-width: 70px;
       background: linear-gradient(135deg, #2e1a1a, #4e2a2a);
-      border-radius: 15px;
+      border-radius: 12px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -547,23 +569,26 @@ class RageRouletteAnimationSystem {
       flex-shrink: 0;
       border: 2px solid #660000;
       text-align: center;
-      padding: 5px;
+      padding: 3px;
     `;
 
       const icon = document.createElement("div");
       icon.textContent = handicap.icon;
       icon.style.cssText = `
-      font-size: clamp(20px, 5vw, 30px);
-      margin-bottom: 5px;
+      font-size: clamp(16px, 4vw, 24px);
+      margin-bottom: 3px;
     `;
 
       const label = document.createElement("span");
       label.textContent = handicap.name.toUpperCase();
       label.style.cssText = `
-      font-size: clamp(8px, 2vw, 12px);
+      font-size: clamp(7px, 1.8vw, 10px);
       font-weight: 700;
       color: #fff;
-      line-height: 1.2;
+      line-height: 1.1;
+      text-align: center;
+      word-break: break-word;
+      hyphens: auto;
     `;
 
       option.appendChild(icon);
