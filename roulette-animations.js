@@ -556,6 +556,8 @@ class RouletteAnimationSystem {
   // Show selection display
   showSelectionDisplay() {
     const selectionDisplay = document.getElementById("selection-display");
+    if (!selectionDisplay) return;
+    
     const classSpan = selectionDisplay.querySelector(".selection-class");
     const spinsSpan = selectionDisplay.querySelector(".selection-spins");
 
@@ -568,11 +570,13 @@ class RouletteAnimationSystem {
       this.selectedSpins > 1 ? "S" : ""
     }`;
 
-    // Show the display
+    // Show the display with visible class
     selectionDisplay.classList.remove("hidden");
+    selectionDisplay.classList.add("visible");
 
     // Hide it after the slot machine starts
     setTimeout(() => {
+      selectionDisplay.classList.remove("visible");
       selectionDisplay.classList.add("hidden");
     }, 5000);
   }

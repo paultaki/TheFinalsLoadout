@@ -179,95 +179,168 @@
       100% { background-position: -200% 0; }
     }
 
-    /* Mobile Optimizations */
+    /* Selection Display - Hidden by default */
+    #selection-display {
+      display: none !important;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+    }
+
+    #selection-display.visible {
+      display: block !important;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Mobile Redesign - Clean & Symmetric */
     @media (max-width: 768px) {
+      /* Reset and base spacing */
+      body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+      
+      .container {
+        padding: 0 16px;
+        max-width: 100%;
+      }
+      
+      /* Header Section - Centered */
       .headerSection {
-        padding: 8px 0;
-        max-height: 120px;
+        padding: 16px 0;
+        text-align: center;
       }
       
       .finals-logo-mobile {
         max-width: 144px;
         height: auto;
-        margin-bottom: 4px;
+        margin-bottom: 8px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
       }
       
       .subTitle-mobile {
-        font-size: 1.1rem;
-        margin: 4px 0;
+        font-size: 14px;
         font-weight: 600;
+        margin: 8px 0;
+        text-transform: none;
+        letter-spacing: 0.5px;
       }
       
       .countdown-mobile {
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(0, 0, 0, 0.4);
         color: #fff;
         font-size: 16px;
         font-weight: 500;
         padding: 8px 16px;
         border-radius: 8px;
-        margin: 8px 0;
+        margin: 8px auto;
         text-align: center;
         letter-spacing: 1px;
+        display: inline-block;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       }
       
-      .countdown-text {
-        opacity: 0.9;
+      /* SPIN Button - Centered & Prominent */
+      .main-spin-button {
+        width: 200px !important;
+        height: 60px;
+        margin: 16px auto;
+        display: block;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        box-shadow: 0 4px 15px rgba(123, 47, 227, 0.3);
+      }
+      
+      /* Class Cards - 2x2 Grid + Centered 5th */
+      .class-selection {
+        margin: 16px 0;
       }
       
       .class-selection .btnRow {
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 8px;
-        justify-content: center;
-        margin: 8px 0;
-        overflow-x: auto;
-        padding: 0 8px;
+        max-width: 150px;
+        margin: 0 auto 8px auto;
+        justify-items: center;
       }
       
       .class-button {
-        width: 70px;
-        height: 100px;
-        flex-shrink: 0;
+        width: 65px !important;
+        height: 90px !important;
         border-radius: 8px;
-        border: 2px solid transparent;
+        border: 2px solid rgba(255, 255, 255, 0.2);
         transition: all 0.3s ease;
+        object-fit: cover;
+      }
+      
+      .class-button:nth-child(3) {
+        grid-column: 1 / -1;
+        justify-self: center;
+        margin-top: 8px;
       }
       
       .class-button.active,
       .class-button:hover {
-        border-color: #fff;
-        transform: scale(1.05);
+        border-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        transform: scale(1.02);
       }
       
-      .main-spin-button {
-        margin: 8px 0;
+      /* Section Spacing */
+      .selection-container > div {
+        margin-bottom: 16px;
       }
       
+      /* Recent Chaos - Clean Cards */
       .loadout-history {
-        margin-top: 8px;
+        margin-top: 16px;
       }
       
       .loadout-history h2 {
-        font-size: 1.2rem;
-        margin-bottom: 8px;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        text-align: center;
+        text-transform: none;
       }
       
+      .chaos-counter {
+        text-align: center;
+        font-size: 12px;
+        margin-bottom: 16px;
+        opacity: 0.8;
+      }
+      
+      /* History Cards - No Overflow */
       .history-item {
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 8px;
-        margin: 4px 0;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 12px;
+        margin: 8px 0;
         padding: 12px;
+        width: calc(100% - 32px);
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
         cursor: pointer;
         transition: all 0.3s ease;
       }
       
       .history-item.collapsed {
         height: 60px;
-        overflow: hidden;
       }
       
       .history-item.expanded {
         height: auto;
-        max-height: 200px;
+        max-height: 300px;
+        overflow-y: auto;
       }
       
       .history-summary {
@@ -275,58 +348,165 @@
         justify-content: space-between;
         align-items: center;
         font-weight: 600;
+        font-size: 14px;
+        text-transform: none;
+      }
+      
+      .view-details {
+        font-size: 12px;
+        opacity: 0.7;
+        font-weight: 400;
       }
       
       .history-details {
-        margin-top: 8px;
+        margin-top: 12px;
         display: none;
+        overflow: hidden;
       }
       
       .history-item.expanded .history-details {
         display: block;
       }
       
-      .fixed-bottom-cta {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(45deg, #7b2fe3, #1e90ff);
-        padding: 12px 16px;
-        z-index: 1000;
-        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+      /* Fix Item Grid Overflow */
+      .history-details .items-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 0;
+        margin: 0;
       }
       
-      .fixed-bottom-cta button {
-        width: 100%;
-        background: none;
-        border: 2px solid #fff;
-        color: #fff;
-        padding: 12px;
-        border-radius: 8px;
-        font-size: 16px;
+      .history-details .item {
+        text-align: center;
+        overflow: hidden;
+      }
+      
+      .history-details .item img {
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
+        object-fit: cover;
+      }
+      
+      .history-details .item p {
+        font-size: 10px;
+        margin: 4px 0 0 0;
+        line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+      }
+      
+      /* Typography Cleanup */
+      .class-name {
+        font-size: 14px;
         font-weight: 700;
-        letter-spacing: 1px;
+        text-transform: none;
+      }
+      
+      .item-name {
+        font-size: 12px;
+        font-weight: 400;
+        text-transform: none;
+      }
+      
+      .flavor-text {
+        font-size: 11px;
+        opacity: 0.8;
+        font-weight: 300;
+      }
+      
+      /* Progress Bars - Thinner */
+      .progress-bar {
+        height: 4px !important;
+        border-radius: 2px;
+        margin: 8px 0;
+      }
+      
+      /* Badges - Smaller */
+      .badge {
+        font-size: 10px !important;
+        padding: 2px 6px !important;
+        border-radius: 4px;
+      }
+      
+      /* Glow Effect Reduction */
+      .main-spin-button {
+        box-shadow: 0 4px 15px rgba(123, 47, 227, 0.2) !important;
+      }
+      
+      .class-button.active {
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.2) !important;
+      }
+      
+      .history-item {
+        box-shadow: none !important;
+      }
+      
+      /* Clear History Button */
+      .clear-history-btn {
+        display: block;
+        margin: 16px auto;
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border-radius: 8px;
+        font-size: 12px;
         cursor: pointer;
         transition: all 0.3s ease;
       }
       
-      .fixed-bottom-cta button:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: scale(1.02);
+      .clear-history-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
       }
       
-      /* Spacing optimizations */
-      .container {
-        padding: 0 8px;
+      /* Toggle Buttons - Filter & Audio */
+      .filter-toggle-button,
+      .sound-toggle-button {
+        position: fixed;
+        right: 16px;
+        width: 48px;
+        height: 48px;
+        border-radius: 24px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 999;
+        backdrop-filter: blur(10px);
       }
       
-      section {
-        margin-bottom: 8px;
+      .filter-toggle-button {
+        top: 80px;
       }
       
-      .selection-container > div {
-        margin-bottom: 8px;
+      .sound-toggle-button {
+        top: 140px;
+      }
+      
+      .filter-toggle-button:hover,
+      .sound-toggle-button:hover {
+        background: rgba(0, 0, 0, 0.8);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: scale(1.05);
+      }
+      
+      .filter-toggle-button svg,
+      .sound-toggle-button svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      /* Remove margin from main to account for no bottom CTA */
+      main {
+        padding-bottom: 16px !important;
       }
     }
   </style>
@@ -397,6 +577,19 @@
 <button id="filter-toggle" class="filter-toggle-button" aria-label="Toggle filters">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+  </svg>
+</button>
+
+<!-- Audio Toggle Button -->
+<button id="sound-toggle" class="sound-toggle-button" aria-label="Toggle sound">
+  <svg class="sound-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+  </svg>
+  <svg class="sound-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+    <line x1="23" y1="9" x2="17" y2="15"></line>
+    <line x1="17" y1="9" x2="23" y2="15"></line>
   </svg>
 </button>
 
@@ -712,12 +905,6 @@
   </section>
 </main>
 
-<!-- Fixed Bottom CTA -->
-<div class="fixed-bottom-cta">
-  <button id="generate-meme-mobile" onclick="shareToSocial()">
-    🎯 GENERATE MEME CARD
-  </button>
-</div>
 
 
 
@@ -907,6 +1094,22 @@
         // Start countdown
         updateCountdown();
         
+        // Hide selection display on page load
+        const selectionDisplay = document.getElementById('selection-display');
+        if (selectionDisplay) {
+          selectionDisplay.classList.remove('visible');
+          selectionDisplay.classList.add('hidden');
+        }
+        
+        // Global function to hide selection display (can be called from app.js)
+        window.hideSelectionDisplay = function() {
+          const selectionDisplay = document.getElementById('selection-display');
+          if (selectionDisplay) {
+            selectionDisplay.classList.remove('visible');
+            selectionDisplay.classList.add('hidden');
+          }
+        };
+        
         // Mobile History Accordion
         function initMobileHistory() {
           const historyList = document.getElementById('history-list');
@@ -977,9 +1180,6 @@
         // Initialize mobile features
         if (window.innerWidth <= 768) {
           initMobileHistory();
-          
-          // Add bottom padding to main content to account for fixed CTA
-          document.querySelector('main').style.paddingBottom = '80px';
         }
       });
     </script>
