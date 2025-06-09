@@ -1,13 +1,37 @@
 // Counter loading functionality
 async function loadCounter() {
   try {
-    const response = await fetch('/api/get-counter');
+    // Check if we're in local development
+    const isLocal = window.location.hostname === 'localhost' || 
+                   window.location.hostname === '127.0.0.1' || 
+                   window.location.hostname === '';
+    
+    // TEMPORARILY COMMENTED OUT FOR TESTING - UNCOMMENT FOR PRODUCTION
+    // if (isLocal) {
+    //   // Use fallback counter for local development
+    //   const fallbackCount = localStorage.getItem('localCounter') || '31846';
+    //   document.querySelectorAll('.loadouts-counter').forEach(el => {
+    //     el.textContent = parseInt(fallbackCount).toLocaleString();
+    //   });
+    //   return;
+    // }
+    
+    // Production API call
+    const response = await fetch('/api/counter');
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
     const data = await response.json();
     document.querySelectorAll('.loadouts-counter').forEach(el => {
       el.textContent = (data.count || 0).toLocaleString();
     });
   } catch (error) {
-    console.error('Counter load failed:', error);
+    console.warn('Counter load failed, using fallback:', error.message);
+    // Fallback to a default count
+    document.querySelectorAll('.loadouts-counter').forEach(el => {
+      el.textContent = '31,846';
+    });
   }
 }
 
