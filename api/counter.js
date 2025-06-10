@@ -1,14 +1,12 @@
-import { Redis } from "@upstash/redis";
-
-const redis = Redis.fromEnv();
+import { kv } from '@vercel/kv';
 
 export default async function handler(req, res) {
   try {
     // Add debugging info
     console.log("Counter API called");
     
-    const count = await redis.get("loadouts_generated");
-    console.log("Redis returned:", count);
+    const count = await kv.get("loadouts_generated");
+    console.log("Vercel KV returned:", count);
     
     const finalCount = count || 0;
     console.log("Final count:", finalCount);
