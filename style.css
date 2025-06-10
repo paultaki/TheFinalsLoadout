@@ -1228,8 +1228,8 @@ html {
 /* Meme Footer Styling */
 .meme-footer {
   text-align: center;
-  margin-top: 12px;
-  padding-top: 8px;
+  margin-top: 8px;
+  padding-top: 6px;
   border-top: 1px solid var(--border-subtle);
 }
 
@@ -1320,9 +1320,9 @@ html {
   background: rgba(255, 51, 102, 0.1);
   border: 1px solid var(--finals-red);
   border-radius: 8px;
-  padding: 16px;
+  padding: 12px;
   text-align: center;
-  margin: 16px 0;
+  margin: 12px 0;
 }
 
 .meme-export-container .roast-text {
@@ -4114,8 +4114,8 @@ html {
 
 /* Roast Section Styling */
 .roast-section {
-  margin: 0.75rem 0;
-  padding: 0.75rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
   background: linear-gradient(135deg, #ff4500, #ff6b00, #ff8c00);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);

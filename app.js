@@ -3497,6 +3497,8 @@ async function incrementLoadoutCounter() {
       }
     });
     
+    console.log('📡 API Response status:', response.status, response.statusText);
+    
     if (response.ok) {
       const data = await response.json();
       console.log('✅ Counter incremented successfully:', data.totalGenerated);
@@ -3508,14 +3510,23 @@ async function incrementLoadoutCounter() {
       // Also re-fetch from counter API to ensure accuracy
       await refreshCounterFromAPI();
     } else {
-      console.warn('⚠️ Failed to increment counter, but continuing...');
+      const errorText = await response.text();
+      console.error('❌ Failed to increment counter:', response.status, errorText);
       // Try to refresh from API anyway
       await refreshCounterFromAPI();
     }
   } catch (error) {
-    console.warn('⚠️ Error incrementing counter:', error);
+    console.error('❌ Network error incrementing counter:', error.message);
+    console.error('❌ Full error:', error);
+    
     // Try to refresh from API as fallback
-    await refreshCounterFromAPI();
+    try {
+      await refreshCounterFromAPI();
+    } catch (refreshError) {
+      console.error('❌ Also failed to refresh counter from API:', refreshError);
+      // As final fallback, just show that we tried
+      console.warn('🔢 Counter update failed completely - continuing with cached value');
+    }
   }
 }
 
