@@ -1011,7 +1011,15 @@ function startSpinAnimation(columns) {
                 }, 500);
               }
 
-              setTimeout(() => container.classList.add("winner-pulsate"), 300);
+              setTimeout(() => {
+                container.classList.add("winner-pulsate");
+                
+                // Add dramatic screen shake on the last column
+                if (index === lastColumnIndex) {
+                  addScreenShake();
+                  createLockInParticleExplosion(container);
+                }
+              }, 300);
             }, index * 200);
           }
         });
@@ -1868,6 +1876,75 @@ function addCelebrationEffects() {
     setTimeout(() => banner.remove(), 500);
     slotMachineWrapper.classList.remove('celebration-flash');
   }, 3000);
+}
+
+// Screen shake effect for dramatic lock-in
+function addScreenShake() {
+  const body = document.body;
+  body.classList.add('screen-shake');
+  
+  setTimeout(() => {
+    body.classList.remove('screen-shake');
+  }, 600);
+}
+
+// Particle explosion when cards lock in
+function createLockInParticleExplosion(container) {
+  const rect = container.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  
+  // Create multiple waves of particles
+  for (let wave = 0; wave < 3; wave++) {
+    setTimeout(() => {
+      for (let i = 0; i < 12; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'lock-in-particle';
+        
+        const angle = (360 / 12) * i;
+        const velocity = 150 + (wave * 50);
+        const size = Math.random() * 8 + 4;
+        
+        particle.style.cssText = `
+          position: fixed;
+          width: ${size}px;
+          height: ${size}px;
+          background: linear-gradient(45deg, #ffff00, #ffd700, #ff8c00);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 10000;
+          left: ${centerX}px;
+          top: ${centerY}px;
+          box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        `;
+        
+        document.body.appendChild(particle);
+        
+        // Animate particle
+        const radians = (angle * Math.PI) / 180;
+        const endX = centerX + Math.cos(radians) * velocity;
+        const endY = centerY + Math.sin(radians) * velocity;
+        
+        particle.animate([
+          {
+            transform: 'translate(0, 0) scale(1)',
+            opacity: 1
+          },
+          {
+            transform: `translate(${endX - centerX}px, ${endY - centerY}px) scale(0)`,
+            opacity: 0
+          }
+        ], {
+          duration: 800 + (wave * 200),
+          easing: 'ease-out'
+        }).onfinish = () => {
+          if (particle.parentNode) {
+            particle.parentNode.removeChild(particle);
+          }
+        };
+      }
+    }, wave * 100);
+  }
 }
 
 // Global function to stop all audio (useful for mobile)
