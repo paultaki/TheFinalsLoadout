@@ -543,7 +543,6 @@ class RageRouletteAnimationSystem {
       { name: "No Minimap", desc: "Cover your minimap completely", icon: "📍" },
       { name: "Pacifist Run", desc: "Win without eliminating anyone", icon: "☮️" },
       { name: "Blind Spots", desc: "Cover corners of your screen", icon: "👁️" },
-      { name: "Shake Vision", desc: "Constantly shake your mouse/controller", icon: "📳" },
       { name: "Wrong Hand", desc: "Use opposite hand for mouse/controller", icon: "👋" },
       { name: "No Cover", desc: "Cannot hide behind objects", icon: "🚫" },
       { name: "Panic Mode", desc: "Must constantly move - no standing still", icon: "🏃" }
