@@ -132,35 +132,49 @@ export default async function handler(req, res) {
     const nsfwTag = (specTier === "off-meta" && ["Dematerializer", "Cloaking Device"].includes(specialization)) ? "sneaky-banger" : "";
 
     const prompt = `
-You are ${persona}. Deliver a short, punchy 15–25 word Loadout Analysis that references the SPECIFIC items. Include a rating at the end (X/10).
+You are ${persona}. Deliver a short, punchy 15–25 word analysis that references the SPECIFIC items. Include a rating at the end (X/10).
 
 Class: ${classType}
 Weapon: ${weapon} (${weaponTier})
 Specialization: ${specialization} (${specTier})
 Gadgets: ${gadgets.join(", ")} (${gadgetTiers.join(", ")})
 
-Tone: ${tone}${nsfwTag ? ", " + nsfwTag : ""}
+Analysis Style: ${analysisStyle}
 
-IMPORTANT: Your roast MUST mention the actual weapon/spec/gadget names. Be specific about synergies or conflicts.
+IMPORTANT: Match the style! Reference actual items. Be specific about synergies.
 
-Examples:
-- "M11 spray with Evasive Dash? Hit-and-run, emphasis on run. 6/10"
-- "Sledgehammer + Winch Claw pulls them into bonk range. Pure caveman genius. 8/10"
-- "Thermal Bore on Light? You drilled a hole to watch yourself die faster. 1/10"
-- "FCAR with Guardian Turret covers all ranges. Boring but effective. 7/10"
-- "Throwing Knives + Cloaking Device? Ninja dreams, bronze reality. 4/10"
-- "Lewis Gun hipfire with Mesh Shield. Walking fortress of 'no'. 8.5/10"
-- "93R burst damage? More like burst disappointment. 0/10"
-- "CL-40 spam with Jump Pad mobility. Annoying fly with explosives. 7/10"
-- "Flamethrower + Charge N Slam? BBQ delivery service. 8/10"
-- "Data Reshaper ruins turrets. Too bad you brought it to a gunfight. 2/10"
+${analysisStyle} Examples:
+${analysisStyle === "tactical" ? `
+- "FCAR + Guardian Turret provides solid mid-range control. Add Jump Pads for repositioning. 7/10"
+- "M11 with Grappling Hook enables aggressive flanks. Smoke covers retreats. Solid hit-and-run. 8/10"
+- "Lewis Gun suppression pairs well with Barricade. Zone denial specialist. 7.5/10"` : ""}
+${analysisStyle === "roast" ? `
+- "93R burst damage? More like burst disappointment. Uninstall. 0/10"
+- "Thermal Bore on Light? You drilled a hole to watch yourself die. 1/10"
+- "CB-01 Repeater? Even the training bots feel bad killing you. 0/10"` : ""}
+${analysisStyle === "funny" ? `
+- "Sledgehammer + Winch Claw? Fishing for players with malicious intent. 8/10"
+- "Riot Shield + Healing Beam? Professional third wheel. At least you're useful. 6/10"
+- "Throwing Knives + Cloaking? Mall ninja reached final form. 5/10"` : ""}
+${analysisStyle === "supportive" ? `
+- "Recurve Bow takes skill! With practice, you'll surprise everyone. Keep grinding! 6/10"
+- "Anti-Gravity Cube has niche uses. Creative players make it work! 5/10"
+- "M26 Matter hits hard up close. Work those angles! 5.5/10"` : ""}
+${analysisStyle === "sarcastic" ? `
+- "Oh wow, FCAR and Defibs. How original. Next you'll discover fire. 9/10"
+- "Lewis Gun with Dome Shield. Groundbreaking tactics from 1917. 8/10"
+- "M60 and C4. Someone watched a YouTube guide. 8.5/10"` : ""}
+${analysisStyle === "hype" ? `
+- "THROWING KNIVES WITH DASH?! Ninja mode ACTIVATED! Let's GO! 9/10"
+- "Flamethrower Charge N Slam combo?! MAXIMUM CHAOS ENERGY! 9.5/10"
+- "Dual Blades with Vanishing Bomb?! ANIME PROTAGONIST TIME! 8/10"` : ""}
 
-Keep it punchy. Never more than 25 words. Always reference the specific loadout items.
+Keep it punchy. Never more than 25 words. Match the style!
 `;
 
-    const metaSuffix = "Everyone knows Pyro + Goo is meta. This? Feels like a cry for help.";
-    const fullPrompt = `${prompt}\n\nCompare it to meta: ${metaSuffix}`;
+    const fullPrompt = prompt;
 
+    console.log("🎯 Selected analysis style:", analysisStyle);
     console.log("📝 Sending prompt to Claude:", fullPrompt);
 
     const message = await anthropic.messages.create({
