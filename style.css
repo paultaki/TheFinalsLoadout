@@ -1721,9 +1721,10 @@ body.flexStyle {
 }
 
 /* Sound Toggle Button */
-.sound-toggle {
-  position: absolute;
-  top: 56px; /* Moved down 36px: 20px + 36px */
+.sound-toggle,
+.sound-toggle-button {
+  position: fixed;
+  top: 140px; /* Moved down further to avoid overlap */
   right: 20px;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -1736,28 +1737,34 @@ body.flexStyle {
   cursor: pointer;
   transition: all 0.3s ease;
   color: var(--neon-yellow);
+  z-index: 1000;
 }
 
-.sound-toggle:hover {
+.sound-toggle:hover,
+.sound-toggle-button:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: var(--neon-yellow);
   transform: scale(1.1);
 }
 
-.sound-toggle svg {
+.sound-toggle svg,
+.sound-toggle-button svg {
   width: 20px;
   height: 20px;
 }
 
-.sound-toggle.muted .sound-on {
+.sound-toggle.muted .sound-on,
+.sound-toggle-button.muted .sound-on {
   display: none;
 }
 
-.sound-toggle.muted .sound-off {
+.sound-toggle.muted .sound-off,
+.sound-toggle-button.muted .sound-off {
   display: block !important;
 }
 
-.sound-toggle.muted {
+.sound-toggle.muted,
+.sound-toggle-button.muted {
   color: #999;
   border-color: rgba(255, 255, 255, 0.1);
 }
@@ -2197,6 +2204,25 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Force audio button position - override all other rules */
+#sound-toggle.sound-toggle-button,
+button#sound-toggle.sound-toggle-button,
+.sound-toggle-button#sound-toggle {
+  position: fixed !important;
+  top: 280px !important;
+  right: 16px !important;
+  z-index: 9999 !important;
+}
+
+@media (min-width: 769px) {
+  #sound-toggle.sound-toggle-button,
+  button#sound-toggle.sound-toggle-button,
+  .sound-toggle-button#sound-toggle {
+    top: 180px !important;
+    right: 20px !important;
+  }
+}
+
 /* Reduce repaints for fixed elements */
 .main-nav {
   will-change: transform;
@@ -2297,16 +2323,18 @@ body {
 /* Mobile Styles - Improved Layout */
 @media (max-width: 768px) {
   /* Sound toggle button - mobile adjustments */
-  .sound-toggle {
-    top: 46px; /* Moved down 36px: 10px + 36px */
-    right: 10px;
-    width: 35px;
-    height: 35px;
+  .sound-toggle,
+  .sound-toggle-button {
+    top: 240px !important; /* Moved down to avoid overlap with filter */
+    right: 16px !important;
+    width: 48px !important;
+    height: 48px !important;
   }
   
-  .sound-toggle svg {
-    width: 18px;
-    height: 18px;
+  .sound-toggle svg,
+  .sound-toggle-button svg {
+    width: 20px;
+    height: 20px;
   }
   
   /* Container for slot machine - adjusted scaling and width */
