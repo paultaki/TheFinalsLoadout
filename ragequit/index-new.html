@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>RAGE QUIT SIMULATOR | The Finals' Most Brutal Challenge</title>
+    <meta
+      name="description"
+      content="The ultimate masochist's playground. Spin for the worst loadouts, stack punishments, and see how long you can survive."
+    />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --blood-red: #dc143c;
+        --dark-red: #8b0000;
+        --neon-red: #ff073a;
+        --black: #0a0a0a;
+        --dark-gray: #1a1a1a;
+        --medium-gray: #2a2a2a;
+        --light-gray: #3a3a3a;
+        --white: #ffffff;
+        --gold: #ffd700;
+        --rage-gradient: linear-gradient(
+          135deg,
+          var(--dark-red),
+          var(--blood-red),
+          var(--neon-red)
+        );
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--black);
+        color: var(--white);
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Animated Background */
+      .rage-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: radial-gradient(
+            circle at 20% 50%,
+            var(--dark-red) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            var(--blood-red) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 20%,
+            var(--neon-red) 0%,
+            transparent 50%
+          ),
+          var(--black);
+        filter: blur(100px);
+        animation: rageFlow 20s ease-in-out infinite;
+      }
+
+      @keyframes rageFlow {
+        0%,
+        100% {
+          transform: scale(1) rotate(0deg);
+        }
+        33% {
+          transform: scale(1.1) rotate(120deg);
+        }
+        66% {
+          transform: scale(0.9) rotate(240deg);
+        }
+      }
+
+      /* Navigation */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding: 1.5rem 2rem;
+        backdrop-filter: blur(20px);
+        background: rgba(10, 10, 10, 0.7);
+        border-bottom: 1px solid rgba(220, 20, 60, 0.3);
+      }
+
+      .nav-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: var(--white);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+        position: relative;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--neon-red);
+        transition: width 0.3s;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      .feedback-btn {
+        background: var(--rage-gradient);
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        color: var(--white);
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .feedback-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(255, 7, 58, 0.4);
+      }
+
+      /* Hero Section */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 8rem 2rem 4rem;
+        position: relative;
+        transition: opacity 0.3s ease;
+      }
+
+      .hero.dimmed {
+        opacity: 0.3;
+      }
+
+      .glitch-container {
+        position: relative;
+        margin-bottom: 2rem;
+      }
+
+      .hero-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(4rem, 12vw, 10rem);
+        text-align: center;
+        line-height: 0.9;
+        letter-spacing: -2px;
+        background: var(--rage-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        animation: glitchText 3s infinite;
+      }
+
+      @keyframes glitchText {
+        0%,
+        100% {
+          text-shadow: 2px 2px 0 var(--neon-red), -2px -2px 0 var(--dark-red);
+        }
+        25% {
+          text-shadow: -2px 2px 0 var(--neon-red), 2px -2px 0 var(--dark-red);
+        }
+        50% {
+          text-shadow: 2px -2px 0 var(--neon-red), -2px 2px 0 var(--dark-red);
+        }
+        75% {
+          text-shadow: -2px -2px 0 var(--neon-red), 2px 2px 0 var(--dark-red);
+        }
+      }
+
+      .hero-subtitle {
+        font-size: clamp(1.2rem, 3vw, 2rem);
+        text-align: center;
+        margin-bottom: 3rem;
+        opacity: 0.8;
+        max-width: 800px;
+      }
+
+      /* Main Button */
+      .rage-button {
+        background: var(--dark-gray);
+        border: 3px solid var(--blood-red);
+        padding: 2rem 4rem;
+        font-size: 1.5rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--white);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+        animation: pulseBorder 2s infinite;
+      }
+
+      @keyframes pulseBorder {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 40px rgba(255, 7, 58, 0.8);
+        }
+      }
+
+      .rage-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: var(--rage-gradient);
+        transition: left 0.5s;
+      }
+
+      .rage-button:hover::before {
+        left: 0;
+      }
+
+      .rage-button span {
+        position: relative;
+        z-index: 1;
+      }
+
+      .rage-button:hover {
+        transform: scale(1.05);
+        border-color: var(--neon-red);
+      }
+
+      .rage-button:active {
+        transform: scale(0.98);
+      }
+
+      /* Stats Bar */
+      .stats-bar {
+        background: var(--dark-gray);
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 20px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        max-width: 900px;
+        width: 100%;
+        border: 1px solid var(--light-gray);
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 3rem;
+        font-weight: 900;
+        background: var(--rage-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Slot Machine Section */
+      .slot-machine-section {
+        padding: 4rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .slot-machine-wrapper {
+        background: var(--dark-gray);
+        border-radius: 30px;
+        padding: 3rem;
+        border: 2px solid var(--blood-red);
+        box-shadow: 0 20px 60px rgba(220, 20, 60, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .slot-machine-wrapper::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 7, 58, 0.1) 0%,
+          transparent 70%
+        );
+        animation: rotate 20s linear infinite;
+      }
+
+      @keyframes rotate {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Slot Output */
+      #output {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Placeholder styles */
+      .placeholder-container {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #444, #222);
+        border-radius: 12px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 190px;
+        width: 140px;
+        text-align: center;
+        padding: 10px 0;
+      }
+
+      .placeholder-container img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+        opacity: 0.7;
+        margin-bottom: 8px;
+      }
+
+      .placeholder-container p {
+        font-size: 16px;
+        color: #ffffff;
+        margin: 0;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+        padding: 0 5px;
+        line-height: 1.2;
+      }
+
+      /* Item container styles for when slots are spinning */
+      .item-container {
+        flex: 0 0 140px;
+        width: 140px;
+        height: 200px;
+        margin: 0;
+        background-color: #fff;
+        border: 3px solid #ffcc00 !important;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .items-container {
+        display: flex !important;
+        gap: 12px !important;
+        justify-content: center !important;
+      }
+
+      .scroll-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .itemCol {
+        padding-top: 5px;
+        will-change: transform;
+        backface-visibility: hidden;
+        transform: translate3d(0, 0, 0);
+        opacity: 0.9;
+      }
+
+      .itemCol img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+        border-radius: 5px;
+        width: 140px;
+        height: 144px;
+        object-fit: cover;
+      }
+
+      .itemCol p {
+        color: #000;
+        padding: 8px 0 10px;
+        font-size: 20px;
+        font-weight: bold;
+        margin: 0;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+        text-align: center;
+        line-height: 1.1;
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+      }
+
+      /* Winner animations */
+      .itemCol.winner::after {
+        content: "LOCKED IN";
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(45deg, #ffb700, #ff7b00);
+        color: black;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        white-space: nowrap;
+        box-shadow: 0 0 10px rgba(255, 183, 0, 0.6);
+      }
+
+      .final-flash {
+        animation: finalFlash 0.6s ease-out;
+      }
+
+      @keyframes finalFlash {
+        0% {
+          box-shadow: 0 0 120px rgba(255, 215, 0, 1);
+          transform: scale(1.1);
+        }
+        100% {
+          box-shadow: 0 0 40px rgba(255, 140, 0, 0.7);
+          transform: scale(1.05);
+        }
+      }
+
+      .winner-pulsate {
+        animation: pulsateWinner 2s ease-in-out infinite;
+      }
+
+      @keyframes pulsateWinner {
+        0%,
+        100% {
+          box-shadow: 0 0 15px rgba(255, 183, 0, 0.5);
+          transform: scale(1.02);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(255, 183, 0, 1);
+          transform: scale(1.04);
+        }
+      }
+
+      .mega-flash {
+        animation: megaFlash 0.7s ease-in-out;
+      }
+
+      @keyframes megaFlash {
+        0% {
+          box-shadow: 0 0 150px rgba(255, 215, 0, 1);
+          transform: scale(1.15);
+          filter: brightness(1.5);
+        }
+        100% {
+          box-shadow: 0 0 60px rgba(255, 140, 0, 0.7);
+          transform: scale(1.05);
+          filter: brightness(1.2);
+        }
+      }
+
+      .locked-tag {
+        position: absolute;
+        top: 5px;
+        right: -5px;
+        background: linear-gradient(45deg, #ffb700, #ff7b00);
+        color: black;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: bold;
+        transform: scale(0);
+        opacity: 0;
+        z-index: 10;
+        white-space: nowrap;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .locked-tag.show {
+        animation: tagPop 0.3s ease-out forwards;
+      }
+
+      @keyframes tagPop {
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* Enhanced celebration animations */
+      @keyframes rapidPulse {
+        0%, 100% { 
+          transform: scale(1);
+          filter: brightness(1);
+        }
+        50% { 
+          transform: scale(1.15);
+          filter: brightness(1.8);
+        }
+      }
+
+      @keyframes explosiveFlash {
+        0% { 
+          transform: scale(1);
+          filter: brightness(1) saturate(1);
+          box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        50% { 
+          transform: scale(1.3);
+          filter: brightness(3) saturate(2);
+          box-shadow: 0 0 150px rgba(255, 215, 0, 1);
+        }
+        100% { 
+          transform: scale(1.1);
+          filter: brightness(1.5) saturate(1.5);
+          box-shadow: 0 0 80px rgba(255, 215, 0, 0.8);
+        }
+      }
+
+      @keyframes superPulse {
+        0%, 100% { 
+          transform: scale(1.05);
+          filter: brightness(1.5);
+        }
+        50% { 
+          transform: scale(1.2);
+          filter: brightness(2.5);
+        }
+      }
+
+      @keyframes victoryShake {
+        0%, 100% { transform: translateX(0); }
+        10% { transform: translateX(-10px) translateY(-5px); }
+        20% { transform: translateX(10px) translateY(5px); }
+        30% { transform: translateX(-8px) translateY(-3px); }
+        40% { transform: translateX(8px) translateY(3px); }
+        50% { transform: translateX(-6px) translateY(-2px); }
+        60% { transform: translateX(6px) translateY(2px); }
+        70% { transform: translateX(-4px) translateY(-1px); }
+        80% { transform: translateX(4px) translateY(1px); }
+        90% { transform: translateX(-2px); }
+      }
+
+      .ultra-flash {
+        animation: ultraFlash 0.4s ease-out;
+      }
+
+      @keyframes ultraFlash {
+        0% {
+          box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+          transform: scale(1.1);
+          filter: brightness(1.5);
+        }
+        50% {
+          box-shadow: 0 0 200px rgba(255, 215, 0, 1), 0 0 300px rgba(255, 140, 0, 0.8);
+          transform: scale(1.4);
+          filter: brightness(3) hue-rotate(15deg);
+        }
+        100% {
+          box-shadow: 0 0 100px rgba(255, 215, 0, 0.9);
+          transform: scale(1.2);
+          filter: brightness(2);
+        }
+      }
+
+      /* Handicap Display */
+      .handicap-section {
+        padding: 1rem 2rem;
+        max-width: 800px;
+        margin: 0.5rem auto 2rem auto;
+      }
+
+      .handicap-container {
+        background: var(--dark-gray);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid var(--blood-red);
+        text-align: center;
+      }
+
+      .handicap-display h3 {
+        color: var(--neon-red);
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .handicap-name {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--gold);
+        margin-bottom: 0.5rem;
+      }
+
+      .handicap-desc {
+        color: #ccc;
+        font-style: italic;
+      }
+
+      /* Copy Button */
+      .copy-button {
+        background: var(--rage-gradient);
+        border: none;
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--white);
+        cursor: pointer;
+        border-radius: 50px;
+        transition: all 0.3s;
+        box-shadow: 0 10px 30px rgba(220, 20, 60, 0.3);
+        margin: 2rem 0;
+      }
+
+      .copy-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(255, 7, 58, 0.5);
+      }
+
+      .copy-button:active {
+        transform: translateY(0);
+      }
+
+      /* History Section */
+      .history-section {
+        padding: 4rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .history-section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        background: var(--rage-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* Rage Roulette Container */
+      .rage-roulette-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(139, 0, 0, 0.95);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+      }
+
+      .rage-roulette-container.hidden {
+        display: none !important;
+      }
+
+      /* History Entry */
+      .rage-history-entry {
+        background: var(--dark-gray);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--blood-red);
+        opacity: 0;
+        transform: translateY(20px);
+        animation: slideIn 0.5s forwards;
+      }
+
+      .rage-history-entry.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @keyframes slideIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 4rem;
+        }
+
+        .rage-button {
+          padding: 1.5rem 2rem;
+          font-size: 1.2rem;
+        }
+
+        .stats-bar {
+          grid-template-columns: 1fr;
+        }
+
+        .slot-machine-wrapper {
+          padding: 1.5rem;
+        }
+
+        #output {
+          gap: 0.5rem;
+        }
+
+        .item-container {
+          width: 100px;
+          height: 140px;
+        }
+
+        .placeholder-container {
+          width: 100px;
+          height: 140px;
+        }
+
+        .itemCol img {
+          width: 100px;
+          height: 100px;
+        }
+
+        .itemCol p {
+          font-size: 20px;
+        }
+      }
+
+      /* Selected Class Display */
+      .selected-class-container {
+        background: var(--dark-gray);
+        border: 2px solid var(--blood-red);
+        border-radius: 15px;
+        padding: 1rem 2rem;
+        text-align: center;
+        max-width: 400px;
+      }
+
+      .selected-class-container h2 {
+        color: var(--neon-red);
+        font-size: 1.2rem;
+        margin: 0;
+      }
+
+      #selected-class {
+        color: var(--gold);
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Animated Background -->
+    <div class="rage-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="nav-content">
+        <div class="nav-links">
+          <a href="../index.html">Home</a>
+          <a href="../patch-notes/index.html">Patch Notes</a>
+          <a href="#leaderboard">Leaderboard</a>
+        </div>
+        <button class="feedback-btn">Feedback</button>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero-section">
+      <div class="glitch-container">
+        <h1 class="hero-title glitch" data-text="RAGE QUIT SIMULATOR">
+          RAGE QUIT<br />SIMULATOR
+        </h1>
+      </div>
+      <p class="hero-subtitle">
+        Spin for the worst loadouts, stack
+        punishments, and see how long you can survive.
+      </p>
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-value" id="totalRageQuits">12,847</div>
+          <div class="stat-label">Total Rage Quits</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="currentStreak">0</div>
+          <div class="stat-label">Your Suffering Streak</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="worstPunishment">∞</div>
+          <div class="stat-label">Max Punishment Level</div>
+        </div>
+      </div>
+
+      <button class="rage-button" id="rage-quit-btn">
+        <span>SPIN FOR SUFFERING 💀</span>
+      </button>
+    </section>
+
+    <!-- Slot Machine Section -->
+    <section class="slot-machine-section">
+      <!-- Selected Class Display -->
+      <div style="width: 100%; display: flex; justify-content: center; margin: 20px 0;">
+        <div id="selected-class-container" class="selected-class-container">
+          <h2>Selected Class: <span id="selected-class">None</span></h2>
+        </div>
+      </div>
+
+      <div class="slot-machine-wrapper">
+        <div id="output" class="slot-machine-output">
+          <div class="placeholder-container">
+            <img
+              src="../images/placeholder.webp"
+              alt="?"
+              width="80"
+              height="80"
+              loading="lazy"
+            />
+            <p>Weapon</p>
+          </div>
+          <div class="placeholder-container">
+            <img
+              src="../images/placeholder.webp"
+              alt="?"
+              width="80"
+              height="80"
+              loading="lazy"
+            />
+            <p>Specialization</p>
+          </div>
+          <div class="placeholder-container">
+            <img
+              src="../images/placeholder.webp"
+              alt="?"
+              width="80"
+              height="80"
+              loading="lazy"
+            />
+            <p>Gadget 1</p>
+          </div>
+          <div class="placeholder-container">
+            <img
+              src="../images/placeholder.webp"
+              alt="?"
+              width="80"
+              height="80"
+              loading="lazy"
+            />
+            <p>Gadget 2</p>
+          </div>
+          <div class="placeholder-container">
+            <img
+              src="../images/placeholder.webp"
+              alt="?"
+              width="80"
+              height="80"
+              loading="lazy"
+            />
+            <p>Gadget 3</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copy Button -->
+      <div style="text-align: center; margin-top: 2rem">
+        <button
+          class="copy-button"
+          id="copyLoadoutButton"
+          style="display: none"
+        >
+          📋 COPY RAGE LOADOUT
+        </button>
+      </div>
+    </section>
+
+    <!-- Handicap Container -->
+    <div class="handicap-section">
+      <div id="handicap-container" class="handicap-container">
+        <!-- Handicap will be inserted here by JavaScript -->
+        <div class="placeholder-handicap">
+          <p>Incoming Handicap... Prepare to cry.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Section -->
+    <section class="history-section">
+      <h2>Your Path of Pain</h2>
+      <div id="history-list">
+        <!-- History cards will be added here -->
+      </div>
+      <div style="text-align: center; margin-top: 2rem;">
+        <button id="clear-history" class="copy-button">Clear History</button>
+      </div>
+    </section>
+
+    <!-- Hidden elements for compatibility -->
+    <div id="double-or-nothing-container" style="display: none"></div>
+    <div
+      id="rage-roulette-container"
+      class="rage-roulette-container hidden"
+    ></div>
+
+    <!-- Audio Elements -->
+    <audio id="clickSound" src="sounds/tabby.mp3" preload="auto"></audio>
+    <audio id="rageAlarmSound" src="sounds/glitch.mp3" preload="auto"></audio>
+    <audio
+      id="rageBuzzerSound"
+      src="sounds/metal-clank.mp3"
+      preload="auto"
+    ></audio>
+    <audio id="rageLaughSound" src="sounds/whisper.mp3" preload="auto"></audio>
+
+    <!-- Scripts -->
+    <script src="rage-roulette-animations.js"></script>
+    <script src="loadout-app.js"></script>
+
+    <!-- Particles Creation -->
+    <script>
+      // Create particles for background effect
+      function createParticles() {
+        const container = document.createElement("div");
+        container.id = "particles";
+        container.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 1;
+        `;
+        document.body.appendChild(container);
+
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement("div");
+          particle.style.cssText = `
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--neon-red);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatParticle 10s infinite;
+            left: ${Math.random() * 100}%;
+            animation-delay: ${Math.random() * 10}s;
+            animation-duration: ${10 + Math.random() * 10}s;
+          `;
+          container.appendChild(particle);
+        }
+      }
+
+      // Add particle animation keyframes
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes floatParticle {
+          0% {
+            opacity: 0;
+            transform: translateY(100vh) scale(0);
+          }
+          10% {
+            opacity: 1;
+            transform: translateY(90vh) scale(1);
+          }
+          90% {
+            opacity: 1;
+            transform: translateY(10vh) scale(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(0) scale(0);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+
+      createParticles();
+    </script>
+  </body>
+</html>
