@@ -1019,6 +1019,19 @@ html {
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* Desktop History - 25% larger images */
+@media (min-width: 769px) {
+  .history-entry .item-icon {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .history-entry .item-icon.small {
+    width: 35px;
+    height: 35px;
+  }
+}
+
 .item-name {
   transition: font-size 0.3s ease;
   font-size: 14px;
@@ -1693,7 +1706,7 @@ body.flexStyle {
 .btnRow {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 15px;
 }
 
 .btnRow + .btnRow {
@@ -3614,12 +3627,6 @@ iframe#bmc-button {
   justify-content: center;
   gap: 15px;
 }
-/* 🔹 Flexbox for Class Buttons */
-.btnRow {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
 
 @media (max-width: 480px) {
   .class-selection h2 {
@@ -5348,7 +5355,7 @@ html {
 .btnRow {
   display: flex;
   justify-content: center;
-  gap: 0px; /* <-- this is the spacing between your class buttons */
+  gap: 15px; /* Consistent spacing between class buttons */
 }
 
 

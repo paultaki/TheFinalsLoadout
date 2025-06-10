@@ -127,6 +127,8 @@
       padding: 1rem 0;
       background: rgba(0, 0, 0, 0.2);
       backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 500;
     }
 
     .main-nav a {
@@ -140,6 +142,16 @@
     .main-nav a:hover,
     .main-nav a.active {
       background-color: var(--neon-blue);
+    }
+    
+    /* Mobile nav positioning fix */
+    @media (max-width: 768px) {
+      .main-nav {
+        margin-top: 50px;
+        z-index: 1001;
+        position: relative;
+        background: rgba(0, 0, 0, 0.8);
+      }
     }
 
     .headerSection {
@@ -447,8 +459,8 @@
       }
       
       .history-entry .loadout-item img {
-        width: 32px;
-        height: 32px;
+        width: 38px;
+        height: 38px;
         border-radius: 4px;
         object-fit: cover;
         margin-bottom: 4px;
@@ -530,7 +542,7 @@
         background: rgba(255, 255, 255, 0.15);
       }
       
-      /* Toggle Buttons - Filter Only */
+      /* Toggle Buttons - Filter and Audio visible on mobile */
       .filter-toggle-button {
         position: fixed;
         right: 16px;
@@ -541,12 +553,12 @@
         background: rgba(0, 0, 0, 0.7);
         border: 2px solid rgba(255, 255, 255, 0.2);
         color: #fff;
-        display: flex;
+        display: flex !important;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         transition: all 0.3s ease;
-        z-index: 999;
+        z-index: 1000;
         backdrop-filter: blur(10px);
       }
       

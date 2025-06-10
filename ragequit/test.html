@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>RAGE QUIT SIMULATOR | The Finals' Most Brutal Challenge</title>
+    <meta
+      name="description"
+      content="The ultimate masochist's playground. Spin for the worst loadouts, stack punishments, and see how long you can survive."
+    />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --blood-red: #dc143c;
+        --dark-red: #8b0000;
+        --neon-red: #ff073a;
+        --black: #0a0a0a;
+        --dark-gray: #1a1a1a;
+        --medium-gray: #2a2a2a;
+        --light-gray: #3a3a3a;
+        --white: #ffffff;
+        --gold: #ffd700;
+        --rage-gradient: linear-gradient(
+          135deg,
+          var(--dark-red),
+          var(--blood-red),
+          var(--neon-red)
+        );
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--black);
+        color: var(--white);
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Animated Background */
+      .rage-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: radial-gradient(
+            circle at 20% 50%,
+            var(--dark-red) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            var(--blood-red) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 20%,
+            var(--neon-red) 0%,
+            transparent 50%
+          ),
+          var(--black);
+        filter: blur(100px);
+        animation: rageFlow 20s ease-in-out infinite;
+      }
+
+      @keyframes rageFlow {
+        0%,
+        100% {
+          transform: scale(1) rotate(0deg);
+        }
+        33% {
+          transform: scale(1.1) rotate(120deg);
+        }
+        66% {
+          transform: scale(0.9) rotate(240deg);
+        }
+      }
+
+      /* Navigation */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding: 1.5rem 2rem;
+        backdrop-filter: blur(20px);
+        background: rgba(10, 10, 10, 0.7);
+        border-bottom: 1px solid rgba(220, 20, 60, 0.3);
+      }
+
+      .nav-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: var(--white);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+        position: relative;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--neon-red);
+        transition: width 0.3s;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      .feedback-btn {
+        background: var(--rage-gradient);
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        color: var(--white);
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .feedback-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(255, 7, 58, 0.4);
+      }
+
+      /* Hero Section */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 8rem 2rem 4rem;
+        position: relative;
+      }
+
+      .glitch-container {
+        position: relative;
+        margin-bottom: 2rem;
+      }
+
+      .hero-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(4rem, 12vw, 10rem);
+        text-align: center;
+        line-height: 0.9;
+        letter-spacing: -2px;
+        background: var(--rage-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        animation: glitchText 3s infinite;
+      }
+
+      @keyframes glitchText {
+        0%,
+        100% {
+          text-shadow: 2px 2px 0 var(--neon-red), -2px -2px 0 var(--dark-red);
+        }
+        25% {
+          text-shadow: -2px 2px 0 var(--neon-red), 2px -2px 0 var(--dark-red);
+        }
+        50% {
+          text-shadow: 2px -2px 0 var(--neon-red), -2px 2px 0 var(--dark-red);
+        }
+        75% {
+          text-shadow: -2px -2px 0 var(--neon-red), 2px 2px 0 var(--dark-red);
+        }
+      }
+
+      .hero-subtitle {
+        font-size: clamp(1.2rem, 3vw, 2rem);
+        text-align: center;
+        margin-bottom: 3rem;
+        opacity: 0.8;
+        max-width: 800px;
+      }
+
+      /* Main Button */
+      .rage-button {
+        background: var(--dark-gray);
+        border: 3px solid var(--blood-red);
+        padding: 2rem 4rem;
+        font-size: 1.5rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--white);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+        animation: pulseBorder 2s infinite;
+      }
+
+      @keyframes pulseBorder {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 40px rgba(255, 7, 58, 0.8);
+        }
+      }
+
+      .rage-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: var(--rage-gradient);
+        transition: left 0.5s;
+      }
+
+      .rage-button:hover::before {
+        left: 0;
+      }
+
+      .rage-button span {
+        position: relative;
+        z-index: 1;
+      }
+
+      .rage-button:hover {
+        transform: scale(1.05);
+        border-color: var(--neon-red);
+      }
+
+      .rage-button:active {
+        transform: scale(0.98);
+      }
+
+      /* Stats Bar */
+      .stats-bar {
+        background: var(--dark-gray);
+        padding: 2rem;
+        margin: 2rem 0;
+        border-radius: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        width: 100%;
+        border: 1px solid var(--light-gray);
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 3rem;
+        font-weight: 900;
+        background: var(--rage-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Slot Machine Container */
+      .slot-machine-section {
+        padding: 4rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .slot-machine-wrapper {
+        background: var(--dark-gray);
+        border-radius: 30px;
+        padding: 3rem;
+        border: 2px solid var(--blood-red);
+        box-shadow: 0 20px 60px rgba(220, 20, 60, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .slot-machine-wrapper::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 7, 58, 0.1) 0%,
+          transparent 70%
+        );
+        animation: rotate 20s linear infinite;
+      }
+
+      @keyframes rotate {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Slot Output - Preserve existing structure */
+      #output {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Placeholder styles to match original */
+      .placeholder-container {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #444, #222);
+        border-radius: 12px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 190px;
+        width: 140px;
+        text-align: center;
+        padding: 10px 0;
+      }
+
+      .placeholder-container img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+        opacity: 0.7;
+        margin-bottom: 8px;
+      }
+
+      .placeholder-container p {
+        font-size: 28px;
+        color: #fff;
+        margin: 0;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+
+      /* Item container styles for when slots are spinning */
+      .item-container {
+        flex: 0 0 140px;
+        width: 140px;
+        height: 200px;
+        margin: 0;
+        background-color: #fff;
+        border: 3px solid #ffcc00 !important;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .items-container {
+        display: flex !important;
+        gap: 12px !important;
+        justify-content: center !important;
+      }
+
+      .scroll-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .itemCol {
+        padding-top: 5px;
+        will-change: transform;
+        backface-visibility: hidden;
+        transform: translate3d(0, 0, 0);
+        opacity: 0.9;
+      }
+
+      .itemCol img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+        border-radius: 5px;
+        width: 140px;
+        height: 144px;
+        object-fit: cover;
+      }
+
+      .itemCol p {
+        color: #000;
+        padding: 8px 0 10px;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0;
+        white-space: nowrap;
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+      }
+
+      /* Punishment Stack */
+      .punishment-stack {
+        background: var(--dark-gray);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 2rem auto;
+        max-width: 800px;
+        border: 1px solid var(--blood-red);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .punishment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .punishment-title {
+        font-size: 1.5rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .suffering-meter {
+        background: var(--black);
+        border-radius: 50px;
+        padding: 0.5rem 1.5rem;
+        border: 2px solid var(--neon-red);
+        font-weight: 700;
+      }
+
+      .punishment-item {
+        background: var(--black);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--light-gray);
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .punishment-item::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--rage-gradient);
+      }
+
+      .punishment-item:hover {
+        transform: translateX(10px);
+        border-color: var(--blood-red);
+      }
+
+      /* Copy Button */
+      .copy-button {
+        background: var(--rage-gradient);
+        border: none;
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--white);
+        cursor: pointer;
+        border-radius: 50px;
+        transition: all 0.3s;
+        box-shadow: 0 10px 30px rgba(220, 20, 60, 0.3);
+      }
+
+      .copy-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(255, 7, 58, 0.5);
+      }
+
+      .copy-button:active {
+        transform: translateY(0);
+      }
+      .double-nothing-section {
+        text-align: center;
+        padding: 3rem 2rem;
+      }
+
+      .double-nothing-btn {
+        background: var(--black);
+        border: 3px solid var(--gold);
+        padding: 1.5rem 3rem;
+        font-size: 1.2rem;
+        font-weight: 900;
+        color: var(--gold);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .double-nothing-btn::after {
+        content: "⚠️ RISK IT ALL ⚠️";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .double-nothing-btn:hover::after {
+        opacity: 1;
+      }
+
+      .double-nothing-btn:hover span {
+        opacity: 0;
+      }
+
+      /* History Section */
+      .history-section {
+        padding: 4rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .history-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .history-card {
+        background: var(--dark-gray);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid var(--light-gray);
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .history-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--rage-gradient);
+      }
+
+      .history-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--blood-red);
+        box-shadow: 0 20px 40px rgba(220, 20, 60, 0.3);
+      }
+
+      /* Leaderboard */
+      .leaderboard {
+        background: var(--dark-gray);
+        border-radius: 30px;
+        padding: 3rem;
+        margin: 4rem auto;
+        max-width: 1000px;
+        border: 2px solid var(--gold);
+        text-align: center;
+      }
+
+      .leaderboard-title {
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, var(--gold), #ffa500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .leaderboard-item {
+        background: var(--black);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s;
+      }
+
+      .leaderboard-item:hover {
+        transform: translateX(10px);
+        border: 1px solid var(--gold);
+      }
+
+      /* Footer */
+      .footer {
+        background: var(--dark-gray);
+        padding: 3rem 2rem;
+        text-align: center;
+        border-top: 1px solid var(--light-gray);
+        margin-top: 6rem;
+      }
+
+      /* Particles */
+      .rage-particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: var(--neon-red);
+        border-radius: 50%;
+        opacity: 0;
+        animation: floatParticle 10s infinite;
+      }
+
+      @keyframes floatParticle {
+        0% {
+          opacity: 0;
+          transform: translateY(100vh) scale(0);
+        }
+        10% {
+          opacity: 1;
+          transform: translateY(90vh) scale(1);
+        }
+        90% {
+          opacity: 1;
+          transform: translateY(10vh) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(0) scale(0);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 4rem;
+        }
+
+        .rage-button {
+          padding: 1.5rem 2rem;
+          font-size: 1.2rem;
+        }
+
+        .slot-machine-output {
+          flex-wrap: wrap;
+        }
+
+        .stats-bar {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Loading Animation */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--black);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s;
+      }
+
+      .loading-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .loading-spinner {
+        width: 100px;
+        height: 100px;
+        border: 4px solid var(--dark-gray);
+        border-top: 4px solid var(--neon-red);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Glitch Effect */
+      .glitch {
+        position: relative;
+      }
+
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .glitch::before {
+        animation: glitch-1 0.5s infinite;
+        color: var(--neon-red);
+        z-index: -1;
+      }
+
+      .glitch::after {
+        animation: glitch-2 0.5s infinite;
+        color: var(--dark-red);
+        z-index: -1;
+      }
+
+      @keyframes glitch-1 {
+        0%,
+        100% {
+          clip-path: inset(0 0 0 0);
+          transform: translate(0);
+        }
+        20% {
+          clip-path: inset(33% 0 0 0);
+          transform: translate(-2px, 2px);
+        }
+        40% {
+          clip-path: inset(0 0 66% 0);
+          transform: translate(2px, -2px);
+        }
+        60% {
+          clip-path: inset(0 0 0 0);
+          transform: translate(0);
+        }
+        80% {
+          clip-path: inset(0 0 33% 0);
+          transform: translate(-2px, -2px);
+        }
+      }
+
+      @keyframes glitch-2 {
+        0%,
+        100% {
+          clip-path: inset(0 0 0 0);
+          transform: translate(0);
+        }
+        20% {
+          clip-path: inset(0 0 66% 0);
+          transform: translate(2px, -2px);
+        }
+        40% {
+          clip-path: inset(33% 0 0 0);
+          transform: translate(-2px, 2px);
+        }
+        60% {
+          clip-path: inset(0 0 0 0);
+          transform: translate(0);
+        }
+        80% {
+          clip-path: inset(66% 0 0 0);
+          transform: translate(2px, 2px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Animated Background -->
+    <div class="rage-bg"></div>
+
+    <!-- Particles -->
+    <div class="rage-particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="nav-content">
+        <div class="nav-links">
+          <a href="../index.html">Home</a>
+          <a href="../patch-notes/index.html">Patch Notes</a>
+          <a href="#leaderboard">Leaderboard</a>
+        </div>
+        <button class="feedback-btn">Feedback</button>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="glitch-container">
+        <h1 class="hero-title glitch" data-text="RAGE QUIT SIMULATOR">
+          RAGE QUIT<br />SIMULATOR
+        </h1>
+      </div>
+      <p class="hero-subtitle">
+        The ultimate masochist's playground. Spin for the worst loadouts, stack
+        punishments, and see how long you can survive.
+      </p>
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-value" id="totalRageQuits">12,847</div>
+          <div class="stat-label">Total Rage Quits</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="currentStreak">0</div>
+          <div class="stat-label">Your Suffering Streak</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="worstPunishment">∞</div>
+          <div class="stat-label">Max Punishment Level</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="avgSurvival">2:34</div>
+          <div class="stat-label">Avg Survival Time</div>
+        </div>
+      </div>
+
+      <button class="rage-button" id="rage-quit-btn">
+        <span>SPIN FOR SUFFERING 💀</span>
+      </button>
+    </section>
+
+    <!-- Slot Machine Section -->
+    <section class="slot-machine-section">
+      <div class="slot-machine-wrapper">
+        <div id="output" class="slot-machine-output">
+          <!-- Preserve existing slot machine structure -->
+          <div class="placeholder-container">
+            <img
+              src="https://thefinalsloadout.com/images/placeholder.webp"
+              alt="?"
+              width="80"
+              height="80"
+            />
+            <p>Weapon</p>
+          </div>
+          <div class="placeholder-container">
+            <img
+              src="https://thefinalsloadout.com/images/placeholder.webp"
+              alt="?"
+              width="80"
+              height="80"
+            />
+            <p>Specialization</p>
+          </div>
+          <div class="placeholder-container">
+            <img
+              src="https://thefinalsloadout.com/images/placeholder.webp"
+              alt="?"
+              width="80"
+              height="80"
+            />
+            <p>Gadget 1</p>
+          </div>
+          <div class="placeholder-container">
+            <img
+              src="https://thefinalsloadout.com/images/placeholder.webp"
+              alt="?"
+              width="80"
+              height="80"
+            />
+            <p>Gadget 2</p>
+          </div>
+          <div class="placeholder-container">
+            <img
+              src="https://thefinalsloadout.com/images/placeholder.webp"
+              alt="?"
+              width="80"
+              height="80"
+            />
+            <p>Gadget 3</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Punishment Stack -->
+      <div class="punishment-stack" id="punishment-stack" style="display: none">
+        <div class="punishment-header">
+          <h3 class="punishment-title">Active Punishments</h3>
+          <div class="suffering-meter">
+            Suffering Level: <span id="suffering-level">1</span>x
+          </div>
+        </div>
+        <div id="punishment-list">
+          <!-- Punishments will be added here -->
+        </div>
+      </div>
+
+      <!-- Copy Button -->
+      <div style="text-align: center; margin-top: 2rem">
+        <button
+          class="copy-button"
+          id="copyLoadoutButton"
+          style="display: none"
+        >
+          📋 COPY RAGE LOADOUT
+        </button>
+      </div>
+
+      <!-- Double or Nothing -->
+      <div
+        class="double-nothing-section"
+        id="double-nothing"
+        style="display: none"
+      >
+        <button class="double-nothing-btn" id="double-nothing-btn">
+          <span>DOUBLE OR NOTHING</span>
+        </button>
+        <p style="margin-top: 1rem; opacity: 0.7">
+          Risk it all for another punishment... or maybe get lucky?
+        </p>
+      </div>
+    </section>
+
+    <!-- History Section -->
+    <section class="history-section">
+      <h2 style="font-size: 2.5rem; margin-bottom: 2rem; text-align: center">
+        Your Path of Pain
+      </h2>
+      <div class="history-grid" id="history-list">
+        <!-- History cards will be added here -->
+      </div>
+    </section>
+
+    <!-- Leaderboard -->
+    <section class="leaderboard" id="leaderboard">
+      <h2 class="leaderboard-title">🏆 HALL OF SUFFERING 🏆</h2>
+      <div class="leaderboard-item">
+        <div>
+          <strong>#1 xXPainMasterXx</strong>
+          <span style="opacity: 0.7; margin-left: 1rem"
+            >15 Punishments Survived</span
+          >
+        </div>
+        <span style="color: var(--gold)">12:47</span>
+      </div>
+      <div class="leaderboard-item">
+        <div>
+          <strong>#2 TiltedTerry</strong>
+          <span style="opacity: 0.7; margin-left: 1rem"
+            >12 Punishments Survived</span
+          >
+        </div>
+        <span style="color: var(--gold)">10:23</span>
+      </div>
+      <div class="leaderboard-item">
+        <div>
+          <strong>#3 RageQuitRandy</strong>
+          <span style="opacity: 0.7; margin-left: 1rem"
+            >11 Punishments Survived</span
+          >
+        </div>
+        <span style="color: var(--gold)">9:15</span>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        © 2025 TheFinalsLoadout.com | Created by <strong>Paul Takisaki</strong>
+      </p>
+      <p style="margin-top: 1rem; opacity: 0.7">
+        Warning: This simulator may cause actual rage quits. Play at your own
+        risk.
+      </p>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Hidden elements for compatibility -->
+    <div id="selected-class-container" style="display: none">
+      <span id="selected-class">None</span>
+    </div>
+    <div id="handicap-container" style="display: none"></div>
+    <div
+      id="rage-roulette-container"
+      class="rage-roulette-container hidden"
+    ></div>
+
+    <!-- Audio Elements -->
+    <audio id="clickSound" src="sounds/tabby.mp3" preload="auto"></audio>
+    <audio id="rageAlarmSound" src="sounds/glitch.mp3" preload="auto"></audio>
+    <audio
+      id="rageBuzzerSound"
+      src="sounds/metal-clank.mp3"
+      preload="auto"
+    ></audio>
+    <audio id="rageLaughSound" src="sounds/whisper.mp3" preload="auto"></audio>
+
+    <script>
+      // Create particles
+      function createParticles() {
+        const container = document.getElementById("particles");
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+          particle.style.left = Math.random() * 100 + "%";
+          particle.style.animationDelay = Math.random() * 10 + "s";
+          particle.style.animationDuration = 10 + Math.random() * 10 + "s";
+          container.appendChild(particle);
+        }
+      }
+      createParticles();
+
+      // Animate stats
+      function animateValue(id, start, end, duration) {
+        const obj = document.getElementById(id);
+        const range = end - start;
+        const startTime = performance.now();
+
+        function update(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const current = Math.floor(start + range * progress);
+          obj.textContent = current.toLocaleString();
+
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          }
+        }
+
+        requestAnimationFrame(update);
+      }
+
+      // Animate stats on load
+      window.addEventListener("load", () => {
+        animateValue("totalRageQuits", 0, 12847, 2000);
+      });
+
+      // Update clock for average survival
+      setInterval(() => {
+        const times = ["1:45", "2:12", "2:34", "3:01", "2:56"];
+        const current = document.getElementById("avgSurvival");
+        current.textContent = times[Math.floor(Math.random() * times.length)];
+      }, 5000);
+    </script>
+
+    <!-- Include your existing scripts -->
+    <script src="rage-roulette-animations.js"></script>
+    <script src="app.js"></script>
+
+    <!-- Bridge Script to Connect New Design with Existing Functionality -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Connect the new spin button to the existing functionality
+        const newSpinButton = document.getElementById("rage-quit-btn");
+
+        if (newSpinButton) {
+          newSpinButton.addEventListener("click", function () {
+            console.log("New spin button clicked!");
+
+            // Show loading overlay
+            const loadingOverlay = document.getElementById("loading");
+            if (loadingOverlay) {
+              loadingOverlay.classList.add("active");
+            }
+
+            // Call the existing spin function
+            if (typeof spinRageQuitLoadout === "function") {
+              spinRageQuitLoadout();
+
+              // Hide loading after a delay
+              setTimeout(() => {
+                if (loadingOverlay) {
+                  loadingOverlay.classList.remove("active");
+                }
+
+                // Show punishment stack and double or nothing
+                document.getElementById("punishment-stack").style.display =
+                  "block";
+                document.getElementById("double-nothing").style.display =
+                  "block";
+                document.getElementById("copyLoadoutButton").style.display =
+                  "inline-block";
+
+                // Update suffering level
+                updateSufferingLevel();
+              }, 3000);
+            } else if (
+              window.rageRouletteSystem &&
+              typeof window.rageRouletteSystem.startFullSequence === "function"
+            ) {
+              // Try the roulette system if available
+              window.rageRouletteSystem.startFullSequence();
+
+              setTimeout(() => {
+                if (loadingOverlay) {
+                  loadingOverlay.classList.remove("active");
+                }
+                document.getElementById("punishment-stack").style.display =
+                  "block";
+                document.getElementById("double-nothing").style.display =
+                  "block";
+                document.getElementById("copyLoadoutButton").style.display =
+                  "inline-block";
+              }, 3000);
+            } else {
+              console.error(
+                "Spin function not found! Make sure app.js is loaded."
+              );
+              if (loadingOverlay) {
+                loadingOverlay.classList.remove("active");
+              }
+            }
+          });
+        }
+
+        // Function to update suffering level display
+        function updateSufferingLevel() {
+          const sufferingEl = document.getElementById("suffering-level");
+          if (sufferingEl && window.state && window.state.sufferingLevel) {
+            sufferingEl.textContent = window.state.sufferingLevel;
+          }
+        }
+
+        // Update current streak
+        let currentStreak = 0;
+        setInterval(() => {
+          if (window.state && window.state.isSpinning) {
+            currentStreak++;
+            document.getElementById("currentStreak").textContent =
+              currentStreak;
+          }
+        }, 1000);
+
+        // Add punishment items when they're selected
+        if (window.state) {
+          const originalDisplayHandicap = window.displaySelectedHandicap;
+          window.displaySelectedHandicap = function () {
+            if (originalDisplayHandicap) {
+              originalDisplayHandicap.apply(this, arguments);
+            }
+
+            // Add to our new punishment list
+            if (window.state.selectedHandicap) {
+              const punishmentList = document.getElementById("punishment-list");
+              const punishmentItem = document.createElement("div");
+              punishmentItem.className = "punishment-item";
+              punishmentItem.innerHTML = `
+              <h4 style="margin-bottom: 0.5rem; color: var(--neon-red);">${
+                window.state.selectedHandicap
+              }</h4>
+              <p style="opacity: 0.8; margin: 0;">${
+                window.state.selectedHandicapDesc || "No description"
+              }</p>
+            `;
+              punishmentList.appendChild(punishmentItem);
+            }
+          };
+        }
+
+        // Initialize with test button click for debugging
+        console.log("Scripts loaded. Available functions:", {
+          spinRageQuitLoadout: typeof spinRageQuitLoadout,
+          rageRouletteSystem: typeof window.rageRouletteSystem,
+          state: typeof window.state,
+        });
+      });
+    </script>
+  </body>
+</html>

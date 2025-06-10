@@ -1377,10 +1377,15 @@ function finalizeSpin() {
     // ✅ Display the selected handicap and re-enable button
     displaySelectedHandicap();
     
+    // Record this spin in history
+    recordSpinInHistory();
+    
     setTimeout(() => {
-      document.getElementById("rage-quit-btn").removeAttribute("disabled");
-      state.isSpinning = false; // Reset state to allow new spin
-      console.log("✅ Button re-enabled and ready for next spin");
+      // Add celebration animation before reset
+      triggerCelebrationAnimation();
+      
+      // Reset state and re-enable button
+      resetSpinState();
       
       // Show Double or Nothing option
       showDoubleOrNothingOption();
@@ -1934,3 +1939,151 @@ function showDoubleOrNothingOption() {
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(initializeDoubleOrNothing, 100);
 });
+
+// Issue 5: Add Celebration Animation
+function triggerCelebrationAnimation() {
+  console.log("🎉 Triggering celebration animation");
+  
+  // Flash all item containers
+  const itemContainers = document.querySelectorAll('.placeholder-container, .item-container');
+  itemContainers.forEach((container, index) => {
+    setTimeout(() => {
+      container.style.animation = 'celebrationPulse 0.8s ease-in-out';
+      container.style.boxShadow = '0 0 30px rgba(255, 68, 68, 0.8)';
+    }, index * 100);
+  });
+  
+  // Show success message overlay
+  const overlay = document.createElement('div');
+  overlay.innerHTML = `
+    <div style="
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.9);
+      border: 3px solid #ff4444;
+      border-radius: 15px;
+      padding: 20px 40px;
+      z-index: 10000;
+      color: #ff6666;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(255, 68, 68, 0.6);
+      animation: celebrationBounce 1s ease-out;
+    ">
+      💀 RAGE LOADOUT COMPLETE! 💀<br>
+      <span style="font-size: 16px; color: #ffaaaa;">Now go suffer!</span>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  
+  // Remove overlay after 2 seconds
+  setTimeout(() => {
+    overlay.remove();
+    // Reset item styles
+    itemContainers.forEach(container => {
+      container.style.animation = '';
+      container.style.boxShadow = '';
+    });
+  }, 2000);
+}
+
+// Issue 6: Fix State Reset
+function resetSpinState() {
+  console.log("🔄 Resetting spin state");
+  
+  // Reset button state
+  const spinButton = document.getElementById("rage-quit-btn");
+  if (spinButton) {
+    spinButton.removeAttribute("disabled");
+    spinButton.classList.remove('spinning');
+  }
+  
+  // Reset animation states
+  state.isSpinning = false;
+  if (window.rageRouletteSystem) {
+    window.rageRouletteSystem.animating = false;
+  }
+  
+  // Clear any ongoing animations
+  document.querySelectorAll('.item-container').forEach(container => {
+    container.classList.remove('mega-flash', 'spinning');
+  });
+  
+  console.log("✅ State reset complete - ready for next spin");
+}
+
+// Issue 7: Implement History Recording
+function recordSpinInHistory() {
+  try {
+    // Get the selected items from the slot machine
+    const itemContainers = document.querySelectorAll('.item-container');
+    const selectedItems = [];
+    
+    itemContainers.forEach(container => {
+      const itemName = container.querySelector('.item-name')?.textContent || 'Unknown Item';
+      const itemType = container.querySelector('p')?.textContent || 'Unknown Type';
+      selectedItems.push({ name: itemName, type: itemType });
+    });
+    
+    // Create history entry
+    const historyEntry = {
+      id: Date.now(),
+      timestamp: new Date().toLocaleString(),
+      selectedClass: state.selectedClass || 'Unknown',
+      items: selectedItems,
+      handicap: state.selectedHandicap || 'None',
+      handicapDescription: state.selectedHandicapDesc || '',
+      sufferingLevel: state.sufferingLevel || 1
+    };
+    
+    // Save to localStorage
+    let history = JSON.parse(localStorage.getItem('rageQuitHistory') || '[]');
+    history.unshift(historyEntry); // Add to beginning
+    
+    // Keep only last 10 entries
+    if (history.length > 10) {
+      history = history.slice(0, 10);
+    }
+    
+    localStorage.setItem('rageQuitHistory', JSON.stringify(history));
+    
+    // Update display
+    displayHistory();
+    
+    console.log("📝 Spin recorded in history:", historyEntry);
+  } catch (error) {
+    console.error("⚠️ Error recording history:", error);
+  }
+}
+
+function displayHistory() {
+  const historyList = document.getElementById('history-list');
+  if (!historyList) return;
+  
+  const history = JSON.parse(localStorage.getItem('rageQuitHistory') || '[]');
+  
+  historyList.innerHTML = history.map((entry, index) => `
+    <div class="history-entry" data-entry-id="${entry.id}">
+      <div class="history-header">
+        <span class="history-number">#${index + 1}</span>
+        <span class="history-class">${entry.selectedClass}</span>
+        <span class="history-timestamp">${entry.timestamp}</span>
+      </div>
+      <div class="history-items">
+        ${entry.items.map(item => `<span class="history-item">${item.name}</span>`).join(' • ')}
+      </div>
+      <div class="history-handicap">
+        <strong>Handicap:</strong> ${entry.handicap}
+        ${entry.handicapDescription ? `<br><small>${entry.handicapDescription}</small>` : ''}
+      </div>
+      <div class="history-suffering">Suffering Level: ${entry.sufferingLevel}</div>
+    </div>
+  `).join('');
+}
+
+function loadHistory() {
+  displayHistory();
+}

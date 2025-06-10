@@ -432,10 +432,13 @@ class RouletteAnimationSystem {
               Math.pow(decelerationProgress, 2);
         }
 
-        if (elapsed >= this.spinAnimationConfig.totalDuration - 400) {
+        // Ensure the animation stops on the predetermined winner
+        if (elapsed >= this.spinAnimationConfig.totalDuration - 600) {
+          // Force stop on winner in final 600ms
           currentIndex = winnerIndex;
-          speed = 400;
+          speed = this.spinAnimationConfig.finalSpeed;
         } else {
+          // Normal cycling through options
           currentIndex = (currentIndex + 1) % this.spinOptions.length;
         }
 
