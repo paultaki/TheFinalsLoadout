@@ -1059,6 +1059,11 @@
     ></audio>
     <audio id="rageLaughSound" src="sounds/whisper.mp3" preload="auto"></audio>
 
+    <!-- Include your existing scripts FIRST -->
+    <script src="rage-roulette-animations.js"></script>
+    <script src="app.js"></script>
+
+    <!-- Then our bridge script -->
     <script>
       // Create particles
       function createParticles() {
@@ -1153,14 +1158,7 @@
           });
         }
       }
-
-      // Initialize roulette system
-      window.rageRouletteSystem = new window.RageRouletteAnimationSystem();
     </script>
-
-    <!-- Include your existing scripts -->
-    <script src="rage-roulette-animations.js"></script>
-    <script src="app.js"></script>
 
     <!-- Bridge Script to Connect New Design with Existing Functionality -->
     <script>
@@ -1173,16 +1171,197 @@
 
         if (newSpinButton) {
           newSpinButton.addEventListener("click", function () {
-            console.log("New spin button clicked!");
+            // Check if already spinning
+            if (window.state && window.state.isSpinning) {
+              console.log("Already spinning, ignoring click");
+              return;
+            }
 
-            // Show centered overlay
-            const overlay = document.getElementById("slot-machine-overlay");
-            const hero = document.getElementById("hero-section");
-            overlay.classList.add("active");
-            hero.classList.add("dimmed");
+            console.log("Spin button clicked!");
 
-            // Move output into overlay
-            const output = document.getElementById("output");
+            // Reset previous state
+            resetForNewSpin();
+
+            // Try to use the existing spin function
+            if (typeof window.spinRageQuitLoadout === "function") {
+              console.log("Using spinRageQuitLoadout");
+
+              // Ensure we have handicaps defined
+              const handicaps = [
+                {
+                  name: "Sloth Mode",
+                  description: "No Sprinting – Must walk everywhere",
+                },
+                {
+                  name: "Bunny Hop Ban",
+                  description: "No Jumping – Stairs and ramps only",
+                },
+                {
+                  name: "Permanent Crouch",
+                  description: "You must stay crouched the entire game",
+                },
+                {
+                  name: "Inverted Controls",
+                  description: "Mouse movement is inverted",
+                },
+                {
+                  name: "Silent Treatment",
+                  description: "Play with all audio muted",
+                },
+                {
+                  name: "One Life",
+                  description: "No respawning - death ends the round",
+                },
+                {
+                  name: "Melee Only",
+                  description: "Can only use melee attacks",
+                },
+                {
+                  name: "Backwards Mode",
+                  description: "Can only move backwards",
+                },
+                {
+                  name: "No Minimap",
+                  description: "Cover your minimap completely",
+                },
+                {
+                  name: "Panic Mode",
+                  description: "Must constantly move - no standing still",
+                },
+              ];
+
+              // Select a random handicap as fallback
+              const randomHandicap =
+                handicaps[Math.floor(Math.random() * handicaps.length)];
+
+              // Initialize state if needed
+              if (!window.state) {
+                window.state = {};
+              }
+
+              // Set handicap if not already set
+              if (!window.state.selectedHandicap) {
+                window.state.selectedHandicap = randomHandicap.name;
+                window.state.selectedHandicapDesc = randomHandicap.description;
+                console.log("Fallback handicap selected:", randomHandicap);
+              }
+
+              // Start the spin
+              window.spinRageQuitLoadout();
+
+              // After a delay, show the centered overlay
+              setTimeout(() => {
+                const overlay = document.getElementById("slot-machine-overlay");
+                const hero = document.getElementById("hero-section");
+                overlay.classList.add("active");
+                hero.classList.add("dimmed");
+
+                // Wait for animations to complete, then show handicap
+                setTimeout(() => {
+                  // Force display the handicap that was selected
+                  const handicapDisplay =
+                    document.getElementById("handicap-display");
+                  if (handicapDisplay) {
+                    handicapDisplay.style.display = "block";
+
+                    // Check multiple possible sources for handicap data
+                    let handicapName = "No Handicap Selected";
+                    let handicapDesc =
+                      "Something went wrong with handicap selection";
+
+                    // Try to get handicap from various sources
+                    if (window.state) {
+                      if (window.state.selectedHandicap) {
+                        handicapName = window.state.selectedHandicap;
+                        handicapDesc =
+                          window.state.selectedHandicapDesc ||
+                          "No description available";
+                      } else if (
+                        window.state.handicapStack &&
+                        window.state.handicapStack.length > 0
+                      ) {
+                        const latestHandicap =
+                          window.state.handicapStack[
+                            window.state.handicapStack.length - 1
+                          ];
+                        handicapName = latestHandicap.name;
+                        handicapDesc =
+                          latestHandicap.description || latestHandicap.desc;
+                      }
+                    }
+
+                    // Also check if displaySelectedHandicap function exists and call it
+                    if (typeof window.displaySelectedHandicap === "function") {
+                      window.displaySelectedHandicap();
+                    }
+
+                    // Update the handicap content
+                    const handicapElement =
+                      document.getElementById("current-handicap");
+                    if (handicapElement) {
+                      handicapElement.innerHTML = `
+                        <h4 style="margin-bottom: 0.5rem; color: var(--neon-red); font-size: 1.5rem;">
+                          💀 ${handicapName} 💀
+                        </h4>
+                        <p style="opacity: 0.9; margin: 0; font-size: 1.1rem;">
+                          ${handicapDesc}
+                        </p>
+                      `;
+                    }
+
+                    // Debug log
+                    console.log("Handicap display attempt:", {
+                      state: window.state,
+                      handicapName,
+                      handicapDesc,
+                      handicapDisplay: handicapDisplay.style.display,
+                    });
+                  }
+
+                  // Show buttons
+                  document.getElementById("copyLoadoutButton").style.display =
+                    "inline-block";
+                  document.getElementById("exit-overlay-btn").style.display =
+                    "inline-block";
+
+                  // Add to history
+                  recordSpinResults();
+
+                  // Reset spinning state
+                  if (window.state) {
+                    window.state.isSpinning = false;
+                  }
+
+                  // Re-enable button
+                  newSpinButton.disabled = false;
+                }, 5000); // Wait for slot animation
+              }, 1000); // Small delay before showing overlay
+            } else {
+              console.error("spinRageQuitLoadout function not found!");
+              alert(
+                "Error: Spin function not loaded. Please refresh the page."
+              );
+            }
+          });
+        }
+
+        // Function to reset state for new spin
+        function resetForNewSpin() {
+          // Hide previous results
+          const handicapDisplay = document.getElementById("handicap-display");
+          if (handicapDisplay) {
+            handicapDisplay.style.display = "none";
+          }
+
+          // Clear selected handicap
+          if (window.state) {
+            window.state.selectedHandicap = null;
+            window.state.selectedHandicapDesc = null;
+          }
+
+          // Reset output to placeholders
+          const output = document.getElementById("output");
+          if (output) {
             output.innerHTML = `
               <div class="placeholder-container">
                 <img src="https://thefinalsloadout.com/images/placeholder.webp" alt="?" width="80" height="80" />
@@ -1205,145 +1384,86 @@
                 <p>Gadget 3</p>
               </div>
             `;
-
-            // Call the roulette system first (which includes handicap selection)
-            if (
-              window.rageRouletteSystem &&
-              typeof window.rageRouletteSystem.startFullSequence === "function"
-            ) {
-              // Close the overlay temporarily for roulette animations
-              overlay.classList.remove("active");
-              hero.classList.remove("dimmed");
-
-              // Start the full sequence (class → spins → handicap → slot machine)
-              window.rageRouletteSystem.startFullSequence();
-
-              // Wait for all animations to complete
-              setTimeout(() => {
-                overlay.classList.add("active");
-                hero.classList.add("dimmed");
-
-                // Show handicap and buttons after slot animation
-                setTimeout(() => {
-                  // Show handicap display
-                  const handicapDisplay =
-                    document.getElementById("handicap-display");
-                  if (
-                    handicapDisplay &&
-                    window.state &&
-                    window.state.selectedHandicap
-                  ) {
-                    handicapDisplay.style.display = "block";
-
-                    // Update the handicap content
-                    const handicapElement =
-                      document.getElementById("current-handicap");
-                    if (handicapElement) {
-                      handicapElement.innerHTML = `
-                        <h4 style="margin-bottom: 0.5rem; color: var(--neon-red); font-size: 1.5rem;">
-                          💀 ${window.state.selectedHandicap} 💀
-                        </h4>
-                        <p style="opacity: 0.9; margin: 0; font-size: 1.1rem;">
-                          ${
-                            window.state.selectedHandicapDesc ||
-                            "No description available"
-                          }
-                        </p>
-                      `;
-                    }
-                  }
-
-                  // Show buttons
-                  document.getElementById("copyLoadoutButton").style.display =
-                    "inline-block";
-                  document.getElementById("exit-overlay-btn").style.display =
-                    "inline-block";
-
-                  // Add to history
-                  recordSpinResults();
-                }, 5000); // Wait for slot animation
-              }, 10000); // Wait for roulette sequence to complete
-            } else if (typeof spinRageQuitLoadout === "function") {
-              // Fallback to direct spin (no handicap selection)
-              spinRageQuitLoadout();
-
-              // Show handicap and buttons after animation
-              setTimeout(() => {
-                // Show handicap display
-                const handicapDisplay =
-                  document.getElementById("handicap-display");
-                if (
-                  handicapDisplay &&
-                  window.state &&
-                  window.state.selectedHandicap
-                ) {
-                  handicapDisplay.style.display = "block";
-
-                  // Update the handicap content
-                  const handicapElement =
-                    document.getElementById("current-handicap");
-                  if (handicapElement) {
-                    handicapElement.innerHTML = `
-                      <h4 style="margin-bottom: 0.5rem; color: var(--neon-red); font-size: 1.5rem;">
-                        💀 ${window.state.selectedHandicap} 💀
-                      </h4>
-                      <p style="opacity: 0.9; margin: 0; font-size: 1.1rem;">
-                        ${
-                          window.state.selectedHandicapDesc ||
-                          "No description available"
-                        }
-                      </p>
-                    `;
-                  }
-                }
-
-                // Show buttons
-                document.getElementById("copyLoadoutButton").style.display =
-                  "inline-block";
-                document.getElementById("exit-overlay-btn").style.display =
-                  "inline-block";
-
-                // Add to history
-                recordSpinResults();
-              }, 8000);
-            } else {
-              console.error(
-                "No spin functions found! Make sure scripts are loaded."
-              );
-            }
-          });
+          }
         }
 
         // Function to record spin results
         function recordSpinResults() {
-          // Get the visible items from the slots
+          // Get items from the actual slot display
           const itemContainers = document.querySelectorAll(".item-container");
-          if (itemContainers.length >= 5 && window.state) {
-            const items = [];
-            itemContainers.forEach((container) => {
-              const visibleItem = container.querySelector(".itemCol.winner p");
-              if (visibleItem) {
-                items.push(visibleItem.textContent);
+          const items = [];
+
+          // Look for winner items in each container
+          itemContainers.forEach((container, index) => {
+            // Try multiple selectors to find the displayed item
+            let itemText = "Unknown";
+
+            // Check for winner class
+            const winnerItem = container.querySelector(".itemCol.winner p");
+            if (winnerItem) {
+              itemText = winnerItem.textContent.trim();
+            } else {
+              // Check for any visible item
+              const allItems = container.querySelectorAll(".itemCol p");
+              if (allItems.length > 0) {
+                // Get the middle item (usually the visible one)
+                const middleIndex = Math.floor(allItems.length / 2);
+                if (allItems[middleIndex]) {
+                  itemText = allItems[middleIndex].textContent.trim();
+                }
               }
+            }
+
+            items.push(itemText);
+            console.log(`Slot ${index + 1}:`, itemText);
+          });
+
+          // Ensure we have all items
+          if (items.length >= 5 && window.state) {
+            const classType = window.state.selectedClass || "Unknown";
+            const weapon = items[0] || "Unknown Weapon";
+            const specialization = items[1] || "Unknown Specialization";
+            const gadgets = [
+              items[2] || "Unknown Gadget 1",
+              items[3] || "Unknown Gadget 2",
+              items[4] || "Unknown Gadget 3",
+            ];
+            const handicapName = window.state.selectedHandicap || "None";
+            const handicapDesc =
+              window.state.selectedHandicapDesc || "No handicap";
+
+            console.log("Recording history:", {
+              classType,
+              weapon,
+              specialization,
+              gadgets,
+              handicapName,
             });
 
-            if (items.length >= 5) {
-              addToHistory(
-                window.state.selectedClass || "Unknown",
-                items[0], // weapon
-                items[1], // specialization
-                [items[2], items[3], items[4]], // gadgets
-                window.state.selectedHandicap || "None",
-                window.state.selectedHandicapDesc || "No handicap"
-              );
-            }
+            addToHistory(
+              classType,
+              weapon,
+              specialization,
+              gadgets,
+              handicapName,
+              handicapDesc
+            );
+          } else {
+            console.error("Not enough items found for history:", items);
           }
         }
 
         // Exit overlay button
         const exitBtn = document.getElementById("exit-overlay-btn");
         if (exitBtn) {
-          exitBtn.addEventListener("click", exitOverlay);
+          exitBtn.addEventListener("click", () => {
+            exitOverlay();
+            // Reset button state when exiting
+            const spinBtn = document.getElementById("rage-quit-btn");
+            if (spinBtn) {
+              spinBtn.disabled = false;
+            }
+          });
         }
 
         // Update current streak

@@ -300,8 +300,8 @@
     .modal-overlay.visible .placeholder-container,
     .modal-overlay.visible .item-container,
     .modal-overlay.visible .scroll-container,
-    .modal-overlay.visible .item,
-    .modal-overlay.visible .item img {
+    .modal-overlay.visible .itemCol,
+    .modal-overlay.visible .itemCol img {
       display: block !important;
       opacity: 1 !important;
       visibility: visible !important;
@@ -313,8 +313,8 @@
     .slot-machine-modal .placeholder-container,
     .slot-machine-modal .item-container,
     .slot-machine-modal .scroll-container,
-    .slot-machine-modal .item,
-    .slot-machine-modal .item img {
+    .slot-machine-modal .itemCol,
+    .slot-machine-modal .itemCol img {
       display: block !important;
       opacity: 1 !important;
       visibility: visible !important;
@@ -327,6 +327,125 @@
       max-width: none !important;
       margin: 0 !important;
       padding: 1rem !important;
+    }
+    
+    /* Fix slot machine container layout in modal */
+    .slot-machine-modal .slot-machine-wrapper {
+      display: block !important;
+      width: 100% !important;
+      padding: 20px !important;
+      background: radial-gradient(ellipse at center, #4a3a5e, #2a2a3a) !important;
+      border-radius: 20px !important;
+      box-shadow: 0 0 100px rgba(138, 43, 226, 0.3), inset 0 0 50px rgba(0, 0, 0, 0.3) !important;
+      position: relative !important;
+      overflow: hidden !important;
+      min-height: 200px !important;
+    }
+    
+    /* Fix items container horizontal layout */
+    .slot-machine-modal .items-container {
+      display: flex !important;
+      flex-direction: row !important;
+      justify-content: center !important;
+      align-items: flex-start !important;
+      gap: 12px !important;
+      min-height: 200px !important;
+      background: rgba(255, 255, 255, 0.12) !important;
+      padding: 8px 15px !important;
+      border-radius: 12px !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    /* Fix individual item containers */
+    .slot-machine-modal .item-container {
+      flex: 1 !important;
+      width: 120px !important;
+      height: 160px !important;
+      background: linear-gradient(to bottom, #0a0a0a, #1a1a1a) !important;
+      border: 4px solid transparent !important;
+      border-image: linear-gradient(45deg, #ffd700, #ff6b6b, #ffd700) 1 !important;
+      box-shadow: inset 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(255, 215, 0, 0.2) !important;
+      position: relative !important;
+      overflow: hidden !important;
+      border-radius: 8px !important;
+    }
+    
+    /* Fix placeholder containers */
+    .slot-machine-modal .placeholder-container {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 120px !important;
+      height: 160px !important;
+      background: linear-gradient(to bottom, #0a0a0a, #1a1a1a) !important;
+      border: 4px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 8px !important;
+      padding: 10px !important;
+    }
+    
+    .slot-machine-modal .placeholder-container img {
+      width: 60px !important;
+      height: 60px !important;
+      opacity: 0.5 !important;
+      margin-bottom: 8px !important;
+    }
+    
+    .slot-machine-modal .placeholder-container p {
+      color: rgba(255, 255, 255, 0.7) !important;
+      font-size: 12px !important;
+      text-align: center !important;
+      margin: 0 !important;
+    }
+    
+    /* Preserve slot machine animation properties in modal */
+    .slot-machine-modal .itemCol {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 140px !important;
+      padding: 10px !important;
+      will-change: transform !important;
+      backface-visibility: hidden !important;
+      position: relative !important;
+    }
+    
+    .slot-machine-modal .itemCol img {
+      width: 60px !important;
+      height: 60px !important;
+      border-radius: 4px !important;
+      margin-bottom: 8px !important;
+    }
+    
+    .slot-machine-modal .itemCol p {
+      color: #fff !important;
+      font-size: 11px !important;
+      text-align: center !important;
+      margin: 0 !important;
+      font-weight: 500 !important;
+    }
+    
+    .slot-machine-modal .scroll-container {
+      position: relative !important;
+      overflow: hidden !important;
+      width: 100% !important;
+      height: 140px !important;
+    }
+    
+    /* Ensure blur effects work in modal */
+    .slot-machine-modal .high-speed-blur .scroll-container {
+      filter: blur(3px) !important;
+    }
+    
+    .slot-machine-modal .extreme-blur .scroll-container {
+      filter: blur(8px) !important;
+    }
+    
+    /* Ensure winner animations work in modal */
+    .slot-machine-modal .itemCol.winner {
+      animation: landingFlash 0.3s ease-out, springBack 0.8s ease-out 0.3s, continuousPulse 2s ease-in-out 1.1s infinite !important;
     }
 
     /* Desktop Audio Toggle Positioning */
@@ -1239,10 +1358,15 @@
     // Override document.getElementById globally
     document.getElementById = function(id) {
       if (id === 'output' && modalOverlay && modalOverlay.classList.contains('visible')) {
-        console.log('🎰 GLOBAL: Redirecting getElementById(output) to modal');
+        console.log('🎰 GLOBAL: Redirecting getElementById(output) to modal:', modalSlotMachine);
+        console.log('🎰 GLOBAL: Modal slot machine innerHTML length:', modalSlotMachine ? modalSlotMachine.innerHTML.length : 'null');
         return modalSlotMachine;
       }
-      return originalGetElementById.call(document, id);
+      const result = originalGetElementById.call(document, id);
+      if (id === 'output') {
+        console.log('🎰 GLOBAL: Normal getElementById(output):', result);
+      }
+      return result;
     };
     
     // Override document.querySelector globally
@@ -1302,10 +1426,10 @@
     
     // Auto-hide modal after spin completes
     function autoHideModalAfterSpin() {
-      console.log('🎰 Auto-hiding modal after spin completion');
+      console.log('🎰 Auto-hiding modal after spin completion in 10 seconds');
       setTimeout(() => {
         hideSlotModal();
-      }, 3000); // Wait 3 seconds after spin completes before auto-closing
+      }, 10000); // Wait 10 seconds after spin completes before auto-closing
     }
     
     // Close modal when clicking close button
@@ -1332,20 +1456,29 @@
       
       console.log('🎰 Debug - Elements found:', {
         originalOutput: !!originalOutput,
-        modalSlotMachine: !!modalSlotMachine
+        modalSlotMachine: !!modalSlotMachine,
+        originalHTML: originalOutput ? originalOutput.innerHTML.substring(0, 200) + '...' : 'null',
+        modalHTML: modalSlotMachine ? modalSlotMachine.innerHTML.substring(0, 200) + '...' : 'null'
       });
       
       if (originalOutput && modalSlotMachine) {
         // Copy the structure to modal
         modalSlotMachine.innerHTML = originalOutput.innerHTML;
         
-        // Force visibility on all elements
+        // Debug what was copied
+        console.log('🎰 Copied content:', modalSlotMachine.innerHTML.substring(0, 300));
+        
+        // Force visibility on all elements with more aggressive CSS
         const forceVisible = (element) => {
           if (element && element.style) {
-            element.style.display = 'block';
-            element.style.opacity = '1';
-            element.style.visibility = 'visible';
-            element.style.position = 'relative';
+            element.style.cssText += `
+              display: block !important;
+              opacity: 1 !important;
+              visibility: visible !important;
+              position: relative !important;
+              width: auto !important;
+              height: auto !important;
+            `;
           }
         };
         
@@ -1354,7 +1487,25 @@
         const allElements = modalSlotMachine.querySelectorAll('*');
         allElements.forEach(forceVisible);
         
-        console.log('🎰 Copied slot machine structure to modal and forced visibility on', allElements.length, 'elements');
+        console.log('🎰 Forced visibility on modal slot machine and', allElements.length, 'child elements');
+        console.log('🎰 Modal slot machine computed style:', window.getComputedStyle(modalSlotMachine));
+        
+        // Add a visible test element to verify modal can show content
+        const testElement = document.createElement('div');
+        testElement.style.cssText = `
+          background: lime !important;
+          color: black !important;
+          padding: 20px !important;
+          margin: 20px !important;
+          border: 3px solid blue !important;
+          position: relative !important;
+          z-index: 999999 !important;
+          font-size: 18px !important;
+          font-weight: bold !important;
+        `;
+        testElement.textContent = 'TEST: Modal is working - slot machine should be below this';
+        modalSlotMachine.insertBefore(testElement, modalSlotMachine.firstChild);
+        
       } else {
         console.error('🎰 Missing elements for structure copy');
       }
@@ -1404,7 +1555,8 @@
           const checkSpinComplete = setInterval(() => {
             if (window.state && !window.state.isSpinning) {
               clearInterval(checkSpinComplete);
-              autoHideModalAfterSpin();
+              console.log('🎰 Spin completed - modal will stay open for debugging');
+              // autoHideModalAfterSpin(); // Disabled for debugging
             }
           }, 500);
           
@@ -1418,12 +1570,13 @@
             const modalSlotMachine = document.getElementById('slot-machine-output');
             if (modalSlotMachine) {
               // Force visibility on all slot machine elements every 100ms during animation
-              const allElements = modalSlotMachine.querySelectorAll('.item-container, .scroll-container, .item, .item img');
+              const allElements = modalSlotMachine.querySelectorAll('.item-container, .scroll-container, .itemCol, .itemCol img');
               allElements.forEach(element => {
                 if (element && element.style) {
                   element.style.display = 'block';
                   element.style.opacity = '1';
                   element.style.visibility = 'visible';
+                  element.style.transform = element.style.transform || 'none'; // Preserve existing transforms
                 }
               });
             }

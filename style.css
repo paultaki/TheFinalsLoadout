@@ -674,9 +674,8 @@
   }
 }
 
-/* Desktop fallback - hide mobile design */
+/* Desktop fallback - hide mobile design (but keep top bar) */
 @media (min-width: 769px) {
-  .top-bar,
   .main-nav-mobile,
   .main-content-mobile,
   .bottom-sheet {
