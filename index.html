@@ -392,72 +392,70 @@
         display: block;
       }
       
-      /* Mobile History Cards - 2x2 Grid Layout */
-      .history-details {
-        padding: 8px;
-        background: rgba(255, 255, 255, 0.02);
-        border-radius: 8px;
-        margin-top: 8px;
-      }
-      
-      .history-details .loadout-grid {
+      /* Mobile History Cards - 2x3 Grid Layout */
+      .history-entry .loadout-details {
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: auto auto;
-        gap: 6px;
-        margin-bottom: 8px;
+        gap: 8px;
+        margin: 8px 0;
       }
       
-      /* Top Row - Weapon and Spec */
-      .history-details .weapon-item {
+      /* Top row: weapon and spec */
+      .history-entry .weapon-item {
         grid-column: 1;
         grid-row: 1;
       }
       
-      .history-details .spec-item {
+      .history-entry .spec-item {
         grid-column: 2;
         grid-row: 1;
       }
       
-      /* Bottom Row - 3 Gadgets */
-      .history-details .gadgets-row {
-        grid-column: 1 / -1;
-        grid-row: 2;
-        display: flex;
-        gap: 4px;
-        justify-content: space-between;
+      /* Bottom row: gadgets spanning both columns - FORCE horizontal layout */
+      .history-entry .gadget-group,
+      .history-entry .meme-export-container .gadget-group {
+        grid-column: 1 / -1 !important;
+        grid-row: 2 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 4px !important;
+        justify-content: space-between !important;
+        align-items: stretch !important;
+        flex-wrap: nowrap !important;
       }
       
-      .history-details .gadget-item {
-        flex: 1;
-        min-width: 0;
+      .history-entry .gadget-item {
+        flex: 1 !important;
+        min-width: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
       }
       
-      /* Item Cards - Compact & Square */
-      .history-details .loadout-item {
+      /* Compact loadout items for mobile */
+      .history-entry .loadout-item {
         background: rgba(0, 0, 0, 0.3);
-        border-radius: 6px;
-        padding: 6px;
+        border-radius: 8px;
+        padding: 8px 4px;
         text-align: center;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: all 0.2s ease;
-        height: 70px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
+        min-height: 70px;
       }
       
-      .history-details .loadout-item img {
+      .history-entry .loadout-item img {
         width: 32px;
         height: 32px;
         border-radius: 4px;
         object-fit: cover;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
       }
       
-      .history-details .loadout-item .item-name {
-        font-size: 9px;
+      .history-entry .loadout-item .item-name {
+        font-size: 10px;
         font-weight: 500;
         line-height: 1.1;
         overflow: hidden;
@@ -466,60 +464,6 @@
         max-width: 100%;
         color: #fff;
         opacity: 0.9;
-      }
-      
-      /* Roast Section - Compact */
-      .history-details .roast-section {
-        background: rgba(255, 183, 0, 0.1);
-        border-radius: 6px;
-        padding: 6px 8px;
-        margin: 6px 0;
-        border-left: 3px solid var(--neon-yellow);
-      }
-      
-      .history-details .roast-text {
-        font-size: 10px;
-        font-style: italic;
-        line-height: 1.3;
-        color: var(--neon-yellow);
-        margin: 0;
-      }
-      
-      /* Action Buttons - Horizontal Layout */
-      .history-details .action-buttons {
-        display: flex;
-        gap: 6px;
-        margin-top: 8px;
-        justify-content: center;
-      }
-      
-      .history-details .action-btn {
-        flex: 1;
-        background: rgba(123, 47, 227, 0.8);
-        border: 1px solid rgba(123, 47, 227, 0.4);
-        color: #fff;
-        padding: 6px 8px;
-        border-radius: 4px;
-        font-size: 9px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      
-      .history-details .action-btn:hover {
-        background: rgba(123, 47, 227, 1);
-        transform: scale(1.02);
-      }
-      
-      .history-details .action-btn.meme-btn {
-        background: rgba(30, 144, 255, 0.8);
-        border-color: rgba(30, 144, 255, 0.4);
-      }
-      
-      .history-details .action-btn.meme-btn:hover {
-        background: rgba(30, 144, 255, 1);
       }
       
       /* Typography Cleanup */
@@ -586,14 +530,14 @@
         background: rgba(255, 255, 255, 0.15);
       }
       
-      /* Toggle Buttons - Filter & Audio */
-      .filter-toggle-button,
-      .sound-toggle-button {
+      /* Toggle Buttons - Filter Only */
+      .filter-toggle-button {
         position: fixed;
         right: 16px;
+        top: 80px;
         width: 48px;
         height: 48px;
-        border-radius: 24px;
+        border-radius: 50%;
         background: rgba(0, 0, 0, 0.7);
         border: 2px solid rgba(255, 255, 255, 0.2);
         color: #fff;
@@ -606,55 +550,53 @@
         backdrop-filter: blur(10px);
       }
       
-      .filter-toggle-button {
-        top: 80px;
-      }
-      
-      .sound-toggle-button {
-        top: 140px;
-      }
-      
-      .filter-toggle-button:hover,
-      .sound-toggle-button:hover {
+      .filter-toggle-button:hover {
         background: rgba(0, 0, 0, 0.8);
         border-color: rgba(255, 255, 255, 0.4);
         transform: scale(1.05);
       }
       
-      .filter-toggle-button svg,
-      .sound-toggle-button svg {
+      .filter-toggle-button svg {
         width: 20px;
         height: 20px;
       }
-      
-      /* Sound Toggle States */
-      .sound-toggle-button.muted {
-        background: rgba(200, 50, 50, 0.8);
-        border-color: rgba(255, 100, 100, 0.4);
-      }
-      
-      .sound-toggle-button.muted:hover {
-        background: rgba(200, 50, 50, 1);
+
+      /* Slot Machine - Restore container look, kill excess space */
+      .slot-machine-wrapper {
+        background: rgba(255, 255, 255, 0.12);
+        padding: 8px 15px !important;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        margin: 15px auto 10px !important;
+        max-width: 90%;
       }
 
-      /* Slot Machine - Remove Excessive Spacing */
-      .slot-machine-wrapper {
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-      
       #output {
         margin-top: 10px !important;
-        margin-bottom: 10px !important;
+        margin-bottom: 0 !important; /* Kill bottom margin */
+      }
+
+      .items-container {
+        margin: 0 auto !important;
+        padding: 3px 10px !important;
+        background: transparent !important; /* Remove duplicate background */
+        box-shadow: none !important; /* Remove duplicate shadow */
+      }
+
+      /* Tighten gap between slot machine and history */
+      .loadout-history {
+        margin-top: 20px !important; /* Was probably 40-50px */
+      }
+
+      /* Remove any min-height constraints */
+      .container,
+      .selection-container,
+      .slot-machine-wrapper {
+        min-height: unset !important;
       }
       
       .main-spin-button {
-        margin-bottom: 10px !important;
-      }
-      
-      .items-container {
-        margin: 0 auto !important;
-        padding: 0 !important;
+        margin-bottom: 15px !important;
       }
       
       /* Reduce gaps between sections */
@@ -673,12 +615,17 @@
       
       /* Compact section spacing */
       .loadout-history {
-        margin-top: 10px !important;
+        margin-top: 15px !important;
       }
 
       /* Remove margin from main to account for no bottom CTA */
       main {
         padding-bottom: 16px !important;
+      }
+      
+      /* Ensure container takes only needed space */
+      .container {
+        min-height: unset !important;
       }
     }
   </style>
@@ -752,18 +699,6 @@
   </svg>
 </button>
 
-<!-- Audio Toggle Button -->
-<button id="sound-toggle" class="sound-toggle-button" aria-label="Toggle sound">
-  <svg class="sound-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-  </svg>
-  <svg class="sound-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
-    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-    <line x1="23" y1="9" x2="17" y2="15"></line>
-    <line x1="17" y1="9" x2="23" y2="15"></line>
-  </svg>
-</button>
 
 <!-- Filter Panel Overlay -->
 <div id="filter-panel-overlay" class="filter-panel-overlay"></div>
@@ -1067,7 +1002,7 @@
 
   <section id="loadout-history" class="loadout-history">
     <h2>🏆 Recent Chaos</h2>
-    <p class="chaos-counter" id="total-loadouts">🔥 <span class="loadouts-counter">0</span> total analyses delivered</p>
+    <p class="chaos-counter" id="total-loadouts">🔥 <span class="loadouts-counter">0</span> Total Loadouts Generated</p>
     <div id="history-list">
       <!-- History entries will be populated here -->
     </div>
@@ -1282,134 +1217,11 @@
           }
         };
         
-        // Mobile History Accordion
+        // Mobile History - Keep Original Structure
         function initMobileHistory() {
-          const historyList = document.getElementById('history-list');
-          if (!historyList) return;
-          
-          // Add click handlers to existing history items
-          const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-              mutation.addedNodes.forEach(function(node) {
-                if (node.nodeType === 1 && node.classList.contains('history-item')) {
-                  makeHistoryItemCollapsible(node);
-                }
-              });
-            });
-          });
-          
-          observer.observe(historyList, { childList: true });
-          
-          // Handle existing items
-          historyList.querySelectorAll('.history-item').forEach(makeHistoryItemCollapsible);
-        }
-        
-        function makeHistoryItemCollapsible(item) {
-          if (item.classList.contains('mobile-enhanced')) return;
-          
-          item.classList.add('mobile-enhanced', 'collapsed');
-          
-          // Extract data from original content
-          const className = item.querySelector('.class-name')?.textContent || 'Unknown Class';
-          const items = item.querySelectorAll('.item');
-          const roastElement = item.querySelector('.roast-text');
-          const roastText = roastElement?.textContent || '';
-          
-          // Create structured mobile layout
-          let loadoutHTML = '';
-          let roastHTML = '';
-          let actionButtonsHTML = '';
-          
-          if (items.length >= 5) {
-            loadoutHTML = `
-              <div class="loadout-grid">
-                <div class="weapon-item">
-                  <div class="loadout-item">
-                    <img src="${items[0].querySelector('img')?.src || 'images/placeholder.webp'}" alt="Weapon">
-                    <div class="item-name">${items[0].querySelector('p')?.textContent || 'Weapon'}</div>
-                  </div>
-                </div>
-                <div class="spec-item">
-                  <div class="loadout-item">
-                    <img src="${items[1].querySelector('img')?.src || 'images/placeholder.webp'}" alt="Specialization">
-                    <div class="item-name">${items[1].querySelector('p')?.textContent || 'Spec'}</div>
-                  </div>
-                </div>
-                <div class="gadgets-row">
-                  <div class="gadget-item">
-                    <div class="loadout-item">
-                      <img src="${items[2].querySelector('img')?.src || 'images/placeholder.webp'}" alt="Gadget">
-                      <div class="item-name">${items[2].querySelector('p')?.textContent || 'Gadget'}</div>
-                    </div>
-                  </div>
-                  <div class="gadget-item">
-                    <div class="loadout-item">
-                      <img src="${items[3].querySelector('img')?.src || 'images/placeholder.webp'}" alt="Gadget">
-                      <div class="item-name">${items[3].querySelector('p')?.textContent || 'Gadget'}</div>
-                    </div>
-                  </div>
-                  <div class="gadget-item">
-                    <div class="loadout-item">
-                      <img src="${items[4].querySelector('img')?.src || 'images/placeholder.webp'}" alt="Gadget">
-                      <div class="item-name">${items[4].querySelector('p')?.textContent || 'Gadget'}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            `;
-          }
-          
-          if (roastText) {
-            roastHTML = `
-              <div class="roast-section">
-                <p class="roast-text">${roastText}</p>
-              </div>
-            `;
-          }
-          
-          actionButtonsHTML = `
-            <div class="action-buttons">
-              <button class="action-btn" onclick="replayLoadout(this)">🔄 Replay</button>
-              <button class="action-btn meme-btn" onclick="shareToSocial()">🎯 Meme</button>
-            </div>
-          `;
-          
-          item.innerHTML = `
-            <div class="history-summary">
-              <span>${className}</span>
-              <span class="view-details">View Details ▼</span>
-            </div>
-            <div class="history-details">
-              ${loadoutHTML}
-              ${roastHTML}
-              ${actionButtonsHTML}
-            </div>
-          `;
-          
-          // Add click handler
-          item.addEventListener('click', function() {
-            const isExpanded = this.classList.contains('expanded');
-            
-            // Collapse all other items
-            document.querySelectorAll('.history-item.expanded').forEach(otherItem => {
-              if (otherItem !== this) {
-                otherItem.classList.remove('expanded');
-                otherItem.classList.add('collapsed');
-                otherItem.querySelector('.view-details').textContent = 'View Details ▼';
-              }
-            });
-            
-            // Toggle current item
-            if (isExpanded) {
-              this.classList.remove('expanded');
-              this.classList.add('collapsed');
-              this.querySelector('.view-details').textContent = 'View Details ▼';
-            } else {
-              this.classList.remove('collapsed');
-              this.classList.add('expanded');
-              this.querySelector('.view-details').textContent = 'Hide Details ▲';
-            }
-          });
+          // No need to override the original history structure
+          // The CSS handles mobile layout automatically
+          console.log('Mobile history initialized - using original structure');
         }
         
         // Initialize mobile features

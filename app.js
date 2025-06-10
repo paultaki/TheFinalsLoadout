@@ -1683,10 +1683,9 @@ async function finalizeSpin(columns) {
       lastAddedLoadout = loadoutString;
 
       // Increment the global loadouts counter
-      // console.log('🚀🚀🚀 ABOUT TO CALL incrementLoadoutCounter 🚀🚀🚀');
-      // alert('About to increment counter!');
-      // await incrementLoadoutCounter();
-      // console.log('✅✅✅ incrementLoadoutCounter COMPLETED ✅✅✅');
+      console.log('🚀🚀🚀 ABOUT TO CALL incrementLoadoutCounter 🚀🚀🚀');
+      await incrementLoadoutCounter();
+      console.log('✅✅✅ incrementLoadoutCounter COMPLETED ✅✅✅');
       
       // Also fetch and update counter display as backup
       // console.log('🚀🚀🚀 ABOUT TO CALL fetchAndUpdateCounter 🚀🚀🚀');
@@ -2007,6 +2006,16 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
   
   // Generate roast
   try {
+    // Check if we're in local development
+    const isLocal = window.location.hostname === 'localhost' || 
+                   window.location.hostname === '127.0.0.1' || 
+                   window.location.hostname === '';
+    
+    if (isLocal) {
+      // Skip API call for local development, use fallback immediately
+      throw new Error('Local development - using fallback roasts');
+    }
+    
     const requestData = {
       class: classType,
       weapon: weapon,
@@ -2045,7 +2054,7 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
     }, 10000);
     
   } catch (error) {
-    console.error('Error generating roast:', error);
+    console.log('Using fallback roast for local development:', error.message);
     
     // Fallback roast
     const fallbackRoasts = [
@@ -3464,6 +3473,23 @@ function updateTotalLoadoutsDisplay(count) {
 async function incrementLoadoutCounter() {
   try {
     console.log('📊 Incrementing loadout counter...');
+    
+    // Check if we're in local development
+    const isLocal = window.location.hostname === 'localhost' || 
+                   window.location.hostname === '127.0.0.1' || 
+                   window.location.hostname === '';
+    
+    if (isLocal) {
+      // Use local fallback for development
+      const currentCount = parseInt(localStorage.getItem('localCounter') || '5321');
+      const newCount = currentCount + 1;
+      localStorage.setItem('localCounter', newCount.toString());
+      
+      console.log('✅ Local counter incremented to:', newCount);
+      updateCounterDisplay(newCount);
+      updateTotalLoadoutsDisplay(newCount);
+      return;
+    }
     
     const response = await fetch('/api/spin', {
       method: 'POST',
