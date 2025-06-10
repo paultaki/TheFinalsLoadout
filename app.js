@@ -1355,9 +1355,9 @@ function populateFilterItems() {
   populateItemGrid(heavyWeaponsGrid, loadouts.Heavy.weapons, "weapon", "heavy", "Heavy Weapons");
   
   // Populate specializations
-  populateItemGrid(lightSpecsGrid, loadouts.Light.specializations, "specialization", "light", "Light Specializations");
-  populateItemGrid(mediumSpecsGrid, loadouts.Medium.specializations, "specialization", "medium", "Medium Specializations");
-  populateItemGrid(heavySpecsGrid, loadouts.Heavy.specializations, "specialization", "heavy", "Heavy Specializations");
+  populateItemGrid(lightSpecsGrid, loadouts.Light.specializations, "specialization", "light", "Light Specials");
+  populateItemGrid(mediumSpecsGrid, loadouts.Medium.specializations, "specialization", "medium", "Medium Specials");
+  populateItemGrid(heavySpecsGrid, loadouts.Heavy.specializations, "specialization", "heavy", "Heavy Specials");
   
   // Populate gadgets
   populateItemGrid(lightGadgetsGrid, loadouts.Light.gadgets, "gadget", "light", "Light Gadgets");
@@ -2577,7 +2577,7 @@ window.copyLoadoutText = function (button) {
   
   // Get weapon and specialization from text
   const weapon = entry.querySelector('.weapon-item .item-name')?.textContent || 'Unknown Weapon';
-  const specialization = entry.querySelector('.spec-item .item-name')?.textContent || 'Unknown Specialization';
+  const specialization = entry.querySelector('.spec-item .item-name')?.textContent || 'Unknown Special';
   
   // Get gadgets from text
   const gadgets = Array.from(entry.querySelectorAll('.gadget-item .item-name'))
@@ -2587,7 +2587,7 @@ window.copyLoadoutText = function (button) {
   const copyText = `${loadoutName}
 Class: ${classType}
 Weapon: ${weapon}
-Specialization: ${specialization}
+Special: ${specialization}
 Gadgets: ${gadgets.join(', ')}`;
 
   navigator.clipboard
@@ -3252,7 +3252,7 @@ function setupSelectAllCheckboxes() {
 
       const copyText = `Class: ${selectedClass}
 Weapon: ${selectedItems[0]}
-Specialization: ${selectedItems[1]}
+Special: ${selectedItems[1]}
 Gadget 1: ${selectedItems[2]}
 Gadget 2: ${selectedItems[3]}
 Gadget 3: ${selectedItems[4]}`;

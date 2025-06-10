@@ -136,7 +136,7 @@ You are ${persona}. Deliver a short, punchy 15–25 word analysis that reference
 
 Class: ${classType}
 Weapon: ${weapon} (${weaponTier})
-Specialization: ${specialization} (${specTier})
+Special: ${specialization} (${specTier})
 Gadgets: ${gadgets.join(", ")} (${gadgetTiers.join(", ")})
 
 Analysis Style: ${analysisStyle}

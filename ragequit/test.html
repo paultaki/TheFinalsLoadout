@@ -979,20 +979,8 @@
           </div>
         </div>
 
-        <!-- Handicap Display -->
-        <div id="handicap-display" style="display: none; margin-top: 2rem">
-          <div class="punishment-stack">
-            <div class="punishment-header">
-              <h3 class="punishment-title">🔥 YOUR HANDICAP 🔥</h3>
-            </div>
-            <div class="punishment-item" id="current-handicap">
-              <h4 style="margin-bottom: 0.5rem; color: var(--neon-red)">
-                Loading...
-              </h4>
-              <p style="opacity: 0.8; margin: 0">Preparing your suffering...</p>
-            </div>
-          </div>
-        </div>
+        <!-- Handicap Display - Hidden -->
+        <div id="handicap-display" style="display: none;"></div>
 
         <!-- Copy Button -->
         <div style="text-align: center; margin-top: 2rem">
@@ -1068,7 +1056,7 @@
     <audio id="rageLaughSound" src="sounds/whisper.mp3" preload="auto"></audio>
 
     <!-- Include your existing scripts FIRST -->
-    <script src="rage-roulette-animations.js"></script>
+    <!-- <script src="rage-roulette-animations.js"></script> -->
     <script src="app.js"></script>
 
     <!-- Then our bridge script -->
@@ -1168,300 +1156,20 @@
       }
     </script>
 
-    <!-- Handicap Selector Animation Script -->
-    <script>
-      // Handicap Animation Function
-      function animateHandicapSelection() {
-        return new Promise((resolve) => {
-          // Create animation container
-          const animationContainer = document.createElement("div");
-          animationContainer.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(139, 0, 0, 0.95);
-            z-index: 999999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-          `;
 
-          const title = document.createElement("h2");
-          title.textContent = "SELECTING YOUR PUNISHMENT...";
-          title.style.cssText = `
-            font-size: clamp(28px, 8vw, 48px);
-            font-weight: 900;
-            letter-spacing: clamp(2px, 2vw, 8px);
-            margin-bottom: clamp(20px, 8vw, 50px);
-            color: #ff4444;
-            text-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
-            text-align: center;
-            padding: 0 20px;
-            animation: pulse 0.5s ease-in-out infinite alternate;
-          `;
-
-          // Add pulse animation
-          const style = document.createElement("style");
-          style.textContent = `
-            @keyframes pulse {
-              from { transform: scale(1); }
-              to { transform: scale(1.05); }
-            }
-            @keyframes shake {
-              0%, 100% { transform: translateX(0); }
-              25% { transform: translateX(-10px); }
-              75% { transform: translateX(10px); }
-            }
-          `;
-          document.head.appendChild(style);
-
-          const wheel = document.createElement("div");
-          wheel.style.cssText = `
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            gap: clamp(5px, 2vw, 15px);
-            padding: 20px;
-            box-sizing: border-box;
-            width: 90%;
-            max-width: 800px;
-            justify-items: center;
-          `;
-
-          // Define handicaps - same list as production
-          const handicaps = [
-            { name: "ADS Only", desc: "Can only use ADS (Aim Down Sights)", icon: "🎯" },
-            { name: "No Healing", desc: "Cannot use healing items or abilities", icon: "❤️‍🩹" },
-            { name: "Inverted Controls", desc: "Mouse movement is inverted", icon: "🔄" },
-            { name: "Sloth Mode", desc: "No sprinting - must walk everywhere", icon: "🦥" },
-            { name: "Bunny Hop Ban", desc: "No jumping - stairs and ramps only", icon: "🐰" },
-            { name: "Squirrel Mode", desc: "Max out your mouse DPI/sensitivity", icon: "🐿️" },
-            { name: "Snail Aim", desc: "Set sensitivity to the lowest value", icon: "🐌" },
-            { name: "Reload Addict", desc: "Must reload after every kill or 3 shots", icon: "🔄" },
-            { name: "Permanent Crouch", desc: "Must stay crouched the entire game", icon: "🧎" },
-            { name: "Silent Treatment", desc: "Play with all audio muted", icon: "🔇" },
-            { name: "One Life", desc: "No respawning - death ends the round", icon: "💀" },
-            { name: "Melee Only", desc: "Can only use melee weapons", icon: "⚔️" },
-            { name: "Backwards Mode", desc: "Can only move backwards", icon: "⏪" },
-            { name: "No Minimap", desc: "Cover your minimap completely", icon: "📍" },
-            { name: "Pacifist Run", desc: "Win without eliminating anyone", icon: "☮️" },
-            { name: "Blind Spots", desc: "Cover corners of your screen", icon: "👁️" },
-            { name: "Shake Vision", desc: "Constantly shake your mouse/controller", icon: "📳" },
-            { name: "Wrong Hand", desc: "Use opposite hand for mouse/controller", icon: "👋" },
-            { name: "No Cover", desc: "Cannot hide behind objects", icon: "🚫" },
-            { name: "Panic Mode", desc: "Must constantly move - no standing still", icon: "🏃" }
-          ];
-
-          const handicapElements = [];
-
-          handicaps.forEach((handicap) => {
-            const option = document.createElement("div");
-            option.style.cssText = `
-              width: 100px;
-              height: 120px;
-              background: linear-gradient(135deg, #2e1a1a, #4e2a2a);
-              border-radius: 12px;
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              transition: all 0.3s ease;
-              opacity: 0.5;
-              transform: scale(0.8);
-              border: 2px solid #660000;
-              text-align: center;
-              padding: 10px;
-              cursor: pointer;
-            `;
-
-            const icon = document.createElement("div");
-            icon.textContent = handicap.icon;
-            icon.style.cssText = `
-              font-size: 28px;
-              margin-bottom: 5px;
-            `;
-
-            const label = document.createElement("span");
-            label.textContent = handicap.name.toUpperCase();
-            label.style.cssText = `
-              font-size: 10px;
-              font-weight: 700;
-              color: #fff;
-              line-height: 1.2;
-              text-align: center;
-              word-break: break-word;
-            `;
-
-            option.appendChild(icon);
-            option.appendChild(label);
-            wheel.appendChild(option);
-            handicapElements.push(option);
-          });
-
-          const statusEl = document.createElement("div");
-          statusEl.style.cssText = `
-            margin-top: 30px;
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #ff6666;
-            text-shadow: 0 0 10px rgba(255, 102, 102, 0.8);
-            min-height: 40px;
-            text-align: center;
-          `;
-
-          animationContainer.appendChild(title);
-          animationContainer.appendChild(wheel);
-          animationContainer.appendChild(statusEl);
-          document.body.appendChild(animationContainer);
-
-          // Animation variables
-          let currentIndex = 0;
-          const startTime = Date.now();
-          const totalDuration = 4000; // 4 seconds
-          const initialSpeed = 100;
-          const finalSpeed = 400;
-          const winnerIndex = Math.floor(Math.random() * handicaps.length);
-          
-          // Store selected handicap
-          const selectedHandicap = handicaps[winnerIndex];
-
-          // Animation function
-          const animate = () => {
-            const elapsed = Date.now() - startTime;
-
-            if (elapsed >= totalDuration) {
-              // Final selection
-              handicapElements[winnerIndex].style.opacity = "1";
-              handicapElements[winnerIndex].style.transform = "scale(1.3)";
-              handicapElements[winnerIndex].style.boxShadow = "0 0 40px rgba(255, 68, 68, 0.8)";
-              handicapElements[winnerIndex].style.background = "linear-gradient(135deg, #8b0000, #ff4444)";
-
-              statusEl.textContent = `${selectedHandicap.name.toUpperCase()} ACTIVATED!`;
-
-              // Screen shake effect
-              document.body.style.animation = "shake 0.5s ease-in-out";
-              setTimeout(() => {
-                document.body.style.animation = "";
-              }, 500);
-
-              setTimeout(() => {
-                document.body.removeChild(animationContainer);
-                resolve(selectedHandicap);
-              }, 2000);
-              return;
-            }
-
-            // Update active state
-            handicapElements.forEach((el, idx) => {
-              if (idx === currentIndex) {
-                el.style.opacity = "1";
-                el.style.transform = "scale(1.1)";
-                el.style.background = "linear-gradient(135deg, #b83e3e, #ff4444)";
-              } else {
-                el.style.opacity = "0.5";
-                el.style.transform = "scale(0.8)";
-                el.style.background = "linear-gradient(135deg, #2e1a1a, #4e2a2a)";
-              }
-            });
-
-            // Calculate speed (accelerates then decelerates)
-            const progress = elapsed / totalDuration;
-            let speed = initialSpeed;
-
-            if (progress > 0.6) {
-              const decelerationProgress = (progress - 0.6) / 0.4;
-              speed = initialSpeed + (finalSpeed - initialSpeed) * Math.pow(decelerationProgress, 2);
-            }
-
-            if (elapsed >= totalDuration - 500) {
-              currentIndex = winnerIndex;
-              speed = 500;
-            } else {
-              currentIndex = (currentIndex + 1) % handicaps.length;
-            }
-
-            setTimeout(animate, speed);
-          };
-
-          // Start animation
-          animate();
-        });
-      }
-
-      // Add button to trigger handicap animation
-      function addHandicapTestButton() {
-        const testButton = document.createElement("button");
-        testButton.textContent = "TEST HANDICAP ANIMATION";
-        testButton.style.cssText = `
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          background: linear-gradient(45deg, #8b0000, #ff4444);
-          color: white;
-          border: none;
-          padding: 15px 30px;
-          font-size: 16px;
-          font-weight: bold;
-          border-radius: 50px;
-          cursor: pointer;
-          z-index: 9999;
-          box-shadow: 0 5px 20px rgba(255, 68, 68, 0.5);
-          transition: all 0.3s;
-        `;
-        
-        testButton.addEventListener("mouseenter", () => {
-          testButton.style.transform = "translateY(-2px)";
-          testButton.style.boxShadow = "0 8px 30px rgba(255, 68, 68, 0.7)";
-        });
-        
-        testButton.addEventListener("mouseleave", () => {
-          testButton.style.transform = "translateY(0)";
-          testButton.style.boxShadow = "0 5px 20px rgba(255, 68, 68, 0.5)";
-        });
-        
-        testButton.addEventListener("click", async () => {
-          const selected = await animateHandicapSelection();
-          console.log("Selected handicap:", selected);
-          
-          // Update the displayed handicap if we're in the overlay
-          const handicapDisplay = document.getElementById("handicap-display");
-          if (handicapDisplay && handicapDisplay.style.display !== "none") {
-            const handicapElement = document.getElementById("current-handicap");
-            if (handicapElement) {
-              handicapElement.innerHTML = `
-                <h4 style="margin-bottom: 0.5rem; color: var(--neon-red); font-size: 1.5rem;">
-                  💀 ${selected.name} 💀
-                </h4>
-                <p style="opacity: 0.9; margin: 0; font-size: 1.1rem;">
-                  ${selected.desc}
-                </p>
-              `;
-            }
-          }
-        });
-        
-        document.body.appendChild(testButton);
-      }
-    </script>
-
-    <!-- Bridge Script to Connect New Design with Existing Functionality -->
+    <!-- Simple Slot Machine Script -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Add the handicap test button
-        addHandicapTestButton();
         // Load saved history
         loadHistory();
 
-        // Connect the new spin button to the existing functionality
+        // Connect the spin button to the original slot machine
         const newSpinButton = document.getElementById("rage-quit-btn");
 
         if (newSpinButton) {
-          newSpinButton.addEventListener("click", async function () {
+          newSpinButton.addEventListener("click", function () {
             // Check if already spinning
-            if (this.disabled || (window.state && window.state.isSpinning)) {
+            if (window.state && window.state.isSpinning) {
               console.log("Already spinning, ignoring click");
               return;
             }
@@ -1471,83 +1179,30 @@
             // Reset previous state
             resetForNewSpin();
 
-            try {
-              // Use the original roulette system but skip its handicap phase
-              if (window.rageRouletteSystem && typeof window.rageRouletteSystem.startFullSequence === 'function') {
-                console.log("Using roulette system");
-                
-                // Disable the built-in handicap animation
-                const originalAnimateHandicap = window.rageRouletteSystem.animateHandicapSelection;
-                window.rageRouletteSystem.animateHandicapSelection = async function() {
-                  // Skip the built-in handicap animation, just set a dummy value
-                  this.selectedHandicap = "Placeholder";
-                  this.selectedHandicapDesc = "Will be replaced";
-                  return Promise.resolve();
-                };
-                
-                // Start the roulette sequence (class + spins + slot machine)
-                await window.rageRouletteSystem.startFullSequence();
-                
-                // Restore original function for future use
-                window.rageRouletteSystem.animateHandicapSelection = originalAnimateHandicap;
-                
-                // Show overlay after roulette
-                setTimeout(() => {
-                  const overlay = document.getElementById("slot-machine-overlay");
-                  const hero = document.getElementById("hero-section");
-                  overlay.classList.add("active");
-                  hero.classList.add("dimmed");
+            // Show overlay immediately
+            const overlay = document.getElementById("slot-machine-overlay");
+            const hero = document.getElementById("hero-section");
+            overlay.classList.add("active");
+            hero.classList.add("dimmed");
 
-                  // Wait for slot animations to complete, then show results
-                  setTimeout(() => {
-                    const handicapDisplay = document.getElementById("handicap-display");
-                    if (handicapDisplay) {
-                      handicapDisplay.style.display = "block";
+            // Use the original slot machine function
+            if (typeof window.spinRageQuitLoadout === "function") {
+              console.log("Using original spinRageQuitLoadout");
+              window.spinRageQuitLoadout();
+              
+              // Wait for slot animations to complete, then show buttons
+              setTimeout(() => {
+                // Show buttons
+                document.getElementById("copyLoadoutButton").style.display = "inline-block";
+                document.getElementById("exit-overlay-btn").style.display = "inline-block";
 
-                      const handicapElement = document.getElementById("current-handicap");
-                      if (handicapElement && window.state) {
-                        handicapElement.innerHTML = `
-                          <h4 style="margin-bottom: 0.5rem; color: var(--neon-red); font-size: 1.5rem;">
-                            💀 ${window.state.selectedHandicap || "Unknown"} 💀
-                          </h4>
-                          <p style="opacity: 0.9; margin: 0; font-size: 1.1rem;">
-                            ${window.state.selectedHandicapDesc || "No description"}
-                          </p>
-                          <p style="margin-top: 1rem; opacity: 0.7; font-size: 0.9rem;">
-                            Class: ${window.state.selectedClass || "Unknown"} | Spins: ${window.state.totalSpins || "Unknown"}
-                          </p>
-                        `;
-                      }
-                    }
-
-                    // Show buttons
-                    document.getElementById("copyLoadoutButton").style.display = "inline-block";
-                    document.getElementById("exit-overlay-btn").style.display = "inline-block";
-
-                    // Add to history
-                    recordSpinResults();
-
-                    // Reset spinning state
-                    if (window.state) {
-                      window.state.isSpinning = false;
-                    }
-
-                    // Re-enable button
-                    this.disabled = false;
-                  }, 6000); // Wait for slot animations
-                }, 500);
-                
-              } else {
-                console.error("Roulette system not found!");
-                alert("Error: Roulette system not loaded. Please refresh the page.");
-                this.disabled = false;
-              }
-            } catch (error) {
-              console.error("Error during spin:", error);
-              this.disabled = false;
-              if (window.state) {
-                window.state.isSpinning = false;
-              }
+                // Add to history
+                recordSpinResults();
+              }, 8000); // Wait for full slot animation
+              
+            } else {
+              console.error("spinRageQuitLoadout function not found!");
+              alert("Error: Slot machine function not loaded. Please refresh the page.");
             }
           });
         }
