@@ -212,6 +212,34 @@
         top: 140px !important;
         right: 16px !important;
         z-index: 999 !important;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+      
+      .sound-toggle-button:hover {
+        background: rgba(0, 0, 0, 0.8);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: scale(1.05);
+      }
+      
+      .sound-toggle-button.muted {
+        background: rgba(255, 68, 68, 0.7);
+        border-color: rgba(255, 68, 68, 0.4);
+      }
+      
+      .sound-toggle-button.muted:hover {
+        background: rgba(255, 68, 68, 0.8);
+        border-color: rgba(255, 68, 68, 0.6);
       }
     }
 
@@ -711,6 +739,19 @@
   </svg>
 </button>
 
+<!-- Desktop Sound Toggle Button -->
+<button id="desktop-sound-toggle" class="sound-toggle-button" aria-label="Toggle sound">
+  <svg class="sound-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+  </svg>
+  <svg class="sound-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+    <line x1="23" y1="9" x2="17" y2="15"></line>
+    <line x1="17" y1="9" x2="23" y2="15"></line>
+  </svg>
+</button>
+
 
 <!-- Filter Panel Overlay -->
 <div id="filter-panel-overlay" class="filter-panel-overlay"></div>
@@ -737,6 +778,28 @@
       <button class="class-filter" data-class="light">Light</button>
       <button class="class-filter" data-class="medium">Medium</button>
       <button class="class-filter" data-class="heavy">Heavy</button>
+    </div>
+    
+    <!-- Class Exclusion Filters -->
+    <div class="class-exclusion-section">
+      <h4>Exclude Classes from Random Selection</h4>
+      <div class="class-exclusion-checkboxes">
+        <label class="exclusion-checkbox">
+          <input type="checkbox" id="exclude-light" data-exclude-class="light">
+          <span class="checkbox-custom"></span>
+          <span class="class-label light">LIGHT</span>
+        </label>
+        <label class="exclusion-checkbox">
+          <input type="checkbox" id="exclude-medium" data-exclude-class="medium">
+          <span class="checkbox-custom"></span>
+          <span class="class-label medium">MEDIUM</span>
+        </label>
+        <label class="exclusion-checkbox">
+          <input type="checkbox" id="exclude-heavy" data-exclude-class="heavy">
+          <span class="checkbox-custom"></span>
+          <span class="class-label heavy">HEAVY</span>
+        </label>
+      </div>
     </div>
   </div>
   
@@ -1247,28 +1310,41 @@
         
         // Audio Toggle Implementation
         function initAudioToggle() {
-          const soundToggle = document.getElementById('sound-toggle');
-          if (!soundToggle) {
-            console.warn('Sound toggle button not found');
+          const mobileSoundToggle = document.getElementById('sound-toggle');
+          const desktopSoundToggle = document.getElementById('desktop-sound-toggle');
+          
+          if (!mobileSoundToggle && !desktopSoundToggle) {
+            console.warn('No sound toggle buttons found');
             return;
           }
           
           // Get initial state from localStorage or default to enabled
           const isEnabled = localStorage.getItem('soundEnabled') !== 'false';
           
-          // Set initial visual state
-          updateAudioToggleVisual(isEnabled);
+          // Set initial visual state for both toggles
+          updateAudioToggleVisual(mobileSoundToggle, isEnabled);
+          updateAudioToggleVisual(desktopSoundToggle, isEnabled);
           
-          // Add click handler
-          soundToggle.addEventListener('click', function() {
+          // Add click handler for mobile toggle
+          if (mobileSoundToggle) {
+            mobileSoundToggle.addEventListener('click', handleToggleClick);
+          }
+          
+          // Add click handler for desktop toggle
+          if (desktopSoundToggle) {
+            desktopSoundToggle.addEventListener('click', handleToggleClick);
+          }
+          
+          function handleToggleClick() {
             const currentState = localStorage.getItem('soundEnabled') !== 'false';
             const newState = !currentState;
             
             // Save new state
             localStorage.setItem('soundEnabled', newState.toString());
             
-            // Update visual
-            updateAudioToggleVisual(newState);
+            // Update visual for both toggles
+            updateAudioToggleVisual(mobileSoundToggle, newState);
+            updateAudioToggleVisual(desktopSoundToggle, newState);
             
             // Update global state if it exists
             if (window.state) {
@@ -1281,11 +1357,10 @@
             }
             
             console.log('Sound', newState ? 'enabled' : 'disabled');
-          });
+          }
         }
         
-        function updateAudioToggleVisual(isEnabled) {
-          const soundToggle = document.getElementById('sound-toggle');
+        function updateAudioToggleVisual(soundToggle, isEnabled) {
           if (!soundToggle) return;
           
           const soundOn = soundToggle.querySelector('.sound-on');

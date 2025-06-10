@@ -947,6 +947,21 @@
         </div>
       </div>
 
+      <!-- Handicap Display (for after spin) -->
+      <div id="handicap-display" style="display: none; margin-top: 2rem">
+        <div class="punishment-stack">
+          <div class="punishment-header">
+            <h3 class="punishment-title">🔥 YOUR HANDICAP 🔥</h3>
+          </div>
+          <div class="punishment-item" id="current-handicap">
+            <h4 style="margin-bottom: 0.5rem; color: var(--neon-red)">
+              Loading...
+            </h4>
+            <p style="opacity: 0.8; margin: 0">Preparing your suffering...</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Copy Button -->
       <div style="text-align: center; margin-top: 2rem">
         <button
@@ -1129,9 +1144,56 @@
                   loadingOverlay.classList.remove("active");
                 }
 
-                // Show punishment stack and double or nothing
-                document.getElementById("punishment-stack").style.display =
-                  "block";
+                // Show handicap display
+                const handicapDisplay =
+                  document.getElementById("handicap-display");
+                if (
+                  handicapDisplay &&
+                  window.state &&
+                  window.state.selectedHandicap
+                ) {
+                  handicapDisplay.style.display = "block";
+
+                  // Update the handicap content
+                  const handicapElement =
+                    document.getElementById("current-handicap");
+                  if (handicapElement) {
+                    handicapElement.innerHTML = `
+                      <h4 style="margin-bottom: 0.5rem; color: var(--neon-red); font-size: 1.5rem;">
+                        💀 ${window.state.selectedHandicap} 💀
+                      </h4>
+                      <p style="opacity: 0.9; margin: 0; font-size: 1.1rem;">
+                        ${
+                          window.state.selectedHandicapDesc ||
+                          "No description available"
+                        }
+                      </p>
+                    `;
+                  }
+
+                  // Scroll to show the handicap
+                  setTimeout(() => {
+                    handicapDisplay.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+                  }, 500);
+                }
+
+                // Show punishment stack if using stacked handicaps
+                const punishmentStack =
+                  document.getElementById("punishment-stack");
+                if (
+                  punishmentStack &&
+                  window.state &&
+                  window.state.handicapStack &&
+                  window.state.handicapStack.length > 0
+                ) {
+                  punishmentStack.style.display = "block";
+                  updatePunishmentDisplay();
+                }
+
+                // Show double or nothing
                 document.getElementById("double-nothing").style.display =
                   "block";
                 document.getElementById("copyLoadoutButton").style.display =
@@ -1174,6 +1236,55 @@
           const sufferingEl = document.getElementById("suffering-level");
           if (sufferingEl && window.state && window.state.sufferingLevel) {
             sufferingEl.textContent = window.state.sufferingLevel;
+          }
+        }
+
+        // Function to update punishment display
+        function updatePunishmentDisplay() {
+          const punishmentList = document.getElementById("punishment-list");
+          if (!punishmentList) return;
+
+          // Clear existing content
+          punishmentList.innerHTML = "";
+
+          // Add all handicaps from the stack
+          if (
+            window.state &&
+            window.state.handicapStack &&
+            window.state.handicapStack.length > 0
+          ) {
+            window.state.handicapStack.forEach((handicap, index) => {
+              const punishmentItem = document.createElement("div");
+              punishmentItem.className = "punishment-item";
+              punishmentItem.innerHTML = `
+                <h4 style="margin-bottom: 0.5rem; color: var(--neon-red);">${
+                  handicap.name
+                }</h4>
+                <p style="opacity: 0.8; margin: 0;">${
+                  handicap.description || "No description"
+                }</p>
+              `;
+              punishmentList.appendChild(punishmentItem);
+            });
+          } else if (window.state && window.state.selectedHandicap) {
+            // Fallback to single handicap if stack is empty
+            const punishmentItem = document.createElement("div");
+            punishmentItem.className = "punishment-item";
+            punishmentItem.innerHTML = `
+              <h4 style="margin-bottom: 0.5rem; color: var(--neon-red);">${
+                window.state.selectedHandicap
+              }</h4>
+              <p style="opacity: 0.8; margin: 0;">${
+                window.state.selectedHandicapDesc || "No description"
+              }</p>
+            `;
+            punishmentList.appendChild(punishmentItem);
+
+            // Update suffering level
+            const sufferingEl = document.getElementById("suffering-level");
+            if (sufferingEl) {
+              sufferingEl.textContent = "1";
+            }
           }
         }
 

@@ -832,9 +832,47 @@ const displayLoadout = (classType) => {
   }, 50);
 };
 
+// Helper function to get available classes (excluding checked exclusions)
+const getAvailableClasses = () => {
+  const allClasses = ["Light", "Medium", "Heavy"];
+  const excludedClasses = [];
+  
+  // Check which classes are excluded
+  ['light', 'medium', 'heavy'].forEach(className => {
+    const checkbox = document.getElementById(`exclude-${className}`);
+    console.log(`🔍 Checking checkbox exclude-${className}:`, checkbox ? 'found' : 'not found');
+    if (checkbox) {
+      console.log(`📋 Checkbox exclude-${className} checked:`, checkbox.checked);
+      if (checkbox.checked) {
+        // Capitalize first letter to match class names
+        const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
+        excludedClasses.push(capitalizedClass);
+        console.log(`🚫 Added ${capitalizedClass} to excluded classes`);
+      }
+    }
+  });
+  
+  // Filter out excluded classes
+  const availableClasses = allClasses.filter(cls => !excludedClasses.includes(cls));
+  
+  console.log('🚫 Final excluded classes:', excludedClasses);
+  console.log('✅ Final available classes:', availableClasses);
+  
+  return availableClasses;
+};
+
 const displayRandomLoadout = () => {
-  const classes = ["Light", "Medium", "Heavy"];
-  const randomClass = classes[Math.floor(Math.random() * classes.length)];
+  let availableClasses = getAvailableClasses();
+  
+  // If no classes are available (all excluded), show warning and use all classes
+  if (availableClasses.length === 0) {
+    console.warn('⚠️ All classes excluded! Using all classes instead.');
+    alert('All classes are excluded! Please uncheck at least one class to continue.');
+    availableClasses = ["Light", "Medium", "Heavy"];
+  }
+  
+  const randomClass = availableClasses[Math.floor(Math.random() * availableClasses.length)];
+  console.log(`🎲 Random class selected: ${randomClass}`);
   displayLoadout(randomClass);
 };
 
@@ -1063,7 +1101,43 @@ function setupFilterSystem() {
   // Apply button closes panel
   applyFiltersBtn.addEventListener("click", () => {
     console.log("🔄 Applying filters and closing panel");
+    
+    // If a spin is currently in progress, don't do anything
+    if (state.isSpinning) {
+      console.log("⚠️ Cannot apply filters during spin");
+      return;
+    }
+    
+    // Force a test calculation of filtered loadouts to make sure filters work
+    const testFiltered = getFilteredLoadouts();
+    console.log("Filter test result:", testFiltered);
+    
     closePanel();
+    
+    // Show confirmation message
+    const filterStatus = document.createElement("div");
+    filterStatus.className = "filter-status";
+    filterStatus.textContent = "Filters applied!";
+    filterStatus.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 255, 0, 0.9);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      z-index: 10001;
+      font-weight: bold;
+    `;
+    document.body.appendChild(filterStatus);
+    
+    // Remove after 2 seconds
+    setTimeout(() => {
+      if (filterStatus && filterStatus.parentNode) {
+        filterStatus.parentNode.removeChild(filterStatus);
+      }
+    }, 2000);
   });
 
   // Escape key closes panel
@@ -1202,51 +1276,7 @@ function setupFilterSystem() {
     console.error("❌ Could not find search input");
   }
 
-  // Apply button functionality
-  const applyBtn = document.getElementById("apply-filters");
-  if (applyBtn) {
-    console.log("✅ Found apply button");
-
-    applyBtn.addEventListener("click", () => {
-      console.log("✅ Filters applied!");
-
-      // If a spin is currently in progress, don't do anything
-      if (state.isSpinning) {
-        console.log("⚠️ Cannot apply filters during spin");
-        return;
-      }
-      
-      // Force a test calculation of filtered loadouts to make sure filters work
-      const testFiltered = getFilteredLoadouts();
-      console.log("Filter test result:", testFiltered);
-
-      // No longer using gadget queues - each spin gets fresh random selection
-      
-      // Close the filter panel
-      if (filterPanel) {
-        filterPanel.style.display = "none";
-        if (toggleIcon) {
-          toggleIcon.textContent = "+";
-          toggleIcon.classList.remove("open");
-        }
-      }
-      
-      // Show confirmation message
-      const filterStatus = document.createElement("div");
-      filterStatus.className = "filter-status";
-      filterStatus.textContent = "Filters applied!";
-      document.body.appendChild(filterStatus);
-      
-      // Remove after 2 seconds
-      setTimeout(() => {
-        if (filterStatus && filterStatus.parentNode) {
-          filterStatus.parentNode.removeChild(filterStatus);
-        }
-      }, 2000);
-    });
-  } else {
-    console.error("❌ Could not find apply button");
-  }
+  // Apply button functionality - handled above in proper scope
   
   // Reset button functionality
   const resetBtn = document.getElementById("reset-filters");
@@ -2853,6 +2883,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize sidebar functionality
   initializeSidebar();
   
+  // Initialize class exclusion system
+  initializeClassExclusion();
+  
   // Initialize mobile performance optimizations
   initializeMobileOptimizations();
   
@@ -3092,9 +3125,17 @@ function setupSelectAllCheckboxes() {
 
       // Handle "Random" class selection
       if (button.dataset.class.toLowerCase() === "random") {
-        // Get a random class
-        const classes = ["Light", "Medium", "Heavy"];
-        const randomClass = classes[Math.floor(Math.random() * classes.length)];
+        // Get available classes (excluding user exclusions)
+        let availableClasses = getAvailableClasses();
+        
+        // If no classes are available (all excluded), show warning and use all classes
+        if (availableClasses.length === 0) {
+          console.warn('⚠️ All classes excluded! Using all classes instead.');
+          alert('All classes are excluded! Please uncheck at least one class to continue.');
+          availableClasses = ["Light", "Medium", "Heavy"];
+        }
+        
+        const randomClass = availableClasses[Math.floor(Math.random() * availableClasses.length)];
         state.selectedClass = randomClass;
         console.log(`🎲 Randomly Chosen Class: ${randomClass}`);
 
@@ -3753,4 +3794,55 @@ async function roastMeAgain(button) {
     button.disabled = false;
     button.style.opacity = '1';
   }
+}
+
+// Initialize class exclusion system
+function initializeClassExclusion() {
+  console.log('🚫 Initializing class exclusion system...');
+  
+  // Get all exclusion checkboxes
+  const exclusionCheckboxes = document.querySelectorAll('[data-exclude-class]');
+  
+  if (exclusionCheckboxes.length === 0) {
+    console.warn('⚠️ No class exclusion checkboxes found');
+    return;
+  }
+  
+  console.log(`✅ Found ${exclusionCheckboxes.length} exclusion checkboxes`);
+  
+  // Load saved exclusions from localStorage
+  exclusionCheckboxes.forEach(checkbox => {
+    const className = checkbox.getAttribute('data-exclude-class');
+    const saved = localStorage.getItem(`exclude-${className}`);
+    if (saved === 'true') {
+      checkbox.checked = true;
+      console.log(`🚫 Loaded exclusion for ${className}`);
+    }
+  });
+  
+  // Add event listeners to save preferences
+  exclusionCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const className = this.getAttribute('data-exclude-class');
+      const isChecked = this.checked;
+      
+      // Save to localStorage
+      localStorage.setItem(`exclude-${className}`, isChecked.toString());
+      
+      console.log(`${isChecked ? '🚫' : '✅'} ${className} class ${isChecked ? 'excluded' : 'included'}`);
+      
+      // Validate that at least one class remains available
+      const availableClasses = getAvailableClasses();
+      if (availableClasses.length === 0) {
+        console.warn('⚠️ All classes would be excluded! Reverting change.');
+        alert('You cannot exclude all classes! At least one class must remain available.');
+        
+        // Revert the change
+        this.checked = false;
+        localStorage.setItem(`exclude-${className}`, 'false');
+      }
+    });
+  });
+  
+  console.log('✅ Class exclusion system initialized');
 }

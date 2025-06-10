@@ -7187,3 +7187,90 @@ details[open].adjustment summary::after {
     margin: 1.5rem 0;
   }
 }
+
+/* Class Exclusion Section */
+.class-exclusion-section {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.class-exclusion-section h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.class-exclusion-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exclusion-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.exclusion-checkbox:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.exclusion-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.exclusion-checkbox input[type="checkbox"]:checked + .checkbox-custom {
+  background: #ff4444;
+  border-color: #ff4444;
+}
+
+.exclusion-checkbox input[type="checkbox"]:checked + .checkbox-custom::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.class-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.class-label.light {
+  color: #00f3ff;
+}
+
+.class-label.medium {
+  color: #ff00ff;
+}
+
+.class-label.heavy {
+  color: #ffaa00;
+}
