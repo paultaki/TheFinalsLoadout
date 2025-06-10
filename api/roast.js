@@ -141,7 +141,7 @@ Gadgets: ${gadgets.join(", ")} (${gadgetTiers.join(", ")})
 
 Analysis Style: ${analysisStyle}
 
-IMPORTANT: Match the style! Reference actual items. Be specific about synergies.
+IMPORTANT: Match the style! Reference actual items. Be specific about synergies. DO NOT include any prefixes like "Here's a roast:" or "Analysis:" - start directly with your analysis.
 
 ${analysisStyle} Examples:
 ${analysisStyle === "tactical" ? `

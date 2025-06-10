@@ -1172,15 +1172,8 @@
         hero.classList.remove("dimmed");
       }
 
-      // Add to history function  
-      function addToHistory(
-        classType,
-        weapon,
-        specialization,
-        gadgets,
-        handicapName,
-        handicapDesc
-      ) {
+      // Proper addToHistory function based on main page pattern
+      async function addToHistory(classType, weapon, specialization, gadgets, handicapName, handicapDesc) {
         const historyList = document.getElementById("history-list");
         if (!historyList) return;
 
@@ -1188,72 +1181,86 @@
           const newEntry = document.createElement("div");
           newEntry.classList.add("history-entry");
 
-          const timestamp = new Date().toLocaleString();
-          const entryNumber = document.querySelectorAll(".history-entry").length + 1;
+          // Generate loadout name like main page
+          const loadoutName = generateRageLoadoutName(classType, weapon, specialization);
+          
+          // Check if spicy loadout
+          if (isSpicyRageLoadout(weapon, specialization, gadgets, handicapName)) {
+            newEntry.classList.add("spicy-loadout");
+          }
 
-          // Create proper history entry with styling
+          // Generate roast for this loadout
+          const roast = generateRageRoast(weapon, specialization, gadgets, handicapName);
+
+          // Create entry with proper main page structure
           newEntry.innerHTML = `
-            <div style="background: var(--dark-gray); border-radius: 15px; padding: 1.5rem; margin-bottom: 1rem; border: 1px solid var(--blood-red);">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h3 style="color: var(--neon-red); margin: 0; font-size: 1.2rem;">
-                  Rage Loadout #${entryNumber}
-                </h3>
-                <span style="color: var(--gold); font-weight: bold; background: var(--black); padding: 0.25rem 0.5rem; border-radius: 5px;">
-                  ${classType}
-                </span>
+            <div class="meme-export-container">
+              <div class="loadout-header">
+                <span class="class-badge ${classType.toLowerCase()}">${classType.toUpperCase()}</span>
+                <span class="loadout-name">${loadoutName}</span>
+                <span class="timestamp">Just now</span>
               </div>
-              
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
-                <div style="text-align: center;">
-                  <img src="../images/${weapon?.replace(/ /g, "_")}.webp" alt="${weapon}" style="width: 50px; height: 50px; object-fit: contain; margin-bottom: 0.5rem;" onerror="this.src='../images/placeholder.webp'">
-                  <p style="color: white; font-size: 0.85rem; margin: 0; font-weight: bold;">${weapon}</p>
-                  <small style="color: #ccc;">Weapon</small>
+              <div class="loadout-details">
+                <div class="loadout-item weapon-item">
+                  <img src="../images/${weapon.replace(/ /g, "_")}.webp" alt="${weapon}" class="item-icon">
+                  <span class="item-name">${weapon}</span>
                 </div>
-                <div style="text-align: center;">
-                  <img src="../images/${specialization?.replace(/ /g, "_")}.webp" alt="${specialization}" style="width: 50px; height: 50px; object-fit: contain; margin-bottom: 0.5rem;" onerror="this.src='../images/placeholder.webp'">
-                  <p style="color: white; font-size: 0.85rem; margin: 0; font-weight: bold;">${specialization}</p>
-                  <small style="color: #ccc;">Spec</small>
+                <div class="loadout-item spec-item">
+                  <img src="../images/${specialization.replace(/ /g, "_")}.webp" alt="${specialization}" class="item-icon">
+                  <span class="item-name">${specialization}</span>
                 </div>
-                ${gadgets.map((gadget, index) => `
-                  <div style="text-align: center;">
-                    <img src="../images/${gadget?.replace(/ /g, "_")}.webp" alt="${gadget}" style="width: 40px; height: 40px; object-fit: contain; margin-bottom: 0.5rem;" onerror="this.src='../images/placeholder.webp'">
-                    <p style="color: white; font-size: 0.75rem; margin: 0; font-weight: bold; line-height: 1.1;">${gadget}</p>
-                    <small style="color: #ccc;">G${index + 1}</small>
-                  </div>
-                `).join('')}
+                <div class="gadget-group">
+                  ${gadgets.map(g => `
+                    <div class="loadout-item gadget-item">
+                      <img src="../images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small">
+                      <span class="item-name small">${g}</span>
+                    </div>
+                  `).join('')}
+                </div>
               </div>
-              
-              <div style="background: var(--black); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
-                <p style="color: var(--neon-red); margin: 0 0 0.5rem 0; font-weight: bold;">
-                  💀 Handicap: ${handicapName || "None"}
-                </p>
-                <p style="color: #ccc; margin: 0; font-style: italic; font-size: 0.9rem;">
-                  ${handicapDesc || "No handicap selected"}
-                </p>
+              <div class="handicap-section">
+                <div class="handicap-badge">
+                  <span class="skull-icon">💀</span>
+                  <span class="handicap-name">${handicapName || "None"}</span>
+                </div>
+                <div class="handicap-desc">${handicapDesc || "No handicap selected"}</div>
               </div>
-              
-              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; opacity: 0.7;">
-                <span>${timestamp}</span>
-                <button onclick="copyHistoryEntry(this)" style="background: var(--rage-gradient); border: none; padding: 0.25rem 0.5rem; border-radius: 3px; color: white; cursor: pointer; font-size: 0.7rem;">
-                  📋 Copy
-                </button>
+              <div class="roast-section">
+                <div class="roast-content">
+                  <span class="fire-emoji">🔥</span>
+                  <span class="roast-text">${roast}</span>
+                </div>
               </div>
+              <div class="meme-footer">
+                <span class="meme-watermark">Rage-analyzed by thefinalsloadout.com</span>
+              </div>
+            </div>
+            <div class="loadout-actions">
+              <button class="copy-build" onclick="copyRageLoadoutText(this)">
+                <span>📋</span> COPY
+              </button>
+              <button class="meme-card-btn" onclick="exportRageMemeCard(this)">
+                <span>💀</span> RAGE CARD
+              </button>
             </div>
           `;
 
-          historyList.insertBefore(newEntry, historyList.firstChild);
+          historyList.prepend(newEntry);
+          
+          // Animate entry
+          setTimeout(() => newEntry.classList.add('visible'), 10);
 
           // Keep only last 5 entries
           while (historyList.children.length > 5) {
             historyList.removeChild(historyList.lastChild);
           }
 
-          // Save to localStorage with the correct structure
+          // Save to localStorage using main page structure
           saveHistory();
           
-          console.log("✅ Added history entry:", { classType, weapon, specialization, gadgets, handicapName });
+          console.log("✅ Added rage history entry:", { classType, weapon, specialization, gadgets, handicapName });
         } catch (error) {
-          console.error("❌ Error adding to history:", error);
+          console.error("❌ Error adding to rage history:", error);
         }
       }
 
@@ -1297,40 +1304,130 @@ Generated by thefinalsloadout.com/ragequit/`;
         }
       }
 
-      // Save history to localStorage (improved structure)
+      // Save history to localStorage using main page data structure
       function saveHistory() {
         try {
-          const entries = [];
-          document.querySelectorAll(".history-entry").forEach((entry) => {
-            entries.push(entry.innerHTML);
+          const entries = Array.from(document.querySelectorAll(".history-entry")).map((entry) => {
+            // Extract data like main page does
+            const classType = entry.querySelector('.class-badge')?.textContent.trim();
+            const loadoutName = entry.querySelector('.loadout-name')?.textContent.trim();
+            const weapon = entry.querySelector('.weapon-item .item-name')?.textContent;
+            const specialization = entry.querySelector('.spec-item .item-name')?.textContent;
+            const gadgets = Array.from(entry.querySelectorAll('.gadget-item .item-name'))
+              .map(el => el.textContent);
+            const handicapName = entry.querySelector('.handicap-name')?.textContent || "None";
+            const handicapDesc = entry.querySelector('.handicap-desc')?.textContent || "No handicap";
+            const roast = entry.querySelector('.roast-text')?.textContent;
+            const isSpicy = entry.classList.contains('spicy-loadout');
+
+            return {
+              classType,
+              loadoutName,
+              weapon,
+              specialization,
+              gadgets,
+              handicapName,
+              handicapDesc,
+              isSpicy,
+              roast,
+              roastFallback: false,
+              timestamp: Date.now()
+            };
           });
-          localStorage.setItem("rageQuitHistory", JSON.stringify(entries));
-          console.log("✅ History saved:", entries.length, "entries");
+
+          const cappedEntries = entries.slice(0, 5);
+          localStorage.setItem("rageQuitHistory", JSON.stringify(cappedEntries));
+          console.log("✅ Rage history saved:", cappedEntries.length, "entries");
         } catch (error) {
-          console.error("❌ Error saving history:", error);
+          console.error("❌ Error saving rage history:", error);
         }
       }
 
-      // Load history from localStorage (improved)
+      // Load history from localStorage using main page pattern
       function loadHistory() {
         try {
           const saved = localStorage.getItem("rageQuitHistory");
           if (saved) {
-            const entries = JSON.parse(saved);
+            const savedEntries = JSON.parse(saved);
             const historyList = document.getElementById("history-list");
             if (historyList) {
               historyList.innerHTML = ""; // Clear existing
-              entries.forEach((html) => {
+              
+              savedEntries.forEach((entryData, index) => {
+                // Skip malformed entries
+                if (!entryData.classType || !entryData.weapon) return;
+                
                 const entry = document.createElement("div");
-                entry.className = "history-entry";
-                entry.innerHTML = html;
+                entry.classList.add("history-entry", "visible");
+                
+                if (entryData.isSpicy) {
+                  entry.classList.add("spicy-loadout");
+                }
+                
+                // Calculate relative timestamp
+                const timeAgo = index === 0 ? 'Just now' : `${index + 1} min ago`;
+                
+                // Rebuild HTML from saved data
+                entry.innerHTML = `
+                  <div class="meme-export-container">
+                    <div class="loadout-header">
+                      <span class="class-badge ${entryData.classType.toLowerCase()}">${entryData.classType.toUpperCase()}</span>
+                      <span class="loadout-name">${entryData.loadoutName}</span>
+                      <span class="timestamp">${timeAgo}</span>
+                    </div>
+                    <div class="loadout-details">
+                      <div class="loadout-item weapon-item">
+                        <img src="../images/${entryData.weapon.replace(/ /g, "_")}.webp" alt="${entryData.weapon}" class="item-icon">
+                        <span class="item-name">${entryData.weapon}</span>
+                      </div>
+                      <div class="loadout-item spec-item">
+                        <img src="../images/${entryData.specialization.replace(/ /g, "_")}.webp" alt="${entryData.specialization}" class="item-icon">
+                        <span class="item-name">${entryData.specialization}</span>
+                      </div>
+                      <div class="gadget-group">
+                        ${entryData.gadgets.map(g => `
+                          <div class="loadout-item gadget-item">
+                            <img src="../images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small">
+                            <span class="item-name small">${g}</span>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+                    <div class="handicap-section">
+                      <div class="handicap-badge">
+                        <span class="skull-icon">💀</span>
+                        <span class="handicap-name">${entryData.handicapName || "None"}</span>
+                      </div>
+                      <div class="handicap-desc">${entryData.handicapDesc || "No handicap"}</div>
+                    </div>
+                    <div class="roast-section${entryData.roastFallback ? ' fallback' : ''}">
+                      <div class="roast-content">
+                        <span class="fire-emoji">🔥</span>
+                        <span class="roast-text">${entryData.roast || 'Analysis unavailable. Still questionable though. -∞/10'}</span>
+                      </div>
+                    </div>
+                    <div class="meme-footer">
+                      <span class="meme-watermark">Rage-analyzed by thefinalsloadout.com</span>
+                    </div>
+                  </div>
+                  <div class="loadout-actions">
+                    <button class="copy-build" onclick="copyRageLoadoutText(this)">
+                      <span>📋</span> COPY
+                    </button>
+                    <button class="meme-card-btn" onclick="exportRageMemeCard(this)">
+                      <span>💀</span> RAGE CARD
+                    </button>
+                  </div>
+                `;
+                
                 historyList.appendChild(entry);
               });
-              console.log("✅ History loaded:", entries.length, "entries");
+              
+              console.log("✅ Rage history loaded:", savedEntries.length, "entries");
             }
           }
         } catch (error) {
-          console.error("❌ Error loading history:", error);
+          console.error("❌ Error loading rage history:", error);
         }
       }
     </script>
@@ -1371,17 +1468,31 @@ Generated by thefinalsloadout.com/ragequit/`;
               // Start the full sequence (class -> spins -> handicap -> slot machine)
               window.rageRouletteSystem.startFullSequence().then(() => {
                 // After roulette completes, the slot machine will run
-                // Wait for slot animations to complete, then show buttons
+                // Wait for slot animations to complete, then show buttons and re-enable spin button
                 setTimeout(() => {
                   // Show buttons
                   document.getElementById("copyLoadoutButton").style.display = "inline-block";
                   document.getElementById("exit-overlay-btn").style.display = "inline-block";
+
+                  // Re-enable spin button for next spin
+                  const spinBtn = document.getElementById("rage-quit-btn");
+                  if (spinBtn) {
+                    spinBtn.disabled = false;
+                    spinBtn.removeAttribute("disabled");
+                    console.log("✅ Spin button re-enabled for next spin");
+                  }
 
                   // Add to history
                   recordSpinResults();
                 }, 8000); // Wait for full slot animation
               }).catch((error) => {
                 console.error("Error in roulette sequence:", error);
+                // Re-enable button on error
+                const spinBtn = document.getElementById("rage-quit-btn");
+                if (spinBtn) {
+                  spinBtn.disabled = false;
+                  spinBtn.removeAttribute("disabled");
+                }
                 // Fallback to direct slot machine
                 if (typeof window.spinRageQuitLoadout === "function") {
                   window.spinRageQuitLoadout();
@@ -1398,6 +1509,14 @@ Generated by thefinalsloadout.com/ragequit/`;
                 document.getElementById("copyLoadoutButton").style.display = "inline-block";
                 document.getElementById("exit-overlay-btn").style.display = "inline-block";
 
+                // Re-enable spin button for next spin
+                const spinBtn = document.getElementById("rage-quit-btn");
+                if (spinBtn) {
+                  spinBtn.disabled = false;
+                  spinBtn.removeAttribute("disabled");
+                  console.log("✅ Spin button re-enabled for next spin (fallback)");
+                }
+
                 // Add to history
                 recordSpinResults();
               }, 8000); // Wait for full slot animation
@@ -1405,6 +1524,12 @@ Generated by thefinalsloadout.com/ragequit/`;
             } else {
               console.error("Neither roulette system nor spinRageQuitLoadout function found!");
               alert("Error: Slot machine function not loaded. Please refresh the page.");
+              // Re-enable button on error
+              const spinBtn = document.getElementById("rage-quit-btn");
+              if (spinBtn) {
+                spinBtn.disabled = false;
+                spinBtn.removeAttribute("disabled");
+              }
             }
           });
         }
@@ -1545,10 +1670,22 @@ Generated by thefinalsloadout.com/ragequit/`;
             // Then exit overlay
             exitOverlay();
             
-            // Reset button state when exiting
+            // Reset button state when exiting - comprehensive reset
             const spinBtn = document.getElementById("rage-quit-btn");
             if (spinBtn) {
               spinBtn.disabled = false;
+              spinBtn.removeAttribute("disabled");
+              spinBtn.classList.remove('disabled', 'spinning');
+              
+              // Reset window state
+              if (window.state) {
+                window.state.isSpinning = false;
+              }
+              if (window.rageRouletteSystem) {
+                window.rageRouletteSystem.animating = false;
+              }
+              
+              console.log("✅ Spin button fully reset after exit overlay");
             }
           });
         }
@@ -1626,6 +1763,98 @@ Generated by thefinalsloadout.com/ragequit/`;
           
           // Scroll to static results
           staticSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Helper functions for rage history (based on main page patterns)
+        function generateRageLoadoutName(classType, weapon, spec) {
+          const weaponAdjectives = {
+            "Throwing Knives": "Knife", "V9S": "Silent", "XP-54": "Rapid",
+            "Model 1887": "Lever", "R.357": "Revolver", "Riot Shield": "Shield",
+            "KS-23": "Pump", "Spear": "Spear"
+          };
+          
+          const specRoles = {
+            "Cloaking Device": "Ghost", "Guardian Turret": "Engineer", 
+            "Mesh Shield": "Fortress", "Winch Claw": "Grappler"
+          };
+          
+          const adjective = weaponAdjectives[weapon] || "Chaos";
+          const role = specRoles[spec] || "Nightmare";
+          
+          const templates = [
+            `${adjective} of Pain`,
+            `Suffering ${role}`,
+            `The ${adjective} Disaster`,
+            `${role}'s Nightmare`
+          ];
+          
+          const hash = (weapon + spec).split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+          return templates[hash % templates.length];
+        }
+        
+        function isSpicyRageLoadout(weapon, spec, gadgets, handicapName) {
+          const badWeapons = ["Throwing Knives", "V9S", "R.357"];
+          const badGadgets = ["Breach Charge", "Thermal Bore", "Vanishing Bomb"];
+          
+          const hasBadWeapon = badWeapons.includes(weapon);
+          const hasBadGadgets = gadgets.some(g => badGadgets.includes(g));
+          const hasHandicap = handicapName && handicapName !== "None";
+          
+          return hasBadWeapon && hasBadGadgets && hasHandicap;
+        }
+        
+        function generateRageRoast(weapon, spec, gadgets, handicapName) {
+          const roasts = [
+            `${weapon} + ${handicapName} = instant rage quit. -∞/10`,
+            `This loadout broke the suffering meter. Good luck. -25/10`,
+            `${spec} with these gadgets? Your enemies will feel bad for you. -18/10`,
+            `${handicapName} makes this loadout a war crime. -30/10`,
+            `Even masochists think this combo is too much. -22/10`,
+            `This setup makes tutorial difficulty impossible. -15/10`,
+            `${weapon}? More like instant uninstall button. -20/10`,
+            `This loadout is so bad it's being studied by scientists. -∞/10`,
+            `Your controller will quit before you do. -27/10`,
+            `This combination violates several gaming conventions. -35/10`
+          ];
+          
+          return roasts[Math.floor(Math.random() * roasts.length)];
+        }
+        
+        function copyRageLoadoutText(button) {
+          try {
+            const entry = button.closest(".history-entry");
+            if (!entry) return;
+            
+            const classType = entry.querySelector('.class-badge')?.textContent.trim();
+            const weapon = entry.querySelector('.weapon-item .item-name')?.textContent;
+            const specialization = entry.querySelector('.spec-item .item-name')?.textContent;
+            const gadgets = Array.from(entry.querySelectorAll('.gadget-item .item-name'))
+              .map(el => el.textContent);
+            const handicapName = entry.querySelector('.handicap-name')?.textContent || "None";
+            const handicapDesc = entry.querySelector('.handicap-desc')?.textContent || "";
+            
+            const copyText = `🔥 RAGE QUIT LOADOUT 🔥\\nClass: ${classType}\\nWeapon: ${weapon}\\nSpecialization: ${specialization}\\nGadgets: ${gadgets.join(", ")}\\nHandicap: ${handicapName}${handicapDesc ? ` - ${handicapDesc}` : ""}\\n\\nGenerated by thefinalsloadout.com/ragequit/`;
+
+            navigator.clipboard.writeText(copyText)
+              .then(() => {
+                button.innerHTML = '<span>✅</span> COPIED!';
+                setTimeout(() => {
+                  button.innerHTML = '<span>📋</span> COPY';
+                }, 2000);
+              })
+              .catch(() => {
+                button.innerHTML = '<span>❌</span> FAILED';
+                setTimeout(() => {
+                  button.innerHTML = '<span>📋</span> COPY';
+                }, 2000);
+              });
+          } catch (error) {
+            console.error("Error copying rage loadout:", error);
+          }
+        }
+        
+        function exportRageMemeCard(button) {
+          alert("Rage meme card export coming soon!");
         }
 
         // Update current streak
