@@ -1927,7 +1927,6 @@ async function addToHistory(
       </div>
       <div class="roast-section loading">
         <div class="roast-content">
-          <span class="fire-emoji">🔥</span>
           <span class="roast-text">Analyzing loadout configuration...</span>
         </div>
       </div>
