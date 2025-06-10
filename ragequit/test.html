@@ -269,6 +269,11 @@
         transform: scale(0.98);
       }
 
+      .rage-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
       /* Stats Bar */
       .stats-bar {
         background: var(--dark-gray);
@@ -341,7 +346,7 @@
         }
       }
 
-      /* Slot Output - Preserve existing structure */
+      /* Slot Output */
       #output {
         display: flex;
         gap: 1.5rem;
@@ -352,7 +357,7 @@
         z-index: 1;
       }
 
-      /* Placeholder styles to match original */
+      /* Placeholder styles */
       .placeholder-container {
         position: relative;
         overflow: hidden;
@@ -386,7 +391,7 @@
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
       }
 
-      /* Item container styles for when slots are spinning */
+      /* Item container styles for spinning */
       .item-container {
         flex: 0 0 140px;
         width: 140px;
@@ -442,6 +447,22 @@
         margin: 0;
         white-space: nowrap;
         text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+      }
+
+      .itemCol.winner::after {
+        content: "LOCKED IN";
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(45deg, #ffb700, #ff7b00);
+        color: black;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        white-space: nowrap;
+        box-shadow: 0 0 10px rgba(255, 183, 0, 0.6);
       }
 
       /* Punishment Stack */
@@ -528,6 +549,8 @@
       .copy-button:active {
         transform: translateY(0);
       }
+
+      /* Double or Nothing */
       .double-nothing-section {
         text-align: center;
         padding: 3rem 2rem;
@@ -604,6 +627,41 @@
         transform: translateY(-5px);
         border-color: var(--blood-red);
         box-shadow: 0 20px 40px rgba(220, 20, 60, 0.3);
+      }
+
+      /* History Entry Styles */
+      .history-entry {
+        background: var(--dark-gray);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--blood-red);
+        opacity: 0;
+        transform: translateY(20px);
+        animation: slideIn 0.5s forwards;
+      }
+
+      @keyframes slideIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .history-entry h3 {
+        color: var(--neon-red);
+        margin-bottom: 0.5rem;
+      }
+
+      .history-entry p {
+        margin: 0.5rem 0;
+        opacity: 0.9;
+      }
+
+      .history-timestamp {
+        font-size: 0.8rem;
+        opacity: 0.6;
+        margin-top: 1rem;
       }
 
       /* Leaderboard */
@@ -692,6 +750,24 @@
         }
       }
 
+      /* Rage Roulette Container */
+      .rage-roulette-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(139, 0, 0, 0.95);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+      }
+
+      .rage-roulette-container.hidden {
+        display: none !important;
+      }
+
       /* Responsive */
       @media (max-width: 768px) {
         .hero-title {
@@ -749,78 +825,80 @@
         }
       }
 
-      /* Glitch Effect */
-      .glitch {
-        position: relative;
+      /* Animation Classes */
+      .final-flash {
+        animation: finalFlash 0.6s ease-out;
       }
 
-      .glitch::before,
-      .glitch::after {
-        content: attr(data-text);
+      @keyframes finalFlash {
+        0% {
+          box-shadow: 0 0 120px rgba(255, 215, 0, 1);
+          transform: scale(1.1);
+        }
+        100% {
+          box-shadow: 0 0 40px rgba(255, 140, 0, 0.7);
+          transform: scale(1.05);
+        }
+      }
+
+      .winner-pulsate {
+        animation: pulsateWinner 2s ease-in-out infinite;
+      }
+
+      @keyframes pulsateWinner {
+        0%,
+        100% {
+          box-shadow: 0 0 15px rgba(255, 183, 0, 0.5);
+          transform: scale(1.02);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(255, 183, 0, 1);
+          transform: scale(1.04);
+        }
+      }
+
+      .mega-flash {
+        animation: megaFlash 0.7s ease-in-out;
+      }
+
+      @keyframes megaFlash {
+        0% {
+          box-shadow: 0 0 150px rgba(255, 215, 0, 1);
+          transform: scale(1.15);
+          filter: brightness(1.5);
+        }
+        100% {
+          box-shadow: 0 0 60px rgba(255, 140, 0, 0.7);
+          transform: scale(1.05);
+          filter: brightness(1.2);
+        }
+      }
+
+      .locked-tag {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        top: 5px;
+        right: -5px;
+        background: linear-gradient(45deg, #ffb700, #ff7b00);
+        color: black;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: bold;
+        transform: scale(0);
+        opacity: 0;
+        z-index: 10;
+        white-space: nowrap;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
-      .glitch::before {
-        animation: glitch-1 0.5s infinite;
-        color: var(--neon-red);
-        z-index: -1;
+      .locked-tag.show {
+        animation: tagPop 0.3s ease-out forwards;
       }
 
-      .glitch::after {
-        animation: glitch-2 0.5s infinite;
-        color: var(--dark-red);
-        z-index: -1;
-      }
-
-      @keyframes glitch-1 {
-        0%,
-        100% {
-          clip-path: inset(0 0 0 0);
-          transform: translate(0);
-        }
-        20% {
-          clip-path: inset(33% 0 0 0);
-          transform: translate(-2px, 2px);
-        }
-        40% {
-          clip-path: inset(0 0 66% 0);
-          transform: translate(2px, -2px);
-        }
-        60% {
-          clip-path: inset(0 0 0 0);
-          transform: translate(0);
-        }
-        80% {
-          clip-path: inset(0 0 33% 0);
-          transform: translate(-2px, -2px);
-        }
-      }
-
-      @keyframes glitch-2 {
-        0%,
-        100% {
-          clip-path: inset(0 0 0 0);
-          transform: translate(0);
-        }
-        20% {
-          clip-path: inset(0 0 66% 0);
-          transform: translate(2px, -2px);
-        }
-        40% {
-          clip-path: inset(33% 0 0 0);
-          transform: translate(-2px, 2px);
-        }
-        60% {
-          clip-path: inset(0 0 0 0);
-          transform: translate(0);
-        }
-        80% {
-          clip-path: inset(66% 0 0 0);
-          transform: translate(2px, 2px);
+      @keyframes tagPop {
+        to {
+          transform: scale(1);
+          opacity: 1;
         }
       }
     </style>
@@ -934,20 +1012,7 @@
         </div>
       </div>
 
-      <!-- Punishment Stack -->
-      <div class="punishment-stack" id="punishment-stack" style="display: none">
-        <div class="punishment-header">
-          <h3 class="punishment-title">Active Punishments</h3>
-          <div class="suffering-meter">
-            Suffering Level: <span id="suffering-level">1</span>x
-          </div>
-        </div>
-        <div id="punishment-list">
-          <!-- Punishments will be added here -->
-        </div>
-      </div>
-
-      <!-- Handicap Display (for after spin) -->
+      <!-- Handicap Display -->
       <div id="handicap-display" style="display: none; margin-top: 2rem">
         <div class="punishment-stack">
           <div class="punishment-header">
@@ -1112,225 +1177,434 @@
         const current = document.getElementById("avgSurvival");
         current.textContent = times[Math.floor(Math.random() * times.length)];
       }, 5000);
-    </script>
 
-    <!-- Include your existing scripts -->
-    <script src="rage-roulette-animations.js"></script>
-    <script src="app.js"></script>
+      // Simplified state management
+      window.gameState = {
+        isSpinning: false,
+        selectedClass: null,
+        selectedHandicap: null,
+        selectedHandicapDesc: null,
+        currentLoadout: null,
+        spinCount: 0,
+      };
 
-    <!-- Bridge Script to Connect New Design with Existing Functionality -->
-    <script>
+      // Handicaps list
+      const handicaps = [
+        {
+          name: "Sloth Mode",
+          description: "No Sprinting – Must walk everywhere",
+          icon: "🦥",
+        },
+        {
+          name: "Bunny Hop Ban",
+          description: "No Jumping – Stairs and ramps only",
+          icon: "🐰",
+        },
+        {
+          name: "Permanent Crouch",
+          description: "You must stay crouched the entire game",
+          icon: "🧎",
+        },
+        {
+          name: "Inverted Controls",
+          description: "Mouse movement is inverted",
+          icon: "🔄",
+        },
+        {
+          name: "Silent Treatment",
+          description: "Play with all audio muted",
+          icon: "🔇",
+        },
+        {
+          name: "One Life",
+          description: "No respawning - death ends the round",
+          icon: "💀",
+        },
+        {
+          name: "Melee Only",
+          description: "Can only use melee attacks",
+          icon: "🔪",
+        },
+        {
+          name: "Backwards Mode",
+          description: "Can only move backwards",
+          icon: "⏪",
+        },
+        {
+          name: "No Minimap",
+          description: "Cover your minimap completely",
+          icon: "📍",
+        },
+        {
+          name: "Panic Mode",
+          description: "Must constantly move - no standing still",
+          icon: "🏃",
+        },
+      ];
+
+      // Loadouts
+      const loadouts = {
+        Light: {
+          weapons: ["Throwing Knives", "V9S", "XP-54"],
+          specializations: ["Cloaking Device"],
+          gadgets: [
+            "Breach Charge",
+            "Glitch Trap",
+            "Thermal Bore",
+            "Vanishing Bomb",
+            "Flashbang",
+            "Smoke Grenade",
+          ],
+        },
+        Medium: {
+          weapons: ["Model 1887", "R.357", "Riot Shield"],
+          specializations: ["Guardian Turret"],
+          gadgets: [
+            "Jump Pad",
+            "Zipline",
+            "Gas Mine",
+            "Glitch Trap",
+            "Flashbang",
+            "Data Reshaper",
+          ],
+        },
+        Heavy: {
+          weapons: ["KS-23", "Spear"],
+          specializations: ["Mesh Shield", "Winch Claw"],
+          gadgets: [
+            "Anti-Gravity Cube",
+            "Dome Shield",
+            "Lockbolt Launcher",
+            "Proximity Sensor",
+            "Gas Grenade",
+            "Pyro Mine",
+          ],
+        },
+      };
+
+      // Main spin function
+      function spinForSuffering() {
+        if (window.gameState.isSpinning) return;
+
+        window.gameState.isSpinning = true;
+        const button = document.getElementById("rage-quit-btn");
+        button.disabled = true;
+
+        // Show loading
+        const loading = document.getElementById("loading");
+        loading.classList.add("active");
+
+        // Select random class
+        const classes = ["Light", "Medium", "Heavy"];
+        const selectedClass =
+          classes[Math.floor(Math.random() * classes.length)];
+        window.gameState.selectedClass = selectedClass;
+
+        // Select random handicap
+        const selectedHandicap =
+          handicaps[Math.floor(Math.random() * handicaps.length)];
+        window.gameState.selectedHandicap = selectedHandicap.name;
+        window.gameState.selectedHandicapDesc = selectedHandicap.description;
+
+        // Build loadout
+        const classLoadout = loadouts[selectedClass];
+        const weapon =
+          classLoadout.weapons[
+            Math.floor(Math.random() * classLoadout.weapons.length)
+          ];
+        const spec =
+          classLoadout.specializations[
+            Math.floor(Math.random() * classLoadout.specializations.length)
+          ];
+
+        // Select 3 unique gadgets
+        const shuffledGadgets = [...classLoadout.gadgets].sort(
+          () => Math.random() - 0.5
+        );
+        const selectedGadgets = shuffledGadgets.slice(0, 3);
+
+        window.gameState.currentLoadout = {
+          class: selectedClass,
+          weapon: weapon,
+          specialization: spec,
+          gadgets: selectedGadgets,
+          handicap: selectedHandicap,
+        };
+
+        // Display the slot machine
+        displaySlotMachine();
+
+        // After animation, show results
+        setTimeout(() => {
+          loading.classList.remove("active");
+          showResults();
+          button.disabled = false;
+          window.gameState.isSpinning = false;
+        }, 3000);
+      }
+
+      // Display slot machine
+      function displaySlotMachine() {
+        const output = document.getElementById("output");
+        const loadout = window.gameState.currentLoadout;
+
+        // Create slot machine HTML
+        const slotsHTML = `
+          <div class="items-container">
+            <div class="item-container">
+              <div class="scroll-container">
+                <div class="itemCol winner">
+                  <img src="../images/${loadout.weapon.replace(
+                    / /g,
+                    "_"
+                  )}.webp" alt="${
+          loadout.weapon
+        }" onerror="this.src='../images/placeholder.webp'">
+                  <p>${loadout.weapon}</p>
+                </div>
+              </div>
+            </div>
+            <div class="item-container">
+              <div class="scroll-container">
+                <div class="itemCol winner">
+                  <img src="../images/${loadout.specialization.replace(
+                    / /g,
+                    "_"
+                  )}.webp" alt="${
+          loadout.specialization
+        }" onerror="this.src='../images/placeholder.webp'">
+                  <p>${loadout.specialization}</p>
+                </div>
+              </div>
+            </div>
+            ${loadout.gadgets
+              .map(
+                (gadget) => `
+              <div class="item-container">
+                <div class="scroll-container">
+                  <div class="itemCol winner">
+                    <img src="../images/${gadget.replace(
+                      / /g,
+                      "_"
+                    )}.webp" alt="${gadget}" onerror="this.src='../images/placeholder.webp'">
+                    <p>${gadget}</p>
+                  </div>
+                </div>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `;
+
+        output.innerHTML = slotsHTML;
+
+        // Add animation classes
+        setTimeout(() => {
+          document
+            .querySelectorAll(".item-container")
+            .forEach((container, index) => {
+              setTimeout(() => {
+                container.classList.add("final-flash");
+                setTimeout(() => {
+                  container.classList.remove("final-flash");
+                  container.classList.add("winner-pulsate");
+                }, 600);
+              }, index * 200);
+            });
+        }, 100);
+      }
+
+      // Show results (handicap and buttons)
+      function showResults() {
+        // Show handicap
+        const handicapDisplay = document.getElementById("handicap-display");
+        const handicapElement = document.getElementById("current-handicap");
+
+        handicapDisplay.style.display = "block";
+        handicapElement.innerHTML = `
+          <h4 style="margin-bottom: 0.5rem; color: var(--neon-red); font-size: 1.5rem;">
+            💀 ${window.gameState.selectedHandicap} 💀
+          </h4>
+          <p style="opacity: 0.9; margin: 0; font-size: 1.1rem;">
+            ${window.gameState.selectedHandicapDesc}
+          </p>
+        `;
+
+        // Show buttons
+        document.getElementById("copyLoadoutButton").style.display =
+          "inline-block";
+        document.getElementById("double-nothing").style.display = "block";
+
+        // Add to history
+        addToHistory();
+
+        // Update stats
+        window.gameState.spinCount++;
+        document.getElementById("currentStreak").textContent =
+          window.gameState.spinCount;
+      }
+
+      // Add to history
+      function addToHistory() {
+        const historyList = document.getElementById("history-list");
+        const loadout = window.gameState.currentLoadout;
+
+        const historyEntry = document.createElement("div");
+        historyEntry.className = "history-entry";
+        historyEntry.innerHTML = `
+          <h3>${loadout.class} - ${loadout.weapon}</h3>
+          <p><strong>Specialization:</strong> ${loadout.specialization}</p>
+          <p><strong>Gadgets:</strong> ${loadout.gadgets.join(", ")}</p>
+          <p><strong>Handicap:</strong> ${loadout.handicap.name} - ${
+          loadout.handicap.description
+        }</p>
+          <div class="history-timestamp">${new Date().toLocaleTimeString()}</div>
+        `;
+
+        // Add to beginning of list
+        historyList.insertBefore(historyEntry, historyList.firstChild);
+
+        // Keep only last 5 entries
+        while (historyList.children.length > 5) {
+          historyList.removeChild(historyList.lastChild);
+        }
+
+        // Save to localStorage
+        saveHistory();
+      }
+
+      // Save history to localStorage
+      function saveHistory() {
+        const historyEntries = [];
+        document.querySelectorAll(".history-entry").forEach((entry) => {
+          historyEntries.push(entry.innerHTML);
+        });
+        localStorage.setItem("rageQuitHistory", JSON.stringify(historyEntries));
+      }
+
+      // Load history from localStorage
+      function loadHistory() {
+        const saved = localStorage.getItem("rageQuitHistory");
+        if (saved) {
+          const entries = JSON.parse(saved);
+          const historyList = document.getElementById("history-list");
+          entries.forEach((html) => {
+            const entry = document.createElement("div");
+            entry.className = "history-entry";
+            entry.innerHTML = html;
+            historyList.appendChild(entry);
+          });
+        }
+      }
+
+      // Copy loadout function
+      function copyLoadout() {
+        const loadout = window.gameState.currentLoadout;
+        if (!loadout) return;
+
+        const text = `🔥 RAGE QUIT LOADOUT 🔥
+Class: ${loadout.class}
+Weapon: ${loadout.weapon}
+Specialization: ${loadout.specialization}
+Gadgets: ${loadout.gadgets.join(", ")}
+Handicap: ${loadout.handicap.name} - ${loadout.handicap.description}
+
+Generated by thefinalsloadout.com/ragequit/`;
+
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            const button = document.getElementById("copyLoadoutButton");
+            const originalText = button.innerHTML;
+            button.innerHTML = "✅ COPIED!";
+            setTimeout(() => {
+              button.innerHTML = originalText;
+            }, 2000);
+          })
+          .catch((err) => {
+            alert("Failed to copy loadout");
+          });
+      }
+
+      // Double or nothing function
+      function doubleOrNothing() {
+        const extraHandicaps = [
+          {
+            name: "Single Finger",
+            description: "Can only use one finger to play",
+            icon: "👆",
+          },
+          {
+            name: "Upside Down",
+            description: "Turn your screen upside down",
+            icon: "🙃",
+          },
+          {
+            name: "Eyes Closed",
+            description: "Must play with eyes closed for 30 seconds",
+            icon: "🙈",
+          },
+        ];
+
+        const newHandicap =
+          extraHandicaps[Math.floor(Math.random() * extraHandicaps.length)];
+
+        // Add new handicap display
+        const handicapDisplay = document.getElementById("handicap-display");
+        const newHandicapDiv = document.createElement("div");
+        newHandicapDiv.className = "punishment-item";
+        newHandicapDiv.style.marginTop = "1rem";
+        newHandicapDiv.innerHTML = `
+          <h4 style="margin-bottom: 0.5rem; color: var(--gold); font-size: 1.3rem;">
+            ⚠️ ADDITIONAL PUNISHMENT ⚠️
+          </h4>
+          <h4 style="margin-bottom: 0.5rem; color: var(--neon-red);">
+            ${newHandicap.icon} ${newHandicap.name}
+          </h4>
+          <p style="opacity: 0.9; margin: 0;">
+            ${newHandicap.description}
+          </p>
+        `;
+
+        handicapDisplay
+          .querySelector(".punishment-stack")
+          .appendChild(newHandicapDiv);
+
+        // Disable double or nothing button
+        const button = document.getElementById("double-nothing-btn");
+        button.disabled = true;
+        button.innerHTML = "<span>MAXIMUM SUFFERING ACHIEVED</span>";
+      }
+
+      // Initialize on DOM load
       document.addEventListener("DOMContentLoaded", function () {
-        // Connect the new spin button to the existing functionality
-        const newSpinButton = document.getElementById("rage-quit-btn");
+        // Load history
+        loadHistory();
 
-        if (newSpinButton) {
-          newSpinButton.addEventListener("click", function () {
-            console.log("New spin button clicked!");
-
-            // Show loading overlay
-            const loadingOverlay = document.getElementById("loading");
-            if (loadingOverlay) {
-              loadingOverlay.classList.add("active");
-            }
-
-            // Call the existing spin function
-            if (typeof spinRageQuitLoadout === "function") {
-              spinRageQuitLoadout();
-
-              // Hide loading after a delay
-              setTimeout(() => {
-                if (loadingOverlay) {
-                  loadingOverlay.classList.remove("active");
-                }
-
-                // Show handicap display
-                const handicapDisplay =
-                  document.getElementById("handicap-display");
-                if (
-                  handicapDisplay &&
-                  window.state &&
-                  window.state.selectedHandicap
-                ) {
-                  handicapDisplay.style.display = "block";
-
-                  // Update the handicap content
-                  const handicapElement =
-                    document.getElementById("current-handicap");
-                  if (handicapElement) {
-                    handicapElement.innerHTML = `
-                      <h4 style="margin-bottom: 0.5rem; color: var(--neon-red); font-size: 1.5rem;">
-                        💀 ${window.state.selectedHandicap} 💀
-                      </h4>
-                      <p style="opacity: 0.9; margin: 0; font-size: 1.1rem;">
-                        ${
-                          window.state.selectedHandicapDesc ||
-                          "No description available"
-                        }
-                      </p>
-                    `;
-                  }
-
-                  // Scroll to show the handicap
-                  setTimeout(() => {
-                    handicapDisplay.scrollIntoView({
-                      behavior: "smooth",
-                      block: "center",
-                    });
-                  }, 500);
-                }
-
-                // Show punishment stack if using stacked handicaps
-                const punishmentStack =
-                  document.getElementById("punishment-stack");
-                if (
-                  punishmentStack &&
-                  window.state &&
-                  window.state.handicapStack &&
-                  window.state.handicapStack.length > 0
-                ) {
-                  punishmentStack.style.display = "block";
-                  updatePunishmentDisplay();
-                }
-
-                // Show double or nothing
-                document.getElementById("double-nothing").style.display =
-                  "block";
-                document.getElementById("copyLoadoutButton").style.display =
-                  "inline-block";
-
-                // Update suffering level
-                updateSufferingLevel();
-              }, 3000);
-            } else if (
-              window.rageRouletteSystem &&
-              typeof window.rageRouletteSystem.startFullSequence === "function"
-            ) {
-              // Try the roulette system if available
-              window.rageRouletteSystem.startFullSequence();
-
-              setTimeout(() => {
-                if (loadingOverlay) {
-                  loadingOverlay.classList.remove("active");
-                }
-                document.getElementById("punishment-stack").style.display =
-                  "block";
-                document.getElementById("double-nothing").style.display =
-                  "block";
-                document.getElementById("copyLoadoutButton").style.display =
-                  "inline-block";
-              }, 3000);
-            } else {
-              console.error(
-                "Spin function not found! Make sure app.js is loaded."
-              );
-              if (loadingOverlay) {
-                loadingOverlay.classList.remove("active");
-              }
-            }
+        // Connect buttons
+        const spinButton = document.getElementById("rage-quit-btn");
+        if (spinButton) {
+          spinButton.addEventListener("click", function () {
+            console.log("Spin button clicked!");
+            spinForSuffering();
           });
         }
 
-        // Function to update suffering level display
-        function updateSufferingLevel() {
-          const sufferingEl = document.getElementById("suffering-level");
-          if (sufferingEl && window.state && window.state.sufferingLevel) {
-            sufferingEl.textContent = window.state.sufferingLevel;
-          }
+        const copyButton = document.getElementById("copyLoadoutButton");
+        if (copyButton) {
+          copyButton.addEventListener("click", copyLoadout);
         }
 
-        // Function to update punishment display
-        function updatePunishmentDisplay() {
-          const punishmentList = document.getElementById("punishment-list");
-          if (!punishmentList) return;
-
-          // Clear existing content
-          punishmentList.innerHTML = "";
-
-          // Add all handicaps from the stack
-          if (
-            window.state &&
-            window.state.handicapStack &&
-            window.state.handicapStack.length > 0
-          ) {
-            window.state.handicapStack.forEach((handicap, index) => {
-              const punishmentItem = document.createElement("div");
-              punishmentItem.className = "punishment-item";
-              punishmentItem.innerHTML = `
-                <h4 style="margin-bottom: 0.5rem; color: var(--neon-red);">${
-                  handicap.name
-                }</h4>
-                <p style="opacity: 0.8; margin: 0;">${
-                  handicap.description || "No description"
-                }</p>
-              `;
-              punishmentList.appendChild(punishmentItem);
-            });
-          } else if (window.state && window.state.selectedHandicap) {
-            // Fallback to single handicap if stack is empty
-            const punishmentItem = document.createElement("div");
-            punishmentItem.className = "punishment-item";
-            punishmentItem.innerHTML = `
-              <h4 style="margin-bottom: 0.5rem; color: var(--neon-red);">${
-                window.state.selectedHandicap
-              }</h4>
-              <p style="opacity: 0.8; margin: 0;">${
-                window.state.selectedHandicapDesc || "No description"
-              }</p>
-            `;
-            punishmentList.appendChild(punishmentItem);
-
-            // Update suffering level
-            const sufferingEl = document.getElementById("suffering-level");
-            if (sufferingEl) {
-              sufferingEl.textContent = "1";
-            }
-          }
+        const doubleButton = document.getElementById("double-nothing-btn");
+        if (doubleButton) {
+          doubleButton.addEventListener("click", doubleOrNothing);
         }
-
-        // Update current streak
-        let currentStreak = 0;
-        setInterval(() => {
-          if (window.state && window.state.isSpinning) {
-            currentStreak++;
-            document.getElementById("currentStreak").textContent =
-              currentStreak;
-          }
-        }, 1000);
-
-        // Add punishment items when they're selected
-        if (window.state) {
-          const originalDisplayHandicap = window.displaySelectedHandicap;
-          window.displaySelectedHandicap = function () {
-            if (originalDisplayHandicap) {
-              originalDisplayHandicap.apply(this, arguments);
-            }
-
-            // Add to our new punishment list
-            if (window.state.selectedHandicap) {
-              const punishmentList = document.getElementById("punishment-list");
-              const punishmentItem = document.createElement("div");
-              punishmentItem.className = "punishment-item";
-              punishmentItem.innerHTML = `
-              <h4 style="margin-bottom: 0.5rem; color: var(--neon-red);">${
-                window.state.selectedHandicap
-              }</h4>
-              <p style="opacity: 0.8; margin: 0;">${
-                window.state.selectedHandicapDesc || "No description"
-              }</p>
-            `;
-              punishmentList.appendChild(punishmentItem);
-            }
-          };
-        }
-
-        // Initialize with test button click for debugging
-        console.log("Scripts loaded. Available functions:", {
-          spinRageQuitLoadout: typeof spinRageQuitLoadout,
-          rageRouletteSystem: typeof window.rageRouletteSystem,
-          state: typeof window.state,
-        });
       });
+
+      // Make spinForSuffering globally available as backup
+      window.spinForSuffering = spinForSuffering;
+      window.spinRageQuitLoadout = spinForSuffering;
     </script>
   </body>
 </html>
