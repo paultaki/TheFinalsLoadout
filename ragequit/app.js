@@ -729,7 +729,11 @@ const spinRageQuitLoadout = () => {
   if (state.isSpinning) return;
 
   // Disable button during spin
-  document.getElementById("rage-quit-btn").setAttribute("disabled", "true");
+  const spinButton = document.getElementById("rage-quit-btn");
+  if (spinButton) {
+    spinButton.setAttribute("disabled", "true");
+    spinButton.classList.add('disabled');
+  }
 
   state.isSpinning = true;
   state.currentGadgetPool.clear();
@@ -1100,13 +1104,21 @@ function displaySelectedHandicap() {
   }
 
   // Initialize handicap stack if first handicap
-  if (state.handicapStack.length === 0 && state.selectedHandicap) {
+  // Check both local state and window.state for handicap
+  const selectedHandicap = state.selectedHandicap || window.state?.selectedHandicap;
+  const selectedHandicapDesc = state.selectedHandicapDesc || window.state?.selectedHandicapDesc;
+  
+  if (state.handicapStack.length === 0 && selectedHandicap) {
     state.handicapStack.push({
-      name: state.selectedHandicap,
-      description: state.selectedHandicapDesc || "No description",
+      name: selectedHandicap,
+      description: selectedHandicapDesc || "No description",
       icon: "💀"
     });
     state.sufferingLevel = 1;
+    
+    // Sync with local state
+    state.selectedHandicap = selectedHandicap;
+    state.selectedHandicapDesc = selectedHandicapDesc;
   }
   
   // Create the handicap stack display UI
@@ -1998,7 +2010,9 @@ function resetSpinState() {
   const spinButton = document.getElementById("rage-quit-btn");
   if (spinButton) {
     spinButton.removeAttribute("disabled");
-    spinButton.classList.remove('spinning');
+    spinButton.classList.remove('spinning', 'disabled');
+    spinButton.disabled = false; // Ensure button is truly enabled
+    console.log("✅ Button re-enabled");
   }
   
   // Reset animation states
