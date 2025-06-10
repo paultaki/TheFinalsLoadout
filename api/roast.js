@@ -95,19 +95,39 @@ export default async function handler(req, res) {
     const specTier = getTier(specialization, "specs");
     const gadgetTiers = gadgets.map(g => getTier(g, "gadgets"));
 
-    let tone = "off-meta-challenge"; // default
-
+    // Determine analysis style based on loadout
+    let analysisStyle = "tactical"; // default
+    
+    // Random style selection with weighted probabilities
+    const styleRoll = Math.random();
+    
     if (weaponTier === "dumpster" || specTier === "dumpster" || gadgetTiers.includes("dumpster")) {
-      tone = "dumpsterfire";
+      // Dumpster tier gets more roasts
+      if (styleRoll < 0.6) analysisStyle = "roast";
+      else if (styleRoll < 0.8) analysisStyle = "funny";
+      else analysisStyle = "supportive";
     } else if (weaponTier === "meta" && specTier === "meta" && gadgetTiers.every(t => t === "meta")) {
-      tone = "meta-edge";
+      // Full meta gets tactical or sarcastic
+      if (styleRoll < 0.5) analysisStyle = "tactical";
+      else if (styleRoll < 0.8) analysisStyle = "sarcastic";
+      else analysisStyle = "hype";
+    } else {
+      // Mixed loadouts get variety
+      if (styleRoll < 0.25) analysisStyle = "tactical";
+      else if (styleRoll < 0.45) analysisStyle = "funny";
+      else if (styleRoll < 0.65) analysisStyle = "roast";
+      else if (styleRoll < 0.85) analysisStyle = "supportive";
+      else analysisStyle = "hype";
     }
 
     const persona = {
-      "meta-edge": "AI tuned for sarcastic admiration of broken meta abuse",
-      "off-meta-challenge": "brutally honest coach rooting for weird picks",
-      "dumpsterfire": "burned-out Finals ref forced to review bronze-tier disasters"
-    }[tone] || "exhausted analyst";
+      "tactical": "competitive analyst breaking down synergies and weaknesses",
+      "roast": "savage critic who's seen too many terrible loadouts",
+      "funny": "comedian making witty observations about loadout choices",
+      "supportive": "encouraging coach finding the silver lining",
+      "sarcastic": "dry wit expert pointing out the obvious",
+      "hype": "enthusiastic caster excited about potential plays"
+    }[analysisStyle] || "tactical analyst";
 
     const nsfwTag = (specTier === "off-meta" && ["Dematerializer", "Cloaking Device"].includes(specialization)) ? "sneaky-banger" : "";
 
