@@ -818,14 +818,14 @@ html {
   background: #0F0F0F !important; /* Darker than page bg */
   border: 1px solid #1A1A1A !important;
   border-radius: 0; /* Sharp edges like The Finals UI */
-  padding: 18px;
-  margin: 12px 0;
+  padding: 14px;
+  margin: 10px 0;
   position: relative;
   overflow: hidden;
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.3s ease;
-  min-height: 140px;
+  min-height: 112px;
 }
 
 /* Class accent strips - subtle and thin */
@@ -899,7 +899,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   flex-wrap: wrap;
   gap: 8px;
 }
@@ -950,16 +950,16 @@ html {
 .loadout-details {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .loadout-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: rgba(255, 255, 255, 0.15);
-  padding: 8px;
+  padding: 6px;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.2s ease;
@@ -994,7 +994,7 @@ html {
 
 .gadget-item {
   flex: 1;
-  padding: 6px;
+  padding: 5px;
 }
 
 /* Icons and Names */
