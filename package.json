@@ -10,5 +10,8 @@
   },
   "engines": {
     "node": "18.x"
+  },
+  "devDependencies": {
+    "purgecss": "^7.0.2"
   }
 }
