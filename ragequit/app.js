@@ -1021,66 +1021,149 @@ function finalVictoryFlash(columns) {
     const allContainers = columns.map((col) => col.closest(".item-container"));
     const itemsContainer = document.querySelector(".items-container");
 
-    // Add a big flash animation to each container in sequence
+    // FIRST WAVE: Rapid mega flashes
     allContainers.forEach((container, index) => {
       setTimeout(() => {
         // Remove any existing animation to reset
-        container.classList.remove("mega-flash");
+        container.classList.remove("mega-flash", "ultra-flash");
         void container.offsetWidth; // Force reflow
 
         // Add the mega flash
         container.classList.add("mega-flash");
-
-        if (index === allContainers.length - 1) {
-          // Create a positioned flash overlay
-          setTimeout(() => {
-            // Add a flash effect just to the items container
-            if (itemsContainer) {
-              // Create a positioned flash overlay
-              const flashOverlay = document.createElement("div");
-
-              // Ensure container has positioning for absolute children
-              if (getComputedStyle(itemsContainer).position === "static") {
-                itemsContainer.style.position = "relative";
-              }
-
-              // Style the flash element
-              flashOverlay.style.position = "absolute";
-              flashOverlay.style.top = "0";
-              flashOverlay.style.left = "0";
-              flashOverlay.style.width = "100%";
-              flashOverlay.style.height = "100%";
-              flashOverlay.style.backgroundColor = "rgba(255, 255, 255, 0)";
-              flashOverlay.style.pointerEvents = "none";
-              flashOverlay.style.zIndex = "90";
-
-              // Add it to the container
-              itemsContainer.appendChild(flashOverlay);
-
-              // Create and apply the flash animation
-              flashOverlay.animate(
-                [
-                  { backgroundColor: "rgba(255, 255, 255, 0)" },
-                  { backgroundColor: "rgba(255, 255, 255, 0.7)" },
-                  { backgroundColor: "rgba(255, 255, 255, 0)" },
-                ],
-                {
-                  duration: 600,
-                  easing: "ease-out",
-                  fill: "forwards",
-                }
-              );
-
-              // Remove the overlay after animation
-              setTimeout(() => {
-                flashOverlay.remove();
-              }, 700);
-            }
-          }, 100); // Small delay after the last mega-flash starts
-        }
-      }, index * 550); // Staggered timing - 150ms between each
+        
+        // Add rapid pulsing effect
+        container.style.animation = "rapidPulse 0.1s ease-in-out 3";
+      }, index * 100); // Much faster - 100ms between each instead of 550ms
     });
-  }, 800); // Wait for last column's individual animation to finish
+
+    // SECOND WAVE: Ultra flash after mega flash
+    setTimeout(() => {
+      allContainers.forEach((container, index) => {
+        setTimeout(() => {
+          container.classList.add("ultra-flash");
+          
+          // Create explosive particle effect
+          createExplosiveParticles(container);
+        }, index * 50); // Even faster for second wave
+      });
+    }, 500);
+
+    // FINAL EXPLOSION: All containers flash together
+    setTimeout(() => {
+      // Screen flash effect
+      createScreenFlash();
+      
+      // All containers flash simultaneously
+      allContainers.forEach((container) => {
+        container.style.animation = "explosiveFlash 0.3s ease-out, superPulse 0.2s ease-in-out 5";
+        container.style.boxShadow = "0 0 100px rgba(255, 215, 0, 1), 0 0 200px rgba(255, 140, 0, 0.8)";
+      });
+      
+      // Screen shake effect
+      document.body.style.animation = "victoryShake 0.5s ease-in-out";
+      setTimeout(() => {
+        document.body.style.animation = "";
+      }, 500);
+      
+    }, 1000);
+
+    // CLEANUP: Remove all effects
+    setTimeout(() => {
+      allContainers.forEach((container) => {
+        container.style.animation = "";
+        container.classList.remove("mega-flash", "ultra-flash");
+      });
+    }, 2000);
+
+  }, 400); // Start sooner - 400ms instead of 800ms
+}
+
+// Create explosive particle effect
+function createExplosiveParticles(container) {
+  const rect = container.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+
+  // Create 12 particles for explosive effect
+  for (let i = 0; i < 12; i++) {
+    const particle = document.createElement("div");
+    particle.style.cssText = `
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(45deg, #ffb700, #ff7b00);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1000;
+      left: ${centerX}px;
+      top: ${centerY}px;
+      box-shadow: 0 0 10px rgba(255, 183, 0, 0.8);
+    `;
+
+    // Random direction and distance
+    const angle = (Math.PI * 2 * i) / 12;
+    const distance = 150 + Math.random() * 100;
+    const targetX = centerX + Math.cos(angle) * distance;
+    const targetY = centerY + Math.sin(angle) * distance;
+
+    document.body.appendChild(particle);
+
+    // Animate the particle
+    particle.animate([
+      {
+        transform: 'translate(0, 0) scale(1)',
+        opacity: 1
+      },
+      {
+        transform: `translate(${targetX - centerX}px, ${targetY - centerY}px) scale(0)`,
+        opacity: 0
+      }
+    ], {
+      duration: 800,
+      easing: 'ease-out'
+    });
+
+    // Remove particle
+    setTimeout(() => {
+      if (particle.parentNode) {
+        particle.parentNode.removeChild(particle);
+      }
+    }, 800);
+  }
+}
+
+// Create screen flash effect
+function createScreenFlash() {
+  const flashOverlay = document.createElement("div");
+  flashOverlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 140, 0, 0.4) 50%, transparent 100%);
+    pointer-events: none;
+    z-index: 9999;
+  `;
+
+  document.body.appendChild(flashOverlay);
+
+  // Animate the flash
+  flashOverlay.animate([
+    { opacity: 0 },
+    { opacity: 1 },
+    { opacity: 0 }
+  ], {
+    duration: 400,
+    easing: 'ease-out'
+  });
+
+  // Remove the overlay
+  setTimeout(() => {
+    if (flashOverlay.parentNode) {
+      flashOverlay.parentNode.removeChild(flashOverlay);
+    }
+  }, 400);
 }
 
 // COMMENTED OUT: Old spinHandicap function - now using roulette-selected handicap

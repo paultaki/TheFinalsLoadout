@@ -911,6 +911,82 @@
         0% { transform: rotateY(0deg); }
         100% { transform: rotateY(360deg); }
       }
+
+      /* Enhanced celebration animations */
+      @keyframes rapidPulse {
+        0%, 100% { 
+          transform: scale(1);
+          filter: brightness(1);
+        }
+        50% { 
+          transform: scale(1.15);
+          filter: brightness(1.8);
+        }
+      }
+
+      @keyframes explosiveFlash {
+        0% { 
+          transform: scale(1);
+          filter: brightness(1) saturate(1);
+          box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        50% { 
+          transform: scale(1.3);
+          filter: brightness(3) saturate(2);
+          box-shadow: 0 0 150px rgba(255, 215, 0, 1);
+        }
+        100% { 
+          transform: scale(1.1);
+          filter: brightness(1.5) saturate(1.5);
+          box-shadow: 0 0 80px rgba(255, 215, 0, 0.8);
+        }
+      }
+
+      @keyframes superPulse {
+        0%, 100% { 
+          transform: scale(1.05);
+          filter: brightness(1.5);
+        }
+        50% { 
+          transform: scale(1.2);
+          filter: brightness(2.5);
+        }
+      }
+
+      @keyframes victoryShake {
+        0%, 100% { transform: translateX(0); }
+        10% { transform: translateX(-10px) translateY(-5px); }
+        20% { transform: translateX(10px) translateY(5px); }
+        30% { transform: translateX(-8px) translateY(-3px); }
+        40% { transform: translateX(8px) translateY(3px); }
+        50% { transform: translateX(-6px) translateY(-2px); }
+        60% { transform: translateX(6px) translateY(2px); }
+        70% { transform: translateX(-4px) translateY(-1px); }
+        80% { transform: translateX(4px) translateY(1px); }
+        90% { transform: translateX(-2px); }
+      }
+
+      .ultra-flash {
+        animation: ultraFlash 0.4s ease-out;
+      }
+
+      @keyframes ultraFlash {
+        0% {
+          box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+          transform: scale(1.1);
+          filter: brightness(1.5);
+        }
+        50% {
+          box-shadow: 0 0 200px rgba(255, 215, 0, 1), 0 0 300px rgba(255, 140, 0, 0.8);
+          transform: scale(1.4);
+          filter: brightness(3) hue-rotate(15deg);
+        }
+        100% {
+          box-shadow: 0 0 100px rgba(255, 215, 0, 0.9);
+          transform: scale(1.2);
+          filter: brightness(2);
+        }
+      }
     </style>
   </head>
   <body>
@@ -1056,11 +1132,24 @@
     <audio id="rageLaughSound" src="sounds/whisper.mp3" preload="auto"></audio>
 
     <!-- Include your existing scripts FIRST -->
-    <!-- <script src="rage-roulette-animations.js"></script> -->
+    <script src="rage-roulette-animations.js"></script>
     <script src="app.js"></script>
 
     <!-- Then our bridge script -->
     <script>
+      // Initialize roulette system after scripts load
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log("🔥 Initializing Rage Roulette System");
+        
+        // Check if the class is available
+        if (typeof window.RageRouletteAnimationSystem !== 'undefined') {
+          window.rageRouletteSystem = new window.RageRouletteAnimationSystem();
+          console.log("✅ Rage Roulette System initialized:", window.rageRouletteSystem);
+        } else {
+          console.error("❌ RageRouletteAnimationSystem class not found");
+        }
+      });
+
       // Create particles
       function createParticles() {
         const container = document.getElementById("particles");
@@ -1083,7 +1172,7 @@
         hero.classList.remove("dimmed");
       }
 
-      // Add to history function
+      // Add to history function  
       function addToHistory(
         classType,
         weapon,
@@ -1095,63 +1184,153 @@
         const historyList = document.getElementById("history-list");
         if (!historyList) return;
 
-        const newEntry = document.createElement("div");
-        newEntry.classList.add("history-entry");
+        try {
+          const newEntry = document.createElement("div");
+          newEntry.classList.add("history-entry");
 
-        const timestamp = new Date().toLocaleTimeString();
-        const entryNumber =
-          document.querySelectorAll(".history-entry").length + 1;
+          const timestamp = new Date().toLocaleString();
+          const entryNumber = document.querySelectorAll(".history-entry").length + 1;
 
-        newEntry.innerHTML = `
-          <h3 style="color: var(--neon-red); margin-bottom: 1rem;">
-            Rage Loadout #${entryNumber} - ${classType}
-          </h3>
-          <p><strong>Weapon:</strong> ${weapon}</p>
-          <p><strong>Specialization:</strong> ${specialization}</p>
-          <p><strong>Gadgets:</strong> ${gadgets.join(", ")}</p>
-          <p style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--blood-red);">
-            <strong>Handicap:</strong> ${handicapName || "None"}
-          </p>
-          <p style="opacity: 0.8; font-style: italic;">${
-            handicapDesc || "No handicap selected"
-          }</p>
-          <div style="margin-top: 1rem; opacity: 0.6; font-size: 0.9rem;">
-            ${timestamp}
-          </div>
-        `;
+          // Create proper history entry with styling
+          newEntry.innerHTML = `
+            <div style="background: var(--dark-gray); border-radius: 15px; padding: 1.5rem; margin-bottom: 1rem; border: 1px solid var(--blood-red);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="color: var(--neon-red); margin: 0; font-size: 1.2rem;">
+                  Rage Loadout #${entryNumber}
+                </h3>
+                <span style="color: var(--gold); font-weight: bold; background: var(--black); padding: 0.25rem 0.5rem; border-radius: 5px;">
+                  ${classType}
+                </span>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                <div style="text-align: center;">
+                  <img src="../images/${weapon?.replace(/ /g, "_")}.webp" alt="${weapon}" style="width: 50px; height: 50px; object-fit: contain; margin-bottom: 0.5rem;" onerror="this.src='../images/placeholder.webp'">
+                  <p style="color: white; font-size: 0.85rem; margin: 0; font-weight: bold;">${weapon}</p>
+                  <small style="color: #ccc;">Weapon</small>
+                </div>
+                <div style="text-align: center;">
+                  <img src="../images/${specialization?.replace(/ /g, "_")}.webp" alt="${specialization}" style="width: 50px; height: 50px; object-fit: contain; margin-bottom: 0.5rem;" onerror="this.src='../images/placeholder.webp'">
+                  <p style="color: white; font-size: 0.85rem; margin: 0; font-weight: bold;">${specialization}</p>
+                  <small style="color: #ccc;">Spec</small>
+                </div>
+                ${gadgets.map((gadget, index) => `
+                  <div style="text-align: center;">
+                    <img src="../images/${gadget?.replace(/ /g, "_")}.webp" alt="${gadget}" style="width: 40px; height: 40px; object-fit: contain; margin-bottom: 0.5rem;" onerror="this.src='../images/placeholder.webp'">
+                    <p style="color: white; font-size: 0.75rem; margin: 0; font-weight: bold; line-height: 1.1;">${gadget}</p>
+                    <small style="color: #ccc;">G${index + 1}</small>
+                  </div>
+                `).join('')}
+              </div>
+              
+              <div style="background: var(--black); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+                <p style="color: var(--neon-red); margin: 0 0 0.5rem 0; font-weight: bold;">
+                  💀 Handicap: ${handicapName || "None"}
+                </p>
+                <p style="color: #ccc; margin: 0; font-style: italic; font-size: 0.9rem;">
+                  ${handicapDesc || "No handicap selected"}
+                </p>
+              </div>
+              
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; opacity: 0.7;">
+                <span>${timestamp}</span>
+                <button onclick="copyHistoryEntry(this)" style="background: var(--rage-gradient); border: none; padding: 0.25rem 0.5rem; border-radius: 3px; color: white; cursor: pointer; font-size: 0.7rem;">
+                  📋 Copy
+                </button>
+              </div>
+            </div>
+          `;
 
-        historyList.insertBefore(newEntry, historyList.firstChild);
+          historyList.insertBefore(newEntry, historyList.firstChild);
 
-        // Keep only last 5 entries
-        while (historyList.children.length > 5) {
-          historyList.removeChild(historyList.lastChild);
+          // Keep only last 5 entries
+          while (historyList.children.length > 5) {
+            historyList.removeChild(historyList.lastChild);
+          }
+
+          // Save to localStorage with the correct structure
+          saveHistory();
+          
+          console.log("✅ Added history entry:", { classType, weapon, specialization, gadgets, handicapName });
+        } catch (error) {
+          console.error("❌ Error adding to history:", error);
         }
-
-        // Save to localStorage
-        saveHistory();
       }
 
-      // Save history to localStorage
+      // Copy history entry function
+      function copyHistoryEntry(button) {
+        try {
+          const entry = button.closest(".history-entry");
+          if (!entry) return;
+          
+          // Extract data from the entry
+          const classType = entry.querySelector("span").textContent.trim();
+          const weapon = entry.querySelectorAll("p")[0]?.textContent.trim() || "Unknown Weapon";
+          const specialization = entry.querySelectorAll("p")[1]?.textContent.trim() || "Unknown Spec";
+          const gadgets = Array.from(entry.querySelectorAll("p")).slice(2, 5).map(p => p.textContent.trim());
+          const handicapText = entry.querySelector("p[style*='neon-red']")?.textContent.replace("💀 Handicap: ", "") || "None";
+          
+          const copyText = `🔥 RAGE QUIT LOADOUT 🔥
+Class: ${classType}
+Weapon: ${weapon}
+Specialization: ${specialization}
+Gadgets: ${gadgets.join(", ")}
+Handicap: ${handicapText}
+
+Generated by thefinalsloadout.com/ragequit/`;
+
+          navigator.clipboard.writeText(copyText)
+            .then(() => {
+              button.innerHTML = "✅ Copied!";
+              setTimeout(() => {
+                button.innerHTML = "📋 Copy";
+              }, 2000);
+            })
+            .catch(() => {
+              button.innerHTML = "❌ Failed";
+              setTimeout(() => {
+                button.innerHTML = "📋 Copy";
+              }, 2000);
+            });
+        } catch (error) {
+          console.error("Error copying history entry:", error);
+        }
+      }
+
+      // Save history to localStorage (improved structure)
       function saveHistory() {
-        const entries = [];
-        document.querySelectorAll(".history-entry").forEach((entry) => {
-          entries.push(entry.innerHTML);
-        });
-        localStorage.setItem("rageQuitHistory", JSON.stringify(entries));
+        try {
+          const entries = [];
+          document.querySelectorAll(".history-entry").forEach((entry) => {
+            entries.push(entry.innerHTML);
+          });
+          localStorage.setItem("rageQuitHistory", JSON.stringify(entries));
+          console.log("✅ History saved:", entries.length, "entries");
+        } catch (error) {
+          console.error("❌ Error saving history:", error);
+        }
       }
 
-      // Load history from localStorage
+      // Load history from localStorage (improved)
       function loadHistory() {
-        const saved = localStorage.getItem("rageQuitHistory");
-        if (saved) {
-          const entries = JSON.parse(saved);
-          const historyList = document.getElementById("history-list");
-          entries.forEach((html) => {
-            const entry = document.createElement("div");
-            entry.className = "history-entry";
-            entry.innerHTML = html;
-            historyList.appendChild(entry);
-          });
+        try {
+          const saved = localStorage.getItem("rageQuitHistory");
+          if (saved) {
+            const entries = JSON.parse(saved);
+            const historyList = document.getElementById("history-list");
+            if (historyList) {
+              historyList.innerHTML = ""; // Clear existing
+              entries.forEach((html) => {
+                const entry = document.createElement("div");
+                entry.className = "history-entry";
+                entry.innerHTML = html;
+                historyList.appendChild(entry);
+              });
+              console.log("✅ History loaded:", entries.length, "entries");
+            }
+          }
+        } catch (error) {
+          console.error("❌ Error loading history:", error);
         }
       }
     </script>
@@ -1169,7 +1348,7 @@
         if (newSpinButton) {
           newSpinButton.addEventListener("click", function () {
             // Check if already spinning
-            if (window.state && window.state.isSpinning) {
+            if (window.state && (window.state.isSpinning || (window.rageRouletteSystem && window.rageRouletteSystem.animating))) {
               console.log("Already spinning, ignoring click");
               return;
             }
@@ -1185,9 +1364,32 @@
             overlay.classList.add("active");
             hero.classList.add("dimmed");
 
-            // Use the original slot machine function
-            if (typeof window.spinRageQuitLoadout === "function") {
-              console.log("Using original spinRageQuitLoadout");
+            // Use the roulette system if available (includes handicap selection)
+            if (window.rageRouletteSystem && typeof window.rageRouletteSystem.startFullSequence === "function") {
+              console.log("Using rage roulette system with handicap selection");
+              
+              // Start the full sequence (class -> spins -> handicap -> slot machine)
+              window.rageRouletteSystem.startFullSequence().then(() => {
+                // After roulette completes, the slot machine will run
+                // Wait for slot animations to complete, then show buttons
+                setTimeout(() => {
+                  // Show buttons
+                  document.getElementById("copyLoadoutButton").style.display = "inline-block";
+                  document.getElementById("exit-overlay-btn").style.display = "inline-block";
+
+                  // Add to history
+                  recordSpinResults();
+                }, 8000); // Wait for full slot animation
+              }).catch((error) => {
+                console.error("Error in roulette sequence:", error);
+                // Fallback to direct slot machine
+                if (typeof window.spinRageQuitLoadout === "function") {
+                  window.spinRageQuitLoadout();
+                }
+              });
+              
+            } else if (typeof window.spinRageQuitLoadout === "function") {
+              console.log("Using original spinRageQuitLoadout (no handicap selection)");
               window.spinRageQuitLoadout();
               
               // Wait for slot animations to complete, then show buttons
@@ -1201,7 +1403,7 @@
               }, 8000); // Wait for full slot animation
               
             } else {
-              console.error("spinRageQuitLoadout function not found!");
+              console.error("Neither roulette system nor spinRageQuitLoadout function found!");
               alert("Error: Slot machine function not loaded. Please refresh the page.");
             }
           });
@@ -1252,81 +1454,178 @@
 
         // Function to record spin results
         function recordSpinResults() {
-          // Get items from the actual slot display
-          const itemContainers = document.querySelectorAll(".item-container");
-          const items = [];
+          try {
+            // Get items from the actual slot display - try multiple selectors
+            const itemContainers = document.querySelectorAll(".item-container");
+            const items = [];
 
-          // Look for winner items in each container
-          itemContainers.forEach((container, index) => {
-            // Try multiple selectors to find the displayed item
-            let itemText = "Unknown";
+            // Look for winner items in each container
+            itemContainers.forEach((container, index) => {
+              let itemText = "Unknown";
 
-            // Check for winner class
-            const winnerItem = container.querySelector(".itemCol.winner p");
-            if (winnerItem) {
-              itemText = winnerItem.textContent.trim();
-            } else {
-              // Check for any visible item
-              const allItems = container.querySelectorAll(".itemCol p");
-              if (allItems.length > 0) {
-                // Get the middle item (usually the visible one)
-                const middleIndex = Math.floor(allItems.length / 2);
-                if (allItems[middleIndex]) {
-                  itemText = allItems[middleIndex].textContent.trim();
+              // Method 1: Check for winner class (most reliable)
+              const winnerItem = container.querySelector(".itemCol.winner p");
+              if (winnerItem) {
+                itemText = winnerItem.textContent.trim();
+              } else {
+                // Method 2: Find the item that's visually centered/visible
+                const scrollContainer = container.querySelector(".scroll-container");
+                if (scrollContainer) {
+                  const allItems = scrollContainer.querySelectorAll(".itemCol");
+                  
+                  // Get the item at index 4 (middle position in our 8-item array)
+                  if (allItems[4] && allItems[4].querySelector("p")) {
+                    itemText = allItems[4].querySelector("p").textContent.trim();
+                  } else if (allItems.length > 0) {
+                    // Fallback to middle item
+                    const middleIndex = Math.floor(allItems.length / 2);
+                    if (allItems[middleIndex] && allItems[middleIndex].querySelector("p")) {
+                      itemText = allItems[middleIndex].querySelector("p").textContent.trim();
+                    }
+                  }
                 }
               }
-            }
 
-            items.push(itemText);
-            console.log(`Slot ${index + 1}:`, itemText);
-          });
-
-          // Ensure we have all items
-          if (items.length >= 5 && window.state) {
-            const classType = window.state.selectedClass || "Unknown";
-            const weapon = items[0] || "Unknown Weapon";
-            const specialization = items[1] || "Unknown Specialization";
-            const gadgets = [
-              items[2] || "Unknown Gadget 1",
-              items[3] || "Unknown Gadget 2",
-              items[4] || "Unknown Gadget 3",
-            ];
-            const handicapName = window.state.selectedHandicap || "None";
-            const handicapDesc =
-              window.state.selectedHandicapDesc || "No handicap";
-
-            console.log("Recording history:", {
-              classType,
-              weapon,
-              specialization,
-              gadgets,
-              handicapName,
+              items.push(itemText);
+              console.log(`Slot ${index + 1}:`, itemText);
             });
 
-            addToHistory(
-              classType,
-              weapon,
-              specialization,
-              gadgets,
-              handicapName,
-              handicapDesc
-            );
-          } else {
-            console.error("Not enough items found for history:", items);
+            // Store results globally for static display
+            window.lastSpinResults = {
+              items: items.slice(), // Copy array
+              classType: window.state?.selectedClass || "Unknown",
+              handicapName: window.state?.selectedHandicap || "None",
+              handicapDesc: window.state?.selectedHandicapDesc || "No handicap"
+            };
+
+            // Ensure we have all items
+            if (items.length >= 5 && window.state) {
+              const classType = window.state.selectedClass || "Unknown";
+              const weapon = items[0] || "Unknown Weapon";
+              const specialization = items[1] || "Unknown Specialization";
+              const gadgets = [
+                items[2] || "Unknown Gadget 1",
+                items[3] || "Unknown Gadget 2",
+                items[4] || "Unknown Gadget 3",
+              ];
+              const handicapName = window.state.selectedHandicap || "None";
+              const handicapDesc = window.state.selectedHandicapDesc || "No handicap";
+
+              console.log("Recording history:", {
+                classType,
+                weapon,
+                specialization,
+                gadgets,
+                handicapName,
+              });
+
+              addToHistory(
+                classType,
+                weapon,
+                specialization,
+                gadgets,
+                handicapName,
+                handicapDesc
+              );
+            } else {
+              console.error("Not enough items found for history:", items);
+            }
+          } catch (error) {
+            console.error("Error recording spin results:", error);
           }
         }
 
-        // Exit overlay button
+        // Exit overlay button - display static results on main page
         const exitBtn = document.getElementById("exit-overlay-btn");
         if (exitBtn) {
           exitBtn.addEventListener("click", () => {
+            // First capture the current slot results
+            displayStaticResultsOnMainPage();
+            
+            // Then exit overlay
             exitOverlay();
+            
             // Reset button state when exiting
             const spinBtn = document.getElementById("rage-quit-btn");
             if (spinBtn) {
               spinBtn.disabled = false;
             }
           });
+        }
+
+        // Function to display static results on main page
+        function displayStaticResultsOnMainPage() {
+          if (!window.lastSpinResults) {
+            console.error("No spin results to display");
+            return;
+          }
+
+          // Create static results section
+          let staticSection = document.getElementById("static-results");
+          if (!staticSection) {
+            staticSection = document.createElement("div");
+            staticSection.id = "static-results";
+            staticSection.className = "static-results-section";
+            
+            // Add styles
+            staticSection.style.cssText = `
+              margin: 2rem auto;
+              padding: 2rem;
+              background: var(--dark-gray);
+              border-radius: 20px;
+              border: 2px solid var(--blood-red);
+              max-width: 800px;
+              text-align: center;
+            `;
+            
+            // Insert after hero section
+            const heroSection = document.getElementById("hero-section");
+            if (heroSection) {
+              heroSection.parentNode.insertBefore(staticSection, heroSection.nextSibling);
+            }
+          }
+
+          const results = window.lastSpinResults;
+          
+          staticSection.innerHTML = `
+            <h2 style="color: var(--neon-red); margin-bottom: 1.5rem; font-size: 2rem;">Your Suffering Loadout</h2>
+            <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
+              <div style="text-align: center;">
+                <img src="../images/${results.items[0]?.replace(/ /g, "_")}.webp" alt="${results.items[0]}" style="width: 80px; height: 80px; object-fit: contain;" onerror="this.src='../images/placeholder.webp'">
+                <p style="color: white; font-weight: bold; margin-top: 0.5rem;">${results.items[0] || "Unknown"}</p>
+                <small style="color: #ccc;">Weapon</small>
+              </div>
+              <div style="text-align: center;">
+                <img src="../images/${results.items[1]?.replace(/ /g, "_")}.webp" alt="${results.items[1]}" style="width: 80px; height: 80px; object-fit: contain;" onerror="this.src='../images/placeholder.webp'">
+                <p style="color: white; font-weight: bold; margin-top: 0.5rem;">${results.items[1] || "Unknown"}</p>
+                <small style="color: #ccc;">Specialization</small>
+              </div>
+              <div style="text-align: center;">
+                <img src="../images/${results.items[2]?.replace(/ /g, "_")}.webp" alt="${results.items[2]}" style="width: 60px; height: 60px; object-fit: contain;" onerror="this.src='../images/placeholder.webp'">
+                <p style="color: white; font-weight: bold; margin-top: 0.5rem; font-size: 0.9rem;">${results.items[2] || "Unknown"}</p>
+                <small style="color: #ccc;">Gadget 1</small>
+              </div>
+              <div style="text-align: center;">
+                <img src="../images/${results.items[3]?.replace(/ /g, "_")}.webp" alt="${results.items[3]}" style="width: 60px; height: 60px; object-fit: contain;" onerror="this.src='../images/placeholder.webp'">
+                <p style="color: white; font-weight: bold; margin-top: 0.5rem; font-size: 0.9rem;">${results.items[3] || "Unknown"}</p>
+                <small style="color: #ccc;">Gadget 2</small>
+              </div>
+              <div style="text-align: center;">
+                <img src="../images/${results.items[4]?.replace(/ /g, "_")}.webp" alt="${results.items[4]}" style="width: 60px; height: 60px; object-fit: contain;" onerror="this.src='../images/placeholder.webp'">
+                <p style="color: white; font-weight: bold; margin-top: 0.5rem; font-size: 0.9rem;">${results.items[4] || "Unknown"}</p>
+                <small style="color: #ccc;">Gadget 3</small>
+              </div>
+            </div>
+            <div style="background: var(--black); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+              <h3 style="color: var(--neon-red); margin-bottom: 0.5rem;">Class: ${results.classType}</h3>
+              <p style="color: var(--gold); font-weight: bold;">Handicap: ${results.handicapName}</p>
+              <p style="color: #ccc; font-style: italic;">${results.handicapDesc}</p>
+            </div>
+            <button onclick="this.parentElement.remove()" style="background: var(--rage-gradient); border: none; padding: 0.5rem 1rem; border-radius: 5px; color: white; cursor: pointer;">Clear Results</button>
+          `;
+          
+          // Scroll to static results
+          staticSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         // Update current streak

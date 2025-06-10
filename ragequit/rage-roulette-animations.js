@@ -39,11 +39,18 @@ class RageRouletteAnimationSystem {
 
     this.animating = true;
 
-    // Hide main UI elements
-    document.querySelector(".rage-button-container").style.display = "none";
-    document.getElementById("output").style.display = "none";
-    document.querySelector(".handicap-section").style.display = "none";
-    document.getElementById("double-or-nothing-container").style.display = "none";
+    // Hide main UI elements (check if they exist first)
+    const rageButtonContainer = document.querySelector(".rage-button-container");
+    if (rageButtonContainer) rageButtonContainer.style.display = "none";
+    
+    const outputElement = document.getElementById("output");
+    if (outputElement) outputElement.style.display = "none";
+    
+    const handicapSection = document.querySelector(".handicap-section");
+    if (handicapSection) handicapSection.style.display = "none";
+    
+    const doubleOrNothingContainer = document.getElementById("double-or-nothing-container");
+    if (doubleOrNothingContainer) doubleOrNothingContainer.style.display = "none";
 
     // Show roulette container
     const rouletteContainer = document.getElementById("rage-roulette-container");
@@ -108,10 +115,15 @@ class RageRouletteAnimationSystem {
     // Show selection display
     this.showSelectionDisplay();
 
-    // Show the main container and output
-    document.querySelector(".rage-button-container").style.display = "flex";
-    document.getElementById("output").style.display = "block";
-    document.querySelector(".handicap-section").style.display = "block";
+    // Show the main container and output (check if they exist first)
+    const rageButtonContainer2 = document.querySelector(".rage-button-container");
+    if (rageButtonContainer2) rageButtonContainer2.style.display = "flex";
+    
+    const outputElement2 = document.getElementById("output");
+    if (outputElement2) outputElement2.style.display = "block";
+    
+    const handicapSection2 = document.querySelector(".handicap-section");
+    if (handicapSection2) handicapSection2.style.display = "block";
 
     // Set the state for the original system
     window.state.selectedClass = this.selectedClass;

@@ -1115,21 +1115,9 @@ function setupFilterSystem() {
     closePanel();
     
     // Show confirmation message
-    const filterStatus = document.createElement("div");
-    filterStatus.className = "filter-status";
-    filterStatus.textContent = "Filters applied!";
-    filterStatus.style.cssText = `
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 255, 0, 0.9);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      z-index: 10001;
-      font-weight: bold;
-    `;
+    const filterStatus = document.createElement("span");
+    filterStatus.textContent = "✓ Filters applied!";
+    filterStatus.setAttribute('style', 'position:fixed!important;top:80px!important;left:50%!important;transform:translateX(-50%)!important;background:#00ff00!important;color:#000!important;padding:3px 10px!important;border-radius:15px!important;z-index:99999!important;font-size:12px!important;font-weight:bold!important;line-height:18px!important;height:24px!important;display:flex!important;align-items:center!important;white-space:nowrap!important;');
     document.body.appendChild(filterStatus);
     
     // Remove after 2 seconds
