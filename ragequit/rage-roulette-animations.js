@@ -432,48 +432,78 @@ class RageRouletteAnimationSystem {
         }
 
         // Update active state
-        spinElements.forEach((el, idx) => {
-          if (idx === currentIndex) {
-            el.style.opacity = "1";
-            el.style.transform = "scale(1.2)";
-            el.style.background = "linear-gradient(135deg, #b83e3e, #ff4444)";
-            
-            // Create particle effect (less frequent to avoid overwhelming)
-            if (elapsed % 100 < 50) {
-              this.createParticleEffect(el);
+        try {
+          spinElements.forEach((el, idx) => {
+            if (idx === currentIndex) {
+              el.style.opacity = "1";
+              el.style.transform = "scale(1.2)";
+              el.style.background = "linear-gradient(135deg, #b83e3e, #ff4444)";
+              
+              // Create particle effect (less frequent to avoid overwhelming)
+              if (elapsed % 200 < 50) { // Reduced frequency
+                this.createParticleEffect(el);
+              }
+            } else {
+              el.style.opacity = "0.5";
+              el.style.transform = "scale(0.8)";
+              el.style.background = "linear-gradient(135deg, #2e1a1a, #4e2a2a)";
             }
-          } else {
-            el.style.opacity = "0.5";
-            el.style.transform = "scale(0.8)";
-            el.style.background = "linear-gradient(135deg, #2e1a1a, #4e2a2a)";
+          });
+        } catch (styleError) {
+          console.warn('Style update error:', styleError);
+        }
+
+        try {
+          this.playTickSound();
+        } catch (soundError) {
+          console.warn('Sound error:', soundError);
+        }
+
+        try {
+          // Calculate speed (EXACT SAME as main page)
+          const progress = elapsed / this.spinAnimationConfig.totalDuration;
+          let speed = this.spinAnimationConfig.initialSpeed;
+
+          if (progress > this.spinAnimationConfig.decelerationStart) {
+            const decelerationProgress =
+              (progress - this.spinAnimationConfig.decelerationStart) /
+              (1 - this.spinAnimationConfig.decelerationStart);
+            speed =
+              this.spinAnimationConfig.initialSpeed +
+              (this.spinAnimationConfig.finalSpeed -
+                this.spinAnimationConfig.initialSpeed) *
+                Math.pow(decelerationProgress, 2);
           }
-        });
 
-        this.playTickSound();
+          if (elapsed >= this.spinAnimationConfig.totalDuration - 400) {
+            currentIndex = winnerIndex;
+            speed = 400;
+          } else {
+            currentIndex = (currentIndex + 1) % this.spinOptions.length;
+          }
 
-        // Calculate speed (EXACT SAME as main page)
-        const progress = elapsed / this.spinAnimationConfig.totalDuration;
-        let speed = this.spinAnimationConfig.initialSpeed;
-
-        if (progress > this.spinAnimationConfig.decelerationStart) {
-          const decelerationProgress =
-            (progress - this.spinAnimationConfig.decelerationStart) /
-            (1 - this.spinAnimationConfig.decelerationStart);
-          speed =
-            this.spinAnimationConfig.initialSpeed +
-            (this.spinAnimationConfig.finalSpeed -
-              this.spinAnimationConfig.initialSpeed) *
-              Math.pow(decelerationProgress, 2);
+          // Ensure speed is within reasonable bounds
+          speed = Math.max(10, Math.min(1000, speed));
+          
+          setTimeout(animate, speed);
+        } catch (animationError) {
+          console.error('Animation error:', animationError);
+          // Fallback: complete the animation
+          try {
+            spinElements[winnerIndex].style.opacity = "1";
+            spinElements[winnerIndex].style.transform = "scale(1.2)";
+            statusEl.textContent = `${this.selectedSpins} SPIN${this.selectedSpins > 1 ? "S" : ""} SELECTED!`;
+            setTimeout(() => {
+              if (animationContainer.parentNode) {
+                document.body.removeChild(animationContainer);
+              }
+              resolve();
+            }, 500);
+          } catch (fallbackError) {
+            console.error('Fallback error:', fallbackError);
+            resolve(); // Just resolve to continue
+          }
         }
-
-        if (elapsed >= this.spinAnimationConfig.totalDuration - 400) {
-          currentIndex = winnerIndex;
-          speed = 400;
-        } else {
-          currentIndex = (currentIndex + 1) % this.spinOptions.length;
-        }
-
-        setTimeout(animate, speed);
       };
 
       animate();
@@ -707,91 +737,138 @@ class RageRouletteAnimationSystem {
   }
 
   createParticleEffect(element) {
-    const rect = element.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    try {
+      const rect = element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
 
-    // Reduce particle count on mobile for performance
-    const particleCount = window.state?.isMobile ? 3 : 8;
+      // Reduce particle count for performance
+      const particleCount = 4; // Fixed count to avoid crashes
 
-    for (let i = 0; i < particleCount; i++) {
-      const particle = document.createElement("div");
-      particle.style.cssText = `
-        position: fixed;
-        width: 4px;
-        height: 4px;
-        background: #ff4444;
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 1000001;
-        left: ${centerX}px;
-        top: ${centerY}px;
-        box-shadow: 0 0 6px rgba(255, 68, 68, 0.8);
-      `;
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement("div");
+        particle.style.cssText = `
+          position: fixed;
+          width: 4px;
+          height: 4px;
+          background: #ff4444;
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 1000001;
+          left: ${centerX}px;
+          top: ${centerY}px;
+          box-shadow: 0 0 6px rgba(255, 68, 68, 0.8);
+        `;
 
-      // Random direction
-      const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
-      const distance = 60 + Math.random() * 80;
-      const targetX = centerX + Math.cos(angle) * distance;
-      const targetY = centerY + Math.sin(angle) * distance;
+        // Random direction
+        const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
+        const distance = 60 + Math.random() * 80;
+        const targetX = centerX + Math.cos(angle) * distance;
+        const targetY = centerY + Math.sin(angle) * distance;
 
-      document.body.appendChild(particle);
+        document.body.appendChild(particle);
 
-      // Animate the particle
-      const animation = particle.animate([
-        {
-          transform: 'translate(0, 0) scale(1)',
-          opacity: 1
-        },
-        {
-          transform: `translate(${targetX - centerX}px, ${targetY - centerY}px) scale(0)`,
-          opacity: 0
+        // Animate the particle with error handling
+        try {
+          const animation = particle.animate([
+            {
+              transform: 'translate(0, 0) scale(1)',
+              opacity: 1
+            },
+            {
+              transform: `translate(${targetX - centerX}px, ${targetY - centerY}px) scale(0)`,
+              opacity: 0
+            }
+          ], {
+            duration: 800,
+            easing: 'ease-out'
+          });
+
+          animation.onfinish = () => {
+            try {
+              if (particle && particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+              }
+            } catch (e) {
+              console.warn('Particle cleanup error:', e);
+            }
+          };
+        } catch (animError) {
+          // Fallback: just remove the particle after a timeout
+          setTimeout(() => {
+            try {
+              if (particle && particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+              }
+            } catch (e) {
+              console.warn('Particle timeout cleanup error:', e);
+            }
+          }, 800);
         }
-      ], {
-        duration: 800,
-        easing: 'ease-out'
-      });
-
-      animation.onfinish = () => {
-        if (particle.parentNode) {
-          particle.parentNode.removeChild(particle);
-        }
-      };
+      }
+    } catch (error) {
+      console.warn('Particle effect error:', error);
+      // Continue without particles
     }
   }
 
   // NEW: Create skull particles for handicap effect
   createSkullParticleEffect(element) {
-    const rect = element.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    try {
+      const rect = element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
 
-    for (let i = 0; i < 3; i++) {
-      const skull = document.createElement("div");
-      skull.textContent = "💀";
-      skull.style.cssText = `
-        position: fixed;
-        font-size: 16px;
-        pointer-events: none;
-        z-index: 1000001;
-        left: ${centerX}px;
-        top: ${centerY}px;
-      `;
+      for (let i = 0; i < 2; i++) { // Reduced count
+        const skull = document.createElement("div");
+        skull.textContent = "💀";
+        skull.style.cssText = `
+          position: fixed;
+          font-size: 16px;
+          pointer-events: none;
+          z-index: 1000001;
+          left: ${centerX}px;
+          top: ${centerY}px;
+        `;
 
-      const angle = (Math.PI * 2 * i) / 3;
-      const distance = 40 + Math.random() * 60;
-      const targetX = centerX + Math.cos(angle) * distance;
-      const targetY = centerY + Math.sin(angle) * distance;
+        const angle = (Math.PI * 2 * i) / 2;
+        const distance = 40 + Math.random() * 60;
+        const targetX = centerX + Math.cos(angle) * distance;
+        const targetY = centerY + Math.sin(angle) * distance;
 
-      document.body.appendChild(skull);
+        document.body.appendChild(skull);
 
-      skull.animate([
-        { transform: 'translate(0, 0)', opacity: 1 },
-        { transform: `translate(${targetX - centerX}px, ${targetY - centerY}px)`, opacity: 0 }
-      ], {
-        duration: 1000,
-        easing: 'ease-out'
-      }).onfinish = () => skull.remove();
+        try {
+          skull.animate([
+            { transform: 'translate(0, 0)', opacity: 1 },
+            { transform: `translate(${targetX - centerX}px, ${targetY - centerY}px)`, opacity: 0 }
+          ], {
+            duration: 1000,
+            easing: 'ease-out'
+          }).onfinish = () => {
+            try {
+              if (skull && skull.parentNode) {
+                skull.remove();
+              }
+            } catch (e) {
+              console.warn('Skull cleanup error:', e);
+            }
+          };
+        } catch (animError) {
+          // Fallback cleanup
+          setTimeout(() => {
+            try {
+              if (skull && skull.parentNode) {
+                skull.remove();
+              }
+            } catch (e) {
+              console.warn('Skull timeout cleanup error:', e);
+            }
+          }, 1000);
+        }
+      }
+    } catch (error) {
+      console.warn('Skull particle effect error:', error);
     }
   }
 
@@ -861,51 +938,23 @@ class RageRouletteAnimationSystem {
       selectedClassElement.style.color = "#ff4444";
     }
 
-    // Show handicap warning
-    this.showHandicapWarning();
+    // Update handicap display instead of showing banner
+    this.updateHandicapDisplay();
   }
 
-  // Show handicap warning banner
-  showHandicapWarning() {
-    // Remove existing warning
-    const existingWarning = document.querySelector('.handicap-warning-banner');
-    if (existingWarning) existingWarning.remove();
+  // Update handicap display in the box below slot machine
+  updateHandicapDisplay() {
+    const handicapContainer = document.querySelector('#handicap-container');
+    if (!handicapContainer) return;
 
-    // Create warning banner
-    const warningBanner = document.createElement('div');
-    warningBanner.className = 'handicap-warning-banner';
-    warningBanner.innerHTML = `
-      <div class="warning-content">
-        <span class="warning-skull">💀</span>
-        <span class="warning-text">WARNING: ${this.selectedHandicap.toUpperCase()} ACTIVATED</span>
-        <span class="warning-skull">💀</span>
+    const handicapHTML = `
+      <div class="handicap-display">
+        <h3>Selected Handicap</h3>
+        <div class="handicap-name">${this.selectedHandicap}</div>
+        <div class="handicap-desc">${this.selectedHandicapDesc}</div>
       </div>
-      <div class="warning-description">${this.selectedHandicapDesc}</div>
     `;
-
-    // Add styles
-    warningBanner.style.cssText = `
-      position: fixed;
-      top: 120px;
-      left: 0;
-      right: 0;
-      background: linear-gradient(45deg, #8b0000, #ff4444);
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-weight: bold;
-      z-index: 10000;
-      box-shadow: 0 4px 20px rgba(255, 68, 68, 0.5);
-      animation: rage-warning-flash 1s ease-in-out infinite alternate;
-    `;
-
-    document.body.appendChild(warningBanner);
-
-    // Remove after 8 seconds
-    setTimeout(() => {
-      warningBanner.style.animation = 'rage-warning-fade-out 0.5s ease-out';
-      setTimeout(() => warningBanner.remove(), 500);
-    }, 8000);
+    handicapContainer.innerHTML = handicapHTML;
   }
 
   // Utility

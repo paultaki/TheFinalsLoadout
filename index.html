@@ -287,8 +287,58 @@
     }
 
 
+    /* Mobile Sound Toggle Styles */
+    .mobile-sound-toggle {
+      display: none !important;
+    }
+    
     /* Mobile Redesign - Clean & Symmetric */
     @media (max-width: 768px) {
+      /* Position mobile sound toggle in header */
+      .mobile-sound-toggle {
+        display: flex !important;
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+        width: 40px !important;
+        height: 40px !important;
+        z-index: 1000 !important;
+        background: rgba(0, 0, 0, 0.7) !important;
+        border: 2px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 50% !important;
+        color: #fff !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        backdrop-filter: blur(10px) !important;
+      }
+      
+      .mobile-sound-toggle:hover {
+        background: rgba(0, 0, 0, 0.8) !important;
+        border-color: rgba(255, 255, 255, 0.4) !important;
+        transform: scale(1.05) !important;
+      }
+      
+      .mobile-sound-toggle.muted {
+        background: rgba(255, 68, 68, 0.7) !important;
+        border-color: rgba(255, 68, 68, 0.4) !important;
+      }
+      
+      .mobile-sound-toggle.muted:hover {
+        background: rgba(255, 68, 68, 0.8) !important;
+        border-color: rgba(255, 68, 68, 0.6) !important;
+      }
+      
+      /* Hide desktop sound toggle on mobile */
+      #sound-toggle {
+        display: none !important;
+      }
+      
+      /* Ensure header has relative positioning for absolute child */
+      .headerSection {
+        position: relative;
+      }
       /* Reset and base spacing */
       body {
         margin: 0;
@@ -1021,6 +1071,19 @@
 <!-- Header Section -->
 <section class="headerSection">
   <div class="container">
+    <!-- Mobile Sound Toggle in Header -->
+    <button id="mobile-sound-toggle" class="sound-toggle-button mobile-sound-toggle" aria-label="Toggle sound">
+      <svg class="sound-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      </svg>
+      <svg class="sound-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <line x1="23" y1="9" x2="17" y2="15"></line>
+        <line x1="17" y1="9" x2="23" y2="15"></line>
+      </svg>
+    </button>
+    
     <img src="images/the-finals-logo.webp" alt="The Finals" class="finals-logo-mobile" width="144" height="auto" />
     <h1 class="subTitle-mobile">Random Loadout Generator</h1>
     <!-- Boxed Countdown moved from top bar -->
@@ -1401,48 +1464,108 @@
           initMobileSpinEffects();
         }
         
+        // TEMPORARY: Clear localStorage to reset audio state for debugging
+        // localStorage.removeItem('soundEnabled');
+        
         // Initialize audio toggle
         initAudioToggle();
+        
+        // Ensure window.state is synchronized with localStorage on load
+        const soundEnabledValue = localStorage.getItem('soundEnabled');
+        const soundEnabled = soundEnabledValue === null ? true : soundEnabledValue !== 'false';
+        
+        if (window.state) {
+          window.state.soundEnabled = soundEnabled;
+        }
+        
+        // Set default if not set
+        if (soundEnabledValue === null) {
+          localStorage.setItem('soundEnabled', 'true');
+        }
+        
+        // Initialize audio on first user interaction (for mobile)
+        initAudioOnInteraction();
+        
+        // TEMPORARY: Add a test audio function for debugging
+        window.testAudio = function() {
+          console.log('Testing audio with state:', window.state.soundEnabled);
+          const clickSound = document.getElementById('clickSound');
+          if (clickSound) {
+            console.log('Click sound element found');
+            clickSound.volume = 0.5;
+            clickSound.play().then(() => {
+              console.log('Audio played successfully');
+            }).catch(err => {
+              console.error('Audio play failed:', err);
+            });
+          } else {
+            console.error('Click sound element not found');
+          }
+        };
         
         // Audio Toggle Implementation
         function initAudioToggle() {
           const soundToggle = document.getElementById('sound-toggle');
+          const mobileSoundToggle = document.getElementById('mobile-sound-toggle');
           
-          if (!soundToggle) {
-            console.warn('No sound toggle button found');
+          // Handle both desktop and mobile toggles
+          const toggles = [soundToggle, mobileSoundToggle].filter(toggle => toggle !== null);
+          
+          if (toggles.length === 0) {
+            console.warn('No sound toggle buttons found');
             return;
           }
           
           // Get initial state from localStorage or default to enabled
-          const isEnabled = localStorage.getItem('soundEnabled') !== 'false';
+          const soundEnabledValue = localStorage.getItem('soundEnabled');
+          const isEnabled = soundEnabledValue === null ? true : soundEnabledValue !== 'false';
           
-          // Set initial visual state
-          updateAudioToggleVisual(soundToggle, isEnabled);
+          console.log('Audio toggle init:', { soundEnabledValue, isEnabled });
           
-          // Add click handler
-          soundToggle.addEventListener('click', handleToggleClick);
+          // Set initial visual state for all toggles
+          toggles.forEach(toggle => updateAudioToggleVisual(toggle, isEnabled));
+          
+          // Sync with global state on initialization
+          if (window.state) {
+            window.state.soundEnabled = isEnabled;
+          }
+          
+          // If localStorage doesn't have the value, set it to the default (true)
+          if (soundEnabledValue === null) {
+            localStorage.setItem('soundEnabled', 'true');
+          }
+          
+          // Add click handler to all toggles
+          toggles.forEach(toggle => toggle.addEventListener('click', handleToggleClick));
           
           function handleToggleClick() {
-            const currentState = localStorage.getItem('soundEnabled') !== 'false';
+            const soundEnabledValue = localStorage.getItem('soundEnabled');
+            const currentState = soundEnabledValue === null ? true : soundEnabledValue !== 'false';
             const newState = !currentState;
+            
+            console.log('Audio toggle clicked:', 'current =', currentState, 'new =', newState);
             
             // Save new state
             localStorage.setItem('soundEnabled', newState.toString());
+            console.log('Saved to localStorage:', newState.toString());
             
-            // Update visual
-            updateAudioToggleVisual(soundToggle, newState);
-            
-            // Update global state if it exists
+            // Update global state FIRST - this is critical for audio to work
             if (window.state) {
               window.state.soundEnabled = newState;
+              console.log('Updated window.state.soundEnabled to', window.state.soundEnabled);
+            } else {
+              console.error('WARNING: window.state not found! Audio may not mute properly.');
             }
+            
+            // Update visual after state is updated for all toggles
+            toggles.forEach(toggle => updateAudioToggleVisual(toggle, newState));
             
             // Stop all audio if disabling
             if (!newState) {
               stopAllAudio();
             }
             
-            console.log('Sound', newState ? 'enabled' : 'disabled');
+            console.log('Sound', newState ? 'enabled' : 'disabled', 'localStorage:', localStorage.getItem('soundEnabled'));
           }
         }
         
@@ -1452,14 +1575,30 @@
           const soundOn = soundToggle.querySelector('.sound-on');
           const soundOff = soundToggle.querySelector('.sound-off');
           
+          console.log('Updating audio visual:', isEnabled, soundOn, soundOff);
+          
           if (isEnabled) {
+            // Audio is ON - show speaker icon, remove red muted styling
             soundToggle.classList.remove('muted');
-            if (soundOn) soundOn.style.display = 'block';
-            if (soundOff) soundOff.style.display = 'none';
+            if (soundOn) {
+              soundOn.style.display = 'block';
+              soundOn.style.visibility = 'visible';
+            }
+            if (soundOff) {
+              soundOff.style.display = 'none';
+              soundOff.style.visibility = 'hidden';
+            }
           } else {
+            // Audio is OFF - show muted icon, add red muted styling
             soundToggle.classList.add('muted');
-            if (soundOn) soundOn.style.display = 'none';
-            if (soundOff) soundOff.style.display = 'block';
+            if (soundOn) {
+              soundOn.style.display = 'none';
+              soundOn.style.visibility = 'hidden';
+            }
+            if (soundOff) {
+              soundOff.style.display = 'block';
+              soundOff.style.visibility = 'visible';
+            }
           }
         }
         
@@ -1469,6 +1608,52 @@
           audioElements.forEach(audio => {
             audio.pause();
             audio.currentTime = 0;
+          });
+        }
+        
+        // Initialize audio on first user interaction (for mobile compatibility)
+        function initAudioOnInteraction() {
+          let audioInitialized = false;
+          
+          function initAudio() {
+            if (audioInitialized) return;
+            
+            // Create a silent AudioContext to unlock audio
+            try {
+              const AudioContext = window.AudioContext || window.webkitAudioContext;
+              const audioContext = new AudioContext();
+              
+              // Create a silent sound
+              const buffer = audioContext.createBuffer(1, 1, 22050);
+              const source = audioContext.createBufferSource();
+              source.buffer = buffer;
+              source.connect(audioContext.destination);
+              source.start();
+              
+              // Try to play all audio elements silently to preload them
+              const audioElements = document.querySelectorAll('audio');
+              audioElements.forEach(audio => {
+                audio.volume = 0;
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                  playPromise.then(() => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    audio.volume = 1;
+                  }).catch(() => {});
+                }
+              });
+              
+              audioInitialized = true;
+              console.log('Audio initialized successfully');
+            } catch (e) {
+              console.log('Audio initialization failed:', e);
+            }
+          }
+          
+          // Add listeners for first user interaction
+          ['touchstart', 'click'].forEach(event => {
+            document.addEventListener(event, initAudio, { once: true });
           });
         }
         

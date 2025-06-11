@@ -48,13 +48,19 @@ const state = {
   totalSpins: 0,
   selectedGadgets: new Set(),
   currentGadgetPool: new Set(),
-  soundEnabled: localStorage.getItem('soundEnabled') !== 'false', // Default to true
+  soundEnabled: localStorage.getItem('soundEnabled') === null ? true : localStorage.getItem('soundEnabled') !== 'false', // Default to true
   isMobile: isMobile,
   sidebarOpen: false,
 };
 
 // Make state globally accessible
 window.state = state;
+
+console.log('Initial state:', state);
+console.log('soundEnabled from localStorage:', localStorage.getItem('soundEnabled'));
+console.log('localStorage value type:', typeof localStorage.getItem('soundEnabled'));
+console.log('Computed soundEnabled value:', localStorage.getItem('soundEnabled') !== 'false');
+console.log('Computed soundEnabled (null check):', localStorage.getItem('soundEnabled') === null ? true : localStorage.getItem('soundEnabled') !== 'false');
 
 // Load initial counter value
 async function loadInitialCounter() {
@@ -2672,42 +2678,21 @@ Gadgets: ${gadgets.join(', ')}`;
 // Initialize everything when DOM is ready
 // Sound helper function
 function playSound(soundId) {
-  if (!state.soundEnabled) return;
+  if (!state.soundEnabled) {
+    console.log('Sound disabled, not playing:', soundId);
+    return;
+  }
   
   const sound = document.getElementById(soundId);
   if (sound) {
-    sound.play().catch(() => {});
+    console.log('Playing sound:', soundId, 'soundEnabled:', state.soundEnabled);
+    sound.play().catch((err) => {
+      console.log('Sound play error:', soundId, err);
+    });
   }
 }
 
-// Initialize sound toggle functionality
-function initializeSoundToggle() {
-  const soundToggle = document.getElementById('sound-toggle');
-  if (!soundToggle) return;
-  
-  // Set initial state
-  if (!state.soundEnabled) {
-    soundToggle.classList.add('muted');
-  }
-  
-  // Add click handler
-  soundToggle.addEventListener('click', () => {
-    state.soundEnabled = !state.soundEnabled;
-    localStorage.setItem('soundEnabled', state.soundEnabled);
-    
-    if (state.soundEnabled) {
-      soundToggle.classList.remove('muted');
-    } else {
-      soundToggle.classList.add('muted');
-      // Stop all currently playing sounds
-      const allAudio = document.querySelectorAll('audio');
-      allAudio.forEach(audio => {
-        audio.pause();
-        audio.currentTime = 0;
-      });
-    }
-  });
-}
+// REMOVED: Old sound toggle functionality - now handled in index.html initAudioToggle()
 
 // Season 6 countdown function
 function initializeSeasonCountdown() {
@@ -2942,8 +2927,8 @@ document.addEventListener("DOMContentLoaded", () => {
   //   fetchAndUpdateCounter();
   // }, 1000);
 
-  // Initialize sound toggle
-  initializeSoundToggle();
+  // Sound toggle now handled in index.html initAudioToggle()
+  // initializeSoundToggle();
   
   // Initialize sidebar functionality
   initializeSidebar();

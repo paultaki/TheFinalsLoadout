@@ -300,6 +300,21 @@ class SlotColumn {
 
 // Display rage quit loadout
 const displayRageQuitLoadout = () => {
+  // Center the slot machine section during animation
+  const slotMachineSection = document.querySelector('.slot-machine-section');
+  const handicapSection = document.querySelector('.handicap-section');
+  const heroSection = document.querySelector('.hero');
+  
+  if (slotMachineSection) {
+    slotMachineSection.classList.add('centered');
+  }
+  if (handicapSection) {
+    handicapSection.style.display = 'block';
+  }
+  if (heroSection) {
+    heroSection.style.opacity = '0.3';
+  }
+
   const outputDiv = document.getElementById("output");
   const classes = ["Light", "Medium", "Heavy"];
   const selectedClass = classes[Math.floor(Math.random() * classes.length)];
@@ -642,10 +657,11 @@ function displaySelectedHandicap() {
     handicapContainer.innerHTML = handicapHTML;
     
     setTimeout(() => {
-      handicapContainer.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+      // Remove scroll to prevent page jumping during animations
+      // handicapContainer.scrollIntoView({
+      //   behavior: "smooth",
+      //   block: "center",
+      // });
     }, 500);
   }
 }
@@ -665,6 +681,17 @@ function resetSpinState() {
   rageState.isSpinning = false;
   if (window.rageRouletteSystem) {
     window.rageRouletteSystem.animating = false;
+  }
+  
+  // Remove centering and restore normal layout
+  const slotMachineSection = document.querySelector('.slot-machine-section');
+  const heroSection = document.querySelector('.hero');
+  
+  if (slotMachineSection) {
+    slotMachineSection.classList.remove('centered');
+  }
+  if (heroSection) {
+    heroSection.style.opacity = '';
   }
   
   document.querySelectorAll('.item-container').forEach(container => {
@@ -787,93 +814,64 @@ function addToRageHistory(classType, weapon, specialization, gadgets, handicapNa
   console.log("📝 Adding to rage history:", { classType, weapon, specialization, gadgets, handicapName });
 
   const newEntry = document.createElement("div");
-  newEntry.classList.add("rage-history-entry");
-  
-  // Generate rage-specific loadout name
-  const loadoutName = generateRageLoadoutName(classType, weapon, specialization);
+  newEntry.classList.add("history-row");
   
   // Generate punishment level based on gear and handicap
   const punishmentLevel = calculatePunishmentLevel(weapon, specialization, gadgets, handicapName);
   
-  // Generate random rage roast that references the handicap
-  const rageRoast = generateRageRoast(weapon, specialization, gadgets, handicapName);
-  
   // Determine if this is a "spicy" (extra bad) loadout
   const isSpicyLoadout = isSpicyRageLoadout(weapon, specialization, gadgets, handicapName);
   if (isSpicyLoadout) {
-    newEntry.classList.add("spicy-rage-loadout");
+    newEntry.classList.add("spicy-loadout");
   }
 
-  // Create the card structure
+  // Add timestamp data attribute for sorting
+  const timestamp = new Date().toISOString();
+  newEntry.dataset.timestamp = timestamp;
+  newEntry.dataset.punishmentLevel = punishmentLevel;
+  newEntry.dataset.classType = classType.toLowerCase();
+
+  // Generate compact loadout description
+  const loadoutName = `${weapon} + ${gadgets.slice(0, 2).join('/')}`;
+
+  // Create simple line format like Discord message history
   newEntry.innerHTML = `
-    <div class="rage-meme-export-container">
-      <div class="rage-loadout-header">
-        <span class="rage-class-badge ${classType.toLowerCase()}">${classType.toUpperCase()}</span>
-        <span class="rage-loadout-name">${loadoutName}</span>
-        <span class="rage-timestamp">Just now</span>
-      </div>
-      <div class="rage-punishment-indicator">
-        <span class="skull-icon">💀</span>
-        <span class="punishment-text">Punishment Level: ${punishmentLevel}</span>
-        <span class="skull-icon">💀</span>
-      </div>
-      <div class="rage-loadout-details">
-        <div class="rage-loadout-item weapon-item">
-          <img src="../images/${weapon.replace(/ /g, "_")}.webp" alt="${weapon}" class="item-icon" onerror="this.src='../images/placeholder.webp'">
-          <span class="item-name">${weapon}</span>
-        </div>
-        <div class="rage-loadout-item spec-item">
-          <img src="../images/${specialization.replace(/ /g, "_")}.webp" alt="${specialization}" class="item-icon" onerror="this.src='../images/placeholder.webp'">
-          <span class="item-name">${specialization}</span>
-        </div>
-        <div class="rage-gadget-group">
-          ${gadgets.map(g => `
-            <div class="rage-loadout-item gadget-item">
-              <img src="../images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small" onerror="this.src='../images/placeholder.webp'">
-              <span class="item-name small">${g}</span>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-      <div class="rage-handicap-section">
-        <div class="rage-handicap-badge">
-          <span class="skull-icon">💀</span>
-          <span class="handicap-name">${handicapName || "None"}</span>
-        </div>
-        <div class="rage-handicap-desc">${handicapDesc || "No handicap selected"}</div>
-      </div>
-      <div class="rage-roast-section">
-        <div class="rage-roast-content">
-          <span class="rage-fire-emoji">🔥</span>
-          <span class="rage-roast-text">${rageRoast}</span>
-        </div>
-      </div>
-      <div class="rage-meme-footer">
-        <span class="rage-meme-watermark">Rage-analyzed by thefinalsloadout.com</span>
-      </div>
-    </div>
-    <div class="rage-loadout-actions">
-      <button class="rage-copy-build" onclick="copyRageLoadoutText(this)">
-        <span>📋</span> COPY PUNISHMENT
-      </button>
-      <button class="rage-meme-card-btn" onclick="exportRageMemeCard(this)">
-        <span>💀</span> RAGE CARD
-      </button>
-      <button class="rage-survived-btn" onclick="markAsSurvived(this)" title="Mark this loadout as survived">
-        <span>🏆</span> SURVIVED
-      </button>
+    <img class="history-tiny-icon" src="../images/${weapon.replace(/ /g, "_")}.webp" alt="${weapon}" onerror="this.src='../images/placeholder.webp'">
+    ${weapon} • 
+    <img class="history-tiny-icon" src="../images/${gadgets[0].replace(/ /g, "_")}.webp" alt="${gadgets[0]}" onerror="this.src='../images/placeholder.webp'">
+    ${gadgets[0]} • 
+    <img class="history-tiny-icon" src="../images/${gadgets[1].replace(/ /g, "_")}.webp" alt="${gadgets[1]}" onerror="this.src='../images/placeholder.webp'">
+    ${gadgets[1]} • Punishment: ${punishmentLevel}
+    <!-- Store full data for modal/copy functionality -->
+    <div style="display: none;">
+      <span class="hidden-weapon">${weapon}</span>
+      <span class="hidden-spec">${specialization}</span>
+      <span class="hidden-gadgets">${gadgets.join('|')}</span>
+      <span class="hidden-handicap">${handicapName || "None"}</span>
+      <span class="hidden-handicap-desc">${handicapDesc || "No handicap selected"}</span>
+      <span class="hidden-roast">${generateRageRoast(weapon, specialization, gadgets, handicapName)}</span>
+      <span class="hidden-loadout-name">${generateRageLoadoutName(classType, weapon, specialization)}</span>
     </div>
   `;
+
+  // Add click handler for the whole row to show details
+  newEntry.addEventListener('click', function() {
+    viewFullDetails(this);
+  });
+
+  // Add right-click context menu for actions
+  newEntry.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    showContextMenu(e, this);
+  });
 
   historyList.prepend(newEntry);
   
   // Animate entry
-  setTimeout(() => newEntry.classList.add('visible'), 10);
+  setTimeout(() => newEntry.style.opacity = '1', 10);
 
-  // Ensure history does not exceed 5 entries
-  while (historyList.children.length > 5) {
-    historyList.removeChild(historyList.lastChild);
-  }
+  // Pagination - show only first 12 entries by default
+  updateHistoryVisibility();
 
   // Update timestamps
   updateRageTimestamps();
@@ -883,9 +881,13 @@ function addToRageHistory(classType, weapon, specialization, gadgets, handicapNa
 }
 
 function saveRageHistory() {
-  const entries = Array.from(document.querySelectorAll(".rage-history-entry")).map(
-    (entry) => entry.innerHTML
-  );
+  const entries = Array.from(document.querySelectorAll(".history-row")).map((entry) => ({
+    html: entry.innerHTML,
+    timestamp: entry.dataset.timestamp,
+    punishmentLevel: entry.dataset.punishmentLevel,
+    classType: entry.dataset.classType,
+    survived: entry.classList.contains('survived')
+  }));
   localStorage.setItem("rageQuitHistory", JSON.stringify(entries));
 }
 
@@ -896,26 +898,36 @@ function loadRageHistory() {
   const savedEntries = JSON.parse(localStorage.getItem("rageQuitHistory")) || [];
   historyList.innerHTML = "";
 
-  savedEntries.forEach((html) => {
+  savedEntries.forEach((entry) => {
     const newEntry = document.createElement("div");
-    newEntry.classList.add("rage-history-entry");
-    newEntry.innerHTML = html;
+    newEntry.classList.add("history-row");
+    if (entry.survived) newEntry.classList.add("survived");
+    newEntry.dataset.timestamp = entry.timestamp || new Date().toISOString();
+    newEntry.dataset.punishmentLevel = entry.punishmentLevel || 0;
+    newEntry.dataset.classType = entry.classType || 'unknown';
+    newEntry.innerHTML = entry.html || entry; // Support old format
     historyList.appendChild(newEntry);
   });
+
+  updateHistoryVisibility();
+  applyHistoryFilters();
 }
 
 function updateRageTimestamps() {
-  const timestamps = document.querySelectorAll('.rage-timestamp');
+  const timestamps = document.querySelectorAll('.history-time');
   timestamps.forEach(timestamp => {
     const now = new Date();
-    const elapsed = Math.floor((now - new Date(timestamp.dataset.created || now)) / 1000);
+    const created = timestamp.dataset.created ? new Date(timestamp.dataset.created) : now;
+    const elapsed = Math.floor((now - created) / 1000);
     
     if (elapsed < 60) {
-      timestamp.textContent = 'Just now';
+      timestamp.textContent = 'now';
     } else if (elapsed < 3600) {
-      timestamp.textContent = `${Math.floor(elapsed / 60)}m ago`;
+      timestamp.textContent = `${Math.floor(elapsed / 60)}m`;
+    } else if (elapsed < 86400) {
+      timestamp.textContent = `${Math.floor(elapsed / 3600)}h`;
     } else {
-      timestamp.textContent = `${Math.floor(elapsed / 3600)}h ago`;
+      timestamp.textContent = `${Math.floor(elapsed / 86400)}d`;
     }
   });
 }
@@ -923,38 +935,36 @@ function updateRageTimestamps() {
 // Update timestamps every minute
 setInterval(updateRageTimestamps, 60000);
 
-// Action Functions
-function copyRageLoadoutText(button) {
-  const entry = button.closest(".rage-history-entry");
-  if (!entry) {
-    console.error("Error: No rage history entry found.");
-    return;
-  }
+// New Compact Row Functions
+function copyCompactLoadout(row) {
+  if (!row) return;
 
-  const classType = entry.querySelector('.rage-class-badge').textContent;
-  const weapon = entry.querySelector('.weapon-item .item-name').textContent;
-  const specialization = entry.querySelector('.spec-item .item-name').textContent;
-  const gadgets = Array.from(entry.querySelectorAll('.gadget-item .item-name')).map(el => el.textContent);
-  const handicap = entry.querySelector('.handicap-name').textContent;
-  const handicapDesc = entry.querySelector('.rage-handicap-desc').textContent;
-  const punishmentLevel = entry.querySelector('.punishment-text').textContent;
+  const classType = row.dataset.classType.toUpperCase();
+  const weapon = row.querySelector('.hidden-weapon').textContent;
+  const spec = row.querySelector('.hidden-spec').textContent;
+  const gadgets = row.querySelector('.hidden-gadgets').textContent.split('|');
+  const handicap = row.querySelector('.hidden-handicap').textContent;
+  const handicapDesc = row.querySelector('.hidden-handicap-desc').textContent;
+  const punishmentLevel = row.dataset.punishmentLevel;
 
   const text = `🔥 THE FINALS RAGE LOADOUT 🔥
 Class: ${classType}
 Weapon: ${weapon}
-Specialization: ${specialization}
+Specialization: ${spec}
 Gadgets: ${gadgets.join(', ')}
-${punishmentLevel}
+Punishment Level: ${punishmentLevel}
 Handicap: ${handicap} - ${handicapDesc}
 
 Generated by thefinalsloadout.com/ragequit/`;
 
   navigator.clipboard.writeText(text)
     .then(() => {
-      button.innerHTML = '<span>✅</span> COPIED!';
+      // Show a brief flash to indicate copy success
+      const originalStyle = row.style.background;
+      row.style.background = 'rgba(0, 255, 0, 0.2)';
       setTimeout(() => {
-        button.innerHTML = '<span>📋</span> COPY PUNISHMENT';
-      }, 2000);
+        row.style.background = originalStyle;
+      }, 500);
     })
     .catch((err) => {
       console.error("Could not copy text: ", err);
@@ -962,26 +972,238 @@ Generated by thefinalsloadout.com/ragequit/`;
     });
 }
 
-function exportRageMemeCard(button) {
-  alert("Rage meme card export coming soon!");
+function viewFullDetails(element) {
+  const row = element.classList.contains('history-row') ? element : element.closest(".history-row");
+  if (!row) return;
+
+  // Create modal if it doesn't exist
+  let modal = document.getElementById('history-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'history-modal';
+    modal.className = 'history-modal';
+    modal.innerHTML = `
+      <div class="history-modal-content">
+        <button class="modal-close" onclick="closeHistoryModal()">&times;</button>
+        <div id="modal-body"></div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  // Populate modal with full details
+  const classType = row.dataset.classType.toUpperCase();
+  const weapon = row.querySelector('.hidden-weapon').textContent;
+  const spec = row.querySelector('.hidden-spec').textContent;
+  const gadgets = row.querySelector('.hidden-gadgets').textContent.split('|');
+  const handicap = row.querySelector('.hidden-handicap').textContent;
+  const handicapDesc = row.querySelector('.hidden-handicap-desc').textContent;
+  const roast = row.querySelector('.hidden-roast').textContent;
+  const loadoutName = row.querySelector('.hidden-loadout-name').textContent;
+  const punishmentLevel = row.dataset.punishmentLevel;
+
+  document.getElementById('modal-body').innerHTML = `
+    <h2>${loadoutName}</h2>
+    <div class="modal-class-badge ${row.dataset.classType}">${classType}</div>
+    <div class="modal-punishment">
+      <span>${'💀'.repeat(Math.min(punishmentLevel, 5))}</span>
+      Punishment Level: ${punishmentLevel}
+    </div>
+    <div class="modal-items">
+      <div class="modal-item">
+        <img src="../images/${weapon.replace(/ /g, "_")}.webp" alt="${weapon}" onerror="this.src='../images/placeholder.webp'">
+        <p>Weapon: ${weapon}</p>
+      </div>
+      <div class="modal-item">
+        <img src="../images/${spec.replace(/ /g, "_")}.webp" alt="${spec}" onerror="this.src='../images/placeholder.webp'">
+        <p>Specialization: ${spec}</p>
+      </div>
+      ${gadgets.map((g, i) => `
+        <div class="modal-item">
+          <img src="../images/${g.replace(/ /g, "_")}.webp" alt="${g}" onerror="this.src='../images/placeholder.webp'">
+          <p>Gadget ${i + 1}: ${g}</p>
+        </div>
+      `).join('')}
+    </div>
+    <div class="modal-handicap">
+      <h3>Active Handicap</h3>
+      <p><strong>${handicap}</strong></p>
+      <p>${handicapDesc}</p>
+    </div>
+    <div class="modal-roast">
+      <span>🔥</span> ${roast}
+    </div>
+  `;
+
+  modal.classList.add('active');
 }
 
-function markAsSurvived(button) {
-  const entry = button.closest(".rage-history-entry");
-  if (!entry) return;
+function closeHistoryModal() {
+  const modal = document.getElementById('history-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+function showContextMenu(event, row) {
+  // Remove any existing context menu
+  const existingMenu = document.getElementById('history-context-menu');
+  if (existingMenu) existingMenu.remove();
+
+  // Create context menu
+  const menu = document.createElement('div');
+  menu.id = 'history-context-menu';
+  menu.style.cssText = `
+    position: fixed;
+    left: ${event.clientX}px;
+    top: ${event.clientY}px;
+    background: var(--dark-gray);
+    border: 1px solid var(--medium-gray);
+    border-radius: 6px;
+    padding: 4px 0;
+    z-index: 10000;
+    min-width: 120px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  `;
+
+  const actions = [
+    { text: 'Copy Loadout', action: () => copyCompactLoadout(row) },
+    { text: 'Mark Survived', action: () => markCompactSurvived(row) },
+  ];
+
+  actions.forEach(item => {
+    const menuItem = document.createElement('div');
+    menuItem.textContent = item.text;
+    menuItem.style.cssText = `
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--white);
+      transition: background 0.2s;
+    `;
+    
+    menuItem.addEventListener('mouseenter', () => {
+      menuItem.style.background = var(--medium-gray);
+    });
+    
+    menuItem.addEventListener('mouseleave', () => {
+      menuItem.style.background = 'transparent';
+    });
+    
+    menuItem.addEventListener('click', () => {
+      item.action();
+      menu.remove();
+    });
+    
+    menu.appendChild(menuItem);
+  });
+
+  document.body.appendChild(menu);
+
+  // Remove menu on click outside
+  const removeMenu = (e) => {
+    if (!menu.contains(e.target)) {
+      menu.remove();
+      document.removeEventListener('click', removeMenu);
+    }
+  };
+  setTimeout(() => document.addEventListener('click', removeMenu), 0);
+}
+
+function markCompactSurvived(row) {
+  if (!row || row.classList.contains('survived')) return;
   
-  if (!entry.querySelector('.survived-badge')) {
-    const survivedBadge = document.createElement('div');
-    survivedBadge.className = 'survived-badge';
-    survivedBadge.innerHTML = '<span>🏆</span> SURVIVED';
-    entry.querySelector('.rage-loadout-header').appendChild(survivedBadge);
-    
-    button.innerHTML = '<span>✅</span> SURVIVED';
-    button.disabled = true;
-    button.classList.add('survived');
-    
-    entry.classList.add('survived-entry');
+  row.classList.add('survived');
+  
+  // Show a brief flash to indicate survival
+  const originalStyle = row.style.background;
+  row.style.background = 'rgba(255, 215, 0, 0.3)';
+  setTimeout(() => {
+    row.style.background = originalStyle;
+  }, 1000);
+  
+  saveRageHistory();
+}
+
+// Pagination and Filtering Functions
+function updateHistoryVisibility() {
+  const rows = document.querySelectorAll('.history-row');
+  const loadMoreBtn = document.getElementById('load-more');
+  const itemsPerPage = 20; // More items since they're much smaller
+  
+  rows.forEach((row, index) => {
+    if (index < itemsPerPage) {
+      row.style.display = 'flex';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+  
+  if (rows.length > itemsPerPage && loadMoreBtn) {
+    loadMoreBtn.style.display = 'block';
+    loadMoreBtn.onclick = () => {
+      rows.forEach(row => row.style.display = 'flex');
+      loadMoreBtn.style.display = 'none';
+    };
+  } else if (loadMoreBtn) {
+    loadMoreBtn.style.display = 'none';
   }
+}
+
+function applyHistoryFilters() {
+  const filterSelect = document.getElementById('history-filter');
+  const sortSelect = document.getElementById('history-sort');
+  
+  if (!filterSelect || !sortSelect) return;
+  
+  filterSelect.addEventListener('change', filterHistory);
+  sortSelect.addEventListener('change', sortHistory);
+}
+
+function filterHistory() {
+  const filter = document.getElementById('history-filter').value;
+  const rows = Array.from(document.querySelectorAll('.history-row'));
+  
+  rows.forEach(row => {
+    let show = true;
+    
+    switch(filter) {
+      case 'survived':
+        show = row.classList.contains('survived');
+        break;
+      case 'high-punishment':
+        show = parseInt(row.dataset.punishmentLevel) >= 8;
+        break;
+      case 'recent':
+        const timestamp = new Date(row.dataset.timestamp);
+        const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        show = timestamp > dayAgo;
+        break;
+    }
+    
+    row.style.display = show ? 'flex' : 'none';
+  });
+  
+  // Re-sort after filtering
+  sortHistory();
+}
+
+function sortHistory() {
+  const sort = document.getElementById('history-sort').value;
+  const historyList = document.getElementById('history-list');
+  const rows = Array.from(document.querySelectorAll('.history-row'));
+  
+  rows.sort((a, b) => {
+    switch(sort) {
+      case 'oldest':
+        return new Date(a.dataset.timestamp) - new Date(b.dataset.timestamp);
+      case 'punishment':
+        return parseInt(b.dataset.punishmentLevel) - parseInt(a.dataset.punishmentLevel);
+      default: // newest
+        return new Date(b.dataset.timestamp) - new Date(a.dataset.timestamp);
+    }
+  });
+  
+  // Re-append in sorted order
+  rows.forEach(row => historyList.appendChild(row));
 }
 
 // Sound Toggle Functionality
@@ -1039,25 +1261,62 @@ function stopAllRageSounds() {
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ Rage Quit Loadout App loaded");
 
+  // Clear old history format to force new format
+  const oldHistory = localStorage.getItem("rageQuitHistory");
+  if (oldHistory) {
+    try {
+      const parsed = JSON.parse(oldHistory);
+      // If it's the old format (array of strings), clear it
+      if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === 'string') {
+        localStorage.removeItem("rageQuitHistory");
+        console.log("🗑️ Cleared old history format");
+      }
+    } catch (e) {
+      localStorage.removeItem("rageQuitHistory");
+    }
+  }
+
   loadRageHistory(); // Load saved history when page loads
+  applyHistoryFilters(); // Initialize filters
 
   // Clear Loadout History
   document.getElementById("clear-history")?.addEventListener("click", () => {
-    localStorage.removeItem("rageQuitHistory");
-    document.getElementById("history-list").innerHTML = "";
-    console.log("🗑️ Rage Quit history cleared.");
+    if (confirm("Are you sure you want to clear all history? This cannot be undone.")) {
+      localStorage.removeItem("rageQuitHistory");
+      document.getElementById("history-list").innerHTML = "";
+      console.log("🗑️ Rage Quit history cleared.");
+    }
   });
 
   // Initialize the rage roulette animation system
+  console.log("🔧 Initializing RageRouletteAnimationSystem...");
+  console.log("📦 RageRouletteAnimationSystem available:", !!window.RageRouletteAnimationSystem);
+  
+  if (!window.RageRouletteAnimationSystem) {
+    console.error("❌ RageRouletteAnimationSystem class not found! Check if rage-roulette-animations.js is loaded.");
+    return;
+  }
+  
   const rageRouletteSystem = new window.RageRouletteAnimationSystem();
   window.rageRouletteSystem = rageRouletteSystem;
+  console.log("✅ RageRouletteAnimationSystem initialized successfully");
   
   // Initialize sound toggle
   initializeRageSoundToggle();
   
   // Rage Quit Button Click Event
   document.getElementById("rage-quit-btn")?.addEventListener("click", async function () {
-    if (rageState.isSpinning || rageRouletteSystem.animating) return;
+    console.log("🎯 Rage Quit button clicked!");
+    console.log("📊 Current state:", {
+      isSpinning: rageState.isSpinning,
+      animating: window.rageRouletteSystem.animating,
+      rageRouletteSystemExists: !!window.rageRouletteSystem
+    });
+    
+    if (rageState.isSpinning || window.rageRouletteSystem.animating) {
+      console.log("❌ Animation already in progress, skipping");
+      return;
+    }
 
     // Play click sound
     const clickSound = document.getElementById("clickSound");
@@ -1069,11 +1328,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add spinning animation to button
     this.classList.add('spinning');
     
-    // Start the full roulette sequence
-    await rageRouletteSystem.startFullSequence();
-    
-    // Remove spinning animation when done
-    this.classList.remove('spinning');
+    try {
+      console.log("🚀 Starting rage roulette sequence...");
+      // Start the full roulette sequence
+      await window.rageRouletteSystem.startFullSequence();
+      console.log("✅ Rage roulette sequence completed");
+    } catch (error) {
+      console.error("❌ Error in rage roulette sequence:", error);
+    } finally {
+      // Remove spinning animation when done
+      this.classList.remove('spinning');
+    }
   });
 
   // Copy Loadout Button
