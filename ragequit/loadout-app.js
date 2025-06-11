@@ -1090,9 +1090,10 @@ function addToRageHistory(classType, weapon, specialization, gadgets, handicapNa
   const loadoutName = `${weapon} + ${gadgets.slice(0, 2).join('/')}`;
 
   // Create clean text-based history entry (NO IMAGES)
+  const handicapDisplay = handicapName && handicapName !== "None" ? ` + [${handicapName}]` : "";
   newEntry.innerHTML = `
     <span class="history-class-tag">${classType.toUpperCase()}</span>
-    ${weapon} + ${specialization} + ${gadgets.join(' + ')}
+    ${weapon} + ${specialization} + ${gadgets.join(' + ')}${handicapDisplay}
     <span class="history-punishment">Level ${punishmentLevel}</span>
     <!-- Store full data for modal/copy functionality -->
     <div style="display: none;">
