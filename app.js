@@ -843,18 +843,15 @@ const getAvailableClasses = () => {
   const allClasses = ["Light", "Medium", "Heavy"];
   const excludedClasses = [];
   
-  // Check which classes are excluded
+  // Check which classes are excluded from localStorage (same as roulette)
   ['light', 'medium', 'heavy'].forEach(className => {
-    const checkbox = document.getElementById(`exclude-${className}`);
-    console.log(`🔍 Checking checkbox exclude-${className}:`, checkbox ? 'found' : 'not found');
-    if (checkbox) {
-      console.log(`📋 Checkbox exclude-${className} checked:`, checkbox.checked);
-      if (checkbox.checked) {
-        // Capitalize first letter to match class names
-        const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
-        excludedClasses.push(capitalizedClass);
-        console.log(`🚫 Added ${capitalizedClass} to excluded classes`);
-      }
+    const saved = localStorage.getItem(`exclude-${className}`);
+    console.log(`🔍 Checking localStorage exclude-${className}:`, saved);
+    if (saved === 'true') {
+      // Capitalize first letter to match class names
+      const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
+      excludedClasses.push(capitalizedClass);
+      console.log(`🚫 Added ${capitalizedClass} to excluded classes`);
     }
   });
   

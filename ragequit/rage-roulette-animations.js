@@ -35,8 +35,12 @@ class RageRouletteAnimationSystem {
 
   // Main entry point for the full animation sequence
   async startFullSequence() {
-    if (this.animating) return;
+    if (this.animating) {
+      console.log("⚠️ Animation already in progress, skipping");
+      return;
+    }
 
+    console.log("🎬 Starting full animation sequence");
     this.animating = true;
 
     // Hide main UI elements (check if they exist first)
@@ -55,8 +59,9 @@ class RageRouletteAnimationSystem {
     // Show roulette container
     const rouletteContainer = document.getElementById("rage-roulette-container");
     if (!rouletteContainer) {
-      console.error("Rage roulette container not found!");
-      return;
+      console.error("❌ Rage roulette container not found!");
+      this.animating = false;
+      throw new Error("Rage roulette container not found");
     }
 
     // Show container by removing hidden class
@@ -88,23 +93,32 @@ class RageRouletteAnimationSystem {
     // Prevent body scrolling during animation
     document.body.style.overflow = "hidden";
 
-    // Phase 1: Class Selection
-    await this.animateClassSelection();
+    try {
+      // Phase 1: Class Selection
+      console.log("🎬 Phase 1: Class Selection");
+      await this.animateClassSelection();
 
-    // Brief pause between phases
-    await this.delay(500);
+      // Brief pause between phases
+      await this.delay(500);
 
-    // Phase 2: Spin Count Selection
-    await this.animateSpinSelection();
+      // Phase 2: Spin Count Selection
+      console.log("🎬 Phase 2: Spin Count Selection");
+      await this.animateSpinSelection();
 
-    // Brief pause before handicap selection
-    await this.delay(500);
+      // Brief pause before handicap selection
+      await this.delay(500);
 
-    // Phase 3: Handicap Selection (NEW for rage quit)
-    await this.animateHandicapSelection();
+      // Phase 3: Handicap Selection (NEW for rage quit)
+      console.log("🎬 Phase 3: Handicap Selection");
+      await this.animateHandicapSelection();
 
-    // Brief pause before starting the actual slot machine
-    await this.delay(500);
+      // Brief pause before starting the actual slot machine
+      await this.delay(500);
+    } catch (error) {
+      console.error("❌ Error during animation phases:", error);
+      this.animating = false;
+      throw error;
+    }
 
     // Hide roulette container
     rouletteContainer.classList.add("hidden");
@@ -139,7 +153,9 @@ class RageRouletteAnimationSystem {
 
   // Animate class selection roulette (EXACT COPY from main page, with rage styling)
   async animateClassSelection() {
-    // Create a completely new DOM structure that we control
+    try {
+      console.log("🎯 Starting class selection animation");
+      // Create a completely new DOM structure that we control
     const animationContainer = document.createElement("div");
     animationContainer.style.cssText = `
     position: fixed;
@@ -309,6 +325,10 @@ class RageRouletteAnimationSystem {
 
       animate();
     });
+    } catch (error) {
+      console.error("❌ Error in class selection animation:", error);
+      throw error;
+    }
   }
 
   // Animate spin count selection (EXACT COPY from main page, with rage styling)
@@ -512,7 +532,9 @@ class RageRouletteAnimationSystem {
 
   // NEW: Animate handicap selection (third phase unique to rage quit)
   async animateHandicapSelection() {
-    // Create a completely new DOM structure
+    try {
+      console.log("🎯 Starting handicap selection animation");
+      // Create a completely new DOM structure
     const animationContainer = document.createElement("div");
     animationContainer.style.cssText = `
     position: fixed;
@@ -726,6 +748,10 @@ class RageRouletteAnimationSystem {
 
       animate();
     });
+    } catch (error) {
+      console.error("❌ Error in handicap selection animation:", error);
+      throw error;
+    }
   }
 
   // Visual effects (EXACT COPY from main page)

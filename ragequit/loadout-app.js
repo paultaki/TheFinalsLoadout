@@ -298,6 +298,30 @@ class SlotColumn {
   }
 }
 
+// Get available classes (respecting exclusions)
+function getAvailableClasses() {
+  const allClasses = ["Light", "Medium", "Heavy"];
+  const excludedClasses = [];
+  
+  // Check which classes are excluded
+  ['light', 'medium', 'heavy'].forEach(className => {
+    const saved = localStorage.getItem(`exclude-${className}`);
+    if (saved === 'true') {
+      // Capitalize first letter to match class names
+      const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
+      excludedClasses.push(capitalizedClass);
+      console.log(`🚫 ${capitalizedClass} excluded from rage loadout`);
+    }
+  });
+  
+  // Filter out excluded classes
+  const availableClasses = allClasses.filter(cls => !excludedClasses.includes(cls));
+  
+  console.log('🎲 Rage loadout available classes:', availableClasses);
+  
+  return availableClasses;
+}
+
 // Display rage quit loadout
 const displayRageQuitLoadout = () => {
   // Center the slot machine section during animation
@@ -316,11 +340,23 @@ const displayRageQuitLoadout = () => {
   }
 
   const outputDiv = document.getElementById("output");
-  const classes = ["Light", "Medium", "Heavy"];
-  const selectedClass = classes[Math.floor(Math.random() * classes.length)];
-
-  // Store the selected class
-  rageState.selectedClass = selectedClass;
+  
+  // Use the class already selected by the roulette system, or fallback to random selection with exclusions
+  let selectedClass = rageState.selectedClass;
+  
+  if (!selectedClass) {
+    console.log('🎲 No class selected by roulette, using fallback selection with exclusions');
+    const availableClasses = getAvailableClasses();
+    if (availableClasses.length === 0) {
+      console.warn('⚠️ All classes excluded! Using all classes instead.');
+      selectedClass = ["Light", "Medium", "Heavy"][Math.floor(Math.random() * 3)];
+    } else {
+      selectedClass = availableClasses[Math.floor(Math.random() * availableClasses.length)];
+    }
+    rageState.selectedClass = selectedClass;
+  }
+  
+  console.log(`🎯 Using selected class: ${selectedClass}`);
 
   // Update the selected class text in the UI
   const selectedClassElement = document.getElementById("selected-class");
@@ -631,6 +667,15 @@ function finalizeSpin() {
   setTimeout(() => {
     resetSpinState();
     showDoubleOrNothingOption();
+    
+    // Scroll to show the final loadout and handicap
+    const slotMachineSection = document.querySelector('.slot-machine-section');
+    if (slotMachineSection) {
+      slotMachineSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
   }, 1000);
 }
 
@@ -837,7 +882,7 @@ function addToRageHistory(classType, weapon, specialization, gadgets, handicapNa
   // Create clean text-based history entry (NO IMAGES)
   newEntry.innerHTML = `
     <span class="history-class-tag">${classType.toUpperCase()}</span>
-    ${weapon} + ${gadgets.slice(0, 2).join(' + ')}
+    ${weapon} + ${specialization} + ${gadgets.join(' + ')}
     <span class="history-punishment">Level ${punishmentLevel}</span>
     <!-- Store full data for modal/copy functionality -->
     <div style="display: none;">
@@ -1260,9 +1305,9 @@ function stopAllRageSounds() {
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ Rage Quit Loadout App loaded");
 
-  // Clear ALL history to force clean text-based format
+  // Clear ALL history to force clean text-based format with correct data
   localStorage.removeItem("rageQuitHistory");
-  console.log("🗑️ Cleared all history to force new text-based format");
+  console.log("🗑️ Cleared all history to force new format with complete loadout data");
 
   loadRageHistory(); // Load saved history when page loads
   applyHistoryFilters(); // Initialize filters
@@ -1297,11 +1342,11 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("🎯 Rage Quit button clicked!");
     console.log("📊 Current state:", {
       isSpinning: rageState.isSpinning,
-      animating: window.rageRouletteSystem.animating,
+      animating: window.rageRouletteSystem?.animating,
       rageRouletteSystemExists: !!window.rageRouletteSystem
     });
     
-    if (rageState.isSpinning || window.rageRouletteSystem.animating) {
+    if (rageState.isSpinning || (window.rageRouletteSystem && window.rageRouletteSystem.animating)) {
       console.log("❌ Animation already in progress, skipping");
       return;
     }
@@ -1318,11 +1363,39 @@ document.addEventListener("DOMContentLoaded", () => {
     
     try {
       console.log("🚀 Starting rage roulette sequence...");
-      // Start the full roulette sequence
+      
+      // Check if roulette system is available and working
+      if (!window.rageRouletteSystem) {
+        console.warn("⚠️ RageRouletteAnimationSystem not available, skipping roulette and going straight to loadout");
+        // Skip roulette and go straight to loadout generation
+        spinRageQuitLoadout();
+        return;
+      }
+      
+      // Start the full roulette sequence with error handling
       await window.rageRouletteSystem.startFullSequence();
       console.log("✅ Rage roulette sequence completed");
     } catch (error) {
       console.error("❌ Error in rage roulette sequence:", error);
+      console.log("🔄 Falling back to direct loadout generation...");
+      
+      // Reset animation state
+      if (window.rageRouletteSystem) {
+        window.rageRouletteSystem.animating = false;
+      }
+      
+      // Hide roulette container if it's showing
+      const rouletteContainer = document.getElementById("rage-roulette-container");
+      if (rouletteContainer) {
+        rouletteContainer.classList.add("hidden");
+        rouletteContainer.style.display = "none";
+      }
+      
+      // Restore body scrolling
+      document.body.style.overflow = "";
+      
+      // Fall back to direct loadout generation
+      spinRageQuitLoadout();
     } finally {
       // Remove spinning animation when done
       this.classList.remove('spinning');

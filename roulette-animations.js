@@ -463,45 +463,89 @@ class RouletteAnimationSystem {
     this.selectedSpins = this.spinOptions[winnerIndex];
 
     return new Promise((resolve) => {
+      // Safety timeout to prevent infinite animations
+      const safetyTimeout = setTimeout(() => {
+        console.warn('Spin animation safety timeout triggered');
+        try {
+          if (animationContainer && animationContainer.parentNode) {
+            document.body.removeChild(animationContainer);
+          }
+        } catch (e) {
+          console.error('Safety cleanup error:', e);
+        }
+        resolve();
+      }, this.spinAnimationConfig.totalDuration + 2000);
+      
       const animate = () => {
         const elapsed = Date.now() - startTime;
 
         if (elapsed >= this.spinAnimationConfig.totalDuration) {
-          // Final selection
-          spinElements[winnerIndex].style.opacity = "1";
-          spinElements[winnerIndex].style.transform = "scale(1.2)";
-          spinElements[winnerIndex].style.boxShadow =
-            "0 0 40px rgba(123, 47, 227, 0.8)";
+          // Final selection with error handling
+          try {
+            if (spinElements[winnerIndex]) {
+              spinElements[winnerIndex].style.opacity = "1";
+              spinElements[winnerIndex].style.transform = "scale(1.2)";
+              spinElements[winnerIndex].style.boxShadow = "0 0 40px rgba(123, 47, 227, 0.8)";
+            }
 
-          this.playSpinWinSound();
-          statusEl.textContent = `${this.selectedSpins} SPIN${
-            this.selectedSpins > 1 ? "S" : ""
-          } SELECTED!`;
+            this.playSpinWinSound();
+            
+            if (statusEl) {
+              statusEl.textContent = `${this.selectedSpins} SPIN${
+                this.selectedSpins > 1 ? "S" : ""
+              } SELECTED!`;
+            }
+          } catch (finalError) {
+            console.error('Error in spin final selection:', finalError);
+          }
 
           setTimeout(() => {
-            document.body.removeChild(animationContainer);
-            resolve();
+            try {
+              clearTimeout(safetyTimeout);
+              if (animationContainer && animationContainer.parentNode) {
+                document.body.removeChild(animationContainer);
+              }
+              resolve();
+            } catch (cleanupError) {
+              console.error('Spin cleanup error:', cleanupError);
+              clearTimeout(safetyTimeout);
+              resolve();
+            }
           }, 500);
           return;
         }
 
-        // Update active state
-        spinElements.forEach((el, idx) => {
-          if (idx === currentIndex) {
-            el.style.opacity = "1";
-            el.style.transform = "scale(1.2)";
-            el.style.background = "linear-gradient(135deg, #7b2fe3, #1e90ff)";
-            
-            // Create particle effect (less frequent to avoid overwhelming)
-            if (elapsed % 100 < 50) {
-              this.createParticleEffect(el);
+        // Update active state with error handling
+        try {
+          spinElements.forEach((el, idx) => {
+            if (el) {
+              try {
+                if (idx === currentIndex) {
+                  el.style.opacity = "1";
+                  el.style.transform = "scale(1.2)";
+                  el.style.background = "linear-gradient(135deg, #7b2fe3, #1e90ff)";
+                  
+                  // Create particle effect (less frequent to avoid overwhelming)
+                  if (elapsed % 100 < 50) {
+                    try {
+                      this.createParticleEffect(el);
+                    } catch (particleError) {
+                      console.warn('Particle effect error:', particleError);
+                    }
+                  }
+                } else {
+                  el.style.opacity = "0.5";
+                  el.style.transform = "scale(0.8)";
+                  el.style.background = "linear-gradient(135deg, #1a1a2e, #2a2a4e)";
+                }
+              } catch (elementError) {
+                console.warn('Spin element style error:', elementError);
+              }
             }
-          } else {
-            el.style.opacity = "0.5";
-            el.style.transform = "scale(0.8)";
-            el.style.background = "linear-gradient(135deg, #1a1a2e, #2a2a4e)";
-          }
-        });
+          });
+        } catch (updateError) {
+          console.warn('Spin update error:', updateError);
+        }
 
         this.playTickSound();
 
@@ -530,7 +574,25 @@ class RouletteAnimationSystem {
           currentIndex = (currentIndex + 1) % this.spinOptions.length;
         }
 
-        setTimeout(animate, speed);
+        // Ensure speed is within reasonable bounds
+        speed = Math.max(10, Math.min(1000, speed));
+        
+        try {
+          setTimeout(animate, speed);
+        } catch (timeoutError) {
+          console.error('Spin animation timeout error:', timeoutError);
+          try {
+            clearTimeout(safetyTimeout);
+            if (animationContainer && animationContainer.parentNode) {
+              document.body.removeChild(animationContainer);
+            }
+            resolve();
+          } catch (fallbackError) {
+            console.error('Spin fallback cleanup error:', fallbackError);
+            clearTimeout(safetyTimeout);
+            resolve();
+          }
+        }
       };
 
       animate();
