@@ -95,12 +95,15 @@ class RouletteAnimationSystem {
     document.getElementById("output").style.display = "block";
 
     // Set the state for the original system
+    console.log(`🔗 Roulette transferring to main system: selectedClass = "${this.selectedClass}", totalSpins = ${this.selectedSpins}`);
     window.state.selectedClass = this.selectedClass;
     window.state.totalSpins = this.selectedSpins;
+    console.log(`✅ Main state updated: selectedClass = "${window.state.selectedClass}"`);
 
     this.animating = false;
 
     // Trigger the original spin mechanism
+    console.log(`🚀 Calling window.spinLoadout() with selectedClass = "${window.state.selectedClass}"`);
     window.spinLoadout();
   }
 
@@ -109,6 +112,12 @@ class RouletteAnimationSystem {
   async animateClassSelection() {
     // Get available classes (respecting exclusions)
     const availableClasses = this.getAvailableClasses();
+    console.log(`🎯 Roulette class selection - Available classes:`, availableClasses);
+    console.log(`🎯 localStorage exclusions check:`, {
+      'exclude-light': localStorage.getItem('exclude-light'),
+      'exclude-medium': localStorage.getItem('exclude-medium'), 
+      'exclude-heavy': localStorage.getItem('exclude-heavy')
+    });
     
     if (availableClasses.length === 0) {
       console.error('⚠️ All classes excluded!');
@@ -221,7 +230,8 @@ class RouletteAnimationSystem {
     // Find the index in the full class options array for animation purposes
     const winnerIndex = this.classOptions.indexOf(this.selectedClass);
     
-    console.log(`🎲 Selected class: ${this.selectedClass} from available: ${availableClasses.join(', ')}`);
+    console.log(`🎲 Roulette selected class: ${this.selectedClass} from available: ${availableClasses.join(', ')}`);
+    console.log(`🎯 Winner index in full options: ${winnerIndex} (${this.classOptions[winnerIndex]})`);
 
     return new Promise((resolve) => {
       // Safety timeout to prevent infinite animations
@@ -744,22 +754,17 @@ class RouletteAnimationSystem {
     const allClasses = ["Light", "Medium", "Heavy"];
     const excludedClasses = [];
     
-    // Check which classes are excluded
+    // Check localStorage for exclusions
     ['light', 'medium', 'heavy'].forEach(className => {
-      const saved = localStorage.getItem(`exclude-${className}`);
-      if (saved === 'true') {
-        // Capitalize first letter to match class names
+      const isExcluded = localStorage.getItem(`exclude-${className}`) === 'true';
+      if (isExcluded) {
         const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
         excludedClasses.push(capitalizedClass);
-        console.log(`🚫 ${capitalizedClass} excluded from roulette`);
       }
     });
     
-    // Filter out excluded classes
     const availableClasses = allClasses.filter(cls => !excludedClasses.includes(cls));
-    
     console.log('🎲 Roulette available classes:', availableClasses);
-    
     return availableClasses;
   }
 }

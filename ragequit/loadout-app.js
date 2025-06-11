@@ -22,6 +22,11 @@ const rageState = {
 window.rageState = rageState;
 window.state = rageState; // For compatibility
 
+// Helper function to check if sound is enabled
+function isSoundEnabled() {
+  return localStorage.getItem('rageSoundEnabled') !== 'false';
+}
+
 // Physics constants for Vegas-style animations (from main page)
 const PHYSICS = {
   ACCELERATION: 8000,  // Dramatic start
@@ -427,7 +432,7 @@ function startSpinAnimation(columns) {
   
   // Play spinning start sound
   const spinStartSound = document.getElementById("spinStart");
-  if (spinStartSound && rageState.soundEnabled) {
+  if (spinStartSound && isSoundEnabled()) {
     spinStartSound.currentTime = 0;
     spinStartSound.volume = 0.3;
     spinStartSound.play().catch(() => {});
@@ -435,7 +440,7 @@ function startSpinAnimation(columns) {
   
   // Play continuous spinning sound
   const spinningSound = document.getElementById("spinningSound");
-  if (spinningSound && rageState.soundEnabled) {
+  if (spinningSound && isSoundEnabled()) {
     spinningSound.currentTime = 0;
     spinningSound.volume = 0.2;
     spinningSound.loop = true;
@@ -449,7 +454,7 @@ function startSpinAnimation(columns) {
     column.onStop = (columnElement) => {
       // Play column stop sound
       const columnStopSound = document.getElementById("columnStop");
-      if (columnStopSound && rageState.soundEnabled) {
+      if (columnStopSound && isSoundEnabled()) {
         columnStopSound.currentTime = 0;
         columnStopSound.volume = 0.4;
         columnStopSound.play().catch(() => {});
@@ -533,7 +538,7 @@ function startSpinAnimation(columns) {
       
       // Play final lock sound
       const finalLockSound = document.getElementById("finalLock");
-      if (finalLockSound && rageState.soundEnabled) {
+      if (finalLockSound && isSoundEnabled()) {
         finalLockSound.currentTime = 0;
         finalLockSound.volume = 0.5;
         finalLockSound.play().catch(() => {});
@@ -554,7 +559,7 @@ function startSpinAnimation(columns) {
 function finalVictoryFlash(columns) {
   // Play final sound effect
   const finalSound = document.getElementById("finalSound");
-  if (finalSound && rageState.soundEnabled) {
+  if (finalSound && isSoundEnabled()) {
     finalSound.currentTime = 0;
     finalSound.volume = 0.6;
     finalSound.play().catch(() => {});

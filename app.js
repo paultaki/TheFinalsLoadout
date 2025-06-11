@@ -843,23 +843,21 @@ const getAvailableClasses = () => {
   const allClasses = ["Light", "Medium", "Heavy"];
   const excludedClasses = [];
   
-  // Check which classes are excluded from localStorage (same as roulette)
+  // Check localStorage for exclusions instead of DOM
   ['light', 'medium', 'heavy'].forEach(className => {
-    const saved = localStorage.getItem(`exclude-${className}`);
-    console.log(`🔍 Checking localStorage exclude-${className}:`, saved);
-    if (saved === 'true') {
-      // Capitalize first letter to match class names
+    const isExcluded = localStorage.getItem(`exclude-${className}`) === 'true';
+    if (isExcluded) {
       const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
       excludedClasses.push(capitalizedClass);
-      console.log(`🚫 Added ${capitalizedClass} to excluded classes`);
+      console.log(`🚫 ${capitalizedClass} excluded from selection`);
     }
   });
   
   // Filter out excluded classes
   const availableClasses = allClasses.filter(cls => !excludedClasses.includes(cls));
   
-  console.log('🚫 Final excluded classes:', excludedClasses);
-  console.log('✅ Final available classes:', availableClasses);
+  console.log('✅ Available classes:', availableClasses);
+  console.log('🚫 Excluded classes:', excludedClasses);
   
   return availableClasses;
 };
@@ -1804,12 +1802,20 @@ const spinLoadout = () => {
   updateSpinCountdown(state.currentSpin);
 
   console.log(`🎲 Starting first spin with currentSpin = ${state.currentSpin}`);
+  console.log(`🔍 spinLoadout() called with state.selectedClass = "${state.selectedClass}" (type: ${typeof state.selectedClass})`);
 
   // Start the first spin
-  if (state.selectedClass === "random") {
+  // If selectedClass is a specific class (Light, Medium, Heavy), use it directly
+  // Only use random selection if selectedClass is explicitly "random" or not set
+  if (state.selectedClass === "random" || !state.selectedClass) {
+    console.log('🎲 No specific class selected, using random selection with exclusions');
     displayRandomLoadout();
-  } else {
+  } else if (["Light", "Medium", "Heavy"].includes(state.selectedClass)) {
+    console.log(`🎯 Using specific class selected by roulette: ${state.selectedClass}`);
     displayLoadout(state.selectedClass);
+  } else {
+    console.log('🎲 Invalid class selection, falling back to random');
+    displayRandomLoadout();
   }
 };
 
