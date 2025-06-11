@@ -834,14 +834,11 @@ function addToRageHistory(classType, weapon, specialization, gadgets, handicapNa
   // Generate compact loadout description
   const loadoutName = `${weapon} + ${gadgets.slice(0, 2).join('/')}`;
 
-  // Create simple line format like Discord message history
+  // Create clean text-based history entry (NO IMAGES)
   newEntry.innerHTML = `
-    <img class="history-tiny-icon" src="../images/${weapon.replace(/ /g, "_")}.webp" alt="${weapon}" onerror="this.src='../images/placeholder.webp'">
-    ${weapon} • 
-    <img class="history-tiny-icon" src="../images/${gadgets[0].replace(/ /g, "_")}.webp" alt="${gadgets[0]}" onerror="this.src='../images/placeholder.webp'">
-    ${gadgets[0]} • 
-    <img class="history-tiny-icon" src="../images/${gadgets[1].replace(/ /g, "_")}.webp" alt="${gadgets[1]}" onerror="this.src='../images/placeholder.webp'">
-    ${gadgets[1]} • Punishment: ${punishmentLevel}
+    <span class="history-class-tag">${classType.toUpperCase()}</span>
+    ${weapon} + ${gadgets.slice(0, 2).join(' + ')}
+    <span class="history-punishment">Level ${punishmentLevel}</span>
     <!-- Store full data for modal/copy functionality -->
     <div style="display: none;">
       <span class="hidden-weapon">${weapon}</span>
@@ -870,8 +867,10 @@ function addToRageHistory(classType, weapon, specialization, gadgets, handicapNa
   // Animate entry
   setTimeout(() => newEntry.style.opacity = '1', 10);
 
-  // Pagination - show only first 12 entries by default
-  updateHistoryVisibility();
+  // Limit to last 5 entries
+  while (historyList.children.length > 5) {
+    historyList.removeChild(historyList.lastChild);
+  }
 
   // Update timestamps
   updateRageTimestamps();
@@ -1055,8 +1054,8 @@ function showContextMenu(event, row) {
     position: fixed;
     left: ${event.clientX}px;
     top: ${event.clientY}px;
-    background: var(--dark-gray);
-    border: 1px solid var(--medium-gray);
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
     border-radius: 6px;
     padding: 4px 0;
     z-index: 10000;
@@ -1076,12 +1075,12 @@ function showContextMenu(event, row) {
       padding: 8px 12px;
       cursor: pointer;
       font-size: 0.9rem;
-      color: var(--white);
+      color: #ffffff;
       transition: background 0.2s;
     `;
     
     menuItem.addEventListener('mouseenter', () => {
-      menuItem.style.background = var(--medium-gray);
+      menuItem.style.background = '#2a2a2a'; // var(--medium-gray)
     });
     
     menuItem.addEventListener('mouseleave', () => {
@@ -1261,20 +1260,9 @@ function stopAllRageSounds() {
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ Rage Quit Loadout App loaded");
 
-  // Clear old history format to force new format
-  const oldHistory = localStorage.getItem("rageQuitHistory");
-  if (oldHistory) {
-    try {
-      const parsed = JSON.parse(oldHistory);
-      // If it's the old format (array of strings), clear it
-      if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === 'string') {
-        localStorage.removeItem("rageQuitHistory");
-        console.log("🗑️ Cleared old history format");
-      }
-    } catch (e) {
-      localStorage.removeItem("rageQuitHistory");
-    }
-  }
+  // Clear ALL history to force clean text-based format
+  localStorage.removeItem("rageQuitHistory");
+  console.log("🗑️ Cleared all history to force new text-based format");
 
   loadRageHistory(); // Load saved history when page loads
   applyHistoryFilters(); // Initialize filters

@@ -107,6 +107,15 @@ class RouletteAnimationSystem {
   // Animate class selection roulette
 
   async animateClassSelection() {
+    // Get available classes (respecting exclusions)
+    const availableClasses = this.getAvailableClasses();
+    
+    if (availableClasses.length === 0) {
+      console.error('⚠️ All classes excluded!');
+      alert('All classes are excluded! Please uncheck at least one class to continue.');
+      return;
+    }
+    
     // Create a completely new DOM structure that we control
     const animationContainer = document.createElement("div");
     animationContainer.style.cssText = `
@@ -204,48 +213,107 @@ class RouletteAnimationSystem {
     // Now run the animation
     let currentIndex = 0;
     const startTime = Date.now();
-    const winnerIndex = Math.floor(Math.random() * this.classOptions.length);
-    this.selectedClass = this.classOptions[winnerIndex];
+    
+    // Select winner from available classes only
+    const availableWinnerIndex = Math.floor(Math.random() * availableClasses.length);
+    this.selectedClass = availableClasses[availableWinnerIndex];
+    
+    // Find the index in the full class options array for animation purposes
+    const winnerIndex = this.classOptions.indexOf(this.selectedClass);
+    
+    console.log(`🎲 Selected class: ${this.selectedClass} from available: ${availableClasses.join(', ')}`);
 
     return new Promise((resolve) => {
+      // Safety timeout to prevent infinite animations
+      const safetyTimeout = setTimeout(() => {
+        console.warn('Animation safety timeout triggered');
+        try {
+          if (animationContainer && animationContainer.parentNode) {
+            document.body.removeChild(animationContainer);
+          }
+        } catch (e) {
+          console.error('Safety cleanup error:', e);
+        }
+        resolve();
+      }, this.classAnimationConfig.totalDuration + 2000);
+      
       const animate = () => {
         const elapsed = Date.now() - startTime;
 
         if (elapsed >= this.classAnimationConfig.totalDuration) {
-          // Final selection
-          classElements.forEach((el, idx) => {
-            if (idx === winnerIndex) {
-              el.style.opacity = "1";
-              el.style.transform = "scale(1.2)";
-              el.style.boxShadow = "0 0 50px rgba(255, 183, 0, 0.8)";
-              el.querySelector("img").style.filter = "brightness(1.2)";
-              el.querySelector("span").style.opacity = "1";
-            }
-          });
+          // Final selection with error handling
+          try {
+            classElements.forEach((el, idx) => {
+              if (idx === winnerIndex && el) {
+                try {
+                  el.style.opacity = "1";
+                  el.style.transform = "scale(1.2)";
+                  el.style.boxShadow = "0 0 50px rgba(255, 183, 0, 0.8)";
+                  
+                  const img = el.querySelector("img");
+                  const span = el.querySelector("span");
+                  
+                  if (img) img.style.filter = "brightness(1.2)";
+                  if (span) span.style.opacity = "1";
+                } catch (styleError) {
+                  console.warn('Style update error on final selection:', styleError);
+                }
+              }
+            });
 
-          this.playClassWinSound();
+            this.playClassWinSound();
+          } catch (finalError) {
+            console.error('Error in final selection:', finalError);
+          }
 
           setTimeout(() => {
-            document.body.removeChild(animationContainer);
-            resolve();
+            try {
+              clearTimeout(safetyTimeout); // Clear safety timeout
+              if (animationContainer && animationContainer.parentNode) {
+                document.body.removeChild(animationContainer);
+              }
+              resolve();
+            } catch (cleanupError) {
+              console.error('Cleanup error:', cleanupError);
+              clearTimeout(safetyTimeout); // Clear even on error
+              resolve(); // Still resolve to continue
+            }
           }, 500);
           return;
         }
 
-        // Update active state
-        classElements.forEach((el, idx) => {
-          if (idx === currentIndex) {
-            el.style.opacity = "1";
-            el.style.transform = "scale(1.1)";
-            el.querySelector("img").style.filter = "brightness(1)";
-            el.querySelector("span").style.opacity = "1";
-          } else {
-            el.style.opacity = "0.5";
-            el.style.transform = "scale(0.8)";
-            el.querySelector("img").style.filter = "brightness(0.5)";
-            el.querySelector("span").style.opacity = "0.5";
-          }
-        });
+        // Update active state with error handling
+        try {
+          classElements.forEach((el, idx) => {
+            if (el) {
+              try {
+                if (idx === currentIndex) {
+                  el.style.opacity = "1";
+                  el.style.transform = "scale(1.1)";
+                  
+                  const img = el.querySelector("img");
+                  const span = el.querySelector("span");
+                  
+                  if (img) img.style.filter = "brightness(1)";
+                  if (span) span.style.opacity = "1";
+                } else {
+                  el.style.opacity = "0.5";
+                  el.style.transform = "scale(0.8)";
+                  
+                  const img = el.querySelector("img");
+                  const span = el.querySelector("span");
+                  
+                  if (img) img.style.filter = "brightness(0.5)";
+                  if (span) span.style.opacity = "0.5";
+                }
+              } catch (elementError) {
+                console.warn('Element style error:', elementError);
+              }
+            }
+          });
+        } catch (updateError) {
+          console.warn('Update active state error:', updateError);
+        }
 
         this.playTickSound();
 
@@ -264,6 +332,7 @@ class RouletteAnimationSystem {
               Math.pow(decelerationProgress, 2);
         }
 
+        // Safety check for animation bounds
         if (elapsed >= this.classAnimationConfig.totalDuration - 500) {
           currentIndex = winnerIndex;
           speed = 500;
@@ -271,7 +340,26 @@ class RouletteAnimationSystem {
           currentIndex = (currentIndex + 1) % this.classOptions.length;
         }
 
-        setTimeout(animate, speed);
+        // Ensure speed is within reasonable bounds to prevent crashes
+        speed = Math.max(10, Math.min(1000, speed));
+        
+        try {
+          setTimeout(animate, speed);
+        } catch (timeoutError) {
+          console.error('Animation timeout error:', timeoutError);
+          // Force completion if timeout fails
+          try {
+            clearTimeout(safetyTimeout);
+            if (animationContainer && animationContainer.parentNode) {
+              document.body.removeChild(animationContainer);
+            }
+            resolve();
+          } catch (fallbackError) {
+            console.error('Fallback cleanup error:', fallbackError);
+            clearTimeout(safetyTimeout);
+            resolve();
+          }
+        }
       };
 
       animate();
@@ -587,6 +675,30 @@ class RouletteAnimationSystem {
   // Utility
   delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  // Get available classes (respecting exclusions)
+  getAvailableClasses() {
+    const allClasses = ["Light", "Medium", "Heavy"];
+    const excludedClasses = [];
+    
+    // Check which classes are excluded
+    ['light', 'medium', 'heavy'].forEach(className => {
+      const saved = localStorage.getItem(`exclude-${className}`);
+      if (saved === 'true') {
+        // Capitalize first letter to match class names
+        const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
+        excludedClasses.push(capitalizedClass);
+        console.log(`🚫 ${capitalizedClass} excluded from roulette`);
+      }
+    });
+    
+    // Filter out excluded classes
+    const availableClasses = allClasses.filter(cls => !excludedClasses.includes(cls));
+    
+    console.log('🎲 Roulette available classes:', availableClasses);
+    
+    return availableClasses;
   }
 }
 
