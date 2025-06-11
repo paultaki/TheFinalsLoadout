@@ -199,7 +199,7 @@
     @media (min-width: 769px) {
       .sound-toggle-button {
         position: fixed !important;
-        top: 80px !important;
+        top: 140px !important;
         right: 16px !important;
         z-index: 999 !important;
         width: 48px;
@@ -798,10 +798,87 @@
         min-height: unset !important;
       }
     }
+
+    /* Promotional Flag for New Filters */
+    .promo-flag {
+      position: fixed;
+      top: 80px;
+      right: 130px;
+      z-index: 10000;
+      animation: flagWave 2s ease-in-out infinite;
+      pointer-events: none;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      transform-origin: center center;
+    }
+
+    .flag-content {
+      position: relative;
+      background: linear-gradient(135deg, #ff6b35, #ff8e53);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 20px rgba(255, 107, 53, 0.6);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(5px);
+      animation: flagPulse 3s ease-in-out infinite;
+    }
+
+    .flag-arrow {
+      position: absolute;
+      top: 50%;
+      right: -8px;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 8px solid #ff6b35;
+    }
+
+    @keyframes flagWave {
+      0%, 100% { transform: rotate(-2deg) translateY(0px); }
+      50% { transform: rotate(2deg) translateY(-3px); }
+    }
+
+    @keyframes flagPulse {
+      0%, 100% { 
+        transform: scale(1); 
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+      }
+      50% { 
+        transform: scale(1.05); 
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+      }
+    }
+
+    /* Hide flag on mobile to avoid clutter */
+    @media (max-width: 768px) {
+      .promo-flag {
+        display: none;
+      }
+    }
+
+    /* Auto-hide flag after user interaction */
+    .promo-flag.dismissed {
+      animation: flagFadeOut 0.5s ease-out forwards;
+    }
+
+    @keyframes flagFadeOut {
+      to { 
+        opacity: 0; 
+        transform: translateY(-20px) scale(0.8); 
+      }
+    }
   </style>
 
   <!-- Full Styles -->
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style-cleaned.css" />
 </head>
 
 <body>
@@ -841,6 +918,14 @@
     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
 </button>
+
+<!-- New Filters Promotional Flag -->
+<div id="filters-promo-flag" class="promo-flag">
+  <div class="flag-content">
+    <span class="flag-text">Try our new filters!</span>
+    <div class="flag-arrow"></div>
+  </div>
+</div>
 
 <!-- Sound Toggle Button -->
 <button id="sound-toggle" class="sound-toggle-button" aria-label="Toggle sound">
@@ -1750,6 +1835,74 @@
             this.style.transform = 'scale(1)';
           });
         }
+
+        // Promotional Flag Management
+        function initPromoFlag() {
+          const promoFlag = document.getElementById('filters-promo-flag');
+          const filterButton = document.getElementById('filter-toggle');
+          
+          if (!promoFlag || !filterButton) return;
+          
+          // Check if user has already seen the promo
+          const hasSeenPromo = localStorage.getItem('hasSeenFiltersPromo');
+          if (hasSeenPromo === 'true') {
+            promoFlag.style.display = 'none';
+            return;
+          }
+          
+          // Function to dismiss the flag
+          function dismissFlag() {
+            promoFlag.classList.add('dismissed');
+            localStorage.setItem('hasSeenFiltersPromo', 'true');
+            setTimeout(() => {
+              promoFlag.style.display = 'none';
+            }, 500);
+          }
+          
+          // Dismiss when user clicks the filter button
+          filterButton.addEventListener('click', dismissFlag, { once: true });
+          
+          // Auto-dismiss after 10 seconds
+          setTimeout(dismissFlag, 10000);
+          
+          // Dismiss on any user interaction with the page
+          const interactionEvents = ['click', 'scroll', 'keydown'];
+          const dismissOnInteraction = () => {
+            dismissFlag();
+            interactionEvents.forEach(event => {
+              document.removeEventListener(event, dismissOnInteraction);
+            });
+          };
+          
+          // Add delayed interaction listeners (after 3 seconds to let user see it first)
+          setTimeout(() => {
+            interactionEvents.forEach(event => {
+              document.addEventListener(event, dismissOnInteraction, { once: true });
+            });
+          }, 3000);
+        }
+        
+        // Initialize the promo flag
+        initPromoFlag();
+        
+        // Debug: Check if promo flag is visible
+        setTimeout(() => {
+          const flag = document.getElementById('filters-promo-flag');
+          if (flag) {
+            console.log('🚩 Promo flag found:', {
+              display: window.getComputedStyle(flag).display,
+              visibility: window.getComputedStyle(flag).visibility,
+              opacity: window.getComputedStyle(flag).opacity,
+              position: window.getComputedStyle(flag).position,
+              top: window.getComputedStyle(flag).top,
+              right: window.getComputedStyle(flag).right,
+              zIndex: window.getComputedStyle(flag).zIndex,
+              hasSeenPromo: localStorage.getItem('hasSeenFiltersPromo')
+            });
+          } else {
+            console.log('❌ Promo flag element not found in DOM');
+          }
+        }, 1000);
       });
     </script>
 

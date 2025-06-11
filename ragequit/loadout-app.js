@@ -860,6 +860,13 @@ function finalizeSpin() {
   const handicapName = rageState.selectedHandicap || "None";
   const handicapDesc = rageState.selectedHandicapDesc || "No handicap selected";
 
+  console.log("🎯 Handicap data for history:", {
+    handicapName,
+    handicapDesc,
+    rageStateHandicap: rageState.selectedHandicap,
+    rageStateHandicapDesc: rageState.selectedHandicapDesc
+  });
+
   // Add to history
   addToRageHistory(classType, weapon, specialization, gadgets, handicapName, handicapDesc);
 
