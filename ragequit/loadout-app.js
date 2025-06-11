@@ -306,23 +306,38 @@ class SlotColumn {
 // Get available classes (respecting exclusions)
 function getAvailableClasses() {
   const allClasses = ["Light", "Medium", "Heavy"];
-  const excludedClasses = [];
+  const includedClasses = [];
   
-  // Check which classes are excluded
+  console.log('\ud83d\udcca [RAGEQUIT] getAvailableClasses: Starting class filtering...');
+  console.log('\ud83d\udcca [RAGEQUIT] localStorage debug values:', {
+    'exclude-light': localStorage.getItem('exclude-light'),
+    'exclude-medium': localStorage.getItem('exclude-medium'), 
+    'exclude-heavy': localStorage.getItem('exclude-heavy'),
+    'class-system-updated': localStorage.getItem('class-system-updated')
+  });
+  
+  // Check which classes are included (checked = included, unchecked = excluded)
+  // The checkboxes are "Select Classes to Include" - when checked, the class should be included
+  // localStorage stores 'false' when checked (included) and 'true' when unchecked (excluded)
   ['light', 'medium', 'heavy'].forEach(className => {
     const saved = localStorage.getItem(`exclude-${className}`);
-    if (saved === 'true') {
-      // Capitalize first letter to match class names
-      const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
-      excludedClasses.push(capitalizedClass);
-      console.log(`🚫 ${capitalizedClass} excluded from rage loadout`);
+    const isExcluded = saved === 'true';
+    const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
+    
+    if (!isExcluded) {
+      // If not excluded, then it's included
+      includedClasses.push(capitalizedClass);
+      console.log(`\u2705 [RAGEQUIT] ${capitalizedClass} included in rage loadout (localStorage: ${saved})`);
+    } else {
+      console.log(`\ud83d\udeab [RAGEQUIT] ${capitalizedClass} excluded from rage loadout (localStorage: ${saved})`);
     }
   });
   
-  // Filter out excluded classes
-  const availableClasses = allClasses.filter(cls => !excludedClasses.includes(cls));
+  // If no classes are explicitly included, include all classes
+  const availableClasses = includedClasses.length > 0 ? includedClasses : allClasses;
   
-  console.log('🎲 Rage loadout available classes:', availableClasses);
+  console.log('\ud83c\udfb2 [RAGEQUIT] Final available classes:', availableClasses);
+  console.log('\u2705 [RAGEQUIT] Non-excluded classes:', includedClasses);
   
   return availableClasses;
 }
@@ -350,8 +365,10 @@ const displayRageQuitLoadout = () => {
   let selectedClass = rageState.selectedClass;
   
   if (!selectedClass) {
-    console.log('🎲 No class selected by roulette, using fallback selection with exclusions');
+    console.log('🎲 [RAGEQUIT] No class selected by roulette, using fallback selection with exclusions');
+    console.log('🎯 [RAGEQUIT] Fetching available classes for fallback selection...');
     const availableClasses = getAvailableClasses();
+    console.log('🎯 [RAGEQUIT] Received available classes for fallback:', availableClasses);
     if (availableClasses.length === 0) {
       console.warn('⚠️ All classes excluded! Using all classes instead.');
       selectedClass = ["Light", "Medium", "Heavy"][Math.floor(Math.random() * 3)];
@@ -387,32 +404,30 @@ const displayRageQuitLoadout = () => {
 
   console.log("🎯 Final loadout stored:", rageState.finalLoadout);
 
-  // Build the slot machine UI
+  // Build the slot machine UI (simplified structure without wrapper)
   const loadoutHTML = `
-    <div class="slot-machine-wrapper">
-      <div class="items-container">
-        <div class="item-container">
-          <div class="scroll-container">
-            ${createItemContainer(classLoadout.weapons, selectedWeapon)}
-          </div>
+    <div class="items-container">
+      <div class="item-container">
+        <div class="scroll-container">
+          ${createItemContainer(classLoadout.weapons, selectedWeapon)}
         </div>
-        <div class="item-container">
-          <div class="scroll-container">
-            ${createItemContainer(classLoadout.specializations, selectedSpec)}
-          </div>
-        </div>
-        ${selectedGadgets
-          .map(
-            (gadget, index) => `
-            <div class="item-container">
-              <div class="scroll-container" data-gadget-index="${index}">
-                ${createItemContainer([gadget, ...classLoadout.gadgets.filter(g => g !== gadget)], gadget, true)}
-              </div>
-            </div>
-          `
-          )
-          .join("")}
       </div>
+      <div class="item-container">
+        <div class="scroll-container">
+          ${createItemContainer(classLoadout.specializations, selectedSpec)}
+        </div>
+      </div>
+      ${selectedGadgets
+        .map(
+          (gadget, index) => `
+          <div class="item-container">
+            <div class="scroll-container" data-gadget-index="${index}">
+              ${createItemContainer([gadget, ...classLoadout.gadgets.filter(g => g !== gadget)], gadget, true)}
+            </div>
+          </div>
+        `
+        )
+        .join("")}
     </div>
   `;
 
@@ -512,43 +527,178 @@ function startSpinAnimation(columns) {
   slotColumns.forEach((column) => (column.state = "accelerating"));
 
   function animate(currentTime) {
-    const elapsed = currentTime - startTime;
-    let isAnimating = false;
-
-    slotColumns.forEach((column) => {
-      if (column.state !== "stopped") {
-        isAnimating = true;
-        const deltaTime = column.lastTimestamp
-          ? currentTime - column.lastTimestamp
-          : 16.67;
-        column.update(elapsed, deltaTime);
-        column.lastTimestamp = currentTime;
-      }
-    });
-
-    if (isAnimating) {
-      requestAnimationFrame(animate);
-    } else {
-      // Stop spinning sound when all columns finish
-      const spinningSound = document.getElementById("spinningSound");
-      if (spinningSound) {
-        spinningSound.pause();
-        spinningSound.currentTime = 0;
+    try {
+      // Safety timeout to prevent infinite animations
+      const elapsed = currentTime - startTime;
+      if (elapsed > 15000) { // 15 second timeout
+        console.warn('⚠️ Rage quit slot machine animation safety timeout triggered');
+        // Force stop all columns
+        slotColumns.forEach(column => {
+          try {
+            if (column && typeof column.forceStop === 'function') {
+              column.forceStop();
+            }
+          } catch (stopError) {
+            console.warn('Rage column force stop error:', stopError);
+          }
+        });
+        // Stop spinning sound
+        try {
+          const spinningSound = document.getElementById('spinningSound');
+          if (spinningSound) {
+            spinningSound.pause();
+            spinningSound.currentTime = 0;
+          }
+        } catch (soundError) {
+          console.warn('Rage sound stop error:', soundError);
+        }
+        // Force finalize
+        try {
+          finalizeSpin();
+        } catch (finalizeError) {
+          console.error('Rage force finalize error:', finalizeError);
+        }
+        return;
       }
       
-      // Play final lock sound
-      const finalLockSound = document.getElementById("finalLock");
-      if (finalLockSound && isSoundEnabled()) {
-        finalLockSound.currentTime = 0;
-        finalLockSound.volume = 0.5;
-        finalLockSound.play().catch(() => {});
+      let isAnimating = false;
+
+      slotColumns.forEach((column, index) => {
+        try {
+          if (column && column.state !== "stopped") {
+            isAnimating = true;
+            const deltaTime = column.lastTimestamp
+              ? currentTime - column.lastTimestamp
+              : 16.67;
+            
+            // Validate deltaTime is reasonable
+            const safeDeltaTime = Math.max(0, Math.min(deltaTime, 100));
+            
+            if (typeof column.update === 'function') {
+              column.update(elapsed, safeDeltaTime);
+            } else {
+              console.warn(`Rage column ${index} missing update method`);
+              // Force stop this broken column
+              if (column) {
+                column.state = "stopped";
+              }
+            }
+            column.lastTimestamp = currentTime;
+          }
+        } catch (columnError) {
+          console.error(`Error updating rage column ${index}:`, columnError);
+          // Force stop the problematic column to prevent further crashes
+          try {
+            if (column) {
+              column.state = "stopped";
+              if (typeof column.forceStop === 'function') {
+                column.forceStop();
+              }
+            }
+          } catch (stopError) {
+            console.warn(`Failed to stop rage column ${index}:`, stopError);
+          }
+        }
+      });
+
+      if (isAnimating) {
+        try {
+          requestAnimationFrame(animate);
+        } catch (rafError) {
+          console.error('Rage RequestAnimationFrame error:', rafError);
+          // Fallback: use setTimeout
+          setTimeout(() => {
+            try {
+              animate(performance.now());
+            } catch (fallbackError) {
+              console.error('Rage fallback animation error:', fallbackError);
+              // Force completion
+              try {
+                finalizeSpin();
+              } catch (finalError) {
+                console.error('Rage final completion error:', finalError);
+              }
+            }
+          }, 16);
+        }
+      } else {
+        try {
+          // Stop spinning sound when all columns finish
+          const spinningSound = document.getElementById("spinningSound");
+          if (spinningSound) {
+            spinningSound.pause();
+            spinningSound.currentTime = 0;
+          }
+          
+          // Play final lock sound
+          const finalLockSound = document.getElementById("finalLock");
+          if (finalLockSound && isSoundEnabled()) {
+            finalLockSound.currentTime = 0;
+            finalLockSound.volume = 0.5;
+            finalLockSound.play().catch(() => {});
+          }
+          
+          // When all columns are stopped, trigger the victory flash and finalize spin
+          try {
+            finalVictoryFlash(columns);
+          } catch (flashError) {
+            console.warn('Victory flash error:', flashError);
+          }
+          
+          setTimeout(() => {
+            try {
+              finalizeSpin();
+            } catch (finalizeError) {
+              console.error('Rage finalize spin error:', finalizeError);
+              // Emergency state reset
+              try {
+                rageState.isSpinning = false;
+                resetSpinState();
+              } catch (resetError) {
+                console.error('Emergency reset error:', resetError);
+              }
+            }
+          }, 1000);
+        } catch (completionError) {
+          console.error('Rage animation completion error:', completionError);
+          // Force completion with minimal functionality
+          try {
+            setTimeout(() => {
+              try {
+                finalizeSpin();
+              } catch (forceError) {
+                console.error('Rage force finalize error:', forceError);
+                rageState.isSpinning = false;
+              }
+            }, 1000);
+          } catch (timeoutError) {
+            console.error('Rage timeout creation error:', timeoutError);
+            rageState.isSpinning = false;
+          }
+        }
       }
-      
-      // When all columns are stopped, trigger the victory flash and finalize spin
-      finalVictoryFlash(columns);
-      setTimeout(() => {
-        finalizeSpin();
-      }, 1000);
+    } catch (animateError) {
+      console.error('Critical rage animation error:', animateError);
+      // Emergency shutdown
+      try {
+        rageState.isSpinning = false;
+        const spinningSound = document.getElementById('spinningSound');
+        if (spinningSound) {
+          spinningSound.pause();
+          spinningSound.currentTime = 0;
+        }
+        resetSpinState();
+        // Try to finalize anyway
+        setTimeout(() => {
+          try {
+            finalizeSpin();
+          } catch (emergencyFinalizeError) {
+            console.error('Emergency rage finalize error:', emergencyFinalizeError);
+          }
+        }, 100);
+      } catch (emergencyError) {
+        console.error('Emergency rage shutdown error:', emergencyError);
+      }
     }
   }
 
@@ -1390,14 +1540,21 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize sound toggle
   initializeRageSoundToggle();
   
-  // Rage Quit Button Click Event
-  document.getElementById("rage-quit-btn")?.addEventListener("click", async function () {
-    console.log("🎯 Rage Quit button clicked!");
-    console.log("📊 Current state:", {
-      isSpinning: rageState.isSpinning,
-      animating: window.rageRouletteSystem?.animating,
-      rageRouletteSystemExists: !!window.rageRouletteSystem
-    });
+  // Check if button exists and add debugging
+  const rageQuitButton = document.getElementById("rage-quit-btn");
+  console.log("🔍 Rage Quit Button found:", !!rageQuitButton);
+  
+  if (rageQuitButton) {
+    console.log("✅ Adding click event listener to rage quit button");
+    
+    // Rage Quit Button Click Event
+    rageQuitButton.addEventListener("click", async function () {
+      console.log("🎯 Rage Quit button clicked!");
+      console.log("📊 Current state:", {
+        isSpinning: rageState.isSpinning,
+        animating: window.rageRouletteSystem?.animating,
+        rageRouletteSystemExists: !!window.rageRouletteSystem
+      });
     
     if (rageState.isSpinning || (window.rageRouletteSystem && window.rageRouletteSystem.animating)) {
       console.log("❌ Animation already in progress, skipping");
@@ -1416,18 +1573,34 @@ document.addEventListener("DOMContentLoaded", () => {
     
     try {
       console.log("🚀 Starting rage roulette sequence...");
+      console.log("🔍 RageRouletteAnimationSystem exists:", !!window.rageRouletteSystem);
+      console.log("🔍 RageRouletteAnimationSystem type:", typeof window.rageRouletteSystem);
       
       // Check if roulette system is available and working
       if (!window.rageRouletteSystem) {
-        console.warn("⚠️ RageRouletteAnimationSystem not available, skipping roulette and going straight to loadout");
-        // Skip roulette and go straight to loadout generation
-        spinRageQuitLoadout();
-        return;
+        console.error("❌ RageRouletteAnimationSystem not available!");
+        // Try to reinitialize
+        if (window.RageRouletteAnimationSystem) {
+          console.log("🔄 Attempting to reinitialize RageRouletteAnimationSystem...");
+          window.rageRouletteSystem = new window.RageRouletteAnimationSystem();
+        } else {
+          console.error("❌ RageRouletteAnimationSystem class not found, falling back to direct loadout");
+          spinRageQuitLoadout();
+          return;
+        }
       }
+      
+      console.log("🎬 Starting full roulette sequence...");
+      console.log("🔍 Checking rageRouletteSystem methods:", {
+        hasStartFullSequence: typeof window.rageRouletteSystem.startFullSequence === 'function',
+        hasAnimateClassSelection: typeof window.rageRouletteSystem.animateClassSelection === 'function',
+        hasAnimateSpinSelection: typeof window.rageRouletteSystem.animateSpinSelection === 'function',
+        hasAnimateHandicapSelection: typeof window.rageRouletteSystem.animateHandicapSelection === 'function'
+      });
       
       // Start the full roulette sequence with error handling
       await window.rageRouletteSystem.startFullSequence();
-      console.log("✅ Rage roulette sequence completed");
+      console.log("✅ Rage roulette sequence completed successfully");
     } catch (error) {
       console.error("❌ Error in rage roulette sequence:", error);
       console.log("🔄 Falling back to direct loadout generation...");
@@ -1453,13 +1626,29 @@ document.addEventListener("DOMContentLoaded", () => {
       // Remove spinning animation when done
       this.classList.remove('spinning');
     }
-  });
+    });
+  } else {
+    console.error("❌ Rage Quit Button not found in DOM!");
+    // Try to find it with a slight delay in case DOM isn't fully loaded
+    setTimeout(() => {
+      const delayedButton = document.getElementById("rage-quit-btn");
+      if (delayedButton) {
+        console.log("✅ Found button on retry, adding listener");
+        delayedButton.addEventListener("click", async function () {
+          console.log("🎯 Delayed Rage Quit button clicked!");
+          if (!rageState.isSpinning) {
+            spinRageQuitLoadout();
+          }
+        });
+      }
+    }, 500);
+  }
 
   // Copy Loadout Button
   document.getElementById("copyLoadoutButton")?.addEventListener("click", () => {
     try {
       const itemContainers = document.querySelectorAll(
-        ".slot-machine-wrapper .items-container .item-container"
+        "#output .items-container .item-container"
       );
 
       if (!itemContainers || itemContainers.length === 0) {

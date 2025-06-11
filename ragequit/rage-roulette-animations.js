@@ -57,11 +57,18 @@ class RageRouletteAnimationSystem {
     if (doubleOrNothingContainer) doubleOrNothingContainer.style.display = "none";
 
     // Show roulette container
+    console.log("🔍 Looking for rage-roulette-container...");
     const rouletteContainer = document.getElementById("rage-roulette-container");
+    console.log("🔍 Rage roulette container found:", !!rouletteContainer);
+    console.log("🔍 Container element:", rouletteContainer);
+    
     if (!rouletteContainer) {
       console.error("❌ Rage roulette container not found!");
+      console.log("🔍 Available containers:", Array.from(document.querySelectorAll('[id*="roulette"]')));
+      console.log("🔍 All elements with 'rage' in id:", Array.from(document.querySelectorAll('[id*="rage"]')));
+      console.log("🔍 All containers:", Array.from(document.querySelectorAll('div')).filter(el => el.id).map(el => el.id));
       this.animating = false;
-      throw new Error("Rage roulette container not found");
+      throw new Error("Rage roulette container not found - check HTML");
     }
 
     // Show container by removing hidden class
@@ -140,10 +147,20 @@ class RageRouletteAnimationSystem {
     if (handicapSection2) handicapSection2.style.display = "block";
 
     // Set the state for the original system
-    window.state.selectedClass = this.selectedClass;
-    window.state.totalSpins = this.selectedSpins;
-    window.state.selectedHandicap = this.selectedHandicap;
-    window.state.selectedHandicapDesc = this.selectedHandicapDesc;
+    if (window.state) {
+      window.state.selectedClass = this.selectedClass;
+      window.state.totalSpins = this.selectedSpins;
+      window.state.selectedHandicap = this.selectedHandicap;
+      window.state.selectedHandicapDesc = this.selectedHandicapDesc;
+    }
+    
+    // Also set in rageState directly
+    if (window.rageState) {
+      window.rageState.selectedClass = this.selectedClass;
+      window.rageState.totalSpins = this.selectedSpins;
+      window.rageState.selectedHandicap = this.selectedHandicap;
+      window.rageState.selectedHandicapDesc = this.selectedHandicapDesc;
+    }
 
     this.animating = false;
 

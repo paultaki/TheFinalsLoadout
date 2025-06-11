@@ -470,22 +470,34 @@ class SlotColumn {
   }
 
   update(elapsed, deltaTime) {
-    // Safety check for runaway animations
-    if (!this.animationStartTime) {
-      this.animationStartTime = performance.now();
-    } else if (
-      performance.now() - this.animationStartTime >
-      this.maxAnimationDuration
-    ) {
-      console.warn("Animation timeout - forcing stop");
-      this.forceStop();
-      return;
-    }
+    try {
+      // Safety check for runaway animations
+      if (!this.animationStartTime) {
+        this.animationStartTime = performance.now();
+      } else if (
+        performance.now() - this.animationStartTime >
+        this.maxAnimationDuration
+      ) {
+        console.warn("Animation timeout - forcing stop");
+        this.forceStop();
+        return;
+      }
 
-    if (this.state === "stopped") return;
+      if (this.state === "stopped") return;
 
-    // Ensure deltaTime is reasonable
-    const dt = Math.min(deltaTime, 50) / 1000; // Cap at 50ms, convert to seconds
+      // Validate inputs
+      if (typeof elapsed !== 'number' || isNaN(elapsed) || elapsed < 0) {
+        console.warn('Invalid elapsed time:', elapsed);
+        elapsed = 0;
+      }
+      
+      if (typeof deltaTime !== 'number' || isNaN(deltaTime) || deltaTime < 0) {
+        console.warn('Invalid deltaTime:', deltaTime);
+        deltaTime = 16.67; // Default to ~60fps
+      }
+
+      // Ensure deltaTime is reasonable
+      const dt = Math.min(deltaTime, 50) / 1000; // Cap at 50ms, convert to seconds
 
     // Vegas-style physics with distinct phases
     const accelerationPhase = 500; // 0-500ms
@@ -559,17 +571,48 @@ class SlotColumn {
         break;
     }
 
-    // Update position
-    this.position += this.velocity * dt;
-    
-    // Don't normalize position for gadget columns when targeting position 0
-    if (this.index >= 2 && this.targetPosition === 0 && this.state === "stopped") {
-      // Keep exact position for gadgets
-    } else if (this.state !== "snapback") {
-      this.position = this.normalizePosition(this.position);
+      // Update position with safety checks
+      if (typeof this.velocity === 'number' && !isNaN(this.velocity) && 
+          typeof this.position === 'number' && !isNaN(this.position)) {
+        this.position += this.velocity * dt;
+      } else {
+        console.warn('Invalid velocity or position values:', this.velocity, this.position);
+        // Reset to safe values
+        this.velocity = 0;
+        this.position = 0;
+      }
+      
+      // Don't normalize position for gadget columns when targeting position 0
+      if (this.index >= 2 && this.targetPosition === 0 && this.state === "stopped") {
+        // Keep exact position for gadgets
+      } else if (this.state !== "snapback") {
+        try {
+          this.position = this.normalizePosition(this.position);
+        } catch (normalizeError) {
+          console.warn('Position normalization error:', normalizeError);
+          this.position = 0; // Safe fallback
+        }
+      }
+      
+      // Update visuals with error handling
+      try {
+        this.updateVisuals();
+      } catch (visualError) {
+        console.warn('Update visuals error:', visualError);
+        // Continue without visuals if they fail
+      }
+    } catch (updateError) {
+      console.error('SlotColumn update error:', updateError);
+      // Force stop on critical error to prevent further crashes
+      try {
+        this.forceStop();
+      } catch (stopError) {
+        console.error('Force stop error:', stopError);
+        // Emergency state reset
+        this.state = "stopped";
+        this.velocity = 0;
+      }
     }
-    
-    this.updateVisuals();
   }
 
   normalizePosition(pos) {
@@ -624,44 +667,117 @@ class SlotColumn {
   }
 
   updateVisuals() {
-    // Vegas-style blur effects based on velocity
-    let blur = 0;
-    let containerClass = '';
-    
-    if (Math.abs(this.velocity) > 3500) {
-      blur = 8;
-      containerClass = 'extreme-blur';
-    } else if (Math.abs(this.velocity) > 2000) {
-      blur = 3;
-      containerClass = 'high-speed-blur';
-    } else if (Math.abs(this.velocity) > 1000) {
-      blur = 1;
-    }
-    
-    // Add/remove blur classes on container
-    if (this.container) {
-      this.container.classList.remove('high-speed-blur', 'extreme-blur');
-      if (containerClass) {
-        this.container.classList.add(containerClass);
+    try {
+      // Validate velocity before calculations
+      if (typeof this.velocity !== 'number' || isNaN(this.velocity)) {
+        console.warn('Invalid velocity in updateVisuals:', this.velocity);
+        this.velocity = 0;
       }
-    }
-    
-    // Shake effect during snapback
-    let shakeX = 0;
-    if (this.state === "snapback") {
-      shakeX = Math.sin(performance.now() / 50) * 3;
-    }
-    
-    // Apply transform and filter
-    this.element.style.transform = `translate(${shakeX}px, ${this.position}px)`;
-    this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
-    
-    // Add slot glow effect at high speeds
-    if (this.container && Math.abs(this.velocity) > 2000) {
-      this.container.style.boxShadow = `
-        inset 0 10px 30px rgba(0,0,0,0.8),
-        0 0 ${20 + Math.abs(this.velocity) / 100}px rgba(255, 215, 0, ${0.2 + Math.abs(this.velocity) / 10000})
-      `;
+      
+      if (typeof this.position !== 'number' || isNaN(this.position)) {
+        console.warn('Invalid position in updateVisuals:', this.position);
+        this.position = 0;
+      }
+      
+      // Vegas-style blur effects based on velocity
+      let blur = 0;
+      let containerClass = '';
+      
+      const absVelocity = Math.abs(this.velocity);
+      
+      if (absVelocity > 3500) {
+        blur = 8;
+        containerClass = 'extreme-blur';
+      } else if (absVelocity > 2000) {
+        blur = 3;
+        containerClass = 'high-speed-blur';
+      } else if (absVelocity > 1000) {
+        blur = 1;
+      }
+      
+      // Add/remove blur classes on container with error handling
+      if (this.container) {
+        try {
+          this.container.classList.remove('high-speed-blur', 'extreme-blur');
+          if (containerClass) {
+            this.container.classList.add(containerClass);
+          }
+        } catch (classError) {
+          console.warn('Class manipulation error:', classError);
+        }
+      }
+      
+      // Shake effect during snapback
+      let shakeX = 0;
+      if (this.state === "snapback") {
+        try {
+          shakeX = Math.sin(performance.now() / 50) * 3;
+          // Validate shakeX
+          if (isNaN(shakeX)) {
+            shakeX = 0;
+          }
+        } catch (shakeError) {
+          console.warn('Shake calculation error:', shakeError);
+          shakeX = 0;
+        }
+      }
+      
+      // Apply transform and filter with error handling
+      if (this.element) {
+        try {
+          this.element.style.transform = `translate(${shakeX}px, ${this.position}px)`;
+          this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
+        } catch (styleError) {
+          console.warn('Style application error:', styleError);
+          // Try basic fallback
+          try {
+            this.element.style.transform = `translateY(${this.position}px)`;
+            this.element.style.filter = "none";
+          } catch (fallbackError) {
+            console.warn('Fallback style error:', fallbackError);
+          }
+        }
+      }
+      
+      // Add slot glow effect at high speeds with error handling
+      if (this.container && absVelocity > 2000) {
+        try {
+          const glowIntensity = 20 + absVelocity / 100;
+          const glowOpacity = 0.2 + absVelocity / 10000;
+          
+          // Validate glow values
+          const safeGlowIntensity = Math.max(0, Math.min(glowIntensity, 100));
+          const safeGlowOpacity = Math.max(0, Math.min(glowOpacity, 1));
+          
+          this.container.style.boxShadow = `
+            inset 0 10px 30px rgba(0,0,0,0.8),
+            0 0 ${safeGlowIntensity}px rgba(255, 215, 0, ${safeGlowOpacity})
+          `;
+        } catch (glowError) {
+          console.warn('Glow effect error:', glowError);
+          // Remove potentially broken box shadow
+          try {
+            this.container.style.boxShadow = '';
+          } catch (shadowError) {
+            console.warn('Shadow reset error:', shadowError);
+          }
+        }
+      }
+    } catch (visualsError) {
+      console.error('UpdateVisuals critical error:', visualsError);
+      // Emergency cleanup - remove all effects
+      try {
+        if (this.element) {
+          this.element.style.transform = '';
+          this.element.style.filter = '';
+        }
+        if (this.container) {
+          this.container.classList.remove('high-speed-blur', 'extreme-blur');
+          this.container.style.boxShadow = '';
+        }
+      } catch (cleanupError) {
+        console.error('Emergency cleanup error:', cleanupError);
+      }
     }
   }
 }
@@ -841,29 +957,40 @@ const displayLoadout = (classType) => {
 // Helper function to get available classes (excluding checked exclusions)
 const getAvailableClasses = () => {
   const allClasses = ["Light", "Medium", "Heavy"];
-  const excludedClasses = [];
+  const availableClasses = [];
   
-  // Check localStorage for exclusions instead of DOM
+  // Check localStorage for exclusions (checked = excluded)
   ['light', 'medium', 'heavy'].forEach(className => {
     const isExcluded = localStorage.getItem(`exclude-${className}`) === 'true';
-    if (isExcluded) {
+    if (!isExcluded) {
       const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
-      excludedClasses.push(capitalizedClass);
+      availableClasses.push(capitalizedClass);
+      console.log(`✅ ${capitalizedClass} available in selection`);
+    } else {
+      const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
       console.log(`🚫 ${capitalizedClass} excluded from selection`);
     }
   });
   
-  // Filter out excluded classes
-  const availableClasses = allClasses.filter(cls => !excludedClasses.includes(cls));
+  // If all classes are excluded, use all classes as fallback
+  const finalClasses = availableClasses.length > 0 ? availableClasses : allClasses;
   
-  console.log('✅ Available classes:', availableClasses);
-  console.log('🚫 Excluded classes:', excludedClasses);
+  console.log('🎲 Available classes:', finalClasses);
+  console.log('✅ Non-excluded classes:', availableClasses);
+  console.log('📦 localStorage values:', {
+    'exclude-light': localStorage.getItem('exclude-light'),
+    'exclude-medium': localStorage.getItem('exclude-medium'),
+    'exclude-heavy': localStorage.getItem('exclude-heavy'),
+    'class-system-updated': localStorage.getItem('class-system-updated')
+  });
   
-  return availableClasses;
+  return finalClasses;
 };
 
 const displayRandomLoadout = () => {
+  console.log('🎯 displayRandomLoadout: Fetching available classes...');
   let availableClasses = getAvailableClasses();
+  console.log('🎯 displayRandomLoadout: Received available classes:', availableClasses);
   
   // If no classes are available (all excluded), show warning and use all classes
   if (availableClasses.length === 0) {
@@ -932,107 +1059,276 @@ function startSpinAnimation(columns) {
   });
 
   function animate(currentTime) {
-    const elapsed = currentTime - startTime;
-    let isAnimating = false;
-
-    slotColumns.forEach((column) => {
-      if (column.state !== "stopped") {
-        isAnimating = true;
-        const deltaTime = column.lastTimestamp
-          ? currentTime - column.lastTimestamp
-          : 16.67;
-        column.update(elapsed, deltaTime);
-        column.lastTimestamp = currentTime;
-      }
-    });
-
-    if (isAnimating) {
-      requestAnimationFrame(animate);
-    } else {
-      console.log("✅ All columns stopped, calling finalizeSpin");
-      
-      // Stop spinning sound with mobile fix
-      const spinningSound = document.getElementById('spinningSound');
-      if (spinningSound) {
-        spinningSound.pause();
-        spinningSound.currentTime = 0;
-        // Additional stop mechanism for mobile browsers
-        try {
-          spinningSound.src = spinningSound.src; // Force reload on mobile
-        } catch (e) {
-          console.log("Mobile audio reload failed:", e);
-        }
-      }
-
-
-      // Add visual effects only for final spin
-      if (isFinalSpin) {
-        let lastColumnIndex = columns.length - 1;
-
-        columns.forEach((column, index) => {
-          const container = column.closest(".item-container");
-          if (container) {
-            setTimeout(() => {
-              container.classList.add("landing-flash");
-
-              let lockedTag = container.querySelector(".locked-tag");
-              if (!lockedTag) {
-                lockedTag = document.createElement("div");
-                lockedTag.className = "locked-tag show";
-                lockedTag.textContent = "Locked In!";
-                container.appendChild(lockedTag);
-              }
-
-              // Play final sound on FIRST locked tag
-              if (index === 0 && state.soundEnabled) {
-                const finalSound = document.getElementById('finalSound');
-                if (finalSound) {
-                  finalSound.currentTime = 0;
-                  finalSound.volume = 0.7;
-                  finalSound.play().catch((err) => {
-                    console.log("Could not play final sound:", err);
-                  });
-                }
-              }
-
-              // If this is the last column, add celebration effects
-              if (index === lastColumnIndex) {
-                console.log("🔒 Last locked tag added, disabling spin buttons");
-                const spinBtns = document.querySelectorAll(".spin-button");
-                spinBtns.forEach((button) => {
-                  button.disabled = true;
-                  button.setAttribute("disabled", "disabled");
-                  button.classList.add("dimmed");
-                });
-                console.log(`Disabled ${spinBtns.length} spin buttons`);
-                
-                // Add celebration effects
-                setTimeout(() => {
-                  addCelebrationEffects();
-                }, 500);
-              }
-
-              setTimeout(() => {
-                container.classList.add("winner-pulsate");
-                
-                // Add dramatic screen shake on the last column
-                if (index === lastColumnIndex) {
-                  addScreenShake();
-                  createLockInParticleExplosion(container);
-                }
-              }, 300);
-            }, index * 200);
+    try {
+      // Safety timeout to prevent infinite animations
+      const elapsed = currentTime - startTime;
+      if (elapsed > 15000) { // 15 second timeout
+        console.warn('⚠️ Slot machine animation safety timeout triggered');
+        // Force stop all columns
+        slotColumns.forEach(column => {
+          try {
+            if (column && typeof column.forceStop === 'function') {
+              column.forceStop();
+            }
+          } catch (stopError) {
+            console.warn('Column force stop error:', stopError);
           }
         });
-      }
-
-      // Let finalizeSpin handle whether to continue or end the sequence
-      setTimeout(
-        () => {
+        // Stop spinning sound
+        try {
+          const spinningSound = document.getElementById('spinningSound');
+          if (spinningSound) {
+            spinningSound.pause();
+            spinningSound.currentTime = 0;
+          }
+        } catch (soundError) {
+          console.warn('Sound stop error:', soundError);
+        }
+        // Force finalize
+        try {
           finalizeSpin(columns);
-        },
-        isFinalSpin ? 1000 : 300
-      ); // Longer delay for final spin
+        } catch (finalizeError) {
+          console.error('Force finalize error:', finalizeError);
+        }
+        return;
+      }
+      
+      let isAnimating = false;
+
+      slotColumns.forEach((column, index) => {
+        try {
+          if (column && column.state !== "stopped") {
+            isAnimating = true;
+            const deltaTime = column.lastTimestamp
+              ? currentTime - column.lastTimestamp
+              : 16.67;
+            
+            // Validate deltaTime is reasonable
+            const safeDeltaTime = Math.max(0, Math.min(deltaTime, 100));
+            
+            if (typeof column.update === 'function') {
+              column.update(elapsed, safeDeltaTime);
+            } else {
+              console.warn(`Column ${index} missing update method`);
+              // Force stop this broken column
+              if (column) {
+                column.state = "stopped";
+              }
+            }
+            column.lastTimestamp = currentTime;
+          }
+        } catch (columnError) {
+          console.error(`Error updating column ${index}:`, columnError);
+          // Force stop the problematic column to prevent further crashes
+          try {
+            if (column) {
+              column.state = "stopped";
+              if (typeof column.forceStop === 'function') {
+                column.forceStop();
+              }
+            }
+          } catch (stopError) {
+            console.warn(`Failed to stop column ${index}:`, stopError);
+          }
+        }
+      });
+
+      if (isAnimating) {
+        try {
+          requestAnimationFrame(animate);
+        } catch (rafError) {
+          console.error('RequestAnimationFrame error:', rafError);
+          // Fallback: use setTimeout
+          setTimeout(() => {
+            try {
+              animate(performance.now());
+            } catch (fallbackError) {
+              console.error('Fallback animation error:', fallbackError);
+              // Force completion
+              try {
+                finalizeSpin(columns);
+              } catch (finalError) {
+                console.error('Final completion error:', finalError);
+              }
+            }
+          }, 16);
+        }
+      } else {
+        console.log("✅ All columns stopped, calling finalizeSpin");
+        
+        try {
+          // Stop spinning sound with mobile fix
+          const spinningSound = document.getElementById('spinningSound');
+          if (spinningSound) {
+            spinningSound.pause();
+            spinningSound.currentTime = 0;
+            // Additional stop mechanism for mobile browsers
+            try {
+              spinningSound.src = spinningSound.src; // Force reload on mobile
+            } catch (e) {
+              console.log("Mobile audio reload failed:", e);
+            }
+          }
+
+          // Add visual effects only for final spin
+          if (isFinalSpin) {
+            let lastColumnIndex = columns.length - 1;
+
+            columns.forEach((column, index) => {
+              try {
+                const container = column ? column.closest(".item-container") : null;
+                if (container) {
+                  setTimeout(() => {
+                    try {
+                      container.classList.add("landing-flash");
+
+                      let lockedTag = container.querySelector(".locked-tag");
+                      if (!lockedTag) {
+                        lockedTag = document.createElement("div");
+                        lockedTag.className = "locked-tag show";
+                        lockedTag.textContent = "Locked In!";
+                        container.appendChild(lockedTag);
+                      }
+
+                      // Play final sound on FIRST locked tag
+                      if (index === 0 && state.soundEnabled) {
+                        try {
+                          const finalSound = document.getElementById('finalSound');
+                          if (finalSound) {
+                            finalSound.currentTime = 0;
+                            finalSound.volume = 0.7;
+                            finalSound.play().catch((err) => {
+                              console.log("Could not play final sound:", err);
+                            });
+                          }
+                        } catch (soundError) {
+                          console.warn('Final sound error:', soundError);
+                        }
+                      }
+
+                      // If this is the last column, add celebration effects
+                      if (index === lastColumnIndex) {
+                        console.log("🔒 Last locked tag added, disabling spin buttons");
+                        try {
+                          const spinBtns = document.querySelectorAll(".spin-button");
+                          spinBtns.forEach((button) => {
+                            try {
+                              button.disabled = true;
+                              button.setAttribute("disabled", "disabled");
+                              button.classList.add("dimmed");
+                            } catch (btnError) {
+                              console.warn('Button disable error:', btnError);
+                            }
+                          });
+                          console.log(`Disabled ${spinBtns.length} spin buttons`);
+                          
+                          // Add celebration effects
+                          setTimeout(() => {
+                            try {
+                              addCelebrationEffects();
+                            } catch (celebrationError) {
+                              console.warn('Celebration effects error:', celebrationError);
+                            }
+                          }, 500);
+                        } catch (buttonError) {
+                          console.warn('Button handling error:', buttonError);
+                        }
+                      }
+
+                      setTimeout(() => {
+                        try {
+                          container.classList.add("winner-pulsate");
+                          
+                          // Add dramatic screen shake on the last column
+                          if (index === lastColumnIndex) {
+                            try {
+                              addScreenShake();
+                              createLockInParticleExplosion(container);
+                            } catch (effectError) {
+                              console.warn('Screen effect error:', effectError);
+                            }
+                          }
+                        } catch (pulsateError) {
+                          console.warn('Pulsate effect error:', pulsateError);
+                        }
+                      }, 300);
+                    } catch (timeoutError) {
+                      console.error(`Timeout callback error for column ${index}:`, timeoutError);
+                    }
+                  }, index * 200);
+                }
+              } catch (columnEffectError) {
+                console.error(`Column effect error for index ${index}:`, columnEffectError);
+              }
+            });
+          }
+
+          // Let finalizeSpin handle whether to continue or end the sequence
+          setTimeout(
+            () => {
+              try {
+                finalizeSpin(columns);
+              } catch (finalizeError) {
+                console.error('Finalize spin error:', finalizeError);
+                // Emergency cleanup
+                try {
+                  state.isSpinning = false;
+                  const mainSpinButton = document.getElementById('main-spin-button');
+                  if (mainSpinButton) {
+                    mainSpinButton.disabled = false;
+                    mainSpinButton.classList.remove('spinning');
+                  }
+                } catch (emergencyError) {
+                  console.error('Emergency cleanup error:', emergencyError);
+                }
+              }
+            },
+            isFinalSpin ? 1000 : 300
+          ); // Longer delay for final spin
+        } catch (completionError) {
+          console.error('Animation completion error:', completionError);
+          // Force completion with minimal functionality
+          try {
+            setTimeout(() => {
+              try {
+                finalizeSpin(columns);
+              } catch (forceError) {
+                console.error('Force finalize error:', forceError);
+                state.isSpinning = false;
+              }
+            }, 1000);
+          } catch (timeoutError) {
+            console.error('Timeout creation error:', timeoutError);
+            state.isSpinning = false;
+          }
+        }
+      }
+    } catch (animateError) {
+      console.error('Critical animation error:', animateError);
+      // Emergency shutdown
+      try {
+        state.isSpinning = false;
+        const spinningSound = document.getElementById('spinningSound');
+        if (spinningSound) {
+          spinningSound.pause();
+          spinningSound.currentTime = 0;
+        }
+        const mainSpinButton = document.getElementById('main-spin-button');
+        if (mainSpinButton) {
+          mainSpinButton.disabled = false;
+          mainSpinButton.classList.remove('spinning');
+        }
+        // Try to finalize anyway
+        setTimeout(() => {
+          try {
+            finalizeSpin(columns);
+          } catch (emergencyFinalizeError) {
+            console.error('Emergency finalize error:', emergencyFinalizeError);
+          }
+        }, 100);
+      } catch (emergencyError) {
+        console.error('Emergency shutdown error:', emergencyError);
+      }
     }
   }
 
@@ -1805,16 +2101,15 @@ const spinLoadout = () => {
   console.log(`🔍 spinLoadout() called with state.selectedClass = "${state.selectedClass}" (type: ${typeof state.selectedClass})`);
 
   // Start the first spin
-  // If selectedClass is a specific class (Light, Medium, Heavy), use it directly
-  // Only use random selection if selectedClass is explicitly "random" or not set
-  if (state.selectedClass === "random" || !state.selectedClass) {
-    console.log('🎲 No specific class selected, using random selection with exclusions');
-    displayRandomLoadout();
-  } else if (["Light", "Medium", "Heavy"].includes(state.selectedClass)) {
-    console.log(`🎯 Using specific class selected by roulette: ${state.selectedClass}`);
+  // The roulette has already selected the class, so use it directly
+  if (state.selectedClass && ["Light", "Medium", "Heavy"].includes(state.selectedClass)) {
+    console.log(`🎯 Using class selected by roulette: ${state.selectedClass}`);
     displayLoadout(state.selectedClass);
+  } else if (state.selectedClass === "random" || !state.selectedClass) {
+    console.log('🎲 Random mode - selecting from available classes');
+    displayRandomLoadout();
   } else {
-    console.log('🎲 Invalid class selection, falling back to random');
+    console.log(`⚠️ Unknown class selection: ${state.selectedClass}, using random`);
     displayRandomLoadout();
   }
 };
@@ -1985,6 +2280,12 @@ async function addToHistory(
   selectedGadgets,
   providedRoast = null
 ) {
+  // Handle null/undefined classType to prevent TypeError
+  if (!classType) {
+    console.warn("addToHistory called with null/undefined classType, defaulting to 'Unknown'");
+    classType = 'Unknown';
+  }
+  
   const historyList = document.getElementById("history-list");
   const newEntry = document.createElement("div");
   newEntry.classList.add("history-entry");
@@ -2312,6 +2613,11 @@ function loadHistory() {
     // Skip if data is malformed
     if (!entryData.classType || !entryData.weapon) return;
     
+    // Ensure classType is a valid string to prevent TypeError
+    if (typeof entryData.classType !== 'string') {
+      entryData.classType = 'Unknown';
+    }
+    
     const entry = document.createElement("div");
     entry.classList.add("history-entry", "visible"); // Add visible class immediately
     
@@ -2397,6 +2703,11 @@ function loadHistory() {
 }
 
 function generateLoadoutName(classType, weapon, spec) {
+  // Handle null/undefined classType to prevent template issues
+  if (!classType) {
+    classType = 'Unknown';
+  }
+  
   // Weapon-based adjectives
   const weaponAdjectives = {
     // Light weapons
@@ -3002,26 +3313,116 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize the roulette animation system
     const rouletteSystem = new window.RouletteAnimationSystem();
     
-    // Set up the main SPIN button
+    // Set up the main SPIN button with debugging
     const mainSpinButton = document.getElementById('main-spin-button');
+    console.log('🔍 Looking for main-spin-button:', !!mainSpinButton);
+    
     if (mainSpinButton) {
+      console.log('✅ Found main-spin-button, adding event listener');
       mainSpinButton.addEventListener('click', async () => {
-        if (state.isSpinning || rouletteSystem.animating) return;
+        console.log('🎯 MAIN SPIN BUTTON CLICKED!');
+        console.log('🔍 Current state:', {
+          isSpinning: state.isSpinning,
+          rouletteAnimating: rouletteSystem.animating,
+          selectedClass: state.selectedClass
+        });
+        
+        if (state.isSpinning || rouletteSystem.animating) {
+          console.log('❌ Animation already in progress, skipping');
+          return;
+        }
         
         // Add spinning animation
         mainSpinButton.classList.add('spinning');
         
-        // Start the full roulette sequence
-        await rouletteSystem.startFullSequence();
+        try {
+          console.log('🚀 Starting roulette sequence...');
+          // Start the full roulette sequence
+          await rouletteSystem.startFullSequence();
+          console.log('✅ Roulette sequence completed');
+        } catch (error) {
+          console.error('❌ Error in roulette sequence:', error);
+          console.log('🔄 Falling back to direct random loadout...');
+          // Fallback to old system
+          displayRandomLoadout();
+        }
         
         // Remove spinning animation when done
         mainSpinButton.classList.remove('spinning');
       });
+      
+      // Test the button is clickable
+      console.log('🧪 Button properties:', {
+        disabled: mainSpinButton.disabled,
+        style: mainSpinButton.style.display,
+        classes: mainSpinButton.className
+      });
+    } else {
+      console.error('❌ Main spin button not found! Retrying in 500ms...');
+      // Retry finding and setting up the button
+      setTimeout(() => {
+        const retryButton = document.getElementById('main-spin-button');
+        if (retryButton) {
+          console.log('✅ Found button on retry, setting up...');
+          retryButton.addEventListener('click', async () => {
+            console.log('🎯 RETRY MAIN SPIN BUTTON CLICKED!');
+            if (state.isSpinning || rouletteSystem.animating) {
+              return;
+            }
+            
+            retryButton.classList.add('spinning');
+            
+            try {
+              await rouletteSystem.startFullSequence();
+            } catch (error) {
+              console.error('❌ Retry roulette error:', error);
+              displayRandomLoadout();
+            }
+            
+            retryButton.classList.remove('spinning');
+          });
+        } else {
+          console.error('❌ Still could not find main-spin-button after retry!');
+        }
+      }, 500);
     }
   }
   
-  // Start the initialization process
-  initializeRouletteSystem();
+  // Initialize roulette system (DOM is already ready)
+  console.log('🚀 About to call initializeRouletteSystem()');
+  try {
+    initializeRouletteSystem();
+    console.log('✅ initializeRouletteSystem() completed successfully');
+  } catch (error) {
+    console.error('❌ Error in initializeRouletteSystem():', error);
+  }
+  
+  // EMERGENCY FALLBACK: Set up spin button directly if roulette system fails
+  setTimeout(() => {
+    const fallbackButton = document.getElementById('main-spin-button');
+    console.log('🔧 Emergency fallback - checking for button:', !!fallbackButton);
+    
+    if (fallbackButton && !fallbackButton.hasAttribute('data-listener-added')) {
+      console.log('🔧 Adding emergency fallback listener');
+      fallbackButton.setAttribute('data-listener-added', 'true');
+      
+      fallbackButton.addEventListener('click', () => {
+        console.log('🎯 EMERGENCY FALLBACK BUTTON CLICKED!');
+        
+        if (state.isSpinning) {
+          console.log('Already spinning, ignoring');
+          return;
+        }
+        
+        console.log('🔄 Using direct loadout generation');
+        try {
+          displayRandomLoadout();
+        } catch (error) {
+          console.error('Emergency loadout generation failed:', error);
+        }
+      });
+    }
+  }, 1000);
 
   const toggleBtn = document.getElementById("toggle-customization");
   const customizationPanel = document.getElementById("customization-panel");
@@ -3179,7 +3580,9 @@ function setupSelectAllCheckboxes() {
       // Handle "Random" class selection
       if (button.dataset.class.toLowerCase() === "random") {
         // Get available classes (excluding user exclusions)
+        console.log('🎲 Random class button: Fetching available classes...');
         let availableClasses = getAvailableClasses();
+        console.log('🎲 Random class button: Received available classes:', availableClasses);
         
         // If no classes are available (all excluded), show warning and use all classes
         if (availableClasses.length === 0) {
@@ -3851,7 +4254,17 @@ async function roastMeAgain(button) {
 
 // Initialize class exclusion system
 function initializeClassExclusion() {
-  console.log('🚫 Initializing class exclusion system...');
+  console.log('✅ Initializing class inclusion system...');
+  
+  // One-time cleanup: Reset class preferences for new intuitive system
+  if (!localStorage.getItem('class-system-updated')) {
+    console.log('🔄 Updating class system to new intuitive logic...');
+    localStorage.removeItem('exclude-light');
+    localStorage.removeItem('exclude-medium');
+    localStorage.removeItem('exclude-heavy');
+    localStorage.setItem('class-system-updated', 'true');
+    console.log('✅ Class system updated to intuitive logic');
+  }
   
   // Get all exclusion checkboxes
   const exclusionCheckboxes = document.querySelectorAll('[data-exclude-class]');
@@ -3861,15 +4274,26 @@ function initializeClassExclusion() {
     return;
   }
   
-  console.log(`✅ Found ${exclusionCheckboxes.length} exclusion checkboxes`);
+  console.log(`✅ Found ${exclusionCheckboxes.length} inclusion checkboxes`);
   
-  // Load saved exclusions from localStorage
+  // Load saved settings from localStorage
+  // Remember: checked=included, localStorage exclude='true' means excluded
   exclusionCheckboxes.forEach(checkbox => {
     const className = checkbox.getAttribute('data-exclude-class');
     const saved = localStorage.getItem(`exclude-${className}`);
     if (saved === 'true') {
+      // exclude='true' means class is excluded, so checkbox should be unchecked
+      checkbox.checked = false;
+      console.log(`🚫 Loaded exclusion for ${className} (unchecked)`);
+    } else if (saved === 'false') {
+      // exclude='false' means class is included, so checkbox should be checked
       checkbox.checked = true;
-      console.log(`🚫 Loaded exclusion for ${className}`);
+      console.log(`✅ Loaded inclusion for ${className} (checked)`);
+    } else if (saved === null) {
+      // Default to all classes included (checked) for new users
+      checkbox.checked = true;
+      localStorage.setItem(`exclude-${className}`, 'false');
+      console.log(`✅ Defaulted inclusion for ${className} (checked)`);
     }
   });
   
@@ -3880,22 +4304,39 @@ function initializeClassExclusion() {
       const isChecked = this.checked;
       
       // Save to localStorage
-      localStorage.setItem(`exclude-${className}`, isChecked.toString());
+      // UI says "Select Classes to Include" so checked should mean INCLUDED
+      // We invert the logic: checked=included means exclude=false in localStorage
+      const localStorageKey = `exclude-${className}`;
+      const valueToSave = (!isChecked).toString(); // Invert: checked=included means exclude=false
+      localStorage.setItem(localStorageKey, valueToSave);
       
-      console.log(`${isChecked ? '🚫' : '✅'} ${className} class ${isChecked ? 'excluded' : 'included'}`);
+      // Detailed debugging logging
+      console.log('🔍 CHECKBOX DEBUG INFO:');
+      console.log(`  1) Checkbox ID: ${this.id || 'No ID set'}`);
+      console.log(`  2) Checked state: ${isChecked}`);
+      console.log(`  3) localStorage key: ${localStorageKey}`);
+      console.log(`  4) Value being saved: ${valueToSave}`);
+      
+      // Verification read-back
+      const verificationValue = localStorage.getItem(localStorageKey);
+      console.log(`  5) Verification read-back: ${verificationValue}`);
+      console.log(`  📝 Summary: ${isChecked ? '✅' : '🚫'} ${className} class ${isChecked ? 'included' : 'excluded'}`);
       
       // Validate that at least one class remains available
+      console.log('✅ Class validation: Checking available classes after toggle...');
       const availableClasses = getAvailableClasses();
+      console.log('✅ Class validation: Available classes after toggle:', availableClasses);
       if (availableClasses.length === 0) {
         console.warn('⚠️ All classes would be excluded! Reverting change.');
-        alert('You cannot exclude all classes! At least one class must remain available.');
+        alert('You cannot uncheck all classes! At least one class must remain selected for random generation.');
         
-        // Revert the change
-        this.checked = false;
-        localStorage.setItem(`exclude-${className}`, 'false');
+        // Revert the change - since we inverted the logic, restore the checkbox to checked
+        this.checked = true;
+        localStorage.setItem(`exclude-${className}`, 'false'); // false = included
+        console.log(`🔄 Reverted ${className} back to included state`);
       }
     });
   });
   
-  console.log('✅ Class exclusion system initialized');
+  console.log('✅ Class inclusion system initialized');
 }
