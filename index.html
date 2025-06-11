@@ -1090,15 +1090,15 @@
     <div class="countdown-compact" id="seasonCountdown">
       <div class="countdown-box-group">
         <div class="countdown-box">
-          <span class="countdown-number" id="countdown-days">02</span>
+          <span class="countdown-number" id="countdown-days">01</span>
           <span class="countdown-unit">DAYS</span>
         </div>
         <div class="countdown-box">
-          <span class="countdown-number" id="countdown-hours">11</span>
+          <span class="countdown-number" id="countdown-hours">02</span>
           <span class="countdown-unit">HOURS</span>
         </div>
         <div class="countdown-box">
-          <span class="countdown-number" id="countdown-minutes">45</span>
+          <span class="countdown-number" id="countdown-minutes">27</span>
           <span class="countdown-unit">MINUTES</span>
         </div>
         <div class="countdown-box">
@@ -1374,8 +1374,14 @@
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         function updateCountdown() {
-          // Set the target date for Season 7: June 11, 2025 at 5 AM CST
-          const targetDate = new Date('2025-06-11T05:00:00-06:00'); // CST is UTC-6
+          // Set the target date for midnight tomorrow night in Mountain Time (MST = UTC-7)
+          const now = new Date();
+          const targetDate = new Date(now);
+          targetDate.setDate(now.getDate() + 2); // Day after tomorrow
+          targetDate.setHours(0, 0, 0, 0); // Midnight
+          
+          // Adjust for Mountain Time (UTC-7)
+          targetDate.setHours(targetDate.getHours() + 7);
           
           const interval = setInterval(() => {
             const currentTime = new Date().getTime();

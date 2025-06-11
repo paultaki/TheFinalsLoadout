@@ -424,12 +424,37 @@ const displayRageQuitLoadout = () => {
 // Start spin animation
 function startSpinAnimation(columns) {
   const startTime = performance.now();
+  
+  // Play spinning start sound
+  const spinStartSound = document.getElementById("spinStart");
+  if (spinStartSound && rageState.soundEnabled) {
+    spinStartSound.currentTime = 0;
+    spinStartSound.volume = 0.3;
+    spinStartSound.play().catch(() => {});
+  }
+  
+  // Play continuous spinning sound
+  const spinningSound = document.getElementById("spinningSound");
+  if (spinningSound && rageState.soundEnabled) {
+    spinningSound.currentTime = 0;
+    spinningSound.volume = 0.2;
+    spinningSound.loop = true;
+    spinningSound.play().catch(() => {});
+  }
 
   const slotColumns = columns.map((element, index) => {
     const column = new SlotColumn(element, index);
 
     // Add the onStop callback for flash effects
     column.onStop = (columnElement) => {
+      // Play column stop sound
+      const columnStopSound = document.getElementById("columnStop");
+      if (columnStopSound && rageState.soundEnabled) {
+        columnStopSound.currentTime = 0;
+        columnStopSound.volume = 0.4;
+        columnStopSound.play().catch(() => {});
+      }
+      
       const container = columnElement.closest(".item-container");
       if (container) {
         // Apply initial flash effect
@@ -499,6 +524,21 @@ function startSpinAnimation(columns) {
     if (isAnimating) {
       requestAnimationFrame(animate);
     } else {
+      // Stop spinning sound when all columns finish
+      const spinningSound = document.getElementById("spinningSound");
+      if (spinningSound) {
+        spinningSound.pause();
+        spinningSound.currentTime = 0;
+      }
+      
+      // Play final lock sound
+      const finalLockSound = document.getElementById("finalLock");
+      if (finalLockSound && rageState.soundEnabled) {
+        finalLockSound.currentTime = 0;
+        finalLockSound.volume = 0.5;
+        finalLockSound.play().catch(() => {});
+      }
+      
       // When all columns are stopped, trigger the victory flash and finalize spin
       finalVictoryFlash(columns);
       setTimeout(() => {
@@ -512,6 +552,14 @@ function startSpinAnimation(columns) {
 
 // Enhanced final victory flash for rage quit
 function finalVictoryFlash(columns) {
+  // Play final sound effect
+  const finalSound = document.getElementById("finalSound");
+  if (finalSound && rageState.soundEnabled) {
+    finalSound.currentTime = 0;
+    finalSound.volume = 0.6;
+    finalSound.play().catch(() => {});
+  }
+  
   setTimeout(() => {
     const allContainers = columns.map((col) => col.closest(".item-container"));
 
