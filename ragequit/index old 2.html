@@ -672,70 +672,6 @@
         }
       }
 
-      /* AI Roast Container */
-      .ai-roast-container {
-        margin: 2rem auto;
-        padding: 2rem;
-        max-width: 800px;
-        background: linear-gradient(135deg, #111, #1a1a1a);
-        border: 2px solid var(--neon-red);
-        border-radius: 15px;
-        box-shadow: 0 0 25px rgba(255, 7, 58, 0.4);
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .ai-roast-container::before {
-        content: "";
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        background: linear-gradient(45deg, var(--neon-red), var(--blood-red), var(--dark-red), var(--neon-red));
-        border-radius: 15px;
-        z-index: -1;
-        animation: borderGlow 3s ease-in-out infinite;
-      }
-
-      @keyframes borderGlow {
-        0%, 100% { opacity: 0.6; }
-        50% { opacity: 1; }
-      }
-
-      .roast-announcer {
-        display: block;
-        color: var(--neon-red);
-        font-weight: 900;
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        text-shadow: 0 0 10px rgba(255, 7, 58, 0.8);
-      }
-
-      .roast-text {
-        font-size: 1.3rem;
-        color: var(--white);
-        font-style: italic;
-        line-height: 1.4;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-        animation: glitchText 4s ease-in-out infinite;
-      }
-
-      @keyframes glitchText {
-        0%, 90%, 100% { 
-          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-        }
-        2%, 8% { 
-          text-shadow: 2px 0 var(--neon-red), -2px 0 cyan;
-        }
-        4%, 6% { 
-          text-shadow: -2px 2px var(--blood-red), 2px -2px lime;
-        }
-      }
-
       /* Handicap Display */
       .handicap-section {
         padding: 0.25rem 2rem 1rem 2rem;
@@ -1160,20 +1096,6 @@
           white-space: nowrap;
         }
 
-        /* Mobile AI Roast */
-        .ai-roast-container {
-          margin: 1rem;
-          padding: 1.5rem;
-        }
-
-        .roast-announcer {
-          font-size: 1rem;
-        }
-
-        .roast-text {
-          font-size: 1.1rem;
-        }
-
         .hero-title {
           font-size: 3rem;
         }
@@ -1500,9 +1422,6 @@
         </button>
       </div>
     </section>
-
-    <!-- AI Roast Container -->
-    <div id="ai-roast-output" class="ai-roast-container" style="display: none;"></div>
 
     <!-- Handicap Container -->
     <div class="handicap-section">
