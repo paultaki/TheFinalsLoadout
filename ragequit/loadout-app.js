@@ -992,6 +992,15 @@ function finalizeSpin() {
   // Display the selected handicap
   displaySelectedHandicap();
   
+  // Fetch AI roast
+  setTimeout(async () => {
+    try {
+      await fetchRageQuitRoast(classType, weapon, gadgets, handicapName);
+    } catch (error) {
+      console.error("Error fetching roast:", error);
+    }
+  }, 1500);
+  
   // Reset state and re-enable button (but DON'T clear the display)
   setTimeout(() => {
     resetSpinStateWithoutClearingDisplay();
@@ -1270,6 +1279,69 @@ const spinRageQuitLoadout = () => {
 
 // Make globally available
 window.spinRageQuitLoadout = spinRageQuitLoadout;
+
+// AI Roast Integration
+async function fetchRageQuitRoast(classType, weapon, gadgets, handicap) {
+  try {
+    console.log("🎙️ Fetching AI roast for:", { classType, weapon, gadgets, handicap });
+    
+    const res = await fetch("/api/rage-roast", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        class: classType, 
+        weapon, 
+        gadgets, 
+        handicap: handicap || "None"
+      })
+    });
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
+    const data = await res.json();
+    console.log("🎙️ Received roast:", data);
+    
+    // Show the roast container
+    const roastContainer = document.getElementById("ai-roast-output");
+    if (roastContainer) {
+      roastContainer.style.display = "block";
+      roastContainer.innerHTML = `
+        <div class="ai-roast-box">
+          <span class="roast-announcer">🎙️ Scotty & June say:</span>
+          <p class="roast-text">${data.roast}</p>
+        </div>
+      `;
+      
+      // Scroll to show the roast with a delay
+      setTimeout(() => {
+        roastContainer.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 500);
+    }
+    
+    return data.roast;
+  } catch (error) {
+    console.error("❌ Error fetching AI roast:", error);
+    
+    // Show fallback roast
+    const roastContainer = document.getElementById("ai-roast-output");
+    if (roastContainer) {
+      roastContainer.style.display = "block";
+      roastContainer.innerHTML = `
+        <div class="ai-roast-box">
+          <span class="roast-announcer">🎙️ Scotty & June say:</span>
+          <p class="roast-text">This loadout is so bad, even our AI roast generator rage quit! 💀</p>
+        </div>
+      `;
+    }
+    
+    return null;
+  }
+}
 
 // History Management Functions
 function generateRageLoadoutName(classType, weapon, specialization) {
