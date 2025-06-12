@@ -694,7 +694,17 @@ class RageRouletteAnimationSystem {
         const elapsed = Date.now() - startTime;
 
         if (elapsed >= this.handicapAnimationConfig.totalDuration) {
-          // Final selection
+          // Final selection - ensure currentIndex matches winnerIndex
+          currentIndex = winnerIndex;
+          
+          // Clear all elements first
+          handicapElements.forEach((el) => {
+            el.style.opacity = "0.5";
+            el.style.transform = "scale(0.8)";
+            el.style.background = "linear-gradient(135deg, #2e1a1a, #4e2a2a)";
+          });
+          
+          // Highlight the winner
           handicapElements[winnerIndex].style.opacity = "1";
           handicapElements[winnerIndex].style.transform = "scale(1.3)";
           handicapElements[winnerIndex].style.boxShadow =
@@ -753,9 +763,10 @@ class RageRouletteAnimationSystem {
               Math.pow(decelerationProgress, 2);
         }
 
-        if (elapsed >= this.handicapAnimationConfig.totalDuration - 500) {
+        if (elapsed >= this.handicapAnimationConfig.totalDuration - 800) {
+          // In the final phase, ensure we land on the winner
           currentIndex = winnerIndex;
-          speed = 500;
+          speed = 800;
         } else {
           currentIndex = (currentIndex + 1) % handicaps.length;
         }

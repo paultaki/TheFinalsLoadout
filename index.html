@@ -904,6 +904,7 @@
         }
       }
 
+      /* Hide flag on mobile since filter button doesn't exist on mobile */
       @media (max-width: 768px) {
         .promo-flag {
           display: none !important;
@@ -925,7 +926,7 @@
     </style>
 
     <!-- Full Styles -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles-cleaned.css" />
   </head>
 
   <body>
@@ -2188,7 +2189,7 @@
           const promoFlag = document.getElementById("filters-promo-flag");
           const filterButton = document.getElementById("filter-toggle");
 
-          if (!promoFlag || !filterButton) return;
+          if (!promoFlag) return;
 
           // Check if user has already seen the promo
           const hasSeenPromo = localStorage.getItem("hasSeenFiltersPromo");
@@ -2206,29 +2207,17 @@
             }, 500);
           }
 
-          // Dismiss when user clicks the filter button
-          filterButton.addEventListener("click", dismissFlag, { once: true });
+          // Dismiss when user clicks the filter button (if it exists)
+          if (filterButton) {
+            filterButton.addEventListener("click", dismissFlag, { once: true });
+          }
 
-          // Auto-dismiss after 10 seconds
-          setTimeout(dismissFlag, 10000);
-
-          // Dismiss on any user interaction with the page
-          const interactionEvents = ["click", "scroll", "keydown"];
-          const dismissOnInteraction = () => {
-            dismissFlag();
-            interactionEvents.forEach((event) => {
-              document.removeEventListener(event, dismissOnInteraction);
-            });
-          };
-
-          // Add delayed interaction listeners (after 3 seconds to let user see it first)
+          // Auto-dismiss after 10 seconds - this is the main dismissal method
+          console.log("🚩 Promotional flag will auto-dismiss in 10 seconds");
           setTimeout(() => {
-            interactionEvents.forEach((event) => {
-              document.addEventListener(event, dismissOnInteraction, {
-                once: true,
-              });
-            });
-          }, 3000);
+            console.log("🚩 Auto-dismissing promotional flag after 10 seconds");
+            dismissFlag();
+          }, 10000);
         }
 
         // Initialize the promo flag

@@ -15,12 +15,47 @@ const rageState = {
   selectedHandicapDesc: null,
   finalLoadout: null,
   handicapStack: [],
-  sufferingLevel: 0
+  sufferingLevel: 0,
+  sufferingStreak: parseInt(localStorage.getItem('rageSufferingStreak')) || 0
 };
 
 // Make state globally accessible
 window.rageState = rageState;
 window.state = rageState; // For compatibility
+
+// Suffering streak management
+function updateSufferingStreak() {
+  rageState.sufferingStreak++;
+  localStorage.setItem('rageSufferingStreak', rageState.sufferingStreak.toString());
+  
+  // Update the display
+  const streakElement = document.getElementById('currentStreak');
+  if (streakElement) {
+    streakElement.textContent = rageState.sufferingStreak.toLocaleString();
+  }
+  
+  console.log(`💀 Suffering streak updated to: ${rageState.sufferingStreak}`);
+}
+
+function resetSufferingStreak() {
+  rageState.sufferingStreak = 0;
+  localStorage.setItem('rageSufferingStreak', '0');
+  
+  // Update the display
+  const streakElement = document.getElementById('currentStreak');
+  if (streakElement) {
+    streakElement.textContent = '0';
+  }
+  
+  console.log('🔄 Suffering streak reset to 0');
+}
+
+function initializeSufferingStreakDisplay() {
+  const streakElement = document.getElementById('currentStreak');
+  if (streakElement) {
+    streakElement.textContent = rageState.sufferingStreak.toLocaleString();
+  }
+}
 
 // Helper function to check if sound is enabled
 function isSoundEnabled() {
@@ -870,6 +905,9 @@ function finalizeSpin() {
   // Add to history
   addToRageHistory(classType, weapon, specialization, gadgets, handicapName, handicapDesc);
 
+  // Update suffering streak
+  updateSufferingStreak();
+
   // Display the selected handicap
   displaySelectedHandicap();
   
@@ -1089,12 +1127,13 @@ function addToRageHistory(classType, weapon, specialization, gadgets, handicapNa
   // Generate compact loadout description
   const loadoutName = `${weapon} + ${gadgets.slice(0, 2).join('/')}`;
 
-  // Create clean text-based history entry (NO IMAGES)
-  const handicapDisplay = handicapName && handicapName !== "None" ? ` + [${handicapName}]` : "";
+  // Create clean text-based history entry (NO IMAGES) - compact format
+  const handicapDisplay = handicapName && handicapName !== "None" ? ` [${handicapName}]` : "";
+  const compactGadgets = gadgets.slice(0, 2).join('/'); // Only show first 2 gadgets for space
   newEntry.innerHTML = `
     <span class="history-class-tag">${classType.toUpperCase()}</span>
-    ${weapon} + ${specialization} + ${gadgets.join(' + ')}${handicapDisplay}
-    <span class="history-punishment">Level ${punishmentLevel}</span>
+    ${weapon} + ${specialization} + ${compactGadgets}${handicapDisplay}
+    <span class="history-punishment">Lvl ${punishmentLevel}</span>
     <!-- Store full data for modal/copy functionality -->
     <div style="display: none;">
       <span class="hidden-weapon">${weapon}</span>
@@ -1516,6 +1555,9 @@ function stopAllRageSounds() {
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ Rage Quit Loadout App loaded");
 
+  // Initialize suffering streak display
+  initializeSufferingStreakDisplay();
+
   // Clear ALL history to force clean text-based format with correct data
   localStorage.removeItem("rageQuitHistory");
   console.log("🗑️ Cleared all history to force new format with complete loadout data");
@@ -1525,10 +1567,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Clear Loadout History
   document.getElementById("clear-history")?.addEventListener("click", () => {
-    if (confirm("Are you sure you want to clear all history? This cannot be undone.")) {
+    if (confirm("Are you sure you want to clear all history AND reset your suffering streak? This cannot be undone.")) {
       localStorage.removeItem("rageQuitHistory");
       document.getElementById("history-list").innerHTML = "";
-      console.log("🗑️ Rage Quit history cleared.");
+      resetSufferingStreak();
+      console.log("🗑️ Rage Quit history cleared and suffering streak reset.");
     }
   });
 

@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>Patch Notes v6.9.0 | The Finals</title>
+    <title>v7.0 – Season 7 Patch Notes | The Finals</title>
     <meta
       name="description"
       content="Full patch notes for The Finals v6.9.0 – Heavy Hitters update, buffs, nerfs, and new events. See what’s changed and what’s coming next."
@@ -81,6 +81,49 @@
     <!-- Styles -->
     <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="style.css" />
+    
+    <!-- Season 7 Table Styles -->
+    <style>
+    .balance-table {
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+    
+    .balance-table table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .balance-table th, .balance-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .balance-table th {
+      background: rgba(0, 0, 0, 0.5);
+      font-weight: 600;
+      color: #ffb700;
+    }
+    
+    .weapon-icon-small {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    
+    .buff-row { 
+      background: rgba(76, 175, 80, 0.1); 
+    }
+    
+    .nerf-row { 
+      background: rgba(244, 67, 54, 0.1); 
+    }
+    </style>
   </head>
 
   <body>
@@ -104,19 +147,18 @@
       <!-- Hero Section -->
       <header class="patch-header">
         <div class="patch-meta">
-          <span class="patch-version">v6.9.0</span>
-          <time class="patch-date">May 22, 2025</time>
+          <span class="patch-version">v7.0</span>
+          <time class="patch-date">June 11, 2025</time>
         </div>
-        <h1 class="patch-title">Heavy Hitters</h1>
+        <h1 class="patch-title">Season 7: The Divide</h1>
         <p class="patch-summary">
-          New 5v5 Platform Fighter mode, Sledgehammer updates, XP Dash event,
-          and major bug fixes
+          Season 7: The Divide is live! Here's what's new...
         </p>
 
         <!-- Quick Stats Bar -->
         <div class="patch-stats">
           <div class="stat-item buffs">
-            <span class="stat-count">5</span>
+            <span class="stat-count">2</span>
             <span class="stat-label">Buffs</span>
           </div>
           <div class="stat-item nerfs">
@@ -124,7 +166,7 @@
             <span class="stat-label">Nerfs</span>
           </div>
           <div class="stat-item new">
-            <span class="stat-count">4</span>
+            <span class="stat-count">6</span>
             <span class="stat-label">New</span>
           </div>
         </div>
@@ -132,11 +174,11 @@
 
       <!-- Sticky Navigation -->
       <nav class="patch-nav" data-sticky>
-        <button class="nav-item active" data-section="events">Events</button>
-        <button class="nav-item" data-section="weapons">Weapons</button>
+        <button class="nav-item active" data-section="content">New Content</button>
         <button class="nav-item" data-section="maps">Maps</button>
+        <button class="nav-item" data-section="weapons">Balance</button>
+        <button class="nav-item" data-section="events">Events</button>
         <button class="nav-item" data-section="fixes">Bug Fixes</button>
-        <button class="nav-item" data-section="content">Content</button>
       </nav>
 
       <!-- Filter Bar -->
@@ -151,245 +193,219 @@
 
       <!-- Content Sections -->
       <div class="patch-content">
-        <!-- Events Section -->
-        <section class="patch-section" id="events">
-          <h2 class="section-title">New Events & Features</h2>
+        <!-- New Content Section -->
+        <section class="patch-section" id="content">
+          <h2 class="section-title">New Content</h2>
 
-          <!-- Heavy Hitters Mode -->
-          <article class="change-card new" data-event="heavy-hitters">
+          <!-- H+ Infuser -->
+          <article class="change-card new" data-content="h-infuser">
             <div class="change-header">
-              <h3 class="weapon-name">Heavy Hitters Mode</h3>
-              <span class="change-type new">NEW LTM</span>
+              <h3 class="weapon-name">H+ Infuser</h3>
+              <span class="change-type new">LIGHT SPEC</span>
             </div>
 
             <div class="change-details">
               <div class="stat-info">
-                <span class="stat-label">Mode Type:</span>
-                <span class="stat-value">5v5 Platform Fighter</span>
+                <span class="stat-label">Type:</span>
+                <span class="stat-value">Precision healing gun</span>
               </div>
               <div class="stat-info">
-                <span class="stat-label">Map:</span>
-                <span class="stat-value">Pop Drop Arena (NEW)</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Objective:</span>
-                <span class="stat-value">Knock opponents off the platform</span>
+                <span class="stat-label">Class:</span>
+                <span class="stat-value">Light only</span>
               </div>
             </div>
 
             <p class="change-summary">
-              Limited time event featuring Sledgehammer-focused combat.
-              Sponsored by OSPUZE Tiger Juice with exclusive rewards.
+              Precision healing tool for supporting teammates at range.
             </p>
           </article>
 
-          <!-- XP Dash Event -->
-          <article class="change-card new" data-event="xp-dash">
+          <!-- Breach Drill -->
+          <article class="change-card new" data-content="breach-drill">
             <div class="change-header">
-              <h3 class="weapon-name">XP DASH Event</h3>
-              <span class="change-type new">LIVE NOW</span>
+              <h3 class="weapon-name">Breach Drill</h3>
+              <span class="change-type new">MEDIUM SPEC</span>
             </div>
 
             <div class="change-details">
               <div class="stat-info">
-                <span class="stat-label">Duration:</span>
-                <span class="stat-value">Now through end of season</span>
+                <span class="stat-label">Type:</span>
+                <span class="stat-value">Wall-penetrating breach tool</span>
               </div>
               <div class="stat-info">
-                <span class="stat-label">Bonus:</span>
-                <span class="stat-value">Increased XP and Fans gain</span>
+                <span class="stat-label">Class:</span>
+                <span class="stat-value">Medium only</span>
               </div>
             </div>
 
             <p class="change-summary">
-              Accelerate your season progress with bonus rewards!
+              Drills through walls to create tactical breach points.
             </p>
           </article>
 
-          <!-- Sponsor Showdown -->
-          <article class="change-card new" data-event="sponsor-showdown">
+          <!-- Healing Emitter -->
+          <article class="change-card new" data-content="healing-emitter">
             <div class="change-header">
-              <h3 class="weapon-name">Sponsor Showdown</h3>
-              <span class="change-type new">WORLD TOUR</span>
+              <h3 class="weapon-name">Healing Emitter</h3>
+              <span class="change-type new">HEAVY SPEC</span>
             </div>
 
             <div class="change-details">
               <div class="stat-info">
-                <span class="stat-label">Sponsors:</span>
-                <span class="stat-value">OSPUZE vs ENGIMO vs ALFA ACTA</span>
+                <span class="stat-label">Type:</span>
+                <span class="stat-value">Deployable healing aura</span>
               </div>
               <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value"
-                  >Daily map takeovers based on performance</span
-                >
+                <span class="stat-label">Class:</span>
+                <span class="stat-value">Heavy only</span>
               </div>
             </div>
 
             <p class="change-summary">
-              Fight for your sponsor's dominance! Top performing sponsor claims
-              visual control of maps each day.
-            </p>
-          </article>
-        </section>
-
-        <!-- Weapons Section -->
-        <section class="patch-section" id="weapons">
-          <h2 class="section-title">Weapon Adjustments</h2>
-
-          <!-- XP-54 Nerf -->
-          <article class="change-card nerf" data-weapon="XP-54">
-            <div class="change-header">
-              <img src="../images/XP-54.webp" alt="XP-54" class="weapon-icon" />
-              <h3 class="weapon-name">XP-54</h3>
-              <span class="change-type nerf">NERF</span>
-            </div>
-
-            <div class="change-details">
-              <div class="stat-change">
-                <span class="stat-name">Damage</span>
-                <div class="stat-bar">
-                  <div class="stat-before" style="width: 70%"></div>
-                  <div class="stat-after nerf" style="width: 65%"></div>
-                </div>
-                <span class="stat-values">17 → 16</span>
-              </div>
-
-              <div class="stat-change">
-                <span class="stat-name">Fire Rate</span>
-                <div class="stat-bar">
-                  <div class="stat-before" style="width: 85%"></div>
-                  <div class="stat-after buff" style="width: 86%"></div>
-                </div>
-                <span class="stat-values">850 RPM → 860 RPM</span>
-              </div>
-            </div>
-
-            <p class="change-summary">
-              Overperforming since last buff. Damage reduced but fire rate
-              slightly increased to find middle ground.
-            </p>
-          </article>
-
-          <!-- KS-23 Buff -->
-          <article class="change-card buff" data-weapon="KS-23">
-            <div class="change-header">
-              <img src="../images/KS-23.webp" alt="KS-23" class="weapon-icon" />
-              <h3 class="weapon-name">KS-23</h3>
-              <span class="change-type buff">BUFF</span>
-            </div>
-
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Accuracy:</span>
-                <span class="stat-value"
-                  >Improved across all movement states</span
-                >
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Dispersion:</span>
-                <span class="stat-value"
-                  >Reduced while hip-firing and ADS in all stances</span
-                >
-              </div>
-            </div>
-
-            <p class="change-summary">
-              Significantly more accurate in various movement states to increase
-              viability.
-            </p>
-          </article>
-
-          <!-- ARN-220 Buff -->
-          <article class="change-card buff" data-weapon="ARN-220">
-            <div class="change-header">
-              <img
-                src="../images/ARN-220.webp"
-                alt="ARN-220"
-                class="weapon-icon"
-              />
-              <h3 class="weapon-name">ARN-220</h3>
-              <span class="change-type buff">BUFF</span>
-            </div>
-
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Recoil Pattern:</span>
-                <span class="stat-value">Unified between both magazines</span>
-              </div>
-            </div>
-
-            <p class="change-summary">
-              More consistent aiming experience regardless of magazine choice.
-            </p>
-          </article>
-
-          <!-- Melee Weapons Buff -->
-          <article class="change-card buff" data-weapon="Melee">
-            <div class="change-header">
-              <img
-                src="../images/Sledgehammer.webp"
-                alt="Melee Weapons"
-                class="weapon-icon"
-              />
-              <h3 class="weapon-name">All Melee Weapons</h3>
-              <span class="change-type buff">BUFF</span>
-            </div>
-
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Hit Detection:</span>
-                <span class="stat-value">Improved hit sweeps</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Reliability:</span>
-                <span class="stat-value">Fewer sweeps lost to collision</span>
-              </div>
-            </div>
-
-            <p class="change-summary">
-              Significant improvement to melee combat reliability. Wall-hitting
-              exploit also fixed.
+              Area healing device that supports entire team positioning.
             </p>
           </article>
         </section>
 
         <!-- Maps Section -->
         <section class="patch-section" id="maps">
-          <h2 class="section-title">Map Changes</h2>
+          <h2 class="section-title">New Map</h2>
 
-          <!-- Kyoto Update -->
-          <article class="change-card buff" data-map="Kyoto">
+          <!-- Nozomi/Citadel -->
+          <article class="change-card new" data-map="nozomi-citadel">
             <div class="change-header">
-              <h3 class="weapon-name">Kyoto</h3>
-              <span class="change-type buff">UPDATED</span>
+              <h3 class="weapon-name">Nozomi/Citadel</h3>
+              <span class="change-type new">NEW MAP</span>
             </div>
 
             <div class="change-details">
               <div class="stat-info">
-                <span class="stat-label">Water Movement:</span>
-                <span class="stat-value">No longer slows players</span>
+                <span class="stat-label">Theme:</span>
+                <span class="stat-value">Dual-themed destructible environment</span>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Layout:</span>
+                <span class="stat-value">Vertical with strategic chokepoints</span>
               </div>
             </div>
 
             <p class="change-summary">
-              Move freely through water like the aquatic creatures you've always
-              wanted to be!
+              Features contrasting architectural styles with extensive destruction opportunities.
             </p>
           </article>
+        </section>
 
-          <!-- P.E.A.C.E. Center -->
-          <article class="change-card new" data-map="PEACE">
+        <!-- Balance Changes Section -->
+        <section class="patch-section" id="weapons">
+          <h2 class="section-title">Key Balance Changes</h2>
+
+          <!-- Balance Changes Table -->
+          <div class="balance-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Weapon</th>
+                  <th>Change</th>
+                  <th>Impact</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="nerf-row">
+                  <td>
+                    <img src="../images/XP-54.webp" alt="XP-54" class="weapon-icon-small" />
+                    XP-54
+                  </td>
+                  <td>Damage 17→16, RPM 850→860</td>
+                  <td><span class="change-type nerf">NERF</span></td>
+                </tr>
+                <tr class="buff-row">
+                  <td>
+                    <img src="../images/KS-23.webp" alt="KS-23" class="weapon-icon-small" />
+                    KS-23
+                  </td>
+                  <td>Accuracy improved</td>
+                  <td><span class="change-type buff">BUFF</span></td>
+                </tr>
+                <tr class="buff-row">
+                  <td>
+                    <img src="../images/ARN-220.webp" alt="ARN-220" class="weapon-icon-small" />
+                    ARN-220
+                  </td>
+                  <td>Unified recoil pattern</td>
+                  <td><span class="change-type buff">BUFF</span></td>
+                </tr>
+                <tr class="buff-row">
+                  <td>
+                    <img src="../images/Sledgehammer.webp" alt="Melee" class="weapon-icon-small" />
+                    All Melee
+                  </td>
+                  <td>Hit detection improved</td>
+                  <td><span class="change-type buff">BUFF</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Events & Features Section -->
+        <section class="patch-section" id="events">
+          <h2 class="section-title">Events & Features</h2>
+
+          <!-- Practice Range -->
+          <article class="change-card new" data-event="practice-range">
             <div class="change-header">
-              <h3 class="weapon-name">P.E.A.C.E. Center</h3>
-              <span class="change-type new">ADDED TO TDM</span>
+              <h3 class="weapon-name">Practice Range</h3>
+              <span class="change-type new">NEW FEATURE</span>
             </div>
 
             <div class="change-details">
-              <p class="change-summary">
-                The forest map is now available in Team Deathmatch rotation.
-              </p>
+              <div class="stat-info">
+                <span class="stat-label">Training:</span>
+                <span class="stat-value">Training dummies with hit feedback</span>
+              </div>
             </div>
+
+            <p class="change-summary">
+              Perfect your aim and test loadouts in a dedicated training environment.
+            </p>
+          </article>
+
+          <!-- XP Dash Event -->
+          <article class="change-card new" data-event="xp-dash">
+            <div class="change-header">
+              <h3 class="weapon-name">XP Dash Event</h3>
+              <span class="change-type new">LIVE NOW</span>
+            </div>
+
+            <div class="change-details">
+              <div class="stat-info">
+                <span class="stat-label">Bonus:</span>
+                <span class="stat-value">Increased XP and progression rewards</span>
+              </div>
+            </div>
+
+            <p class="change-summary">
+              Accelerate your Season 7 progression with bonus rewards.
+            </p>
+          </article>
+
+          <!-- Deep Shuffle -->
+          <article class="change-card new" data-event="deep-shuffle">
+            <div class="change-header">
+              <h3 class="weapon-name">Deep Shuffle</h3>
+              <span class="change-type new">CUSTOMIZATION</span>
+            </div>
+
+            <div class="change-details">
+              <div class="stat-info">
+                <span class="stat-label">System:</span>
+                <span class="stat-value">Advanced cosmetic customization</span>
+              </div>
+            </div>
+
+            <p class="change-summary">
+              Enhanced customization options for personalizing your contestant.
+            </p>
           </article>
         </section>
 
@@ -397,73 +413,26 @@
         <section class="patch-section" id="fixes">
           <h2 class="section-title">Major Bug Fixes</h2>
 
-          <!-- Endless Effects Fix -->
-          <article class="change-card buff" data-fix="endless-effects">
+          <!-- Gameplay Fixes -->
+          <article class="change-card buff" data-fix="gameplay">
             <div class="change-header">
-              <h3 class="weapon-name">Endless Effects Bug</h3>
+              <h3 class="weapon-name">Gameplay Improvements</h3>
               <span class="change-type buff">FIXED</span>
             </div>
 
             <div class="change-details">
               <div class="stat-info">
-                <span class="stat-label">Issue:</span>
-                <span class="stat-value"
-                  >Effects stuck permanently on players</span
-                >
+                <span class="stat-label">Audio:</span>
+                <span class="stat-value">Improved audio positioning and clarity</span>
               </div>
               <div class="stat-info">
-                <span class="stat-label">Affected:</span>
-                <span class="stat-value"
-                  >Burning, tracking, sonar, invulnerability visuals</span
-                >
+                <span class="stat-label">Performance:</span>
+                <span class="stat-value">Optimized frame stability</span>
               </div>
             </div>
 
             <p class="change-summary">
-              After 6 seasons, finally fixed the bug causing visual effects to
-              persist forever!
-            </p>
-          </article>
-        </section>
-
-        <!-- Content Section -->
-        <section class="patch-section" id="content">
-          <h2 class="section-title">New Content</h2>
-
-          <!-- Twitch Drops -->
-          <article class="change-card new" data-content="twitch-drops">
-            <div class="change-header">
-              <h3 class="weapon-name">Twitch Drops</h3>
-              <span class="change-type new">BROADCAST BLAZE</span>
-            </div>
-
-            <div class="change-details">
-              <p class="change-summary">
-                Watch any stream of THE FINALS on Twitch to unlock new Broadcast
-                Blaze weapon skins.
-              </p>
-            </div>
-          </article>
-
-          <!-- Season 3 Ruby Rewards -->
-          <article class="change-card buff" data-content="ruby-rewards">
-            <div class="change-header">
-              <h3 class="weapon-name">Season 3 Ruby Rewards</h3>
-              <span class="change-type buff">DELIVERED</span>
-            </div>
-
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Items:</span>
-                <span class="stat-value"
-                  >Player Card background, Emblem, Badge (coming next
-                  update)</span
-                >
-              </div>
-            </div>
-
-            <p class="change-summary">
-              Thanks to Newton and all S3 Ruby players who signed the petition!
+              Various stability and performance improvements across all platforms.
             </p>
           </article>
         </section>
