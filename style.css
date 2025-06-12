@@ -318,11 +318,13 @@ html {
 .maintenance-notice {
   background: rgba(255, 51, 102, 0.1);
   border-left: 4px solid var(--finals-red);
-  padding: 12px 20px;
-  margin: 10px auto;
-  max-width: 800px;
+  padding: 15px 60px 15px 20px; /* Extra right padding to avoid filter button */
+  margin: 10px auto 20px auto;
+  max-width: 700px;
   border-radius: 4px;
   backdrop-filter: blur(5px);
+  position: relative;
+  z-index: 400; /* Below filter button but above other content */
 }
 
 .maintenance-notice p {
@@ -331,6 +333,20 @@ html {
   margin: 0;
   text-align: center;
   opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* Mobile adjustments for maintenance notice */
+@media (max-width: 768px) {
+  .maintenance-notice {
+    margin: 10px 15px 20px 15px;
+    padding: 12px 15px;
+    max-width: none;
+  }
+  
+  .maintenance-notice p {
+    font-size: 0.85rem;
+  }
 }
 
 /* History Section */
