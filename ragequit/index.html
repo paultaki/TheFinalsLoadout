@@ -672,9 +672,28 @@
         }
       }
 
+      /* Section Centering and Spacing */
+      .selected-class-section,
+      .handicap-section,
+      .slot-machine-section,
+      .ai-roast-section {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin: 1rem auto;
+      }
+
+      .selected-class-section {
+        margin-top: 2rem;
+      }
+
+      .ai-roast-section {
+        margin-bottom: 2rem;
+      }
+
       /* AI Roast Container */
       .ai-roast-container {
-        margin: 2rem auto;
+        margin: 0 auto;
         padding: 2rem;
         max-width: 800px;
         background: linear-gradient(135deg, #111, #1a1a1a);
@@ -1160,9 +1179,18 @@
           white-space: nowrap;
         }
 
+        /* Mobile Section Spacing */
+        .selected-class-section,
+        .handicap-section,
+        .slot-machine-section,
+        .ai-roast-section {
+          margin: 0.5rem auto;
+          padding: 0 1rem;
+        }
+
         /* Mobile AI Roast */
         .ai-roast-container {
-          margin: 1rem;
+          margin: 0;
           padding: 1.5rem;
         }
 
@@ -1476,15 +1504,27 @@
       </button>
     </section>
 
-    <!-- Slot Machine Section -->
-    <section class="slot-machine-section">
-      <!-- Selected Class Display -->
-      <div style="width: 100%; display: flex; justify-content: center; margin: 10px 0;">
-        <div id="selected-class-container" class="selected-class-container">
+    <!-- 1. Selected Class Display -->
+    <section class="selected-class-section">
+      <div style="width: 100%; display: flex; justify-content: center; margin: 20px 0;">
+        <div id="selected-class-container" class="selected-class-container" style="display: none;">
           <h2>Selected Class: <span id="selected-class">None</span></h2>
         </div>
       </div>
+    </section>
 
+    <!-- 2. Active Handicap -->
+    <section class="handicap-section">
+      <div id="handicap-container" class="handicap-container" style="display: none;">
+        <!-- Handicap will be inserted here by JavaScript -->
+        <div class="placeholder-handicap">
+          <p>Incoming Handicap... Prepare to cry.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Slot Machine Section -->
+    <section class="slot-machine-section">
       <div id="output" class="slot-machine-output">
         <!-- Content will be dynamically generated here -->
       </div>
@@ -1501,18 +1541,10 @@
       </div>
     </section>
 
-    <!-- AI Roast Container -->
-    <div id="ai-roast-output" class="ai-roast-container" style="display: none;"></div>
-
-    <!-- Handicap Container -->
-    <div class="handicap-section">
-      <div id="handicap-container" class="handicap-container">
-        <!-- Handicap will be inserted here by JavaScript -->
-        <div class="placeholder-handicap">
-          <p>Incoming Handicap... Prepare to cry.</p>
-        </div>
-      </div>
-    </div>
+    <!-- 4. AI Roast Container -->
+    <section class="ai-roast-section">
+      <div id="ai-roast-output" class="ai-roast-container" style="display: none; margin-top: 1rem;"></div>
+    </section>
 
     <!-- History Section -->
     <section class="history-section">

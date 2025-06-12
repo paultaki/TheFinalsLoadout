@@ -476,10 +476,14 @@ const displayRageQuitLoadout = () => {
   
   console.log(`🎯 Using selected class: ${selectedClass}`);
 
-  // Update the selected class text in the UI
+  // Update the selected class text in the UI and show the container
   const selectedClassElement = document.getElementById("selected-class");
+  const selectedClassContainer = document.getElementById("selected-class-container");
   if (selectedClassElement) {
     selectedClassElement.innerText = selectedClass;
+  }
+  if (selectedClassContainer) {
+    selectedClassContainer.style.display = "block";
   }
 
   // Get class-specific loadouts
@@ -1006,15 +1010,15 @@ function finalizeSpin() {
     resetSpinStateWithoutClearingDisplay();
     showDoubleOrNothingOption();
     
-    // Scroll to show the final loadout and handicap
-    const slotMachineSection = document.querySelector('.slot-machine-section');
-    if (slotMachineSection) {
-      slotMachineSection.scrollIntoView({
+    // Scroll to show the selected class (first visible element)
+    const selectedClassSection = document.querySelector('.selected-class-section');
+    if (selectedClassSection) {
+      selectedClassSection.scrollIntoView({
         behavior: 'smooth',
-        block: 'center'
+        block: 'start'
       });
     }
-  }, 1000);
+  }, 2000); // Increased delay to wait for AI roast
 }
 
 // Display selected handicap
@@ -1038,6 +1042,7 @@ function displaySelectedHandicap() {
       </div>
     `;
     handicapContainer.innerHTML = handicapHTML;
+    handicapContainer.style.display = "block";
     
     setTimeout(() => {
       // Remove scroll to prevent page jumping during animations
