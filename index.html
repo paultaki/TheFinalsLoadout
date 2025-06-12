@@ -904,10 +904,10 @@
         }
       }
 
-      /* Hide flag on mobile to avoid clutter */
       @media (max-width: 768px) {
         .promo-flag {
-          display: none;
+          display: none !important;
+          visibility: hidden !important;
         }
       }
 
@@ -1739,14 +1739,17 @@
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         function updateCountdown() {
-          // Set the target date for midnight tomorrow night in Mountain Time (MST = UTC-7)
+          // Set the target date for 7:00 UTC (midnight tonight)
           const now = new Date();
-          const targetDate = new Date(now);
-          targetDate.setDate(now.getDate() + 2); // Day after tomorrow
-          targetDate.setHours(0, 0, 0, 0); // Midnight
-
-          // Adjust for Mountain Time (UTC-7)
-          targetDate.setHours(targetDate.getHours() + 7);
+          const targetDate = new Date();
+          
+          // Set to today at 7:00 UTC
+          targetDate.setUTCHours(7, 0, 0, 0);
+          
+          // If we've already passed 7:00 UTC today, set for tomorrow
+          if (now.getTime() > targetDate.getTime()) {
+            targetDate.setUTCDate(targetDate.getUTCDate() + 1);
+          }
 
           const interval = setInterval(() => {
             const currentTime = new Date().getTime();
