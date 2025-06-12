@@ -1221,15 +1221,6 @@ function startSpinAnimation(columns) {
                             }
                           });
                           console.log(`Disabled ${spinBtns.length} spin buttons`);
-                          
-                          // Add celebration effects
-                          setTimeout(() => {
-                            try {
-                              addCelebrationEffects();
-                            } catch (celebrationError) {
-                              console.warn('Celebration effects error:', celebrationError);
-                            }
-                          }, 500);
                         } catch (buttonError) {
                           console.warn('Button handling error:', buttonError);
                         }
@@ -4348,3 +4339,21 @@ function initializeClassExclusion() {
   
   console.log('✅ Class inclusion system initialized');
 }
+
+// Auto-dismiss the filters promotional banner after 7 seconds
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => {
+    const promoFlag = document.getElementById('filters-promo-flag');
+    if (promoFlag && !promoFlag.classList.contains('dismissed')) {
+      console.log('🏷️ Auto-dismissing filters promo flag after 7 seconds');
+      promoFlag.classList.add('dismissed');
+      
+      // Remove from DOM after fade animation completes
+      setTimeout(() => {
+        if (promoFlag.parentNode) {
+          promoFlag.remove();
+        }
+      }, 500);
+    }
+  }, 7000); // 7 seconds - middle of the 5-10 second range requested
+});
