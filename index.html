@@ -94,6 +94,12 @@
       media="print"
       onload="this.media='all'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap"
+      />
+    </noscript>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
@@ -926,7 +932,7 @@
     </style>
 
     <!-- Full Styles -->
-    <link rel="stylesheet" href="styles-cleaned.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
@@ -1743,10 +1749,10 @@
           // Set the target date for 7:00 UTC (midnight tonight)
           const now = new Date();
           const targetDate = new Date();
-          
+
           // Set to today at 7:00 UTC
           targetDate.setUTCHours(7, 0, 0, 0);
-          
+
           // If we've already passed 7:00 UTC today, set for tomorrow
           if (now.getTime() > targetDate.getTime()) {
             targetDate.setUTCDate(targetDate.getUTCDate() + 1);
