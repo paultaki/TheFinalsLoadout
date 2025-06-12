@@ -194,6 +194,22 @@
             height: 10px !important;
         }
         
+        /* Target any potential problematic containers */
+        main * {
+            max-height: 500px !important;
+        }
+        
+        /* Force all containers between header and history to be compact */
+        main#loadouts > div {
+            min-height: 0 !important;
+        }
+        
+        /* Emergency nuclear option - hide anything that's too tall */
+        div[style*="height"] {
+            max-height: 200px !important;
+            overflow: hidden !important;
+        }
+        
         /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
