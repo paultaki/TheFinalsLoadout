@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>The Finals RAGE QUIT SIMULATOR | The Most Frustrating Loadouts</title>
+  <meta name="description" content="Rage Quit Simulator for The Finals - Challenge yourself with the worst weapons, gadgets, and movement handicaps for maximum frustration." />
+  <link rel="canonical" href="https://thefinalsloadout.com/ragequit/" />
+
+  <!-- Open Graph (for Discord, Facebook, etc.) -->
+  <meta property="og:title" content="The Finals RAGE QUIT SIMULATOR | The Most Frustrating Loadouts" />
+  <meta property="og:description" content="Challenge yourself with the worst weapons, gadgets, and movement handicaps in The Finals. Rage quit guaranteed." />
+  <meta property="og:image" content="https://www.thefinalsloadout.com/images/rage-quit.webp" />
+  <meta property="og:url" content="https://www.thefinalsloadout.com/ragequit/" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Finals RAGE QUIT SIMULATOR" />
+  <meta name="twitter:description" content="The most frustrating loadouts imaginable in The Finals. Can you survive?" />
+  <meta name="twitter:image" content="https://www.thefinalsloadout.com/images/rage-quit.webp" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "The Finals Rage Quit Simulator",
+      "description": "A simulator that gives you the worst possible loadouts and handicaps in The Finals game, guaranteed to make you rage quit.",
+      "url": "https://www.thefinalsloadout.com/ragequit/",
+      "image": "https://www.thefinalsloadout.com/images/rage-quit.webp",
+      "author": {
+        "@type": "Organization",
+        "name": "Paul Takisaki"
+      }
+    }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-GVGKYFGZ1Z");
+  </script>
+
+  <!-- Font & Favicon -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: "Oswald", sans-serif;
+    }
+  </style>
+</head>
+
+
+  <!-- Audio Elements for Rage Sounds -->
+  <audio id="clickSound" src="sounds/tabby.mp3" preload="auto"></audio>
+  <audio id="rageAlarmSound" src="sounds/glitch.mp3" preload="auto"></audio>
+  <audio id="rageBuzzerSound" src="sounds/metal-clank.mp3" preload="auto"></audio>
+  <audio id="rageLaughSound" src="sounds/whisper.mp3" preload="auto"></audio>
+  <audio id="rageBackgroundMusic" src="sounds/glitch-sound-effect-96251.mp3" preload="auto" loop></audio>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+    
+    <!-- Return to Top Button -->
+    <button class="return-to-top" id="returnToTop" aria-label="Return to top" title="Return to top">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+
+  <nav class="main-nav">
+    <a href="../index.html">Home</a>
+    <a href="../patch-notes/index.html">Patch Notes</a>
+    <a href="../feedback/index.html">Feedback</a>
+  </nav>
+
+  <header class="headerSection">
+    <div class="container">
+      <img
+        src="images/rage-quit.webp"
+        alt="Rage Quit Simulator for The Finals"
+        class="rage-logo"
+        width="200"
+        height="auto"
+        onerror="this.src='https://thefinalsloadout.com/images/the-finals.webp'"
+      />
+      <h1 class="mainTitle">The Finals' Most Frustrating Loadouts!</h1>
+      <h2 class="subTitle">Think you're good? Prove it with the worst gear and a brutal handicap!</h2>
+      <!-- Sound Toggle Button -->
+      <button id="rage-sound-toggle" class="rage-sound-toggle" aria-label="Toggle sound" title="Toggle rage sounds on/off">
+        <svg class="sound-on" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <svg class="sound-off" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Rage Meter -->
+  <div id="rage-meter" class="rage-meter-container">
+    <div class="rage-meter-title">RAGE</div>
+    <div class="rage-meter-bar">
+      <div id="rage-meter-fill" class="rage-meter-fill"></div>
+    </div>
+    <div id="rage-meter-text" class="rage-meter-text">0%</div>
+  </div>
+
+  <main class="mainContent">
+
+      <!-- Rage Roulette Container -->
+      <div id="rage-roulette-container" class="rage-roulette-container hidden">
+        <!-- Class Roulette -->
+        <div id="rage-class-roulette" class="rage-roulette-section hidden">
+          <h2 class="rage-roulette-title">SELECTING YOUR DOOM...</h2>
+          <div class="rage-class-roulette-wheel">
+            <div class="rage-class-option light-option" data-class="Light">
+              <img src="https://thefinalsloadout.com/images/light_active.webp" alt="Light">
+              <span>LIGHT</span>
+            </div>
+            <div class="rage-class-option medium-option" data-class="Medium">
+              <img src="https://thefinalsloadout.com/images/medium_active.webp" alt="Medium">
+              <span>MEDIUM</span>
+            </div>
+            <div class="rage-class-option heavy-option" data-class="Heavy">
+              <img src="https://thefinalsloadout.com/images/heavy_active.webp" alt="Heavy">
+              <span>HEAVY</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Spin Count Roulette -->
+        <div id="rage-spin-roulette" class="rage-roulette-section hidden">
+          <h2 class="rage-roulette-title">HOW MUCH PAIN?</h2>
+          <div class="rage-spin-roulette-wheel">
+            <div class="rage-spin-option" data-spins="1">
+              <div class="rage-spin-number">1</div>
+              <span>MILD</span>
+            </div>
+            <div class="rage-spin-option" data-spins="2">
+              <div class="rage-spin-number">2</div>
+              <span>SPICY</span>
+            </div>
+            <div class="rage-spin-option" data-spins="3">
+              <div class="rage-spin-number">3</div>
+              <span>HOT</span>
+            </div>
+            <div class="rage-spin-option" data-spins="4">
+              <div class="rage-spin-number">4</div>
+              <span>INFERNO</span>
+            </div>
+            <div class="rage-spin-option" data-spins="5">
+              <div class="rage-spin-number">5</div>
+              <span>HELL</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Handicap Roulette -->
+        <div id="rage-handicap-roulette" class="rage-roulette-section hidden">
+          <h2 class="rage-roulette-title">SELECTING HANDICAP...</h2>
+          <div class="rage-handicap-roulette-wheel">
+            <div class="rage-handicap-option" data-handicap="ads-only">
+              <div class="handicap-icon">🎯</div>
+              <span>ADS ONLY</span>
+            </div>
+            <div class="rage-handicap-option" data-handicap="no-healing">
+              <div class="handicap-icon">❤️‍🩹</div>
+              <span>NO HEALING</span>
+            </div>
+            <div class="rage-handicap-option" data-handicap="inverted-controls">
+              <div class="handicap-icon">🔄</div>
+              <span>INVERTED</span>
+            </div>
+            <div class="rage-handicap-option" data-handicap="slow-movement">
+              <div class="handicap-icon">🐌</div>
+              <span>SLOW</span>
+            </div>
+            <div class="rage-handicap-option" data-handicap="no-jumping">
+              <div class="handicap-icon">🚫</div>
+              <span>NO JUMP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rage-button-container">
+        <button id="rage-quit-btn" class="rage-quit-button">
+          <span class="rage-icon">💢</span> Get Wrecked (Spin Now)!
+          <span class="rage-icon">💢</span>
+        </button>
+      </div>
+<!-- Selected Class Display -->
+<div style="width: 100%; display: flex; justify-content: center; margin: 20px 0;">
+  <div id="selected-class-container" class="selected-class-container">
+    <h2>Selected Class: <span id="selected-class">None</span></h2>
+  </div>
+</div>
+
+      <div id="output" class="slot-machine-output">
+        <div class="placeholder-container">
+          <img
+            src="https://thefinalsloadout.com/images/placeholder.webp"
+            alt="?"
+            width="80"
+            height="80"
+            loading="lazy"
+          />
+          <p>Weapon</p>
+        </div>
+        <div class="placeholder-container">
+          <img
+            src="https://thefinalsloadout.com/images/placeholder.webp"
+            alt="?"
+            width="80"
+            height="80"
+            loading="lazy"
+          />
+          <p>Specialization</p>
+        </div>
+        <div class="placeholder-container">
+          <img
+            src="https://thefinalsloadout.com/images/placeholder.webp"
+            alt="?"
+            width="80"
+            height="80"
+            loading="lazy"
+          />
+          <p>Gadget 1</p>
+        </div>
+        <div class="placeholder-container">
+          <img
+            src="https://thefinalsloadout.com/images/placeholder.webp"
+            alt="?"
+            width="80"
+            height="80"
+            loading="lazy"
+          />
+          <p>Gadget 2</p>
+        </div>
+        <div class="placeholder-container">
+          <img
+            src="https://thefinalsloadout.com/images/placeholder.webp"
+            alt="?"
+            width="80"
+            height="80"
+            loading="lazy"
+          />
+          <p>Gadget 3</p>
+        </div>
+      </div>
+
+<!-- Handicap Container -->
+<div class="handicap-section">
+  <div id="handicap-container" class="handicap-container">
+    <!-- Handicap wheel will be inserted here by JavaScript -->
+    <div class="placeholder-handicap">
+      <p>Incoming Handicap... Prepare to cry.</p>
+    </div>
+  </div>
+</div>
+
+      <div class="btnRow">
+        <button id="copyLoadoutButton" class="copy-button">
+          <span class="copy-icon">📋</span> Copy Rage Loadout
+        </button>
+      </div>
+
+      <!-- Double or Nothing -->
+      <div id="double-or-nothing-container" class="double-or-nothing-container" style="display: none;">
+        <button id="double-or-nothing-btn" class="double-or-nothing-btn">
+          💀 Double or Nothing 💀
+        </button>
+        <p style="color: #ff6666; font-style: italic; margin-top: 10px;">
+          Add another random handicap for maximum suffering!
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Hall of Shame -->
+  <section class="hall-of-shame">
+    <h2>🏆 Hall of Shame 🏆</h2>
+    <div class="shame-grid">
+      <div class="shame-item">
+        <h3>Worst Loadout Today</h3>
+        <div id="worst-loadout" class="shame-value">93R + Tracking Dart</div>
+        <div class="shame-description">This combination has caused 47 rage quits</div>
+      </div>
+      <div class="shame-item">
+        <h3>Most Punishing Handicap</h3>
+        <div id="worst-handicap" class="shame-value">Inverted Controls</div>
+        <div class="shame-description">Makes even pros look like beginners</div>
+      </div>
+      <div class="shame-item">
+        <h3>Players Who Rage Quit</h3>
+        <div id="rage-quit-counter" class="shame-value">1,337</div>
+        <div class="shame-description">And counting...</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="loadout-history" class="loadout-history">
+    <h2>Save this masterpiece of misery for later.</h2>
+    <div id="history-list">
+      <!-- History entries will be populated here -->
+    </div>
+    <button id="clear-history" class="clear-history-btn">Clear History</button>
+  </section>
+  <div class="rage-button-container">
+
+  </div>
+  
+  <!-- Add this script immediately after your button -->
+  <script>
+    (function() {
+      console.log("Inline button script running");
+      
+      // Function to attach the event handler
+      function attachButtonHandler() {
+        const rageButton = document.getElementById("rage-quit-btn");
+        if (rageButton) {
+          console.log("Found rage button, attaching handler");
+          
+          rageButton.addEventListener("click", function() {
+            console.log("Button clicked!");
+            
+            // Disable button
+            this.disabled = true;
+            
+            // Check if roulette system is available (preferred method)
+            if (window.rageRouletteSystem && typeof window.rageRouletteSystem.startFullSequence === 'function') {
+              console.log("Using roulette system");
+              window.rageRouletteSystem.startFullSequence();
+            } else if (typeof spinRageQuitLoadout === 'function') {
+              console.log("Calling spinRageQuitLoadout");
+              spinRageQuitLoadout();
+            } else {
+              console.error("Neither roulette system nor spinRageQuitLoadout found");
+              alert("Error: Could not find spin function. Check the console for details.");
+              this.disabled = false;
+            }
+          });
+          
+          console.log("Handler attached successfully");
+        } else {
+          console.error("Button not found");
+        }
+      }
+      
+      // Try to attach handler immediately
+      if (document.readyState === "complete" || document.readyState === "interactive") {
+        attachButtonHandler();
+      } else {
+        // Or wait for DOM to be ready
+        document.addEventListener("DOMContentLoaded", attachButtonHandler);
+      }
+      
+      // Final fallback - try again after a short delay
+      setTimeout(attachButtonHandler, 500);
+    })();
+  </script>
+ <section class="rage-tips">
+  <div class="container">
+    <h2>Rage Management Tips</h2>
+    <div class="tips-container">
+      <div class="tip-item">
+        <div class="tip-icon">😤</div>
+        <div class="tip-content">
+          <h3>Control Your Breathing</h3>
+          <p>Inhale for 4 seconds, hold for 4, exhale for 4. Helps reduce tilt.</p>
+        </div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-icon">⏱️</div>
+        <div class="tip-content">
+          <h3>Take Regular Breaks</h3>
+          <p>Step away for 5-10 minutes if a match is getting frustrating.</p>
+        </div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-icon">🤣</div>
+        <div class="tip-content">
+          <h3>Laugh It Off</h3>
+          <p>It's just a game—find humor in ridiculous situations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer class="footerSection" style="text-align: center;">
+  <div class="container" style="text-align: center;">
+    <div class="footerRow" style="justify-content: center; text-align: center;">
+      <p style="text-align: center; width: 100%; margin: 0 auto;">
+        © 2025 TheFinalsLoadout.com | Created by <strong><a href="https://www.paultakisaki.com" rel="author" style="color: #ffb700;">Paul Takisaki</a></strong> | 
+        <a href="/legal/legal.html" style="color: #ffb700;">Legal Disclaimer</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+  <!-- Scripts -->
+</main>
+<!-- Your other content sections should be here -->
+<script defer src="rage-roulette-animations.js"></script>
+<script defer src="app.js"></script>
+
+    <!-- Scroll Progress Bar and Return to Top Script -->
+    <script>
+      // Scroll Progress Bar
+      function updateScrollProgress() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollProgress = (scrollTop / scrollHeight) * 100;
+        document.getElementById('scrollProgressBar').style.width = scrollProgress + '%';
+      }
+
+      // Return to Top Button
+      const returnToTopBtn = document.getElementById('returnToTop');
+      
+      function toggleReturnToTop() {
+        if (window.pageYOffset > 300) {
+          returnToTopBtn.classList.add('visible');
+        } else {
+          returnToTopBtn.classList.remove('visible');
+        }
+      }
+
+      returnToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+
+      // Add scroll event listeners
+      window.addEventListener('scroll', () => {
+        updateScrollProgress();
+        toggleReturnToTop();
+      });
+
+      // Initial check
+      toggleReturnToTop();
+    </script>
+
+</body>
+
+</html>
