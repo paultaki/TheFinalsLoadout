@@ -29,29 +29,7 @@
   --impact-font: 'Bebas Neue', sans-serif;
 }
 
-
-
-/* Copy loadout button style */
-.copy-button {
-  background: linear-gradient(45deg, #7b2fe3, #1e90ff); /* Matching gradient */
-  border: none;
-  color: white;
-  padding: 12px 24px;
-  font-size: 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  box-shadow: 0 4px 12px rgba(123, 47, 227, 0.3);
-}
-
-.copy-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(123, 47, 227, 0.4);
-  background: linear-gradient(45deg, #1e90ff, #7b2fe3);
-}
-
+/* Critical Animations */
 @keyframes finalFlash {
   0% {
     box-shadow: 0 0 100px rgba(255, 215, 0, 1);
@@ -85,7 +63,7 @@
   }
 }
 
-/* Scroll Progress Bar */
+/* Progress & Navigation */
 .scroll-progress-bar {
   position: fixed;
   top: 0;
@@ -98,114 +76,47 @@
   box-shadow: 0 2px 4px rgba(0, 212, 255, 0.4);
 }
 
-/* Season Countdown Timer */
-.season-countdown-container {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.season-status {
-  font-size: 1.44rem; /* 20% smaller: 1.8 * 0.8 = 1.44 */
-  color: var(--finals-yellow);
-  margin-bottom: 12px; /* 20% smaller: 15 * 0.8 = 12 */
-  text-transform: uppercase;
-  letter-spacing: 1.6px; /* 20% smaller: 2 * 0.8 = 1.6 */
-}
-
-.countdown-timer {
+/* Countdown Timer - Unified Compact Style */
+.countdown-compact,
+.countdown-box-group {
   display: flex;
+  gap: 6px;
+  align-items: center;
   justify-content: center;
-  gap: 16px; /* 20% smaller: 20 * 0.8 = 16 */
-  margin-bottom: 8px; /* 20% smaller: 10 * 0.8 = 8 */
 }
 
-.countdown-item {
-  background: rgba(0, 0, 0, 0.4);
-  border: 2px solid var(--finals-blue);
-  border-radius: 6.4px; /* 20% smaller: 8 * 0.8 = 6.4 */
-  padding: 12px 16px; /* 20% smaller: 15px 20px * 0.8 = 12px 16px */
-  min-width: 64px; /* 20% smaller: 80 * 0.8 = 64 */
+.countdown-box {
+  background: rgba(139, 69, 19, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 3px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 28px;
   position: relative;
-  overflow: hidden;
+  backdrop-filter: blur(5px);
 }
 
-.countdown-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
-  animation: countdownShine 3s infinite;
-}
-
-@keyframes countdownShine {
-  0% { left: -100%; }
-  100% { left: 100%; }
-}
-
-.countdown-value {
+.countdown-number {
   display: block;
-  font-size: 2rem; /* 20% smaller: 2.5 * 0.8 = 2 */
-  font-weight: bold;
-  color: var(--finals-white);
-  font-family: var(--impact-font);
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
   line-height: 1;
+  font-family: var(--impact-font);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-.countdown-label {
+.countdown-unit {
   display: block;
-  font-size: 0.64rem; /* 20% smaller: 0.8 * 0.8 = 0.64 */
-  color: var(--finals-blue);
+  font-size: 8px;
+  color: var(--finals-yellow);
   text-transform: uppercase;
-  margin-top: 4px; /* 20% smaller: 5 * 0.8 = 4 */
-}
-
-.countdown-disclaimer {
-  font-size: 0.65rem; /* Slightly smaller: 0.75rem → 0.65rem */
-  color: rgba(255, 255, 255, 0.5);
-  font-style: italic;
-  margin: 10px 0 0 0;
-}
-
-/* Mobile adjustments for countdown */
-@media (max-width: 768px) {
-  .countdown-timer {
-    gap: 10px;
-  }
-  
-  .countdown-item {
-    padding: 10px 15px;
-    min-width: 60px;
-  }
-  
-  .countdown-value {
-    font-size: 2rem;
-  }
-  
-  .countdown-label {
-    font-size: 0.7rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .season-status {
-    font-size: 1.5rem;
-  }
-  
-  .countdown-timer {
-    gap: 5px;
-  }
-  
-  .countdown-item {
-    padding: 8px 10px;
-    min-width: 50px;
-  }
-  
-  .countdown-value {
-    font-size: 1.5rem;
-  }
+  line-height: 1;
+  margin-top: 1px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 /* Return to Top Button */
@@ -241,459 +152,20 @@
   background: linear-gradient(135deg, var(--neon-purple), var(--finals-blue));
 }
 
-.return-to-top:active {
-  transform: translateY(-1px);
-}
-
-/* ========================================
-   MOBILE-FIRST REDESIGN STYLES
-   ======================================== */
-
-/* Persistent Top Bar */
-.top-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 48px;
-  background: rgba(13, 13, 23, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 10000;
-}
-
-.top-bar-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-  padding: 0 16px;
-  max-width: 375px;
-  margin: 0 auto;
-}
-
-.brand-compact {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.brand-logo {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-}
-
-.brand-text {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--finals-white);
-}
-
-.countdown-compact {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 12px;
-  color: var(--finals-yellow);
-  font-weight: 500;
-}
-
-.countdown-box-group {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
-.countdown-box {
-  background: rgba(139, 69, 19, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  padding: 3px 6px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 28px;
-  position: relative;
-  backdrop-filter: blur(5px);
-}
-
-.countdown-number {
-  display: block;
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1;
-  font-family: 'Bebas Neue', sans-serif;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.countdown-unit {
-  display: block;
-  font-size: 8px;
-  color: var(--finals-yellow);
-  text-transform: uppercase;
-  line-height: 1;
-  margin-top: 1px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-/* Mobile responsiveness for countdown boxes */
-@media (max-width: 480px) {
-  .countdown-box-group {
-    gap: 3px;
-  }
-  
-  .countdown-box {
-    min-width: 24px;
-    padding: 2px 4px;
-  }
-  
-  .countdown-number {
-    font-size: 12px;
-  }
-  
-  .countdown-unit {
-    font-size: 7px;
-    letter-spacing: 0.2px;
-  }
-}
-
-.sound-toggle-compact {
-  background: none;
-  border: none;
-  color: var(--finals-white);
-  padding: 4px;
-  border-radius: 4px;
-  cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-
-.sound-toggle-compact:hover {
-  opacity: 1;
-}
-
-/* Mobile Navigation */
-.main-nav-mobile {
-  position: fixed;
-  top: 48px;
-  left: 0;
-  right: 0;
-  background: rgba(13, 13, 23, 0.9);
-  backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  z-index: 9999;
-}
-
-.main-nav-mobile a {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.main-nav-mobile a:hover {
-  color: var(--finals-blue);
-}
-
-/* Main Content Mobile */
-.main-content-mobile {
-  margin-top: 96px; /* Top bar + nav */
-  padding: 16px;
-  max-width: 375px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-bottom: 120px; /* Space for bottom sheet */
-}
-
-/* Loadout Selection Strip */
-.loadout-strip {
-  margin-bottom: 24px;
-}
-
-.section-title {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--finals-white);
-  margin: 0 0 12px 0;
-}
-
-.loadout-cards-container {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  padding: 8px 0;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-}
-
-.loadout-card {
-  flex: 0 0 80px;
-  height: 100px;
-  background: rgba(26, 26, 46, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.loadout-card.active {
-  background: rgba(0, 212, 255, 0.2);
-  border-color: var(--finals-blue);
-  box-shadow: 0 0 16px rgba(0, 212, 255, 0.3);
-  transform: scale(1.05);
-}
-
-.card-icon {
-  font-size: 24px;
-  line-height: 1;
-}
-
-.card-name {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--finals-white);
-  text-align: center;
-}
-
-.scroll-dots {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 12px;
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transition: background 0.2s ease;
-}
-
-.dot.active {
-  background: var(--finals-blue);
-}
-
-/* Analysis Results */
-.analysis-results {
-  background: rgba(26, 26, 46, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 16px;
-}
-
-.results-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.loadout-counter {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 12px;
-  color: var(--finals-yellow);
-  font-weight: 500;
-}
-
-.results-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.result-group {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding-bottom: 12px;
-}
-
-.result-group:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.group-title {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.6);
-  margin: 0 0 8px 0;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.result-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  border-radius: 6px;
-}
-
-.result-item:hover {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.item-icon {
-  font-size: 20px;
-  width: 24px;
-  text-align: center;
-}
-
-.item-info {
-  flex: 1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.item-name {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  color: var(--finals-white);
-  font-weight: 500;
-}
-
-.item-stat {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
-  font-weight: 400;
-}
-
-/* Fixed Bottom Sheet */
-.bottom-sheet {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(13, 13, 23, 0.95);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 10000;
-  max-width: 375px;
-  margin: 0 auto;
-}
-
-.bottom-sheet-content {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.secondary-action {
-  background: none;
-  border: none;
-  color: var(--finals-blue);
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-  padding: 8px;
-  cursor: pointer;
-  text-decoration: underline;
-  opacity: 0.8;
-  transition: opacity 0.2s ease;
-}
-
-.secondary-action:hover {
-  opacity: 1;
-}
-
-.primary-cta {
-  background: linear-gradient(135deg, var(--finals-blue), #0066cc);
-  border: none;
-  border-radius: 12px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
-}
-
-.primary-cta:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0, 212, 255, 0.4);
-}
-
-.primary-cta:active {
-  transform: translateY(0);
-}
-
-.cta-text {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.cta-icon {
-  font-size: 16px;
-}
-
-/* Hide legacy elements on mobile */
+/* Mobile Navigation - Simplified */
 @media (max-width: 768px) {
   .main-nav,
-  .headerSection,
-  .main-content,
   .footerSection,
   .filter-toggle-button {
     display: none !important;
   }
   
   .scroll-progress-bar {
-    top: 0;
-    height: 2px;
-  }
-  
-  .return-to-top {
-    display: none;
-  }
-}
-
-/* Desktop fallback - hide mobile design (but keep top bar) */
-@media (min-width: 769px) {
-  .main-nav-mobile,
-  .main-content-mobile,
-  .bottom-sheet {
-    display: none !important;
-  }
-}
-
-/* Mobile optimizations for scroll progress and return to top */
-@media (max-width: 768px) {
-  .scroll-progress-bar {
     height: 3px;
   }
   
   .return-to-top {
-    width: 45px;
-    height: 45px;
-    bottom: 15px;
-    right: 15px;
+    display: none;
   }
 }
 
@@ -707,9 +179,8 @@ html {
   background: linear-gradient(135deg, #1b1b3a, #34003d, #240049, #003d66);
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
-  will-change: background-position; /* Optimize animation */
+  will-change: background-position;
 }
-
 
 @keyframes gradientShift {
   0% {
@@ -723,10 +194,10 @@ html {
   }
 }
 
-/* Vegas-style Slot Machine Styles */
-.slot-machine-wrapper {
+/* Slot Machine Core */
+#output {
   background: radial-gradient(ellipse at center, #4a3a5e, #2a2a3a);
-  padding: 40px;
+  padding: 20px;
   border-radius: 20px;
   box-shadow: 
     0 0 100px rgba(138, 43, 226, 0.3),
@@ -734,11 +205,10 @@ html {
   position: relative;
   overflow: hidden;
   margin: 20px auto;
-  min-height: 200px; /* Prevent layout shift */
-  contain: layout style; /* Optimize rendering */
+  min-height: 200px;
+  contain: layout style;
 }
 
-/* Individual slot windows */
 .item-container {
   background: linear-gradient(to bottom, #0a0a0a, #1a1a1a);
   border: 4px solid transparent;
@@ -748,11 +218,11 @@ html {
     0 0 20px rgba(255, 215, 0, 0.2);
   position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Optimize transition */
-  will-change: transform; /* Optimize animation */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
 }
 
-/* Add slot window "glass" effect */
+/* Slot window effect */
 .item-container::before {
   content: '';
   position: absolute;
@@ -775,7 +245,7 @@ html {
   100% { left: 200%; }
 }
 
-/* Blur effects */
+/* Animation states */
 .high-speed-blur .scroll-container {
   filter: blur(3px);
 }
@@ -784,7 +254,6 @@ html {
   filter: blur(8px);
 }
 
-/* Lock-in animation */
 @keyframes lockIn {
   0% { transform: scale(1); }
   50% { transform: scale(1.2); }
@@ -796,7 +265,6 @@ html {
   animation: lockIn 0.5s ease-out;
 }
 
-/* Column lock flash */
 .item-container.locking {
   border-color: #ffd700 !important;
   box-shadow: 
@@ -804,7 +272,6 @@ html {
     0 0 40px rgba(255, 215, 0, 0.8);
 }
 
-/* Screen shake */
 @keyframes screenShake {
   0%, 100% { transform: translate(0, 0); }
   25% { transform: translate(-2px, 2px); }
@@ -816,45 +283,38 @@ html {
   animation: screenShake 0.2s ease-out;
 }
 
-/* Season Status */
-.season-status {
-  font-size: 1.5rem;
-  color: var(--neon-yellow);
-  margin: 1rem 0;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+/* Navigation */
+.main-nav {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1rem 0;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 500;
 }
 
-.days-remaining {
-  color: var(--neon-cyan);
-  font-weight: 700;
-  text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+.main-nav a {
+  color: #fff;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s;
 }
 
-/* Urgent styling for last day */
-.season-status.urgent {
-  color: var(--neon-orange);
-  animation: urgentPulse 1.5s ease-in-out infinite;
+.main-nav a:hover,
+.main-nav a.active {
+  background-color: var(--neon-blue);
 }
 
-.season-status.urgent .days-remaining {
-  color: var(--neon-orange);
-  text-shadow: 0 0 15px rgba(255, 123, 0, 0.8);
+.main-nav a[href*="ragequit"] {
+  background: transparent !important;
+  border: 1px solid #FF6600 !important;
+  color: #FF6600 !important;
 }
 
-@keyframes urgentPulse {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 1; }
-}
-
-/* Season ended */
-.season-status.ended {
-  color: var(--neon-orange);
-  font-size: 1.8rem;
-}
-
-/* History Section Overhaul */
+/* History Section */
 .loadout-history {
   background: transparent;
   border: none;
@@ -873,11 +333,10 @@ html {
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
-/* History Entry Cards */
 .history-entry {
-  background: #0F0F0F !important; /* Darker than page bg */
+  background: #0F0F0F !important;
   border: 1px solid #1A1A1A !important;
-  border-radius: 0; /* Sharp edges like The Finals UI */
+  border-radius: 0;
   padding: 14px;
   margin: 10px 0;
   position: relative;
@@ -888,7 +347,6 @@ html {
   min-height: 112px;
 }
 
-/* Class accent strips - subtle and thin */
 .history-entry::before {
   content: '';
   position: absolute;
@@ -896,27 +354,19 @@ html {
   left: 0;
   width: 2px;
   height: 100%;
-  background: #666; /* Subtle default */
+  background: #666;
 }
 
-/* Class-specific accent colors - muted */
 .history-entry:has(.class-badge.light)::before {
-  background: #0099cc; /* Muted blue */
+  background: #0099cc;
 }
 
 .history-entry:has(.class-badge.medium)::before {
-  background: #cc6699; /* Muted magenta */
+  background: #cc6699;
 }
 
 .history-entry:has(.class-badge.heavy)::before {
-  background: #cc6600; /* Muted orange */
-}
-
-/* Orange nav button needs to go */
-.main-nav a[href*="ragequit"] {
-  background: transparent !important;
-  border: 1px solid #FF6600 !important;
-  color: #FF6600 !important;
+  background: #cc6600;
 }
 
 .history-entry.visible {
@@ -930,19 +380,16 @@ html {
   box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
 }
 
-/* First entry glows */
 .history-entry:first-child {
   border-color: #666;
   position: relative;
 }
-
 
 @keyframes pulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.05); }
 }
 
-/* Spicy loadouts */
 .history-entry.spicy-loadout {
   border-color: #ff6b6b;
   background: linear-gradient(135deg, #2a1a1a, #3e1a1a);
@@ -954,7 +401,6 @@ html {
   50% { box-shadow: 0 0 25px rgba(255, 107, 107, 0.6); }
 }
 
-/* Header Section */
 .loadout-header {
   display: flex;
   align-items: center;
@@ -999,7 +445,6 @@ html {
   color: #fff;
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
-
 .timestamp {
   font-size: 12px;
   color: #888;
@@ -1188,7 +633,7 @@ html {
 .meme-export-container {
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
   border: 2px solid transparent;
-  border-image: linear-gradient(45deg, #ff1493, #00ffff, #ff229) 1;
+  border-image: linear-gradient(45deg, #ff1493, #00ffff, #ff2299 ) 1;
   border-radius: 8px;
   padding: 16px;
   position: relative;
@@ -2284,7 +1729,7 @@ button#sound-toggle.sound-toggle-button,
   margin: 15px auto;
   width: 100%;
   max-width: 800px;
-  min-width: 800px;
+  min-width: auto;
   flex-wrap: nowrap;
   overflow-x: visible;
   position: relative;
@@ -2337,28 +1782,59 @@ button#sound-toggle.sound-toggle-button,
     height: 20px;
   }
   
-  /* Container for slot machine - adjusted scaling and width */
+  /* Container for slot machine - no wrapper styling on mobile */
   .items-container {
-    transform: scale(0.45);
-    transform-origin: center top;
-    width: 600px; /* Reduced from 700px */
-    margin: 0 auto;
-    padding: 5px 15px;
-  }
-
-  /* Wrapper to contain the overflow */
-  .slot-machine-wrapper {
+    transform: none !important;
+    background: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
     width: 100%;
-    overflow: hidden;
-    display: flex;
+    max-width: 100%;
+    min-width: auto !important;
+    margin: 0;
+    padding: 0 5px;
+    gap: 3px;
     justify-content: center;
-    align-items: center;
+    overflow-x: visible;
   }
 
-  /* Adjust item containers for better spacing */
+  /* slot-machine-wrapper removed - content now generated dynamically */
+
+  /* Wider item containers with minimal padding */
   .item-container {
-    width: 110px;
-    margin: 0 4px;
+    flex: 0 0 calc((100vw - 25px) / 5);
+    width: calc((100vw - 25px) / 5);
+    max-width: 95px;
+    min-width: 65px;
+    height: 140px;
+    margin: 0;
+  }
+
+  /* Ensure all itemCol elements fit properly - wider boxes */
+  .items-container .itemCol {
+    flex: 0 0 calc((100vw - 25px) / 5) !important;
+    width: calc((100vw - 25px) / 5) !important;
+    max-width: 95px !important;
+    min-width: 65px !important;
+    margin: 0 !important;
+    height: 140px !important;
+    overflow: hidden !important;
+  }
+  
+  /* Ensure images scale properly */
+  .items-container .itemCol img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 70px !important;
+    object-fit: contain !important;
+  }
+  
+  /* Ensure text is readable */
+  .items-container .itemCol p {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    margin: 2px 0 !important;
+    padding: 0 2px !important;
   }
 
   /* Adjust main container padding */
@@ -2423,15 +1899,56 @@ button#sound-toggle.sound-toggle-button,
     margin-top: 20px;
     margin-bottom: 10px;
     width: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
+    max-width: 100vw;
+    position: relative;
   }
 }
 
 /* Extra small devices - iPhone specific */
 @media (max-width: 375px) {
   .items-container {
-    transform: scale(0.42); /* Reduced from 0.55 */
-    width: 580px; /* Added explicit width */
+    transform: none !important;
+    background: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: auto !important;
+    gap: 2px;
+    padding: 0 3px;
+    overflow-x: visible;
+  }
+
+  .item-container {
+    flex: 0 0 calc((100vw - 15px) / 5);
+    width: calc((100vw - 15px) / 5);
+    max-width: 80px;
+    min-width: 60px;
+    height: 120px;
+    margin: 0;
+  }
+
+  .items-container .itemCol {
+    width: calc((100vw - 15px) / 5) !important;
+    max-width: 80px !important;
+    min-width: 60px !important;
+    flex: 0 0 calc((100vw - 15px) / 5) !important;
+    margin: 0 !important;
+  }
+
+  .items-container .itemCol img {
+    width: 100% !important;
+    max-width: 65px !important;
+    height: auto !important;
+    max-height: 65px !important;
+    min-height: 45px !important;
+  }
+
+  .items-container .itemCol p {
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+    padding: 2px 1px !important;
   }
 
   .btnRow {
@@ -2450,6 +1967,40 @@ body {
 .container {
   max-width: 100%;
   overflow: hidden;
+}
+
+/* Ensure 5 slot machine items are always visible on all screens */
+@media (max-width: 768px) {
+  .items-container {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: visible !important;
+    min-width: auto !important;
+  }
+  
+  /* Force exactly 5 items to fit */
+  .items-container > * {
+    flex: 0 0 calc((100% - 32px) / 5) !important;
+    max-width: calc((100% - 32px) / 5) !important;
+    min-width: 0 !important;
+  }
+}
+
+/* Season Update Notice */
+.season-update-notice {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #ff6b35;
+  margin: 10px 0 20px 0;
+  text-align: center;
+  text-shadow: 0 0 8px rgba(255, 107, 53, 0.6);
+}
+
+@media (max-width: 768px) {
+  .season-update-notice {
+    font-size: 1rem;
+    margin: 8px 0 15px 0;
+  }
 }
 
 /* =====================
@@ -2685,27 +2236,96 @@ body {
   #output {
     margin-top: 10px;
     margin-bottom: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    overflow-x: hidden;
   }
 
   .items-container {
-    transform: scale(0.45);
-    transform-origin: center top;
-    width: 600px;
+    width: 100% !important;
+    max-width: 100% !important;
     margin: 0 auto;
-    padding: 5px 15px;
+    padding: 5px 10px;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    transform: none !important;
+    position: static !important;
+    left: auto !important;
+    box-sizing: border-box !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* Mobile-specific slot machine item sizing */
+  .items-container .itemCol {
+    width: calc((100vw - 80px) / 5) !important;
+    max-width: 90px !important;
+    min-width: 55px !important;
+    flex: 0 0 calc((100vw - 80px) / 5) !important;
+    margin: 0 2px !important;
+  }
+  
+  .items-container .itemCol img {
+    width: 100% !important;
+    max-width: 80px !important;
+    height: auto !important;
+    max-height: 80px !important;
+    min-height: 60px !important;
+  }
+  
+  .items-container .itemCol p {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    padding: 3px 2px !important;
+    margin: 0 !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
   }
 
-  .slot-machine-wrapper {
-    width: 100%;
-    overflow: hidden;
-    margin-bottom: 10px;
-  }
+  /* slot-machine-wrapper removed - content now generated dynamically */
 }
 
 @media (max-width: 375px) {
   .items-container {
-    transform: scale(0.42);
-    width: 580px;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    gap: 2px;
+    padding: 5px;
+  }
+
+  .item-container {
+    flex: 0 0 calc((100vw - 30px) / 5);
+    width: calc((100vw - 30px) / 5);
+    max-width: 75px;
+    min-width: 50px;
+    height: 120px;
+    margin: 0 1px;
+  }
+
+  .items-container .itemCol {
+    width: calc((100vw - 15px) / 5) !important;
+    max-width: 80px !important;
+    min-width: 60px !important;
+    flex: 0 0 calc((100vw - 15px) / 5) !important;
+    margin: 0 !important;
+  }
+
+  .items-container .itemCol img {
+    width: 100% !important;
+    max-width: 65px !important;
+    height: auto !important;
+    max-height: 65px !important;
+    min-height: 45px !important;
+  }
+
+  .items-container .itemCol p {
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+    padding: 2px 1px !important;
   }
 
   .btnRow {
@@ -3544,6 +3164,10 @@ iframe#bmc-button {
     margin-bottom: 5px !important; /* Improved spacing */
     width: 100%;
     position: relative;
+    overflow-x: hidden;
+    max-width: 100vw;
+    margin-left: auto;
+    margin-right: auto;
     z-index: 1;
   }
 
@@ -3600,18 +3224,7 @@ iframe#bmc-button {
     margin: 2px 0 !important; /* Reduce top & bottom spacing */
   }
 
-  /* Slot machine wrapper styling */
-  .slot-machine-wrapper {
-    width: 100%;
-    overflow: visible;
-    display: flex;
-    margin: 5px auto !important; /* Reduce space between elements */
-    padding-bottom: 0;
-    justify-content: center;
-    margin-bottom: 2px !important; /* Almost no space */
-
-    align-items: center;
-  }
+  /* slot-machine-wrapper removed - content now generated dynamically */
 
   /* Button row styling */
   .btnRow {
@@ -3676,8 +3289,11 @@ iframe#bmc-button {
 /* Extra small screens */
 @media (max-width: 375px) {
   .items-container {
-    transform: scale(0.42);
-    width: 580px;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    gap: 4px;
+    padding: 5px;
   }
 
   .btnRow {

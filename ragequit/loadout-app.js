@@ -57,6 +57,34 @@ function initializeSufferingStreakDisplay() {
   }
 }
 
+// Total rage quits counter management
+function updateTotalRageQuits() {
+  // Get current total from localStorage, start at 3144 if not set
+  let totalRageQuits = parseInt(localStorage.getItem('totalRageQuits')) || 3144;
+  
+  // Increment the counter
+  totalRageQuits++;
+  
+  // Save back to localStorage
+  localStorage.setItem('totalRageQuits', totalRageQuits.toString());
+  
+  // Update the display
+  const totalElement = document.getElementById('totalRageQuits');
+  if (totalElement) {
+    totalElement.textContent = totalRageQuits.toLocaleString();
+  }
+  
+  console.log(`💀 Total rage quits updated to: ${totalRageQuits}`);
+}
+
+function initializeTotalRageQuitsDisplay() {
+  const totalElement = document.getElementById('totalRageQuits');
+  if (totalElement) {
+    const totalRageQuits = parseInt(localStorage.getItem('totalRageQuits')) || 3144;
+    totalElement.textContent = totalRageQuits.toLocaleString();
+  }
+}
+
 // Helper function to check if sound is enabled
 function isSoundEnabled() {
   return localStorage.getItem('rageSoundEnabled') !== 'false';
@@ -957,6 +985,9 @@ function finalizeSpin() {
 
   // Update suffering streak
   updateSufferingStreak();
+  
+  // Update total rage quits counter
+  updateTotalRageQuits();
 
   // Display the selected handicap
   displaySelectedHandicap();
@@ -1530,16 +1561,16 @@ function viewFullDetails(element) {
     <div class="modal-items">
       <div class="modal-item">
         <img src="../images/${weapon.replace(/ /g, "_")}.webp" alt="${weapon}" onerror="this.src='../images/placeholder.webp'">
-        <p>Weapon: ${weapon}</p>
+        <p>${weapon}</p>
       </div>
       <div class="modal-item">
         <img src="../images/${spec.replace(/ /g, "_")}.webp" alt="${spec}" onerror="this.src='../images/placeholder.webp'">
-        <p>Specialization: ${spec}</p>
+        <p>${spec}</p>
       </div>
-      ${gadgets.map((g, i) => `
+      ${gadgets.map((g) => `
         <div class="modal-item">
           <img src="../images/${g.replace(/ /g, "_")}.webp" alt="${g}" onerror="this.src='../images/placeholder.webp'">
-          <p>Gadget ${i + 1}: ${g}</p>
+          <p>${g}</p>
         </div>
       `).join('')}
     </div>
@@ -1781,6 +1812,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize suffering streak display
   initializeSufferingStreakDisplay();
+  
+  // Initialize total rage quits display
+  initializeTotalRageQuitsDisplay();
 
   // Only clear history once when format is updated
   const formatVersion = localStorage.getItem("rageHistoryFormatVersion");

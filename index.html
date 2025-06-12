@@ -1432,27 +1432,7 @@
           height="auto"
         />
         <h1 class="subTitle-mobile">Random Loadout Generator</h1>
-        <!-- Boxed Countdown moved from top bar -->
-        <div class="countdown-compact" id="seasonCountdown">
-          <div class="countdown-box-group">
-            <div class="countdown-box">
-              <span class="countdown-number" id="countdown-days">01</span>
-              <span class="countdown-unit">DAYS</span>
-            </div>
-            <div class="countdown-box">
-              <span class="countdown-number" id="countdown-hours">02</span>
-              <span class="countdown-unit">HOURS</span>
-            </div>
-            <div class="countdown-box">
-              <span class="countdown-number" id="countdown-minutes">27</span>
-              <span class="countdown-unit">MINUTES</span>
-            </div>
-            <div class="countdown-box">
-              <span class="countdown-number" id="countdown-seconds">30</span>
-              <span class="countdown-unit">SECONDS</span>
-            </div>
-          </div>
-        </div>
+        <p class="season-update-notice">Season 7 updates coming later today</p>
       </div>
     </section>
 
@@ -1749,103 +1729,9 @@
       toggleReturnToTop();
     </script>
 
-    <!-- Season 7 Countdown Timer & Mobile Enhancements -->
+    <!-- Mobile Enhancements -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        function updateCountdown() {
-          // Set the target date for 7:00 UTC (midnight tonight)
-          const now = new Date();
-          const targetDate = new Date();
-
-          // Set to today at 7:00 UTC
-          targetDate.setUTCHours(7, 0, 0, 0);
-
-          // If we've already passed 7:00 UTC today, set for tomorrow
-          if (now.getTime() > targetDate.getTime()) {
-            targetDate.setUTCDate(targetDate.getUTCDate() + 1);
-          }
-
-          const interval = setInterval(() => {
-            const currentTime = new Date().getTime();
-            const distance = targetDate - currentTime;
-
-            if (distance < 0) {
-              clearInterval(interval);
-              // Update top bar countdown
-              const topDays = document.getElementById("countdown-days");
-              const topHours = document.getElementById("countdown-hours");
-              const topMinutes = document.getElementById("countdown-minutes");
-              const topSeconds = document.getElementById("countdown-seconds");
-              if (topDays) topDays.textContent = "00";
-              if (topHours) topHours.textContent = "00";
-              if (topMinutes) topMinutes.textContent = "00";
-              if (topSeconds) topSeconds.textContent = "00";
-
-              // Update mobile countdown
-              const mobileDays = document.getElementById(
-                "mobile-countdown-days"
-              );
-              const mobileHours = document.getElementById(
-                "mobile-countdown-hours"
-              );
-              const mobileMinutes = document.getElementById(
-                "mobile-countdown-minutes"
-              );
-              const mobileSeconds = document.getElementById(
-                "mobile-countdown-seconds"
-              );
-              if (mobileDays) mobileDays.textContent = "00";
-              if (mobileHours) mobileHours.textContent = "00";
-              if (mobileMinutes) mobileMinutes.textContent = "00";
-              if (mobileSeconds) mobileSeconds.textContent = "00";
-              return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor(
-              (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-            );
-            const minutes = Math.floor(
-              (distance % (1000 * 60 * 60)) / (1000 * 60)
-            );
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            // Update top bar countdown
-            const topDays = document.getElementById("countdown-days");
-            const topHours = document.getElementById("countdown-hours");
-            const topMinutes = document.getElementById("countdown-minutes");
-            const topSeconds = document.getElementById("countdown-seconds");
-            if (topDays) topDays.textContent = String(days).padStart(2, "0");
-            if (topHours) topHours.textContent = String(hours).padStart(2, "0");
-            if (topMinutes)
-              topMinutes.textContent = String(minutes).padStart(2, "0");
-            if (topSeconds)
-              topSeconds.textContent = String(seconds).padStart(2, "0");
-
-            // Update mobile countdown
-            const mobileDays = document.getElementById("mobile-countdown-days");
-            const mobileHours = document.getElementById(
-              "mobile-countdown-hours"
-            );
-            const mobileMinutes = document.getElementById(
-              "mobile-countdown-minutes"
-            );
-            const mobileSeconds = document.getElementById(
-              "mobile-countdown-seconds"
-            );
-            if (mobileDays)
-              mobileDays.textContent = String(days).padStart(2, "0");
-            if (mobileHours)
-              mobileHours.textContent = String(hours).padStart(2, "0");
-            if (mobileMinutes)
-              mobileMinutes.textContent = String(minutes).padStart(2, "0");
-            if (mobileSeconds)
-              mobileSeconds.textContent = String(seconds).padStart(2, "0");
-          }, 1000);
-        }
-
-        // Start countdown
-        updateCountdown();
 
         // Hide selection display on page load
         const selectionDisplay = document.getElementById("selection-display");

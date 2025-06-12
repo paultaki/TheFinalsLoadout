@@ -651,9 +651,9 @@ class SlotColumn {
       
       // Add screen shake for dramatic effect (only on final spin)
       if (this.isFinalSpin && this.index === 0) {
-        document.querySelector('.slot-machine-wrapper')?.classList.add('screen-shake');
+        document.querySelector('.items-container')?.classList.add('screen-shake');
         setTimeout(() => {
-          document.querySelector('.slot-machine-wrapper')?.classList.remove('screen-shake');
+          document.querySelector('.items-container')?.classList.remove('screen-shake');
         }, 200);
       }
     }
@@ -1822,7 +1822,7 @@ async function finalizeSpin(columns) {
 
   // Get the final selections from the DOM
   const itemContainers = document.querySelectorAll(
-    ".slot-machine-wrapper .items-container .item-container"
+    "#output .items-container .item-container"
   );
 
   if (itemContainers && itemContainers.length > 0) {
@@ -2024,6 +2024,14 @@ async function finalizeSpin(columns) {
           console.log("✅ Successfully added to history:", loadoutString);
           isAddingToHistory = false; // Reset the flag
         }, 500);
+      }).catch(error => {
+        console.error("❌ Error displaying roast, but still adding to history:", error);
+        // Still add to history even if roast fails
+        setTimeout(() => {
+          addToHistory(savedClass, weapon, specialization, gadgets, "");
+          console.log("✅ Added to history without roast:", loadoutString);
+          isAddingToHistory = false; // Reset the flag
+        }, 500);
       });
 
       // Reset the class AFTER saving it
@@ -2119,8 +2127,8 @@ window.spinLoadout = spinLoadout;
 
 // Celebration effects function
 function addCelebrationEffects() {
-  const slotMachineWrapper = document.querySelector('.slot-machine-wrapper');
-  if (!slotMachineWrapper) return;
+  const itemsContainer = document.querySelector('#output .items-container');
+  if (!itemsContainer) return;
   
   // Add a "LOADOUT LOCKED!" banner
   const banner = document.createElement('div');
@@ -2129,10 +2137,10 @@ function addCelebrationEffects() {
     <div class="banner-text">LOADOUT LOCKED!</div>
     <div class="banner-subtext">Ready to dominate The Finals</div>
   `;
-  slotMachineWrapper.appendChild(banner);
+  itemsContainer.appendChild(banner);
   
   // Flash the entire loadout container
-  slotMachineWrapper.classList.add('celebration-flash');
+  itemsContainer.classList.add('celebration-flash');
   
   // Celebration words array
   const celebrationWords = [
@@ -2167,7 +2175,7 @@ function addCelebrationEffects() {
       floatingText.textContent = celebrationWords[Math.floor(Math.random() * celebrationWords.length)];
       floatingText.style.left = pos.x;
       floatingText.style.top = pos.y;
-      slotMachineWrapper.appendChild(floatingText);
+      itemsContainer.appendChild(floatingText);
       
       // Remove after animation
       setTimeout(() => floatingText.remove(), 2000);
@@ -2178,7 +2186,7 @@ function addCelebrationEffects() {
   setTimeout(() => {
     banner.classList.add('fade-out');
     setTimeout(() => banner.remove(), 500);
-    slotMachineWrapper.classList.remove('celebration-flash');
+    itemsContainer.classList.remove('celebration-flash');
   }, 3000);
 }
 
@@ -2383,8 +2391,8 @@ async function addToHistory(
 
 // Display roast below slot machine
 async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
-  const slotMachineWrapper = document.querySelector('.slot-machine-wrapper');
-  if (!slotMachineWrapper) return null;
+  const itemsContainer = document.querySelector('#output .items-container');
+  if (!itemsContainer) return null;
   
   // Remove any existing roast display
   const existingRoast = document.getElementById('slot-machine-roast');
@@ -2404,7 +2412,7 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
   `;
   
   // Insert after slot machine
-  slotMachineWrapper.insertAdjacentElement('afterend', roastContainer);
+  itemsContainer.insertAdjacentElement('afterend', roastContainer);
   
   let generatedRoast = null;
   
@@ -3659,7 +3667,7 @@ function setupSelectAllCheckboxes() {
     .getElementById("copyLoadoutButton")
     ?.addEventListener("click", () => {
       const itemContainers = document.querySelectorAll(
-        ".slot-machine-wrapper .items-container .item-container"
+        "#output .items-container .item-container"
       );
 
       if (!itemContainers || itemContainers.length === 0) {
