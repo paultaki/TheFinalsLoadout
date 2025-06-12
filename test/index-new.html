@@ -129,6 +129,54 @@
             -webkit-tap-highlight-color: transparent;
         }
         
+        /* Fix output container spacing */
+        #output {
+            min-height: auto !important;
+            height: auto !important;
+        }
+        
+        #output .slot-machine-wrapper {
+            min-height: auto !important;
+            height: auto !important;
+            padding: 0.5rem !important;
+        }
+        
+        #output .glass {
+            min-height: auto !important;
+            height: auto !important;
+            padding: 1rem !important;
+        }
+        
+        /* Fix the selection-container height issue */
+        .selection-container {
+            height: auto !important;
+            min-height: auto !important;
+            max-height: 200px !important;
+            overflow: hidden !important;
+        }
+        
+        /* Also target any div that might be creating excessive height */
+        #output > div {
+            height: auto !important;
+            min-height: auto !important;
+        }
+        
+        /* Aggressive fix for any tall containers */
+        #output div[style*="height"] {
+            height: auto !important;
+        }
+        
+        /* Fix any containers with background colors that might be causing the issue */
+        #output div {
+            max-height: 300px !important;
+        }
+        
+        /* Target the specific issue area we saw in devtools */
+        div[style*="464"] {
+            height: auto !important;
+            max-height: 100px !important;
+        }
+        
         /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -249,10 +297,10 @@
     </header>
     
     <!-- Main Loadout Section -->
-    <main id="loadouts" class="relative py-16 px-4">
+    <main id="loadouts" class="relative py-8 px-4">
         <div class="container mx-auto max-w-6xl">
             <!-- Section Header -->
-            <div class="text-center mb-12">
+            <div class="text-center mb-6">
                 <h2 class="text-4xl sm:text-5xl font-bold mb-4">
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-vegas-gold to-vegas-red">
                         Choose Your Destiny
