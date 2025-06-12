@@ -944,13 +944,38 @@ const displayLoadout = (classType) => {
     </div>
   `;
 
-  outputDiv.innerHTML = loadoutHTML;
+  // Safety check for outputDiv
+  if (!outputDiv) {
+    console.error('❌ CRASH PREVENTION: outputDiv is null, attempting to find element');
+    outputDiv = document.getElementById("output");
+    if (!outputDiv) {
+      console.error('❌ CRITICAL: Could not find output element, cannot display loadout');
+      return;
+    }
+  }
+
+  try {
+    outputDiv.innerHTML = loadoutHTML;
+  } catch (error) {
+    console.error('❌ CRASH PREVENTION: Error setting innerHTML:', error);
+    return;
+  }
 
   setTimeout(() => {
-    const scrollContainers = Array.from(
-      document.querySelectorAll(".scroll-container")
-    );
-    startSpinAnimation(scrollContainers);
+    try {
+      const scrollContainers = Array.from(
+        document.querySelectorAll(".scroll-container")
+      );
+      
+      if (scrollContainers.length === 0) {
+        console.error('❌ CRASH PREVENTION: No scroll containers found, cannot start animation');
+        return;
+      }
+      
+      startSpinAnimation(scrollContainers);
+    } catch (error) {
+      console.error('❌ CRASH PREVENTION: Error starting spin animation:', error);
+    }
   }, 50);
 };
 
@@ -988,24 +1013,51 @@ const getAvailableClasses = () => {
 };
 
 const displayRandomLoadout = () => {
-  console.log('🎯 displayRandomLoadout: Fetching available classes...');
-  let availableClasses = getAvailableClasses();
-  console.log('🎯 displayRandomLoadout: Received available classes:', availableClasses);
-  
-  // If no classes are available (all excluded), show warning and use all classes
-  if (availableClasses.length === 0) {
-    console.warn('⚠️ All classes excluded! Using all classes instead.');
-    alert('All classes are excluded! Please uncheck at least one class to continue.');
-    availableClasses = ["Light", "Medium", "Heavy"];
+  try {
+    console.log('🎯 displayRandomLoadout: Fetching available classes...');
+    let availableClasses = getAvailableClasses();
+    console.log('🎯 displayRandomLoadout: Received available classes:', availableClasses);
+    
+    // If no classes are available (all excluded), show warning and use all classes
+    if (availableClasses.length === 0) {
+      console.warn('⚠️ All classes excluded! Using all classes instead.');
+      alert('All classes are excluded! Please uncheck at least one class to continue.');
+      availableClasses = ["Light", "Medium", "Heavy"];
+    }
+    
+    if (!availableClasses || availableClasses.length === 0) {
+      console.error('❌ CRASH PREVENTION: No available classes after fallback');
+      availableClasses = ["Light", "Medium", "Heavy"];
+    }
+    
+    const randomClass = availableClasses[Math.floor(Math.random() * availableClasses.length)];
+    console.log(`🎲 Random class selected: ${randomClass}`);
+    
+    if (!randomClass || !["Light", "Medium", "Heavy"].includes(randomClass)) {
+      console.error('❌ CRASH PREVENTION: Invalid random class selected, using Light');
+      displayLoadout("Light");
+    } else {
+      displayLoadout(randomClass);
+    }
+  } catch (error) {
+    console.error('❌ CRASH PREVENTION: displayRandomLoadout failed:', error);
+    // Emergency fallback - try to display Light class directly
+    try {
+      displayLoadout("Light");
+    } catch (fallbackError) {
+      console.error('❌ CRITICAL: Emergency fallback also failed:', fallbackError);
+    }
   }
-  
-  const randomClass = availableClasses[Math.floor(Math.random() * availableClasses.length)];
-  console.log(`🎲 Random class selected: ${randomClass}`);
-  displayLoadout(randomClass);
 };
 
 // Animation function
 function startSpinAnimation(columns) {
+  // Safety check for columns array
+  if (!columns || !Array.isArray(columns) || columns.length === 0) {
+    console.error('❌ CRASH PREVENTION: Invalid columns passed to startSpinAnimation');
+    return;
+  }
+
   // Final spin is when we're on the last spin (currentSpin === 1)
   const isFinalSpin = state.currentSpin === 1;
   console.log(
@@ -1034,20 +1086,38 @@ function startSpinAnimation(columns) {
 
   const startTime = performance.now();
 
-  const slotColumns = columns.map(
-    (element, index) => new SlotColumn(element, index, isFinalSpin)
-  );
+  const slotColumns = columns.map((element, index) => {
+    if (!element) {
+      console.error(`❌ CRASH PREVENTION: Column ${index} is null/undefined`);
+      return null;
+    }
+    return new SlotColumn(element, index, isFinalSpin);
+  }).filter(col => col !== null);
+
+  if (slotColumns.length === 0) {
+    console.error('❌ CRASH PREVENTION: No valid slot columns created');
+    return;
+  }
 
   // Reset containers
-  columns.forEach((column) => {
-    const container = column.closest(".item-container");
-    if (container) {
-      container.classList.remove("landing-flash", "winner-pulsate");
-      const lockedTag = container.querySelector(".locked-tag");
-      if (lockedTag) lockedTag.remove();
+  columns.forEach((column, index) => {
+    if (!column) {
+      console.error(`❌ CRASH PREVENTION: Column ${index} is null during reset`);
+      return;
     }
-    column.style.transform = "translateY(0)";
-    column.style.transition = "none";
+    
+    try {
+      const container = column.closest(".item-container");
+      if (container) {
+        container.classList.remove("landing-flash", "winner-pulsate");
+        const lockedTag = container.querySelector(".locked-tag");
+        if (lockedTag) lockedTag.remove();
+      }
+      column.style.transform = "translateY(0)";
+      column.style.transition = "none";
+    } catch (error) {
+      console.error(`❌ CRASH PREVENTION: Error resetting column ${index}:`, error);
+    }
   });
 
   // Initialize animation states clearly
@@ -3259,7 +3329,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // classButtons = document.querySelectorAll(".class-button");
   // spinButtons = document.querySelectorAll(".spin-button");
   // spinSelection = document.getElementById("spinSelection");
-  outputDiv = document.getElementById("output");
+  try {
+    outputDiv = document.getElementById("output");
+    if (!outputDiv) {
+      console.error('❌ CRASH PREVENTION: Could not find output element during initialization');
+    }
+  } catch (error) {
+    console.error('❌ CRASH PREVENTION: Error during initialization:', error);
+  }
   
   // Mobile audio failsafe - stop all sounds when page loses focus
   document.addEventListener('visibilitychange', () => {

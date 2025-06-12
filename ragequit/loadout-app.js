@@ -16,7 +16,8 @@ const rageState = {
   finalLoadout: null,
   handicapStack: [],
   sufferingLevel: 0,
-  sufferingStreak: parseInt(localStorage.getItem('rageSufferingStreak')) || 0
+  sufferingStreak: parseInt(localStorage.getItem('rageSufferingStreak')) || 0,
+  aiRoast: null
 };
 
 // Make state globally accessible
@@ -984,9 +985,6 @@ function finalizeSpin() {
     source: actualResults ? "slot machine display" : "stored final loadout"
   });
 
-  // Add to history using the results
-  addToRageHistory(classType, weapon, specialization, gadgets, handicapName, handicapDesc);
-
   // Update suffering streak
   updateSufferingStreak();
   
@@ -996,12 +994,18 @@ function finalizeSpin() {
   // Display the selected handicap
   displaySelectedHandicap();
   
-  // Fetch AI roast
+  // Fetch AI roast first, then add to history
   setTimeout(async () => {
     try {
       await fetchRageQuitRoast(classType, weapon, specialization, gadgets, handicapName);
+      
+      // Add to history after AI roast is fetched (using stored roast)
+      addToRageHistory(classType, weapon, specialization, gadgets, handicapName, handicapDesc, rageState.aiRoast);
     } catch (error) {
       console.error("Error fetching roast:", error);
+      
+      // Add to history anyway with fallback roast
+      addToRageHistory(classType, weapon, specialization, gadgets, handicapName, handicapDesc, null);
     }
   }, 1500);
   
@@ -1308,6 +1312,9 @@ async function fetchRageQuitRoast(classType, weapon, specialization, gadgets, ha
     const data = await res.json();
     console.log("🎙️ Received roast:", data);
     
+    // Store the AI roast in global state
+    rageState.aiRoast = data.roast;
+    
     // Show the roast container
     const roastContainer = document.getElementById("ai-roast-output");
     if (roastContainer) {
@@ -1417,7 +1424,7 @@ function isSpicyRageLoadout(weapon, specialization, gadgets, handicapName) {
   return hasBadWeapon && hasBadGadgets && hasHandicap;
 }
 
-function addToRageHistory(classType, weapon, specialization, gadgets, handicapName, handicapDesc) {
+function addToRageHistory(classType, weapon, specialization, gadgets, handicapName, handicapDesc, aiRoast = null) {
   const historyList = document.getElementById("history-list");
   if (!historyList) return;
 
@@ -1461,7 +1468,7 @@ function addToRageHistory(classType, weapon, specialization, gadgets, handicapNa
       <span class="hidden-gadgets">${gadgets.join('|')}</span>
       <span class="hidden-handicap">${handicapName || "None"}</span>
       <span class="hidden-handicap-desc">${handicapDesc || "No handicap selected"}</span>
-      <span class="hidden-roast">${generateRageRoast(weapon, specialization, gadgets, handicapName)}</span>
+      <span class="hidden-roast">${aiRoast || generateRageRoast(weapon, specialization, gadgets, handicapName)}</span>
       <span class="hidden-loadout-name">${generateRageLoadoutName(classType, weapon, specialization)}</span>
     </div>
   `;
