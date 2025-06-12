@@ -995,7 +995,7 @@ function finalizeSpin() {
   // Fetch AI roast
   setTimeout(async () => {
     try {
-      await fetchRageQuitRoast(classType, weapon, gadgets, handicapName);
+      await fetchRageQuitRoast(classType, weapon, specialization, gadgets, handicapName);
     } catch (error) {
       console.error("Error fetching roast:", error);
     }
@@ -1281,18 +1281,18 @@ const spinRageQuitLoadout = () => {
 window.spinRageQuitLoadout = spinRageQuitLoadout;
 
 // AI Roast Integration
-async function fetchRageQuitRoast(classType, weapon, gadgets, handicap) {
+async function fetchRageQuitRoast(classType, weapon, specialization, gadgets, handicap) {
   try {
-    console.log("🎙️ Fetching AI roast for:", { classType, weapon, gadgets, handicap });
+    console.log("🎙️ Fetching AI roast for:", { classType, weapon, specialization, gadgets, handicap });
     
-    const res = await fetch("/api/rage-roast", {
+    const res = await fetch("/api/roast", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 
         class: classType, 
         weapon, 
-        gadgets, 
-        handicap: handicap || "None"
+        specialization, 
+        gadgets
       })
     });
     
