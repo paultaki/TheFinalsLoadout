@@ -383,9 +383,17 @@
         gap: 1.5rem;
         justify-content: center;
         align-items: center;
-        padding: 2rem;
+        padding: 0;
         position: relative;
         z-index: 1;
+        min-height: 0;
+        height: auto;
+        overflow: visible;
+      }
+      
+      /* When output has content, add padding */
+      #output:not(:empty) {
+        padding: 2rem;
       }
 
       /* Placeholder styles */
@@ -1095,9 +1103,14 @@
         }
 
         #output {
-          gap: 0.5rem;
+          gap: 2px;
           flex-wrap: nowrap;
-          overflow-x: auto;
+          overflow-x: hidden;
+          width: 100vw;
+          max-width: 100vw;
+          padding: 10px 5px !important;
+          margin: 0;
+          box-sizing: border-box;
         }
 
         .items-container {
@@ -1107,41 +1120,44 @@
           flex-wrap: nowrap !important;
           width: 100% !important;
           max-width: 100% !important;
-          overflow-x: visible !important;
-          padding: 0 2px !important;
+          overflow-x: hidden !important;
+          padding: 0 !important;
+          box-sizing: border-box !important;
         }
 
         .item-container {
-          width: 18.8vw !important;
-          height: 115px !important;
-          flex: 0 0 18.8vw !important;
-          min-width: 18.8vw !important;
-          max-width: 18.8vw !important;
+          width: calc((100vw - 20px) / 5) !important;
+          height: 110px !important;
+          flex: 0 0 calc((100vw - 20px) / 5) !important;
+          min-width: calc((100vw - 20px) / 5) !important;
+          max-width: calc((100vw - 20px) / 5) !important;
+          box-sizing: border-box !important;
         }
 
         /* Regular mobile view content sizing - improved for post-animation display */
         .itemCol img {
-          width: calc(18.8vw - 6px) !important;
-          height: 75px !important;
+          width: calc(((100vw - 20px) / 5) - 8px) !important;
+          height: 65px !important;
           object-fit: contain !important;
         }
 
         .itemCol p {
-          font-size: 10px !important;
+          font-size: 9px !important;
           line-height: 1.1 !important;
-          padding: 2px 2px 4px 2px !important;
+          padding: 2px 1px 4px 1px !important;
           overflow: visible !important;
           text-overflow: clip !important;
           white-space: normal !important;
           word-wrap: break-word !important;
           overflow-wrap: break-word !important;
           hyphens: auto !important;
-          max-height: 35px !important;
+          max-height: 30px !important;
         }
 
         .placeholder-container {
-          width: 100px;
-          height: 140px;
+          width: calc((100vw - 20px) / 5) !important;
+          height: 110px !important;
+          box-sizing: border-box !important;
         }
 
         .itemCol img {
@@ -1182,8 +1198,8 @@
         }
 
         .slot-machine-section.centered #output {
-          width: 100% !important;
-          max-width: 100% !important;
+          width: 100vw !important;
+          max-width: 100vw !important;
           margin: 0 !important;
           padding: 10px 5px !important;
           overflow: visible !important;
@@ -1191,41 +1207,44 @@
           display: flex !important;
           justify-content: center !important;
           align-items: center !important;
-          gap: 3px !important;
+          gap: 2px !important;
+          box-sizing: border-box !important;
         }
 
         .slot-machine-section.centered .items-container {
           width: 100% !important;
           max-width: 100% !important;
           display: flex !important;
-          gap: 1px !important;
+          gap: 2px !important;
           justify-content: center !important;
           flex-wrap: nowrap !important;
-          padding: 0 2px !important;
+          padding: 0 !important;
           margin: 0 !important;
           overflow: visible !important;
+          box-sizing: border-box !important;
         }
 
         .slot-machine-section.centered .item-container {
-          flex: 0 0 19.6vw !important;
-          width: 19.6vw !important;
-          height: 140px !important;
-          min-width: 19.6vw !important;
-          max-width: 19.6vw !important;
+          flex: 0 0 calc((100vw - 20px) / 5) !important;
+          width: calc((100vw - 20px) / 5) !important;
+          height: 110px !important;
+          min-width: calc((100vw - 20px) / 5) !important;
+          max-width: calc((100vw - 20px) / 5) !important;
+          box-sizing: border-box !important;
         }
 
         /* Mobile slot machine content sizing - back to working animation settings */
         .slot-machine-section.centered .itemCol img {
-          width: calc(19.6vw - 8px) !important;
-          height: 90px !important;
+          width: calc(((100vw - 20px) / 5) - 8px) !important;
+          height: 65px !important;
           object-fit: contain !important;
           margin: 2px !important;
         }
 
         .slot-machine-section.centered .itemCol p {
-          font-size: 11px !important;
-          line-height: 1.2 !important;
-          padding: 4px 2px !important;
+          font-size: 9px !important;
+          line-height: 1.1 !important;
+          padding: 2px 1px 4px 1px !important;
           margin: 0 !important;
           overflow: visible !important;
           text-overflow: clip !important;
@@ -1233,7 +1252,7 @@
           word-wrap: break-word !important;
           overflow-wrap: break-word !important;
           hyphens: auto !important;
-          max-height: 40px !important;
+          max-height: 30px !important;
         }
 
         /* Smaller screens - maintain full screen approach */
@@ -1355,56 +1374,7 @@
       </div>
 
       <div id="output" class="slot-machine-output">
-        <div class="placeholder-container">
-          <img
-            src="../images/placeholder.webp"
-            alt="?"
-            width="80"
-            height="80"
-            loading="lazy"
-          />
-          <p>Weapon</p>
-        </div>
-        <div class="placeholder-container">
-          <img
-            src="../images/placeholder.webp"
-            alt="?"
-            width="80"
-            height="80"
-            loading="lazy"
-          />
-          <p>Specialization</p>
-        </div>
-        <div class="placeholder-container">
-          <img
-            src="../images/placeholder.webp"
-            alt="?"
-            width="80"
-            height="80"
-            loading="lazy"
-          />
-          <p>Gadget 1</p>
-        </div>
-        <div class="placeholder-container">
-          <img
-            src="../images/placeholder.webp"
-            alt="?"
-            width="80"
-            height="80"
-            loading="lazy"
-          />
-          <p>Gadget 2</p>
-        </div>
-        <div class="placeholder-container">
-          <img
-            src="../images/placeholder.webp"
-            alt="?"
-            width="80"
-            height="80"
-            loading="lazy"
-          />
-          <p>Gadget 3</p>
-        </div>
+        <!-- Content will be dynamically generated here -->
       </div>
 
       <!-- Copy Button -->

@@ -185,6 +185,8 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
   }
 
   winningItem = winningItem || items[Math.floor(Math.random() * items.length)];
+  console.log(`🎰 Creating container with winner: "${winningItem}"`);
+  
   let repeatedItems = items
     .filter((item) => item !== winningItem)
     .sort(() => Math.random() - 0.5)
@@ -204,7 +206,7 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
   return repeatedItems
     .map(
       (item, index) => `
-      <div class="itemCol ${index === 4 ? "winner" : ""}">
+      <div class="itemCol ${index === 4 ? "winner" : ""}" data-item-name="${item}">
         <img src="../images/${item.replace(/ /g, "_")}.webp" alt="${item}" onerror="this.src='../images/placeholder.webp'">
         <p>${item}</p>
       </div>
@@ -236,77 +238,108 @@ class SlotColumn {
   }
 
   update(elapsed, deltaTime) {
-    // Safety check for runaway animations
-    if (!this.animationStartTime) {
-      this.animationStartTime = performance.now();
-    } else if (
-      performance.now() - this.animationStartTime >
-      this.maxAnimationDuration
-    ) {
-      console.warn("Animation timeout - forcing stop");
-      this.forceStop();
-      return;
-    }
+    try {
+      // Safety check for runaway animations
+      if (!this.animationStartTime) {
+        this.animationStartTime = performance.now();
+      } else if (
+        performance.now() - this.animationStartTime >
+        this.maxAnimationDuration
+      ) {
+        console.warn("Animation timeout - forcing stop");
+        this.forceStop();
+        return;
+      }
 
-    if (this.state === "stopped") return;
+      if (this.state === "stopped") return;
 
-    const dt = Math.min(deltaTime, 50) / 1000;
+      const dt = Math.min(deltaTime, 50) / 1000;
 
-    switch (this.state) {
-      case "accelerating":
-        this.velocity += PHYSICS.ACCELERATION * dt;
-        if (this.velocity >= PHYSICS.MAX_VELOCITY) {
-          this.velocity = PHYSICS.MAX_VELOCITY;
-          this.state = "spinning";
-        }
-        break;
-
-      case "spinning":
-        if (elapsed >= this.totalDuration - this.decelerationTime) {
-          this.state = "decelerating";
-          this.targetPosition =
-            Math.ceil(this.position / PHYSICS.ITEM_HEIGHT) *
-            PHYSICS.ITEM_HEIGHT;
-        }
-        break;
-
-      case "decelerating":
-        this.velocity += PHYSICS.DECELERATION * dt;
-
-        if (
-          Math.abs(this.position - this.targetPosition) < 1 &&
-          Math.abs(this.velocity) < 50
-        ) {
-          this.forceStop();
-          return;
-        }
-
-        if (this.velocity <= 0) {
-          if (Math.abs(this.velocity) < 100) {
-            this.forceStop();
-          } else {
-            this.velocity = -this.velocity * PHYSICS.BOUNCE_DAMPENING;
-            this.state = "bouncing";
+      switch (this.state) {
+        case "accelerating":
+          this.velocity += PHYSICS.ACCELERATION * dt;
+          if (this.velocity >= PHYSICS.MAX_VELOCITY) {
+            this.velocity = PHYSICS.MAX_VELOCITY;
+            this.state = "spinning";
           }
-        }
-        break;
+          break;
 
-      case "bouncing":
-        this.velocity += PHYSICS.DECELERATION * 1.2 * dt;
+        case "spinning":
+          if (elapsed >= this.totalDuration - this.decelerationTime) {
+            this.state = "decelerating";
+            // Calculate target position to land on the winner item (index 4)
+            // For gadget containers with single item, target position is 0
+            const itemsCount = this.element.querySelectorAll('.itemCol').length;
+            if (itemsCount === 1) {
+              this.targetPosition = 0;
+            } else {
+              // For regular slots, target the winner at index 4
+              this.targetPosition = 4 * PHYSICS.ITEM_HEIGHT;
+            }
+            console.log(`🎯 Column ${this.index} targeting position ${this.targetPosition} for ${itemsCount} items`);
+          }
+          break;
 
-        if (
-          Math.abs(this.velocity) < 50 ||
-          Math.abs(this.position - this.targetPosition) < 5
-        ) {
-          this.forceStop();
-          return;
-        }
-        break;
+        case "decelerating":
+          this.velocity += PHYSICS.DECELERATION * dt;
+
+          if (
+            Math.abs(this.position - this.targetPosition) < 1 &&
+            Math.abs(this.velocity) < 50
+          ) {
+            this.forceStop();
+            return;
+          }
+
+          if (this.velocity <= 0) {
+            if (Math.abs(this.velocity) < 100) {
+              this.forceStop();
+            } else {
+              this.velocity = -this.velocity * PHYSICS.BOUNCE_DAMPENING;
+              this.state = "bouncing";
+            }
+          }
+          break;
+
+        case "bouncing":
+          this.velocity += PHYSICS.DECELERATION * 1.2 * dt;
+
+          if (
+            Math.abs(this.velocity) < 50 ||
+            Math.abs(this.position - this.targetPosition) < 5
+          ) {
+            this.forceStop();
+            return;
+          }
+          break;
+      }
+
+      // Validate position before updating
+      if (!isNaN(this.velocity) && !isNaN(dt)) {
+        this.position += this.velocity * dt;
+        this.position = this.normalizePosition(this.position);
+        this.updateVisuals();
+      } else {
+        console.error('Invalid velocity or dt:', { velocity: this.velocity, dt });
+        this.forceStop();
+      }
+    } catch (error) {
+      console.error('SlotColumn update error:', error);
+      console.error('Column state:', { 
+        state: this.state, 
+        velocity: this.velocity, 
+        position: this.position,
+        elapsed,
+        deltaTime 
+      });
+      // Force stop on error
+      try {
+        this.forceStop();
+      } catch (stopError) {
+        console.error('Force stop error:', stopError);
+        this.state = "stopped";
+      }
     }
-
-    this.position += this.velocity * dt;
-    this.position = this.normalizePosition(this.position);
-    this.updateVisuals();
   }
 
   normalizePosition(pos) {
@@ -437,7 +470,12 @@ const displayRageQuitLoadout = () => {
     gadgets: selectedGadgets,
   };
 
-  console.log("🎯 Final loadout stored:", rageState.finalLoadout);
+  console.log("🎯 Final loadout stored BEFORE animation:", rageState.finalLoadout);
+  console.log("📝 Selected items:", {
+    weapon: selectedWeapon,
+    spec: selectedSpec,
+    gadgets: selectedGadgets
+  });
 
   // Build the slot machine UI (simplified structure without wrapper)
   const loadoutHTML = `
@@ -563,6 +601,9 @@ function startSpinAnimation(columns) {
 
   function animate(currentTime) {
     try {
+      // Add debug logging
+      console.log('🎰 Animate frame:', { currentTime, startTime, elapsed: currentTime - startTime });
+      
       // Safety timeout to prevent infinite animations
       const elapsed = currentTime - startTime;
       if (elapsed > 15000) { // 15 second timeout
@@ -609,6 +650,8 @@ function startSpinAnimation(columns) {
             // Validate deltaTime is reasonable
             const safeDeltaTime = Math.max(0, Math.min(deltaTime, 100));
             
+            console.log(`🎰 Column ${index} update:`, { state: column.state, deltaTime: safeDeltaTime });
+            
             if (typeof column.update === 'function') {
               column.update(elapsed, safeDeltaTime);
             } else {
@@ -622,6 +665,7 @@ function startSpinAnimation(columns) {
           }
         } catch (columnError) {
           console.error(`Error updating rage column ${index}:`, columnError);
+          console.error('Column state:', column);
           // Force stop the problematic column to prevent further crashes
           try {
             if (column) {
@@ -657,6 +701,7 @@ function startSpinAnimation(columns) {
           }, 16);
         }
       } else {
+        console.log('🎰 All columns stopped, finalizing...');
         try {
           // Stop spinning sound when all columns finish
           const spinningSound = document.getElementById("spinningSound");
@@ -714,6 +759,7 @@ function startSpinAnimation(columns) {
       }
     } catch (animateError) {
       console.error('Critical rage animation error:', animateError);
+      console.error('Animation error stack:', animateError.stack);
       // Emergency shutdown
       try {
         rageState.isSpinning = false;
@@ -884,25 +930,29 @@ function createScreenFlash() {
 
 // Finalize spin - record results and add to history
 function finalizeSpin() {
-  console.log("🎯 Finalizing spin with stored loadout:", rageState.finalLoadout);
+  console.log("🎯 Finalizing spin - reading actual slot machine results");
 
-  if (!rageState.finalLoadout) {
-    console.error("❌ No final loadout stored!");
+  // Read the actual results from the slot machine display
+  const actualResults = readSlotMachineResults();
+  
+  // If we couldn't read the results, fall back to the stored final loadout
+  const resultsToUse = actualResults || rageState.finalLoadout;
+  
+  if (!resultsToUse) {
+    console.error("❌ Could not read slot machine results or find stored loadout!");
     return;
   }
 
-  const { classType, weapon, specialization, gadgets } = rageState.finalLoadout;
+  const { classType, weapon, specialization, gadgets } = resultsToUse;
   const handicapName = rageState.selectedHandicap || "None";
   const handicapDesc = rageState.selectedHandicapDesc || "No handicap selected";
 
-  console.log("🎯 Handicap data for history:", {
-    handicapName,
-    handicapDesc,
-    rageStateHandicap: rageState.selectedHandicap,
-    rageStateHandicapDesc: rageState.selectedHandicapDesc
+  console.log("🎯 Slot machine results for history:", {
+    classType, weapon, specialization, gadgets, handicapName, handicapDesc,
+    source: actualResults ? "slot machine display" : "stored final loadout"
   });
 
-  // Add to history
+  // Add to history using the results
   addToRageHistory(classType, weapon, specialization, gadgets, handicapName, handicapDesc);
 
   // Update suffering streak
@@ -911,9 +961,9 @@ function finalizeSpin() {
   // Display the selected handicap
   displaySelectedHandicap();
   
-  // Reset state and re-enable button
+  // Reset state and re-enable button (but DON'T clear the display)
   setTimeout(() => {
-    resetSpinState();
+    resetSpinStateWithoutClearingDisplay();
     showDoubleOrNothingOption();
     
     // Scroll to show the final loadout and handicap
@@ -992,6 +1042,165 @@ function resetSpinState() {
   });
   
   console.log("✅ State reset complete - ready for next spin");
+}
+
+// Read the actual results from the slot machine display
+function readSlotMachineResults() {
+  try {
+    const itemContainers = document.querySelectorAll("#output .items-container .item-container");
+    
+    console.log("🔍 Reading slot machine results from", itemContainers.length, "containers");
+    
+    if (!itemContainers || itemContainers.length < 5) {
+      console.error("Not enough item containers found");
+      return null;
+    }
+
+    const results = [];
+    
+    // Read each slot machine result
+    itemContainers.forEach((container, index) => {
+      const scrollContainer = container.querySelector(".scroll-container");
+      if (!scrollContainer) {
+        console.error(`No scroll container found for item ${index}`);
+        return;
+      }
+
+      let itemName = null;
+
+      // First, let's debug what we're seeing in this container
+      const allItems = scrollContainer.querySelectorAll(".itemCol");
+      console.log(`🔍 Slot ${index} has ${allItems.length} items`);
+      
+      // List all items for debugging
+      allItems.forEach((item, itemIndex) => {
+        const text = item.querySelector("p")?.textContent?.trim();
+        const hasWinnerClass = item.classList.contains("winner");
+        console.log(`  Item ${itemIndex}: "${text}" (winner: ${hasWinnerClass})`);
+      });
+
+      // Find the winner item - prioritize actual scroll position over winner class
+      
+      // Method 1: Find the item that's actually centered in the viewport
+      const containerRect = container.getBoundingClientRect();
+      const containerCenter = containerRect.top + (containerRect.height / 2);
+      
+      let closestItem = null;
+      let closestDistance = Infinity;
+      
+      allItems.forEach((item, itemIndex) => {
+        const rect = item.getBoundingClientRect();
+        const itemCenter = rect.top + (rect.height / 2);
+        const distance = Math.abs(itemCenter - containerCenter);
+        
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestItem = item;
+        }
+      });
+      
+      if (closestItem) {
+        itemName = closestItem.querySelector("p")?.textContent?.trim();
+        console.log(`🎯 Found centered item for slot ${index}:`, itemName);
+      }
+      
+      // Method 2: Check for winner class (fallback)
+      if (!itemName) {
+        const winner = scrollContainer.querySelector(".itemCol.winner");
+        if (winner) {
+          itemName = winner.querySelector("p")?.textContent?.trim();
+          console.log(`🎯 Found winner class for slot ${index}:`, itemName);
+        }
+      }
+      
+      // Method 3: For gadget containers, check for data-gadget-index
+      if (!itemName && scrollContainer.hasAttribute('data-gadget-index')) {
+        // This is a gadget slot - might have a predetermined winner
+        const gadgetIndex = parseInt(scrollContainer.getAttribute('data-gadget-index'));
+        if (gadgetIndex >= 0 && gadgetIndex < 3 && rageState.finalLoadout?.gadgets?.[gadgetIndex]) {
+          itemName = rageState.finalLoadout.gadgets[gadgetIndex];
+          console.log(`🎯 Using stored gadget for slot ${index}:`, itemName);
+        }
+      }
+      
+      // Method 4: Position-based (item at index 4 is typically the winner for non-gadget slots)
+      if (!itemName && allItems.length > 4 && !scrollContainer.hasAttribute('data-gadget-index')) {
+        const winnerByPosition = allItems[4];
+        if (winnerByPosition) {
+          itemName = winnerByPosition.querySelector("p")?.textContent?.trim();
+          console.log(`🎯 Using position-based winner for slot ${index}:`, itemName);
+        }
+      }
+
+      if (itemName) {
+        results.push(itemName);
+        console.log(`✅ Slot ${index} result:`, itemName);
+      } else {
+        console.error(`❌ Could not determine result for slot ${index}`);
+      }
+    });
+
+    console.log("🎯 All slot machine results:", results);
+
+    if (results.length < 5) {
+      console.error("Could not read all slot machine results", results);
+      return null;
+    }
+
+    // Get the selected class
+    const selectedClassElement = document.getElementById("selected-class");
+    const classType = selectedClassElement?.textContent?.trim() || "Unknown";
+
+    const finalResults = {
+      classType: classType,
+      weapon: results[0],
+      specialization: results[1],
+      gadgets: [results[2], results[3], results[4]]
+    };
+
+    console.log("🎯 Final parsed results:", finalResults);
+
+    return finalResults;
+  } catch (error) {
+    console.error("Error reading slot machine results:", error);
+    return null;
+  }
+}
+
+// Reset spin state without clearing the display
+function resetSpinStateWithoutClearingDisplay() {
+  console.log("🔄 Resetting spin state (preserving display)");
+  
+  const spinButton = document.getElementById("rage-quit-btn");
+  if (spinButton) {
+    spinButton.removeAttribute("disabled");
+    spinButton.classList.remove('spinning', 'disabled');
+    spinButton.disabled = false;
+    console.log("✅ Button re-enabled");
+  }
+  
+  rageState.isSpinning = false;
+  if (window.rageRouletteSystem) {
+    window.rageRouletteSystem.animating = false;
+  }
+  
+  // Remove centering and restore normal layout
+  const slotMachineSection = document.querySelector('.slot-machine-section');
+  const heroSection = document.querySelector('.hero');
+  
+  if (slotMachineSection) {
+    slotMachineSection.classList.remove('centered');
+  }
+  if (heroSection) {
+    heroSection.style.opacity = '';
+  }
+  
+  // Remove animation classes but keep the content
+  document.querySelectorAll('.item-container').forEach(container => {
+    container.classList.remove('mega-flash', 'spinning');
+  });
+  
+  console.log("✅ State reset complete - display preserved, ready for next spin");
 }
 
 // Show Double or Nothing option
@@ -1127,12 +1336,15 @@ function addToRageHistory(classType, weapon, specialization, gadgets, handicapNa
   // Generate compact loadout description
   const loadoutName = `${weapon} + ${gadgets.slice(0, 2).join('/')}`;
 
-  // Create clean text-based history entry (NO IMAGES) - compact format
-  const handicapDisplay = handicapName && handicapName !== "None" ? ` [${handicapName}]` : "";
-  const compactGadgets = gadgets.slice(0, 2).join('/'); // Only show first 2 gadgets for space
+  // Create clean text-based history entry (NO IMAGES) - ultra compact format
+  const handicapDisplay = handicapName && handicapName !== "None" ? ` [${handicapName.slice(0, 8)}...]` : "";
+  const shortWeapon = weapon.length > 12 ? weapon.slice(0, 12) + "..." : weapon;
+  const shortSpec = specialization.length > 10 ? specialization.slice(0, 10) + "..." : specialization;
+  const compactGadgets = gadgets.slice(0, 1).join(''); // Only show first gadget for more space
+  
   newEntry.innerHTML = `
     <span class="history-class-tag">${classType.toUpperCase()}</span>
-    ${weapon} + ${specialization} + ${compactGadgets}${handicapDisplay}
+    ${shortWeapon} + ${shortSpec} + ${compactGadgets}${handicapDisplay}
     <span class="history-punishment">Lvl ${punishmentLevel}</span>
     <!-- Store full data for modal/copy functionality -->
     <div style="display: none;">
@@ -1200,6 +1412,18 @@ function loadRageHistory() {
     newEntry.dataset.punishmentLevel = entry.punishmentLevel || 0;
     newEntry.dataset.classType = entry.classType || 'unknown';
     newEntry.innerHTML = entry.html || entry; // Support old format
+    
+    // Add click handler for the whole row to show details
+    newEntry.addEventListener('click', function() {
+      viewFullDetails(this);
+    });
+
+    // Add right-click context menu for actions
+    newEntry.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      showContextMenu(e, this);
+    });
+    
     historyList.appendChild(newEntry);
   });
 
@@ -1558,9 +1782,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize suffering streak display
   initializeSufferingStreakDisplay();
 
-  // Clear ALL history to force clean text-based format with correct data
-  localStorage.removeItem("rageQuitHistory");
-  console.log("🗑️ Cleared all history to force new format with complete loadout data");
+  // Only clear history once when format is updated
+  const formatVersion = localStorage.getItem("rageHistoryFormatVersion");
+  if (formatVersion !== "v2") {
+    localStorage.removeItem("rageQuitHistory");
+    localStorage.setItem("rageHistoryFormatVersion", "v2");
+    console.log("🗑️ Cleared history for format update v2");
+  }
 
   loadRageHistory(); // Load saved history when page loads
   applyHistoryFilters(); // Initialize filters

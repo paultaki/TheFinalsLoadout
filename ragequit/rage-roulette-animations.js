@@ -682,99 +682,197 @@ class RageRouletteAnimationSystem {
     animationContainer.appendChild(statusEl);
     document.body.appendChild(animationContainer);
 
-    // Animation logic (same pattern as main page)
+    // Animation logic - determine winner at the end based on where it stops
     let currentIndex = 0;
     const startTime = Date.now();
-    const winnerIndex = Math.floor(Math.random() * handicaps.length);
-    this.selectedHandicap = handicaps[winnerIndex].name;
-    this.selectedHandicapDesc = handicaps[winnerIndex].desc;
+    let winnerIndex = null; // Will be determined when animation completes
+    let finalHandicap = null;
+    let finalHandicapDesc = null;
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const animate = () => {
-        const elapsed = Date.now() - startTime;
+        try {
+          const elapsed = Date.now() - startTime;
 
-        if (elapsed >= this.handicapAnimationConfig.totalDuration) {
-          // Final selection - ensure currentIndex matches winnerIndex
-          currentIndex = winnerIndex;
-          
-          // Clear all elements first
-          handicapElements.forEach((el) => {
-            el.style.opacity = "0.5";
-            el.style.transform = "scale(0.8)";
-            el.style.background = "linear-gradient(135deg, #2e1a1a, #4e2a2a)";
-          });
-          
-          // Highlight the winner
-          handicapElements[winnerIndex].style.opacity = "1";
-          handicapElements[winnerIndex].style.transform = "scale(1.3)";
-          handicapElements[winnerIndex].style.boxShadow =
-            "0 0 40px rgba(255, 68, 68, 0.8)";
-          handicapElements[winnerIndex].style.background = 
-            "linear-gradient(135deg, #8b0000, #ff4444)";
-
-          this.playHandicapWinSound();
-          statusEl.textContent = `${this.selectedHandicap.toUpperCase()} ACTIVATED!`;
-
-          // Screen shake effect
-          document.body.style.animation = "rage-shake 0.5s ease-in-out";
-          setTimeout(() => {
-            document.body.style.animation = "";
-          }, 500);
-
-          setTimeout(() => {
-            document.body.removeChild(animationContainer);
-            resolve();
-          }, 1000);
-          return;
-        }
-
-        // Update active state
-        handicapElements.forEach((el, idx) => {
-          if (idx === currentIndex) {
-            el.style.opacity = "1";
-            el.style.transform = "scale(1.1)";
-            el.style.background = "linear-gradient(135deg, #b83e3e, #ff4444)";
-            
-            // Create skull particles
-            if (elapsed % 150 < 50) {
-              this.createSkullParticleEffect(el);
+          // Safety timeout
+          if (elapsed > 10000) {
+            console.warn('⚠️ Handicap animation timeout - forcing completion');
+            try {
+              if (animationContainer && animationContainer.parentNode) {
+                document.body.removeChild(animationContainer);
+              }
+            } catch (cleanupError) {
+              console.warn('Cleanup error:', cleanupError);
             }
-          } else {
-            el.style.opacity = "0.5";
-            el.style.transform = "scale(0.8)";
-            el.style.background = "linear-gradient(135deg, #2e1a1a, #4e2a2a)";
+            resolve();
+            return;
           }
-        });
 
-        this.playTickSound();
+          if (elapsed >= this.handicapAnimationConfig.totalDuration) {
+            try {
+              // Final selection - use current position as winner
+              winnerIndex = currentIndex;
+              finalHandicap = handicaps[winnerIndex].name;
+              finalHandicapDesc = handicaps[winnerIndex].desc;
+              
+              // Set the selected handicap based on where we actually stopped
+              this.selectedHandicap = finalHandicap;
+              this.selectedHandicapDesc = finalHandicapDesc;
+              
+              // Clear all elements first
+              handicapElements.forEach((el, idx) => {
+                if (el && el.style) {
+                  el.style.opacity = "0.5";
+                  el.style.transform = "scale(0.8)";
+                  el.style.background = "linear-gradient(135deg, #2e1a1a, #4e2a2a)";
+                }
+              });
+              
+              // Highlight the winner (where we actually stopped)
+              if (handicapElements[winnerIndex] && handicapElements[winnerIndex].style) {
+                handicapElements[winnerIndex].style.opacity = "1";
+                handicapElements[winnerIndex].style.transform = "scale(1.3)";
+                handicapElements[winnerIndex].style.boxShadow = "0 0 40px rgba(255, 68, 68, 0.8)";
+                handicapElements[winnerIndex].style.background = "linear-gradient(135deg, #8b0000, #ff4444)";
+              }
 
-        // Calculate speed
-        const progress = elapsed / this.handicapAnimationConfig.totalDuration;
-        let speed = this.handicapAnimationConfig.initialSpeed;
+              try {
+                this.playHandicapWinSound();
+              } catch (soundError) {
+                console.warn('Sound error:', soundError);
+              }
 
-        if (progress > this.handicapAnimationConfig.decelerationStart) {
-          const decelerationProgress =
-            (progress - this.handicapAnimationConfig.decelerationStart) /
-            (1 - this.handicapAnimationConfig.decelerationStart);
-          speed =
-            this.handicapAnimationConfig.initialSpeed +
-            (this.handicapAnimationConfig.finalSpeed -
-              this.handicapAnimationConfig.initialSpeed) *
-              Math.pow(decelerationProgress, 2);
-        }
+              if (statusEl) {
+                statusEl.textContent = `${finalHandicap.toUpperCase()} ACTIVATED!`;
+              }
 
-        if (elapsed >= this.handicapAnimationConfig.totalDuration - 800) {
-          // In the final phase, ensure we land on the winner
-          currentIndex = winnerIndex;
-          speed = 800;
-        } else {
+              // Screen shake effect
+              try {
+                document.body.style.animation = "rage-shake 0.5s ease-in-out";
+                setTimeout(() => {
+                  document.body.style.animation = "";
+                }, 500);
+              } catch (shakeError) {
+                console.warn('Shake animation error:', shakeError);
+              }
+
+              setTimeout(() => {
+                try {
+                  if (animationContainer && animationContainer.parentNode) {
+                    document.body.removeChild(animationContainer);
+                  }
+                  resolve();
+                } catch (cleanupError) {
+                  console.warn('Final cleanup error:', cleanupError);
+                  resolve();
+                }
+              }, 1000);
+              return;
+            } catch (finalError) {
+              console.error('Final selection error:', finalError);
+              try {
+                if (animationContainer && animationContainer.parentNode) {
+                  document.body.removeChild(animationContainer);
+                }
+              } catch (cleanupError) {
+                console.warn('Emergency cleanup error:', cleanupError);
+              }
+              resolve();
+              return;
+            }
+          }
+
+          // Update active state
+          try {
+            handicapElements.forEach((el, idx) => {
+              if (el && el.style) {
+                if (idx === currentIndex) {
+                  el.style.opacity = "1";
+                  el.style.transform = "scale(1.1)";
+                  el.style.background = "linear-gradient(135deg, #b83e3e, #ff4444)";
+                  
+                  // Create skull particles (less frequently to avoid performance issues)
+                  if (elapsed % 300 < 50) {
+                    try {
+                      this.createSkullParticleEffect(el);
+                    } catch (particleError) {
+                      console.warn('Particle effect error:', particleError);
+                    }
+                  }
+                } else {
+                  el.style.opacity = "0.5";
+                  el.style.transform = "scale(0.8)";
+                  el.style.background = "linear-gradient(135deg, #2e1a1a, #4e2a2a)";
+                }
+              }
+            });
+          } catch (styleError) {
+            console.warn('Style update error:', styleError);
+          }
+
+          try {
+            this.playTickSound();
+          } catch (soundError) {
+            console.warn('Tick sound error:', soundError);
+          }
+
+          // Calculate speed
+          const progress = elapsed / this.handicapAnimationConfig.totalDuration;
+          let speed = this.handicapAnimationConfig.initialSpeed;
+
+          if (progress > this.handicapAnimationConfig.decelerationStart) {
+            const decelerationProgress =
+              (progress - this.handicapAnimationConfig.decelerationStart) /
+              (1 - this.handicapAnimationConfig.decelerationStart);
+            speed =
+              this.handicapAnimationConfig.initialSpeed +
+              (this.handicapAnimationConfig.finalSpeed -
+                this.handicapAnimationConfig.initialSpeed) *
+                Math.pow(decelerationProgress, 2);
+          }
+
+          // Natural progression - no forced winner
           currentIndex = (currentIndex + 1) % handicaps.length;
-        }
 
-        setTimeout(animate, speed);
+          // Ensure speed is reasonable
+          speed = Math.max(50, Math.min(speed, 1000));
+
+          setTimeout(() => {
+            try {
+              animate();
+            } catch (animateError) {
+              console.error('Animation recursion error:', animateError);
+              try {
+                if (animationContainer && animationContainer.parentNode) {
+                  document.body.removeChild(animationContainer);
+                }
+                resolve();
+              } catch (emergencyError) {
+                console.error('Emergency resolution error:', emergencyError);
+                resolve();
+              }
+            }
+          }, speed);
+
+        } catch (outerError) {
+          console.error('Handicap animation error:', outerError);
+          try {
+            if (animationContainer && animationContainer.parentNode) {
+              document.body.removeChild(animationContainer);
+            }
+          } catch (cleanupError) {
+            console.warn('Outer cleanup error:', cleanupError);
+          }
+          resolve();
+        }
       };
 
-      animate();
+      try {
+        animate();
+      } catch (initialError) {
+        console.error('Initial animate error:', initialError);
+        reject(initialError);
+      }
     });
     } catch (error) {
       console.error("❌ Error in handicap selection animation:", error);

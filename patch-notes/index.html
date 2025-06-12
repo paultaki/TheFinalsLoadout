@@ -74,10 +74,28 @@
     <!-- Fonts & Favicon -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
     <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
+    />
+    <link
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
 
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="../style.css" as="style" />
+    <link rel="preload" href="style.css" as="style" />
+    <link rel="preload" href="app.js" as="script" />
+    
     <!-- Styles -->
     <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="style.css" />
@@ -312,7 +330,7 @@
               <tbody>
                 <tr class="nerf-row">
                   <td>
-                    <img src="../images/XP-54.webp" alt="XP-54" class="weapon-icon-small" />
+                    <img src="../images/XP-54.webp" alt="XP-54" class="weapon-icon-small" width="24" height="24" loading="lazy" />
                     XP-54
                   </td>
                   <td>Damage 17→16, RPM 850→860</td>
@@ -320,7 +338,7 @@
                 </tr>
                 <tr class="buff-row">
                   <td>
-                    <img src="../images/KS-23.webp" alt="KS-23" class="weapon-icon-small" />
+                    <img src="../images/KS-23.webp" alt="KS-23" class="weapon-icon-small" width="24" height="24" loading="lazy" />
                     KS-23
                   </td>
                   <td>Accuracy improved</td>
@@ -328,7 +346,7 @@
                 </tr>
                 <tr class="buff-row">
                   <td>
-                    <img src="../images/ARN-220.webp" alt="ARN-220" class="weapon-icon-small" />
+                    <img src="../images/ARN-220.webp" alt="ARN-220" class="weapon-icon-small" width="24" height="24" loading="lazy" />
                     ARN-220
                   </td>
                   <td>Unified recoil pattern</td>
@@ -336,7 +354,7 @@
                 </tr>
                 <tr class="buff-row">
                   <td>
-                    <img src="../images/Sledgehammer.webp" alt="Melee" class="weapon-icon-small" />
+                    <img src="../images/Sledgehammer.webp" alt="Melee" class="weapon-icon-small" width="24" height="24" loading="lazy" />
                     All Melee
                   </td>
                   <td>Hit detection improved</td>
@@ -439,7 +457,7 @@
       </div>
     </main>
 
-    <script src="app.js"></script>
+    <script defer src="app.js"></script>
     
     <!-- Scroll Progress Bar and Return to Top Script -->
     <script>
