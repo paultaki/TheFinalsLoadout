@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/roast.js": {
-      "maxDuration": 30
-    }
-  }
-}

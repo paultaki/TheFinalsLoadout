@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <link rel="canonical" href="https://www.thefinalsloadout.com/" />
+
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com/" />
+    <link rel="dns-prefetch" href="https://static.cloudflareinsights.com/" />
+
+    <!-- Preload Critical Resources -->
+    <link
+      rel="preload"
+      href="images/the-finals-logo.webp"
+      as="image"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      href="images/light_silhouette.webp"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="images/medium_silhouette.webp"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="images/heavy_silhouette.webp"
+      as="image"
+    />
+    <link rel="preload" href="style.css" as="style" />
+    <link rel="preload" href="app.js" as="script" />
+    <link rel="prefetch" href="images/light_active.webp" />
+    <link rel="prefetch" href="images/medium_active.webp" />
+    <link rel="prefetch" href="images/heavy_active.webp" />
+    <link rel="prefetch" href="images/placeholder.webp" />
+
+    <!-- Meta Tags -->
+    <title>
+      The Finals BEST Random Loadout Generator | Fun & Unique Loadouts
+    </title>
+    <meta
+      name="description"
+      content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles."
+    />
+    <meta name="author" content="Paul Takisaki" />
+    <link rel="author" href="https://www.paultakisaki.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="The Finals Loadout Roulette" />
+    <meta
+      property="og:description"
+      content="Randomize your loadout and dominate The Finals with style."
+    />
+    <meta
+      property="og:image"
+      content="https://www.thefinalsloadout.com/assets/loadout-social-card@2x.png"
+    />
+    <meta property="og:image:width" content="2400" />
+    <meta property="og:image:height" content="1260" />
+    <meta property="og:url" content="https://www.thefinalsloadout.com/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Finals Loadout Roulette" />
+    <meta
+      name="twitter:description"
+      content="Spin the wheel. Wreck the arena."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.thefinalsloadout.com/assets/loadout-social-card@2x.png"
+    />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "The Finals Loadout Generator",
+        "url": "https://www.thefinalsloadout.com",
+        "description": "A random loadout generator for The Finals game with optimized weapons and gadgets for different playstyles.",
+        "image": "https://www.thefinalsloadout.com/images/the-finals-logo.webp",
+        "author": {
+          "@type": "Person",
+          "name": "Paul Takisaki",
+          "url": "https://www.paultakisaki.com"
+        }
+      }
+    </script>
+
+    <!-- Fonts -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap"
+      />
+    </noscript>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+
+    <!-- Critical CSS -->
+    <style>
+      :root {
+        --neon-purple: #7b2fe3;
+        --neon-blue: #1e90ff;
+        --neon-cyan: #00f3ff;
+        --neon-pink: #ff1493;
+        --neon-orange: #ff7b00;
+        --neon-yellow: #ffb700;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: linear-gradient(-45deg, #1d1a21, #2a1f2d, #1f2a2d, #201c24);
+        background-size: 400% 400%;
+        animation: gradientShift 20s ease infinite;
+        min-height: 100%;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        font-weight: 400;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        color: #fff;
+        text-align: center;
+        background: transparent;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      h1,
+      h2,
+      .impact-text {
+        font-family: "Bebas Neue", sans-serif;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .main-nav {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        padding: 1rem 0;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        position: relative;
+        z-index: 500;
+      }
+
+      .main-nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+
+      .main-nav a:hover,
+      .main-nav a.active {
+        background-color: var(--neon-blue);
+      }
+
+      .headerSection {
+        padding: 2rem 0;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+
+      .finals-logo {
+        max-width: 240px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .subTitle {
+        font-size: 1.5rem;
+        margin: 1rem 0;
+        color: var(--neon-yellow);
+        font-weight: 500;
+      }
+
+      .loading-placeholder {
+        background: linear-gradient(90deg, #333, #555, #333);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+        border-radius: 8px;
+      }
+
+      @keyframes loading {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      /* Selection Display - Hidden by default */
+      #selection-display {
+        display: none !important;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+      }
+
+      #selection-display.visible {
+        display: block !important;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Desktop Audio Toggle Positioning */
+      @media (min-width: 769px) {
+        .sound-toggle-button {
+          position: fixed !important;
+          top: 140px !important;
+          right: 16px !important;
+          z-index: 999 !important;
+        }
+        
+        /* Hide mobile sound toggle on desktop */
+        .mobile-sound-toggle {
+          display: none !important;
+        }
+
+        .sound-toggle-button:hover {
+          background: rgba(0, 0, 0, 0.8);
+          border-color: rgba(255, 255, 255, 0.4);
+          transform: scale(1.05);
+        }
+
+        .sound-toggle-button.muted {
+          background: rgba(255, 68, 68, 0.7);
+          border-color: rgba(255, 68, 68, 0.4);
+        }
+
+        .sound-toggle-button.muted:hover {
+          background: rgba(255, 68, 68, 0.8);
+          border-color: rgba(255, 68, 68, 0.6);
+        }
+      }
+
+      /* Countdown Styles */
+
+      .countdown-compact {
+        font-family: system-ui, -apple-system, sans-serif;
+        font-size: 12px;
+        color: var(--neon-yellow);
+        font-weight: 500;
+        margin: 16px auto;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+      }
+
+      .countdown-box-group {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .countdown-box {
+        background: linear-gradient(
+          135deg,
+          rgba(123, 47, 227, 0.2),
+          rgba(30, 144, 255, 0.2)
+        );
+        border: 1px solid rgba(123, 47, 227, 0.4);
+        border-radius: 4px;
+        padding: 3px 6px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 28px;
+        position: relative;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 0 10px rgba(123, 47, 227, 0.3);
+      }
+
+      .countdown-number {
+        display: block;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--neon-yellow);
+        line-height: 1;
+        font-family: "Bebas Neue", sans-serif;
+        text-shadow: 0 0 5px rgba(255, 183, 0, 0.6);
+      }
+
+      .countdown-unit {
+        display: block;
+        font-size: 8px;
+        color: var(--neon-yellow);
+        text-transform: uppercase;
+        line-height: 1;
+        margin-top: 1px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+
+      /* Base Toggle Button Styles */
+      .sound-toggle-button {
+        position: fixed;
+        right: 16px;
+        top: 280px;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+      }
+
+      .sound-toggle-button:hover {
+        background: rgba(0, 0, 0, 0.8);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: scale(1.05);
+      }
+
+      .sound-toggle-button.muted {
+        background: rgba(255, 68, 68, 0.7);
+        border-color: rgba(255, 68, 68, 0.4);
+      }
+
+      .sound-toggle-button.muted:hover {
+        background: rgba(255, 68, 68, 0.8);
+        border-color: rgba(255, 68, 68, 0.6);
+      }
+
+      .filter-toggle-button {
+        position: fixed;
+        right: 16px;
+        top: 80px;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 1001;
+        backdrop-filter: blur(10px);
+      }
+
+      .filter-toggle-button:hover {
+        background: rgba(0, 0, 0, 0.8);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: scale(1.05);
+      }
+
+      .filter-toggle-button svg {
+        width: 20px;
+        height: 20px;
+      }
+      
+      /* Force filter button visibility on all devices */
+      #filter-toggle {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+
+      /* Mobile Sound Toggle Styles */
+      .mobile-sound-toggle {
+        display: none !important;
+      }
+
+      /* Mobile Redesign - Clean & Symmetric */
+      @media (max-width: 768px) {
+        /* Position mobile sound toggle in header */
+        .mobile-sound-toggle {
+          display: flex !important;
+          position: absolute !important;
+          top: 10px !important;
+          right: 10px !important;
+          width: 40px !important;
+          height: 40px !important;
+          z-index: 1001 !important;
+          background: rgba(0, 0, 0, 0.7) !important;
+          border: 2px solid rgba(255, 255, 255, 0.2) !important;
+          border-radius: 50% !important;
+          color: #fff !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          transition: all 0.3s ease !important;
+          backdrop-filter: blur(10px) !important;
+        }
+
+        .mobile-sound-toggle:hover {
+          background: rgba(0, 0, 0, 0.8) !important;
+          border-color: rgba(255, 255, 255, 0.4) !important;
+          transform: scale(1.05) !important;
+        }
+
+        .mobile-sound-toggle.muted {
+          background: rgba(255, 68, 68, 0.7) !important;
+          border-color: rgba(255, 68, 68, 0.4) !important;
+        }
+
+        .mobile-sound-toggle.muted:hover {
+          background: rgba(255, 68, 68, 0.8) !important;
+          border-color: rgba(255, 68, 68, 0.6) !important;
+        }
+
+
+        /* Ensure header has relative positioning for absolute child */
+        .headerSection {
+          position: relative;
+        }
+        /* Reset and base spacing */
+        body {
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
+        }
+
+        .container {
+          padding: 0 16px;
+          max-width: 100%;
+        }
+
+        /* Ensure main content has tight spacing */
+        main.container {
+          padding-top: 0;
+          padding-bottom: 16px;
+        }
+
+        /* Header Section - Centered */
+        .headerSection {
+          padding: 16px 0;
+          text-align: center;
+        }
+
+        .finals-logo-mobile {
+          max-width: 144px;
+          height: auto;
+          margin-bottom: 8px;
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .subTitle-mobile {
+          font-size: 14px;
+          font-weight: 600;
+          margin: 8px 0;
+          text-transform: none;
+          letter-spacing: 0.5px;
+        }
+
+        .countdown-mobile {
+          background: rgba(0, 0, 0, 0.4);
+          color: #fff;
+          font-size: 16px;
+          font-weight: 500;
+          padding: 8px 16px;
+          border-radius: 8px;
+          margin: 8px auto;
+          text-align: center;
+          letter-spacing: 1px;
+          display: inline-block;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* SPIN Button - Centered & Prominent */
+        .main-spin-button {
+          width: 200px !important;
+          height: 60px;
+          margin: 16px auto;
+          display: block;
+          border-radius: 12px;
+          font-size: 18px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          box-shadow: 0 4px 15px rgba(123, 47, 227, 0.3);
+        }
+
+        /* Class Cards - 2x2 Grid + Centered 5th */
+        .class-selection {
+          margin: 16px 0;
+        }
+
+        .class-selection .btnRow {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          max-width: 150px;
+          margin: 0 auto 8px auto;
+          justify-items: center;
+        }
+
+        .class-button {
+          width: 65px !important;
+          height: 90px !important;
+          border-radius: 8px;
+          border: 2px solid rgba(255, 255, 255, 0.2);
+          transition: all 0.3s ease;
+          object-fit: cover;
+        }
+
+        .class-button:nth-child(3) {
+          grid-column: 1 / -1;
+          justify-self: center;
+          margin-top: 8px;
+        }
+
+        .class-button.active,
+        .class-button:hover {
+          border-color: rgba(255, 255, 255, 0.8);
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+          transform: scale(1.02);
+        }
+
+        /* Section Spacing - Compact */
+        .selection-container > div {
+          margin-bottom: 10px;
+        }
+
+        /* Tighten all major section gaps */
+        .class-selection,
+        .spin-control,
+        #output,
+        .loadout-history {
+          margin: 8px 0;
+        }
+
+        /* Recent Chaos - Clean Cards */
+        .loadout-history {
+          margin-top: 10px;
+        }
+
+        .loadout-history h2 {
+          font-size: 18px;
+          font-weight: 700;
+          margin-bottom: 12px;
+          text-align: center;
+          text-transform: none;
+        }
+
+        .chaos-counter {
+          text-align: center;
+          font-size: 12px;
+          margin-bottom: 16px;
+          opacity: 0.8;
+        }
+
+        /* History Cards - No Overflow */
+        .history-item {
+          background: rgba(0, 0, 0, 0.4);
+          border-radius: 12px;
+          margin: 8px 0;
+          padding: 12px;
+          width: calc(100% - 32px);
+          margin-left: auto;
+          margin-right: auto;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          overflow: hidden;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .history-item.collapsed {
+          height: 50px;
+        }
+
+        .history-item.expanded {
+          height: auto;
+          max-height: 180px;
+          overflow-y: auto;
+        }
+
+        .history-summary {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-weight: 600;
+          font-size: 14px;
+          text-transform: none;
+        }
+
+        .view-details {
+          font-size: 12px;
+          opacity: 0.7;
+          font-weight: 400;
+        }
+
+        .history-details {
+          margin-top: 12px;
+          display: none;
+          overflow: hidden;
+        }
+
+        .history-item.expanded .history-details {
+          display: block;
+        }
+
+        /* Mobile History Cards - 2x3 Grid Layout */
+        .history-entry .loadout-details {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: auto auto;
+          gap: 8px;
+          margin: 8px 0;
+        }
+
+        /* Top row: weapon and spec */
+        .history-entry .weapon-item {
+          grid-column: 1;
+          grid-row: 1;
+        }
+
+        .history-entry .spec-item {
+          grid-column: 2;
+          grid-row: 1;
+        }
+
+        /* Bottom row: gadgets spanning both columns - FORCE horizontal layout */
+        .history-entry .gadget-group,
+        .history-entry .meme-export-container .gadget-group {
+          grid-column: 1 / -1 !important;
+          grid-row: 2 !important;
+          display: flex !important;
+          flex-direction: row !important;
+          gap: 4px !important;
+          justify-content: space-between !important;
+          align-items: stretch !important;
+          flex-wrap: nowrap !important;
+        }
+
+        .history-entry .gadget-item {
+          flex: 1 !important;
+          min-width: 0 !important;
+          display: flex !important;
+          flex-direction: column !important;
+        }
+
+        /* Compact loadout items for mobile */
+        .history-entry .loadout-item {
+          background: rgba(0, 0, 0, 0.3);
+          border-radius: 8px;
+          padding: 8px 4px;
+          text-align: center;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          min-height: 70px;
+        }
+
+        .history-entry .loadout-item img {
+          width: 38px;
+          height: 38px;
+          border-radius: 4px;
+          object-fit: cover;
+          margin-bottom: 4px;
+        }
+
+        .history-entry .loadout-item .item-name {
+          font-size: 10px;
+          font-weight: 500;
+          line-height: 1.1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 100%;
+          color: #fff;
+          opacity: 0.9;
+        }
+
+        /* Typography Cleanup */
+        .class-name {
+          font-size: 14px;
+          font-weight: 700;
+          text-transform: none;
+        }
+
+        .item-name {
+          font-size: 12px;
+          font-weight: 400;
+          text-transform: none;
+        }
+
+        .flavor-text {
+          font-size: 11px;
+          opacity: 0.8;
+          font-weight: 300;
+        }
+
+        /* Progress Bars - Thinner */
+        .progress-bar {
+          height: 4px !important;
+          border-radius: 2px;
+          margin: 8px 0;
+        }
+
+        /* Badges - Smaller */
+        .badge {
+          font-size: 10px !important;
+          padding: 2px 6px !important;
+          border-radius: 4px;
+        }
+
+        /* Glow Effect Reduction */
+        .main-spin-button {
+          box-shadow: 0 4px 15px rgba(123, 47, 227, 0.2) !important;
+        }
+
+        .class-button.active {
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .history-item {
+          box-shadow: none !important;
+        }
+
+        /* Clear History Button */
+        .clear-history-btn {
+          display: block;
+          margin: 16px auto;
+          padding: 8px 16px;
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          color: #fff;
+          border-radius: 8px;
+          font-size: 12px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .clear-history-btn:hover {
+          background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Mobile Toggle Button Adjustments - Position below nav bar */
+        .filter-toggle-button,
+        #filter-toggle {
+          display: flex !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          top: 60px !important;  /* Below navigation bar */
+          right: 70px !important;
+          z-index: 10002 !important;
+          background: rgba(0, 0, 0, 0.8) !important;
+          border: 2px solid rgba(255, 255, 255, 0.3) !important;
+          width: 40px !important;
+          height: 40px !important;
+          position: fixed !important;
+          border-radius: 50% !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          transition: all 0.3s ease !important;
+          backdrop-filter: blur(10px) !important;
+          color: #fff !important;
+        }
+        
+        .filter-toggle-button svg,
+        #filter-toggle svg {
+          width: 18px !important;
+          height: 18px !important;
+          color: #fff !important;
+          fill: none !important;
+          stroke: #fff !important;
+        }
+        
+        .sound-toggle-button {
+          top: 60px !important;  /* Below navigation bar */
+          right: 10px !important;
+          z-index: 10001 !important;
+          width: 40px !important;
+          height: 40px !important;
+        }
+
+
+        /* slot-machine-wrapper removed - content now generated dynamically */
+
+        #output {
+          margin-top: 10px !important;
+          margin-bottom: 0 !important; /* Kill bottom margin */
+        }
+
+        .items-container {
+          margin: 0 auto !important;
+          padding: 3px 10px !important;
+          background: transparent !important;
+          box-shadow: none !important;
+        }
+        
+        /* #output now handles the wrapper styling */
+        #output {
+          padding: 8px 15px !important;
+          margin: 15px auto 10px !important;
+          max-width: 90%;
+        }
+
+        /* Tighten gap between slot machine and history */
+        .loadout-history {
+          margin-top: 20px !important; /* Was probably 40-50px */
+        }
+
+        /* Remove any min-height constraints */
+        .container,
+        .selection-container {
+          min-height: unset !important;
+        }
+
+        .main-spin-button {
+          margin-bottom: 15px !important;
+        }
+
+        /* Reduce gaps between sections */
+        .selection-container {
+          margin-bottom: 10px !important;
+        }
+
+        .spin-control {
+          margin-bottom: 10px !important;
+        }
+
+        /* Remove excessive height constraints */
+        .headerSection {
+          min-height: unset !important;
+        }
+
+        /* Compact section spacing */
+        .loadout-history {
+          margin-top: 15px !important;
+        }
+
+        /* Remove margin from main to account for no bottom CTA */
+        main {
+          padding-bottom: 16px !important;
+        }
+
+        /* Ensure container takes only needed space */
+        .container {
+          min-height: unset !important;
+        }
+      }
+
+      /* Promotional Flag for New Filters */
+      .promo-flag {
+        position: fixed;
+        top: 70px;
+        right: 75px;
+        z-index: 10000;
+        animation: flagWave 2s ease-in-out infinite;
+        pointer-events: none;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform-origin: center center;
+      }
+
+      .flag-content {
+        position: relative;
+        background: linear-gradient(135deg, #ff6b35, #ff8e53);
+        color: white;
+        padding: 10px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 20px rgba(255, 107, 53, 0.6);
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(5px);
+        animation: flagPulse 3s ease-in-out infinite;
+      }
+
+      .flag-arrow {
+        position: absolute;
+        top: 50%;
+        right: -8px;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-left: 8px solid #ff6b35;
+      }
+
+      @keyframes flagWave {
+        0%,
+        100% {
+          transform: rotate(-2deg) translateY(0px);
+        }
+        50% {
+          transform: rotate(2deg) translateY(-3px);
+        }
+      }
+
+      @keyframes flagPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+        }
+      }
+
+      /* Hide flag on mobile since filter button doesn't exist on mobile */
+      @media (max-width: 768px) {
+        .promo-flag {
+          display: none !important;
+          visibility: hidden !important;
+        }
+      }
+
+      /* Auto-hide flag after user interaction */
+      .promo-flag.dismissed {
+        animation: flagFadeOut 0.5s ease-out forwards;
+      }
+
+      @keyframes flagFadeOut {
+        to {
+          opacity: 0;
+          transform: translateY(-20px) scale(0.8);
+        }
+      }
+    </style>
+
+    <!-- Full Styles -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+
+    <!-- Return to Top Button -->
+    <button
+      class="return-to-top"
+      id="returnToTop"
+      aria-label="Return to top"
+      title="Return to top"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+
+    <audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="tickSound" src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="classWinSound" src="sounds/chang.mp3" preload="auto"></audio>
+    <audio
+      id="spinWinSound"
+      src="sounds/Tabby%20Tune.mp3"
+      preload="auto"
+    ></audio>
+    <audio id="spinningSound" src="sounds/spinning.mp3" preload="auto"></audio>
+    <audio
+      id="transitionSound"
+      src="sounds/transition.mp3"
+      preload="auto"
+    ></audio>
+    <audio id="finalSound" src="sounds/final-sound.mp3" preload="auto"></audio>
+    <audio id="spinStart" src="sounds/start-spin.mp3" preload="auto"></audio>
+    <audio id="columnStop" src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="finalLock" src="sounds/final-sound.mp3" preload="auto"></audio>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+      <a href="ragequit/index.html">New Rage Quit</a>
+      <a href="patch-notes/index.html">Patch Notes</a>
+      <a href="feedback/index.html">Feedback</a>
+    </nav>
+
+    <!-- Maintenance Notice -->
+    <div class="maintenance-notice">
+      <p>Heads up: This site's currently under maintenance. Thanks for your patience—I'm a one-man show keeping the chaos running.</p>
+    </div>
+
+    <!-- Filter Toggle Button -->
+    <button
+      id="filter-toggle"
+      class="filter-toggle-button"
+      aria-label="Toggle filters"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+      </svg>
+    </button>
+
+    <!-- New Filters Promotional Flag -->
+    <div id="filters-promo-flag" class="promo-flag">
+      <div class="flag-content">
+        <span class="flag-text">Try our new filters!</span>
+        <div class="flag-arrow"></div>
+      </div>
+    </div>
+
+    <!-- Sound Toggle Button -->
+    <button
+      id="sound-toggle"
+      class="sound-toggle-button"
+      aria-label="Toggle sound"
+    >
+      <svg
+        class="sound-on"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path
+          d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
+        ></path>
+      </svg>
+      <svg
+        class="sound-off"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        style="display: none"
+      >
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <line x1="23" y1="9" x2="17" y2="15"></line>
+        <line x1="17" y1="9" x2="23" y2="15"></line>
+      </svg>
+    </button>
+
+    <!-- Filter Panel Overlay -->
+    <div id="filter-panel-overlay" class="filter-panel-overlay"></div>
+
+    <!-- Slide-out Filter Panel -->
+    <div id="filter-panel" class="filter-panel slide-out">
+      <div class="panel-header">
+        <h3>Filters</h3>
+        <button
+          id="close-filter-panel"
+          class="close-panel"
+          aria-label="Close filters"
+        >
+          ×
+        </button>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="filter-tabs">
+        <button class="tab-button active" data-tab="weapons">Weapons</button>
+        <button class="tab-button" data-tab="specializations">Specs</button>
+        <button class="tab-button" data-tab="gadgets">Gadgets</button>
+      </div>
+
+      <!-- Search and Class Filter -->
+      <div class="filter-controls">
+        <input
+          type="text"
+          id="filter-search"
+          placeholder="Search weapons..."
+          class="search-input"
+        />
+        <div class="class-filter-buttons">
+          <button class="class-filter active" data-class="all">All</button>
+          <button class="class-filter" data-class="light">Light</button>
+          <button class="class-filter" data-class="medium">Medium</button>
+          <button class="class-filter" data-class="heavy">Heavy</button>
+        </div>
+
+        <!-- Class Selection Filters -->
+        <div class="class-exclusion-section">
+          <h4>Select Classes to Include in Random Selection</h4>
+          <div class="class-exclusion-checkboxes">
+            <label class="exclusion-checkbox">
+              <input
+                type="checkbox"
+                id="exclude-light"
+                data-exclude-class="light"
+                checked
+              />
+              <span class="checkbox-custom"></span>
+              <span class="class-label light">LIGHT</span>
+            </label>
+            <label class="exclusion-checkbox">
+              <input
+                type="checkbox"
+                id="exclude-medium"
+                data-exclude-class="medium"
+                checked
+              />
+              <span class="checkbox-custom"></span>
+              <span class="class-label medium">MEDIUM</span>
+            </label>
+            <label class="exclusion-checkbox">
+              <input
+                type="checkbox"
+                id="exclude-heavy"
+                data-exclude-class="heavy"
+                checked
+              />
+              <span class="checkbox-custom"></span>
+              <span class="class-label heavy">HEAVY</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Content Container -->
+      <div class="filter-content-container">
+        <!-- Content Area - Weapons Tab (Active by Default) -->
+        <div class="tab-content active" id="weapons-tab">
+          <!-- Light Weapons Section -->
+          <div class="item-category light-category">
+            <div class="category-header">
+              <h3>Light Class Weapons</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="light-weapons-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="weapon-selectall"
+                  data-class="light"
+                />
+                <span><strong>Select All Light Weapons</strong></span>
+              </label>
+              <!-- Individual weapons will be populated here by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Medium Weapons Section with Select All -->
+          <div class="item-category medium-category">
+            <div class="category-header">
+              <h3>Medium Class Weapons</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="medium-weapons-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="weapon-selectall"
+                  data-class="medium"
+                />
+                <span><strong>Select All Medium Weapons</strong></span>
+              </label>
+              <!-- Individual weapons will be populated here by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Heavy Weapons Section with Select All -->
+          <div class="item-category heavy-category">
+            <div class="category-header">
+              <h3>Heavy Class Weapons</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="heavy-weapons-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="weapon-selectall"
+                  data-class="heavy"
+                />
+                <span><strong>Select All Heavy Weapons</strong></span>
+              </label>
+              <!-- Individual weapons will be populated here by JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Specializations Tab (Hidden by Default) -->
+        <div class="tab-content" id="specializations-tab" style="display: none">
+          <!-- Light Specializations Section -->
+          <div class="item-category light-category">
+            <div class="category-header">
+              <h3>Light Class Specials</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="light-specializations-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="specialization-selectall"
+                  data-class="light"
+                />
+                <span><strong>Select All Light Specials</strong></span>
+              </label>
+              <!-- Individual specializations will be populated here by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Medium Specializations Section -->
+          <div class="item-category medium-category">
+            <div class="category-header">
+              <h3>Medium Class Specials</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="medium-specializations-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="specialization-selectall"
+                  data-class="medium"
+                />
+                <span><strong>Select All Medium Specials</strong></span>
+              </label>
+              <!-- Individual specializations will be populated here by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Heavy Specializations Section -->
+          <div class="item-category heavy-category">
+            <div class="category-header">
+              <h3>Heavy Class Specials</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="heavy-specializations-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="specialization-selectall"
+                  data-class="heavy"
+                />
+                <span><strong>Select All Heavy Specials</strong></span>
+              </label>
+              <!-- Individual specializations will be populated here by JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Gadgets Tab (Hidden by Default) -->
+        <div class="tab-content" id="gadgets-tab" style="display: none">
+          <!-- Light Gadgets Section -->
+          <div class="item-category light-category">
+            <div class="category-header">
+              <h3>Light Class Gadgets</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="light-gadgets-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="gadget-selectall"
+                  data-class="light"
+                />
+                <span><strong>Select All Light Gadgets</strong></span>
+              </label>
+              <!-- Individual gadgets will be populated here by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Medium Gadgets Section -->
+          <div class="item-category medium-category">
+            <div class="category-header">
+              <h3>Medium Class Gadgets</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="medium-gadgets-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="gadget-selectall"
+                  data-class="medium"
+                />
+                <span><strong>Select All Medium Gadgets</strong></span>
+              </label>
+              <!-- Individual gadgets will be populated here by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Heavy Gadgets Section -->
+          <div class="item-category heavy-category">
+            <div class="category-header">
+              <h3>Heavy Class Gadgets</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="heavy-gadgets-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="gadget-selectall"
+                  data-class="heavy"
+                />
+                <span><strong>Select All Heavy Gadgets</strong></span>
+              </label>
+              <!-- Individual gadgets will be populated here by JavaScript -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Action Buttons -->
+      <div class="filter-actions">
+        <button id="reset-filters" class="reset-button">Reset All</button>
+        <button id="apply-filters" class="apply-button">Apply Filters</button>
+      </div>
+    </div>
+
+    <!-- Header Section -->
+    <section class="headerSection">
+      <div class="container">
+        <!-- Mobile Sound Toggle in Header -->
+        <button
+          id="mobile-sound-toggle"
+          class="sound-toggle-button mobile-sound-toggle"
+          aria-label="Toggle sound"
+        >
+          <svg
+            class="sound-on"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path
+              d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
+            ></path>
+          </svg>
+          <svg
+            class="sound-off"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            style="display: none"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+
+        <img
+          src="images/the-finals-logo.webp"
+          alt="The Finals"
+          class="finals-logo-mobile"
+          width="144"
+          height="auto"
+        />
+        <h1 class="subTitle-mobile">Random Loadout Generator</h1>
+        <p class="season-update-notice">Season 7 updates coming later today</p>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+      <div class="selection-container">
+        <div class="class-selection">
+          <div class="btnRow">
+            <img
+              id="light-class"
+              class="class-button"
+              src="images/light_silhouette.webp"
+              data-active="images/light_active.webp"
+              data-default="images/light_silhouette.webp"
+              data-class="Light"
+              alt="Light Class Loadouts"
+              width="80"
+              height="80"
+            />
+            <img
+              id="medium-class"
+              class="class-button"
+              src="images/medium_silhouette.webp"
+              data-active="images/medium_active.webp"
+              data-default="images/medium_silhouette.webp"
+              data-class="Medium"
+              alt="Medium Class Loadouts"
+              width="80"
+              height="80"
+            />
+            <img
+              id="heavy-class"
+              class="class-button"
+              src="images/heavy_silhouette.webp"
+              data-active="images/heavy_active.webp"
+              data-default="images/heavy_silhouette.webp"
+              data-class="Heavy"
+              alt="Heavy Class Loadouts"
+              width="80"
+              height="80"
+            />
+          </div>
+        </div>
+
+        <div class="spin-control">
+          <button id="main-spin-button" class="main-spin-button">
+            <span class="spin-text">SPIN</span>
+            <div class="spin-energy"></div>
+          </button>
+          <div class="spin-status" id="spinStatus"></div>
+          <div id="selection-display" class="selection-display">
+            <div class="selection-info">
+              <span class="selection-class"></span>
+              <span class="selection-divider">•</span>
+              <span class="selection-spins"></span>
+            </div>
+          </div>
+        </div>
+
+        <div id="roulette-container" class="roulette-container hidden">
+          <div id="class-roulette" class="roulette-section">
+            <h2 class="roulette-title">SELECTING CLASS...</h2>
+            <div class="class-roulette-wheel">
+              <div class="class-option light-option" data-class="Light">
+                <img
+                  src="images/light_active.webp"
+                  alt="Light"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <span>LIGHT</span>
+              </div>
+              <div class="class-option medium-option" data-class="Medium">
+                <img
+                  src="images/medium_active.webp"
+                  alt="Medium"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <span>MEDIUM</span>
+              </div>
+              <div class="class-option heavy-option" data-class="Heavy">
+                <img
+                  src="images/heavy_active.webp"
+                  alt="Heavy"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <span>HEAVY</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="spin-roulette" class="roulette-section">
+            <h2 class="roulette-title">CHOOSING SPINS...</h2>
+            <div class="spin-roulette-wheel">
+              <div class="spin-option" data-spins="1"><span>1</span></div>
+              <div class="spin-option" data-spins="2"><span>2</span></div>
+              <div class="spin-option" data-spins="3"><span>3</span></div>
+              <div class="spin-option" data-spins="4"><span>4</span></div>
+              <div class="spin-option" data-spins="5"><span>5</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="output">
+          <!-- Slot machine content will be dynamically generated here -->
+        </div>
+      </div>
+
+      <section id="loadout-history" class="loadout-history">
+        <h2>🏆 Recent Chaos</h2>
+        <p class="chaos-counter" id="total-loadouts">
+          🔥 <span class="loadouts-counter">0</span> Total Loadouts Generated
+        </p>
+        <div id="history-list">
+          <!-- History entries will be populated here -->
+        </div>
+        <button id="clear-history" class="clear-history-btn">
+          Clear History
+        </button>
+      </section>
+    </main>
+
+    <footer class="footerSection" style="text-align: center">
+      <div class="container" style="text-align: center">
+        <div
+          class="footerRow"
+          style="justify-content: center; text-align: center"
+        >
+          <p style="text-align: center; width: 100%; margin: 0 auto">
+            © 2025 TheFinalsLoadout.com | Created by
+            <strong
+              ><a
+                href="https://www.paultakisaki.com/"
+                rel="author"
+                style="color: #ffb700"
+                >Paul Takisaki</a
+              ></strong
+            >
+            |
+            <a href="legal/legal.html" style="color: #ffb700"
+              >Legal Disclaimer</a
+            >
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts - restored to working order -->
+    <script defer src="performance-utils.js"></script>
+    <script defer src="roulette-animations.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script defer src="app.js"></script>
+    <script defer src="performance-init.js"></script>
+    <script>
+      // FAQ Toggle Script
+      document.addEventListener("DOMContentLoaded", function () {
+        var faqToggleButton = document.getElementById("faq-toggle-button");
+        var faqContent = document.getElementById("faq-content");
+        var faqToggle = document.querySelector(".faq-toggle");
+
+        if (faqToggleButton && faqContent && faqToggle) {
+          faqToggleButton.addEventListener("click", function () {
+            faqContent.classList.toggle("open");
+            faqToggle.innerText = faqContent.classList.contains("open")
+              ? "−"
+              : "+";
+          });
+        }
+      });
+    </script>
+
+    <!-- Web Vitals for performance monitoring -->
+    <script>
+      // Simple Web Vitals tracking
+      if ("PerformanceObserver" in window) {
+        // Track Largest Contentful Paint (LCP)
+        new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          console.log("LCP:", lastEntry.startTime.toFixed(2) + "ms");
+        }).observe({ entryTypes: ["largest-contentful-paint"] });
+
+        // Track First Input Delay (FID)
+        new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach((entry) => {
+            console.log("FID:", entry.processingStart - entry.startTime + "ms");
+          });
+        }).observe({ entryTypes: ["first-input"] });
+
+        // Track Cumulative Layout Shift (CLS)
+        let clsValue = 0;
+        new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (!entry.hadRecentInput) {
+              clsValue += entry.value;
+              console.log("Current CLS:", clsValue.toFixed(3));
+            }
+          }
+        }).observe({ entryTypes: ["layout-shift"] });
+      }
+    </script>
+
+    <!-- Optimized Google Analytics - load after user interaction -->
+    <script>
+      // Initialize dataLayer early but delay actual GA loading
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      // Load GA after user interaction or 3 seconds (whichever comes first)
+      let gaLoaded = false;
+      function loadGA() {
+        if (gaLoaded) return;
+        gaLoaded = true;
+
+        const script = document.createElement("script");
+        script.async = true;
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z";
+        document.head.appendChild(script);
+
+        script.onload = function () {
+          gtag("config", "G-GVGKYFGZ1Z", {
+            page_title: document.title,
+            page_location: window.location.href,
+          });
+        };
+      }
+
+      // Load on user interaction
+      ["click", "scroll", "touchstart", "keydown"].forEach((event) => {
+        document.addEventListener(event, loadGA, { once: true, passive: true });
+      });
+
+      // Fallback: load after 3 seconds
+      setTimeout(loadGA, 3000);
+    </script>
+
+    <!-- Cloudflare Insights -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+      integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+      data-cf-beacon='{"rayId":"90d5a0a2197ddbbe","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}'
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Scroll Progress Bar and Return to Top Script -->
+    <script>
+      // Scroll Progress Bar
+      function updateScrollProgress() {
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        const scrollProgress = (scrollTop / scrollHeight) * 100;
+        document.getElementById("scrollProgressBar").style.width =
+          scrollProgress + "%";
+      }
+
+      // Return to Top Button
+      const returnToTopBtn = document.getElementById("returnToTop");
+
+      function toggleReturnToTop() {
+        if (window.pageYOffset > 300) {
+          returnToTopBtn.classList.add("visible");
+        } else {
+          returnToTopBtn.classList.remove("visible");
+        }
+      }
+
+      returnToTopBtn.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      });
+
+      // Add scroll event listeners
+      window.addEventListener("scroll", () => {
+        updateScrollProgress();
+        toggleReturnToTop();
+      });
+
+      // Initial check
+      toggleReturnToTop();
+    </script>
+
+    <!-- Mobile Enhancements -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+
+        // Hide selection display on page load
+        const selectionDisplay = document.getElementById("selection-display");
+        if (selectionDisplay) {
+          selectionDisplay.classList.remove("visible");
+          selectionDisplay.classList.add("hidden");
+        }
+
+        // Global function to hide selection display (can be called from app.js)
+        window.hideSelectionDisplay = function () {
+          const selectionDisplay = document.getElementById("selection-display");
+          if (selectionDisplay) {
+            selectionDisplay.classList.remove("visible");
+            selectionDisplay.classList.add("hidden");
+          }
+        };
+
+        // Mobile History - Keep Original Structure
+        function initMobileHistory() {
+          // No need to override the original history structure
+          // The CSS handles mobile layout automatically
+          console.log("Mobile history initialized - using original structure");
+        }
+
+        // Initialize mobile features
+        if (window.innerWidth <= 768) {
+          initMobileHistory();
+          initMobileSpinEffects();
+        }
+
+        // TEMPORARY: Clear localStorage to reset audio state for debugging
+        // localStorage.removeItem('soundEnabled');
+
+        // Initialize audio toggle
+        initAudioToggle();
+
+        // Ensure window.state is synchronized with localStorage on load
+        const soundEnabledValue = localStorage.getItem("soundEnabled");
+        const soundEnabled =
+          soundEnabledValue === null ? true : soundEnabledValue !== "false";
+
+        if (window.state) {
+          window.state.soundEnabled = soundEnabled;
+        }
+
+        // Set default if not set
+        if (soundEnabledValue === null) {
+          localStorage.setItem("soundEnabled", "true");
+        }
+
+        // Initialize audio on first user interaction (for mobile)
+        initAudioOnInteraction();
+
+        // TEMPORARY: Add a test audio function for debugging
+        window.testAudio = function () {
+          console.log("Testing audio with state:", window.state.soundEnabled);
+          const clickSound = document.getElementById("clickSound");
+          if (clickSound) {
+            console.log("Click sound element found");
+            clickSound.volume = 0.5;
+            clickSound
+              .play()
+              .then(() => {
+                console.log("Audio played successfully");
+              })
+              .catch((err) => {
+                console.error("Audio play failed:", err);
+              });
+          } else {
+            console.error("Click sound element not found");
+          }
+        };
+
+        // Audio Toggle Implementation
+        function initAudioToggle() {
+          const soundToggle = document.getElementById("sound-toggle");
+          const mobileSoundToggle = document.getElementById(
+            "mobile-sound-toggle"
+          );
+
+          // Handle both desktop and mobile toggles
+          const toggles = [soundToggle, mobileSoundToggle].filter(
+            (toggle) => toggle !== null
+          );
+
+          if (toggles.length === 0) {
+            console.warn("No sound toggle buttons found");
+            return;
+          }
+
+          // Get initial state from localStorage or default to enabled
+          const soundEnabledValue = localStorage.getItem("soundEnabled");
+          const isEnabled =
+            soundEnabledValue === null ? true : soundEnabledValue !== "false";
+
+          console.log("Audio toggle init:", { soundEnabledValue, isEnabled });
+
+          // Set initial visual state for all toggles
+          toggles.forEach((toggle) =>
+            updateAudioToggleVisual(toggle, isEnabled)
+          );
+
+          // Sync with global state on initialization
+          if (window.state) {
+            window.state.soundEnabled = isEnabled;
+          }
+
+          // If localStorage doesn't have the value, set it to the default (true)
+          if (soundEnabledValue === null) {
+            localStorage.setItem("soundEnabled", "true");
+          }
+
+          // Add click handler to all toggles
+          toggles.forEach((toggle) =>
+            toggle.addEventListener("click", handleToggleClick)
+          );
+
+          function handleToggleClick() {
+            const soundEnabledValue = localStorage.getItem("soundEnabled");
+            const currentState =
+              soundEnabledValue === null ? true : soundEnabledValue !== "false";
+            const newState = !currentState;
+
+            console.log(
+              "Audio toggle clicked:",
+              "current =",
+              currentState,
+              "new =",
+              newState
+            );
+
+            // Save new state
+            localStorage.setItem("soundEnabled", newState.toString());
+            console.log("Saved to localStorage:", newState.toString());
+
+            // Update global state FIRST - this is critical for audio to work
+            if (window.state) {
+              window.state.soundEnabled = newState;
+              console.log(
+                "Updated window.state.soundEnabled to",
+                window.state.soundEnabled
+              );
+            } else {
+              console.error(
+                "WARNING: window.state not found! Audio may not mute properly."
+              );
+            }
+
+            // Update visual after state is updated for all toggles
+            toggles.forEach((toggle) =>
+              updateAudioToggleVisual(toggle, newState)
+            );
+
+            // Stop all audio if disabling
+            if (!newState) {
+              stopAllAudio();
+            }
+
+            console.log(
+              "Sound",
+              newState ? "enabled" : "disabled",
+              "localStorage:",
+              localStorage.getItem("soundEnabled")
+            );
+          }
+        }
+
+        function updateAudioToggleVisual(soundToggle, isEnabled) {
+          if (!soundToggle) return;
+
+          const soundOn = soundToggle.querySelector(".sound-on");
+          const soundOff = soundToggle.querySelector(".sound-off");
+
+          console.log("Updating audio visual:", isEnabled, soundOn, soundOff);
+
+          if (isEnabled) {
+            // Audio is ON - show speaker icon, remove red muted styling
+            soundToggle.classList.remove("muted");
+            if (soundOn) {
+              soundOn.style.display = "block";
+              soundOn.style.visibility = "visible";
+            }
+            if (soundOff) {
+              soundOff.style.display = "none";
+              soundOff.style.visibility = "hidden";
+            }
+          } else {
+            // Audio is OFF - show muted icon, add red muted styling
+            soundToggle.classList.add("muted");
+            if (soundOn) {
+              soundOn.style.display = "none";
+              soundOn.style.visibility = "hidden";
+            }
+            if (soundOff) {
+              soundOff.style.display = "block";
+              soundOff.style.visibility = "visible";
+            }
+          }
+        }
+
+        function stopAllAudio() {
+          // Stop all audio elements
+          const audioElements = document.querySelectorAll("audio");
+          audioElements.forEach((audio) => {
+            audio.pause();
+            audio.currentTime = 0;
+          });
+        }
+
+        // Initialize audio on first user interaction (for mobile compatibility)
+        function initAudioOnInteraction() {
+          let audioInitialized = false;
+
+          function initAudio() {
+            if (audioInitialized) return;
+
+            // Create a silent AudioContext to unlock audio
+            try {
+              const AudioContext =
+                window.AudioContext || window.webkitAudioContext;
+              const audioContext = new AudioContext();
+
+              // Create a silent sound
+              const buffer = audioContext.createBuffer(1, 1, 22050);
+              const source = audioContext.createBufferSource();
+              source.buffer = buffer;
+              source.connect(audioContext.destination);
+              source.start();
+
+              // Try to play all audio elements silently to preload them
+              const audioElements = document.querySelectorAll("audio");
+              audioElements.forEach((audio) => {
+                audio.volume = 0;
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                  playPromise
+                    .then(() => {
+                      audio.pause();
+                      audio.currentTime = 0;
+                      audio.volume = 1;
+                    })
+                    .catch(() => {});
+                }
+              });
+
+              audioInitialized = true;
+              console.log("Audio initialized successfully");
+            } catch (e) {
+              console.log("Audio initialization failed:", e);
+            }
+          }
+
+          // Add listeners for first user interaction
+          ["touchstart", "click"].forEach((event) => {
+            document.addEventListener(event, initAudio, { once: true });
+          });
+        }
+
+        // Mobile SPIN button particle effects
+        function initMobileSpinEffects() {
+          const spinButton = document.getElementById("main-spin-button");
+          if (!spinButton) return;
+
+          // Create mobile particle effect
+          function createMobileParticleEffect(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Mobile-optimized particle count
+            const particleCount = 6;
+
+            for (let i = 0; i < particleCount; i++) {
+              const particle = document.createElement("div");
+              particle.style.cssText = `
+                position: fixed;
+                width: 6px;
+                height: 6px;
+                background: linear-gradient(45deg, #7b2fe3, #1e90ff);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1000001;
+                left: ${centerX}px;
+                top: ${centerY}px;
+                box-shadow: 0 0 8px rgba(123, 47, 227, 0.8);
+              `;
+
+              // Random direction for firework effect
+              const angle =
+                (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.3;
+              const distance = 40 + Math.random() * 60;
+              const targetX = centerX + Math.cos(angle) * distance;
+              const targetY = centerY + Math.sin(angle) * distance;
+
+              document.body.appendChild(particle);
+
+              // Animate the particle
+              const animation = particle.animate(
+                [
+                  {
+                    transform: "translate(0, 0) scale(1)",
+                    opacity: 1,
+                  },
+                  {
+                    transform: `translate(${targetX - centerX}px, ${
+                      targetY - centerY
+                    }px) scale(0)`,
+                    opacity: 0,
+                  },
+                ],
+                {
+                  duration: 600,
+                  easing: "ease-out",
+                }
+              );
+
+              animation.onfinish = () => {
+                if (particle.parentNode) {
+                  particle.parentNode.removeChild(particle);
+                }
+              };
+            }
+          }
+
+          // Add click/touch effect for mobile
+          spinButton.addEventListener("click", function (e) {
+            // Create particle effect on click
+            createMobileParticleEffect(this);
+
+            // Add button scale effect
+            this.style.transform = "scale(0.95)";
+            setTimeout(() => {
+              this.style.transform = "scale(1)";
+            }, 150);
+
+            // Trigger haptic feedback if available
+            if (navigator.vibrate) {
+              navigator.vibrate(50);
+            }
+          });
+
+          // Add touch feedback
+          spinButton.addEventListener("touchstart", function (e) {
+            this.style.transform = "scale(0.98)";
+          });
+
+          spinButton.addEventListener("touchend", function (e) {
+            this.style.transform = "scale(1)";
+          });
+        }
+
+        // Promotional Flag Management
+        function initPromoFlag() {
+          const promoFlag = document.getElementById("filters-promo-flag");
+          const filterButton = document.getElementById("filter-toggle");
+
+          if (!promoFlag) return;
+
+          // Check if user has already seen the promo
+          const hasSeenPromo = localStorage.getItem("hasSeenFiltersPromo");
+          if (hasSeenPromo === "true") {
+            promoFlag.style.display = "none";
+            return;
+          }
+
+          // Function to dismiss the flag
+          function dismissFlag() {
+            promoFlag.classList.add("dismissed");
+            localStorage.setItem("hasSeenFiltersPromo", "true");
+            setTimeout(() => {
+              promoFlag.style.display = "none";
+            }, 500);
+          }
+
+          // Dismiss when user clicks the filter button (if it exists)
+          if (filterButton) {
+            filterButton.addEventListener("click", dismissFlag, { once: true });
+          }
+
+          // Auto-dismiss after 10 seconds - this is the main dismissal method
+          console.log("🚩 Promotional flag will auto-dismiss in 10 seconds");
+          setTimeout(() => {
+            console.log("🚩 Auto-dismissing promotional flag after 10 seconds");
+            dismissFlag();
+          }, 10000);
+        }
+
+        // Initialize the promo flag
+        initPromoFlag();
+
+        // Debug: Check if promo flag is visible
+        setTimeout(() => {
+          const flag = document.getElementById("filters-promo-flag");
+          if (flag) {
+            console.log("🚩 Promo flag found:", {
+              display: window.getComputedStyle(flag).display,
+              visibility: window.getComputedStyle(flag).visibility,
+              opacity: window.getComputedStyle(flag).opacity,
+              position: window.getComputedStyle(flag).position,
+              top: window.getComputedStyle(flag).top,
+              right: window.getComputedStyle(flag).right,
+              zIndex: window.getComputedStyle(flag).zIndex,
+              hasSeenPromo: localStorage.getItem("hasSeenFiltersPromo"),
+            });
+          } else {
+            console.log("❌ Promo flag element not found in DOM");
+          }
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>

@@ -129,85 +129,14 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* Fix output container spacing */
+        /* Clean loadout display - no excessive spacing */
         #output {
-            min-height: auto !important;
-            height: auto !important;
+            display: none;
         }
         
-        #output .slot-machine-wrapper {
-            min-height: auto !important;
-            height: auto !important;
-            padding: 0.5rem !important;
-        }
-        
-        #output .glass {
-            min-height: auto !important;
-            height: auto !important;
-            padding: 1rem !important;
-        }
-        
-        /* Fix the selection-container height issue */
-        .selection-container {
-            height: auto !important;
-            min-height: auto !important;
-            max-height: 200px !important;
-            overflow: hidden !important;
-        }
-        
-        /* Also target any div that might be creating excessive height */
-        #output > div {
-            height: auto !important;
-            min-height: auto !important;
-        }
-        
-        /* Aggressive fix for any tall containers */
-        #output div[style*="height"] {
-            height: auto !important;
-        }
-        
-        /* Fix any containers with background colors that might be causing the issue */
-        #output div {
-            max-height: 300px !important;
-        }
-        
-        /* Target the specific issue area we saw in devtools */
-        div[style*="464"] {
-            height: auto !important;
-            max-height: 100px !important;
-        }
-        
-        /* Ultra-aggressive height fixes */
-        #output, #output * {
-            height: auto !important;
-            min-height: 0 !important;
-            max-height: 50px !important;
-        }
-        
-        /* When output is empty, make it invisible */
-        #output:empty {
-            display: none !important;
-        }
-        
-        /* Override any JavaScript-generated heights */
-        [style*="height: 4"], [style*="height:4"] {
-            height: 10px !important;
-        }
-        
-        /* Target any potential problematic containers */
-        main * {
-            max-height: 500px !important;
-        }
-        
-        /* Force all containers between header and history to be compact */
-        main#loadouts > div {
-            min-height: 0 !important;
-        }
-        
-        /* Emergency nuclear option - hide anything that's too tall */
-        div[style*="height"] {
-            max-height: 200px !important;
-            overflow: hidden !important;
+        #output.show {
+            display: block;
+            margin: 1rem 0;
         }
         
         /* Custom scrollbar */
@@ -232,6 +161,7 @@
     
     <!-- Enhanced Vegas Styles -->
     <link rel="stylesheet" href="styles.css">
+    
 </head>
 
 <body class="min-h-screen text-white font-oswald overflow-x-hidden">
@@ -273,7 +203,7 @@
     </nav>
     
     <!-- Hero Section -->
-    <header class="relative min-h-screen flex items-center justify-center px-4 pt-20">
+    <header class="relative min-h-0 flex items-center justify-center px-4 pt-20 pb-8">
         <!-- Animated Background Elements -->
         <div class="absolute inset-0 overflow-hidden">
             <div class="absolute w-96 h-96 bg-vegas-gold/10 rounded-full blur-3xl -top-48 -left-48 animate-float"></div>
@@ -442,9 +372,9 @@
                 </div>
             </div>
             
-            <!-- Slot Machine Output -->
-            <div id="output" class="mb-4" style="min-height: 0 !important; height: auto !important;">
-                <!-- Minimal placeholder that only shows when needed -->
+            <!-- Slot Machine Output - Hidden until needed -->
+            <div id="output" class="mb-4">
+                <!-- Will be shown when slot machine results are displayed -->
             </div>
         </div>
     </main>

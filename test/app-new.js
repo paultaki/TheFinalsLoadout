@@ -393,6 +393,7 @@ const displayLoadout = (classType) => {
   `;
 
   outputDiv.innerHTML = loadoutHTML;
+  outputDiv.classList.add('show');
 
   // Add enhanced styles
   addVegasStyles();
@@ -680,6 +681,9 @@ const spinLoadout = () => {
   }
   
   console.log(`🌀 Starting spin sequence: ${state.totalSpins} total spins`);
+  
+  // Hide previous results
+  outputDiv.classList.remove('show');
   
   state.isSpinning = true;
   state.currentSpin = state.totalSpins;
