@@ -1,8 +1,10 @@
 .spin-count-wheel {
   width: 100%;
-  max-width: 600px;
+  max-width: min(600px, 100vw); /* Never exceed viewport width */
   margin: 0 auto;
-  padding: 10px;
+  padding: 5px;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 @media (min-width: 640px) {
@@ -22,6 +24,7 @@
   position: relative;
   overflow: hidden;
   /* Ensure container doesn't overflow viewport */
+  width: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
@@ -68,10 +71,10 @@
 
 .wheel-frame {
   position: relative;
-  width: calc(100% - 30px); /* Account for ticker overhang on mobile */
-  max-width: 340px;
+  width: 100%;
+  max-width: min(340px, calc(100vw - 20px)); /* Ensure it never exceeds viewport width minus padding */
   max-height: 60vh;
-  height: 540px;
+  height: clamp(400px, 80vh, 540px); /* More responsive height */
   background: 
     radial-gradient(black 15%, transparent 16%) 0 0,
     radial-gradient(black 15%, transparent 16%) 8px 8px,
@@ -88,11 +91,14 @@
   transition: all 0.5s;
   margin: 0 auto;
   z-index: 2;
+  box-sizing: border-box; /* Include border in width calculation */
 }
 
 @media (min-width: 640px) {
   .wheel-frame {
     width: min(90vw, 340px);
+    overflow: hidden;
+    margin: 0 auto;
   }
 }
 
@@ -117,6 +123,15 @@
   position: absolute;
   inset: 16px;
   overflow: hidden;
+  /* Ensure content doesn't extend beyond track - increased margin for mobile */
+  right: 24px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .wheel-track {
+    right: 16px;
+  }
 }
 
 .wheel-list {
@@ -288,7 +303,7 @@
 /* Ticker */
 .ticker {
   position: absolute;
-  right: -10px;
+  right: 8px; /* Increased margin to keep inside frame on mobile */
   top: 50%;
   transform: translateY(-50%);
   z-index: 20;
@@ -322,7 +337,7 @@
 .peg {
   position: absolute;
   top: 50%;
-  right: -4px;
+  right: 6px; /* Increased margin to keep pegs inside on mobile */
   transform: translateY(-50%);
   width: 8px;
   height: 8px;
@@ -500,5 +515,65 @@
 @media (max-width: 640px) {
   .winner-banner {
     padding: 24px 48px;
+  }
+}
+
+/* Extra small mobile screens - aggressive mobile optimization */
+@media (max-width: 375px) {
+  .spin-count-wheel {
+    max-width: calc(100vw - 16px);
+    padding: 2px;
+  }
+  
+  .wheel-frame {
+    max-width: calc(100vw - 32px);
+    border-width: 1px;
+  }
+  
+  .wheel-track {
+    right: 28px;
+  }
+  
+  .ticker {
+    right: 12px;
+  }
+  
+  .peg {
+    right: 10px;
+    width: 6px;
+    height: 6px;
+  }
+  
+  .wheel-container {
+    padding: 12px;
+    border-width: 1px;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 375px) {
+  .wheel-frame {
+    max-width: calc(100vw - 16px); /* Even tighter on very small screens */
+    padding: 2px; /* Reduce internal padding */
+  }
+  
+  .wheel-track {
+    right: 28px; /* More margin on small screens */
+  }
+  
+  .ticker {
+    right: 12px; /* More margin for ticker */
+  }
+  
+  .peg {
+    right: 10px; /* More margin for pegs */
+  }
+  
+  .spin-count-wheel {
+    padding: 2px; /* Reduce outer padding */
+  }
+  
+  .wheel-container {
+    padding: 12px; /* Reduce container padding */
   }
 }

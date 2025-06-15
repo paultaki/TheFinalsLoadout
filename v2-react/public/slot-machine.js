@@ -991,6 +991,7 @@ class SlotMachine {
     // Big win flash
     const bigWinFlash = document.createElement('div');
     bigWinFlash.className = 'big-win-flash';
+    bigWinFlash.innerHTML = '<div style="font-size: 3rem; font-weight: bold; color: #FFD700; white-space: nowrap; text-align: center;">POP. POUR. PERFORM.</div>';
     this.container.appendChild(bigWinFlash);
     
     bigWinFlash.animate([

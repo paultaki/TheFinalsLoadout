@@ -97,8 +97,8 @@ export const animateCabinetShake = (
 
   wheelFrameRef.current.animate(
     [
-      { transform: 'translateX(-4px)' },
-      { transform: 'translateX(4px)' },
+      { transform: 'translateX(-2px)' },
+      { transform: 'translateX(2px)' },
       { transform: 'translateX(0)' },
     ],
     {
@@ -110,7 +110,7 @@ export const animateCabinetShake = (
   // Heartbeat effect for slow speeds
   if (velocity < 120) {
     wheelFrameRef.current.animate(
-      [{ transform: 'scale(1)' }, { transform: 'scale(1.03)' }, { transform: 'scale(1)' }],
+      [{ transform: 'scale(1)' }, { transform: 'scale(1.015)' }, { transform: 'scale(1)' }],
       {
         duration: 300,
         easing: 'ease-out',

@@ -20,7 +20,7 @@ import './styles.css';
  */
 const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
   const { setClass, setSpins, finishRoulette } = useGameDispatch();
-  const playBeep = useSound('/sounds/wheel-beep.mp3', { volume: 0.4 });
+  const playBeep = useSound('/sounds/wheel-beep.mp3', { volume: 0.2 });
   const playDing = useSound('/sounds/ding.mp3', { volume: 0.6 });
   const playDingDing = useSound('/sounds/ding-ding.mp3', { volume: 0.7 });
   const [isSpinning, setIsSpinning] = useState(false);

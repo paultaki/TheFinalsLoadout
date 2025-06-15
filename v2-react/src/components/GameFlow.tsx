@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useGameState, useGameDispatch } from '../hooks/useGameState';
 import SpinCountWheel from '../features/spin-selector';
-import ClassRoulette from '../features/class-roulette';
 import SlotMachineLayout from './SlotMachineLayout';
 import History from './History';
+import { FEATURE_FLAGS } from '../constants/features';
 import type { ClassType, Loadout } from '../types';
+
+// Import components based on feature flag
+import RouletteWheel from './RouletteWheel';
+const ClassRouletteOLD = React.lazy(() => import('../features/class-roulette/ClassRoulette_OLD'));
 
 /**
  * Main game flow component that manages transitions between spin wheel, class roulette, and slot machine
@@ -41,14 +45,17 @@ const GameFlow: React.FC = () => {
   // Auto-spin roulette when needed
   useEffect(() => {
     if (autoSpinRoulette && state.stage === 'ROULETTE') {
-      // Trigger auto-spin after a short delay
-      const timer = setTimeout(() => {
-        const spinBtn = document.querySelector('.class-roulette button') as HTMLButtonElement;
-        if (spinBtn) {
-          spinBtn.click();
-        }
-      }, 500);
-      return () => clearTimeout(timer);
+      // For new roulette, it auto-spins on mount, so no need to trigger manually
+      if (!FEATURE_FLAGS.USE_NEW_ROULETTE) {
+        // Legacy roulette - trigger auto-spin
+        const timer = setTimeout(() => {
+          const spinBtn = document.querySelector('.class-roulette button') as HTMLButtonElement;
+          if (spinBtn) {
+            spinBtn.click();
+          }
+        }, 500);
+        return () => clearTimeout(timer);
+      }
     }
   }, [autoSpinRoulette, state.stage]);
 
@@ -86,9 +93,15 @@ const GameFlow: React.FC = () => {
     case 'ROULETTE':
       return (
         <>
-          <div className="class-roulette">
-            <ClassRoulette onComplete={handleRouletteComplete} />
-          </div>
+          {FEATURE_FLAGS.USE_NEW_ROULETTE ? (
+            <RouletteWheel onClassSelected={handleRouletteComplete} />
+          ) : (
+            <React.Suspense fallback={<div className="min-h-screen bg-gray-950 flex items-center justify-center text-white">Loading...</div>}>
+              <div className="class-roulette">
+                <ClassRouletteOLD onComplete={handleRouletteComplete} />
+              </div>
+            </React.Suspense>
+          )}
           <History loadouts={state.history} />
         </>
       );

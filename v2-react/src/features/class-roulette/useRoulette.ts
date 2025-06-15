@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { playSound } from '../../utils/sound';
-import { SLICE_DEG, POINTER_OFFSET, WHEEL_PATTERN } from '../../constants/roulette';
+import { SLICE_DEG, WHEEL_PATTERN } from '../../constants/roulette';
 import { TIMING, THRESHOLDS, NUMBERS } from '../../constants/physics';
 import { getClassAtRotation } from './utils';
 import type { ClassType } from '../../types';
@@ -46,10 +46,10 @@ export const useRoulette = () => {
         const targetClass = WHEEL_PATTERN[targetIndex];
 
         // Calculate final rotation
-        // We need to rotate so that when rotation is applied, the target segment aligns with the pointer
-        // Since pointer is at +90°, we need: (rotation + 90) % 360 = targetIndex * 30
-        // Therefore: rotation = (targetIndex * 30 - 90 + 360) % 360
-        const targetRotation = (targetIndex * SLICE_DEG - POINTER_OFFSET + NUMBERS.fullCircle) % NUMBERS.fullCircle;
+        // Canvas draws segments starting at -90°, pointer is at top after 180° flip
+        // We need to account for canvas offset (-90°) to align target segment with pointer
+        const canvasOffset = -NUMBERS.rightAngle; // Canvas starts at -90°
+        const targetRotation = (targetIndex * SLICE_DEG + canvasOffset + NUMBERS.fullCircle) % NUMBERS.fullCircle;
 
         // Add multiple full spins
         const spins = TIMING.wheel.spins.min + Math.random() * (TIMING.wheel.spins.max - TIMING.wheel.spins.min);
