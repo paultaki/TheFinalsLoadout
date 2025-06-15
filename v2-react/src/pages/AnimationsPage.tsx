@@ -84,13 +84,17 @@ const AnimationsPage: React.FC = () => {
 
         <div className="relative container mx-auto px-4 pt-2 pb-1">
           <div className="text-center">
-            {/* Centered Logo - Reduced to very small size */}
+            {/* Centered Logo - Scaled to match heading width */}
             <div className="mb-1">
               <img 
                 src="/images/the-finals-logo.webp" 
                 alt="The Finals" 
-                className="w-auto mx-auto filter drop-shadow-[0_0_15px_rgba(255,39,231,0.5)]"
-                style={{ height: '20px', maxHeight: '20px' }}
+                className="mx-auto filter drop-shadow-[0_0_15px_rgba(255,39,231,0.5)]"
+                style={{ 
+                  width: window.innerWidth >= 768 ? '520px' : '80%',
+                  height: 'auto',
+                  maxWidth: '80vw'
+                }}
               />
             </div>
 
@@ -122,7 +126,7 @@ const AnimationsPage: React.FC = () => {
       {/* Wrap both sections in a single LoadoutHistoryProvider */}
       <LoadoutHistoryProvider>
         {/* Main Content - Animations */}
-        <section id="generator" className="relative pt-2 pb-3">
+        <section id="generator" className="relative pt-2 pb-3 mt-4">
           {/* Section Background */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
           
@@ -147,7 +151,7 @@ const AnimationsPage: React.FC = () => {
         </section>
 
         {/* Loadout History Section */}
-        <section id="history" className="py-0 relative">
+        <section id="history" className="py-0 relative pb-6">
           <LoadoutHistory />
         </section>
       </LoadoutHistoryProvider>

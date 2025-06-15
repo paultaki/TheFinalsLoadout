@@ -413,6 +413,13 @@
   letter-spacing: 2px;
   position: relative;
   overflow: hidden;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
 .spin-button::before {
@@ -434,7 +441,9 @@
 }
 
 .spin-button:hover:not(:disabled) {
-  transform: translateY(-2px) scale(1.05);
+  animation: none;
+  transform: scale(1.08);
+  transition: transform 90ms ease-out;
   box-shadow: 
     0 12px 32px rgba(171, 71, 188, 0.6),
     0 0 60px rgba(171, 71, 188, 0.4),
@@ -460,6 +469,7 @@
   color: #6b7280;
   border-color: #4b5563;
   cursor: not-allowed;
+  animation: none;
   transform: none;
   box-shadow: none;
 }
