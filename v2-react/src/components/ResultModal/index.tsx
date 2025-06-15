@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { ResultModalProps } from './types';
+import type { ResultModalProps } from './types';
 import { modalStyles, textStyles, classButtonConfigs } from './styles';
 import ClassButton from './ClassButton';
 import './ResultModal.module.css';

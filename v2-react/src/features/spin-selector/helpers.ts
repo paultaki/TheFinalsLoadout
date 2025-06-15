@@ -1,4 +1,4 @@
-import { CardData } from './types';
+import type { CardData } from './types';
 
 /**
  * Creates a jackpot card with random spin count (2-4)
@@ -49,7 +49,7 @@ export const createConfetti = (): void => {
 /**
  * Calculates the height of a card element including margins
  */
-export const getCardHeight = (wheelRef: React.RefObject<HTMLUListElement>): number => {
+export const getCardHeight = (wheelRef: React.RefObject<HTMLUListElement | null>): number => {
   const card = wheelRef.current?.querySelector('.card');
   return card ? card.getBoundingClientRect().height + 16 : 90; // 16 = margin
 };

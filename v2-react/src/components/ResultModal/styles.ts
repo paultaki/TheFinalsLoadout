@@ -1,5 +1,5 @@
-import { CSSProperties } from 'react';
-import { ClassButtonConfig } from './types';
+import type { CSSProperties } from 'react';
+import type { ClassButtonConfig } from './types';
 
 // Modal styles
 export const modalStyles = {

@@ -2,9 +2,9 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useGameState } from '../../hooks/useGameState';
 import { useLoadoutHistory } from '../../context/LoadoutHistoryContext';
 import { SOUNDS } from '../../constants/sounds';
-import { UI_CONSTANTS } from '../../constants/ui';
 import type { ClassType } from '../../types';
-import { generateLoadout, GeneratedLoadout } from './loadout-generator';
+import { generateLoadout } from './loadout-generator';
+import type { GeneratedLoadout } from './loadout-generator';
 import { loadSlotMachineScript, initializeSlotMachine } from './script-loader';
 import './SlotMachine.css';
 
@@ -68,7 +68,7 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
       const loadout = generateLoadout(state.chosenClass as ClassType, state.spinsLeft);
 
       // Start animation
-      slotMachineRef.current.animateSlots(loadout, () => {
+      slotMachineRef.current?.animateSlots(loadout, () => {
         // Only add to history on the final spin
         if (state.spinsLeft === 1) {
           // Delay history update to ensure animation is fully complete

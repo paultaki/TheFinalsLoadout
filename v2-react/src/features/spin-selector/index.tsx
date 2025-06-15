@@ -1,15 +1,14 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useGameDispatch } from '../../hooks/useGameState';
-import { playSound } from '../../utils/sound';
 import { useSound } from '../../utils/audio';
 import ResultModal from '../../components/ResultModal';
 import { animateTickerCollision } from './animations';
-import { SpinResult, SpinCountWheelProps, ModalResult } from './types';
-import { CARD_DATA, INFINITE_CARDS, createConfetti, getCardHeight, getWinnerText } from './helpers';
+import type { SpinCountWheelProps, ModalResult } from './types';
+import { INFINITE_CARDS, createConfetti, getCardHeight, getWinnerText } from './helpers';
 import {
   easeOutExpo,
   PHYSICS_CONFIG,
-  AnimationRefs,
+  type AnimationRefs,
   findWinningCard,
   applyInfiniteScroll,
   animateCabinetShake,
@@ -90,7 +89,7 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
     const cards = wheelRef.current?.querySelectorAll('.card');
 
     // Highlight winning card
-    cards.forEach((card) => card.classList.remove('winner'));
+    cards?.forEach((card) => card.classList.remove('winner'));
     if (winningCard) {
       winningCard.classList.add('winner');
     }

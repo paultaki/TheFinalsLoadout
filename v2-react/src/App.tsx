@@ -1,4 +1,3 @@
-import React from 'react';
 import { GameProvider } from './context/GameProvider';
 import { LoadoutHistoryProvider } from './context/LoadoutHistoryContext';
 import GameFlow from './components/GameFlow';

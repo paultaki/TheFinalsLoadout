@@ -1,8 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { playSound } from '../../utils/sound';
-import { ANIMATION_CONSTANTS } from '../../constants/animation';
 import { SLICE_DEG, POINTER_OFFSET, WHEEL_PATTERN } from '../../constants/roulette';
-import { PHYSICS, TIMING, THRESHOLDS, NUMBERS } from '../../constants/physics';
+import { TIMING, THRESHOLDS, NUMBERS } from '../../constants/physics';
 import { getClassAtRotation } from './utils';
 import type { ClassType } from '../../types';
 
@@ -11,8 +10,6 @@ interface RouletteState {
   rotation: number;
   currentClass: ClassType | null;
 }
-
-const { classRoulette } = ANIMATION_CONSTANTS;
 
 /**
  * Hook for managing roulette wheel state and spin animations
@@ -25,7 +22,7 @@ export const useRoulette = () => {
   });
 
   const animationRef = useRef<{ rotation: number } | null>(null);
-  const gsapTimelineRef = useRef<gsap.core.Tween | null>(null);
+  const gsapTimelineRef = useRef<any>(null);
 
   const spin = useCallback(
     (forcedResult?: ClassType): Promise<ClassType> => {
@@ -84,6 +81,7 @@ export const useRoulette = () => {
               duration: TIMING.wheel.duration,
               ease: 'power4.out',
               onUpdate: () => {
+                if (!animationRef.current) return;
                 const currentRotation = animationRef.current.rotation;
                 setState((prev) => ({ ...prev, rotation: currentRotation }));
 

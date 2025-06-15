@@ -45,6 +45,7 @@ export const initializeSlotMachine = (containerId: string): any => {
   if (!isSlotMachineAvailable()) return null;
 
   const SlotMachineClass = window.SlotMachine;
+  if (!SlotMachineClass) return null;
   const slotMachine = new SlotMachineClass(containerId);
   slotMachine.init();
 

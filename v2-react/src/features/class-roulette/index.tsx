@@ -4,8 +4,8 @@ import { useRoulette } from './useRoulette';
 import { SOUNDS } from '../../constants/sounds';
 import ResultBanner from './ResultBanner';
 import clsx from 'clsx';
-import { DIMENSIONS, THRESHOLDS, TIMING } from '../../constants/physics';
-import { COLORS_EXTENDED, SHADOWS, GRADIENTS, FILTERS, OPACITY } from '../../constants/styles';
+import { DIMENSIONS, THRESHOLDS } from '../../constants/physics';
+import { COLORS_EXTENDED, SHADOWS, FILTERS, OPACITY } from '../../constants/styles';
 import { useWheelSize } from './responsive-utils';
 import { createTouchHandlers } from './touch-handlers';
 import {
@@ -34,6 +34,16 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
   const touchStartY = useRef(0);
   const lastTouchTime = useRef(0);
 
+  const handleSpin = async () => {
+    if (isSpinning) return;
+
+    setShowResult(false);
+    const result = await spin();
+
+    // onComplete is called after delay in useRoulette
+    onComplete(result);
+  };
+
   // Auto-spin after 1 second
   useEffect(() => {
     const autoSpinDelay = 1000;
@@ -46,16 +56,6 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
 
   // Touch handlers for mobile swipe
   const touchHandlers = createTouchHandlers(touchStartY, lastTouchTime, isSpinning, handleSpin);
-
-  const handleSpin = async () => {
-    if (isSpinning) return;
-
-    setShowResult(false);
-    const result = await spin();
-
-    // onComplete is called after delay in useRoulette
-    onComplete(result);
-  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-900 to-black p-4 relative overflow-hidden">

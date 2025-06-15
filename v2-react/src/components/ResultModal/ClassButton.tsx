@@ -1,5 +1,5 @@
 import React from 'react';
-import { ClassButtonConfig } from './types';
+import type { ClassButtonConfig } from './types';
 import { getButtonStyles, buttonHoverStyles } from './styles';
 
 interface ClassButtonProps {

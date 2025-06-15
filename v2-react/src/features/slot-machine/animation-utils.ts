@@ -1,5 +1,5 @@
 import { SLOT_PHYSICS, NUMBERS } from '../../constants/physics';
-import type { SlotItem, ColumnState } from './types';
+import type { SlotItem } from './types';
 import { playTickSound, playWinSound, playJackpotSound } from '../../utils/audio';
 import { getColumnPool, getRandomItem } from './slot-data';
 

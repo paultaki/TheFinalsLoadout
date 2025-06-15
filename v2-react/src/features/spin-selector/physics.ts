@@ -1,4 +1,4 @@
-import { CardData } from './types';
+import type { CardData } from './types';
 import { CARD_DATA } from './helpers';
 
 /**
@@ -35,8 +35,8 @@ export interface AnimationRefs {
  * Finds the winning card based on which card is centered in the viewport
  */
 export const findWinningCard = (
-  wheelFrameRef: React.RefObject<HTMLDivElement>,
-  wheelRef: React.RefObject<HTMLUListElement>
+  wheelFrameRef: React.RefObject<HTMLDivElement | null>,
+  wheelRef: React.RefObject<HTMLUListElement | null>
 ): { card: Element | null; result: CardData } => {
   if (!wheelFrameRef.current || !wheelRef.current) {
     return { card: null, result: CARD_DATA[0] };
@@ -74,7 +74,7 @@ export const findWinningCard = (
 export const applyInfiniteScroll = (
   distance: number,
   cardHeight: number,
-  wheelRef: React.RefObject<HTMLUListElement>
+  wheelRef: React.RefObject<HTMLUListElement | null>
 ): void => {
   let normalizedDistance = distance % (CARD_DATA.length * cardHeight * 3);
   if (normalizedDistance > CARD_DATA.length * cardHeight * 2) {
@@ -90,7 +90,7 @@ export const applyInfiniteScroll = (
  * Animates a cabinet shake effect when ticker hits pegs
  */
 export const animateCabinetShake = (
-  wheelFrameRef: React.RefObject<HTMLDivElement>,
+  wheelFrameRef: React.RefObject<HTMLDivElement | null>,
   velocity: number
 ): void => {
   if (!wheelFrameRef.current) return;
