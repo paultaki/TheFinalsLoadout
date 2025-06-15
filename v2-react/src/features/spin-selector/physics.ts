@@ -10,10 +10,10 @@ export const easeOutExpo = (t: number): number => {
 
 // Physics constants
 export const PHYSICS_CONFIG = {
-  initialVelocity: { min: 2400, max: 2800 },
-  friction: 0.988,
+  initialVelocity: { min: 4800, max: 5600 }, // Doubled for faster initial spin
+  friction: 0.985, // Slightly less friction for longer spin
   decelerationThreshold: 600,
-  decelerationDuration: 400,
+  decelerationDuration: 600, // Longer deceleration for smoother stop
   idleSpeed: 0.3,
   minTickVelocity: 50,
 } as const;

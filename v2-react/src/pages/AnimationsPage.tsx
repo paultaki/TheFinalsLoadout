@@ -119,15 +119,7 @@ const AnimationsPage: React.FC = () => {
 
         <div className="relative container mx-auto px-4 py-4 sm:py-8">
           <div className="text-center">
-            {/* Main Logo - Hidden on mobile since NavBar already has logo */}
-            <div className="hidden sm:block mb-3 sm:mb-4 relative inline-block group">
-              <div className="absolute inset-0 bg-purple-600/30 blur-2xl group-hover:bg-purple-500/40 transition-colors duration-500" />
-              <img 
-                src="/images/the-finals-logo.webp" 
-                alt="The Finals" 
-                className="relative h-12 sm:h-16 md:h-20 w-auto mx-auto filter drop-shadow-[0_0_20px_rgba(171,71,188,0.6)]"
-              />
-            </div>
+            {/* Logo removed - NavBar already has one */}
 
             {/* Title with Holographic Effect */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 tracking-tight">
@@ -146,10 +138,7 @@ const AnimationsPage: React.FC = () => {
               <span className="text-sm font-bold text-yellow-400 uppercase tracking-wider">SEASON 7: THE DIVIDE</span>
             </div>
 
-            {/* Description - Smaller and Tighter */}
-            <p className="text-gray-400 text-base max-w-xl mx-auto mb-6 px-4 opacity-90">
-              Premium loadout generator for competitive play
-            </p>
+            {/* Removed premium text per request */}
 
             {/* Scroll Indicator with Touch Hint */}
             <TouchWrapper 
