@@ -18,20 +18,8 @@ const NavBar: React.FC = () => {
     <>
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-surface-dark-transparent border-b border-purple-500/40 neon-purple">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="flex items-center space-x-1 sm:space-x-2">
-              <img 
-                src="/images/the-finals-logo.webp" 
-                alt="The Finals" 
-                className="h-3.5 sm:h-4 w-auto animate-pulse-slow"
-              />
-              <span className="hidden sm:inline text-lg font-bold gradient-text">
-                Loadout Generator
-              </span>
-            </div>
-
-            {/* Mobile Menu Button */}
+          <div className="flex items-center justify-between h-12">
+            {/* Mobile Menu Button - Moved to left */}
             <TouchWrapper
               onTap={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="sm:hidden"
@@ -49,6 +37,9 @@ const NavBar: React.FC = () => {
                 </svg>
               </button>
             </TouchWrapper>
+            
+            {/* Empty div for spacing on mobile */}
+            <div className="sm:hidden" />
 
             {/* Desktop Nav Links */}
             <div className="hidden sm:flex items-center space-x-6">

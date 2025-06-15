@@ -7,7 +7,6 @@ import NavBar from '../layout/NavBar';
 import Footer from '../layout/Footer';
 import MobileBottomNav from '../components/MobileBottomNav';
 import MobilePerformanceMonitor from '../components/MobilePerformanceMonitor';
-import TouchWrapper from '../components/TouchWrapper';
 import PullToRefresh from '../components/PullToRefresh';
 import { useMobileDetect } from '../hooks/useMobileDetect';
 import './AnimationsPage.css';
@@ -94,7 +93,7 @@ const AnimationsPage: React.FC = () => {
       <NavBar />
 
       {/* Hero Section - Mobile Optimized */}
-      <section id="home" className="relative overflow-hidden">
+      <section id="home" className="relative overflow-hidden pt-0">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
@@ -117,12 +116,19 @@ const AnimationsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="relative container mx-auto px-4 py-2 sm:py-4">
+        <div className="relative container mx-auto px-4 pt-2 pb-1">
           <div className="text-center">
-            {/* Logo removed - NavBar already has one */}
+            {/* Centered Logo */}
+            <div className="mb-2">
+              <img 
+                src="/images/the-finals-logo.webp" 
+                alt="The Finals" 
+                className="h-8 sm:h-10 w-auto mx-auto filter drop-shadow-[0_0_15px_rgba(255,39,231,0.5)]"
+              />
+            </div>
 
             {/* Title with Holographic Effect */}
-            <div className="mb-2">
+            <div className="mb-1">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
                 <span className="holographic-text">THE FINALS</span>
               </h1>
@@ -133,7 +139,7 @@ const AnimationsPage: React.FC = () => {
 
             {/* Season Badge with Glow - Moved below title with less spacing */}
             <div className="inline-flex items-center gap-2 px-4 py-2 glass-card 
-                          border border-yellow-400/50 rounded-full mb-4 pulse-glow">
+                          border border-yellow-400/50 rounded-full pulse-glow">
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
@@ -142,22 +148,6 @@ const AnimationsPage: React.FC = () => {
             </div>
 
             {/* Removed premium text per request */}
-
-            {/* Scroll Indicator with Touch Hint */}
-            <TouchWrapper 
-              onTap={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-              onSwipeUp={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-              className="inline-block mt-4"
-            >
-              <div className="animate-bounce cursor-pointer">
-                <svg className="w-6 h-6 mx-auto text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
-                {isMobile && (
-                  <p className="text-xs text-purple-400 mt-2">Swipe up or tap</p>
-                )}
-              </div>
-            </TouchWrapper>
           </div>
         </div>
       </section>
@@ -165,13 +155,13 @@ const AnimationsPage: React.FC = () => {
       {/* Wrap both sections in a single LoadoutHistoryProvider */}
       <LoadoutHistoryProvider>
         {/* Main Content - Animations */}
-        <section id="generator" className="relative py-3 sm:py-4">
+        <section id="generator" className="relative pt-2 pb-3">
           {/* Section Background */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
           
           <div className="relative container mx-auto px-4">
             {/* Section Header - Compact with reduced spacing */}
-            <div className="text-center mb-3">
+            <div className="text-center mb-2">
               <h2 className="text-xl sm:text-2xl font-bold gradient-text uppercase tracking-wider">
                 Generate Your Loadout
               </h2>
@@ -181,12 +171,7 @@ const AnimationsPage: React.FC = () => {
             <div className={`max-w-4xl mx-auto ${isMobile ? 'px-2' : ''}`}>
               <GameProvider>
                 <div className="relative">
-                  {/* Mobile-only: Sticky progress indicator */}
-                  {isMobile && (
-                    <div className="sticky top-16 z-30 bg-gray-900/80 backdrop-blur-sm p-2 rounded-lg mb-4 text-center text-sm text-gray-400">
-                      <span>Step 1: Choose number of loadouts</span>
-                    </div>
-                  )}
+                  {/* Removed mobile progress indicator */}
                   <GameFlow />
                 </div>
               </GameProvider>
@@ -195,7 +180,7 @@ const AnimationsPage: React.FC = () => {
         </section>
 
         {/* Loadout History Section */}
-        <section id="history" className="py-8 sm:py-12 relative">
+        <section id="history" className="py-0 relative">
           <LoadoutHistory />
         </section>
       </LoadoutHistoryProvider>

@@ -35,13 +35,13 @@ const LoadoutHistory: React.FC = () => {
   };
 
   return (
-    <div className="w-full px-4 py-12">
+    <div className="w-full px-4 py-0">
       <div className="max-w-7xl mx-auto" style={{ width: '90%' }}>
         <div className="relative">
           {/* Premium background effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 to-blue-900/10 blur-3xl" />
           
-          <div className="relative cyber-card p-8 shadow-2xl" style={{
+          <div className="relative cyber-card p-6 shadow-2xl" style={{
             background: 'linear-gradient(135deg, rgba(255, 39, 231, 0.05) 0%, rgba(0, 229, 255, 0.02) 100%), rgba(18, 18, 26, 0.95)',
             border: '1px solid rgba(0, 229, 255, 0.3)',
             boxShadow: '0 0 40px rgba(255, 39, 231, 0.2), 0 0 80px rgba(0, 229, 255, 0.1)'

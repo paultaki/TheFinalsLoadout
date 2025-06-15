@@ -27,20 +27,20 @@ section {
 
 /* Hero section optimizations */
 #home {
-  min-height: 40vh;
+  min-height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   background: 
     radial-gradient(ellipse at center top, rgba(0, 229, 255, 0.15) 0%, transparent 50%),
     radial-gradient(ellipse at center bottom, rgba(255, 39, 231, 0.1) 0%, transparent 50%);
-  padding: 2rem 0;
+  padding: 0;
 }
 
 @media (min-width: 768px) {
   #home {
-    min-height: 60vh;
-    padding: 3rem 0;
+    min-height: auto;
+    padding: 0;
   }
 }
 
