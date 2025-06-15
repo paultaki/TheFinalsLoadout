@@ -1,11 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MobileNav from '../components/MobileNav';
 import TouchWrapper from '../components/TouchWrapper';
 import { useMobileDetect } from '../hooks/useMobileDetect';
 
 const NavBar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const { isTouchDevice } = useMobileDetect();
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = window.scrollY;
+      const progress = scrollHeight > 0 ? (scrolled / scrollHeight) * 100 : 0;
+      setScrollProgress(progress);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial check
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const links = [
     { href: "https://thefinalsloadout.com/", label: "Home" },
@@ -16,7 +30,12 @@ const NavBar: React.FC = () => {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-surface-dark-transparent border-b border-purple-500/40 neon-purple">
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-surface-dark-transparent border-b border-purple-500/40 neon-purple">
+        {/* Scroll Progress Bar */}
+        <div 
+          className="absolute top-0 left-0 h-0.5 bg-gradient-to-r from-cyan-400 via-magenta-500 to-yellow-400 transition-all duration-200 z-[60]"
+          style={{ width: `${scrollProgress}%` }}
+        />
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-12">
             {/* Mobile Menu Button - Moved to left */}
@@ -68,5 +87,10 @@ const NavBar: React.FC = () => {
     </>
   );
 };
+
+// Add padding to body to account for fixed navbar
+if (typeof document !== 'undefined') {
+  document.body.style.paddingTop = '48px'; // h-12 = 3rem = 48px
+}
 
 export default NavBar;
