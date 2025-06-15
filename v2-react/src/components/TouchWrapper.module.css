@@ -1,0 +1,18 @@
+.touchWrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.touchWrapper.touching {
+  transform: scale(0.98);
+  opacity: 0.9;
+  transition: all 0.1s ease;
+}
+
+/* Prevent text selection on long press */
+.touchWrapper * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

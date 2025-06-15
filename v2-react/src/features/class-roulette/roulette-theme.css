@@ -1,5 +1,5 @@
 /* Import shared casino theme */
-@import url('/casino-theme-shared.css');
+@import url('/src/styles/casino-theme-shared.css');
 
 /* Roulette-specific animations */
 @keyframes dataStream {

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import styles from './PullToRefresh.module.css';
 
 interface PullToRefreshProps {
   children: React.ReactNode;
@@ -85,7 +86,7 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
   return (
     <div
       ref={containerRef}
-      className="pull-refresh-container"
+      className={styles.pullRefreshContainer}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -96,15 +97,15 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
     >
       {/* Pull indicator */}
       <div
-        className={`pull-indicator ${pullDistance > 0 ? 'visible' : ''}`}
+        className={`${styles.pullIndicator} ${pullDistance > 0 ? styles.visible : ''}`}
         style={{
           transform: `translateY(${pullDistance}px)`,
           opacity: pullDistance > 0 ? Math.min(pullDistance / threshold, 1) : 0
         }}
       >
-        <div className="pull-indicator-content">
+        <div className={styles.pullIndicatorContent}>
           {/* Spinner */}
-          <div className={`spinner ${isRefreshing ? 'spinning' : ''}`}>
+          <div className={`${styles.spinner} ${isRefreshing ? styles.spinning : ''}`}>
             <svg
               className="w-6 h-6"
               style={{
@@ -125,13 +126,13 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
           </div>
           
           {/* Status text */}
-          <span className="status-text">{getStatusText()}</span>
+          <span className={styles.statusText}>{getStatusText()}</span>
         </div>
       </div>
 
       {/* Main content */}
       <div
-        className="pull-content"
+        className={styles.pullContent}
         style={{
           transform: `translateY(${pullDistance}px)`,
           transition: pullDistance === 0 ? 'transform 0.3s' : 'none'
@@ -139,65 +140,6 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
       >
         {children}
       </div>
-
-      <style jsx>{`
-        .pull-refresh-container {
-          position: relative;
-          overflow: hidden;
-          touch-action: pan-x pan-down pinch-zoom;
-        }
-
-        .pull-indicator {
-          position: absolute;
-          top: -80px;
-          left: 0;
-          right: 0;
-          height: 80px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: opacity 0.3s;
-          pointer-events: none;
-        }
-
-        .pull-indicator.visible {
-          pointer-events: auto;
-        }
-
-        .pull-indicator-content {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 8px;
-          color: #a855f7;
-        }
-
-        .spinner {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .spinner.spinning {
-          animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-
-        .status-text {
-          font-size: 0.875rem;
-          color: #9333ea;
-          font-weight: 500;
-        }
-
-        .pull-content {
-          position: relative;
-          background: inherit;
-        }
-      `}</style>
     </div>
   );
 };

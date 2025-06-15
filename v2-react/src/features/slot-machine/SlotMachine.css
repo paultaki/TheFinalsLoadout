@@ -3,7 +3,7 @@
    ===================================================== */
 
 /* Import shared casino theme */
-@import url('/casino-theme-shared.css');
+@import url('/src/styles/casino-theme-shared.css');
 
 /* Base Container - Mobile First Design */
 .slot-machine-component {

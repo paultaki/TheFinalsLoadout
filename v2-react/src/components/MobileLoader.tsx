@@ -15,157 +15,40 @@ const MobileLoader: React.FC<MobileLoaderProps> = ({
   progress = 0 
 }) => {
   return (
-    <div className="mobile-loader">
+    <div className="flex flex-col items-center justify-center min-h-[50vh] p-8">
       {/* Logo pulse animation */}
-      <div className="loader-logo">
-        <div className="logo-shimmer">
+      <div className="mb-8 relative">
+        <div className="relative overflow-hidden">
           <img 
             src="/images/the-finals-logo.webp" 
             alt="Loading" 
-            className="h-16 w-auto opacity-50"
+            className="h-16 w-auto opacity-50 animate-pulse"
           />
         </div>
       </div>
 
       {/* Progress bar */}
       {showProgress && (
-        <div className="progress-container">
-          <div className="progress-bar">
+        <div className="w-[200px] mb-4">
+          <div className="h-1 bg-white/10 rounded-sm overflow-hidden mb-2">
             <div 
-              className="progress-fill"
+              className="h-full bg-gradient-to-r from-purple-500 to-yellow-500 transition-all duration-300 rounded-sm"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="progress-text">{Math.round(progress)}%</span>
+          <span className="block text-center text-sm text-purple-400">{Math.round(progress)}%</span>
         </div>
       )}
 
       {/* Loading text */}
-      <p className="loader-text">{text}</p>
+      <p className="text-gray-400 text-base mb-8 animate-pulse">{text}</p>
 
       {/* Skeleton screens for better perceived performance */}
-      <div className="skeleton-container">
-        <div className="skeleton skeleton-card" />
-        <div className="skeleton skeleton-card" />
-        <div className="skeleton skeleton-card" />
+      <div className="grid gap-4 w-full max-w-[400px]">
+        <div className="h-20 bg-gradient-to-r from-white/5 via-white/10 to-white/5 rounded-lg animate-pulse" />
+        <div className="h-20 bg-gradient-to-r from-white/5 via-white/10 to-white/5 rounded-lg animate-pulse" />
+        <div className="h-20 bg-gradient-to-r from-white/5 via-white/10 to-white/5 rounded-lg animate-pulse" />
       </div>
-
-      <style jsx>{`
-        .mobile-loader {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          min-height: 50vh;
-          padding: 2rem;
-        }
-
-        .loader-logo {
-          margin-bottom: 2rem;
-        }
-
-        .logo-shimmer {
-          position: relative;
-          overflow: hidden;
-        }
-
-        .logo-shimmer::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(168, 85, 247, 0.4) 50%,
-            transparent 100%
-          );
-          animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(200%); }
-        }
-
-        .progress-container {
-          width: 200px;
-          margin-bottom: 1rem;
-        }
-
-        .progress-bar {
-          height: 4px;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 2px;
-          overflow: hidden;
-          margin-bottom: 0.5rem;
-        }
-
-        .progress-fill {
-          height: 100%;
-          background: linear-gradient(90deg, #a855f7 0%, #eab308 100%);
-          transition: width 0.3s ease;
-          border-radius: 2px;
-        }
-
-        .progress-text {
-          display: block;
-          text-align: center;
-          font-size: 0.875rem;
-          color: #a855f7;
-        }
-
-        .loader-text {
-          color: #9ca3af;
-          font-size: 1rem;
-          margin-bottom: 2rem;
-          animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-          0%, 100% { opacity: 0.5; }
-          50% { opacity: 1; }
-        }
-
-        .skeleton-container {
-          display: grid;
-          gap: 1rem;
-          width: 100%;
-          max-width: 400px;
-        }
-
-        .skeleton {
-          background: linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0.05) 25%,
-            rgba(255, 255, 255, 0.1) 50%,
-            rgba(255, 255, 255, 0.05) 75%
-          );
-          background-size: 200% 100%;
-          animation: skeleton-loading 1.5s infinite;
-          border-radius: 0.5rem;
-        }
-
-        .skeleton-card {
-          height: 80px;
-        }
-
-        @keyframes skeleton-loading {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
-
-        /* Reduced motion support */
-        @media (prefers-reduced-motion: reduce) {
-          .logo-shimmer::after,
-          .loader-text,
-          .skeleton {
-            animation: none;
-          }
-        }
-      `}</style>
     </div>
   );
 };

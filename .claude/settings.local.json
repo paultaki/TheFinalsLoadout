@@ -20,7 +20,8 @@
       "Bash(ls:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(rg:*)"
     ]
   },
   "enableAllProjectMcpServers": false

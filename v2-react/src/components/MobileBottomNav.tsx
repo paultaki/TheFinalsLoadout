@@ -93,127 +93,71 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeSection = '' })
 
   return (
     <nav 
-      className={`mobile-bottom-nav ${isVisible ? 'visible' : 'hidden'}`}
+      className="sm:hidden"
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        background: 'rgba(17, 24, 39, 0.95)',
+        backdropFilter: 'blur(20px)',
+        borderTop: '1px solid rgba(168, 85, 247, 0.2)',
+        zIndex: 40,
+        transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
+        transition: 'transform 0.3s ease',
+        paddingBottom: 'env(safe-area-inset-bottom)'
+      }}
     >
-      <div className="nav-container">
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        padding: '0.5rem 0'
+      }}>
         {navItems.map((item) => (
           <TouchWrapper
             key={item.id}
             onTap={() => handleNavClick(item.href)}
-            className="nav-item-wrapper"
+            className="flex-1"
           >
-            <div 
-              className={`nav-item ${activeSection === item.id ? 'active' : ''}`}
-            >
-              <div className="nav-icon">
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '0.5rem',
+              color: activeSection === item.id ? '#a855f7' : '#9ca3af',
+              transition: 'all 0.2s ease',
+              position: 'relative',
+              minHeight: '60px'
+            }}>
+              <div style={{
+                transition: 'transform 0.2s ease',
+                transform: activeSection === item.id ? 'scale(1.1)' : 'scale(1)'
+              }}>
                 {item.icon}
               </div>
-              <span className="nav-label">{item.label}</span>
+              <span style={{
+                fontSize: '0.75rem',
+                marginTop: '0.25rem',
+                fontWeight: 500
+              }}>{item.label}</span>
               {activeSection === item.id && (
-                <div className="active-indicator" />
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '20px',
+                  height: '3px',
+                  background: 'linear-gradient(90deg, #a855f7 0%, #eab308 100%)',
+                  borderRadius: '0 0 3px 3px'
+                }} />
               )}
             </div>
           </TouchWrapper>
         ))}
       </div>
-
-      <style jsx>{`
-        .mobile-bottom-nav {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: rgba(17, 24, 39, 0.95);
-          backdrop-filter: blur(20px);
-          border-top: 1px solid rgba(168, 85, 247, 0.2);
-          z-index: 40;
-          transform: translateY(0);
-          transition: transform 0.3s ease;
-          padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .mobile-bottom-nav.hidden {
-          transform: translateY(100%);
-        }
-
-        .nav-container {
-          display: flex;
-          justify-content: space-around;
-          align-items: center;
-          padding: 0.5rem 0;
-        }
-
-        .nav-item-wrapper {
-          flex: 1;
-        }
-
-        .nav-item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 0.5rem;
-          color: #9ca3af;
-          transition: all 0.2s ease;
-          position: relative;
-          min-height: 60px;
-        }
-
-        .nav-item.active {
-          color: #a855f7;
-        }
-
-        .nav-icon {
-          transition: transform 0.2s ease;
-        }
-
-        .nav-item.active .nav-icon {
-          transform: scale(1.1);
-        }
-
-        .nav-label {
-          font-size: 0.75rem;
-          margin-top: 0.25rem;
-          font-weight: 500;
-        }
-
-        .active-indicator {
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 20px;
-          height: 3px;
-          background: linear-gradient(90deg, #a855f7 0%, #eab308 100%);
-          border-radius: 0 0 3px 3px;
-          animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateX(-50%) translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-          }
-        }
-
-        /* Hide on larger screens */
-        @media (min-width: 640px) {
-          .mobile-bottom-nav {
-            display: none;
-          }
-        }
-
-        /* Adjust for iPhone notch */
-        @supports (padding: max(0px)) {
-          .mobile-bottom-nav {
-            padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
-          }
-        }
-      `}</style>
     </nav>
   );
 };

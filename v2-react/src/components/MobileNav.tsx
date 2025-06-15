@@ -1,20 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import TouchWrapper from './TouchWrapper';
 
+interface NavLink {
+  href: string;
+  label: string;
+}
+
 interface MobileNavProps {
   isOpen: boolean;
   onClose: () => void;
+  links?: NavLink[];
 }
 
 /**
  * Mobile navigation menu with smooth animations
  */
-const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
-  const navItems = [
-    { href: '#generator', label: 'Generator', icon: '🎲' },
-    { href: '#history', label: 'History', icon: '📜' },
-    { href: '#about', label: 'About', icon: 'ℹ️' },
+const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose, links }) => {
+  const navItems = links || [
+    { href: '#generator', label: 'Generator' },
+    { href: '#history', label: 'History' },
+    { href: '#about', label: 'About' },
   ];
+
+  const getIcon = (label: string) => {
+    switch (label.toLowerCase()) {
+      case 'home': return '🏠';
+      case 'generator': return '🎲';
+      case 'history': return '📜';
+      case 'about': return 'ℹ️';
+      case 'rage quit': return '😤';
+      case 'patch notes': return '📋';
+      case 'feedback': return '💬';
+      default: return '📌';
+    }
+  };
 
   return (
     <>
@@ -34,8 +53,8 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
       >
         <div 
           className={`
-            fixed top-16 left-0 right-0 bottom-0 bg-gray-900/98 backdrop-blur-md z-50 
-            transform transition-transform duration-300 ease-in-out
+            fixed top-16 left-0 right-0 bottom-0 bg-base-dark/98 backdrop-blur-md z-50 
+            transform transition-transform duration-300 ease-in-out border-r border-purple-500/40
             ${isOpen ? 'translate-x-0' : '-translate-x-full'}
           `}
         >
@@ -54,7 +73,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
                     className="flex items-center space-x-4 p-4 rounded-lg hover:bg-purple-600/20 
                              transition-colors group cursor-pointer"
                   >
-                    <span className="text-2xl">{item.icon}</span>
+                    <span className="text-2xl">{getIcon(item.label)}</span>
                     <span className="text-lg font-medium group-hover:text-purple-400 transition-colors">
                       {item.label}
                     </span>

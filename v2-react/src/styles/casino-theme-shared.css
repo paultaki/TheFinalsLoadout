@@ -1,0 +1,250 @@
+/* =====================================================
+   CYBER-CASINO THEME - THE FINALS SEASON 7 "THE DIVIDE"
+   ===================================================== */
+
+:root {
+  --primary-purple: #7B1FA2;
+  --primary-gradient: linear-gradient(135deg, #7B1FA2 0%, #AB47BC 100%);
+  --secondary-blue: #29B6F6;
+  --secondary-gradient: linear-gradient(135deg, #29B6F6 0%, #4FC3F7 100%);
+  --accent-gold: #FFD700;
+  --alert-pink: #FF1744;
+  --base-dark: #0e0e0e;
+  --surface-dark: #1a1a1a;
+  --surface-dark-transparent: rgba(26, 26, 26, 0.95);
+}
+
+/* Base body styling */
+body {
+  background: radial-gradient(circle at top, rgba(27, 27, 27, 0.9) 0%, var(--base-dark) 60%) fixed;
+  color: #fff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Scan-line overlay effect */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.03) 0 2px,
+    transparent 2px 4px
+  );
+  mix-blend-mode: overlay;
+  z-index: 9999;
+}
+
+/* Neon glow helper classes */
+.neon-purple {
+  box-shadow: 0 0 12px rgba(171, 71, 188, 0.8);
+}
+
+.neon-blue {
+  box-shadow: 0 0 12px rgba(79, 195, 247, 0.8);
+}
+
+.neon-gold {
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card styling */
+.cyber-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(171, 71, 188, 0.3);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* Button base styling */
+.cyber-button {
+  background: var(--primary-gradient);
+  color: white;
+  border: 2px solid var(--accent-gold);
+  border-radius: 9999px;
+  padding: 12px 32px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cyber-button::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 215, 0, 0.2) 50%,
+    transparent 70%
+  );
+  transform: rotate(45deg);
+  transition: all 0.5s;
+  opacity: 0;
+}
+
+.cyber-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(171, 71, 188, 0.6),
+              0 0 60px rgba(171, 71, 188, 0.4);
+}
+
+.cyber-button:hover::before {
+  opacity: 1;
+  animation: buttonShimmer 1s ease-in-out infinite;
+}
+
+@keyframes buttonShimmer {
+  0% { transform: rotate(45deg) translateX(-100%); }
+  100% { transform: rotate(45deg) translateX(100%); }
+}
+
+/* Link styling */
+a {
+  color: var(--secondary-blue);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--accent-gold);
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--base-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-purple);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-blue);
+}
+
+/* Selection styling */
+::selection {
+  background: var(--primary-purple);
+  color: white;
+}
+
+/* Glitch effect animation */
+@keyframes glitch {
+  0%, 100% {
+    text-shadow: 
+      0.05em 0 0 rgba(255, 0, 0, 0.75),
+      -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+      0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  14% {
+    text-shadow: 
+      0.05em 0 0 rgba(255, 0, 0, 0.75),
+      -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+      0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  15% {
+    text-shadow: 
+      -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+      0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+      -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  49% {
+    text-shadow: 
+      -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+      0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+      -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  50% {
+    text-shadow: 
+      0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+      0.05em 0 0 rgba(0, 255, 0, 0.75),
+      0 -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  99% {
+    text-shadow: 
+      0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+      0.05em 0 0 rgba(0, 255, 0, 0.75),
+      0 -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+}
+
+.glitch-text {
+  animation: glitch 2s linear infinite;
+}
+
+/* Responsive box-shadow optimization */
+@media (max-width: 768px) {
+  .neon-purple {
+    box-shadow: 0 0 8px rgba(171, 71, 188, 0.8);
+  }
+
+  .neon-blue {
+    box-shadow: 0 0 8px rgba(79, 195, 247, 0.8);
+  }
+
+  .neon-gold {
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+  }
+
+  .cyber-button:hover {
+    box-shadow: 0 8px 20px rgba(171, 71, 188, 0.6),
+                0 0 40px rgba(171, 71, 188, 0.4);
+  }
+}
+
+/* Utility classes */
+.backdrop-blur {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animation utilities */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

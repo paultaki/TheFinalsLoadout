@@ -75,118 +75,95 @@ const MobilePerformanceMonitor: React.FC<MobilePerformanceMonitorProps> = ({
   if (!show) return null;
 
   return (
-    <div className={`perf-monitor ${minimized ? 'minimized' : ''}`}>
+    <div 
+      className="sm:hidden"
+      style={{
+        position: 'fixed',
+        top: '80px',
+        right: '10px',
+        background: 'rgba(0, 0, 0, 0.9)',
+        border: '1px solid rgba(168, 85, 247, 0.3)',
+        borderRadius: '8px',
+        padding: minimized ? '4px' : '8px',
+        fontFamily: 'monospace',
+        fontSize: '12px',
+        zIndex: 9999,
+        minWidth: minimized ? 'auto' : '150px',
+        transition: 'all 0.3s ease'
+      }}
+    >
       <button 
-        className="toggle-btn"
         onClick={() => setMinimized(!minimized)}
+        style={{
+          position: 'absolute',
+          top: '2px',
+          right: '2px',
+          background: 'none',
+          border: 'none',
+          color: '#a855f7',
+          cursor: 'pointer',
+          fontSize: '16px',
+          padding: '2px 6px',
+          lineHeight: 1
+        }}
       >
         {minimized ? '📊' : '−'}
       </button>
 
       {!minimized && (
-        <div className="perf-content">
-          <div className="perf-item">
-            <span className="perf-label">FPS:</span>
-            <span className={`perf-value ${fps < 30 ? 'warning' : fps < 50 ? 'caution' : 'good'}`}>
+        <div style={{ marginTop: '20px' }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginBottom: '4px',
+            color: '#e5e7eb'
+          }}>
+            <span style={{ color: '#9ca3af' }}>FPS:</span>
+            <span style={{
+              fontWeight: 'bold',
+              color: fps < 30 ? '#ef4444' : fps < 50 ? '#f59e0b' : '#10b981'
+            }}>
               {fps}
             </span>
           </div>
 
           {memory.total > 0 && (
-            <div className="perf-item">
-              <span className="perf-label">Memory:</span>
-              <span className="perf-value">
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginBottom: '4px',
+              color: '#e5e7eb'
+            }}>
+              <span style={{ color: '#9ca3af' }}>Memory:</span>
+              <span style={{ fontWeight: 'bold' }}>
                 {memory.used}/{memory.total}MB
               </span>
             </div>
           )}
 
-          <div className="perf-item">
-            <span className="perf-label">Network:</span>
-            <span className="perf-value">{connection.type}</span>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginBottom: '4px',
+            color: '#e5e7eb'
+          }}>
+            <span style={{ color: '#9ca3af' }}>Network:</span>
+            <span style={{ fontWeight: 'bold' }}>{connection.type}</span>
           </div>
 
-          <div className="perf-item">
-            <span className="perf-label">Device:</span>
-            <span className="perf-value">
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginBottom: '4px',
+            color: '#e5e7eb'
+          }}>
+            <span style={{ color: '#9ca3af' }}>Device:</span>
+            <span style={{ fontWeight: 'bold' }}>
               {window.innerWidth}x{window.innerHeight}
             </span>
           </div>
         </div>
       )}
-
-      <style jsx>{`
-        .perf-monitor {
-          position: fixed;
-          top: 80px;
-          right: 10px;
-          background: rgba(0, 0, 0, 0.9);
-          border: 1px solid rgba(168, 85, 247, 0.3);
-          border-radius: 8px;
-          padding: 8px;
-          font-family: monospace;
-          font-size: 12px;
-          z-index: 9999;
-          min-width: 150px;
-          transition: all 0.3s ease;
-        }
-
-        .perf-monitor.minimized {
-          min-width: auto;
-          padding: 4px;
-        }
-
-        .toggle-btn {
-          position: absolute;
-          top: 2px;
-          right: 2px;
-          background: none;
-          border: none;
-          color: #a855f7;
-          cursor: pointer;
-          font-size: 16px;
-          padding: 2px 6px;
-          line-height: 1;
-        }
-
-        .perf-content {
-          margin-top: 20px;
-        }
-
-        .perf-item {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 4px;
-          color: #e5e7eb;
-        }
-
-        .perf-label {
-          color: #9ca3af;
-        }
-
-        .perf-value {
-          font-weight: bold;
-        }
-
-        .perf-value.good {
-          color: #10b981;
-        }
-
-        .perf-value.caution {
-          color: #f59e0b;
-        }
-
-        .perf-value.warning {
-          color: #ef4444;
-        }
-
-        /* Hide on production */
-        @media (min-width: 640px) {
-          .perf-monitor {
-            display: none;
-          }
-        }
-      `}</style>
     </div>
   );
 };

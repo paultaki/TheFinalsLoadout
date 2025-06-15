@@ -36,78 +36,81 @@ const LoadoutHistory: React.FC = () => {
 
   return (
     <div className="w-full px-4 py-8">
-      <div className="max-w-7xl mx-auto">
-        <div
-          className="rounded-xl p-6"
-          style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.55)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-          }}
-        >
-          <h2
-            className="text-center text-2xl font-bold mb-6"
-            style={{
-              color: '#ffd36d',
-              textTransform: 'uppercase',
-              letterSpacing: '2px',
-              fontSize: '1.125rem',
-              fontVariant: 'small-caps',
-            }}
-          >
-            Loadout History
-          </h2>
+      <div className="max-w-4xl mx-auto">
+        <div className="cyber-card p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold gradient-text uppercase tracking-wide">
+              Loadout History
+            </h2>
+            {history.length > 0 && (
+              <button 
+                onClick={() => {
+                  if (window.confirm('Clear all loadout history?')) {
+                    localStorage.removeItem('loadoutHistory');
+                    window.location.reload();
+                  }
+                }}
+                className="cyber-button py-2 px-4 text-sm"
+              >
+                Clear History
+              </button>
+            )}
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {history.map((loadout, index) => (
               <div
                 key={`${loadout.timestamp}-${index}`}
-                className="bg-gray-900/60 rounded-lg p-4 border border-gray-700/50 hover:border-gray-600/50 transition-colors"
+                className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
               >
-                <div className="space-y-2">
-                  {/* Class */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-xs uppercase">Class</span>
-                    <span className={`font-bold ${getClassColor(loadout.class)}`}>
+                <div className="space-y-3">
+                  {/* Header with Class and Time */}
+                  <div className="flex items-center justify-between border-b border-purple-500/20 pb-2">
+                    <span className={`font-bold text-lg ${getClassColor(loadout.class)}`}>
                       {loadout.class}
                     </span>
-                  </div>
-
-                  {/* Weapon */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-xs uppercase">Weapon</span>
-                    <span className="text-yellow-400 text-sm font-medium">
-                      {loadout.weapon.replace(/_/g, ' ')}
+                    <span className="text-xs text-gray-500">
+                      {formatTime(loadout.timestamp)}
                     </span>
                   </div>
 
-                  {/* Specialization */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-xs uppercase">Spec</span>
-                    <span className="text-purple-400 text-sm">
-                      {loadout.specialization.replace(/_/g, ' ')}
-                    </span>
-                  </div>
-
-                  {/* Gadgets */}
-                  <div className="border-t border-gray-700/50 pt-2 mt-2">
-                    <span className="text-gray-500 text-xs uppercase">Gadgets</span>
-                    <div className="mt-1 space-y-1">
-                      <div className="text-cyan-400 text-xs">
-                        {loadout.gadget1.replace(/_/g, ' ')}
-                      </div>
-                      <div className="text-cyan-400 text-xs">
-                        {loadout.gadget2.replace(/_/g, ' ')}
-                      </div>
-                      <div className="text-cyan-400 text-xs">
-                        {loadout.gadget3.replace(/_/g, ' ')}
+                  {/* Weapon with Icon */}
+                  <div className="bg-gradient-to-r from-purple-900/20 to-transparent rounded p-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">🔫</span>
+                      <div>
+                        <span className="text-xs text-gray-400 block">Weapon</span>
+                        <span className="text-accent-gold font-medium">
+                          {loadout.weapon.replace(/_/g, ' ')}
+                        </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Timestamp */}
-                  <div className="text-center text-gray-600 text-xs pt-2 border-t border-gray-700/50">
-                    {formatTime(loadout.timestamp)}
+                  {/* Specialization */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">⚡</span>
+                    <div className="flex-1">
+                      <span className="text-xs text-gray-400 block">Specialization</span>
+                      <span className="text-purple-400 text-sm font-medium">
+                        {loadout.specialization.replace(/_/g, ' ')}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Gadgets */}
+                  <div className="space-y-1">
+                    <span className="text-xs text-gray-400 uppercase tracking-wider">Gadgets</span>
+                    <div className="flex flex-wrap gap-2">
+                      {[loadout.gadget1, loadout.gadget2, loadout.gadget3].map((gadget, idx) => (
+                        <span 
+                          key={idx}
+                          className="text-xs bg-secondary-blue/20 text-secondary-blue px-2 py-1 rounded-full border border-secondary-blue/30"
+                        >
+                          {gadget.replace(/_/g, ' ')}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>

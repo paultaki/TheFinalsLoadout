@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import styles from './TouchWrapper.module.css';
 
 interface TouchWrapperProps {
   children: React.ReactNode;
@@ -119,7 +120,7 @@ const TouchWrapper: React.FC<TouchWrapperProps> = ({
   return (
     <div
       ref={elementRef}
-      className={`touch-wrapper ${className} ${isTouching ? 'touching' : ''}`}
+      className={`${styles.touchWrapper} ${className} ${isTouching ? styles.touching : ''}`}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -140,26 +141,6 @@ const TouchWrapper: React.FC<TouchWrapperProps> = ({
       }}
     >
       {children}
-      <style jsx>{`
-        .touch-wrapper {
-          position: relative;
-          cursor: pointer;
-        }
-        
-        .touch-wrapper.touching {
-          transform: scale(0.98);
-          opacity: 0.9;
-          transition: all 0.1s ease;
-        }
-        
-        /* Prevent text selection on long press */
-        .touch-wrapper * {
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-        }
-      `}</style>
     </div>
   );
 };

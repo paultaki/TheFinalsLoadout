@@ -92,6 +92,24 @@
     scroll-snap-align: start;
     min-height: 100vh;
   }
+  
+  /* Better mobile spacing */
+  section {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  
+  /* Prevent horizontal scroll on mobile */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Ensure modals fit on mobile */
+  .modal-content {
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100vh - 4rem);
+    margin: 1rem;
+  }
 }
 
 /* Touch-friendly buttons */

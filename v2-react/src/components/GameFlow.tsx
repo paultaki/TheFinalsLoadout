@@ -3,6 +3,8 @@ import { useGameState, useGameDispatch } from '../hooks/useGameState';
 import SpinCountWheel from '../features/spin-selector';
 import SlotMachineLayout from './SlotMachineLayout';
 import History from './History';
+import MobileLoader from './MobileLoader';
+import { useMobileDetect } from '../hooks/useMobileDetect';
 import { FEATURE_FLAGS } from '../constants/features';
 import type { ClassType, Loadout } from '../types';
 
@@ -16,6 +18,7 @@ const ClassRouletteOLD = React.lazy(() => import('../features/class-roulette/Cla
 const GameFlow: React.FC = () => {
   const state = useGameState();
   const { finishSpin, finishRoulette, runSlot, addToHistory, setSpins } = useGameDispatch();
+  const { isMobile } = useMobileDetect();
   const [autoSpinRoulette, setAutoSpinRoulette] = useState(false);
 
   const handleSpinComplete = (result: { value: string; spins: number; isJackpot: boolean }) => {
@@ -96,7 +99,13 @@ const GameFlow: React.FC = () => {
           {FEATURE_FLAGS.USE_NEW_ROULETTE ? (
             <RouletteWheel onClassSelected={handleRouletteComplete} />
           ) : (
-            <React.Suspense fallback={<div className="min-h-screen bg-gray-950 flex items-center justify-center text-white">Loading...</div>}>
+            <React.Suspense fallback={
+              isMobile ? (
+                <MobileLoader text="Loading class selector..." />
+              ) : (
+                <div className="min-h-screen bg-gray-950 flex items-center justify-center text-white">Loading...</div>
+              )
+            }>
               <div className="class-roulette">
                 <ClassRouletteOLD onComplete={handleRouletteComplete} />
               </div>
