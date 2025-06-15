@@ -4,6 +4,8 @@ import { LoadoutHistoryProvider } from '../context/LoadoutHistoryContext';
 import GameFlow from '../components/GameFlow';
 import LoadoutHistory from '../components/LoadoutHistory';
 import MobileNav from '../components/MobileNav';
+import MobileBottomNav from '../components/MobileBottomNav';
+import MobilePerformanceMonitor from '../components/MobilePerformanceMonitor';
 import TouchWrapper from '../components/TouchWrapper';
 import PullToRefresh from '../components/PullToRefresh';
 import { useMobileDetect } from '../hooks/useMobileDetect';
@@ -17,17 +19,32 @@ const AnimationsPage: React.FC = () => {
   const { isMobile, isTablet, isTouchDevice } = useMobileDetect();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  const [activeSection, setActiveSection] = useState('home');
   
-  // Track scroll progress for mobile UI enhancements
+  // Track scroll progress and active section for mobile UI enhancements
   useEffect(() => {
     const handleScroll = () => {
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
       const scrolled = window.scrollY;
       const progress = scrollHeight > 0 ? (scrolled / scrollHeight) * 100 : 0;
       setScrollProgress(progress);
+      
+      // Determine active section
+      const sections = ['generator', 'history', 'features'];
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      
+      let currentSection = 'home';
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
+        if (element && element.offsetTop <= scrollPosition) {
+          currentSection = sectionId;
+        }
+      }
+      setActiveSection(currentSection);
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial check
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
@@ -117,7 +134,7 @@ const AnimationsPage: React.FC = () => {
       <MobileNav isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
 
       {/* Hero Section - Mobile Optimized */}
-      <section className="relative overflow-hidden">
+      <section id="home" className="relative overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
@@ -209,7 +226,7 @@ const AnimationsPage: React.FC = () => {
           </div>
 
           {/* Game Flow Container with Mobile Optimizations */}
-          <div className={`max-w-4xl mx-auto ${isMobile ? 'px-2' : ''}`}>
+          <div className={`max-w-4xl mx-auto ${isMobile ? 'px-2 pb-20' : ''}`}>
             <LoadoutHistoryProvider>
               <GameProvider>
                 <div className="relative">
@@ -288,8 +305,14 @@ const AnimationsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-gray-800 bg-gray-900/50">
+      {/* Mobile Bottom Navigation */}
+      {isMobile && <MobileBottomNav activeSection={activeSection} />}
+      
+      {/* Performance Monitor for Development */}
+      {isMobile && <MobilePerformanceMonitor />}
+      
+      {/* Footer with padding for mobile nav */}
+      <footer className={`border-t border-gray-800 bg-gray-900/50 ${isMobile ? 'pb-20' : ''}`}>
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <p className="text-gray-400 text-sm mb-4">
