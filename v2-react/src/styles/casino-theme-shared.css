@@ -4,52 +4,128 @@
 
 :root {
   --primary-purple: #7B1FA2;
+  --primary-purple-light: #AB47BC;
   --primary-gradient: linear-gradient(135deg, #7B1FA2 0%, #AB47BC 100%);
   --secondary-blue: #29B6F6;
+  --secondary-blue-light: #4FC3F7;
   --secondary-gradient: linear-gradient(135deg, #29B6F6 0%, #4FC3F7 100%);
   --accent-gold: #FFD700;
+  --accent-gold-dark: #FFA000;
   --alert-pink: #FF1744;
-  --base-dark: #0e0e0e;
-  --surface-dark: #1a1a1a;
-  --surface-dark-transparent: rgba(26, 26, 26, 0.95);
+  --base-dark: #0a0a0f;
+  --surface-dark: #12121a;
+  --surface-dark-transparent: rgba(18, 18, 26, 0.95);
+  --surface-dark-glass: rgba(18, 18, 26, 0.6);
+  
+  /* Neon glow values */
+  --glow-purple: 0 0 20px rgba(171, 71, 188, 0.8), 0 0 40px rgba(171, 71, 188, 0.5);
+  --glow-blue: 0 0 20px rgba(79, 195, 247, 0.8), 0 0 40px rgba(79, 195, 247, 0.5);
+  --glow-gold: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.5);
+  --glow-purple-subtle: 0 0 10px rgba(171, 71, 188, 0.4);
+  
+  /* Typography scale */
+  --font-scale: clamp(0.875rem, 1vw + 0.5rem, 1rem);
+  --heading-scale: clamp(1.5rem, 3vw + 1rem, 3rem);
 }
 
 /* Base body styling */
 body {
-  background: radial-gradient(circle at top, rgba(27, 27, 27, 0.9) 0%, var(--base-dark) 60%) fixed;
+  background: 
+    radial-gradient(ellipse at top, rgba(123, 31, 162, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(41, 182, 246, 0.1) 0%, transparent 50%),
+    linear-gradient(180deg, var(--base-dark) 0%, #0f0f1a 100%) fixed;
   color: #fff;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
   margin: 0;
+  position: relative;
 }
 
-/* Scan-line overlay effect */
+/* Animated grid background */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(123, 31, 162, 0.03) 50px, rgba(123, 31, 162, 0.03) 51px),
+    repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(41, 182, 246, 0.03) 50px, rgba(41, 182, 246, 0.03) 51px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Scan-line overlay effect with animation */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(255, 255, 255, 0.03) 0 2px,
-    transparent 2px 4px
-  );
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      rgba(255, 255, 255, 0.03) 2px,
+      rgba(255, 255, 255, 0.03) 4px
+    );
   mix-blend-mode: overlay;
   z-index: 9999;
+  animation: scanlines 8s linear infinite;
 }
 
-/* Neon glow helper classes */
+@keyframes scanlines {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+
+/* Neon glow helper classes with enhanced effects */
 .neon-purple {
-  box-shadow: 0 0 12px rgba(171, 71, 188, 0.8);
+  box-shadow: var(--glow-purple);
+  position: relative;
+}
+
+.neon-purple::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: var(--primary-gradient);
+  opacity: 0;
+  border-radius: inherit;
+  filter: blur(10px);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.neon-purple:hover::before {
+  opacity: 0.3;
 }
 
 .neon-blue {
-  box-shadow: 0 0 12px rgba(79, 195, 247, 0.8);
+  box-shadow: var(--glow-blue);
 }
 
 .neon-gold {
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+  box-shadow: var(--glow-gold);
+}
+
+/* Holographic effect */
+.holographic {
+  position: relative;
+  background: linear-gradient(
+    45deg,
+    #7B1FA2 0%,
+    #29B6F6 25%,
+    #FFD700 50%,
+    #29B6F6 75%,
+    #7B1FA2 100%
+  );
+  background-size: 400% 100%;
+  animation: holographic-shift 3s ease-in-out infinite;
+}
+
+@keyframes holographic-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 /* Gradient text */
@@ -60,29 +136,77 @@ body::before {
   background-clip: text;
 }
 
-/* Card styling */
+/* Premium card styling with glass effect */
 .cyber-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(171, 71, 188, 0.3);
+  background: 
+    linear-gradient(135deg, rgba(123, 31, 162, 0.1) 0%, rgba(41, 182, 246, 0.05) 100%),
+    var(--surface-dark-glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid transparent;
+  background-clip: padding-box;
   border-radius: 16px;
   overflow: hidden;
+  position: relative;
 }
 
-/* Button base styling */
+.cyber-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(171, 71, 188, 0.5), rgba(79, 195, 247, 0.3));
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Premium hover state */
+.cyber-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 10px 40px rgba(171, 71, 188, 0.3),
+    0 0 60px rgba(171, 71, 188, 0.1);
+}
+
+/* Premium button styling with multiple states */
 .cyber-button {
-  background: var(--primary-gradient);
+  background: linear-gradient(135deg, #7B1FA2 0%, #AB47BC 50%, #7B1FA2 100%);
+  background-size: 200% 100%;
   color: white;
-  border: 2px solid var(--accent-gold);
+  border: 1px solid var(--accent-gold);
   border-radius: 9999px;
   padding: 12px 32px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 4px 20px rgba(171, 71, 188, 0.4),
+    0 0 40px rgba(171, 71, 188, 0.2);
+}
+
+/* Animated gradient on hover */
+.cyber-button:hover {
+  background-position: 100% 0;
+  border-color: var(--accent-gold-dark);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 8px 30px rgba(255, 215, 0, 0.4),
+    0 0 60px rgba(255, 215, 0, 0.3);
+}
+
+.cyber-button:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .cyber-button::before {

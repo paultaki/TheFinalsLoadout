@@ -11,6 +11,7 @@ import TouchWrapper from '../components/TouchWrapper';
 import PullToRefresh from '../components/PullToRefresh';
 import { useMobileDetect } from '../hooks/useMobileDetect';
 import './AnimationsPage.css';
+import './AnimationsPage.premium.css';
 
 /**
  * AnimationsPage - Mobile-first full page implementation with navigation, hero, animations, and footer
@@ -78,6 +79,9 @@ const AnimationsPage: React.FC = () => {
 
   const content = (
     <>
+      {/* Cyber Grid Background */}
+      <div className="cyber-grid" />
+      
       {/* Scroll Progress Indicator for Mobile */}
       {isMobile && (
         <div 
@@ -113,39 +117,38 @@ const AnimationsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="relative container mx-auto px-4 py-8 sm:py-20">
+        <div className="relative container mx-auto px-4 py-4 sm:py-8">
           <div className="text-center">
-            {/* Main Logo - Hidden on very small screens to avoid duplication */}
-            <div className="mb-4 sm:mb-6 relative inline-block">
-              <div className="absolute inset-0 bg-yellow-400/20 blur-3xl" />
+            {/* Main Logo - Reduced size by 60% with purple glow */}
+            <div className="mb-3 sm:mb-4 relative inline-block group">
+              <div className="absolute inset-0 bg-purple-600/30 blur-2xl group-hover:bg-purple-500/40 transition-colors duration-500" />
               <img 
                 src="/images/the-finals-logo.webp" 
                 alt="The Finals" 
-                className="relative h-20 sm:h-32 md:h-40 w-auto mx-auto drop-shadow-2xl"
+                className="relative h-12 sm:h-16 md:h-20 w-auto mx-auto filter drop-shadow-[0_0_20px_rgba(171,71,188,0.6)]"
               />
             </div>
 
-            {/* Title */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-4 tracking-tight">
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent">
+            {/* Title with Holographic Effect */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 tracking-tight">
+              <span className="holographic-text">
                 LOADOUT GENERATOR
               </span>
             </h1>
 
-            {/* Season Badge */}
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600/20 to-yellow-600/20 
-                          border border-yellow-400/50 rounded-full mb-8">
+            {/* Season Badge with Glow */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 glass-card 
+                          border border-yellow-400/50 rounded-full mb-6 pulse-glow">
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
               </span>
-              <span className="text-lg font-bold text-yellow-400">SEASON 7 READY!</span>
+              <span className="text-sm font-bold text-yellow-400 uppercase tracking-wider">SEASON 7: THE DIVIDE</span>
             </div>
 
-            {/* Description */}
-            <p className="text-gray-300 text-lg sm:text-xl max-w-2xl mx-auto mb-8 px-4">
-              Generate random loadouts for The Finals. Perfect for challenges, 
-              content creation, or just mixing up your playstyle!
+            {/* Description - Smaller and Tighter */}
+            <p className="text-gray-400 text-base max-w-xl mx-auto mb-6 px-4 opacity-90">
+              Premium loadout generator for competitive play
             </p>
 
             {/* Scroll Indicator with Touch Hint */}
@@ -168,17 +171,16 @@ const AnimationsPage: React.FC = () => {
       </section>
 
       {/* Main Content - Animations */}
-      <section id="generator" className="relative py-8 sm:py-12">
+      <section id="generator" className="relative py-6 sm:py-8">
         {/* Section Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
         
         <div className="relative container mx-auto px-4">
-          {/* Section Header */}
-          <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-yellow-400 bg-clip-text text-transparent">
+          {/* Section Header - Compact */}
+          <div className="text-center mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold gradient-text uppercase tracking-wider">
               Generate Your Loadout
             </h2>
-            <p className="text-gray-400">Follow the steps to create your random loadout</p>
           </div>
 
           {/* Game Flow Container with Mobile Optimizations */}
@@ -201,21 +203,10 @@ const AnimationsPage: React.FC = () => {
       </section>
 
       {/* Loadout History Section */}
-      <section id="history" className="py-8 sm:py-12 bg-surface-dark/50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-yellow-400 bg-clip-text text-transparent">
-              Recent Loadouts
-            </h2>
-            <p className="text-gray-400">Your generated loadout history</p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <LoadoutHistoryProvider>
-              <LoadoutHistory />
-            </LoadoutHistoryProvider>
-          </div>
-        </div>
+      <section id="history" className="py-8 sm:py-12 relative">
+        <LoadoutHistoryProvider>
+          <LoadoutHistory />
+        </LoadoutHistoryProvider>
       </section>
 
       {/* Features Section with Lazy Loading */}

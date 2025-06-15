@@ -35,9 +35,16 @@ const LoadoutHistory: React.FC = () => {
   };
 
   return (
-    <div className="w-full px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="cyber-card p-6">
+    <div className="w-full px-4 py-12">
+      <div className="max-w-7xl mx-auto" style={{ width: '90%' }}>
+        <div className="relative">
+          {/* Premium background effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 to-blue-900/10 blur-3xl" />
+          
+          <div className="relative cyber-card p-8 shadow-2xl" style={{
+            background: 'linear-gradient(135deg, rgba(123, 31, 162, 0.05) 0%, rgba(41, 182, 246, 0.02) 100%), rgba(18, 18, 26, 0.9)',
+            border: '1px solid rgba(171, 71, 188, 0.2)'
+          }}>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold gradient-text uppercase tracking-wide">
               Loadout History
@@ -50,62 +57,97 @@ const LoadoutHistory: React.FC = () => {
                     window.location.reload();
                   }
                 }}
-                className="cyber-button py-2 px-4 text-sm"
+                className="premium-button py-2 px-6 text-xs"
               >
                 Clear History
               </button>
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="space-y-3">
             {history.map((loadout, index) => (
               <div
                 key={`${loadout.timestamp}-${index}`}
-                className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
+                className="group relative overflow-hidden rounded-xl transition-all duration-500 hover:transform hover:scale-[1.02]"
+                style={{
+                  background: index % 2 === 0 
+                    ? 'linear-gradient(90deg, rgba(123, 31, 162, 0.08) 0%, rgba(123, 31, 162, 0.03) 100%)' 
+                    : 'linear-gradient(90deg, rgba(41, 182, 246, 0.08) 0%, rgba(41, 182, 246, 0.03) 100%)',
+                  border: '1px solid',
+                  borderColor: index % 2 === 0 ? 'rgba(171, 71, 188, 0.2)' : 'rgba(79, 195, 247, 0.2)',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+                }}
               >
-                <div className="space-y-3">
-                  {/* Header with Class and Time */}
-                  <div className="flex items-center justify-between border-b border-purple-500/20 pb-2">
-                    <span className={`font-bold text-lg ${getClassColor(loadout.class)}`}>
-                      {loadout.class}
-                    </span>
-                    <span className="text-xs text-gray-500">
+                {/* Hover glow effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    background: index % 2 === 0 
+                      ? 'radial-gradient(circle at center, rgba(171, 71, 188, 0.1) 0%, transparent 70%)'
+                      : 'radial-gradient(circle at center, rgba(79, 195, 247, 0.1) 0%, transparent 70%)'
+                  }}
+                />
+                
+                <div className="relative p-6"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+                  {/* Class Badge */}
+                  <div className="md:col-span-1">
+                    <div className={`inline-flex items-center justify-center px-4 py-2 rounded-lg font-bold text-lg ${getClassColor(loadout.class)}`}
+                      style={{
+                        background: loadout.class === 'Light' ? 'rgba(79, 195, 247, 0.1)' :
+                                   loadout.class === 'Medium' ? 'rgba(171, 71, 188, 0.1)' :
+                                   'rgba(255, 23, 68, 0.1)',
+                        border: '1px solid',
+                        borderColor: loadout.class === 'Light' ? 'rgba(79, 195, 247, 0.3)' :
+                                    loadout.class === 'Medium' ? 'rgba(171, 71, 188, 0.3)' :
+                                    'rgba(255, 23, 68, 0.3)',
+                        boxShadow: loadout.class === 'Light' ? '0 0 20px rgba(79, 195, 247, 0.2)' :
+                                  loadout.class === 'Medium' ? '0 0 20px rgba(171, 71, 188, 0.2)' :
+                                  '0 0 20px rgba(255, 23, 68, 0.2)'
+                      }}
+                    >
+                      <span className="mr-2" style={{ fontSize: '1.5rem' }}>
+                        {loadout.class === 'Light' ? '⚡' : loadout.class === 'Medium' ? '🛡️' : '💪'}
+                      </span>
+                      {loadout.class.toUpperCase()}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">
                       {formatTime(loadout.timestamp)}
-                    </span>
+                    </div>
                   </div>
 
-                  {/* Weapon with Icon */}
-                  <div className="bg-gradient-to-r from-purple-900/20 to-transparent rounded p-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl">🔫</span>
-                      <div>
-                        <span className="text-xs text-gray-400 block">Weapon</span>
-                        <span className="text-accent-gold font-medium">
-                          {loadout.weapon.replace(/_/g, ' ')}
-                        </span>
+                  {/* Weapon & Specialization */}
+                  <div className="md:col-span-1 space-y-3">
+                    <div>
+                      <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Weapon</div>
+                      <div className="text-accent-gold font-medium flex items-center gap-2">
+                        <span style={{ filter: 'brightness(1.5)' }}>🔫</span>
+                        {loadout.weapon.replace(/_/g, ' ')}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Specialization</div>
+                      <div className="text-purple-400 font-medium flex items-center gap-2">
+                        <span>⚡</span>
+                        {loadout.specialization.replace(/_/g, ' ')}
                       </div>
                     </div>
                   </div>
 
-                  {/* Specialization */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">⚡</span>
-                    <div className="flex-1">
-                      <span className="text-xs text-gray-400 block">Specialization</span>
-                      <span className="text-purple-400 text-sm font-medium">
-                        {loadout.specialization.replace(/_/g, ' ')}
-                      </span>
-                    </div>
-                  </div>
-
                   {/* Gadgets */}
-                  <div className="space-y-1">
-                    <span className="text-xs text-gray-400 uppercase tracking-wider">Gadgets</span>
+                  <div className="md:col-span-2">
+                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Gadgets</div>
                     <div className="flex flex-wrap gap-2">
                       {[loadout.gadget1, loadout.gadget2, loadout.gadget3].map((gadget, idx) => (
                         <span 
                           key={idx}
-                          className="text-xs bg-secondary-blue/20 text-secondary-blue px-2 py-1 rounded-full border border-secondary-blue/30"
+                          className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105"
+                          style={{
+                            background: 'linear-gradient(135deg, rgba(41, 182, 246, 0.15) 0%, rgba(79, 195, 247, 0.1) 100%)',
+                            border: '1px solid rgba(79, 195, 247, 0.3)',
+                            color: '#4FC3F7',
+                            boxShadow: '0 2px 10px rgba(79, 195, 247, 0.2)'
+                          }}
                         >
                           {gadget.replace(/_/g, ' ')}
                         </span>
@@ -114,7 +156,9 @@ const LoadoutHistory: React.FC = () => {
                   </div>
                 </div>
               </div>
+              </div>
             ))}
+          </div>
           </div>
         </div>
       </div>
