@@ -170,42 +170,43 @@ const AnimationsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Main Content - Animations */}
-      <section id="generator" className="relative py-6 sm:py-8">
-        {/* Section Background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
-        
-        <div className="relative container mx-auto px-4">
-          {/* Section Header - Compact */}
-          <div className="text-center mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold gradient-text uppercase tracking-wider">
-              Generate Your Loadout
-            </h2>
-          </div>
+      {/* Wrap both sections in a single LoadoutHistoryProvider */}
+      <LoadoutHistoryProvider>
+        {/* Main Content - Animations */}
+        <section id="generator" className="relative py-6 sm:py-8">
+          {/* Section Background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
+          
+          <div className="relative container mx-auto px-4">
+            {/* Section Header - Compact */}
+            <div className="text-center mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold gradient-text uppercase tracking-wider">
+                Generate Your Loadout
+              </h2>
+            </div>
 
-          {/* Game Flow Container with Mobile Optimizations */}
-          <div className={`max-w-4xl mx-auto ${isMobile ? 'px-2' : ''}`}>
-            <GameProvider>
-              <div className="relative">
-                {/* Mobile-only: Sticky progress indicator */}
-                {isMobile && (
-                  <div className="sticky top-16 z-30 bg-gray-900/80 backdrop-blur-sm p-2 rounded-lg mb-4 text-center text-sm text-gray-400">
-                    <span>Step 1: Choose number of loadouts</span>
-                  </div>
-                )}
-                <GameFlow />
-              </div>
-            </GameProvider>
+            {/* Game Flow Container with Mobile Optimizations */}
+            <div className={`max-w-4xl mx-auto ${isMobile ? 'px-2' : ''}`}>
+              <GameProvider>
+                <div className="relative">
+                  {/* Mobile-only: Sticky progress indicator */}
+                  {isMobile && (
+                    <div className="sticky top-16 z-30 bg-gray-900/80 backdrop-blur-sm p-2 rounded-lg mb-4 text-center text-sm text-gray-400">
+                      <span>Step 1: Choose number of loadouts</span>
+                    </div>
+                  )}
+                  <GameFlow />
+                </div>
+              </GameProvider>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Loadout History Section */}
-      <section id="history" className="py-8 sm:py-12 relative">
-        <LoadoutHistoryProvider>
+        {/* Loadout History Section */}
+        <section id="history" className="py-8 sm:py-12 relative">
           <LoadoutHistory />
-        </LoadoutHistoryProvider>
-      </section>
+        </section>
+      </LoadoutHistoryProvider>
 
       {/* Features Section with Lazy Loading */}
       <section 
