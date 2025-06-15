@@ -6,6 +6,9 @@ import SlotMachineLayout from './SlotMachineLayout';
 import History from './History';
 import type { ClassType, Loadout } from '../types';
 
+/**
+ * Main game flow component that manages transitions between spin wheel, class roulette, and slot machine
+ */
 const GameFlow: React.FC = () => {
   const state = useGameState();
   const { finishSpin, finishRoulette, runSlot, addToHistory, setSpins } = useGameDispatch();

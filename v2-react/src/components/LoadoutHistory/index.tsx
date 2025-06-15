@@ -1,6 +1,9 @@
 import React from 'react';
 import { useLoadoutHistory } from '../../context/LoadoutHistoryContext';
 
+/**
+ * Displays the loadout generation history stored in localStorage
+ */
 const LoadoutHistory: React.FC = () => {
   const { history } = useLoadoutHistory();
 

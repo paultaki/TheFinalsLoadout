@@ -7,6 +7,9 @@ interface ResultBannerProps {
   classType: ClassType | null;
 }
 
+/**
+ * Banner component that displays the selected class during roulette spin
+ */
 const ResultBanner: React.FC<ResultBannerProps> = ({ classType }) => {
   if (!classType) return null;
 

@@ -9,6 +9,9 @@ export const initialState: GameState = {
   history: [],
 };
 
+/**
+ * Reducer function that manages game state transitions based on actions
+ */
 export const gameReducer = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
     case GameActionTypes.START_SPIN:

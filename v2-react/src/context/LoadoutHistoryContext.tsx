@@ -19,6 +19,9 @@ const LoadoutHistoryContext = createContext<LoadoutHistoryContextType | undefine
 
 const STORAGE_KEY = 'tflg-loadout-history';
 
+/**
+ * Context provider that manages loadout history with localStorage persistence
+ */
 export const LoadoutHistoryProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [history, setHistory] = useState<LoadoutRecord[]>([]);
 
@@ -50,6 +53,9 @@ export const LoadoutHistoryProvider: React.FC<{ children: ReactNode }> = ({ chil
   );
 };
 
+/**
+ * Hook to access loadout history and add new loadouts
+ */
 export const useLoadoutHistory = () => {
   const context = useContext(LoadoutHistoryContext);
   if (!context) {

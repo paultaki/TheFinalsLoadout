@@ -7,6 +7,9 @@ interface ClassButtonProps {
   onClick: () => void;
 }
 
+/**
+ * Button component for selecting a class in the jackpot modal
+ */
 const ClassButton: React.FC<ClassButtonProps> = ({ config, onClick }) => {
   const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     const target = e.currentTarget;

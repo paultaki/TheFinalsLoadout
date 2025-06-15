@@ -1,7 +1,9 @@
 import { CardData } from './types';
 import { CARD_DATA } from './helpers';
 
-// Easing function for smooth deceleration
+/**
+ * Exponential easing function for smooth deceleration
+ */
 export const easeOutExpo = (t: number): number => {
   return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
 };
@@ -29,7 +31,9 @@ export interface AnimationRefs {
   decelerateStartVelocity: number;
 }
 
-// Find winning card based on viewport center
+/**
+ * Finds the winning card based on which card is centered in the viewport
+ */
 export const findWinningCard = (
   wheelFrameRef: React.RefObject<HTMLDivElement>,
   wheelRef: React.RefObject<HTMLUListElement>
@@ -64,7 +68,9 @@ export const findWinningCard = (
   };
 };
 
-// Apply infinite scroll transform
+/**
+ * Applies infinite scroll transform to the wheel element
+ */
 export const applyInfiniteScroll = (
   distance: number,
   cardHeight: number,
@@ -80,7 +86,9 @@ export const applyInfiniteScroll = (
   }
 };
 
-// Cabinet shake animation
+/**
+ * Animates a cabinet shake effect when ticker hits pegs
+ */
 export const animateCabinetShake = (
   wheelFrameRef: React.RefObject<HTMLDivElement>,
   velocity: number

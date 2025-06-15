@@ -72,7 +72,9 @@ export const CLASS_DATA: ClassDataMap = {
   },
 };
 
-// Generate a random loadout for the given class
+/**
+ * Generates a random loadout with weapons, specializations and gadgets for the specified class
+ */
 export const generateLoadout = (classType: ClassType, spinsLeft: number): GeneratedLoadout => {
   const minSpins = 0;
   const spinsRemaining = Math.max(minSpins, spinsLeft - 1);

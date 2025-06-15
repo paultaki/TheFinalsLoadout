@@ -10,6 +10,9 @@ interface SlotMachineLayoutProps {
   onResult: (loadout: Loadout) => void;
 }
 
+/**
+ * Layout wrapper for slot machine that includes loadout history and start over button
+ */
 const SlotMachineLayout: React.FC<SlotMachineLayoutProps> = ({ spinsLeft, isFinalSpin, onResult }) => {
   return (
     <div className="min-h-screen bg-gray-950 text-white flex flex-col">

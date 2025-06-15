@@ -13,6 +13,9 @@ import {
   playSpinCompleteSound,
 } from './animation-utils';
 
+/**
+ * Hook for managing slot machine animation state and spin logic
+ */
 export const useSlotMachine = (onResult: (result: Loadout) => void, isFinalSpin = false) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [columns, setColumns] = useState<ColumnState[]>(

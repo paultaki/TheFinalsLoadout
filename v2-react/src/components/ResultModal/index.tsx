@@ -5,6 +5,9 @@ import { modalStyles, textStyles, classButtonConfigs } from './styles';
 import ClassButton from './ClassButton';
 import './ResultModal.module.css';
 
+/**
+ * Modal component that displays spin results or jackpot class selection
+ */
 const ResultModal: React.FC<ResultModalProps> = ({
   variant,
   value,

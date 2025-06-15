@@ -3,6 +3,9 @@ import { GameProvider } from './context/GameProvider';
 import { LoadoutHistoryProvider } from './context/LoadoutHistoryContext';
 import GameFlow from './components/GameFlow';
 
+/**
+ * Main application component that provides game context and renders the game flow
+ */
 function App() {
   return (
     <LoadoutHistoryProvider>

@@ -23,6 +23,9 @@ interface ClassRouletteProps {
   onComplete: (selectedClass: ClassType) => void;
 }
 
+/**
+ * Class selection roulette wheel component with auto-spin functionality
+ */
 const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
   const { isSpinning, rotation, spin, currentClass } = useRoulette();
   const wheelSize = useWheelSize();

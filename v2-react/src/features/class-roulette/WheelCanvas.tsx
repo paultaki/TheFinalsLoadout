@@ -12,6 +12,9 @@ export interface WheelCanvasRef {
   getCanvas: () => HTMLCanvasElement | null;
 }
 
+/**
+ * Canvas component that renders the rotating class selection wheel
+ */
 const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotation }, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const offscreenCanvasRef = useRef<HTMLCanvasElement | null>(null);

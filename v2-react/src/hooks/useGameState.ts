@@ -2,7 +2,6 @@ import { useGame } from '../context/GameProvider';
 
 /**
  * Hook to access game state
- * @returns Current game state
  */
 export const useGameState = () => {
   const { state } = useGame();
@@ -11,7 +10,6 @@ export const useGameState = () => {
 
 /**
  * Hook to access game dispatch functions
- * @returns Object containing all dispatch functions
  */
 export const useGameDispatch = () => {
   const {

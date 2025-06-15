@@ -1,7 +1,9 @@
 import React from 'react';
 import { DIMENSIONS } from '../../constants/physics';
 
-// Calculate responsive wheel size based on viewport
+/**
+ * Calculates responsive wheel size based on viewport dimensions
+ */
 export const calculateWheelSize = (): number => {
   const vw = window.innerWidth;
   const size = Math.max(
@@ -11,7 +13,9 @@ export const calculateWheelSize = (): number => {
   return size;
 };
 
-// Create a hook for responsive wheel size
+/**
+ * Hook that provides responsive wheel size and updates on window resize
+ */
 export const useWheelSize = () => {
   const [wheelSize, setWheelSize] = React.useState(0);
 

@@ -19,6 +19,9 @@ interface SlotMachineProps {
   isFinalSpin: boolean;
 }
 
+/**
+ * Slot machine component that generates and displays loadout items with animations
+ */
 const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
   const state = useGameState();
   const { addLoadout } = useLoadoutHistory();

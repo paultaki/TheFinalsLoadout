@@ -5,6 +5,9 @@ interface HistoryProps {
   loadouts: Loadout[];
 }
 
+/**
+ * Displays the last 5 loadouts generated during the current session
+ */
 const History: React.FC<HistoryProps> = ({ loadouts }) => {
   if (loadouts.length === 0) return null;
 

@@ -1,6 +1,8 @@
 import { CardData } from './types';
 
-// Helper to create jackpot cards with random spins
+/**
+ * Creates a jackpot card with random spin count (2-4)
+ */
 export const makeJackpotCard = (): CardData => {
   const spins = 2 + Math.floor(Math.random() * 3); // 2, 3, or 4
   return {
@@ -26,7 +28,9 @@ export const CARD_DATA: CardData[] = [
 // Triple for infinite scroll
 export const INFINITE_CARDS = [...CARD_DATA, ...CARD_DATA, ...CARD_DATA];
 
-// Create confetti particles
+/**
+ * Creates animated confetti particles for celebrations
+ */
 export const createConfetti = (): void => {
   for (let i = 0; i < 50; i++) {
     const confetti = document.createElement('div');
@@ -42,13 +46,17 @@ export const createConfetti = (): void => {
   }
 };
 
-// Calculate dynamic card height
+/**
+ * Calculates the height of a card element including margins
+ */
 export const getCardHeight = (wheelRef: React.RefObject<HTMLUListElement>): number => {
   const card = wheelRef.current?.querySelector('.card');
   return card ? card.getBoundingClientRect().height + 16 : 90; // 16 = margin
 };
 
-// Get winner text for banner
+/**
+ * Generates the winner text displayed in the result banner
+ */
 export const getWinnerText = (result: CardData): string => {
   return `🎯 ${result.label} SPIN${result.value !== '1' ? 'S' : ''}! 🎯`;
 };

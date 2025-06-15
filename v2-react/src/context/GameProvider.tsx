@@ -18,6 +18,9 @@ interface GameContextType {
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
+/**
+ * Hook to access game context containing state and dispatch functions
+ */
 export const useGame = () => {
   const context = useContext(GameContext);
   if (!context) {
@@ -30,6 +33,9 @@ interface GameProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Context provider that manages global game state and actions
+ */
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 

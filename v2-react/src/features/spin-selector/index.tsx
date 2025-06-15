@@ -18,7 +18,6 @@ import './styles.css';
 
 /**
  * Spin count selector wheel component with peg physics
- * @param onSpinComplete - Callback when spin animation completes
  */
 const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
   const { setClass, setSpins, finishRoulette } = useGameDispatch();

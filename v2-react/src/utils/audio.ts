@@ -6,10 +6,7 @@ interface SoundOptions {
 }
 
 /**
- * Hook for playing overlapping sound instances
- * @param src - Path to audio file
- * @param options - Sound options
- * @returns Function to play the sound
+ * Hook for playing overlapping sound instances with audio pooling
  */
 export const useSound = (src: string, options: SoundOptions = {}) => {
   const audioPoolRef = useRef<HTMLAudioElement[]>([]);
@@ -46,19 +43,27 @@ export const useSound = (src: string, options: SoundOptions = {}) => {
   return play;
 };
 
-// Legacy functions for backward compatibility
+/**
+ * Plays a tick/click sound effect
+ */
 export const playTickSound = (): void => {
   const audio = new Audio('/sounds/click.mp3');
   audio.volume = 0.4;
   audio.play().catch(() => {});
 };
 
+/**
+ * Plays a win sound effect
+ */
 export const playWinSound = (): void => {
   const audio = new Audio('/sounds/ding.mp3');
   audio.volume = 0.6;
   audio.play().catch(() => {});
 };
 
+/**
+ * Plays a jackpot celebration sound effect
+ */
 export const playJackpotSound = (): void => {
   const audio = new Audio('/sounds/ding-ding.mp3');
   audio.volume = 0.8;

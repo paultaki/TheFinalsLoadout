@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * Button component that reloads the page to start a new game session
+ */
 const StartOverButton: React.FC = () => {
   const handleStartOver = () => {
     window.location.reload();

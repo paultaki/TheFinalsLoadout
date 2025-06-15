@@ -29,6 +29,9 @@ export interface Particle {
   created: number;
 }
 
+/**
+ * Creates a single particle with random properties at the specified position
+ */
 export function createParticle(x: number, y: number): Particle {
   const angle = Math.random() * Math.PI * 2;
   const velocity =
@@ -54,6 +57,9 @@ export function createParticle(x: number, y: number): Particle {
   };
 }
 
+/**
+ * Updates particle position and applies physics effects
+ */
 export function updateParticle(particle: Particle, deltaTime: number): boolean {
   const age = Date.now() - particle.created;
   if (age > particle.lifetime) return false;
@@ -74,6 +80,9 @@ export function updateParticle(particle: Particle, deltaTime: number): boolean {
   return true;
 }
 
+/**
+ * Creates a burst of particles at the specified position
+ */
 export function createParticleBurst(x: number, y: number, count?: number): Particle[] {
   const isMobile = window.innerWidth < 768;
   const isTablet = window.innerWidth < 1024;
@@ -88,7 +97,9 @@ export function createParticleBurst(x: number, y: number, count?: number): Parti
   return particles;
 }
 
-// Unified celebration animation
+/**
+ * Creates a unified celebration animation with particles and screen effects
+ */
 export function unifiedCelebration(type: 'jackpot' | 'win' | 'rare' = 'win') {
   const container = document.createElement('div');
   container.className = 'celebration-container';

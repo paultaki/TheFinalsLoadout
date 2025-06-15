@@ -14,6 +14,9 @@ interface RouletteState {
 
 const { classRoulette } = ANIMATION_CONSTANTS;
 
+/**
+ * Hook for managing roulette wheel state and spin animations
+ */
 export const useRoulette = () => {
   const [state, setState] = useState<RouletteState>({
     isSpinning: false,
