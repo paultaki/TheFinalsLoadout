@@ -395,6 +395,34 @@
   }
 }
 
+/* Desktop-only clipping rule to prevent peek-through (768px+) */
+@media (min-width: 768px) {
+  .slot-item {
+    overflow: hidden !important;
+    /* Ensure exact height matches the visible area */
+    height: 160px; /* Matches tablet height */
+  }
+  
+  .slot-scroll {
+    /* Ensure proper clipping */
+    overflow: hidden !important;
+  }
+}
+
+/* Larger desktop screens (1024px+) */
+@media (min-width: 1024px) {
+  .slot-item {
+    height: 180px; /* Matches desktop height */
+  }
+}
+
+/* Extra large screens (1280px+) */
+@media (min-width: 1280px) {
+  .slot-item {
+    height: 188px; /* Specific height for xl screens */
+  }
+}
+
 /* Animations */
 @keyframes slotShine {
   0% {
