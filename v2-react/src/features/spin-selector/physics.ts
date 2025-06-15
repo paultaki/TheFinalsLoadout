@@ -1,0 +1,112 @@
+import { CardData } from './types';
+import { CARD_DATA } from './helpers';
+
+// Easing function for smooth deceleration
+export const easeOutExpo = (t: number): number => {
+  return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+};
+
+// Physics constants
+export const PHYSICS_CONFIG = {
+  initialVelocity: { min: 2400, max: 2800 },
+  friction: 0.988,
+  decelerationThreshold: 600,
+  decelerationDuration: 400,
+  idleSpeed: 0.3,
+  minTickVelocity: 50,
+} as const;
+
+// Animation refs interface for physics calculations
+export interface AnimationRefs {
+  currentDistance: number;
+  currentVelocity: number;
+  lastTime: number;
+  lastTickIndex: number;
+  lastPegIndex: number;
+  isDecelerating: boolean;
+  decelerateStartTime: number;
+  decelerateStartDistance: number;
+  decelerateStartVelocity: number;
+}
+
+// Find winning card based on viewport center
+export const findWinningCard = (
+  wheelFrameRef: React.RefObject<HTMLDivElement>,
+  wheelRef: React.RefObject<HTMLUListElement>
+): { card: Element | null; result: CardData } => {
+  if (!wheelFrameRef.current || !wheelRef.current) {
+    return { card: null, result: CARD_DATA[0] };
+  }
+
+  const frameRect = wheelFrameRef.current.getBoundingClientRect();
+  const frameCenter = frameRect.top + frameRect.height / 2;
+
+  const cards = wheelRef.current.querySelectorAll('.card');
+  let winningCard: Element | null = null;
+  let result: CardData | null = null;
+
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i];
+    const rect = card.getBoundingClientRect();
+    const cardCenter = rect.top + rect.height / 2;
+
+    if (Math.abs(cardCenter - frameCenter) < rect.height / 2) {
+      winningCard = card;
+      const dataIndex = parseInt(card.getAttribute('data-index') || '0') % CARD_DATA.length;
+      result = CARD_DATA[dataIndex];
+      break;
+    }
+  }
+
+  return {
+    card: winningCard,
+    result: result || CARD_DATA[0],
+  };
+};
+
+// Apply infinite scroll transform
+export const applyInfiniteScroll = (
+  distance: number,
+  cardHeight: number,
+  wheelRef: React.RefObject<HTMLUListElement>
+): void => {
+  let normalizedDistance = distance % (CARD_DATA.length * cardHeight * 3);
+  if (normalizedDistance > CARD_DATA.length * cardHeight * 2) {
+    normalizedDistance -= CARD_DATA.length * cardHeight;
+  }
+
+  if (wheelRef.current) {
+    wheelRef.current.style.transform = `translateY(${-normalizedDistance}px)`;
+  }
+};
+
+// Cabinet shake animation
+export const animateCabinetShake = (
+  wheelFrameRef: React.RefObject<HTMLDivElement>,
+  velocity: number
+): void => {
+  if (!wheelFrameRef.current) return;
+
+  wheelFrameRef.current.animate(
+    [
+      { transform: 'translateX(-4px)' },
+      { transform: 'translateX(4px)' },
+      { transform: 'translateX(0)' },
+    ],
+    {
+      duration: 90,
+      iterations: 1,
+    }
+  );
+
+  // Heartbeat effect for slow speeds
+  if (velocity < 120) {
+    wheelFrameRef.current.animate(
+      [{ transform: 'scale(1)' }, { transform: 'scale(1.03)' }, { transform: 'scale(1)' }],
+      {
+        duration: 300,
+        easing: 'ease-out',
+      }
+    );
+  }
+};

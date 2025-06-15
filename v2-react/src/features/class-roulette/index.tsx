@@ -6,6 +6,15 @@ import ResultBanner from './ResultBanner';
 import clsx from 'clsx';
 import { DIMENSIONS, THRESHOLDS, TIMING } from '../../constants/physics';
 import { COLORS_EXTENDED, SHADOWS, GRADIENTS, FILTERS, OPACITY } from '../../constants/styles';
+import { useWheelSize } from './responsive-utils';
+import { createTouchHandlers } from './touch-handlers';
+import {
+  getHexagonalGridStyles,
+  getScanlinesStyles,
+  getWheelShadowStyles,
+  getHubShadowStyles,
+  getNeonGlowStyles,
+} from './background-styles';
 import './roulette-theme.css';
 
 import type { ClassType } from '../../types';
@@ -16,24 +25,11 @@ interface ClassRouletteProps {
 
 const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
   const { isSpinning, rotation, spin, currentClass } = useRoulette();
-  const [wheelSize, setWheelSize] = useState(0);
+  const wheelSize = useWheelSize();
   const containerRef = useRef<HTMLDivElement>(null);
   const [showResult, setShowResult] = useState(false);
   const touchStartY = useRef(0);
   const lastTouchTime = useRef(0);
-
-  // Calculate responsive wheel size
-  useEffect(() => {
-    const updateSize = () => {
-      const vw = window.innerWidth;
-      const size = Math.max(DIMENSIONS.responsive.minWheelSize, Math.min(vw * DIMENSIONS.responsive.maxWheelSizeRatio, DIMENSIONS.responsive.maxWheelSize));
-      setWheelSize(size);
-    };
-
-    updateSize();
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
 
   // Auto-spin after 1 second
   useEffect(() => {
@@ -46,22 +42,7 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
   }, []);
 
   // Touch handlers for mobile swipe
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY;
-    lastTouchTime.current = Date.now();
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const touchEndY = e.changedTouches[0].clientY;
-    const deltaY = touchStartY.current - touchEndY;
-    const deltaTime = Date.now() - lastTouchTime.current;
-    const velocity = Math.abs(deltaY) / deltaTime;
-
-    // Swipe up/down with sufficient velocity triggers spin
-    if (Math.abs(deltaY) > THRESHOLDS.swipe.minDistance && velocity > THRESHOLDS.swipe.minVelocity && !isSpinning) {
-      handleSpin();
-    }
-  };
+  const touchHandlers = createTouchHandlers(touchStartY, lastTouchTime, isSpinning, handleSpin);
 
   const handleSpin = async () => {
     if (isSpinning) return;
@@ -76,49 +57,14 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-900 to-black p-4 relative overflow-hidden">
       {/* Hexagonal Grid Background */}
-      <div
-        className="absolute inset-0"
-        style={{
-          opacity: OPACITY.background.hexGrid,
-          backgroundImage: GRADIENTS.hexagonalGrid.angles.map((angle, i) => {
-            const color = i < 4 ? COLORS_EXTENDED.metallic.rim.outer : 'rgba(171, 71, 188, 0.1)';
-            const percent = GRADIENTS.hexagonalGrid.percentages;
-            if (i < 4) {
-              return `linear-gradient(${angle}deg, ${color} ${percent.start}%, transparent ${percent.start + percent.gap}%, transparent ${percent.end}%, ${color} ${percent.end + percent.gap}%, ${color})`;
-            } else {
-              return `linear-gradient(${angle}deg, ${color} ${percent.accent}%, transparent ${percent.accent + percent.accentGap}%, transparent ${percent.accentEnd}%, ${color} ${percent.accentEnd}%, ${color})`;
-            }
-          }).join(', '),
-          backgroundSize: GRADIENTS.hexagonalGrid.size,
-          backgroundPosition: GRADIENTS.hexagonalGrid.positions,
-        }}
-      />
+      <div className="absolute inset-0" style={getHexagonalGridStyles()} />
 
       {/* Scanlines Overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `repeating-linear-gradient(
-          to bottom,
-          transparent 0,
-          transparent ${GRADIENTS.scanlines.size},
-          ${COLORS_EXTENDED.ui.scanlines} ${GRADIENTS.scanlines.size},
-          ${COLORS_EXTENDED.ui.scanlines} ${parseInt(GRADIENTS.scanlines.size) * 2}px
-        )`,
-          animation: `scanlines ${GRADIENTS.scanlines.duration} linear infinite`,
-        }}
-      />
+      <div className="absolute inset-0 pointer-events-none" style={getScanlinesStyles()} />
 
       <div className="relative" style={{ width: wheelSize, height: wheelSize }}>
         {/* Purple Neon Glow */}
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{
-            boxShadow: `${SHADOWS.wheel.neonGlow.small}, ${SHADOWS.wheel.neonGlow.large}`,
-            filter: FILTERS.blur.glow,
-            transform: 'scale(1.1)',
-          }}
-        />
+        <div className="absolute inset-0 rounded-full" style={getNeonGlowStyles()} />
 
         {/* Wheel Container */}
         <div
@@ -130,20 +76,11 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
             filter: isSpinning && rotation > THRESHOLDS.blur.rotationThreshold ? FILTERS.blur.spinning : 'none',
             transition: `filter ${FILTERS.transition.filter}`,
           }}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
+          onTouchStart={touchHandlers.onTouchStart}
+          onTouchEnd={touchHandlers.onTouchEnd}
         >
           {/* Multiple shadows for depth */}
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              boxShadow: `
-                ${SHADOWS.wheel.depth.outer},
-                ${SHADOWS.wheel.depth.inset},
-                ${SHADOWS.wheel.depth.drop}
-              `,
-            }}
-          />
+          <div className="absolute inset-0 rounded-full" style={getWheelShadowStyles()} />
 
           {/* Canvas Wheel */}
           <WheelCanvas size={wheelSize} rotation={rotation} />
@@ -160,11 +97,7 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
             style={{
               width: wheelSize * DIMENSIONS.wheel.hubSizeRatio,
               height: wheelSize * DIMENSIONS.wheel.hubSizeRatio,
-              boxShadow: `
-                ${SHADOWS.wheel.hub.primary},
-                ${SHADOWS.wheel.hub.secondary},
-                ${SHADOWS.wheel.hub.inset}
-              `,
+              ...getHubShadowStyles(),
             }}
           >
             <img

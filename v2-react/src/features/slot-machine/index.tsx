@@ -4,34 +4,18 @@ import { useLoadoutHistory } from '../../context/LoadoutHistoryContext';
 import { SOUNDS } from '../../constants/sounds';
 import { UI_CONSTANTS } from '../../constants/ui';
 import type { ClassType } from '../../types';
+import { generateLoadout, GeneratedLoadout } from './loadout-generator';
+import { loadSlotMachineScript, initializeSlotMachine } from './script-loader';
 import './SlotMachine.css';
 
 interface SlotMachineClass {
   init: () => void;
-  animateSlots: (loadout: Loadout, callback: () => void) => void;
-}
-
-interface Loadout {
-  weapon: { name: string; category: 'weapon' };
-  specialization: { name: string; category: 'specialization' };
-  gadget1: { name: string; category: 'gadget' };
-  gadget2: { name: string; category: 'gadget' };
-  gadget3: { name: string; category: 'gadget' };
-  classType: ClassType;
-  weapons: string;
-  specializations: string;
-  gadgets: string[];
-  spinsRemaining: number;
-  allItems: {
-    weapons: string[];
-    specializations: string[];
-    gadgets: string[];
-  };
+  animateSlots: (loadout: GeneratedLoadout, callback: () => void) => void;
 }
 
 interface SlotMachineProps {
   images?: string[];
-  onResult: (loadout: Loadout) => void;
+  onResult: (loadout: GeneratedLoadout) => void;
   isFinalSpin: boolean;
 }
 
@@ -45,58 +29,22 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
 
   // Load the slot machine script
   useEffect(() => {
-    // Check if SlotMachine class already exists
-    if (window.SlotMachine) {
-      setIsReady(true);
-      return;
-    }
-
-    // Check if script is already loading/loaded
-    const existingScript = document.querySelector('script[src="/slot-machine.js"]');
-    if (existingScript) {
-      // Wait for existing script to load
-      const checkLoaded = () => {
-        if (window.SlotMachine) {
-          setIsReady(true);
-        } else {
-          const checkInterval = 100;
-          setTimeout(checkLoaded, checkInterval);
-        }
-      };
-      checkLoaded();
-      return;
-    }
-
-    // Load the slot machine script
-    const script = document.createElement('script');
-    script.src = '/slot-machine.js';
-    script.async = true;
-    script.onload = () => {
-      setIsReady(true);
-    };
-    document.body.appendChild(script);
+    loadSlotMachineScript(() => setIsReady(true));
   }, []);
 
   // Initialize the slot machine once script is loaded
   useEffect(() => {
     if (!isReady || !containerRef.current || slotMachineRef.current) return;
 
-    const SlotMachineClass = window.SlotMachine;
-    if (!SlotMachineClass) return;
-
     // Create unique ID for this instance
     const uniqueId = `slot-machine-${Date.now()}`;
     containerRef.current.id = uniqueId;
 
     // Initialize slot machine
-    slotMachineRef.current = new SlotMachineClass(uniqueId);
-    slotMachineRef.current.init();
-
-    // Set global state for sound
-    window.state = { soundEnabled: true };
-
-    // Mark as initialized
-    setIsMachineInitialized(true);
+    slotMachineRef.current = initializeSlotMachine(uniqueId);
+    if (slotMachineRef.current) {
+      setIsMachineInitialized(true);
+    }
   }, [isReady]);
 
   // Auto-start animation when ready
@@ -112,15 +60,16 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
 
 
     // Small delay to ensure DOM is ready
+    const startDelay = 100;
     const timer = setTimeout(() => {
-      const loadout = generateLoadout();
+      const loadout = generateLoadout(state.chosenClass as ClassType, state.spinsLeft);
 
       // Start animation
       slotMachineRef.current.animateSlots(loadout, () => {
-
         // Only add to history on the final spin
         if (state.spinsLeft === 1) {
           // Delay history update to ensure animation is fully complete
+          const historyDelay = 2000;
           setTimeout(() => {
             // Add to loadout history
             addLoadout({
@@ -132,105 +81,16 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
               gadget3: loadout.gadget3.name,
               specialization: loadout.specialization.name,
             });
-          }, 2000); // Delay for final spin effects
+          }, historyDelay);
         }
 
         onResult(loadout);
       });
-    const startDelay = 100;
     }, startDelay);
 
     return () => clearTimeout(timer);
   }, [isMachineInitialized, state.chosenClass, state.spinsLeft]); // Proper dependencies
 
-  const generateLoadout = (): Loadout => {
-    interface ClassData {
-      weapons: string[];
-      specializations: string[];
-      gadgets: string[];
-    }
-
-    type ClassDataMap = Record<ClassType, ClassData>;
-
-    const classType = state.chosenClass as ClassType;
-    const minSpins = 0;
-    const spinsRemaining = Math.max(minSpins, state.spinsLeft - 1);
-
-    // Mock data - replace with actual game data
-    const classData: ClassDataMap = {
-      Light: {
-        weapons: ['XP-54', 'M11', 'SH1900', 'SR-84', 'V9S'],
-        specializations: ['Cloaking_Device', 'Evasive_Dash', 'Grappling_Hook'],
-        gadgets: [
-          'Flashbang',
-          'Smoke_Grenade',
-          'Breach_Charge',
-          'Thermal_Bore',
-          'Glitch_Grenade',
-          'Vanishing_Bomb',
-        ],
-      },
-      Medium: {
-        weapons: ['AKM', 'R.357', 'Model_1887', 'FCAR', 'CL-40'],
-        specializations: ['Guardian_Turret', 'Healing_Beam', 'APS_Turret'],
-        gadgets: [
-          'Gas_Mine',
-          'Defibrillator',
-          'Jump_Pad',
-          'Zipline',
-          'Glitch_Trap',
-          'Data_Reshaper',
-        ],
-      },
-      Heavy: {
-        weapons: ['Lewis_Gun', 'M60', 'SA_1216', 'Flamethrower', 'KS-23'],
-        specializations: ['Goo_Gun', 'Mesh_Shield', 'Charge_N_Slam'],
-        gadgets: [
-          'RPG-7',
-          'C4',
-          'Dome_Shield',
-          'Barricade',
-          'Pyro_Mine',
-          'Anti-Gravity_Cube',
-          'Goo_Grenade',
-        ],
-      },
-    };
-
-    const data = classData[classType];
-
-    // Pick random items
-    const weapon = data.weapons[Math.floor(Math.random() * data.weapons.length)];
-    const spec = data.specializations[Math.floor(Math.random() * data.specializations.length)];
-    const gadgets: string[] = [];
-
-    // Pick 3 unique gadgets
-    while (gadgets.length < 3) {
-      const gadget = data.gadgets[Math.floor(Math.random() * data.gadgets.length)];
-      if (!gadgets.includes(gadget)) {
-        gadgets.push(gadget);
-      }
-    }
-
-    // Create loadout object
-    return {
-      weapon: { name: weapon, category: 'weapon' as const },
-      specialization: { name: spec, category: 'specialization' as const },
-      gadget1: { name: gadgets[0], category: 'gadget' as const },
-      gadget2: { name: gadgets[1], category: 'gadget' as const },
-      gadget3: { name: gadgets[2], category: 'gadget' as const },
-      classType,
-      weapons: weapon,
-      specializations: spec,
-      gadgets,
-      spinsRemaining,
-      allItems: {
-        weapons: data.weapons,
-        specializations: data.specializations,
-        gadgets: data.gadgets,
-      },
-    };
-  };
 
   return (
     <>

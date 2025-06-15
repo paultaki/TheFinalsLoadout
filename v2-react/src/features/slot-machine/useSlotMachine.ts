@@ -1,59 +1,17 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import type { SlotItem, Loadout, ColumnState } from './types';
-import { playTickSound, playWinSound, playJackpotSound } from '../../utils/audio';
-import { SLOT_PHYSICS, NUMBERS } from '../../constants/physics';
-
-const SLOT_HEIGHT = SLOT_PHYSICS.height;
-const TOTAL_SLOTS = SLOT_PHYSICS.totalSlots;
-const STAGGER_DELAY = SLOT_PHYSICS.staggerDelay;
-const SPIN_DURATION_NORMAL = SLOT_PHYSICS.duration.normal;
-const SPIN_DURATION_FINAL = SLOT_PHYSICS.duration.final;
-
-// Weapon pool
-const WEAPONS = [
-  { name: 'FCAR', icon: 'images/weapons/fcar.png', type: 'weapon' as const },
-  { name: 'AKM', icon: 'images/weapons/akm.png', type: 'weapon' as const },
-  { name: 'M60', icon: 'images/weapons/m60.png', type: 'weapon' as const },
-  { name: 'V9S', icon: 'images/weapons/v9s.png', type: 'weapon' as const },
-  { name: 'XP-54', icon: 'images/weapons/xp54.png', type: 'weapon' as const },
-];
-
-// Specialization pool
-const SPECIALIZATIONS = [
-  {
-    name: 'Cloaking Device',
-    icon: 'images/specializations/cloak.png',
-    type: 'specialization' as const,
-  },
-  { name: 'Goo Gun', icon: 'images/specializations/goo.png', type: 'specialization' as const },
-  {
-    name: 'Grappling Hook',
-    icon: 'images/specializations/grapple.png',
-    type: 'specialization' as const,
-  },
-  {
-    name: 'Guardian Turret',
-    icon: 'images/specializations/turret.png',
-    type: 'specialization' as const,
-  },
-  {
-    name: 'Mesh Shield',
-    icon: 'images/specializations/shield.png',
-    type: 'specialization' as const,
-  },
-];
-
-// Gadget pool
-const GADGETS = [
-  { name: 'Frag Grenade', icon: 'images/gadgets/frag.png', type: 'gadget' as const },
-  { name: 'Gas Grenade', icon: 'images/gadgets/gas.png', type: 'gadget' as const },
-  { name: 'RPG-7', icon: 'images/gadgets/rpg.png', type: 'gadget' as const },
-  { name: 'C4', icon: 'images/gadgets/c4.png', type: 'gadget' as const },
-  { name: 'Jump Pad', icon: 'images/gadgets/jumppad.png', type: 'gadget' as const },
-  { name: 'Stun Gun', icon: 'images/gadgets/stun.png', type: 'gadget' as const },
-  { name: 'Pyro Grenade', icon: 'images/gadgets/pyro.png', type: 'gadget' as const },
-  { name: 'Barricade', icon: 'images/gadgets/barricade.png', type: 'gadget' as const },
-];
+import { NUMBERS } from '../../constants/physics';
+import {
+  SLOT_HEIGHT,
+  TOTAL_SLOTS,
+  STAGGER_DELAY,
+  SPIN_DURATION_NORMAL,
+  SPIN_DURATION_FINAL,
+  generateColumnItems,
+  calculateEasedPosition,
+  checkTickSound,
+  playSpinCompleteSound,
+} from './animation-utils';
 
 export const useSlotMachine = (onResult: (result: Loadout) => void, isFinalSpin = false) => {
   const [isAnimating, setIsAnimating] = useState(false);
@@ -71,44 +29,12 @@ export const useSlotMachine = (onResult: (result: Loadout) => void, isFinalSpin 
   const lastTickRef = useRef<number[]>([0, 0, 0, 0, 0]);
   const columnsRef = useRef<HTMLDivElement[]>([]);
 
-  // Get random item from pool
-  const getRandomItem = (pool: SlotItem[]) => {
-    return pool[Math.floor(Math.random() * pool.length)];
-  };
-
-  // Generate items for a column
-  const generateColumnItems = (columnIndex: number): SlotItem[] => {
-    const items: SlotItem[] = [];
-    let pool: SlotItem[];
-
-    switch (columnIndex) {
-      case 0:
-        pool = WEAPONS;
-        break;
-      case 1:
-        pool = SPECIALIZATIONS;
-        break;
-      default:
-        pool = GADGETS;
-        break;
-    }
-
-    // Generate items to fill the column
-    for (let i = 0; i < TOTAL_SLOTS; i++) {
-      items.push(getRandomItem(pool));
-    }
-
-    return items;
-  };
-
   const [columnItems] = useState<SlotItem[][]>(() => {
     return Array(NUMBERS.columns)
       .fill(null)
       .map((_, index) => generateColumnItems(index));
   });
 
-  // Easing functions
-  const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, NUMBERS.animation.cubicExponent);
 
   // Animate a single column
   const animateColumn = useCallback(
@@ -119,28 +45,24 @@ export const useSlotMachine = (onResult: (result: Loadout) => void, isFinalSpin 
 
         if (progress < 1) {
           // Calculate position with easing
-          const easedProgress = progress < SLOT_PHYSICS.easing.progressThreshold ? easeOutCubic(progress / SLOT_PHYSICS.easing.progressThreshold) : 1;
+          const { position, velocity, currentIndex } = calculateEasedPosition(progress, targetIndex);
           const totalDistance = (targetIndex + TOTAL_SLOTS * 3) * SLOT_HEIGHT;
-          const currentPosition = easedProgress * totalDistance;
+          const currentPosition = progress * totalDistance;
 
           // Update column state
           setColumns((prev) => {
             const newColumns = [...prev];
             newColumns[columnIndex] = {
               ...newColumns[columnIndex],
-              position: currentPosition % (TOTAL_SLOTS * SLOT_HEIGHT),
-              velocity: (currentPosition - newColumns[columnIndex].position) * 60,
-              currentIndex: Math.floor(currentPosition / SLOT_HEIGHT) % TOTAL_SLOTS,
+              position,
+              velocity,
+              currentIndex,
             };
             return newColumns;
           });
 
           // Check for tick sound
-          const currentSlot = Math.floor(currentPosition / SLOT_HEIGHT);
-          if (currentSlot !== lastTickRef.current[columnIndex]) {
-            lastTickRef.current[columnIndex] = currentSlot;
-            playTickSound();
-          }
+          checkTickSound(currentPosition, columnIndex, lastTickRef);
 
           requestAnimationFrame(animate);
         } else {
@@ -188,11 +110,7 @@ export const useSlotMachine = (onResult: (result: Loadout) => void, isFinalSpin 
     };
 
     // Play win sound
-    if (isFinalSpin) {
-      playJackpotSound();
-    } else {
-      playWinSound();
-    }
+    playSpinCompleteSound(isFinalSpin);
 
     // Trigger callback
     onResult(finalLoadout);

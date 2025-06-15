@@ -4,51 +4,17 @@ import { playSound } from '../../utils/sound';
 import { useSound } from '../../utils/audio';
 import ResultModal from '../../components/ResultModal';
 import { animateTickerCollision } from './animations';
+import { SpinResult, SpinCountWheelProps, ModalResult } from './types';
+import { CARD_DATA, INFINITE_CARDS, createConfetti, getCardHeight, getWinnerText } from './helpers';
+import {
+  easeOutExpo,
+  PHYSICS_CONFIG,
+  AnimationRefs,
+  findWinningCard,
+  applyInfiniteScroll,
+  animateCabinetShake,
+} from './physics';
 import './styles.css';
-
-interface SpinResult {
-  value: string;
-  spins: number;
-  isJackpot: boolean;
-}
-
-interface SpinCountWheelProps {
-  onSpinComplete: (result: SpinResult) => void;
-}
-
-interface CardData {
-  value: string;
-  spins: number;
-  label: string;
-  className: string;
-  isJackpot?: boolean;
-}
-
-// Helper to create jackpot cards with random spins
-const makeJackpotCard = (): CardData => {
-  const spins = 2 + Math.floor(Math.random() * 3); // 2, 3, or 4
-  return {
-    value: 'JACKPOT',
-    spins: spins,
-    label: `Jackpot!\nChoose Class\n${spins} Spins`,
-    className: 'card-special jackpot',
-    isJackpot: true,
-  };
-};
-
-// Card configuration
-const CARD_DATA: CardData[] = [
-  { value: '1', spins: 1, label: '1', className: 'card-1' },
-  makeJackpotCard(),
-  { value: '2', spins: 2, label: '2', className: 'card-2' },
-  { value: '3', spins: 3, label: '3', className: 'card-3' },
-  { value: '4', spins: 4, label: '4', className: 'card-4' },
-  makeJackpotCard(),
-  { value: '5', spins: 5, label: '5', className: 'card-5' },
-];
-
-// Triple for infinite scroll
-const INFINITE_CARDS = [...CARD_DATA, ...CARD_DATA, ...CARD_DATA];
 
 /**
  * Spin count selector wheel component with peg physics
@@ -63,11 +29,7 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
   const [showWinnerBanner, setShowWinnerBanner] = useState(false);
   const [winnerText, setWinnerText] = useState('');
   const [isFrameGlowing, setIsFrameGlowing] = useState(false);
-  const [modalResult, setModalResult] = useState<{
-    variant: 'number' | 'jackpot';
-    value: string;
-    spins: number;
-  } | null>(null);
+  const [modalResult, setModalResult] = useState<ModalResult | null>(null);
 
   // Refs
   const wheelRef = useRef<HTMLUListElement>(null);
@@ -78,27 +40,19 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
   // Animation state
   const animationIdRef = useRef<number | undefined>(undefined);
   const idleAnimationIdRef = useRef<number | undefined>(undefined);
-  const currentDistanceRef = useRef(0);
-  const currentVelocityRef = useRef(0);
-  const lastTimeRef = useRef(0);
-  const lastTickIndexRef = useRef(0);
-  const lastPegIndexRef = useRef(-1);
-  const isDeceleratingRef = useRef(false);
-  const decelerateStartTimeRef = useRef(0);
-  const decelerateStartDistanceRef = useRef(0);
-  const decelerateStartVelocityRef = useRef(0);
   const isSpinningRef = useRef(false);
+  const animationRefs = useRef<AnimationRefs>({
+    currentDistance: 0,
+    currentVelocity: 0,
+    lastTime: 0,
+    lastTickIndex: 0,
+    lastPegIndex: -1,
+    isDecelerating: false,
+    decelerateStartTime: 0,
+    decelerateStartDistance: 0,
+    decelerateStartVelocity: 0,
+  });
 
-  // Calculate dynamic card height
-  const getCardHeight = useCallback(() => {
-    const card = wheelRef.current?.querySelector('.card');
-    return card ? card.getBoundingClientRect().height + 16 : 90; // 16 = margin
-  }, []);
-
-  // Easing function
-  const easeOutExpo = (t: number) => {
-    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-  };
 
   // Handle pointer tick animation with GSAP
   const handlePointerTick = useCallback(
@@ -112,30 +66,7 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
       }
 
       // Cabinet shake
-      if (wheelFrameRef.current) {
-        wheelFrameRef.current.animate(
-          [
-            { transform: 'translateX(-4px)' },
-            { transform: 'translateX(4px)' },
-            { transform: 'translateX(0)' },
-          ],
-          {
-            duration: 90,
-            iterations: 1,
-          }
-        );
-
-        // Heartbeat effect for slow speeds
-        if (velocity < 120) {
-          wheelFrameRef.current.animate(
-            [{ transform: 'scale(1)' }, { transform: 'scale(1.03)' }, { transform: 'scale(1)' }],
-            {
-              duration: 300,
-              easing: 'ease-out',
-            }
-          );
-        }
-      }
+      animateCabinetShake(wheelFrameRef, velocity);
     },
     [playBeep]
   );
@@ -144,7 +75,7 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
   const handleStop = useCallback(() => {
     setIsSpinning(false);
     isSpinningRef.current = false;
-    isDeceleratingRef.current = false;
+    animationRefs.current.isDecelerating = false;
     if (spinBtnRef.current) {
       spinBtnRef.current.disabled = false;
     }
@@ -156,32 +87,8 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
     }
 
     // Find which card is in the center of viewport
-    if (!wheelFrameRef.current || !wheelRef.current) return;
-
-    const frameRect = wheelFrameRef.current.getBoundingClientRect();
-    const frameCenter = frameRect.top + frameRect.height / 2;
-
-    const cards = wheelRef.current.querySelectorAll('.card');
-    let winningCard: Element | null = null;
-    let result: CardData | null = null;
-
-    for (let i = 0; i < cards.length; i++) {
-      const card = cards[i];
-      const rect = card.getBoundingClientRect();
-      const cardCenter = rect.top + rect.height / 2;
-
-      if (Math.abs(cardCenter - frameCenter) < rect.height / 2) {
-        winningCard = card;
-        const dataIndex = parseInt(card.getAttribute('data-index') || '0') % CARD_DATA.length;
-        result = CARD_DATA[dataIndex];
-        break;
-      }
-    }
-
-    // Fallback
-    if (!result) {
-      result = CARD_DATA[0];
-    }
+    const { card: winningCard, result } = findWinningCard(wheelFrameRef, wheelRef);
+    const cards = wheelRef.current?.querySelectorAll('.card');
 
     // Highlight winning card
     cards.forEach((card) => card.classList.remove('winner'));
@@ -198,8 +105,7 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
 
     // Show winner banner only for non-jackpot
     if (!result.isJackpot) {
-      const excitingText = `🎯 ${result.label} SPIN${result.value !== '1' ? 'S' : ''}! 🎯`;
-      setWinnerText(excitingText);
+      setWinnerText(getWinnerText(result));
       setShowWinnerBanner(true);
       setIsFrameGlowing(true);
     }
@@ -234,57 +140,59 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
     setTimeout(() => {
       startIdleAnimation();
     }, 1000);
-  }, [getCardHeight, onSpinComplete, playDing, playDingDing]);
+  }, [onSpinComplete, playDing, playDingDing]);
 
   // Physics update
   const updatePhysics = useCallback(
     (timestamp: number) => {
       if (!isSpinningRef.current) return;
 
-      if (lastTimeRef.current === 0) {
-        lastTimeRef.current = timestamp;
+      const refs = animationRefs.current;
+
+      if (refs.lastTime === 0) {
+        refs.lastTime = timestamp;
         animationIdRef.current = requestAnimationFrame(updatePhysics);
         return;
       }
 
-      const deltaTime = (timestamp - lastTimeRef.current) / 1000;
-      lastTimeRef.current = timestamp;
+      const deltaTime = (timestamp - refs.lastTime) / 1000;
+      refs.lastTime = timestamp;
 
-      const cardHeight = getCardHeight();
+      const cardHeight = getCardHeight(wheelRef);
 
-      if (!isDeceleratingRef.current) {
+      if (!refs.isDecelerating) {
         // Normal spinning
-        currentDistanceRef.current += currentVelocityRef.current * deltaTime;
-        currentVelocityRef.current *= Math.pow(0.988, deltaTime * 60);
+        refs.currentDistance += refs.currentVelocity * deltaTime;
+        refs.currentVelocity *= Math.pow(PHYSICS_CONFIG.friction, deltaTime * 60);
 
         // Check for tick
-        const tickIndex = Math.floor(currentDistanceRef.current / cardHeight);
-        if (tickIndex !== lastTickIndexRef.current) {
-          handlePointerTick(currentVelocityRef.current);
-          lastTickIndexRef.current = tickIndex;
+        const tickIndex = Math.floor(refs.currentDistance / cardHeight);
+        if (tickIndex !== refs.lastTickIndex) {
+          handlePointerTick(refs.currentVelocity);
+          refs.lastTickIndex = tickIndex;
         }
 
         // Start deceleration when velocity is low enough
-        if (currentVelocityRef.current < 600) {
-          isDeceleratingRef.current = true;
-          decelerateStartTimeRef.current = timestamp;
-          decelerateStartDistanceRef.current = currentDistanceRef.current;
-          decelerateStartVelocityRef.current = currentVelocityRef.current;
+        if (refs.currentVelocity < PHYSICS_CONFIG.decelerationThreshold) {
+          refs.isDecelerating = true;
+          refs.decelerateStartTime = timestamp;
+          refs.decelerateStartDistance = refs.currentDistance;
+          refs.decelerateStartVelocity = refs.currentVelocity;
         }
       } else {
         // Smooth deceleration
-        const decelerateElapsed = (timestamp - decelerateStartTimeRef.current) / 400;
+        const decelerateElapsed = (timestamp - refs.decelerateStartTime) / PHYSICS_CONFIG.decelerationDuration;
         const progress = Math.min(1, decelerateElapsed);
         const eased = easeOutExpo(progress);
 
-        currentDistanceRef.current += currentVelocityRef.current * deltaTime;
-        currentVelocityRef.current = decelerateStartVelocityRef.current * (1 - eased);
+        refs.currentDistance += refs.currentVelocity * deltaTime;
+        refs.currentVelocity = refs.decelerateStartVelocity * (1 - eased);
 
         // Slower ticks during deceleration
-        const tickIndex = Math.floor(currentDistanceRef.current / cardHeight);
-        if (tickIndex !== lastTickIndexRef.current && currentVelocityRef.current > 50) {
-          handlePointerTick(currentVelocityRef.current);
-          lastTickIndexRef.current = tickIndex;
+        const tickIndex = Math.floor(refs.currentDistance / cardHeight);
+        if (tickIndex !== refs.lastTickIndex && refs.currentVelocity > PHYSICS_CONFIG.minTickVelocity) {
+          handlePointerTick(refs.currentVelocity);
+          refs.lastTickIndex = tickIndex;
         }
 
         if (progress >= 1) {
@@ -294,40 +202,26 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
       }
 
       // Apply infinite scroll
-      let normalizedDistance = currentDistanceRef.current % (CARD_DATA.length * cardHeight * 3);
-      if (normalizedDistance > CARD_DATA.length * cardHeight * 2) {
-        normalizedDistance -= CARD_DATA.length * cardHeight;
-      }
-
-      if (wheelRef.current) {
-        wheelRef.current.style.transform = `translateY(${-normalizedDistance}px)`;
-      }
+      applyInfiniteScroll(refs.currentDistance, cardHeight, wheelRef);
 
       animationIdRef.current = requestAnimationFrame(updatePhysics);
     },
-    [getCardHeight, handlePointerTick, handleStop, playBeep]
+    [handlePointerTick, handleStop]
   );
 
   // Idle animation
   const startIdleAnimation = useCallback(() => {
     const idleAnimate = (): void => {
       if (!isSpinningRef.current) {
-        currentDistanceRef.current += 0.3;
+        animationRefs.current.currentDistance += PHYSICS_CONFIG.idleSpeed;
 
-        const cardHeight = getCardHeight();
-        let normalizedDistance = currentDistanceRef.current % (CARD_DATA.length * cardHeight * 3);
-        if (normalizedDistance > CARD_DATA.length * cardHeight * 2) {
-          normalizedDistance -= CARD_DATA.length * cardHeight;
-        }
-
-        if (wheelRef.current) {
-          wheelRef.current.style.transform = `translateY(${-normalizedDistance}px)`;
-        }
+        const cardHeight = getCardHeight(wheelRef);
+        applyInfiniteScroll(animationRefs.current.currentDistance, cardHeight, wheelRef);
         idleAnimationIdRef.current = requestAnimationFrame(idleAnimate);
       }
     };
     idleAnimate();
-  }, [getCardHeight]);
+  }, []);
 
   const stopIdleAnimation = (): void => {
     if (idleAnimationIdRef.current) {
@@ -351,30 +245,16 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
     if (wheelRef.current) {
       wheelRef.current.style.transition = 'none';
     }
-    currentVelocityRef.current = 2400 + Math.random() * 400;
-    lastTimeRef.current = 0;
-    lastTickIndexRef.current = 0;
-    lastPegIndexRef.current = -1;
-    isDeceleratingRef.current = false;
+    const refs = animationRefs.current;
+    refs.currentVelocity = PHYSICS_CONFIG.initialVelocity.min + Math.random() * (PHYSICS_CONFIG.initialVelocity.max - PHYSICS_CONFIG.initialVelocity.min);
+    refs.lastTime = 0;
+    refs.lastTickIndex = 0;
+    refs.lastPegIndex = -1;
+    refs.isDecelerating = false;
 
     animationIdRef.current = requestAnimationFrame(updatePhysics);
   }, [isSpinning]);
 
-  // Create confetti
-  const createConfetti = (): void => {
-    for (let i = 0; i < 50; i++) {
-      const confetti = document.createElement('div');
-      confetti.className = 'confetti-particle';
-      confetti.style.left = `${Math.random() * 100}%`;
-      confetti.style.backgroundColor = ['#f59e0b', '#ec4899', '#3b82f6', '#10b981'][
-        Math.floor(Math.random() * 4)
-      ];
-      confetti.style.animationDelay = `${Math.random()}s`;
-      confetti.style.animationDuration = `${2 + Math.random()}s`;
-      document.body.appendChild(confetti);
-      setTimeout(() => confetti.remove(), 3000);
-    }
-  };
 
   // Initialize idle animation
   useEffect(() => {
