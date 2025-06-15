@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Spin Count Wheel - Price Is Right Edition</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #0a0a0a;
+            color: white;
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .wheel-container {
+            background: linear-gradient(to bottom, #1a1a1a, #000);
+            border-radius: 24px;
+            padding: clamp(16px, 4vw, 32px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+        
+        h1 {
+            font-size: clamp(24px, 6vw, 36px);
+            background: linear-gradient(to right, #fbbf24, #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: clamp(16px, 4vw, 32px);
+            font-family: "Impact", "Orbitron", sans-serif;
+        }
+        
+        .wheel-frame {
+            position: relative;
+            width: min(90vw, 340px);
+            max-height: 60vh;
+            height: 540px;
+            background: linear-gradient(to bottom, #374151, #111827);
+            border-radius: 16px;
+            box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: box-shadow 0.5s;
+        }
+        
+        .wheel-frame.glowing {
+            animation: frameGlow 0.5s ease-out;
+        }
+        
+        @keyframes frameGlow {
+            0%, 100% { box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.5); }
+            50% { box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(251, 191, 36, 0.8); }
+        }
+        
+        .wheel-track {
+            position: absolute;
+            inset: 16px;
+            overflow: hidden;
+        }
+        
+        .wheel-list {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            list-style: none;
+            transition: none;
+        }
+        
+        /* Price Is Right style cards */
+        .card {
+            height: clamp(70px, 18vw, 85px);
+            margin: 8px 0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(28px, 7vw, 42px);
+            font-weight: bold;
+            font-family: "Impact", "Orbitron", sans-serif;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.3s, transform 0.3s;
+            text-shadow: 2px 2px 0 #ffd700, -2px -2px 0 #ffd700, 2px -2px 0 #ffd700, -2px 2px 0 #ffd700;
+        }
+        
+        .card.winner {
+            animation: winnerGlow 1s ease-out;
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        @keyframes winnerGlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .card-1 { background: #d32f2f; color: white; }
+        .card-2 { background: #1976d2; color: white; }
+        .card-3 { background: #388e3c; color: white; }
+        .card-4 { background: #7b1fa2; color: white; }
+        .card-5 { background: #f57c00; color: white; }
+        
+        .card-special.jackpot {
+            background: linear-gradient(
+                135deg,
+                #ffd700 0%,
+                #ffa500 20%,
+                #ffd700 40%,
+                #ffc107 60%,
+                #ffd700 100%
+            );
+            color: #333;
+            animation: shimmer 2s linear infinite, glitter 3s linear infinite;
+            text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff;
+            font-size: clamp(18px, 4vw, 24px);
+            line-height: 1.2;
+            text-align: center;
+            padding: 8px;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        @keyframes glitter {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; }
+        }
+        
+        /* Fade overlays */
+        .fade-top, .fade-bottom {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 128px;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .fade-top {
+            top: 0;
+            background: linear-gradient(to bottom, #111827, transparent);
+        }
+        
+        .fade-bottom {
+            bottom: 0;
+            background: linear-gradient(to top, #111827, transparent);
+        }
+        
+        /* Pointer */
+        .pointer {
+            position: absolute;
+            right: 4%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+        }
+        
+        .pointer-arm {
+            width: 35px;
+            height: 4px;
+            background: linear-gradient(to right, #dc143c 0%, #ff0000 100%);
+            transform-origin: right center;
+            transition: transform 0.1s ease-out;
+        }
+        
+        .pointer-tip {
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-right: 20px solid #dc143c;
+        }
+        
+        /* Pegs */
+        .peg {
+            position: absolute;
+            right: 85px;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle at 30% 30%, #ffd700 0%, #b8860b 100%);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+            transition: transform 0.05s;
+        }
+        
+        /* Button */
+        .spin-button {
+            margin-top: 20px;
+            padding: clamp(16px, 4vw, 24px) clamp(32px, 8vw, 48px);
+            font-size: clamp(18px, 4vw, 24px);
+            font-weight: bold;
+            background: linear-gradient(to right, #eab308, #dc2626);
+            color: white;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            font-family: "Impact", "Orbitron", sans-serif;
+        }
+        
+        .spin-button:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+        }
+        
+        .spin-button:active:not(:disabled) {
+            transform: translateY(0) scale(0.95);
+        }
+        
+        .spin-button:disabled {
+            background: #4b5563;
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Winner banner */
+        .winner-banner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #fbbf24, #dc2626);
+            padding: 32px 64px;
+            border-radius: 24px;
+            font-size: clamp(32px, 8vw, 48px);
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: bannerPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes bannerPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+        }
+        
+        .winner-banner.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            animation: bannerPulse 2s ease-in-out infinite, bannerEntrance 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes bannerEntrance {
+            0% { transform: translate(-50%, -50%) scale(0) rotate(-180deg); }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+        }
+        
+        .winner-banner.hide {
+            transform: translate(-50%, -50%) scale(0.8);
+            opacity: 0;
+        }
+        
+        /* Jackpot Modal */
+        .jackpot-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .jackpot-modal.show {
+            display: flex;
+        }
+        
+        .jackpot-content {
+            background: linear-gradient(135deg, #1a1a1a, #000);
+            border: 3px solid #ffd700;
+            border-radius: 24px;
+            padding: 48px;
+            text-align: center;
+            animation: modalBounce 0.5s ease-out;
+        }
+        
+        @keyframes modalBounce {
+            0% { transform: scale(0) rotate(180deg); }
+            60% { transform: scale(1.1) rotate(-10deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+        
+        .jackpot-title {
+            font-size: 72px;
+            color: #ffd700;
+            font-family: "Impact", "Orbitron", sans-serif;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            margin-bottom: 24px;
+            animation: jackpotPulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes jackpotPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .jackpot-message {
+            font-size: 32px;
+            color: white;
+            margin-bottom: 32px;
+        }
+        
+        .class-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        
+        .class-button {
+            padding: 16px 32px;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: "Impact", "Orbitron", sans-serif;
+        }
+        
+        .class-button:hover {
+            transform: translateY(-2px) scale(1.05);
+        }
+        
+        .class-button.light {
+            background: linear-gradient(135deg, #64b5f6, #2196f3);
+            color: white;
+        }
+        
+        .class-button.medium {
+            background: linear-gradient(135deg, #81c784, #4caf50);
+            color: white;
+        }
+        
+        .class-button.heavy {
+            background: linear-gradient(135deg, #e57373, #f44336);
+            color: white;
+        }
+        
+        /* Debug panel */
+        .debug-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            min-width: 200px;
+        }
+        
+        .debug-value {
+            margin: 8px 0;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .autospin-button {
+            margin-top: 16px;
+            padding: 8px 16px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 640px) {
+            .winner-banner {
+                padding: 24px 48px;
+            }
+            
+            .debug-panel {
+                top: 10px;
+                right: 10px;
+                font-size: 12px;
+                padding: 12px;
+            }
+            
+            .jackpot-content {
+                padding: 32px;
+            }
+            
+            .jackpot-title {
+                font-size: 48px;
+            }
+            
+            .jackpot-message {
+                font-size: 24px;
+            }
+            
+            .class-button {
+                font-size: 18px;
+                padding: 12px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wheel-container">
+        <h1>SPIN COUNT SELECTOR</h1>
+        
+        <div class="wheel-frame" id="wheelFrame">
+            <div class="fade-top"></div>
+            <div class="fade-bottom"></div>
+            
+            <div class="pointer" id="pointer">
+                <div class="pointer-arm" id="pointerArm">
+                    <div class="pointer-tip"></div>
+                </div>
+            </div>
+            
+            <!-- Pegs will be generated dynamically -->
+            
+            <div class="wheel-track">
+                <ul class="wheel-list" id="wheel">
+                    <!-- Cards will be generated by JS -->
+                </ul>
+            </div>
+        </div>
+        
+        <button class="spin-button" id="spinBtn">Pull to Spin</button>
+    </div>
+    
+    <div class="winner-banner" id="winnerBanner">
+        🎉 <span id="winnerText"></span> 🎉
+    </div>
+    
+    <div class="jackpot-modal" id="jackpotModal">
+        <div class="jackpot-content">
+            <div class="jackpot-title">JACKPOT!</div>
+            <div class="jackpot-message">You earned <span id="jackpotSpins"></span> spins!</div>
+            <div class="class-buttons">
+                <button class="class-button light" data-weight="Light">Light</button>
+                <button class="class-button medium" data-weight="Medium">Medium</button>
+                <button class="class-button heavy" data-weight="Heavy">Heavy</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="debug-panel">
+        <div class="debug-value">Velocity: <span id="velocity">0</span> px/s</div>
+        <div class="debug-value">Distance: <span id="distance">0</span> px</div>
+        <div class="debug-value">Spins: <span id="spinCount">0</span></div>
+        <button class="autospin-button" id="autospinBtn">Autospin 50x</button>
+    </div>
+    
+    <script>
+        // Sound effects
+        const tickSnd = new Audio('sounds/ding.mp3');
+        tickSnd.volume = 0.3;
+        
+        const winSnd = new Audio('sounds/ding.mp3');
+        winSnd.volume = 0.5;
+        
+        const jackSnd = new Audio('sounds/ding.mp3');
+        jackSnd.volume = 0.7;
+        
+        // Create tick sound fallback
+        const tickSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBCdy0fLZgTEGHm7A7+OZURE');
+        tickSound.volume = 0.3;
+        
+        // Create celebration sound fallback
+        const celebrateSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBCdy0fLZgTEGHm7A7+OZURE');
+        celebrateSound.volume = 0.7;
+        
+        // Jackpot card factory
+        function makeJackpotCard() {
+            const spins = 2 + Math.floor(Math.random() * 3); // 2, 3, or 4
+            return {
+                value: 'JACKPOT',
+                spins: spins,
+                label: `Jackpot!\nChoose Class\n${spins} Spins`,
+                className: 'card-special jackpot',
+                isJackpot: true
+            };
+        }
+        
+        // Card configuration
+        const CARD_DATA = [
+            { value: '1', spins: 1, label: '1', className: 'card-1' },
+            makeJackpotCard(),
+            { value: '2', spins: 2, label: '2', className: 'card-2' },
+            { value: '3', spins: 3, label: '3', className: 'card-3' },
+            { value: '4', spins: 4, label: '4', className: 'card-4' },
+            makeJackpotCard(),
+            { value: '5', spins: 5, label: '5', className: 'card-5' }
+        ];
+        
+        // Triple for infinite scroll
+        const INFINITE_CARDS = [...CARD_DATA, ...CARD_DATA, ...CARD_DATA];
+        
+        // State
+        let isSpinning = false;
+        let currentVelocity = 0;
+        let currentDistance = 0;
+        let spinTarget = 0;
+        let animationId = null;
+        let idleAnimationId = null;
+        let lastTime = 0;
+        let spinCount = 0;
+        let lastTickIndex = 0;
+        let lastPegIndex = -1;
+        let isDecelerating = false;
+        let decelerateStartTime = 0;
+        let decelerateStartDistance = 0;
+        let decelerateStartVelocity = 0;
+        
+        // Wheel callback
+        let onSelectCallback = null;
+        
+        // Elements
+        const wheel = document.getElementById('wheel');
+        const spinBtn = document.getElementById('spinBtn');
+        const velocityDisplay = document.getElementById('velocity');
+        const distanceDisplay = document.getElementById('distance');
+        const spinCountDisplay = document.getElementById('spinCount');
+        const autospinBtn = document.getElementById('autospinBtn');
+        const winnerBanner = document.getElementById('winnerBanner');
+        const winnerText = document.getElementById('winnerText');
+        const wheelFrame = document.getElementById('wheelFrame');
+        const pointerArm = document.getElementById('pointerArm');
+        const jackpotModal = document.getElementById('jackpotModal');
+        const jackpotSpins = document.getElementById('jackpotSpins');
+        
+        // Calculate dynamic card height
+        function getCardHeight() {
+            const card = wheel.querySelector('.card');
+            return card ? card.offsetHeight + 16 : 90; // 16 = margin
+        }
+        
+        // Create pegs dynamically
+        function createPegs() {
+            // Remove existing pegs
+            const existingPegs = wheelFrame.querySelectorAll('.peg');
+            existingPegs.forEach(peg => peg.remove());
+            
+            // Calculate number of pegs based on frame height
+            const pegCount = 9;
+            const pegSpacing = 100 / (pegCount + 1);
+            
+            for (let i = 0; i < pegCount; i++) {
+                const peg = document.createElement('div');
+                peg.className = 'peg';
+                peg.style.top = `${pegSpacing * (i + 1)}%`;
+                wheelFrame.appendChild(peg);
+            }
+        }
+        
+        // Create cards
+        function createCards() {
+            wheel.innerHTML = INFINITE_CARDS.map((card, index) => `
+                <li class="card ${card.className}" data-index="${index}" data-spins="${card.spins}">
+                    ${card.label.replace(/\n/g, '<br>')}
+                </li>
+            `).join('');
+        }
+        
+        // Handle pointer tick animation
+        function handlePointerTick(velocity) {
+            // Play tick sound - always use tickSnd which has the data URI
+            tickSnd.currentTime = 0;
+            tickSnd.playbackRate = Math.min(2, 0.5 + velocity / 1000);
+            tickSnd.play().catch(err => console.log('Tick sound error:', err));
+            
+            // Pointer bend
+            const bendAmount = Math.min(velocity / 100, 20);
+            pointerArm.style.transform = `rotate(${bendAmount}deg)`;
+            setTimeout(() => {
+                pointerArm.style.transform = "rotate(0deg)";
+            }, 80);
+            
+            // Peg hit animation
+            const cardHeight = getCardHeight();
+            const currentPegIndex = Math.floor((currentDistance % (cardHeight * 10)) / cardHeight);
+            if (currentPegIndex !== lastPegIndex) {
+                lastPegIndex = currentPegIndex;
+                const pegs = wheelFrame.querySelectorAll('.peg');
+                const peg = pegs[currentPegIndex % pegs.length];
+                if (peg) {
+                    peg.style.transform = "scale(1.3)";
+                    setTimeout(() => {
+                        peg.style.transform = "scale(1)";
+                    }, 50);
+                }
+                
+                // Cabinet shake
+                wheelFrame.animate([
+                    { transform: "translateX(-4px)" },
+                    { transform: "translateX(4px)" },
+                    { transform: "translateX(0)" },
+                ], {
+                    duration: 90,
+                    iterations: 1,
+                });
+                
+                // Heartbeat effect for slow speeds
+                if (velocity < 120) {
+                    wheelFrame.animate([
+                        { transform: "scale(1)" },
+                        { transform: "scale(1.03)" },
+                        { transform: "scale(1)" },
+                    ], {
+                        duration: 300,
+                        easing: "ease-out",
+                    });
+                    
+                    // Mobile haptic
+                    if ("vibrate" in navigator && velocity < 60) {
+                        navigator.vibrate([30, 40, 30]);
+                    }
+                }
+            }
+        }
+        
+        // Idle animation
+        function startIdleAnimation() {
+            const idleAnimate = () => {
+                if (!isSpinning) {
+                    currentDistance += 0.3;
+                    
+                    const cardHeight = getCardHeight();
+                    let normalizedDistance = currentDistance % (CARD_DATA.length * cardHeight * 3);
+                    if (normalizedDistance > CARD_DATA.length * cardHeight * 2) {
+                        normalizedDistance -= CARD_DATA.length * cardHeight;
+                    }
+                    
+                    wheel.style.transform = `translateY(${-normalizedDistance}px)`;
+                    idleAnimationId = requestAnimationFrame(idleAnimate);
+                }
+            };
+            idleAnimate();
+        }
+        
+        function stopIdleAnimation() {
+            if (idleAnimationId) {
+                cancelAnimationFrame(idleAnimationId);
+                idleAnimationId = null;
+            }
+        }
+        
+        // Ease out exponential function
+        function easeOutExpo(t) {
+            return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+        }
+        
+        // Physics update
+        function updatePhysics(timestamp) {
+            if (!isSpinning) return;
+            
+            if (lastTime === 0) {
+                lastTime = timestamp;
+                animationId = requestAnimationFrame(updatePhysics);
+                return;
+            }
+            
+            const deltaTime = (timestamp - lastTime) / 1000;
+            lastTime = timestamp;
+            
+            const cardHeight = getCardHeight();
+            
+            if (!isDecelerating) {
+                // Normal spinning
+                currentDistance += currentVelocity * deltaTime;
+                currentVelocity *= Math.pow(0.988, deltaTime * 60);
+                
+                // Check for tick
+                const tickIndex = Math.floor(currentDistance / cardHeight);
+                if (tickIndex !== lastTickIndex) {
+                    handlePointerTick(currentVelocity);
+                    lastTickIndex = tickIndex;
+                }
+                
+                // Start deceleration when velocity is low enough
+                if (currentVelocity < 600) {
+                    isDecelerating = true;
+                    decelerateStartTime = timestamp;
+                    decelerateStartDistance = currentDistance;
+                    decelerateStartVelocity = currentVelocity;
+                    
+                    // Calculate where we'll naturally stop and use that as target
+                    const remainingDistance = (currentVelocity * currentVelocity) / (2 * 1200);
+                    spinTarget = currentDistance + remainingDistance;
+                }
+            } else {
+                // Smooth deceleration to exact target
+                const decelerateElapsed = (timestamp - decelerateStartTime) / 400; // 400ms deceleration (twice as fast)
+                const progress = Math.min(1, decelerateElapsed);
+                const eased = easeOutExpo(progress);
+                
+                // Natural deceleration
+                currentDistance += currentVelocity * deltaTime;
+                currentVelocity = decelerateStartVelocity * (1 - eased);
+                
+                // Slower ticks during deceleration
+                const tickIndex = Math.floor(currentDistance / cardHeight);
+                if (tickIndex !== lastTickIndex && currentVelocity > 50) {
+                    handlePointerTick(currentVelocity);
+                    lastTickIndex = tickIndex;
+                }
+                
+                if (progress >= 1) {
+                    handleStop();
+                    return;
+                }
+            }
+            
+            // Apply infinite scroll
+            let normalizedDistance = currentDistance % (CARD_DATA.length * cardHeight * 3);
+            if (normalizedDistance > CARD_DATA.length * cardHeight * 2) {
+                normalizedDistance -= CARD_DATA.length * cardHeight;
+            }
+            
+            wheel.style.transform = `translateY(${-normalizedDistance}px)`;
+            
+            // Update debug
+            velocityDisplay.textContent = Math.round(currentVelocity);
+            distanceDisplay.textContent = Math.round(currentDistance);
+            
+            animationId = requestAnimationFrame(updatePhysics);
+        }
+        
+        // Handle stop
+        function handleStop() {
+            console.log('HandleStop called');
+            isSpinning = false;
+            isDecelerating = false;
+            spinBtn.disabled = false;
+            spinBtn.textContent = 'Pull to Spin';
+            
+            // Cancel any pending animation frame
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            
+            const cardHeight = getCardHeight();
+            
+            // Don't jump to a different position - stay where we naturally stopped
+            // Find which card is actually in the center of the viewport
+            const frameRect = wheelFrame.getBoundingClientRect();
+            const frameCenter = frameRect.top + frameRect.height / 2;
+            
+            // Find the card that's centered in the viewport
+            const cards = wheel.querySelectorAll('.card');
+            let winningCard = null;
+            let result = null;
+            
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                const rect = card.getBoundingClientRect();
+                const cardCenter = rect.top + rect.height / 2;
+                
+                // Check if this card's center is within the viewport center
+                if (Math.abs(cardCenter - frameCenter) < rect.height / 2) {
+                    winningCard = card;
+                    // Get the actual data index
+                    const dataIndex = parseInt(card.dataset.index) % CARD_DATA.length;
+                    result = CARD_DATA[dataIndex];
+                    break;
+                }
+            }
+            
+            // Fallback if no card found (shouldn't happen)
+            if (!result) {
+                result = CARD_DATA[0];
+            }
+            
+            // Highlight winning card
+            cards.forEach(card => card.classList.remove('winner'));
+            
+            if (winningCard) {
+                winningCard.classList.add('winner');
+            }
+            
+            // Play appropriate sound
+            if (result.isJackpot) {
+                if (jackSnd.src && jackSnd.readyState >= 2) {
+                    jackSnd.play().catch(() => {});
+                } else {
+                    celebrateSound.play().catch(() => {});
+                }
+            } else {
+                if (winSnd.src && winSnd.readyState >= 2) {
+                    winSnd.play().catch(() => {});
+                } else {
+                    celebrateSound.play().catch(() => {});
+                }
+            }
+            
+            // Handle jackpot modal or regular banner
+            if (result.isJackpot) {
+                // Show jackpot modal
+                jackpotSpins.textContent = result.spins;
+                jackpotModal.classList.add('show');
+                
+                // Confetti
+                createConfetti();
+                setTimeout(() => createConfetti(), 300);
+                setTimeout(() => createConfetti(), 600);
+            } else {
+                // Show regular winner banner
+                winnerText.textContent = `${result.value} SPIN${result.value > 1 ? 'S' : ''}!`;
+                winnerBanner.classList.add('show');
+                wheelFrame.classList.add('glowing');
+                
+                // Regular confetti
+                createConfetti();
+                
+                // Hide banner after 3 seconds
+                setTimeout(() => {
+                    winnerBanner.classList.remove('show');
+                    winnerBanner.classList.add('hide');
+                    wheelFrame.classList.remove('glowing');
+                    setTimeout(() => {
+                        winnerBanner.classList.remove('hide');
+                    }, 500);
+                }, 3000);
+                
+                // Fire callback
+                if (onSelectCallback) {
+                    onSelectCallback({
+                        type: 'number',
+                        spins: result.spins,
+                        classWeight: null
+                    });
+                }
+            }
+            
+            // Restart idle animation
+            setTimeout(() => {
+                startIdleAnimation();
+            }, 1000);
+        }
+        
+        // Spin function
+        function spin() {
+            if (isSpinning) return;
+            
+            stopIdleAnimation();
+            isSpinning = true;
+            spinBtn.disabled = true;
+            spinBtn.textContent = 'Spinning…';
+            spinCount++;
+            spinCountDisplay.textContent = spinCount;
+            
+            // Just set initial velocity and let physics handle the rest
+            const cardHeight = getCardHeight();
+            
+            // Reset state
+            wheel.style.transition = 'none';
+            currentVelocity = 2400 + Math.random() * 400;
+            lastTime = 0;
+            lastTickIndex = 0;
+            lastPegIndex = -1;
+            isDecelerating = false;
+            
+            animationId = requestAnimationFrame(updatePhysics);
+        }
+        
+        // Confetti effect
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.cssText = `
+                    position: fixed;
+                    left: ${Math.random() * 100}%;
+                    top: -10px;
+                    width: 10px;
+                    height: 10px;
+                    background: ${['#f59e0b', '#ec4899', '#3b82f6', '#10b981'][Math.floor(Math.random() * 4)]};
+                    transform: rotate(${Math.random() * 360}deg);
+                    animation: fall ${2 + Math.random()}s linear;
+                    z-index: 99;
+                `;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+        
+        // Animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Autospin
+        async function autospin() {
+            for (let i = 0; i < 50; i++) {
+                spin();
+                await new Promise(resolve => {
+                    const checkInterval = setInterval(() => {
+                        if (!isSpinning) {
+                            clearInterval(checkInterval);
+                            setTimeout(resolve, 500);
+                        }
+                    }, 100);
+                });
+            }
+        }
+        
+        // Jackpot class selection
+        document.querySelectorAll('.class-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const classWeight = e.target.dataset.weight;
+                const spins = parseInt(jackpotSpins.textContent);
+                
+                // Store selection
+                window.nextStage = {
+                    spinCount: spins,
+                    classWeight: classWeight
+                };
+                
+                // Fire callback
+                if (onSelectCallback) {
+                    onSelectCallback({
+                        type: 'jackpot',
+                        spins: spins,
+                        classWeight: classWeight
+                    });
+                }
+                
+                // Hide modal
+                jackpotModal.classList.remove('show');
+                
+                console.log('Next stage:', window.nextStage);
+            });
+        });
+        
+        // Public API
+        window.wheel = {
+            spin: spin,
+            onSelect: (callback) => {
+                onSelectCallback = callback;
+            }
+        };
+        
+        // Event listeners
+        spinBtn.addEventListener('click', spin);
+        autospinBtn.addEventListener('click', autospin);
+        
+        // Initialize
+        createCards();
+        createPegs();
+        startIdleAnimation();
+    </script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino Wheels Test - The Finals Loadout</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="class-roulette.css">
+    <link rel="stylesheet" href="spin-wheel.css">
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            padding: 20px;
+        }
+        
+        .wheel-demo {
+            margin: 40px auto;
+            max-width: 1200px;
+        }
+        
+        .demo-section {
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        
+        h1, h2 {
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin-bottom: 30px;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Debug styles */
+        .debug-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .debug-info pre {
+            margin: 0;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="wheel-demo">
+        <h1>Casino Wheels Visual Test</h1>
+        
+        <div class="demo-grid">
+            <!-- Roulette Wheel Demo -->
+            <div class="demo-section">
+                <h2>Class Roulette Wheel</h2>
+                <div id="class-roulette"></div>
+                <div class="debug-info">
+                    <pre id="roulette-debug">Roulette wheel not initialized</pre>
+                </div>
+            </div>
+            
+            <!-- Spin Wheel Demo -->
+            <div class="demo-section">
+                <h2>Spin Count Wheel</h2>
+                <div id="spin-wheel"></div>
+                <div class="debug-info">
+                    <pre id="spin-debug">Spin wheel not initialized</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Audio elements -->
+    <audio id="spinningSound" src="sounds/spinning.mp3" preload="auto"></audio>
+    <audio id="tickSound" src="sounds/tick.mp3" preload="auto"></audio>
+    <audio id="finalSound" src="sounds/final-sound.mp3" preload="auto"></audio>
+    
+    <script src="class-roulette.js"></script>
+    <script src="spin-wheel.js"></script>
+    <script>
+        // Debug function
+        function updateDebug(elementId, info) {
+            const debugEl = document.getElementById(elementId);
+            if (debugEl) {
+                debugEl.textContent = JSON.stringify(info, null, 2);
+            }
+        }
+        
+        // Initialize Roulette Wheel
+        try {
+            const roulette = new RouletteWheel('class-roulette');
+            updateDebug('roulette-debug', {
+                status: 'Initialized',
+                classes: roulette.classes,
+                segments: roulette.segments,
+                container: 'Found'
+            });
+            
+            // Listen for class selection
+            document.getElementById('class-roulette').addEventListener('classSelected', (e) => {
+                updateDebug('roulette-debug', {
+                    status: 'Class Selected',
+                    selectedClass: e.detail.class,
+                    timestamp: new Date().toISOString()
+                });
+            });
+        } catch (error) {
+            updateDebug('roulette-debug', {
+                status: 'Error',
+                error: error.message
+            });
+        }
+        
+        // Initialize Spin Wheel
+        try {
+            const spinWheel = new SpinWheel('spin-wheel');
+            updateDebug('spin-debug', {
+                status: 'Initialized',
+                totalSegments: spinWheel.totalSegments,
+                segments: spinWheel.segments.map(s => ({value: s.value, weight: s.weight})),
+                container: 'Found'
+            });
+            
+            // Listen for spin completion
+            document.getElementById('spin-wheel').addEventListener('spinComplete', (e) => {
+                updateDebug('spin-debug', {
+                    status: 'Spin Complete',
+                    selectedSpins: e.detail.spins,
+                    timestamp: new Date().toISOString()
+                });
+            });
+        } catch (error) {
+            updateDebug('spin-debug', {
+                status: 'Error',
+                error: error.message
+            });
+        }
+        
+        // Add visual debugging - highlight segments on hover
+        setTimeout(() => {
+            // For roulette wheel
+            const rouletteSegments = document.querySelectorAll('.wheel-segment');
+            rouletteSegments.forEach((seg, i) => {
+                seg.addEventListener('mouseenter', () => {
+                    console.log('Roulette segment', i, seg.className);
+                });
+            });
+            
+            // For spin wheel
+            const spinSegments = document.querySelectorAll('.wheel-segment-circular');
+            spinSegments.forEach((seg, i) => {
+                seg.addEventListener('mouseenter', () => {
+                    console.log('Spin segment', i, seg.className);
+                });
+            });
+        }, 1000);
+    </script>
+</body>
+</html>

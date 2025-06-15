@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin Wheel Revamped - The Finals Loadout</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="spin-wheel-revamped.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Orbitron', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        /* Fix for result positioning */
+        .game-container {
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 48px;
+            color: #FFD700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            text-align: center;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            color: #B8860B;
+            margin-bottom: 40px;
+            text-align: center;
+            opacity: 0.8;
+        }
+        
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .result-log {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            min-height: 60px;
+            font-size: 18px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .choose-class-ui {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 200;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .choose-class-ui.show {
+            display: flex;
+        }
+        
+        .choose-title {
+            font-size: 36px;
+            color: #FFD700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .class-options {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .class-button {
+            padding: 30px 40px;
+            font-size: 24px;
+            font-weight: 700;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .class-button.light {
+            background: linear-gradient(135deg, #4FC3F7 0%, #1976D2 100%);
+        }
+        
+        .class-button.medium {
+            background: linear-gradient(135deg, #AB47BC 0%, #6A1B9A 100%);
+        }
+        
+        .class-button.heavy {
+            background: linear-gradient(135deg, #FF6B6B 0%, #B71C1C 100%);
+        }
+        
+        .class-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        }
+        
+        /* Background animation */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 140, 0, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            animation: backgroundPulse 10s ease-in-out infinite;
+        }
+        
+        @keyframes backgroundPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <h1>The Finals Loadout</h1>
+    <p class="subtitle">Casino Experience Demo</p>
+    
+    <div class="game-container">
+        <div id="spin-wheel"></div>
+        
+        <div class="result-log" id="result-log">
+            Ready to spin! Pull to reveal your fate...
+        </div>
+    </div>
+    
+    <!-- Choose Class UI -->
+    <div class="choose-class-ui" id="choose-class-ui">
+        <h2 class="choose-title">⭐ Choose Your Class ⭐</h2>
+        <div class="class-options">
+            <button class="class-button light" data-class="Light">LIGHT</button>
+            <button class="class-button medium" data-class="Medium">MEDIUM</button>
+            <button class="class-button heavy" data-class="Heavy">HEAVY</button>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="spin-wheel-revamped.js"></script>
+    
+    <script>
+        // Initialize the spin wheel
+        const spinWheel = new SpinWheelRevamped('spin-wheel', {
+            friction: 0.985,
+            initialVelocity: 40
+        });
+        
+        const resultLog = document.getElementById('result-log');
+        const chooseClassUI = document.getElementById('choose-class-ui');
+        
+        // Handle spin complete event
+        document.getElementById('spin-wheel').addEventListener('spinComplete', async (e) => {
+            const { value, type, label } = e.detail;
+            
+            if (type === 'special') {
+                // Show choose class UI
+                resultLog.innerHTML = `<span style="color: #FFD700;">⭐ ${label} ⭐</span>`;
+                
+                setTimeout(() => {
+                    chooseClassUI.classList.add('show');
+                }, 1000);
+            } else {
+                // Auto spin class wheel (would trigger class wheel here)
+                resultLog.innerHTML = `Got <strong style="color: #FFD700;">${value}</strong> ${value === 1 ? 'spin' : 'spins'}! Auto-selecting class...`;
+                
+                // Simulate class selection after delay
+                setTimeout(() => {
+                    const classes = ['Light', 'Medium', 'Heavy'];
+                    const selectedClass = classes[Math.floor(Math.random() * 3)];
+                    resultLog.innerHTML += `<br>Selected: <strong>${selectedClass}</strong>`;
+                }, 2000);
+            }
+        });
+        
+        // Handle class selection
+        document.querySelectorAll('.class-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const selectedClass = e.target.dataset.class;
+                chooseClassUI.classList.remove('show');
+                resultLog.innerHTML = `You chose: <strong style="color: #FFD700;">${selectedClass}</strong>! Loading slot machine...`;
+                
+                // Would trigger slot machine here
+                setTimeout(() => {
+                    resultLog.innerHTML += '<br>🎰 Slot machine would spin here! 🎰';
+                }, 1500);
+            });
+        });
+        
+        // Log initialization
+        console.log('🎰 Spin Wheel Revamped Initialized!');
+        console.log('Features:');
+        console.log('- Interleaved segments (no grouping)');
+        console.log('- 3 CHOOSE CLASS cards mixed in');
+        console.log('- 3D perspective with scaling');
+        console.log('- Smooth Price is Right physics');
+        console.log('- Rainbow special effects');
+    </script>
+</body>
+</html>

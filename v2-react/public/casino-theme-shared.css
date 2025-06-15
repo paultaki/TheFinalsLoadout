@@ -1,0 +1,419 @@
+/* =====================================================
+   THE FINALS CASINO THEME - UNIFIED STYLES
+   Season 7 "The Divide" Cyberpunk Aesthetic
+   ===================================================== */
+
+/* Color System */
+:root {
+  /* Primary Colors */
+  --primary-purple: linear-gradient(135deg, #7B1FA2 0%, #AB47BC 100%);
+  --primary-purple-solid: #AB47BC;
+  --primary-purple-dark: #7B1FA2;
+  
+  /* Secondary Colors */
+  --secondary-blue: linear-gradient(135deg, #29B6F6 0%, #4FC3F7 100%);
+  --secondary-blue-solid: #4FC3F7;
+  --secondary-blue-dark: #29B6F6;
+  
+  /* Accent Colors */
+  --accent-gold: #FFD700;
+  --accent-gold-glow: rgba(255, 215, 0, 0.8);
+  --alert-pink: #FF1744;
+  --alert-pink-glow: rgba(255, 23, 68, 0.8);
+  
+  /* Base Colors */
+  --base-dark: #1a1a1a;
+  --base-metallic: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%);
+  --base-carbon: linear-gradient(135deg, #0a0a0a 0%, #2a2a2a 50%, #1a1a1a 100%);
+  
+  /* Glow Effects */
+  --neon-purple-glow: 0 0 20px rgba(171, 71, 188, 0.6), 0 0 40px rgba(171, 71, 188, 0.4);
+  --neon-blue-glow: 0 0 20px rgba(79, 195, 247, 0.6), 0 0 40px rgba(79, 195, 247, 0.4);
+  --neon-gold-glow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4);
+  --neon-pink-glow: 0 0 20px rgba(255, 23, 68, 0.6), 0 0 40px rgba(255, 23, 68, 0.4);
+  
+  /* Animation Timing */
+  --ease-accelerate: cubic-bezier(0.4, 0.0, 1, 1);
+  --ease-decelerate: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --pause-before-reveal: 350ms;
+  --celebration-duration: 1000ms;
+  
+  /* Particle Counts */
+  --particle-count-desktop: 50;
+  --particle-count-mobile: 30;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  :root {
+    --neon-purple-glow: 0 0 10px rgba(171, 71, 188, 0.6);
+    --neon-blue-glow: 0 0 10px rgba(79, 195, 247, 0.6);
+    --neon-gold-glow: 0 0 10px rgba(255, 215, 0, 0.6);
+    --neon-pink-glow: 0 0 10px rgba(255, 23, 68, 0.6);
+    --particle-count-mobile: 20;
+  }
+}
+
+/* =====================================================
+   SHARED EFFECTS & ANIMATIONS
+   ===================================================== */
+
+/* Holographic Shimmer Effect */
+@keyframes holographicShimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.holographic {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(171, 71, 188, 0.2) 20%,
+    rgba(79, 195, 247, 0.3) 40%,
+    rgba(255, 215, 0, 0.2) 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: holographicShimmer 3s linear infinite;
+  mix-blend-mode: screen;
+}
+
+/* Scanline Overlay */
+@keyframes scanlines {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(20px);
+  }
+}
+
+.scanlines::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2px,
+    rgba(255, 255, 255, 0.03) 2px,
+    rgba(255, 255, 255, 0.03) 4px
+  );
+  animation: scanlines 8s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Glitch Effect */
+@keyframes glitch {
+  0%, 100% {
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+    filter: hue-rotate(90deg);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+    filter: hue-rotate(180deg);
+  }
+  60% {
+    transform: translate(2px, 2px);
+    filter: hue-rotate(270deg);
+  }
+  80% {
+    transform: translate(2px, -2px);
+    filter: hue-rotate(360deg);
+  }
+}
+
+.glitch-transition {
+  animation: glitch 0.3s ease-in-out;
+}
+
+/* Data Stream Effect */
+@keyframes dataStream {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.data-stream {
+  position: absolute;
+  width: 2px;
+  height: 30px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--secondary-blue-solid) 50%,
+    transparent 100%
+  );
+  animation: dataStream 1s linear infinite;
+}
+
+/* Hexagonal Grid Pattern */
+.hex-grid {
+  background-image: 
+    linear-gradient(30deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
+    linear-gradient(150deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
+    linear-gradient(30deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
+    linear-gradient(150deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
+    linear-gradient(60deg, rgba(171, 71, 188, 0.1) 25%, transparent 25.5%, transparent 75%, rgba(171, 71, 188, 0.1) 75%, rgba(171, 71, 188, 0.1)),
+    linear-gradient(60deg, rgba(171, 71, 188, 0.1) 25%, transparent 25.5%, transparent 75%, rgba(171, 71, 188, 0.1) 75%, rgba(171, 71, 188, 0.1));
+  background-size: 80px 140px;
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+}
+
+/* Carbon Fiber Texture */
+.carbon-fiber {
+  background: 
+    radial-gradient(black 15%, transparent 16%) 0 0,
+    radial-gradient(black 15%, transparent 16%) 8px 8px,
+    radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
+    radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
+  background-color: #282828;
+  background-size: 16px 16px;
+}
+
+/* LCD Display Style */
+.lcd-display {
+  font-family: 'Orbitron', 'Digital', monospace;
+  background: linear-gradient(to bottom, #0a0a0a 0%, #1a1a1a 100%);
+  color: var(--accent-gold);
+  text-shadow: 
+    0 0 10px var(--accent-gold-glow),
+    0 0 20px var(--accent-gold-glow);
+  letter-spacing: 2px;
+}
+
+/* Digital Flicker */
+@keyframes digitalFlicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 0.6;
+  }
+  94% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.8;
+  }
+  96% {
+    opacity: 1;
+  }
+}
+
+.digital-flicker {
+  animation: digitalFlicker 3s infinite;
+}
+
+/* Neon Border Pulse */
+@keyframes neonPulse {
+  0%, 100% {
+    box-shadow: 
+      inset 0 0 10px var(--primary-purple-solid),
+      0 0 20px var(--primary-purple-solid);
+  }
+  50% {
+    box-shadow: 
+      inset 0 0 20px var(--primary-purple-solid),
+      0 0 40px var(--primary-purple-solid);
+  }
+}
+
+.neon-border {
+  border: 2px solid var(--primary-purple-solid);
+  animation: neonPulse 2s ease-in-out infinite;
+}
+
+/* =====================================================
+   PARTICLE SYSTEM
+   ===================================================== */
+
+.particle {
+  position: absolute;
+  pointer-events: none;
+}
+
+.particle-hex {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 8px solid var(--primary-purple-solid);
+  position: relative;
+}
+
+.particle-hex::after {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: 8px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 8px solid var(--primary-purple-solid);
+}
+
+.particle-triangle {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 10px solid var(--secondary-blue-solid);
+  filter: drop-shadow(0 0 4px var(--secondary-blue-solid));
+}
+
+/* Spark Burst Effect */
+@keyframes sparkBurst {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5) rotate(180deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.5) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.spark-burst {
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, var(--primary-purple-solid) 0%, transparent 70%);
+  animation: sparkBurst 0.6s ease-out;
+}
+
+/* =====================================================
+   CELEBRATION EFFECTS
+   ===================================================== */
+
+/* Screen Flash */
+@keyframes screenFlash {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.screen-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, var(--primary-purple-solid) 0%, transparent 60%);
+  animation: screenFlash 0.3s ease-out;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Victory Glow */
+@keyframes victoryGlow {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.05);
+    filter: brightness(1.3);
+  }
+}
+
+.victory-glow {
+  animation: victoryGlow 1s ease-in-out;
+}
+
+/* Data Corruption Effect */
+@keyframes dataCorruption {
+  0%, 100% {
+    clip-path: inset(0 0 0 0);
+  }
+  20% {
+    clip-path: inset(10% 0 80% 0);
+  }
+  40% {
+    clip-path: inset(50% 0 30% 0);
+  }
+  60% {
+    clip-path: inset(80% 0 5% 0);
+  }
+  80% {
+    clip-path: inset(0 0 70% 0);
+  }
+}
+
+.data-corruption {
+  animation: dataCorruption 0.5s ease-in-out;
+}
+
+/* =====================================================
+   UTILITY CLASSES
+   ===================================================== */
+
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Sound Data Attributes */
+[data-sound] {
+  position: relative;
+}
+
+[data-sound]::after {
+  content: attr(data-sound);
+  position: absolute;
+  top: -20px;
+  right: 0;
+  font-size: 10px;
+  color: var(--accent-gold);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Debug mode - show sound attributes */
+.debug-sounds [data-sound]::after {
+  opacity: 0.5;
+}
