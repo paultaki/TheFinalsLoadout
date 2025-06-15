@@ -111,8 +111,8 @@ const TouchWrapper: React.FC<TouchWrapperProps> = ({
   useEffect(() => {
     if (elementRef.current) {
       elementRef.current.style.touchAction = 'manipulation';
-      elementRef.current.style.webkitTapHighlightColor = 'transparent';
-      elementRef.current.style.webkitTouchCallout = 'none';
+      (elementRef.current.style as any).webkitTapHighlightColor = 'transparent';
+      (elementRef.current.style as any).webkitTouchCallout = 'none';
       elementRef.current.style.userSelect = 'none';
     }
   }, []);
@@ -131,7 +131,7 @@ const TouchWrapper: React.FC<TouchWrapperProps> = ({
           setTouchStart({ x: e.clientX, y: e.clientY });
         }
       }}
-      onMouseUp={(e) => {
+      onMouseUp={() => {
         // Support mouse for testing
         if (!('ontouchstart' in window) && touchStart && onTap) {
           setIsTouching(false);

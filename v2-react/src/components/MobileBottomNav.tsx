@@ -101,8 +101,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeSection = '' })
         right: 0,
         background: 'linear-gradient(to bottom, rgba(18, 18, 26, 0.98), rgba(10, 10, 15, 0.98))',
         backdropFilter: 'blur(20px) saturate(180%)',
-        borderTop: '1px solid rgba(171, 71, 188, 0.3)',
-        boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.5), 0 -2px 20px rgba(171, 71, 188, 0.2)',
+        borderTop: '1px solid rgba(0, 229, 255, 0.3)',
+        boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.5), 0 -2px 20px rgba(0, 229, 255, 0.3), 0 0 40px rgba(255, 39, 231, 0.1)',
         zIndex: 40,
         transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
         transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -129,7 +129,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeSection = '' })
               alignItems: 'center',
               justifyContent: 'center',
               padding: '0.5rem',
-              color: activeSection === item.id ? '#FFD700' : '#6b7280',
+              color: activeSection === item.id ? 'var(--neon-gold)' : '#6b7280',
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               position: 'relative',
               minHeight: '48px'
@@ -142,11 +142,12 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeSection = '' })
                 justifyContent: 'center',
                 transition: 'all 0.3s ease',
                 transform: activeSection === item.id ? 'scale(1.15) translateY(-2px)' : 'scale(1)',
-                filter: activeSection === item.id ? 'drop-shadow(0 4px 8px rgba(255, 215, 0, 0.5))' : 'none'
+                filter: activeSection === item.id ? 'drop-shadow(0 4px 8px rgba(255, 211, 109, 0.6)) brightness(1.2)' : 'none'
               }}>
                 {React.cloneElement(item.icon as React.ReactElement, {
-                  style: { width: '20px', height: '20px' }
-                })}
+                  width: '20px',
+                  height: '20px'
+                } as any)}
               </div>
               <span style={{
                 fontSize: '0.65rem',
@@ -164,8 +165,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeSection = '' })
                   transform: 'translateX(-50%)',
                   width: '40px',
                   height: '2px',
-                  background: 'linear-gradient(90deg, transparent, #FFD700, transparent)',
-                  boxShadow: '0 0 10px rgba(255, 215, 0, 0.8)'
+                  background: 'linear-gradient(90deg, transparent, var(--neon-gold), transparent)',
+                  boxShadow: '0 0 15px rgba(255, 211, 109, 0.8), 0 0 30px rgba(255, 211, 109, 0.4)'
                 }} />
               )}
             </div>

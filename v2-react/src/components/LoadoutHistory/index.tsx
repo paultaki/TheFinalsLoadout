@@ -42,8 +42,9 @@ const LoadoutHistory: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 to-blue-900/10 blur-3xl" />
           
           <div className="relative cyber-card p-8 shadow-2xl" style={{
-            background: 'linear-gradient(135deg, rgba(123, 31, 162, 0.05) 0%, rgba(41, 182, 246, 0.02) 100%), rgba(18, 18, 26, 0.9)',
-            border: '1px solid rgba(171, 71, 188, 0.2)'
+            background: 'linear-gradient(135deg, rgba(255, 39, 231, 0.05) 0%, rgba(0, 229, 255, 0.02) 100%), rgba(18, 18, 26, 0.95)',
+            border: '1px solid rgba(0, 229, 255, 0.3)',
+            boxShadow: '0 0 40px rgba(255, 39, 231, 0.2), 0 0 80px rgba(0, 229, 255, 0.1)'
           }}>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold gradient-text uppercase tracking-wide">
@@ -71,11 +72,13 @@ const LoadoutHistory: React.FC = () => {
                 className="group relative overflow-hidden rounded-xl transition-all duration-500 hover:transform hover:scale-[1.02]"
                 style={{
                   background: index % 2 === 0 
-                    ? 'linear-gradient(90deg, rgba(123, 31, 162, 0.08) 0%, rgba(123, 31, 162, 0.03) 100%)' 
-                    : 'linear-gradient(90deg, rgba(41, 182, 246, 0.08) 0%, rgba(41, 182, 246, 0.03) 100%)',
+                    ? 'linear-gradient(90deg, rgba(255, 39, 231, 0.08) 0%, rgba(255, 39, 231, 0.03) 100%)' 
+                    : 'linear-gradient(90deg, rgba(0, 229, 255, 0.08) 0%, rgba(0, 229, 255, 0.03) 100%)',
                   border: '1px solid',
-                  borderColor: index % 2 === 0 ? 'rgba(171, 71, 188, 0.2)' : 'rgba(79, 195, 247, 0.2)',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+                  borderColor: index % 2 === 0 ? 'rgba(255, 39, 231, 0.3)' : 'rgba(0, 229, 255, 0.3)',
+                  boxShadow: index % 2 === 0 
+                    ? '0 4px 20px rgba(255, 39, 231, 0.2), 0 0 40px rgba(255, 39, 231, 0.1)'
+                    : '0 4px 20px rgba(0, 229, 255, 0.2), 0 0 40px rgba(0, 229, 255, 0.1)'
                 }}
               >
                 {/* Hover glow effect */}
@@ -120,15 +123,15 @@ const LoadoutHistory: React.FC = () => {
                   <div className="md:col-span-1 space-y-3">
                     <div>
                       <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Weapon</div>
-                      <div className="text-accent-gold font-medium flex items-center gap-2">
-                        <span style={{ filter: 'brightness(1.5)' }}>🔫</span>
+                      <div className="font-medium flex items-center gap-2" style={{ color: 'var(--neon-gold)' }}>
+                        <span style={{ filter: 'brightness(1.5) saturate(1.5)' }}>🔫</span>
                         {loadout.weapon.replace(/_/g, ' ')}
                       </div>
                     </div>
                     <div>
                       <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Specialization</div>
-                      <div className="text-purple-400 font-medium flex items-center gap-2">
-                        <span>⚡</span>
+                      <div className="font-medium flex items-center gap-2" style={{ color: 'var(--neon-magenta)' }}>
+                        <span style={{ filter: 'brightness(1.2)' }}>⚡</span>
                         {loadout.specialization.replace(/_/g, ' ')}
                       </div>
                     </div>
@@ -143,10 +146,11 @@ const LoadoutHistory: React.FC = () => {
                           key={idx}
                           className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105"
                           style={{
-                            background: 'linear-gradient(135deg, rgba(41, 182, 246, 0.15) 0%, rgba(79, 195, 247, 0.1) 100%)',
-                            border: '1px solid rgba(79, 195, 247, 0.3)',
-                            color: '#4FC3F7',
-                            boxShadow: '0 2px 10px rgba(79, 195, 247, 0.2)'
+                            background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.15) 0%, rgba(0, 229, 255, 0.1) 100%)',
+                            border: '1px solid rgba(0, 229, 255, 0.4)',
+                            color: 'var(--neon-cyan)',
+                            boxShadow: '0 2px 10px rgba(0, 229, 255, 0.3), 0 0 20px rgba(0, 229, 255, 0.2)',
+                            textShadow: '0 0 10px currentColor'
                           }}
                         >
                           {gadget.replace(/_/g, ' ')}

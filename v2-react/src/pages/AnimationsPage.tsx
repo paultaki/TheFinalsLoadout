@@ -17,7 +17,7 @@ import './AnimationsPage.premium.css';
  * AnimationsPage - Mobile-first full page implementation with navigation, hero, animations, and footer
  */
 const AnimationsPage: React.FC = () => {
-  const { isMobile, isTablet, isTouchDevice } = useMobileDetect();
+  const { isMobile, isTouchDevice } = useMobileDetect();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [activeSection, setActiveSection] = useState('home');
@@ -119,8 +119,8 @@ const AnimationsPage: React.FC = () => {
 
         <div className="relative container mx-auto px-4 py-4 sm:py-8">
           <div className="text-center">
-            {/* Main Logo - Reduced size by 60% with purple glow */}
-            <div className="mb-3 sm:mb-4 relative inline-block group">
+            {/* Main Logo - Hidden on mobile since NavBar already has logo */}
+            <div className="hidden sm:block mb-3 sm:mb-4 relative inline-block group">
               <div className="absolute inset-0 bg-purple-600/30 blur-2xl group-hover:bg-purple-500/40 transition-colors duration-500" />
               <img 
                 src="/images/the-finals-logo.webp" 
@@ -184,20 +184,18 @@ const AnimationsPage: React.FC = () => {
           </div>
 
           {/* Game Flow Container with Mobile Optimizations */}
-          <div className={`max-w-4xl mx-auto ${isMobile ? 'px-2 pb-20' : ''}`}>
-            <LoadoutHistoryProvider>
-              <GameProvider>
-                <div className="relative">
-                  {/* Mobile-only: Sticky progress indicator */}
-                  {isMobile && (
-                    <div className="sticky top-16 z-30 bg-gray-900/80 backdrop-blur-sm p-2 rounded-lg mb-4 text-center text-sm text-gray-400">
-                      <span>Step 1: Choose number of loadouts</span>
-                    </div>
-                  )}
-                  <GameFlow />
-                </div>
-              </GameProvider>
-            </LoadoutHistoryProvider>
+          <div className={`max-w-4xl mx-auto ${isMobile ? 'px-2' : ''}`}>
+            <GameProvider>
+              <div className="relative">
+                {/* Mobile-only: Sticky progress indicator */}
+                {isMobile && (
+                  <div className="sticky top-16 z-30 bg-gray-900/80 backdrop-blur-sm p-2 rounded-lg mb-4 text-center text-sm text-gray-400">
+                    <span>Step 1: Choose number of loadouts</span>
+                  </div>
+                )}
+                <GameFlow />
+              </div>
+            </GameProvider>
           </div>
         </div>
       </section>
@@ -254,14 +252,14 @@ const AnimationsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Mobile Bottom Navigation */}
+      {/* Footer */}
+      <Footer />
+      
+      {/* Mobile Bottom Navigation - After footer to avoid gap */}
       {isMobile && <MobileBottomNav activeSection={activeSection} />}
       
       {/* Performance Monitor for Development */}
       {isMobile && <MobilePerformanceMonitor />}
-      
-      {/* Footer */}
-      <Footer />
 
     </>
   );

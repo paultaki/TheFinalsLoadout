@@ -8,44 +8,54 @@
 /* Premium section spacing and transitions */
 section {
   position: relative;
-  padding: 3rem 0;
+  padding: 2rem 0;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (min-width: 768px) {
   section {
-    padding: 4rem 0;
+    padding: 3rem 0;
+  }
+}
+
+/* Ensure proper spacing for mobile bottom nav */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 80px;
   }
 }
 
 /* Hero section optimizations */
 #home {
-  min-height: 60vh;
+  min-height: 40vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: 
-    radial-gradient(ellipse at center top, rgba(171, 71, 188, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at center bottom, rgba(79, 195, 247, 0.1) 0%, transparent 50%);
+    radial-gradient(ellipse at center top, rgba(0, 229, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at center bottom, rgba(255, 39, 231, 0.1) 0%, transparent 50%);
+  padding: 2rem 0;
 }
 
 @media (min-width: 768px) {
   #home {
-    min-height: 70vh;
+    min-height: 60vh;
+    padding: 3rem 0;
   }
 }
 
-/* Animated cyber grid background */
+/* Animated cyber grid background with neon colors */
 .cyber-grid {
   position: fixed;
   inset: 0;
   background-image: 
-    linear-gradient(rgba(171, 71, 188, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(79, 195, 247, 0.1) 1px, transparent 1px);
+    linear-gradient(rgba(0, 229, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 39, 231, 0.08) 1px, transparent 1px);
   background-size: 50px 50px;
   animation: grid-move 20s linear infinite;
   pointer-events: none;
   z-index: 0;
+  opacity: 0.7;
 }
 
 @keyframes grid-move {
@@ -53,24 +63,25 @@ section {
   100% { transform: translate(50px, 50px); }
 }
 
-/* Holographic text effect */
+/* Holographic text effect with neon colors */
 .holographic-text {
   background: linear-gradient(
     90deg,
-    #FF1744 0%,
-    #7B1FA2 20%,
-    #29B6F6 40%,
-    #FFD700 60%,
-    #29B6F6 80%,
-    #7B1FA2 90%,
-    #FF1744 100%
+    #00E5FF 0%,
+    #FF27E7 25%,
+    #FFD36D 50%,
+    #00E5FF 75%,
+    #FF27E7 100%
   );
   background-size: 200% auto;
   color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
   animation: holographic-text 3s linear infinite;
-  text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+  text-shadow: 
+    0 0 30px rgba(0, 229, 255, 0.5),
+    0 0 60px rgba(255, 39, 231, 0.3);
+  filter: brightness(1.2) contrast(1.1);
 }
 
 @keyframes holographic-text {
@@ -361,17 +372,24 @@ section {
 
 /* Optimize section spacing */
 #generator {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
 #history {
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgba(123, 31, 162, 0.05) 50%,
+    rgba(255, 39, 231, 0.03) 50%,
     transparent 100%
   );
+  padding-bottom: 100px; /* Space for mobile nav */
+}
+
+@media (min-width: 768px) {
+  #history {
+    padding-bottom: 3rem;
+  }
 }
 
 /* Remove excessive margins */
