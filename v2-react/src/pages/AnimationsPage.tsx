@@ -59,7 +59,7 @@ const AnimationsPage: React.FC = () => {
       <NavBar />
 
       {/* Hero Section - Mobile Optimized */}
-      <section id="home" className="relative overflow-hidden pt-0">
+      <section id="home" className="relative overflow-hidden pt-10">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />

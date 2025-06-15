@@ -30,7 +30,7 @@ const NavBar: React.FC = () => {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-surface-dark-transparent border-b border-[#8a2eff]/40" style={{ filter: 'drop-shadow(0 0 6px #8a2effaa)' }}>
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-surface-dark-transparent border-b border-[#8a2eff]/40" style={{ filter: 'drop-shadow(0 0 6px #8a2effaa)' }}>
         {/* Scroll Progress Bar */}
         <div 
           className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-cyan-400 via-magenta-500 to-yellow-400 transition-all duration-200"
