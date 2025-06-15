@@ -1,4 +1,6 @@
 import { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
+import { DIMENSIONS, NUMBERS } from '../../constants/physics';
+import { COLORS_EXTENDED, SHADOWS } from '../../constants/styles';
 
 interface WheelCanvasProps {
   size: number;
@@ -47,22 +49,22 @@ const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotati
       // Draw static wheel elements
       const centerX = size / 2;
       const centerY = size / 2;
-      const outerRadius = size / 2 - 10;
-      const innerRadius = outerRadius * 0.3;
+      const outerRadius = size / 2 - DIMENSIONS.canvas.padding;
+      const innerRadius = outerRadius * DIMENSIONS.wheel.innerRadiusRatio;
 
       // Segments configuration - The Finals theme
-      const segments = 12;
+      const segments = NUMBERS.segments;
       const classes = ['LIGHT', 'MEDIUM', 'HEAVY'];
       const colors = {
-        LIGHT: { base: '#4FC3F7', dark: '#29B6F6', light: '#81D4FA' },
-        MEDIUM: { base: '#AB47BC', dark: '#7B1FA2', light: '#CE93D8' },
-        HEAVY: { base: '#FF1744', dark: '#D50000', light: '#FF5252' },
+        LIGHT: COLORS_EXTENDED.classes.light,
+        MEDIUM: COLORS_EXTENDED.classes.medium,
+        HEAVY: COLORS_EXTENDED.classes.heavy,
       };
 
       const anglePerSegment = (Math.PI * 2) / segments;
 
       // Draw outer metallic rim with purple underglow
-      const rimInner = Math.max(0, outerRadius - 20);
+      const rimInner = Math.max(0, outerRadius - DIMENSIONS.wheel.rimWidth);
       const rimOuter = Math.max(0, outerRadius);
       if (rimInner < 0 || rimOuter <= 0) return;
       const rimGradient = offCtx.createRadialGradient(
@@ -73,20 +75,20 @@ const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotati
         centerY,
         rimOuter
       );
-      rimGradient.addColorStop(0, '#3a3a3a');
-      rimGradient.addColorStop(0.3, '#2a2a2a');
-      rimGradient.addColorStop(0.7, '#1a1a1a');
-      rimGradient.addColorStop(1, '#7B1FA2');
+      rimGradient.addColorStop(0, COLORS_EXTENDED.metallic.rim.inner);
+      rimGradient.addColorStop(0.3, COLORS_EXTENDED.metallic.rim.mid);
+      rimGradient.addColorStop(0.7, COLORS_EXTENDED.metallic.rim.outer);
+      rimGradient.addColorStop(1, COLORS_EXTENDED.metallic.rim.glow);
 
       offCtx.beginPath();
       offCtx.arc(centerX, centerY, outerRadius, 0, Math.PI * 2);
-      offCtx.arc(centerX, centerY, outerRadius - 20, 0, Math.PI * 2, true);
+      offCtx.arc(centerX, centerY, outerRadius - DIMENSIONS.wheel.rimWidth, 0, Math.PI * 2, true);
       offCtx.fillStyle = rimGradient;
       offCtx.fill();
 
       // Draw holographic gold inner ring
-      const goldInner = Math.max(0, outerRadius - 25);
-      const goldOuter = Math.max(0, outerRadius - 20);
+      const goldInner = Math.max(0, outerRadius - DIMENSIONS.wheel.segmentInset);
+      const goldOuter = Math.max(0, outerRadius - DIMENSIONS.wheel.rimWidth);
       if (goldInner < 0 || goldOuter <= 0) return;
       const goldGradient = offCtx.createRadialGradient(
         centerX,
@@ -96,14 +98,14 @@ const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotati
         centerY,
         goldOuter
       );
-      goldGradient.addColorStop(0, '#FFD700');
-      goldGradient.addColorStop(0.3, '#FFED4E');
-      goldGradient.addColorStop(0.6, '#AB47BC');
-      goldGradient.addColorStop(1, '#FFD700');
+      goldGradient.addColorStop(0, COLORS_EXTENDED.gold.primary);
+      goldGradient.addColorStop(0.3, COLORS_EXTENDED.gold.light);
+      goldGradient.addColorStop(0.6, COLORS_EXTENDED.gold.accent);
+      goldGradient.addColorStop(1, COLORS_EXTENDED.gold.primary);
 
       offCtx.beginPath();
-      offCtx.arc(centerX, centerY, outerRadius - 20, 0, Math.PI * 2);
-      offCtx.arc(centerX, centerY, outerRadius - 25, 0, Math.PI * 2, true);
+      offCtx.arc(centerX, centerY, outerRadius - DIMENSIONS.wheel.rimWidth, 0, Math.PI * 2);
+      offCtx.arc(centerX, centerY, outerRadius - DIMENSIONS.wheel.segmentInset, 0, Math.PI * 2, true);
       offCtx.fillStyle = goldGradient;
       offCtx.fill();
 
@@ -116,7 +118,7 @@ const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotati
 
         // Create gradient for segment
         const segInner = Math.max(0, innerRadius);
-        const segOuter = Math.max(0, outerRadius - 25);
+        const segOuter = Math.max(0, outerRadius - DIMENSIONS.wheel.segmentInset);
         if (segInner < 0 || segOuter <= 0) continue;
         const gradient = offCtx.createRadialGradient(
           centerX,
@@ -133,13 +135,13 @@ const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotati
         // Draw segment
         offCtx.beginPath();
         offCtx.moveTo(centerX, centerY);
-        offCtx.arc(centerX, centerY, outerRadius - 25, startAngle, endAngle);
+        offCtx.arc(centerX, centerY, outerRadius - DIMENSIONS.wheel.segmentInset, startAngle, endAngle);
         offCtx.closePath();
         offCtx.fillStyle = gradient;
         offCtx.fill();
 
         // Draw segment border
-        offCtx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+        offCtx.strokeStyle = COLORS_EXTENDED.ui.segmentBorder;
         offCtx.lineWidth = 1;
         offCtx.stroke();
 
@@ -150,11 +152,11 @@ const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotati
         offCtx.textAlign = 'center';
         offCtx.textBaseline = 'middle';
         offCtx.fillStyle = 'white';
-        offCtx.font = `bold ${size / 20}px "Impact", sans-serif`;
-        offCtx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-        offCtx.shadowBlur = 4;
-        offCtx.shadowOffsetX = 2;
-        offCtx.shadowOffsetY = 2;
+        offCtx.font = `bold ${size / DIMENSIONS.canvas.fontSize}px "Impact", sans-serif`;
+        offCtx.shadowColor = COLORS_EXTENDED.ui.shadowColor;
+        offCtx.shadowBlur = SHADOWS.text.blur;
+        offCtx.shadowOffsetX = SHADOWS.text.offsetX;
+        offCtx.shadowOffsetY = SHADOWS.text.offsetY;
         offCtx.fillText(className, outerRadius * 0.55, 0);
         offCtx.restore();
 
@@ -162,7 +164,7 @@ const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotati
         offCtx.save();
         offCtx.beginPath();
         offCtx.moveTo(centerX, centerY);
-        offCtx.arc(centerX, centerY, outerRadius - 25, startAngle, endAngle);
+        offCtx.arc(centerX, centerY, outerRadius - DIMENSIONS.wheel.segmentInset, startAngle, endAngle);
         offCtx.closePath();
         offCtx.clip();
 
@@ -172,9 +174,9 @@ const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotati
           centerX + outerRadius,
           centerY + outerRadius
         );
-        glossGradient.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
-        glossGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.05)');
-        glossGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        glossGradient.addColorStop(0, `rgba(255, 255, 255, ${NUMBERS.opacity.gloss.start})`);
+        glossGradient.addColorStop(0.5, `rgba(255, 255, 255, ${NUMBERS.opacity.gloss.mid})`);
+        glossGradient.addColorStop(1, `rgba(255, 255, 255, ${NUMBERS.opacity.gloss.end})`);
 
         offCtx.fillStyle = glossGradient;
         offCtx.fillRect(0, 0, size, size);
@@ -193,9 +195,9 @@ const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotati
         centerY,
         hubOuter
       );
-      hubGradient.addColorStop(0, '#4a4a4a');
-      hubGradient.addColorStop(0.7, '#2a2a2a');
-      hubGradient.addColorStop(1, '#1a1a1a');
+      hubGradient.addColorStop(0, COLORS_EXTENDED.metallic.hub.light);
+      hubGradient.addColorStop(0.7, COLORS_EXTENDED.metallic.hub.medium);
+      hubGradient.addColorStop(1, COLORS_EXTENDED.metallic.hub.dark);
 
       offCtx.beginPath();
       offCtx.arc(centerX, centerY, innerRadius, 0, Math.PI * 2);

@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ClassType } from '../../types';
+import { COLORS_EXTENDED } from '../../constants/styles';
 import './ResultBanner.css';
 
 interface ResultBannerProps {
@@ -10,15 +11,16 @@ const ResultBanner: React.FC<ResultBannerProps> = ({ classType }) => {
   if (!classType) return null;
 
   const getClassStyle = (cls: ClassType) => {
+    const defaultColor = '#666666';
     switch (cls.toLowerCase()) {
       case 'light':
-        return { backgroundColor: '#2e8cff' };
+        return { backgroundColor: '#2e8cff' }; // Note: Using different shade for banner
       case 'medium':
-        return { backgroundColor: '#49b76d' };
+        return { backgroundColor: '#49b76d' }; // Note: Using different shade for banner
       case 'heavy':
-        return { backgroundColor: '#e94d4d' };
+        return { backgroundColor: '#e94d4d' }; // Note: Using different shade for banner
       default:
-        return { backgroundColor: '#666666' };
+        return { backgroundColor: defaultColor };
     }
   };
 

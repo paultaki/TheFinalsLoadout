@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { playSound } from '../../utils/sound';
 import { ANIMATION_CONSTANTS } from '../../constants/animation';
 import { SLICE_DEG, POINTER_OFFSET, WHEEL_PATTERN } from '../../constants/roulette';
+import { PHYSICS, TIMING, THRESHOLDS, NUMBERS } from '../../constants/physics';
 import { getClassAtRotation } from './utils';
 import type { ClassType } from '../../types';
 
@@ -39,7 +40,7 @@ export const useRoulette = () => {
           );
           targetIndex = possibleIndices[Math.floor(Math.random() * possibleIndices.length)];
         } else {
-          targetIndex = Math.floor(Math.random() * 12);
+          targetIndex = Math.floor(Math.random() * NUMBERS.segments);
         }
 
         const targetClass = WHEEL_PATTERN[targetIndex];
@@ -48,11 +49,11 @@ export const useRoulette = () => {
         // We need to rotate so that when rotation is applied, the target segment aligns with the pointer
         // Since pointer is at +90°, we need: (rotation + 90) % 360 = targetIndex * 30
         // Therefore: rotation = (targetIndex * 30 - 90 + 360) % 360
-        const targetRotation = (targetIndex * SLICE_DEG - POINTER_OFFSET + 360) % 360;
+        const targetRotation = (targetIndex * SLICE_DEG - POINTER_OFFSET + NUMBERS.fullCircle) % NUMBERS.fullCircle;
 
         // Add multiple full spins
-        const spins = 6 + Math.random() * 2; // 6-8 full rotations
-        const finalRotation = spins * 360 + targetRotation;
+        const spins = TIMING.wheel.spins.min + Math.random() * (TIMING.wheel.spins.max - TIMING.wheel.spins.min);
+        const finalRotation = spins * NUMBERS.fullCircle + targetRotation;
 
         // Play whoosh sound
         playSound('spinning');
@@ -77,7 +78,7 @@ export const useRoulette = () => {
             { rotation: 0 },
             {
               rotation: finalRotation,
-              duration: 4,
+              duration: TIMING.wheel.duration,
               ease: 'power4.out',
               onUpdate: () => {
                 const currentRotation = animationRef.current.rotation;
@@ -85,13 +86,13 @@ export const useRoulette = () => {
 
                 // Tick sounds
                 const tickIndex = Math.floor(currentRotation / SLICE_DEG);
-                if (tickIndex !== lastTickIndex && tickIndex % 1 === 0) {
+                if (tickIndex !== lastTickIndex) {
                   lastTickIndex = tickIndex;
-                  const speed = gsap.getProperty(animationRef.current, 'rotation') / 4; // rough speed
-                  if (speed > 50) {
+                  const speed = gsap.getProperty(animationRef.current, 'rotation') / TIMING.wheel.duration; // rough speed
+                  if (speed > THRESHOLDS.audio.volume.speedDivisor / 10) {
                     playSound('tick', {
-                      volume: Math.min(1, speed / 500),
-                      playbackRate: Math.min(1.5, speed / 300),
+                      volume: Math.min(THRESHOLDS.audio.volume.max, speed / THRESHOLDS.audio.volume.speedDivisor),
+                      playbackRate: Math.min(THRESHOLDS.audio.playbackRate.max, speed / THRESHOLDS.audio.playbackRate.speedDivisor),
                     });
                   }
                 }
@@ -113,7 +114,7 @@ export const useRoulette = () => {
                 // Delay to show result
                 setTimeout(() => {
                   resolve(actualClass);
-                }, 2000);
+                }, TIMING.wheel.resultDelay);
               },
             }
           );
@@ -127,7 +128,7 @@ export const useRoulette = () => {
               currentClass: targetClass,
             }));
             resolve(targetClass);
-          }, 5000);
+          }, TIMING.wheel.fallbackDuration);
         }
       });
     },

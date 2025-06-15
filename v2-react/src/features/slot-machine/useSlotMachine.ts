@@ -1,12 +1,13 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import type { SlotItem, Loadout, ColumnState } from './types';
 import { playTickSound, playWinSound, playJackpotSound } from '../../utils/audio';
+import { SLOT_PHYSICS, NUMBERS } from '../../constants/physics';
 
-const SLOT_HEIGHT = 120;
-const TOTAL_SLOTS = 15;
-const STAGGER_DELAY = 120;
-const SPIN_DURATION_NORMAL = 2500;
-const SPIN_DURATION_FINAL = 5000;
+const SLOT_HEIGHT = SLOT_PHYSICS.height;
+const TOTAL_SLOTS = SLOT_PHYSICS.totalSlots;
+const STAGGER_DELAY = SLOT_PHYSICS.staggerDelay;
+const SPIN_DURATION_NORMAL = SLOT_PHYSICS.duration.normal;
+const SPIN_DURATION_FINAL = SLOT_PHYSICS.duration.final;
 
 // Weapon pool
 const WEAPONS = [
@@ -56,13 +57,15 @@ const GADGETS = [
 
 export const useSlotMachine = (onResult: (result: Loadout) => void, isFinalSpin = false) => {
   const [isAnimating, setIsAnimating] = useState(false);
-  const [columns, setColumns] = useState<ColumnState[]>([
-    { position: 0, velocity: 0, isAnimating: false, finalIndex: 0, currentIndex: 0 },
-    { position: 0, velocity: 0, isAnimating: false, finalIndex: 0, currentIndex: 0 },
-    { position: 0, velocity: 0, isAnimating: false, finalIndex: 0, currentIndex: 0 },
-    { position: 0, velocity: 0, isAnimating: false, finalIndex: 0, currentIndex: 0 },
-    { position: 0, velocity: 0, isAnimating: false, finalIndex: 0, currentIndex: 0 },
-  ]);
+  const [columns, setColumns] = useState<ColumnState[]>(
+    Array(NUMBERS.columns).fill(null).map(() => ({ 
+      position: 0, 
+      velocity: 0, 
+      isAnimating: false, 
+      finalIndex: 0, 
+      currentIndex: 0 
+    }))
+  );
 
   const animationFrameRef = useRef<number | undefined>(undefined);
   const lastTickRef = useRef<number[]>([0, 0, 0, 0, 0]);
@@ -99,13 +102,13 @@ export const useSlotMachine = (onResult: (result: Loadout) => void, isFinalSpin 
   };
 
   const [columnItems] = useState<SlotItem[][]>(() => {
-    return Array(5)
+    return Array(NUMBERS.columns)
       .fill(null)
       .map((_, index) => generateColumnItems(index));
   });
 
   // Easing functions
-  const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+  const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, NUMBERS.animation.cubicExponent);
 
   // Animate a single column
   const animateColumn = useCallback(
@@ -116,7 +119,7 @@ export const useSlotMachine = (onResult: (result: Loadout) => void, isFinalSpin 
 
         if (progress < 1) {
           // Calculate position with easing
-          const easedProgress = progress < 0.8 ? easeOutCubic(progress / 0.8) : 1;
+          const easedProgress = progress < SLOT_PHYSICS.easing.progressThreshold ? easeOutCubic(progress / SLOT_PHYSICS.easing.progressThreshold) : 1;
           const totalDistance = (targetIndex + TOTAL_SLOTS * 3) * SLOT_HEIGHT;
           const currentPosition = easedProgress * totalDistance;
 

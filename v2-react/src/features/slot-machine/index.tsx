@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useGameState } from '../../hooks/useGameState';
 import { useLoadoutHistory } from '../../context/LoadoutHistoryContext';
 import { SOUNDS } from '../../constants/sounds';
+import { UI_CONSTANTS } from '../../constants/ui';
 import type { ClassType } from '../../types';
 import './SlotMachine.css';
 
@@ -53,7 +54,8 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
         if ((window as any).SlotMachine) {
           setIsReady(true);
         } else {
-          setTimeout(checkLoaded, 100);
+          const checkInterval = 100;
+          setTimeout(checkLoaded, checkInterval);
         }
       };
       checkLoaded();
@@ -136,14 +138,16 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
 
         onResult(loadout);
       });
-    }, 100);
+    const startDelay = 100;
+    }, startDelay);
 
     return () => clearTimeout(timer);
   }, [isMachineInitialized, state.chosenClass, state.spinsLeft]); // Proper dependencies
 
   const generateLoadout = (): Loadout => {
     const classType = state.chosenClass as ClassType;
-    const spinsRemaining = Math.max(0, state.spinsLeft - 1);
+    const minSpins = 0;
+    const spinsRemaining = Math.max(minSpins, state.spinsLeft - 1);
 
     // Mock data - replace with actual game data
     const classData = {

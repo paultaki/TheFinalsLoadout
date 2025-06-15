@@ -4,6 +4,8 @@ import { useRoulette } from './useRoulette';
 import { SOUNDS } from '../../constants/sounds';
 import ResultBanner from './ResultBanner';
 import clsx from 'clsx';
+import { DIMENSIONS, THRESHOLDS, TIMING } from '../../constants/physics';
+import { COLORS_EXTENDED, SHADOWS, GRADIENTS, FILTERS, OPACITY } from '../../constants/styles';
 import './roulette-theme.css';
 
 import type { ClassType } from '../../types';
@@ -24,7 +26,7 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
   useEffect(() => {
     const updateSize = () => {
       const vw = window.innerWidth;
-      const size = Math.max(300, Math.min(vw * 0.6, 500));
+      const size = Math.max(DIMENSIONS.responsive.minWheelSize, Math.min(vw * DIMENSIONS.responsive.maxWheelSizeRatio, DIMENSIONS.responsive.maxWheelSize));
       setWheelSize(size);
     };
 
@@ -35,9 +37,10 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
 
   // Auto-spin after 1 second
   useEffect(() => {
+    const autoSpinDelay = 1000;
     const timer = setTimeout(() => {
       handleSpin();
-    }, 1000);
+    }, autoSpinDelay);
 
     return () => clearTimeout(timer);
   }, []);
@@ -55,7 +58,7 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
     const velocity = Math.abs(deltaY) / deltaTime;
 
     // Swipe up/down with sufficient velocity triggers spin
-    if (Math.abs(deltaY) > 50 && velocity > 0.5 && !isSpinning) {
+    if (Math.abs(deltaY) > THRESHOLDS.swipe.minDistance && velocity > THRESHOLDS.swipe.minVelocity && !isSpinning) {
       handleSpin();
     }
   };
@@ -74,18 +77,20 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-900 to-black p-4 relative overflow-hidden">
       {/* Hexagonal Grid Background */}
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0"
         style={{
-          backgroundImage: `
-          linear-gradient(30deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
-          linear-gradient(150deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
-          linear-gradient(30deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
-          linear-gradient(150deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
-          linear-gradient(60deg, rgba(171, 71, 188, 0.1) 25%, transparent 25.5%, transparent 75%, rgba(171, 71, 188, 0.1) 75%, rgba(171, 71, 188, 0.1)),
-          linear-gradient(60deg, rgba(171, 71, 188, 0.1) 25%, transparent 25.5%, transparent 75%, rgba(171, 71, 188, 0.1) 75%, rgba(171, 71, 188, 0.1))
-        `,
-          backgroundSize: '80px 140px',
-          backgroundPosition: '0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px',
+          opacity: OPACITY.background.hexGrid,
+          backgroundImage: GRADIENTS.hexagonalGrid.angles.map((angle, i) => {
+            const color = i < 4 ? COLORS_EXTENDED.metallic.rim.outer : 'rgba(171, 71, 188, 0.1)';
+            const percent = GRADIENTS.hexagonalGrid.percentages;
+            if (i < 4) {
+              return `linear-gradient(${angle}deg, ${color} ${percent.start}%, transparent ${percent.start + percent.gap}%, transparent ${percent.end}%, ${color} ${percent.end + percent.gap}%, ${color})`;
+            } else {
+              return `linear-gradient(${angle}deg, ${color} ${percent.accent}%, transparent ${percent.accent + percent.accentGap}%, transparent ${percent.accentEnd}%, ${color} ${percent.accentEnd}%, ${color})`;
+            }
+          }).join(', '),
+          backgroundSize: GRADIENTS.hexagonalGrid.size,
+          backgroundPosition: GRADIENTS.hexagonalGrid.positions,
         }}
       />
 
@@ -96,11 +101,11 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
           background: `repeating-linear-gradient(
           to bottom,
           transparent 0,
-          transparent 2px,
-          rgba(255, 255, 255, 0.03) 2px,
-          rgba(255, 255, 255, 0.03) 4px
+          transparent ${GRADIENTS.scanlines.size},
+          ${COLORS_EXTENDED.ui.scanlines} ${GRADIENTS.scanlines.size},
+          ${COLORS_EXTENDED.ui.scanlines} ${parseInt(GRADIENTS.scanlines.size) * 2}px
         )`,
-          animation: 'scanlines 8s linear infinite',
+          animation: `scanlines ${GRADIENTS.scanlines.duration} linear infinite`,
         }}
       />
 
@@ -109,8 +114,8 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
         <div
           className="absolute inset-0 rounded-full"
           style={{
-            boxShadow: '0 0 60px rgba(171, 71, 188, 0.6), 0 0 120px rgba(171, 71, 188, 0.4)',
-            filter: 'blur(20px)',
+            boxShadow: `${SHADOWS.wheel.neonGlow.small}, ${SHADOWS.wheel.neonGlow.large}`,
+            filter: FILTERS.blur.glow,
             transform: 'scale(1.1)',
           }}
         />
@@ -122,8 +127,8 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
           style={{
             width: wheelSize,
             height: wheelSize,
-            filter: isSpinning && rotation > 720 ? 'blur(2px)' : 'none',
-            transition: 'filter 0.3s',
+            filter: isSpinning && rotation > THRESHOLDS.blur.rotationThreshold ? FILTERS.blur.spinning : 'none',
+            transition: `filter ${FILTERS.transition.filter}`,
           }}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
@@ -133,9 +138,9 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
             className="absolute inset-0 rounded-full"
             style={{
               boxShadow: `
-                0 0 50px rgba(0, 0, 0, 0.8),
-                inset 0 0 30px rgba(0, 0, 0, 0.5),
-                0 10px 40px rgba(0, 0, 0, 0.6)
+                ${SHADOWS.wheel.depth.outer},
+                ${SHADOWS.wheel.depth.inset},
+                ${SHADOWS.wheel.depth.drop}
               `,
             }}
           />
@@ -153,12 +158,12 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
               !isSpinning && 'animate-pulse'
             )}
             style={{
-              width: wheelSize * 0.25,
-              height: wheelSize * 0.25,
+              width: wheelSize * DIMENSIONS.wheel.hubSizeRatio,
+              height: wheelSize * DIMENSIONS.wheel.hubSizeRatio,
               boxShadow: `
-                0 0 40px rgba(171, 71, 188, 0.8),
-                0 0 80px rgba(171, 71, 188, 0.4),
-                inset 0 0 20px rgba(171, 71, 188, 0.3)
+                ${SHADOWS.wheel.hub.primary},
+                ${SHADOWS.wheel.hub.secondary},
+                ${SHADOWS.wheel.hub.inset}
               `,
             }}
           >
@@ -166,10 +171,10 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
               src="/images/finals-logo.webp"
               alt="The Finals"
               style={{
-                width: '70%',
-                height: '70%',
+                width: `${DIMENSIONS.wheel.logoSizeRatio * 100}%`,
+                height: `${DIMENSIONS.wheel.logoSizeRatio * 100}%`,
                 objectFit: 'contain',
-                filter: 'drop-shadow(0 0 10px rgba(171, 71, 188, 0.8))',
+                filter: SHADOWS.wheel.logo,
               }}
             />
           </div>
@@ -184,16 +189,18 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
           {isSpinning && (
             <>
               <div
-                className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-8 opacity-60"
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-8"
                 style={{
-                  background: 'linear-gradient(to bottom, transparent, #FF1744)',
+                  opacity: OPACITY.background.dataStream,
+                  background: `linear-gradient(to bottom, transparent, ${COLORS_EXTENDED.ui.dataStreamRed})`,
                   animation: 'dataStream 0.5s linear infinite',
                 }}
               />
               <div
-                className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-8 opacity-60"
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-8"
                 style={{
-                  background: 'linear-gradient(to bottom, transparent, #AB47BC)',
+                  opacity: OPACITY.background.dataStream,
+                  background: `linear-gradient(to bottom, transparent, ${COLORS_EXTENDED.ui.dataStreamPurple})`,
                   animation: 'dataStream 0.5s linear infinite 0.2s',
                 }}
               />
@@ -204,10 +211,10 @@ const ClassRoulette: React.FC<ClassRouletteProps> = ({ onComplete }) => {
             className="pointer"
             viewBox="0 0 40 40"
             style={{
-              width: wheelSize * 0.15,
-              height: wheelSize * 0.15,
+              width: wheelSize * DIMENSIONS.wheel.pointerSizeRatio,
+              height: wheelSize * DIMENSIONS.wheel.pointerSizeRatio,
               transform: 'rotate(180deg)',
-              filter: 'drop-shadow(0 0 20px rgba(255, 23, 68, 0.8))',
+              filter: SHADOWS.wheel.pointer,
             }}
           >
             <defs>

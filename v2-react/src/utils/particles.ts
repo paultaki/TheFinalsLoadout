@@ -1,24 +1,17 @@
 // Unified particle system for The Finals casino theme
 
+import { PHYSICS, NUMBERS, TIMING } from '../constants/physics';
+import { COLORS_EXTENDED, SHADOWS, ANIMATIONS, OPACITY } from '../constants/styles';
+
 export const PARTICLE_CONFIG = {
-  colors: ['#AB47BC', '#4FC3F7', '#FFD700', '#FF1744'],
+  colors: Object.values(COLORS_EXTENDED.particles),
   shapes: ['hexagon', 'triangle', 'circle'] as const,
-  count: {
-    desktop: 50,
-    mobile: 30,
-    tablet: 40,
-  },
+  count: NUMBERS.particleCount,
   glitchEffect: true,
   physics: {
-    gravity: 0.5,
-    velocity: {
-      min: 5,
-      max: 15,
-    },
-    lifetime: {
-      min: 800,
-      max: 1200,
-    },
+    gravity: PHYSICS.particle.gravity,
+    velocity: PHYSICS.particle.velocity,
+    lifetime: PHYSICS.particle.lifetime,
   },
 };
 
@@ -49,7 +42,11 @@ export function createParticle(x: number, y: number): Particle {
     vy: Math.sin(angle) * velocity,
     color: PARTICLE_CONFIG.colors[Math.floor(Math.random() * PARTICLE_CONFIG.colors.length)],
     shape: PARTICLE_CONFIG.shapes[Math.floor(Math.random() * PARTICLE_CONFIG.shapes.length)],
-    size: 4 + Math.random() * 4,
+    size: (() => {
+      const minSize = 4;
+      const maxSize = 8;
+      return minSize + Math.random() * (maxSize - minSize);
+    })(),
     lifetime:
       PARTICLE_CONFIG.physics.lifetime.min +
       Math.random() * (PARTICLE_CONFIG.physics.lifetime.max - PARTICLE_CONFIG.physics.lifetime.min),
@@ -69,9 +66,9 @@ export function updateParticle(particle: Particle, deltaTime: number): boolean {
   particle.vy += PARTICLE_CONFIG.physics.gravity * deltaTime;
 
   // Apply glitch effect
-  if (PARTICLE_CONFIG.glitchEffect && Math.random() < 0.05) {
-    particle.x += (Math.random() - 0.5) * 10;
-    particle.y += (Math.random() - 0.5) * 10;
+  if (PARTICLE_CONFIG.glitchEffect && Math.random() < PHYSICS.particle.glitchProbability) {
+    particle.x += (Math.random() - 0.5) * PHYSICS.particle.glitchMagnitude;
+    particle.y += (Math.random() - 0.5) * PHYSICS.particle.glitchMagnitude;
   }
 
   return true;
@@ -79,8 +76,9 @@ export function updateParticle(particle: Particle, deltaTime: number): boolean {
 
 export function createParticleBurst(x: number, y: number, count?: number): Particle[] {
   const isMobile = window.innerWidth < 768;
+  const isTablet = window.innerWidth < 1024;
   const particleCount =
-    count || (isMobile ? PARTICLE_CONFIG.count.mobile : PARTICLE_CONFIG.count.desktop);
+    count || (isMobile ? PARTICLE_CONFIG.count.mobile : isTablet ? PARTICLE_CONFIG.count.tablet : PARTICLE_CONFIG.count.desktop);
 
   const particles: Particle[] = [];
   for (let i = 0; i < particleCount; i++) {
@@ -115,9 +113,9 @@ export function unifiedCelebration(type: 'jackpot' | 'win' | 'rare' = 'win') {
     width: 100%;
     height: 100%;
     background: radial-gradient(circle, ${
-      type === 'jackpot' ? '#FFD700' : type === 'rare' ? '#FF1744' : '#AB47BC'
+      type === 'jackpot' ? COLORS_EXTENDED.gold.primary : type === 'rare' ? COLORS_EXTENDED.particles.red : COLORS_EXTENDED.particles.purple
     } 0%, transparent 60%);
-    animation: screenFlash 0.3s ease-out;
+    animation: screenFlash ${ANIMATIONS.screenFlash.duration} ${ANIMATIONS.screenFlash.timing};
   `;
   container.appendChild(flash);
 
@@ -137,7 +135,7 @@ export function unifiedCelebration(type: 'jackpot' | 'win' | 'rare' = 'win') {
       width: ${particle.size}px;
       height: ${particle.size}px;
       background: ${particle.color};
-      box-shadow: 0 0 ${particle.size * 2}px ${particle.color};
+      box-shadow: ${SHADOWS.particle(particle.color, particle.size)};
       pointer-events: none;
     `;
 
@@ -146,7 +144,8 @@ export function unifiedCelebration(type: 'jackpot' | 'win' | 'rare' = 'win') {
       el.style.height = '0';
       el.style.borderLeft = `${particle.size}px solid transparent`;
       el.style.borderRight = `${particle.size}px solid transparent`;
-      el.style.borderBottom = `${particle.size * 1.5}px solid ${particle.color}`;
+      const triangleHeightRatio = 1.5;
+      el.style.borderBottom = `${particle.size * triangleHeightRatio}px solid ${particle.color}`;
       el.style.background = 'transparent';
     } else if (particle.shape === 'circle') {
       el.style.borderRadius = '50%';
@@ -168,7 +167,7 @@ export function unifiedCelebration(type: 'jackpot' | 'win' | 'rare' = 'win') {
       if (el && updateParticle(particle, deltaTime)) {
         el.style.left = `${particle.x}px`;
         el.style.top = `${particle.y}px`;
-        el.style.opacity = `${1 - (currentTime - particle.created) / particle.lifetime}`;
+        el.style.opacity = `${OPACITY.particle.calculation(particle.created, particle.lifetime)}`;
         activeParticles++;
       } else if (el) {
         el.style.display = 'none';
@@ -179,7 +178,7 @@ export function unifiedCelebration(type: 'jackpot' | 'win' | 'rare' = 'win') {
       requestAnimationFrame(animate);
     } else {
       // Cleanup
-      setTimeout(() => container.remove(), 500);
+      setTimeout(() => container.remove(), TIMING.particles.cleanupDelay);
     }
   };
 
@@ -188,6 +187,6 @@ export function unifiedCelebration(type: 'jackpot' | 'win' | 'rare' = 'win') {
   // Add glitch effect if enabled
   if (PARTICLE_CONFIG.glitchEffect) {
     document.body.classList.add('glitch-transition');
-    setTimeout(() => document.body.classList.remove('glitch-transition'), 300);
+    setTimeout(() => document.body.classList.remove('glitch-transition'), parseInt(ANIMATIONS.glitchTransition.duration));
   }
 }
