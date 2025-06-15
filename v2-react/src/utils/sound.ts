@@ -44,6 +44,6 @@ export const createAudioElement = (soundType: SoundType): HTMLAudioElement => {
 };
 
 // Legacy functions for backward compatibility
-export const playTickSound = () => playSound('tick');
-export const playWinSound = () => playSound('win');
-export const playJackpotSound = () => playSound('jackpot');
+export const playTickSound = (): void => playSound('tick');
+export const playWinSound = (): void => playSound('win');
+export const playJackpotSound = (): void => playSound('jackpot');

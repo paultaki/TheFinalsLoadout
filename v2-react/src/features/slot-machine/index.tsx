@@ -6,6 +6,11 @@ import { UI_CONSTANTS } from '../../constants/ui';
 import type { ClassType } from '../../types';
 import './SlotMachine.css';
 
+interface SlotMachineClass {
+  init: () => void;
+  animateSlots: (loadout: Loadout, callback: () => void) => void;
+}
+
 interface Loadout {
   weapon: { name: string; category: 'weapon' };
   specialization: { name: string; category: 'specialization' };
@@ -34,14 +39,14 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
   const state = useGameState();
   const { addLoadout } = useLoadoutHistory();
   const containerRef = useRef<HTMLDivElement>(null);
-  const slotMachineRef = useRef<any>(null);
+  const slotMachineRef = useRef<SlotMachineClass | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [isMachineInitialized, setIsMachineInitialized] = useState(false);
 
   // Load the slot machine script
   useEffect(() => {
     // Check if SlotMachine class already exists
-    if ((window as any).SlotMachine) {
+    if (window.SlotMachine) {
       setIsReady(true);
       return;
     }
@@ -51,7 +56,7 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
     if (existingScript) {
       // Wait for existing script to load
       const checkLoaded = () => {
-        if ((window as any).SlotMachine) {
+        if (window.SlotMachine) {
           setIsReady(true);
         } else {
           const checkInterval = 100;
@@ -76,7 +81,7 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
   useEffect(() => {
     if (!isReady || !containerRef.current || slotMachineRef.current) return;
 
-    const SlotMachineClass = (window as any).SlotMachine;
+    const SlotMachineClass = window.SlotMachine;
     if (!SlotMachineClass) return;
 
     // Create unique ID for this instance
@@ -88,7 +93,7 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
     slotMachineRef.current.init();
 
     // Set global state for sound
-    (window as any).state = { soundEnabled: true };
+    window.state = { soundEnabled: true };
 
     // Mark as initialized
     setIsMachineInitialized(true);
@@ -105,11 +110,6 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
     )
       return;
 
-    console.log('Starting slot machine animation', {
-      initialized: isMachineInitialized,
-      class: state.chosenClass,
-      spins: state.spinsLeft,
-    });
 
     // Small delay to ensure DOM is ready
     const timer = setTimeout(() => {
@@ -117,7 +117,6 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
 
       // Start animation
       slotMachineRef.current.animateSlots(loadout, () => {
-        console.log('Slot animation complete');
 
         // Only add to history on the final spin
         if (state.spinsLeft === 1) {
@@ -145,12 +144,20 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
   }, [isMachineInitialized, state.chosenClass, state.spinsLeft]); // Proper dependencies
 
   const generateLoadout = (): Loadout => {
+    interface ClassData {
+      weapons: string[];
+      specializations: string[];
+      gadgets: string[];
+    }
+
+    type ClassDataMap = Record<ClassType, ClassData>;
+
     const classType = state.chosenClass as ClassType;
     const minSpins = 0;
     const spinsRemaining = Math.max(minSpins, state.spinsLeft - 1);
 
     // Mock data - replace with actual game data
-    const classData = {
+    const classData: ClassDataMap = {
       Light: {
         weapons: ['XP-54', 'M11', 'SH1900', 'SR-84', 'V9S'],
         specializations: ['Cloaking_Device', 'Evasive_Dash', 'Grappling_Hook'],

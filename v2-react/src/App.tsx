@@ -42,7 +42,6 @@ const GameFlow: React.FC = () => {
   const [autoSpinRoulette, setAutoSpinRoulette] = useState(false);
 
   const handleSpinComplete = (result: { value: string; spins: number; isJackpot: boolean }) => {
-    console.log('Spin complete:', result);
 
     if (result.isJackpot) {
       // Jackpot result is already handled by ResultModal in SpinCountWheel
@@ -65,7 +64,6 @@ const GameFlow: React.FC = () => {
   const handleSlotResult = (loadout: Loadout) => {
     addToHistory(loadout);
     runSlot();
-    console.log('Loadout generated:', loadout);
   };
 
   // Auto-spin roulette when needed

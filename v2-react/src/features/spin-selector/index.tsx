@@ -142,7 +142,6 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
 
   // Handle stop
   const handleStop = useCallback(() => {
-    console.log('HandleStop called');
     setIsSpinning(false);
     isSpinningRef.current = false;
     isDeceleratingRef.current = false;
@@ -311,7 +310,7 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
 
   // Idle animation
   const startIdleAnimation = useCallback(() => {
-    const idleAnimate = () => {
+    const idleAnimate = (): void => {
       if (!isSpinningRef.current) {
         currentDistanceRef.current += 0.3;
 
@@ -330,7 +329,7 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
     idleAnimate();
   }, [getCardHeight]);
 
-  const stopIdleAnimation = () => {
+  const stopIdleAnimation = (): void => {
     if (idleAnimationIdRef.current) {
       cancelAnimationFrame(idleAnimationIdRef.current);
       idleAnimationIdRef.current = undefined;
@@ -362,7 +361,7 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
   }, [isSpinning]);
 
   // Create confetti
-  const createConfetti = () => {
+  const createConfetti = (): void => {
     for (let i = 0; i < 50; i++) {
       const confetti = document.createElement('div');
       confetti.className = 'confetti-particle';

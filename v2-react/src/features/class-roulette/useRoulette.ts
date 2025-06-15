@@ -21,8 +21,8 @@ export const useRoulette = () => {
     currentClass: null,
   });
 
-  const animationRef = useRef<any>(null);
-  const gsapTimelineRef = useRef<any>(null);
+  const animationRef = useRef<{ rotation: number } | null>(null);
+  const gsapTimelineRef = useRef<gsap.core.Tween | null>(null);
 
   const spin = useCallback(
     (forcedResult?: ClassType): Promise<ClassType> => {
@@ -59,8 +59,8 @@ export const useRoulette = () => {
         playSound('spinning');
 
         // GSAP animation
-        if (typeof (window as any).gsap !== 'undefined') {
-          const gsap = (window as any).gsap;
+        if (typeof window.gsap !== 'undefined') {
+          const gsap = window.gsap;
 
           // Kill any existing timeline
           if (gsapTimelineRef.current) {

@@ -34,7 +34,7 @@ export const useSound = (src: string, options: SoundOptions = {}) => {
     };
   }, [src, options.volume, options.loop]);
 
-  const play = () => {
+  const play = (): void => {
     // Find an available audio instance
     const audio = audioPoolRef.current.find((a) => a.paused) || audioPoolRef.current[0];
     if (audio) {
@@ -47,19 +47,19 @@ export const useSound = (src: string, options: SoundOptions = {}) => {
 };
 
 // Legacy functions for backward compatibility
-export const playTickSound = () => {
+export const playTickSound = (): void => {
   const audio = new Audio('/sounds/click.mp3');
   audio.volume = 0.4;
   audio.play().catch(() => {});
 };
 
-export const playWinSound = () => {
+export const playWinSound = (): void => {
   const audio = new Audio('/sounds/ding.mp3');
   audio.volume = 0.6;
   audio.play().catch(() => {});
 };
 
-export const playJackpotSound = () => {
+export const playJackpotSound = (): void => {
   const audio = new Audio('/sounds/ding-ding.mp3');
   audio.volume = 0.8;
   audio.play().catch(() => {});

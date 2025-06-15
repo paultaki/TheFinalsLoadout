@@ -2,7 +2,7 @@ export interface SlotItem {
   name: string;
   icon: string;
   type: 'weapon' | 'specialization' | 'gadget';
-  rarity?: string;
+  rarity?: 'common' | 'rare' | 'epic' | 'legendary';
 }
 
 export interface Loadout {
