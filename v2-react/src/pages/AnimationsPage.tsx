@@ -59,7 +59,7 @@ const AnimationsPage: React.FC = () => {
       <NavBar />
 
       {/* Hero Section - Mobile Optimized */}
-      <section id="home" className="relative overflow-hidden pt-12">
+      <section id="home" className="relative overflow-hidden pt-0">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
@@ -84,12 +84,13 @@ const AnimationsPage: React.FC = () => {
 
         <div className="relative container mx-auto px-4 pt-2 pb-1">
           <div className="text-center">
-            {/* Centered Logo - Reduced by 50% */}
+            {/* Centered Logo - Reduced to very small size */}
             <div className="mb-1">
               <img 
                 src="/images/the-finals-logo.webp" 
                 alt="The Finals" 
-                className="h-4 sm:h-5 w-auto mx-auto filter drop-shadow-[0_0_15px_rgba(255,39,231,0.5)]"
+                className="w-auto mx-auto filter drop-shadow-[0_0_15px_rgba(255,39,231,0.5)]"
+                style={{ height: '20px', maxHeight: '20px' }}
               />
             </div>
 
