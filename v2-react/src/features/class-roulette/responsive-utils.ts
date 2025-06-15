@@ -17,14 +17,13 @@ export const calculateWheelSize = (): number => {
  * Hook that provides responsive wheel size and updates on window resize
  */
 export const useWheelSize = () => {
-  const [wheelSize, setWheelSize] = React.useState(0);
+  const [wheelSize, setWheelSize] = React.useState(() => calculateWheelSize());
 
   React.useEffect(() => {
     const updateSize = () => {
       setWheelSize(calculateWheelSize());
     };
 
-    updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
   }, []);

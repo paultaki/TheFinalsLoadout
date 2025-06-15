@@ -26,6 +26,9 @@ const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotati
 
   // Pre-render static wheel to offscreen canvas
   useEffect(() => {
+    // Don't initialize if size is 0
+    if (size === 0) return;
+    
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -55,6 +58,9 @@ const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotati
 
   // Draw rotated wheel
   useEffect(() => {
+    // Don't draw if size is 0
+    if (size === 0) return;
+    
     const canvas = canvasRef.current;
     const offscreen = offscreenCanvasRef.current;
     if (!canvas || !offscreen) return;
@@ -65,6 +71,9 @@ const WheelCanvas = forwardRef<WheelCanvasRef, WheelCanvasProps>(({ size, rotati
     drawRotatedWheel(ctx, offscreen, size, rotation);
   }, [rotation, size]);
 
+  // Don't render if size is 0
+  if (size === 0) return null;
+  
   return (
     <canvas ref={canvasRef} className="absolute inset-0" style={{ width: size, height: size }} />
   );
