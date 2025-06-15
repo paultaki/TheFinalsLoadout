@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLoadoutHistory } from '../../context/LoadoutHistoryContext';
+import styles from './LoadoutHistory.module.css';
 
 /**
  * Displays the loadout generation history stored in localStorage
@@ -23,7 +24,7 @@ const LoadoutHistory: React.FC = () => {
 
   return (
     <div className="w-full px-4 py-0">
-      <div className="max-w-7xl mx-auto" style={{ width: '90%' }}>
+      <div className="mx-auto" style={{ maxWidth: '750px' }}>
         <div className="relative backdrop-blur-[6px] bg-white/5 rounded-[10px] p-3" 
           style={{
             background: 'rgba(255, 255, 255, 0.05)',
@@ -56,34 +57,49 @@ const LoadoutHistory: React.FC = () => {
             {history.map((loadout, index) => (
               <div key={`${loadout.timestamp}-${index}`}>
                 <div className="flex flex-col p-3">
-                  {/* Header row */}
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <span style={{ fontSize: '1.2rem' }}>
-                        {loadout.class === 'Light' ? '⚡' : loadout.class === 'Medium' ? '🛡️' : '💪'}
-                      </span>
-                      <span className="font-bold">{loadout.class.toUpperCase()}</span>
-                    </div>
-                    <span className="text-cyan-400 text-[11px] font-bold">
-                      {formatTime(loadout.timestamp)}
-                    </span>
+                  {/* Class indicator */}
+                  <div className={`${styles['class-indicator']} ${styles[loadout.class.toLowerCase()]} mb-2`}>
+                    <span>{loadout.class === 'Light' ? '⚡' : loadout.class === 'Medium' ? '🛡️' : '💪'}</span>
+                    <span>{loadout.class.toUpperCase()}</span>
                   </div>
                   
-                  {/* Body rows */}
-                  <div className="space-y-1 text-sm">
-                    <div className="text-gray-300">
-                      <span className="text-gray-500">Weapon:</span> {loadout.weapon.replace(/_/g, ' ')}
+                  {/* Chips Layout */}
+                  <div className="flex flex-wrap gap-2">
+                    {/* Row 1: Weapon & Spec */}
+                    <div className="flex gap-2 w-full">
+                      <div className={`${styles['chip-item']} flex-1`}>
+                        <span className={styles['chip-icon']}>⚔</span>
+                        <span className={styles['chip-text']}>{loadout.weapon.replace(/_/g, ' ')}</span>
+                      </div>
+                      <div className={`${styles['chip-item']} flex-1`}>
+                        <span className={styles['chip-icon']}>⚡</span>
+                        <span className={styles['chip-text']}>{loadout.specialization.replace(/_/g, ' ')}</span>
+                      </div>
                     </div>
-                    <div className="text-gray-300">
-                      <span className="text-gray-500">Spec:</span> {loadout.specialization.replace(/_/g, ' ')}
+                    
+                    {/* Row 2: Gadgets */}
+                    <div className="flex gap-2 w-full">
+                      <div className={`${styles['chip-item']} flex-1`}>
+                        <span className={styles['chip-icon']}>🛠</span>
+                        <span className={styles['chip-text']}>{loadout.gadget1.replace(/_/g, ' ')}</span>
+                      </div>
+                      <div className={`${styles['chip-item']} flex-1`}>
+                        <span className={styles['chip-icon']}>🛠</span>
+                        <span className={styles['chip-text']}>{loadout.gadget2.replace(/_/g, ' ')}</span>
+                      </div>
                     </div>
-                    <div className="text-gray-300">
-                      <span className="text-gray-500">Gadgets:</span>{' '}
-                      <span style={{ color: '#FF27E7' }}>
-                        {[loadout.gadget1, loadout.gadget2, loadout.gadget3]
-                          .map(g => g.replace(/_/g, ' '))
-                          .join(' • ')}
-                      </span>
+                    
+                    {/* Row 3: Last gadget & Timestamp */}
+                    <div className="flex gap-2 w-full items-center">
+                      <div className={`${styles['chip-item']} flex-1`}>
+                        <span className={styles['chip-icon']}>🛠</span>
+                        <span className={styles['chip-text']}>{loadout.gadget3.replace(/_/g, ' ')}</span>
+                      </div>
+                      <div className="flex-1 text-right">
+                        <span className="text-cyan-400 text-[10px] font-mono">
+                          {formatTime(loadout.timestamp)}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>

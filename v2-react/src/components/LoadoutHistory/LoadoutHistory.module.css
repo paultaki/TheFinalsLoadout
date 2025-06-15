@@ -1,0 +1,70 @@
+/* Chip styles for loadout history cards */
+.chip-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  min-height: 32px;
+  transition: all 0.2s ease;
+}
+
+.chip-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.chip-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.chip-text {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .chip-item {
+    padding: 4px 8px;
+    min-height: 28px;
+  }
+  
+  .chip-icon {
+    font-size: 12px;
+  }
+  
+  .chip-text {
+    font-size: 10px;
+  }
+}
+
+/* Class indicators */
+.class-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.class-indicator.light {
+  color: #00e5ff;
+}
+
+.class-indicator.medium {
+  color: #ff9800;
+}
+
+.class-indicator.heavy {
+  color: #f44336;
+}

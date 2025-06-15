@@ -10,27 +10,21 @@ const StartOverButton: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center py-12">
+    <div className="flex justify-center py-4">
       <div className="relative group start-over-container">
         {/* Particle background */}
         <div className="particle-bg" />
         
         {/* Animated background glow */}
-        <div className="absolute -inset-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-2xl blur-xl start-over-glow" />
+        <div className="absolute -inset-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-3xl blur-xl start-over-glow" />
         
-        {/* Rotating gradient border */}
-        <div 
-          className="absolute -inset-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-2xl opacity-80 group-hover:opacity-100"
-          style={{
-            background: 'conic-gradient(from 0deg, #FFD700, #FF8C00, #FF4500, #FFD700)',
-            animation: 'spin 8s linear infinite'
-          }}
-        />
+        {/* Static gradient border */}
+        <div className="absolute -inset-[2px] bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-3xl opacity-80 group-hover:opacity-100" />
         
         {/* Main button */}
         <button
           onClick={handleStartOver}
-          className="relative px-16 py-8 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-black text-3xl rounded-2xl transform hover:scale-110 transition-all duration-300 shadow-2xl hover:shadow-yellow-500/50 uppercase tracking-wider overflow-hidden"
+          className="relative px-12 py-6 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-black text-2xl rounded-3xl transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-yellow-500/50 uppercase tracking-wider overflow-hidden"
           style={{
             boxShadow: '0 10px 40px rgba(255, 215, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.5), 0 0 80px rgba(255, 140, 0, 0.3)',
             textShadow: '0 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.5)'

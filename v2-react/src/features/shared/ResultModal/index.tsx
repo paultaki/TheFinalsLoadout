@@ -44,7 +44,7 @@ const ResultModal: React.FC<ResultModalProps> = ({
             </p>
             <p className="text-3xl text-center mb-6 text-yellow-400 font-bold">{spins} Spins</p>
 
-            <div className="flex gap-4 justify-center">
+            <div className="flex gap-6 justify-center">
               <button
                 onClick={() => {
                   onSelectClass?.('Light');

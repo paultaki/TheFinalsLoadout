@@ -51,7 +51,7 @@ const AnimationsPage: React.FC = () => {
   };
 
   const content = (
-    <>
+    <div className="flex flex-col min-h-screen">
       {/* Cyber Grid Background */}
       <div className="cyber-grid" />
       
@@ -59,7 +59,7 @@ const AnimationsPage: React.FC = () => {
       <NavBar />
 
       {/* Hero Section - Mobile Optimized */}
-      <section id="home" className="relative overflow-hidden pt-10">
+      <section id="home" className="relative pt-20">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
@@ -91,7 +91,7 @@ const AnimationsPage: React.FC = () => {
                 alt="The Finals" 
                 className="mx-auto filter drop-shadow-[0_0_15px_rgba(255,39,231,0.5)]"
                 style={{ 
-                  width: window.innerWidth >= 768 ? '520px' : '80%',
+                  width: window.innerWidth >= 768 ? '260px' : '60%',
                   height: 'auto',
                   maxWidth: '80vw'
                 }}
@@ -123,10 +123,12 @@ const AnimationsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Wrap both sections in a single LoadoutHistoryProvider */}
-      <LoadoutHistoryProvider>
-        {/* Main Content - Animations */}
-        <section id="generator" className="relative pt-2 pb-3 mt-4">
+      {/* Main content wrapper that grows to push footer down */}
+      <div className="flex-1">
+        {/* Wrap both sections in a single LoadoutHistoryProvider */}
+        <LoadoutHistoryProvider>
+          {/* Main Content - Animations */}
+          <section id="generator" className="relative pt-2 pb-3 mt-4">
           {/* Section Background */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
           
@@ -150,11 +152,12 @@ const AnimationsPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Loadout History Section */}
-        <section id="history" className="py-0 relative pb-6">
-          <LoadoutHistory />
-        </section>
-      </LoadoutHistoryProvider>
+          {/* Loadout History Section */}
+          <section id="history" className="py-0 relative pb-6">
+            <LoadoutHistory />
+          </section>
+        </LoadoutHistoryProvider>
+      </div>
 
       {/* Footer */}
       <Footer />
@@ -165,11 +168,11 @@ const AnimationsPage: React.FC = () => {
       {/* Performance Monitor for Development */}
       {isMobile && <MobilePerformanceMonitor />}
 
-    </>
+    </div>
   );
   
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       {isMobile && isTouchDevice ? (
         <PullToRefresh onRefresh={handleRefresh}>
           {content}

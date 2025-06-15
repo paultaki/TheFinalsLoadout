@@ -13,7 +13,7 @@ export const SOUNDS = {
   whoosh: '/sounds/spinning.mp3',
   victory: '/sounds/chang.mp3',
   tabbyTune: '/sounds/Tabby Tune.mp3',
-  wheelBeep: '/sounds/wheel-beep.mp3',
+  wheelBeep: '/sounds/beep.mp3',
   ding: '/sounds/ding.mp3',
   dingDing: '/sounds/ding-ding.mp3',
 } as const;

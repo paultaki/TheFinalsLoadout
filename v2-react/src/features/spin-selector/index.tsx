@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useGameDispatch } from '../../hooks/useGameState';
 import { useSound } from '../../utils/audio';
 import ResultModal from '../../components/ResultModal';
+import PullSpinButton from './PullSpinButton';
 import { animateTickerCollision } from './animations';
 import type { SpinCountWheelProps, ModalResult } from './types';
 import { INFINITE_CARDS, createConfetti, getCardHeight, getWinnerText } from './helpers';
@@ -20,13 +21,14 @@ import './styles.css';
  */
 const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
   const { setClass, setSpins, finishRoulette } = useGameDispatch();
-  const playBeep = useSound('/sounds/wheel-beep.mp3', { volume: 0.2 });
+  const playBeep = useSound('/sounds/beep.mp3', { volume: 0.2 });
   const playDing = useSound('/sounds/ding.mp3', { volume: 0.6 });
   const playDingDing = useSound('/sounds/ding-ding.mp3', { volume: 0.7 });
   const [isSpinning, setIsSpinning] = useState(false);
   const [showWinnerBanner, setShowWinnerBanner] = useState(false);
   const [winnerText, setWinnerText] = useState('');
   const [isFrameGlowing, setIsFrameGlowing] = useState(false);
+  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number }>>([]);
   const [modalResult, setModalResult] = useState<ModalResult | null>(null);
 
   // Refs
@@ -301,12 +303,24 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
           </div>
         </div>
 
-        <button className="spin-button" ref={spinBtnRef} onClick={spin} disabled={isSpinning}>
-          {isSpinning ? 'Spinning…' : 'Pull to Spin'}
-        </button>
+        <PullSpinButton onSpin={spin} disabled={isSpinning} />
       </div>
 
       <div className={`winner-banner ${showWinnerBanner ? 'show' : ''}`}>{winnerText}</div>
+
+      {/* Particle effects container */}
+      <div className="particle-container">
+        {particles.map(particle => (
+          <div
+            key={particle.id}
+            className="particle"
+            style={{
+              left: particle.x,
+              top: particle.y,
+            }}
+          />
+        ))}
+      </div>
 
       {modalResult && (
         <ResultModal

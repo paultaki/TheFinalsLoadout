@@ -1,6 +1,5 @@
 import React from 'react';
 import SlotMachine from '../features/slot-machine';
-import LoadoutHistory from './LoadoutHistory';
 import StartOverButton from './StartOverButton';
 import type { Loadout } from '../types';
 
@@ -11,21 +10,18 @@ interface SlotMachineLayoutProps {
 }
 
 /**
- * Layout wrapper for slot machine that includes loadout history and start over button
+ * Layout wrapper for slot machine that includes start over button
  */
 const SlotMachineLayout: React.FC<SlotMachineLayoutProps> = ({ spinsLeft, isFinalSpin, onResult }) => {
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col">
+    <div className="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center">
       {/* Slot Machine */}
-      <div className="flex-1">
+      <div className="w-full">
         <SlotMachine images={[]} onResult={onResult} isFinalSpin={isFinalSpin} />
       </div>
 
       {/* Start Over button when all spins are done */}
       {spinsLeft === 0 && <StartOverButton />}
-
-      {/* Loadout History */}
-      <LoadoutHistory />
     </div>
   );
 };

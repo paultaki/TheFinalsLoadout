@@ -85,14 +85,14 @@ const GameFlow: React.FC = () => {
   switch (state.stage) {
     case 'SPIN':
       return (
-        <>
+        <div className="min-h-screen flex items-center justify-center">
           <SpinCountWheel onSpinComplete={handleSpinComplete} />
-        </>
+        </div>
       );
 
     case 'ROULETTE':
       return (
-        <>
+        <div className="min-h-screen flex items-center justify-center">
           {FEATURE_FLAGS.USE_NEW_ROULETTE ? (
             <RouletteWheel onClassSelected={handleRouletteComplete} />
           ) : (
@@ -108,16 +108,16 @@ const GameFlow: React.FC = () => {
               </div>
             </React.Suspense>
           )}
-        </>
+        </div>
       );
 
     case 'SLOTS':
       if (!state.chosenClass) {
         // Waiting for jackpot class selection - show spin selector with modal
         return (
-          <>
+          <div className="min-h-screen flex items-center justify-center">
             <SpinCountWheel onSpinComplete={handleSpinComplete} />
-          </>
+          </div>
         );
       }
 

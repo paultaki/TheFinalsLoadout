@@ -169,7 +169,7 @@
     inset 0 2px 4px rgba(0, 0, 0, 0.5);
   position: relative;
   overflow: hidden;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
   background: linear-gradient(to bottom, #0a0a0a 0%, #1a1a1a 100%);
   border: 2px solid rgba(171, 71, 188, 0.5);
   color: #FFD700;
@@ -199,9 +199,20 @@
 .card.winner {
   animation: winnerGlow 1s ease-out, digitalFlicker 3s infinite;
   box-shadow: 
-    0 0 30px rgba(255, 215, 0, 0.8), 
+    0 0 40px rgba(255, 215, 0, 0.9), 
+    0 0 80px rgba(255, 215, 0, 0.6),
     0 4px 12px rgba(0, 0, 0, 0.3),
-    inset 0 0 20px rgba(255, 215, 0, 0.3);
+    inset 0 0 30px rgba(255, 215, 0, 0.4);
+  transform: scale(1.05);
+}
+
+/* Hover effects for cards */
+.card:hover {
+  box-shadow: 
+    0 0 20px rgba(79, 195, 247, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    inset 0 0 10px rgba(79, 195, 247, 0.1);
+  transform: translateX(-2px);
 }
 
 @keyframes winnerGlow {
@@ -391,14 +402,22 @@
   }
 }
 
-/* Cyberpunk Button */
+/* Cyberpunk Button with Shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 .spin-button {
   margin-top: 16px;
   width: 100%;
   padding: clamp(14px, 3vw, 24px) clamp(24px, 6vw, 48px);
   font-size: clamp(16px, 3.5vw, 24px);
   font-weight: bold;
-  background: linear-gradient(135deg, #AB47BC 0%, #7B1FA2 100%);
+  background: linear-gradient(120deg,
+    #7b3dff 0%, #c13dff 20%, #ff4dd2 40%, #c13dff 60%, #7b3dff 80%);
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
   color: white;
   border: 2px solid #FFD700;
   border-radius: 9999px;
@@ -413,13 +432,6 @@
   letter-spacing: 2px;
   position: relative;
   overflow: hidden;
-  animation: pulse 2s infinite ease-in-out;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
 }
 
 .spin-button::before {
@@ -441,9 +453,7 @@
 }
 
 .spin-button:hover:not(:disabled) {
-  animation: none;
-  transform: scale(1.08);
-  transition: transform 90ms ease-out;
+  transform: translateY(-2px);
   box-shadow: 
     0 12px 32px rgba(171, 71, 188, 0.6),
     0 0 60px rgba(171, 71, 188, 0.4),
@@ -593,5 +603,195 @@
   
   .wheel-container {
     padding: 12px; /* Reduce container padding */
+  }
+}
+
+/* Pull to Spin Banner - Removed duplicate element */
+
+/* Enhanced Visual Polish */
+.wheel-frame.glowing {
+  box-shadow: 
+    inset 0 4px 12px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(255, 107, 53, 0.6),
+    0 0 80px rgba(255, 107, 53, 0.3);
+  border-color: rgba(255, 107, 53, 0.8);
+}
+
+/* Particle effect styles */
+.particle-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 215, 0, 0.8);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+  animation: particleFloat 3s ease-out forwards;
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-200px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Enhanced spin button */
+.spin-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.spin-button::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #ff6b35, #f7931e, #ff6b35);
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: -1;
+  animation: rotateGradient 3s linear infinite;
+}
+
+.spin-button:not(:disabled):hover::before {
+  opacity: 1;
+}
+
+@keyframes rotateGradient {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Ticker enhancements */
+.ticker {
+  filter: drop-shadow(0 0 8px rgba(255, 107, 53, 0.6));
+}
+
+.ticker-triangle {
+  box-shadow: 
+    0 0 20px rgba(255, 107, 53, 0.8),
+    inset 0 0 10px rgba(255, 107, 53, 0.4);
+}
+
+/* Card selection highlight */
+.card[data-index] {
+  position: relative;
+}
+
+.card[data-index]::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, transparent, rgba(79, 195, 247, 0.4), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  border-radius: 12px;
+}
+
+/* Enhanced peg animations */
+.peg {
+  transition: all 0.2s ease;
+}
+
+.card:hover .peg {
+  box-shadow: 
+    0 0 15px rgba(255, 215, 0, 0.8),
+    0 0 30px rgba(255, 215, 0, 0.4);
+  transform: scale(1.2);
+}
+
+/* Mobile responsiveness improvements */
+@media (max-width: 480px) {
+  .pull-to-spin-banner {
+    bottom: 40px;
+    left: -60px;
+    width: 220px;
+    height: 40px;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+  }
+  
+  .spin-count-wheel h1 {
+    font-size: 1.5rem;
+    margin: 10px 0;
+  }
+  
+  .wheel-frame {
+    height: clamp(300px, 50vh, 400px);
+  }
+  
+  .card {
+    height: 60px;
+    font-size: 24px;
+    margin: 4px 0;
+  }
+  
+  .ticker {
+    right: 8px;
+  }
+  
+  .spin-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .lever-container {
+    margin-left: 12px !important;
+  }
+  
+  .particle {
+    width: 3px;
+    height: 3px;
+  }
+}
+
+/* Smooth scrolling for better mobile experience */
+.wheel-list {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Prevent text selection on mobile */
+.card, .spin-button, .lever {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Better touch targets for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .spin-button {
+    min-height: 44px;
+    min-width: 120px;
+  }
+  
+  .lever-hit-area {
+    top: -30px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
   }
 }
