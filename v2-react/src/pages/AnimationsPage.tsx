@@ -117,20 +117,23 @@ const AnimationsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="relative container mx-auto px-4 py-4 sm:py-8">
+        <div className="relative container mx-auto px-4 py-2 sm:py-4">
           <div className="text-center">
             {/* Logo removed - NavBar already has one */}
 
             {/* Title with Holographic Effect */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 tracking-tight">
-              <span className="holographic-text">
-                LOADOUT GENERATOR
-              </span>
-            </h1>
+            <div className="mb-2">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
+                <span className="holographic-text">THE FINALS</span>
+              </h1>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight mt-1">
+                <span className="holographic-text">LOADOUT GENERATOR</span>
+              </h2>
+            </div>
 
-            {/* Season Badge with Glow */}
+            {/* Season Badge with Glow - Moved below title with less spacing */}
             <div className="inline-flex items-center gap-2 px-4 py-2 glass-card 
-                          border border-yellow-400/50 rounded-full mb-6 pulse-glow">
+                          border border-yellow-400/50 rounded-full mb-4 pulse-glow">
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
@@ -144,7 +147,7 @@ const AnimationsPage: React.FC = () => {
             <TouchWrapper 
               onTap={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
               onSwipeUp={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-              className="inline-block mt-8"
+              className="inline-block mt-4"
             >
               <div className="animate-bounce cursor-pointer">
                 <svg className="w-6 h-6 mx-auto text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,13 +165,13 @@ const AnimationsPage: React.FC = () => {
       {/* Wrap both sections in a single LoadoutHistoryProvider */}
       <LoadoutHistoryProvider>
         {/* Main Content - Animations */}
-        <section id="generator" className="relative py-6 sm:py-8">
+        <section id="generator" className="relative py-3 sm:py-4">
           {/* Section Background */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
           
           <div className="relative container mx-auto px-4">
-            {/* Section Header - Compact */}
-            <div className="text-center mb-6">
+            {/* Section Header - Compact with reduced spacing */}
+            <div className="text-center mb-3">
               <h2 className="text-xl sm:text-2xl font-bold gradient-text uppercase tracking-wider">
                 Generate Your Loadout
               </h2>

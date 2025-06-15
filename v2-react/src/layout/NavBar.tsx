@@ -24,7 +24,7 @@ const NavBar: React.FC = () => {
               <img 
                 src="/images/the-finals-logo.webp" 
                 alt="The Finals" 
-                className="h-7 sm:h-8 w-auto animate-pulse-slow"
+                className="h-3.5 sm:h-4 w-auto animate-pulse-slow"
               />
               <span className="hidden sm:inline text-lg font-bold gradient-text">
                 Loadout Generator

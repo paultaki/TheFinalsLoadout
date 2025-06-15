@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useGameState, useGameDispatch } from '../hooks/useGameState';
 import SpinCountWheel from '../features/spin-selector';
 import SlotMachineLayout from './SlotMachineLayout';
-import History from './History';
 import MobileLoader from './MobileLoader';
 import { useMobileDetect } from '../hooks/useMobileDetect';
 import { FEATURE_FLAGS } from '../constants/features';
@@ -78,7 +77,6 @@ const GameFlow: React.FC = () => {
           isFinalSpin={state.spinsLeft === 1}
           onResult={handleSlotResult}
         />
-        <History loadouts={state.history} />
       </>
     );
   }
@@ -89,7 +87,6 @@ const GameFlow: React.FC = () => {
       return (
         <>
           <SpinCountWheel onSpinComplete={handleSpinComplete} />
-          <History loadouts={state.history} />
         </>
       );
 
@@ -111,7 +108,6 @@ const GameFlow: React.FC = () => {
               </div>
             </React.Suspense>
           )}
-          <History loadouts={state.history} />
         </>
       );
 
@@ -121,7 +117,6 @@ const GameFlow: React.FC = () => {
         return (
           <>
             <SpinCountWheel onSpinComplete={handleSpinComplete} />
-            <History loadouts={state.history} />
           </>
         );
       }
@@ -133,7 +128,6 @@ const GameFlow: React.FC = () => {
             isFinalSpin={state.spinsLeft === 1}
             onResult={handleSlotResult}
           />
-          <History loadouts={state.history} />
         </>
       );
 
