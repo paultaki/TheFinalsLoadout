@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { ClassType } from '../../types';
+import { useSound } from '../../utils/audio';
+import { SOUNDS } from '../../constants/sounds';
 import './RouletteWheel.css';
 
 interface RouletteWheelProps {
@@ -40,6 +42,9 @@ const RouletteWheel: React.FC<RouletteWheelProps> = ({ onClassSelected }) => {
   
   const wheelRef = useRef<HTMLDivElement>(null);
   const ballRef = useRef<HTMLDivElement>(null);
+  
+  // Add tabby tune sound for the final announcement
+  const playTabbyTune = useSound(SOUNDS.tabbyTune, { volume: 0.7 });
 
   // Generate wheel with conic gradient and labels - exact copy from HTML
   const generateWheel = () => {
@@ -140,6 +145,7 @@ const RouletteWheel: React.FC<RouletteWheelProps> = ({ onClassSelected }) => {
       // Show announcement after brief pause
       setTimeout(() => {
         setShowAnnouncement(true);
+        playTabbyTune(); // Play the tabby tune when the announcement appears
       }, 500);
       
       // Give user time to digest (3 seconds), then proceed

@@ -101,7 +101,7 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
       <audio id="clickSound" src={SOUNDS.click} preload="auto" />
       <audio id="tickSound" src={SOUNDS.click} preload="auto" />
       <audio id="classWinSound" src={SOUNDS.chang} preload="auto" />
-      <audio id="spinWinSound" src={SOUNDS.tabbyTune} preload="auto" />
+      <audio id="spinWinSound" src={SOUNDS.chang} preload="auto" />
       <audio id="spinningSound" src={SOUNDS.spinning} preload="auto" />
       <audio id="transitionSound" src={SOUNDS.transition} preload="auto" />
       <audio id="finalSound" src="/sounds/pop-pour-perform.mp3" preload="auto" />
