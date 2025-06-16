@@ -30,16 +30,19 @@ const NavBar: React.FC = () => {
 
   return (
     <>
+      {/* Scroll Progress Bar at very top */}
+      <div className="fixed top-0 left-0 right-0 h-1 z-[60] bg-gray-900/50">
+        <div 
+          className="h-full bg-gradient-to-r from-cyan-400 via-magenta-500 to-yellow-400 transition-all duration-200"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      </div>
+      
       {/* Placeholder for fixed navbar */}
       <div className="h-10" />
       
-      <header className="fixed top-0 left-0 right-0 z-50 w-full bg-transparent backdrop-blur-md neon-outline">
+      <header className="fixed top-1 left-0 right-0 z-50 w-full bg-transparent backdrop-blur-md neon-outline">
         <nav className="pointer-events-auto bg-gray-950/95 border-b border-[#8a2eff]/40" style={{ filter: 'drop-shadow(0 0 6px #8a2effaa)' }}>
-        {/* Scroll Progress Bar */}
-        <div 
-          className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-cyan-400 via-magenta-500 to-yellow-400 transition-all duration-200 z-10"
-          style={{ width: `${scrollProgress}%` }}
-        />
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-10">
             {/* Mobile Menu Button - Moved to left */}

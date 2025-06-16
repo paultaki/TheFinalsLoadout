@@ -12,20 +12,24 @@ const LoadoutHistory: React.FC = () => {
     return null;
   }
 
-  const formatTime = (timestamp: number) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    });
+  const getTimeAgo = (timestamp: number) => {
+    const now = Date.now();
+    const diff = now - timestamp;
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    
+    if (seconds < 60) return 'Just Now';
+    if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+    if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+    return `${days} day${days === 1 ? '' : 's'} ago`;
   };
 
   return (
-    <div className="w-full px-4 py-0">
+    <div className="w-full px-3 sm:px-4 py-2 sm:py-0">
       <div className="mx-auto" style={{ maxWidth: '750px' }}>
-        <div className="relative backdrop-blur-[6px] bg-white/5 rounded-[10px] p-3" 
+        <div className="relative backdrop-blur-[6px] bg-white/5 rounded-[10px] p-3 sm:p-3" 
           style={{
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(6px)',
@@ -57,47 +61,41 @@ const LoadoutHistory: React.FC = () => {
             {history.map((loadout, index) => (
               <div key={`${loadout.timestamp}-${index}`}>
                 <div className="flex flex-col p-3">
-                  {/* Class indicator */}
-                  <div className={`${styles['class-indicator']} ${styles[loadout.class.toLowerCase()]} mb-2`}>
-                    <span>{loadout.class === 'Light' ? '⚡' : loadout.class === 'Medium' ? '🛡️' : '💪'}</span>
-                    <span>{loadout.class.toUpperCase()}</span>
+                  {/* Header row with class and time ago */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className={`${styles['class-indicator']} ${styles[loadout.class.toLowerCase()]}`}>
+                      <span>{loadout.class === 'Light' ? '⚡' : loadout.class === 'Medium' ? '🛡️' : '💪'}</span>
+                      <span>{loadout.class.toUpperCase()}</span>
+                    </div>
+                    <span className="text-cyan-400 text-[11px] font-medium">
+                      {getTimeAgo(loadout.timestamp)}
+                    </span>
                   </div>
                   
-                  {/* Chips Layout */}
-                  <div className="flex flex-wrap gap-2">
+                  {/* 3 Box Layout */}
+                  <div className="flex flex-col gap-2">
                     {/* Row 1: Weapon & Spec */}
                     <div className="flex gap-2 w-full">
-                      <div className={`${styles['chip-item']} flex-1`}>
-                        <span className={styles['chip-icon']}>⚔</span>
-                        <span className={styles['chip-text']}>{loadout.weapon.replace(/_/g, ' ')}</span>
+                      <div className={`${styles['chip-item']} flex-1 text-center`}>
+                        <span className={styles['chip-text']}>
+                          <span className="text-gray-400">WEAPON:</span>{' '}
+                          <span className="text-white">{loadout.weapon.replace(/_/g, ' ')}</span>
+                        </span>
                       </div>
-                      <div className={`${styles['chip-item']} flex-1`}>
-                        <span className={styles['chip-icon']}>⚡</span>
-                        <span className={styles['chip-text']}>{loadout.specialization.replace(/_/g, ' ')}</span>
+                      <div className={`${styles['chip-item']} flex-1 text-center`}>
+                        <span className={styles['chip-text']}>
+                          <span className="text-gray-400">SPEC:</span>{' '}
+                          <span className="text-white">{loadout.specialization.replace(/_/g, ' ')}</span>
+                        </span>
                       </div>
                     </div>
                     
-                    {/* Row 2: Gadgets */}
+                    {/* Row 2: All Gadgets in one box */}
                     <div className="flex gap-2 w-full">
-                      <div className={`${styles['chip-item']} flex-1`}>
-                        <span className={styles['chip-icon']}>🛠</span>
-                        <span className={styles['chip-text']}>{loadout.gadget1.replace(/_/g, ' ')}</span>
-                      </div>
-                      <div className={`${styles['chip-item']} flex-1`}>
-                        <span className={styles['chip-icon']}>🛠</span>
-                        <span className={styles['chip-text']}>{loadout.gadget2.replace(/_/g, ' ')}</span>
-                      </div>
-                    </div>
-                    
-                    {/* Row 3: Last gadget & Timestamp */}
-                    <div className="flex gap-2 w-full items-center">
-                      <div className={`${styles['chip-item']} flex-1`}>
-                        <span className={styles['chip-icon']}>🛠</span>
-                        <span className={styles['chip-text']}>{loadout.gadget3.replace(/_/g, ' ')}</span>
-                      </div>
-                      <div className="flex-1 text-right">
-                        <span className="text-cyan-400 text-[10px] font-mono">
-                          {formatTime(loadout.timestamp)}
+                      <div className={`${styles['chip-item']} flex-1 text-center`}>
+                        <span className={styles['chip-text']}>
+                          <span className="text-gray-400">GADGETS:</span>{' '}
+                          <span className="text-white">{loadout.gadget1.replace(/_/g, ' ')}, {loadout.gadget2.replace(/_/g, ' ')} & {loadout.gadget3.replace(/_/g, ' ')}</span>
                         </span>
                       </div>
                     </div>

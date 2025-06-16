@@ -65,7 +65,7 @@ const ResultModal: React.FC<ResultModalProps> = ({
             </h2>
 
             {/* Class buttons with cyberpunk neon style */}
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
               {classButtonConfigs.map((config) => (
                 <ClassButton
                   key={config.class}
