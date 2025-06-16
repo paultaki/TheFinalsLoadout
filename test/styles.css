@@ -1,8 +1,29 @@
 /* Enhanced Vegas-Style Slot Machine CSS */
 
+/* Hide output div by default - show only when loadout is generated */
+#output {
+  display: none;
+}
+
 /* Base slot machine wrapper */
 .slot-machine-wrapper {
   @apply relative p-2 mx-auto max-w-6xl;
+}
+
+/* Clean, compact loadout display */
+#output.show {
+  display: block;
+  margin: 1rem 0;
+}
+
+/* Remove brown/tan backgrounds from loadout display */
+.slot-machine-frame {
+  background: linear-gradient(145deg, #2a2a3e, #1a1a2e) !important;
+}
+
+.slot-machine-top,
+.slot-machine-bottom {
+  background: linear-gradient(145deg, #2a2a3e, #1a1a2e) !important;
 }
 
 /* Main frame with metallic gradient */

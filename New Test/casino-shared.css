@@ -1,0 +1,227 @@
+/**
+ * casino-shared.css - Shared visual language for The Finals Loadout casino components
+ */
+
+/* Common Variables */
+:root {
+  /* Color Palette */
+  --color-gold: #FFD700;
+  --color-gold-dark: #B8860B;
+  --color-gold-darker: #8B6914;
+  --color-red: #DC143C;
+  --color-red-dark: #B71C1C;
+  --color-red-darker: #8B0000;
+  
+  /* Background Colors */
+  --bg-dark: #0a0a0a;
+  --bg-medium: #1a1a1a;
+  --bg-light: #2a2a2a;
+  --bg-lighter: #3a3a3a;
+  
+  /* Class Colors */
+  --color-light: #4FC3F7;
+  --color-medium: #AB47BC;
+  --color-heavy: #FF6B6B;
+  
+  /* Font Stack */
+  --font-display: 'Orbitron', monospace;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  
+  /* Animations */
+  --transition-fast: 0.2s ease-out;
+  --transition-normal: 0.3s ease-out;
+  --transition-slow: 0.5s ease-out;
+}
+
+/* Common Metallic Textures */
+.metallic-surface {
+  background: 
+    radial-gradient(ellipse at 30% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 40%),
+    linear-gradient(135deg, var(--bg-lighter) 0%, var(--bg-medium) 45%, var(--bg-light) 50%, var(--bg-medium) 100%);
+}
+
+/* Common Gold Accent */
+.gold-accent {
+  background: 
+    radial-gradient(circle at 40% 40%, var(--color-gold) 0%, var(--color-gold-dark) 50%, var(--color-gold-darker) 100%);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+/* Common Premium Border */
+.premium-border {
+  box-shadow: 
+    0 0 0 2px var(--color-gold-dark),
+    0 0 0 4px var(--bg-dark),
+    0 0 0 6px var(--color-gold),
+    0 0 0 8px var(--color-gold-dark);
+}
+
+/* Common Depth Shadow */
+.depth-shadow {
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.8),
+    0 5px 15px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Common Glow Effects */
+.gold-glow {
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+}
+
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+  }
+}
+
+/* Common Text Styles */
+.display-text {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.premium-text-shadow {
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Common Button Style */
+.premium-button {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  background: 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    linear-gradient(135deg, var(--color-gold) 0%, #FFA500 50%, var(--color-gold-dark) 100%);
+  color: var(--bg-dark);
+  border: none;
+  border-radius: 50px;
+  padding: 15px 40px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 70%
+  );
+  transform: rotate(45deg) translateY(-100%);
+  transition: transform 0.6s;
+}
+
+.premium-button:hover::before {
+  transform: rotate(45deg) translateY(100%);
+}
+
+/* Common Particle Effect */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle at 30% 30%, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 4px rgba(255, 215, 0, 0.8),
+    0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+/* Shared Animations */
+@keyframes floatAnimation {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes rotateGlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Screen Effects */
+.screen-flash {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 215, 0, 0.3);
+  pointer-events: none;
+  z-index: 9999;
+  animation: flashFade 0.5s ease-out forwards;
+}
+
+@keyframes flashFade {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* The Finals Branding */
+.finals-logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+  :root {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    font-size: 18px;
+  }
+}
+
+/* Performance Optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  will-change: transform;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark Mode Support (already dark by default) */
+@media (prefers-color-scheme: light) {
+  /* Could add light mode overrides here if needed */
+}

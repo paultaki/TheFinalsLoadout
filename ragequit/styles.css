@@ -166,7 +166,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url(../images"/cubes.png");
+background: url("../images/cubes.png");
   opacity: 0.1;
   pointer-events: none;
   animation: slowMove 20s linear infinite;
@@ -4320,12 +4320,14 @@ body {
 @keyframes extremeRage {
   0% { filter: hue-rotate(0deg) brightness(1); }
   100% { filter: hue-rotate(-20deg) brightness(1.2); }
-}
+
+.alert-box {
   border: 1px solid #660000;
   border-radius: 10px;
   padding: 15px;
   text-align: center;
 }
+
 
 .shame-item h3 {
   color: #ff6666;
