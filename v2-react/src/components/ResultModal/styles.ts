@@ -3,40 +3,22 @@ import type { ClassButtonConfig } from './types';
 
 // Modal styles
 export const modalStyles = {
-  backdrop: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 9999,
-  } as CSSProperties,
-  
-  backdropOverlay: {
-    pointerEvents: 'none',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  } as CSSProperties,
-  
   modalContainer: {
-    maxWidth: 'min(420px, 90vw)',
+    maxWidth: 'min(360px, 85vw)',
     background: 'radial-gradient(circle at center, #222 0%, #151515 100%)',
-    borderRadius: '24px',
+    borderRadius: '20px',
     border: '3px solid #FFD52D',
-    padding: '32px',
-    animation: 'fadeInScale 250ms ease-out',
+    padding: '24px',
     position: 'relative',
     zIndex: 10,
+    boxShadow: '0 0 50px rgba(255, 215, 0, 0.3), 0 10px 40px rgba(0, 0, 0, 0.8)',
   } as CSSProperties,
 };
 
 // Text styles
 export const textStyles = {
   jackpotTitle: {
-    fontSize: 'clamp(60px, 18vw, 80px)',
+    fontSize: 'clamp(48px, 15vw, 64px)',
     background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFD700 100%)',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
@@ -50,6 +32,7 @@ export const textStyles = {
     color: '#AB47BC',
     textShadow: '0 0 20px rgba(171, 71, 188, 0.8), 0 0 40px rgba(171, 71, 188, 0.4)',
     letterSpacing: '1px',
+    fontSize: '24px',
   } as CSSProperties,
   
   classChoiceHeader: {

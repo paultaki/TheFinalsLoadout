@@ -21,6 +21,9 @@ export const useGameDispatch = () => {
     addToHistory,
     setClass,
     setSpins,
+    showAnalysis,
+    hideAnalysis,
+    setLatestLoadout,
   } = useGame();
 
   return {
@@ -32,5 +35,8 @@ export const useGameDispatch = () => {
     addToHistory,
     setClass,
     setSpins,
+    showAnalysis,
+    hideAnalysis,
+    setLatestLoadout,
   };
 };

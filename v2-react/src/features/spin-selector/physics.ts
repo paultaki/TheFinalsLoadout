@@ -1,12 +1,6 @@
 import type { CardData } from './types';
 import { CARD_DATA } from './helpers';
-
-/**
- * Exponential easing function for smooth deceleration
- */
-export const easeOutExpo = (t: number): number => {
-  return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-};
+// import { easeOutExpo } from '../../utils/animationMath';
 
 // Physics constants
 export const PHYSICS_CONFIG = {

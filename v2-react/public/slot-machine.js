@@ -30,6 +30,7 @@ class SlotMachine {
   // Animation physics constants
   static PHYSICS = {
     CELL_HEIGHT: 120,
+    CELL_HEIGHT_DESKTOP: 158, // Desktop cell height for balanced peek
     FINAL_SPIN_START: -900,
     NORMAL_SPIN_START: -720,
     FINAL_OVERSHOOT: 50,
@@ -75,15 +76,12 @@ class SlotMachine {
 
     // Set up the HTML structure with placeholders
     this.container.innerHTML = `
-      <div class="slot-status-bar">
-        <span id="slot-status-text">Ready to spin!</span>
-      </div>
       <div class="slot-machine-items">
         ${this.createPlaceholderSlots()}
       </div>
     `;
 
-    this.statusBar = this.container.querySelector(".slot-status-bar");
+    this.statusBar = null; // Status bar removed - now using GameMarquee
     this.itemsContainer = this.container.querySelector(".slot-machine-items");
   }
   
@@ -132,16 +130,11 @@ class SlotMachine {
     );
   }
 
-  // Update status bar
+  // Update status bar - disabled since we now use GameMarquee
   updateStatus(classType, spinsRemaining) {
-    const statusText = this.statusBar.querySelector("#slot-status-text");
-    if (statusText) {
-      let status = `${classType} Class`;
-      if (spinsRemaining !== undefined && spinsRemaining !== null) {
-        status += ` - ${spinsRemaining} spins remaining`;
-      }
-      statusText.textContent = status;
-    }
+    // Status is now handled by the GameMarquee component
+    // Keeping this function to avoid breaking existing calls
+    return;
   }
 
   // Build slot HTML - Updated for 5 slots
@@ -176,6 +169,7 @@ class SlotMachine {
   // Create slot cell with enhanced visual markers
   createSlotCell(item, isWinner = false, isNearMiss = false) {
     const imageName = item.replace(/ /g, "_");
+    const displayName = item.replace(/_/g, " "); // Format display name
     const classes = ['slot-cell'];
     if (isWinner) classes.push('winner');
     if (isNearMiss) classes.push('near-miss');
@@ -185,8 +179,8 @@ class SlotMachine {
     if (rarity) classes.push(`rarity-${rarity}`);
     
     return '<div class="' + classes.join(' ') + '">' +
-        '<img src="images/' + imageName + '.webp" alt="' + item + '" loading="eager" onerror="this.style.display=\'none\'; this.nextElementSibling.style.fontSize=\'14px\'; this.nextElementSibling.style.fontWeight=\'bold\';">' +
-        '<p>' + item + '</p>' +
+        '<img src="images/' + imageName + '.webp" alt="' + displayName + '" loading="eager" onerror="this.style.display=\'none\'; this.nextElementSibling.style.fontSize=\'14px\'; this.nextElementSibling.style.fontWeight=\'bold\';">' +
+        '<p>' + displayName + '</p>' +
       '</div>';
   }
 
@@ -208,13 +202,18 @@ class SlotMachine {
     // Update countdown badge
     this.updateSpinCountdown(loadout.spinsRemaining);
 
-    // Ensure we have the slot structure - if not, create placeholders
-    if (!this.itemsContainer || !this.itemsContainer.querySelector('.slot-item')) {
-      // Re-init if needed
-      if (!this.itemsContainer) {
-        this.init();
-      }
-      // Now display the loadout structure
+    // Ensure we have the slot structure
+    if (!this.itemsContainer) {
+      this.init();
+    }
+    
+    // Check if we have the proper structure (5 slots)
+    const existingSlots = this.itemsContainer.querySelectorAll('.slot-item');
+    
+    // NEVER rebuild structure if React has already created it
+    // React creates slots with specific classes and structure
+    if (existingSlots.length === 0) {
+      // Only create structure if there are NO slots at all
       this.displayLoadout(loadout);
     }
 
@@ -991,13 +990,17 @@ class SlotMachine {
     // Big win flash
     const bigWinFlash = document.createElement('div');
     bigWinFlash.className = 'big-win-flash';
-    bigWinFlash.innerHTML = '<div style="font-size: 3rem; font-weight: bold; color: #FFD700; white-space: nowrap; text-align: center;">POP. POUR. PERFORM.</div>';
-    this.container.appendChild(bigWinFlash);
+    bigWinFlash.innerHTML = '<div style="font-size: 2rem; font-weight: bold; color: #FFD700; text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.6), 0 0 60px rgba(255, 215, 0, 0.4); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;">POP. POUR. PERFORM.</div>';
+    
+    // Find the slot machine component container for proper positioning
+    const slotMachineComponent = this.container.closest('.slot-machine-component') || this.container;
+    slotMachineComponent.style.position = 'relative';
+    slotMachineComponent.appendChild(bigWinFlash);
     
     bigWinFlash.animate([
-      { opacity: 0, transform: 'scale(0.8)' },
-      { opacity: 1, transform: 'scale(1.2)' },
-      { opacity: 0, transform: 'scale(1.4)' }
+      { opacity: 0, transform: 'translateY(-50%) scale(0.8)' },
+      { opacity: 1, transform: 'translateY(-50%) scale(1.2)' },
+      { opacity: 0, transform: 'translateY(-50%) scale(1.4)' }
     ], {
       duration: 800,
       easing: 'ease-out'

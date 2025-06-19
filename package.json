@@ -2,7 +2,12 @@
   "name": "thefinalsloadout",
   "version": "1.0.0",
   "description": "Fun & optimized loadouts for The Finals",
-  "scripts": {},
+  "scripts": {
+    "dev": "concurrently \"vite\" \"npm run serve:api\"",
+    "serve:api": "node server.js",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.3",
     "@upstash/redis": "^1.35.0",
@@ -12,6 +17,8 @@
     "node": "18.x"
   },
   "devDependencies": {
-    "purgecss": "^7.0.2"
+    "concurrently": "^9.1.2",
+    "purgecss": "^7.0.2",
+    "vite": "^5.3.0"
   }
 }

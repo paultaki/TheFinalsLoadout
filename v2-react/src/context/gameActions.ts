@@ -9,6 +9,9 @@ export const GameActionTypes = {
   ADD_TO_HISTORY: 'ADD_TO_HISTORY',
   SET_CLASS: 'SET_CLASS',
   SET_SPINS: 'SET_SPINS',
+  SHOW_ANALYSIS: 'SHOW_ANALYSIS',
+  HIDE_ANALYSIS: 'HIDE_ANALYSIS',
+  SET_LATEST_LOADOUT: 'SET_LATEST_LOADOUT',
 } as const;
 
 export type GameAction =
@@ -19,4 +22,7 @@ export type GameAction =
   | { type: typeof GameActionTypes.RESET_GAME }
   | { type: typeof GameActionTypes.ADD_TO_HISTORY; payload: Loadout }
   | { type: typeof GameActionTypes.SET_CLASS; payload: ClassType }
-  | { type: typeof GameActionTypes.SET_SPINS; payload: number };
+  | { type: typeof GameActionTypes.SET_SPINS; payload: number }
+  | { type: typeof GameActionTypes.SHOW_ANALYSIS; payload: Loadout }
+  | { type: typeof GameActionTypes.HIDE_ANALYSIS }
+  | { type: typeof GameActionTypes.SET_LATEST_LOADOUT; payload: Loadout };
