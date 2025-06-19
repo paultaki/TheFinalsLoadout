@@ -3038,10 +3038,12 @@ img {
   }
 
   /* Adjust main container padding */
-  .container {
-    padding: 5px 2px !important;
-  }
-
+.container {
+    padding-top: 0px !important;
+    padding-right: 2px !important;
+    padding-bottom: 5px !important; /* Assuming you want to keep the bottom padding */
+    padding-left: 2px !important;
+}
   /* ===== 2. CLASS & SPIN SELECTION AREA ===== */
 
   /* Step headers */
