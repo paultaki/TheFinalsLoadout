@@ -1326,7 +1326,12 @@ body.flexStyle {
   font-size: 16px; /* 👀 Increase readability */
   font-weight: bold; /* Makes it pop more */
   margin: 0;
-  white-space: nowrap;
+  white-space: normal; /* Allow word wrapping */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
+  line-height: 1.2;
+  hyphens: auto;
 }
 
 .selected + .itemCol {
@@ -7264,12 +7269,12 @@ details[open].adjustment summary::after {
 
   /* Reduce celebration banner text size on mobile */
   .celebration-banner .banner-text {
-    font-size: 36px; /* Reduced from 48px */
-    letter-spacing: 2px; /* Reduced from 3px */
+    font-size: 32px; /* Reduced from 36px */
+    letter-spacing: 2px;
   }
 
   .celebration-banner .banner-subtext {
-    font-size: 16px; /* Reduced from 20px */
+    font-size: 14px; /* Reduced from 16px */
   }
 }
 

@@ -53,7 +53,7 @@
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": "Help Us Make This Less Terrible | The Finals Loadout",
-        "description": "Submit feedback to improve The Finals Loadout Generator. Whether it’s bugs, feature requests, or passionate rants — we want to hear it.",
+        "description": "Submit feedback to improve The Finals Loadout Generator. Whether it's bugs, feature requests, or passionate rants — we want to hear it.",
         "url": "https://www.thefinalsloadout.com/feedback/",
         "image": "https://www.thefinalsloadout.com/images/feedback-logo3.webp",
         "author": {
@@ -92,18 +92,33 @@
   <body>
     <!-- Scroll Progress Bar -->
     <div class="scroll-progress-bar" id="scrollProgressBar"></div>
-    
+
     <!-- Return to Top Button -->
-    <button class="return-to-top" id="returnToTop" aria-label="Return to top" title="Return to top">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <button
+      class="return-to-top"
+      id="returnToTop"
+      aria-label="Return to top"
+      title="Return to top"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <polyline points="18 15 12 9 6 15"></polyline>
       </svg>
     </button>
-    
+
     <nav class="main-nav">
       <a href="../index.html">Home</a>
-      <a href="../ragequit/index.html">Rage Quit Loadout</a>
+      <a href="../ragequit/index.html">New Rage Quit</a>
       <a href="../patch-notes/index.html">Patch Notes</a>
+      <a href="../meta-weapons/">Meta Weapons</a>
     </nav>
 
     <header class="headerSection">
@@ -114,23 +129,50 @@
       />
       <h1 class="feedback-title">Help Us Make This Less Terrible</h1>
       <p class="feedback-subtitle">
-        Your feedback directly shapes The Finals Random Loadout Generator experience.
+        Your feedback directly shapes The Finals Random Loadout Generator
+        experience.
       </p>
     </header>
 
-
     <main class="feedback-container">
-
       <!-- Developer Note -->
-      <section class="developer-note" style="background: rgba(0, 212, 255, 0.1); border-left: 4px solid #00D4FF; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-        <p style="color: #F5F5F5; margin: 0; font-size: 0.95rem; line-height: 1.4;">
-          Built this as a solo project while learning to code. Feedback, bugs, and brutal honesty all welcome—I don't rage quit.
+      <section
+        class="developer-note"
+        style="
+          background: rgba(0, 212, 255, 0.1);
+          border-left: 4px solid #00d4ff;
+          padding: 15px 20px;
+          border-radius: 8px;
+          margin-bottom: 20px;
+          text-align: center;
+        "
+      >
+        <p
+          style="
+            color: #f5f5f5;
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+          "
+        >
+          Built this as a solo project while learning to code. Feedback, bugs,
+          and brutal honesty all welcome—I don't rage quit.
         </p>
       </section>
 
       <!-- Tally Feedback Form -->
       <section class="feedback-form-section">
-        <iframe data-tally-src="https://tally.so/r/wkveY1" loading="lazy" width="100%" height="1200" frameborder="0" marginheight="0" marginwidth="0" title="Tally Form" style="height: 1200px; overflow: hidden;"></iframe>
+        <iframe
+          data-tally-src="https://tally.so/r/wkveY1"
+          loading="lazy"
+          width="100%"
+          height="1200"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+          title="Tally Form"
+          style="height: 1200px; overflow: hidden"
+        ></iframe>
       </section>
     </main>
 
@@ -151,7 +193,7 @@
               ></strong
             >
             |
-            <a href="../legal/legal.html" style="color: #ffb700"
+            <a href="../legal/index.html" style="color: #ffb700"
               >Legal Disclaimer</a
             >
           </p>
@@ -165,7 +207,6 @@
         localStorage.getItem("feedbackCount") || "0"
       );
       let isSpinning = false;
-
 
       // Enhanced topic setting with glow effects
       function setTopic(category) {
@@ -317,7 +358,6 @@
         setTimeout(() => badge.remove(), 5000);
       }
 
-
       // Simulated sound effect
       function playTickSound() {
         // Create a simple tick sound using Web Audio API
@@ -359,76 +399,76 @@
       // ENHANCED FUNCTIONALITY
       // ============================================
 
-
       // Enhanced form functionality
       function initEnhancedForm() {
         // Show/hide conditional fields
-        const feedbackType = document.getElementById('feedback-type');
-        const stepsGroup = document.getElementById('steps-group');
-        const responsePrefs = document.getElementById('response-prefs');
-        const emailInput = document.getElementById('email');
+        const feedbackType = document.getElementById("feedback-type");
+        const stepsGroup = document.getElementById("steps-group");
+        const responsePrefs = document.getElementById("response-prefs");
+        const emailInput = document.getElementById("email");
 
-        feedbackType.addEventListener('change', function() {
+        feedbackType.addEventListener("change", function () {
           // Show reproduction steps for bugs
-          if (this.value === 'bug') {
-            stepsGroup.style.display = 'block';
+          if (this.value === "bug") {
+            stepsGroup.style.display = "block";
           } else {
-            stepsGroup.style.display = 'none';
+            stepsGroup.style.display = "none";
           }
         });
 
-        emailInput.addEventListener('input', function() {
+        emailInput.addEventListener("input", function () {
           // Show response preferences when email is entered
           if (this.value.trim()) {
-            responsePrefs.style.display = 'block';
+            responsePrefs.style.display = "block";
           } else {
-            responsePrefs.style.display = 'none';
+            responsePrefs.style.display = "none";
           }
         });
 
         // File upload functionality
         initFileUpload();
-        
+
         // Tags functionality
         initTagsSystem();
       }
 
       // File upload system
       function initFileUpload() {
-        const fileUploadArea = document.getElementById('file-upload-area');
-        const fileInput = document.getElementById('screenshots');
-        const uploadedFiles = document.getElementById('uploaded-files');
+        const fileUploadArea = document.getElementById("file-upload-area");
+        const fileInput = document.getElementById("screenshots");
+        const uploadedFiles = document.getElementById("uploaded-files");
         let selectedFiles = [];
 
         // Click to upload
-        fileUploadArea.addEventListener('click', () => {
+        fileUploadArea.addEventListener("click", () => {
           fileInput.click();
         });
 
         // Drag and drop
-        fileUploadArea.addEventListener('dragover', (e) => {
+        fileUploadArea.addEventListener("dragover", (e) => {
           e.preventDefault();
-          fileUploadArea.classList.add('dragover');
+          fileUploadArea.classList.add("dragover");
         });
 
-        fileUploadArea.addEventListener('dragleave', () => {
-          fileUploadArea.classList.remove('dragover');
+        fileUploadArea.addEventListener("dragleave", () => {
+          fileUploadArea.classList.remove("dragover");
         });
 
-        fileUploadArea.addEventListener('drop', (e) => {
+        fileUploadArea.addEventListener("drop", (e) => {
           e.preventDefault();
-          fileUploadArea.classList.remove('dragover');
+          fileUploadArea.classList.remove("dragover");
           handleFiles(e.dataTransfer.files);
         });
 
-        fileInput.addEventListener('change', (e) => {
+        fileInput.addEventListener("change", (e) => {
           handleFiles(e.target.files);
         });
 
         function handleFiles(files) {
-          Array.from(files).forEach(file => {
-            if (file.size > 10 * 1024 * 1024) { // 10MB limit
-              alert('File too large. Please choose files under 10MB.');
+          Array.from(files).forEach((file) => {
+            if (file.size > 10 * 1024 * 1024) {
+              // 10MB limit
+              alert("File too large. Please choose files under 10MB.");
               return;
             }
 
@@ -438,60 +478,70 @@
         }
 
         function displayFile(file) {
-          const fileDiv = document.createElement('div');
-          fileDiv.className = 'uploaded-file';
-          
-          const isImage = file.type.startsWith('image/');
-          const isVideo = file.type.startsWith('video/');
-          
+          const fileDiv = document.createElement("div");
+          fileDiv.className = "uploaded-file";
+
+          const isImage = file.type.startsWith("image/");
+          const isVideo = file.type.startsWith("video/");
+
           fileDiv.innerHTML = `
-            ${isImage ? `<img src="${URL.createObjectURL(file)}" class="file-preview" alt="Preview">` : 
-              isVideo ? `<video src="${URL.createObjectURL(file)}" class="file-preview" controls></video>` :
-              `<div class="file-preview" style="display: flex; align-items: center; justify-content: center; background: #333;">📄</div>`}
+            ${
+              isImage
+                ? `<img src="${URL.createObjectURL(
+                    file
+                  )}" class="file-preview" alt="Preview">`
+                : isVideo
+                ? `<video src="${URL.createObjectURL(
+                    file
+                  )}" class="file-preview" controls></video>`
+                : `<div class="file-preview" style="display: flex; align-items: center; justify-content: center; background: #333;">📄</div>`
+            }
             <div class="file-name">${file.name}</div>
             <button class="file-remove" onclick="removeFile(this)">×</button>
           `;
-          
+
           uploadedFiles.appendChild(fileDiv);
         }
 
-        window.removeFile = function(button) {
+        window.removeFile = function (button) {
           const fileDiv = button.parentElement;
-          const fileName = fileDiv.querySelector('.file-name').textContent;
-          selectedFiles = selectedFiles.filter(file => file.name !== fileName);
+          const fileName = fileDiv.querySelector(".file-name").textContent;
+          selectedFiles = selectedFiles.filter(
+            (file) => file.name !== fileName
+          );
           fileDiv.remove();
         };
       }
 
       // Tags system
       function initTagsSystem() {
-        const tagInput = document.getElementById('tag-input');
-        const selectedTags = document.getElementById('selected-tags');
-        const tagSuggestions = document.querySelectorAll('.tag-suggestion');
+        const tagInput = document.getElementById("tag-input");
+        const selectedTags = document.getElementById("selected-tags");
+        const tagSuggestions = document.querySelectorAll(".tag-suggestion");
         let tags = [];
 
         // Add tag from input
-        tagInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
+        tagInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
             e.preventDefault();
             addTag(tagInput.value.trim());
-            tagInput.value = '';
+            tagInput.value = "";
           }
         });
 
         // Add tag from suggestions
-        tagSuggestions.forEach(suggestion => {
-          suggestion.addEventListener('click', () => {
+        tagSuggestions.forEach((suggestion) => {
+          suggestion.addEventListener("click", () => {
             addTag(suggestion.dataset.tag);
           });
         });
 
         function addTag(tagText) {
           if (!tagText || tags.includes(tagText)) return;
-          
+
           tags.push(tagText);
-          const tagElement = document.createElement('span');
-          tagElement.className = 'selected-tag';
+          const tagElement = document.createElement("span");
+          tagElement.className = "selected-tag";
           tagElement.innerHTML = `
             ${tagText}
             <button class="tag-remove" onclick="removeTag('${tagText}')">×</button>
@@ -499,10 +549,10 @@
           selectedTags.appendChild(tagElement);
         }
 
-        window.removeTag = function(tagText) {
-          tags = tags.filter(tag => tag !== tagText);
-          const tagElements = selectedTags.querySelectorAll('.selected-tag');
-          tagElements.forEach(element => {
+        window.removeTag = function (tagText) {
+          tags = tags.filter((tag) => tag !== tagText);
+          const tagElements = selectedTags.querySelectorAll(".selected-tag");
+          tagElements.forEach((element) => {
             if (element.textContent.includes(tagText)) {
               element.remove();
             }
@@ -512,27 +562,27 @@
 
       // Auto-save draft functionality
       function initAutoSave() {
-        const form = document.getElementById('feedback-form');
-        const inputs = form.querySelectorAll('input, textarea, select');
-        
+        const form = document.getElementById("feedback-form");
+        const inputs = form.querySelectorAll("input, textarea, select");
+
         function saveDraft() {
           const formData = new FormData(form);
           const draft = {};
           for (let [key, value] of formData.entries()) {
             draft[key] = value;
           }
-          localStorage.setItem('feedbackDraft', JSON.stringify(draft));
+          localStorage.setItem("feedbackDraft", JSON.stringify(draft));
         }
 
         function loadDraft() {
-          const saved = localStorage.getItem('feedbackDraft');
+          const saved = localStorage.getItem("feedbackDraft");
           if (saved) {
             const draft = JSON.parse(saved);
-            Object.keys(draft).forEach(key => {
+            Object.keys(draft).forEach((key) => {
               const field = form.querySelector(`[name="${key}"]`);
               if (field) {
                 field.value = draft[key];
-                if (field.type === 'radio' && field.value === draft[key]) {
+                if (field.type === "radio" && field.value === draft[key]) {
                   field.checked = true;
                 }
               }
@@ -541,8 +591,8 @@
         }
 
         // Auto-save every 30 seconds
-        inputs.forEach(input => {
-          input.addEventListener('input', () => {
+        inputs.forEach((input) => {
+          input.addEventListener("input", () => {
             clearTimeout(window.autoSaveTimeout);
             window.autoSaveTimeout = setTimeout(saveDraft, 2000);
           });
@@ -552,40 +602,40 @@
         loadDraft();
 
         // Clear draft on successful submission
-        form.addEventListener('submit', () => {
-          localStorage.removeItem('feedbackDraft');
+        form.addEventListener("submit", () => {
+          localStorage.removeItem("feedbackDraft");
         });
       }
 
       // Character counter for textareas
       function initCharacterCounters() {
-        const textareas = document.querySelectorAll('textarea');
-        
-        textareas.forEach(textarea => {
-          const counter = document.createElement('div');
-          counter.className = 'character-counter';
+        const textareas = document.querySelectorAll("textarea");
+
+        textareas.forEach((textarea) => {
+          const counter = document.createElement("div");
+          counter.className = "character-counter";
           counter.style.cssText = `
             text-align: right;
             color: #888;
             font-size: 0.8rem;
             margin-top: 5px;
           `;
-          
+
           function updateCounter() {
             const length = textarea.value.length;
             const maxLength = textarea.maxLength || 1000;
             counter.textContent = `${length}/${maxLength}`;
-            
+
             if (length > maxLength * 0.9) {
-              counter.style.color = '#ff4444';
+              counter.style.color = "#ff4444";
             } else if (length > maxLength * 0.7) {
-              counter.style.color = '#ffb700';
+              counter.style.color = "#ffb700";
             } else {
-              counter.style.color = '#888';
+              counter.style.color = "#888";
             }
           }
-          
-          textarea.addEventListener('input', updateCounter);
+
+          textarea.addEventListener("input", updateCounter);
           textarea.parentNode.appendChild(counter);
           updateCounter();
         });
@@ -593,32 +643,38 @@
 
       // Form validation enhancements
       function initFormValidation() {
-        const form = document.getElementById('feedback-form');
-        
-        form.addEventListener('submit', function(e) {
+        const form = document.getElementById("feedback-form");
+
+        form.addEventListener("submit", function (e) {
           let isValid = true;
-          
+
           // Validate priority selection
-          const prioritySelected = document.querySelector('input[name="priority"]:checked');
+          const prioritySelected = document.querySelector(
+            'input[name="priority"]:checked'
+          );
           if (!prioritySelected) {
             e.preventDefault();
-            alert('Please select a priority level');
+            alert("Please select a priority level");
             isValid = false;
           }
-          
+
           // Validate feedback length
-          const feedbackText = document.getElementById('feedback-text');
+          const feedbackText = document.getElementById("feedback-text");
           if (feedbackText.value.trim().length < 10) {
             e.preventDefault();
-            alert('Please provide more detailed feedback (at least 10 characters)');
+            alert(
+              "Please provide more detailed feedback (at least 10 characters)"
+            );
             isValid = false;
           }
-          
+
           if (isValid) {
             // Show enhanced loading state
-            const submitBtn = document.getElementById('send-button');
-            submitBtn.innerHTML = '<span class="button-text">ANALYZING FEEDBACK...</span>';
-            submitBtn.style.background = 'linear-gradient(45deg, #4444ff, #6666ff)';
+            const submitBtn = document.getElementById("send-button");
+            submitBtn.innerHTML =
+              '<span class="button-text">ANALYZING FEEDBACK...</span>';
+            submitBtn.style.background =
+              "linear-gradient(45deg, #4444ff, #6666ff)";
           }
         });
       }
@@ -631,45 +687,50 @@
         initFormValidation();
       });
     </script>
-    
+
     <!-- Tally Form Script -->
     <script>
-      let d=document,s=d.createElement("script");
-      s.src="https://tally.so/widgets/embed.js";
-      s.onload=()=>Tally.loadEmbeds();
+      let d = document,
+        s = d.createElement("script");
+      s.src = "https://tally.so/widgets/embed.js";
+      s.onload = () => Tally.loadEmbeds();
       d.body.appendChild(s);
     </script>
-    
+
     <!-- Scroll Progress Bar and Return to Top Script -->
     <script>
       // Scroll Progress Bar
       function updateScrollProgress() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
         const scrollProgress = (scrollTop / scrollHeight) * 100;
-        document.getElementById('scrollProgressBar').style.width = scrollProgress + '%';
+        document.getElementById("scrollProgressBar").style.width =
+          scrollProgress + "%";
       }
 
       // Return to Top Button
-      const returnToTopBtn = document.getElementById('returnToTop');
-      
+      const returnToTopBtn = document.getElementById("returnToTop");
+
       function toggleReturnToTop() {
         if (window.pageYOffset > 300) {
-          returnToTopBtn.classList.add('visible');
+          returnToTopBtn.classList.add("visible");
         } else {
-          returnToTopBtn.classList.remove('visible');
+          returnToTopBtn.classList.remove("visible");
         }
       }
 
-      returnToTopBtn.addEventListener('click', () => {
+      returnToTopBtn.addEventListener("click", () => {
         window.scrollTo({
           top: 0,
-          behavior: 'smooth'
+          behavior: "smooth",
         });
       });
 
       // Add scroll event listeners
-      window.addEventListener('scroll', () => {
+      window.addEventListener("scroll", () => {
         updateScrollProgress();
         toggleReturnToTop();
       });

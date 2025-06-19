@@ -3,21 +3,31 @@
   <url>
     <loc>https://thefinalsloadout.com/</loc>
     <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://thefinalsloadout.com/ragequit/</loc>
     <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://thefinalsloadout.com/patch-notes/</loc>
     <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://thefinalsloadout.com/meta-weapons/</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://thefinalsloadout.com/feedback/</loc>
     <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://thefinalsloadout.com/legal/legal.html</loc>
+    <loc>https://thefinalsloadout.com/legal/</loc>
     <priority>0.3</priority>
+    <changefreq>yearly</changefreq>
   </url>
 </urlset>

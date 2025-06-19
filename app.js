@@ -1433,7 +1433,7 @@ function startSpinAnimation(columns) {
                       if (!lockedTag) {
                         lockedTag = document.createElement("div");
                         lockedTag.className = "locked-tag show";
-                        lockedTag.textContent = "POP. POUR. PERFORM.";
+                        lockedTag.textContent = "Locked-In";
                         container.appendChild(lockedTag);
                       }
 
