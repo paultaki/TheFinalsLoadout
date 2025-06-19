@@ -6,12 +6,14 @@ export interface LoadoutItem {
 }
 
 export interface GeneratedLoadout {
+  id?: string; // Optional ID that gets added later
   weapon: LoadoutItem;
   specialization: LoadoutItem;
   gadget1: LoadoutItem;
   gadget2: LoadoutItem;
   gadget3: LoadoutItem;
   classType: ClassType;
+  class: ClassType; // Add alias for compatibility
   weapons: string;
   specializations: string;
   gadgets: string[];
@@ -101,6 +103,7 @@ export const generateLoadout = (classType: ClassType, spinsLeft: number): Genera
     gadget2: { name: gadgets[1], category: 'gadget' as const },
     gadget3: { name: gadgets[2], category: 'gadget' as const },
     classType,
+    class: classType, // Add alias for compatibility
     weapons: weapon,
     specializations: spec,
     gadgets,

@@ -2382,7 +2382,9 @@ img {
   animation: neonPulse 2s ease-in-out infinite;
 }
 @keyframes neonPulse {
-  0%,
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
 }
 
 
@@ -3816,7 +3818,6 @@ html {
   .tab-button[data-tab="specializations"] {
     font-size: 10px;
   }
-}
   
   .filter-controls {
     padding: 0 1rem;

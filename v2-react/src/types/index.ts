@@ -13,6 +13,7 @@ export interface LoadoutItem {
 }
 
 export interface Loadout {
+  id?: string;
   weapon: LoadoutItem;
   specialization: LoadoutItem;
   gadget1: LoadoutItem;
@@ -35,6 +36,9 @@ export interface GameState {
   chosenClass: ClassType | null;
   stage: GameStage;
   history: Loadout[];
+  analysisVisible: boolean;
+  analysisLoadout: Loadout | null;
+  latestLoadout: Loadout | null;
 }
 
 export interface WheelSegment {

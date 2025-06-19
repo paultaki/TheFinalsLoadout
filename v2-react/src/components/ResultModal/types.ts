@@ -1,7 +1,7 @@
 export interface ResultModalProps {
-  variant: 'number' | 'jackpot';
+  variant: 'number' | 'jackpot' | 'class';
   value: string;
-  spins: number;
+  spins?: number;
   onSelectClass?: (cls: 'Light' | 'Medium' | 'Heavy') => void;
   onClose?: () => void;
 }

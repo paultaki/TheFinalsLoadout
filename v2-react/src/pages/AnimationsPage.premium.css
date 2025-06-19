@@ -3,7 +3,7 @@
    ===================================================== */
 
 /* Import the enhanced shared theme */
-@import url('../styles/casino-theme-shared.css');
+/* Shared casino theme imported in main.tsx */
 
 /* Premium section spacing and transitions */
 section {
@@ -392,10 +392,7 @@ section {
   }
 }
 
-/* Remove excessive margins */
-.container {
-  max-width: 1400px;
-}
+/* Container is now handled by Tailwind config */
 
 h1, h2, h3 {
   margin-bottom: 1rem;

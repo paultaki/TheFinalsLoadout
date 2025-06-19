@@ -14,6 +14,9 @@ interface GameContextType {
   addToHistory: (loadout: Loadout) => void;
   setClass: (clazz: ClassType) => void;
   setSpins: (spins: number) => void;
+  showAnalysis: (loadout: Loadout) => void;
+  hideAnalysis: () => void;
+  setLatestLoadout: (loadout: Loadout) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -64,6 +67,15 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     },
     resetGame: () => {
       dispatch({ type: GameActionTypes.RESET_GAME });
+    },
+    showAnalysis: (loadout: Loadout) => {
+      dispatch({ type: GameActionTypes.SHOW_ANALYSIS, payload: loadout });
+    },
+    hideAnalysis: () => {
+      dispatch({ type: GameActionTypes.HIDE_ANALYSIS });
+    },
+    setLatestLoadout: (loadout: Loadout) => {
+      dispatch({ type: GameActionTypes.SET_LATEST_LOADOUT, payload: loadout });
     },
   };
 

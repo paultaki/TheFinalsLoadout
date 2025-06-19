@@ -16,13 +16,14 @@ interface SlotMachineClass {
 interface SlotMachineProps {
   images?: string[];
   onResult: (loadout: GeneratedLoadout) => void;
+  onSpinEnd?: (loadout: GeneratedLoadout) => void;
   isFinalSpin: boolean;
 }
 
 /**
  * Slot machine component that generates and displays loadout items with animations
  */
-const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
+const SlotMachine: React.FC<SlotMachineProps> = ({ onResult, onSpinEnd }) => {
   const state = useGameState();
   const { addLoadout } = useLoadoutHistory();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,22 +45,30 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
     containerRef.current.id = uniqueId;
 
     // Initialize slot machine
-    slotMachineRef.current = initializeSlotMachine(uniqueId);
-    if (slotMachineRef.current) {
-      setIsMachineInitialized(true);
+    try {
+      slotMachineRef.current = initializeSlotMachine(uniqueId);
+      if (slotMachineRef.current) {
+        setIsMachineInitialized(true);
+      } else {
+        console.error('❌ Slot machine initialization returned null');
+      }
+    } catch (error) {
+      console.error('❌ Failed to initialize slot machine:', error);
     }
   }, [isReady]);
 
   // Auto-start animation when ready
   useEffect(() => {
+    
     if (
       !isMachineInitialized ||
       !slotMachineRef.current ||
       !state.chosenClass ||
       state.spinsLeft === undefined ||
       state.spinsLeft <= 0
-    )
+    ) {
       return;
+    }
 
 
     // Small delay to ensure DOM is ready
@@ -88,6 +97,11 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onResult }) => {
         }
 
         onResult(loadout);
+        
+        // Fire onSpinEnd only on the final spin
+        if (onSpinEnd && state.spinsLeft === 1) {
+          onSpinEnd(loadout);
+        }
       });
     }, startDelay);
 

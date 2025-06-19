@@ -9,11 +9,13 @@ export type LoadoutRecord = {
   gadget2: string;
   gadget3: string;
   specialization: string;
+  analysis?: string;
 };
 
 interface LoadoutHistoryContextType {
   history: LoadoutRecord[];
   addLoadout: (loadout: LoadoutRecord) => void;
+  updateLatestAnalysis: (analysis: string) => void;
 }
 
 const LoadoutHistoryContext = createContext<LoadoutHistoryContextType | undefined>(undefined);
@@ -47,8 +49,25 @@ export const LoadoutHistoryProvider: React.FC<{ children: ReactNode }> = ({ chil
     });
   };
 
+  const updateLatestAnalysis = (analysis: string) => {
+    setHistory((prev) => {
+      if (prev.length === 0) return prev;
+      const updated = [...prev];
+      // Find the most recent loadout without an analysis
+      const indexToUpdate = updated.findIndex(item => !item.analysis);
+      if (indexToUpdate !== -1) {
+        updated[indexToUpdate] = { ...updated[indexToUpdate], analysis };
+      } else {
+        // If all have analysis, update the most recent one
+        updated[0] = { ...updated[0], analysis };
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   return (
-    <LoadoutHistoryContext.Provider value={{ history, addLoadout }}>
+    <LoadoutHistoryContext.Provider value={{ history, addLoadout, updateLatestAnalysis }}>
       {children}
     </LoadoutHistoryContext.Provider>
   );

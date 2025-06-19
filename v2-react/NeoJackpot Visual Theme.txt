@@ -1,0 +1,32 @@
+“NeoJackpot” Visual Theme – Vegas x Cyberpunk UI
+
+Apply the “NeoJackpot” theme to this site. The design should feel like a sleek fusion of Las Vegas slot machine energy and Cyberpunk 2077's futuristic glow — bold, neon, and dopamine-rich without being tacky or cluttered. Maintain a dark-mode core with vivid accent bursts.
+
+Here’s the full visual direction:
+
+🎰 SLOT MACHINE ENERGY
+- UI should evoke a sense of reward, momentum, and interactivity.
+- Slot-style buttons, pull-to-spin motion, and jackpot language are welcome.
+
+🌌 CYBERPUNK ELEMENTS
+- Base background: deep black or #0A0A23 grid with subtle pixel matrix vibe
+- Neon accents:  
+  - Pink: #FF007F  
+  - Cyan: #00FFFF  
+  - Gold (sparingly): #FFD700  
+- Text color: #E0E0FF for readability
+- Font: bold, clean sans-serif — readable in dark mode, strong headings
+
+📐 LAYOUT & POLISH
+- Use flexbox/grid for centering and responsive spacing
+- Make loadout history cards feel like digital modules — add subtle shadows, hover states, or glowing dividers
+- Remove harsh white backgrounds or generic containers — use gradients like `linear-gradient(135deg, #1a1a40, #3d1c4e)` behind sections
+
+🧼 FINISHING TOUCHES
+- Smooth animations with easing (`ease-in-out`)
+- Add responsive spacing and margin at footer — current one is too tight
+- Ensure mobile view doesn’t stack awkwardly
+
+You can improvise within this theme, but always ask: “Does this feel like a dopamine-fueled tactical slot machine inside a cyberpunk world?” If not, tweak it.
+
+Style name: NeoJackpot.

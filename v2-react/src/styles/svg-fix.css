@@ -1,0 +1,35 @@
+/* Global SVG fix to prevent oversized icons */
+
+/* Ensure all SVGs respect their class sizes */
+svg {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Specific fix for refresh/reload icons */
+svg[viewBox="0 0 24 24"] {
+  max-width: 2rem !important;
+  max-height: 2rem !important;
+}
+
+/* Fix for pull-to-refresh indicator */
+.pullIndicator svg {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  max-width: 1.5rem !important;
+  max-height: 1.5rem !important;
+}
+
+/* Fix for any centered SVG that might be too large */
+.flex.justify-center svg:not(.w-5):not(.w-6) {
+  max-width: 3rem !important;
+  max-height: 3rem !important;
+}
+
+/* Prevent absolute positioned SVGs from breaking layout */
+svg:not([class*="w-"]):not([class*="h-"]) {
+  width: auto;
+  height: auto;
+  max-width: 100px;
+  max-height: 100px;
+}
