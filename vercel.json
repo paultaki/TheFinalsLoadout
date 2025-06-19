@@ -3,5 +3,8 @@
     "api/roast.js": {
       "maxDuration": 30
     }
-  }
+  },
+  "rewrites": [{ "source": "/", "destination": "/index.html" }],
+  "cleanUrls": true,
+  "trailingSlash": false
 }
