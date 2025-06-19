@@ -14,14 +14,14 @@ export const makeJackpotCard = (): CardData => {
   };
 };
 
-// Card configuration
+// Card configuration with static jackpot cards
 export const CARD_DATA: CardData[] = [
   { value: '1', spins: 1, label: '1', className: 'card-1' },
-  makeJackpotCard(),
+  { value: 'JACKPOT', spins: 3, label: 'Jackpot!\nChoose Class\n3 Spins', className: 'card-special jackpot', isJackpot: true },
   { value: '2', spins: 2, label: '2', className: 'card-2' },
   { value: '3', spins: 3, label: '3', className: 'card-3' },
   { value: '4', spins: 4, label: '4', className: 'card-4' },
-  makeJackpotCard(),
+  { value: 'JACKPOT', spins: 3, label: 'Jackpot!\nChoose Class\n3 Spins', className: 'card-special jackpot', isJackpot: true },
   { value: '5', spins: 5, label: '5', className: 'card-5' },
 ];
 

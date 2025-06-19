@@ -7,14 +7,15 @@ import { animateTickerCollision } from './animations';
 import type { SpinCountWheelProps, ModalResult } from './types';
 import { INFINITE_CARDS, createConfetti, getCardHeight, getWinnerText } from './helpers';
 import {
-  easeOutExpo,
   PHYSICS_CONFIG,
   type AnimationRefs,
   findWinningCard,
   applyInfiniteScroll,
   animateCabinetShake,
 } from './physics';
+import { easeOutExpo } from '../../utils/animationMath';
 import './styles.css';
+import styles from './SpinSelector.module.css';
 
 /**
  * Spin count selector wheel component with peg physics
@@ -28,7 +29,7 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
   const [showWinnerBanner, setShowWinnerBanner] = useState(false);
   const [winnerText, setWinnerText] = useState('');
   const [isFrameGlowing, setIsFrameGlowing] = useState(false);
-  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number }>>([]);
+  const [particles] = useState<Array<{ id: number; x: number; y: number }>>([]);
   const [modalResult, setModalResult] = useState<ModalResult | null>(null);
 
   // Refs
@@ -89,6 +90,11 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
     // Find which card is in the center of viewport
     const { card: winningCard, result } = findWinningCard(wheelFrameRef, wheelRef);
     const cards = wheelRef.current?.querySelectorAll('.card');
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🎯 Winning result:', result);
+      console.log('🎯 Is jackpot?', result.isJackpot);
+    }
 
     // Highlight winning card
     cards?.forEach((card) => card.classList.remove('winner'));
@@ -99,6 +105,14 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
     // Play appropriate sound
     if (result.isJackpot) {
       playDingDing();
+      // Stop the jackpot sound after 1.5 seconds (half the usual duration)
+      setTimeout(() => {
+        const audio = document.querySelector('audio[src*="ding-ding"]') as HTMLAudioElement;
+        if (audio) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      }, 1500);
     } else {
       playDing();
     }
@@ -128,11 +142,15 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
     }
 
     // Show modal
-    setModalResult({
+    const modalData = {
       variant: result.isJackpot ? 'jackpot' : 'number',
       value: result.value,
       spins: result.spins,
-    });
+    };
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🎯 Setting modal:', modalData);
+    }
+    setModalResult(modalData);
 
     // Fire callback is now handled by modal onClose
 
@@ -269,10 +287,8 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
   }, []);
 
   return (
-    <div className="spin-count-wheel">
+    <div className={`spin-count-wheel ${styles.spinSelectorWrapper}`}>
       <div className="wheel-container">
-        <h1>SPIN COUNT SELECTOR</h1>
-
         <div className={`wheel-frame ${isFrameGlowing ? 'glowing' : ''}`} ref={wheelFrameRef}>
           <div className="fade-top" />
           <div className="fade-bottom" />
@@ -303,7 +319,9 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
           </div>
         </div>
 
-        <PullSpinButton onSpin={spin} disabled={isSpinning} />
+        <div className={styles.pullButtonWrapper}>
+          <PullSpinButton onSpin={spin} disabled={isSpinning} />
+        </div>
       </div>
 
       <div className={`winner-banner ${showWinnerBanner ? 'show' : ''}`}>{winnerText}</div>
@@ -324,14 +342,14 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
 
       {modalResult && (
         <ResultModal
-          variant={modalResult.variant}
-          value={modalResult.value}
-          spins={modalResult.spins}
+            variant={modalResult.variant}
+            value={modalResult.value}
+            spins={modalResult.spins}
           onSelectClass={(cls) => {
             // Set class and spins
             setClass(cls);
             setSpins(modalResult.spins);
-            // Transition directly to slots
+            // Finish roulette to go to slots
             finishRoulette(cls);
             // Close modal
             setModalResult(null);
@@ -344,6 +362,13 @@ const SpinCountWheel: React.FC<SpinCountWheelProps> = ({ onSpinComplete }) => {
                 value: modalResult.value,
                 spins: modalResult.spins,
                 isJackpot: false,
+              });
+            } else if (modalResult.variant === 'jackpot') {
+              // For jackpot, fire the callback to continue game flow
+              onSpinComplete({
+                value: modalResult.value,
+                spins: modalResult.spins,
+                isJackpot: true,
               });
             }
           }}

@@ -1,9 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{ts,tsx}",
-    "../New Test/**/*.{html,js}"
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  safelist: [
+    'space-x-4',
+    'sm:space-x-6',
+    'text-accent-gold',
+    'animate-marqueePulse',
+    'gradient-text',
   ],
   theme: {
     extend: {
@@ -22,4 +25,4 @@ export default {
     },
   },
   plugins: [],
-}
+};

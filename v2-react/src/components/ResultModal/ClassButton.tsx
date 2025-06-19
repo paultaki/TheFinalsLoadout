@@ -26,7 +26,7 @@ const ClassButton: React.FC<ClassButtonProps> = ({ config, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="relative py-4 px-10 font-bold text-lg uppercase tracking-wider overflow-hidden group"
+      className="relative py-5 px-12 font-bold text-xl uppercase tracking-wider overflow-hidden group mx-2 sm:mx-0 min-w-[120px]"
       style={getButtonStyles(config)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

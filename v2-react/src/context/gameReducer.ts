@@ -7,6 +7,9 @@ export const initialState: GameState = {
   chosenClass: null,
   stage: 'SPIN',
   history: [],
+  analysisVisible: false,
+  analysisLoadout: null,
+  latestLoadout: null,
 };
 
 /**
@@ -29,10 +32,11 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
     case GameActionTypes.FINISH_ROULETTE:
       return { ...state, chosenClass: action.payload, stage: 'SLOTS' };
 
-    case GameActionTypes.RUN_SLOT:
+    case GameActionTypes.RUN_SLOT: {
       const newSpinsLeft = Math.max(0, state.spinsLeft - 1);
       // Stay on SLOTS stage even when spins are done
       return { ...state, spinsLeft: newSpinsLeft };
+    }
 
     case GameActionTypes.ADD_TO_HISTORY:
       return { ...state, history: [...state.history, action.payload] };
@@ -44,7 +48,16 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
       return { ...state, spinsLeft: action.payload };
 
     case GameActionTypes.RESET_GAME:
-      return initialState;
+      return { ...initialState, latestLoadout: null };
+
+    case GameActionTypes.SHOW_ANALYSIS:
+      return { ...state, analysisVisible: true, analysisLoadout: action.payload };
+
+    case GameActionTypes.HIDE_ANALYSIS:
+      return { ...state, analysisVisible: false, analysisLoadout: null };
+
+    case GameActionTypes.SET_LATEST_LOADOUT:
+      return { ...state, latestLoadout: { ...action.payload, id: Date.now().toString() } };
 
     default:
       return state;

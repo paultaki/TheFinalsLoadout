@@ -69,3 +69,30 @@ export const playJackpotSound = (): void => {
   audio.volume = 0.8;
   audio.play().catch(() => {});
 };
+
+// Audio cache for general sound playback
+const audioCache: Map<string, HTMLAudioElement> = new Map();
+
+/**
+ * Generic sound player with caching
+ */
+export const playSound = (soundName: string, volume: number = 0.5): void => {
+  try {
+    let audio = audioCache.get(soundName);
+    
+    if (!audio) {
+      audio = new Audio(`/sounds/${soundName}.mp3`);
+      audioCache.set(soundName, audio);
+    }
+
+    // Clone the audio to allow overlapping sounds
+    const audioClone = audio.cloneNode() as HTMLAudioElement;
+    audioClone.volume = volume;
+    
+    audioClone.play().catch(error => {
+      console.warn(`Failed to play sound: ${soundName}`, error);
+    });
+  } catch (error) {
+    console.error(`Error playing sound: ${soundName}`, error);
+  }
+};

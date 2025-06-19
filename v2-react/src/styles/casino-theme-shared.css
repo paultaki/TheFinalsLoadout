@@ -43,7 +43,8 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
-  margin: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   position: relative;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

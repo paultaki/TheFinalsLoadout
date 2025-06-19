@@ -1,0 +1,7 @@
+.spinSelectorWrapper {
+  @apply w-full max-w-[420px] mx-auto md:max-w-[480px];
+}
+
+.pullButtonWrapper {
+  @apply -mt-4 flex justify-center;
+}
