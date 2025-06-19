@@ -4889,3 +4889,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }, 7000); // 7 seconds - middle of the 5-10 second range requested
 });
+
+fetch("https://api.github.com/repos/paultaki/TheFinalsLoadout/commits/main")
+  .then(res => res.json())
+  .then(data => {
+    const hash = data.sha.slice(0, 7);
+    const date = new Date(data.commit.author.date).toLocaleDateString();
+    const el = document.getElementById("deploy-version");
+    if (el) {
+      el.innerHTML = `Version: <a href="https://github.com/paultaki/TheFinalsLoadout/commit/${hash}" target="_blank">${hash}</a> (${date})`;
+    }
+  })
+  .catch(() => {
+    const el = document.getElementById("deploy-version");
+    if (el) el.textContent = "Version: unknown";
+  });

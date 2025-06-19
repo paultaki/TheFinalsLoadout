@@ -111,7 +111,7 @@
     <!-- Critical CSS -->
 
     <!-- Full Styles -->
-    <link rel="stylesheet" href="style.css?v=2" />
+    <link rel="stylesheet" href="style.css?v=a70bdb3" />
   </head>
 
   <body>
@@ -696,22 +696,45 @@
         >
           <p style="text-align: center; width: 100%; margin: 0 auto">
             © 2025 TheFinalsLoadout.com | Created by
-            <strong
-              ><a
+            <strong>
+              <a
                 href="https://www.paultakisaki.com/"
                 rel="author"
                 style="color: #ffb700"
                 >Paul Takisaki</a
-              ></strong
-            >
+              >
+            </strong>
             |
             <a href="legal/legal.html" style="color: #ffb700"
               >Legal Disclaimer</a
+            >
+            <br />
+            <span id="deploy-version" style="font-size: 12px; color: #888"
+              >Version: <code>loading...</code></span
             >
           </p>
         </div>
       </div>
     </footer>
+
+    <script>
+      fetch(
+        "https://api.github.com/repos/paultaki/TheFinalsLoadout/commits/main"
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          const hash = data.sha.slice(0, 7);
+          const date = new Date(data.commit.author.date).toLocaleDateString();
+          const el = document.getElementById("deploy-version");
+          if (el) {
+            el.innerHTML = `Version: <a href="https://github.com/paultaki/TheFinalsLoadout/commit/${hash}" target="_blank" style="color:#888">${hash}</a> (${date})`;
+          }
+        })
+        .catch(() => {
+          const el = document.getElementById("deploy-version");
+          if (el) el.textContent = "Version: unknown";
+        });
+    </script>
 
     <!-- Scripts - restored to working order -->
     <script defer src="performance-utils.js"></script>
