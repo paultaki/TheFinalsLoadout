@@ -21,21 +21,9 @@
       as="image"
       fetchpriority="high"
     />
-    <link
-      rel="preload"
-      href="images/light_silhouette.webp"
-      as="image"
-    />
-    <link
-      rel="preload"
-      href="images/medium_silhouette.webp"
-      as="image"
-    />
-    <link
-      rel="preload"
-      href="images/heavy_silhouette.webp"
-      as="image"
-    />
+    <link rel="preload" href="images/light_silhouette.webp" as="image" />
+    <link rel="preload" href="images/medium_silhouette.webp" as="image" />
+    <link rel="preload" href="images/heavy_silhouette.webp" as="image" />
     <link rel="preload" href="style.css" as="style" />
     <link rel="preload" href="app.js" as="script" />
     <link rel="prefetch" href="images/light_active.webp" />
@@ -121,7 +109,6 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
 
     <!-- Critical CSS -->
-   
 
     <!-- Full Styles -->
     <link rel="stylesheet" href="style.css" />
@@ -178,7 +165,6 @@
       <a href="feedback/index.html">Feedback</a>
     </nav>
 
-  
     <!-- Filter Toggle Button -->
     <button
       id="filter-toggle"
@@ -730,7 +716,10 @@
     <!-- Scripts - restored to working order -->
     <script defer src="performance-utils.js"></script>
     <script defer src="roulette-animations.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+    ></script>
     <script defer src="app.js"></script>
     <script defer src="performance-init.js"></script>
     <script>
@@ -874,7 +863,6 @@
     <!-- Mobile Enhancements -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-
         // Hide selection display on page load
         const selectionDisplay = document.getElementById("selection-display");
         if (selectionDisplay) {
