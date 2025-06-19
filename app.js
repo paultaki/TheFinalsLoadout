@@ -58,6 +58,7 @@ const state = {
       : localStorage.getItem("soundEnabled") !== "false", // Default to true
   isMobile: isMobile,
   sidebarOpen: false,
+  isRouletteAnimating: false, // Add flag to track roulette animation
 };
 
 // Make state globally accessible
@@ -880,6 +881,12 @@ let lastAddedLoadout = null;
 
 // Main functions for displaying loadouts
 const displayLoadout = (classType) => {
+  // Don't start if roulette is animating
+  if (state.isRouletteAnimating) {
+    console.log("⏸️ Roulette animating, skipping displayLoadout");
+    return;
+  }
+
   // Get the filtered loadouts
   const filteredLoadouts = getFilteredLoadouts();
   const loadout = filteredLoadouts[classType];
@@ -1088,6 +1095,7 @@ const displayLoadout = (classType) => {
 
   try {
     outputDiv.innerHTML = loadoutHTML;
+    outputDiv.style.opacity = "1"; // Reset opacity to full when showing real loadout
   } catch (error) {
     console.error("❌ CRASH PREVENTION: Error setting innerHTML:", error);
     return;
@@ -1153,6 +1161,12 @@ const getAvailableClasses = () => {
 };
 
 const displayRandomLoadout = () => {
+  // Don't start if roulette is animating
+  if (state.isRouletteAnimating) {
+    console.log("⏸️ Roulette animating, skipping displayRandomLoadout");
+    return;
+  }
+
   try {
     console.log("🎯 displayRandomLoadout: Fetching available classes...");
     let availableClasses = getAvailableClasses();
@@ -1419,7 +1433,7 @@ function startSpinAnimation(columns) {
                       if (!lockedTag) {
                         lockedTag = document.createElement("div");
                         lockedTag.className = "locked-tag show";
-                        lockedTag.textContent = "Locked In!";
+                        lockedTag.textContent = "POP. POUR. PERFORM.";
                         container.appendChild(lockedTag);
                       }
 
@@ -2476,6 +2490,18 @@ window.spinLoadout = spinLoadout;
 function addCelebrationEffects() {
   const itemsContainer = document.querySelector("#output .items-container");
   if (!itemsContainer) return;
+
+  // Play celebration sound at the beginning of the animation
+  if (state.soundEnabled) {
+    const celebrationSound = document.getElementById("celebrationSound");
+    if (celebrationSound) {
+      celebrationSound.currentTime = 0;
+      celebrationSound.volume = 0.7;
+      celebrationSound.play().catch((err) => {
+        console.log("Celebration sound play error:", err);
+      });
+    }
+  }
 
   // Add a "LOADOUT LOCKED!" banner
   const banner = document.createElement("div");
@@ -3696,6 +3722,64 @@ function initializeLazyLoading() {
   }
 }
 
+// Initialize empty slot machine on page load
+function initializeEmptySlotMachine() {
+  console.log("🎰 Initializing empty slot machine");
+
+  const placeholderItems = ["?", "?", "?", "?", "?"];
+  const placeholderHTML = `
+    <div class="slot-machine-wrapper">
+      <div class="items-container">
+        <div class="item-container">
+          <div class="scroll-container">
+            <div class="itemCol">
+              <img src="images/placeholder-question.webp" alt="?" loading="lazy">
+              <p></p>
+            </div>
+          </div>
+        </div>
+        <div class="item-container">
+          <div class="scroll-container">
+            <div class="itemCol">
+              <img src="images/placeholder-question.webp" alt="?" loading="lazy">
+              <p></p>
+            </div>
+          </div>
+        </div>
+        <div class="item-container">
+          <div class="scroll-container">
+            <div class="itemCol">
+              <img src="images/placeholder-question.webp" alt="?" loading="lazy">
+              <p></p>
+            </div>
+          </div>
+        </div>
+        <div class="item-container">
+          <div class="scroll-container">
+            <div class="itemCol">
+              <img src="images/placeholder-question.webp" alt="?" loading="lazy">
+              <p></p>
+            </div>
+          </div>
+        </div>
+        <div class="item-container">
+          <div class="scroll-container">
+            <div class="itemCol">
+              <img src="images/placeholder-question.webp" alt="?" loading="lazy">
+              <p></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  if (outputDiv) {
+    outputDiv.innerHTML = placeholderHTML;
+    outputDiv.style.opacity = "0.7"; // Slightly faded to indicate it's a placeholder
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded");
 
@@ -3732,6 +3816,9 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(
         "❌ CRASH PREVENTION: Could not find output element during initialization"
       );
+    } else {
+      // Initialize empty slot machine on page load
+      initializeEmptySlotMachine();
     }
   } catch (error) {
     console.error("❌ CRASH PREVENTION: Error during initialization:", error);
@@ -3762,6 +3849,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize roulette system with retry mechanism
   function initializeRouletteSystem() {
+    // Ensure roulette container is hidden on init
+    const rouletteContainer = document.getElementById("roulette-container");
+    const rouletteOverlay = document.getElementById("roulette-overlay");
+    if (rouletteContainer) {
+      rouletteContainer.style.display = "none";
+      rouletteContainer.classList.add("hidden");
+      console.log("🎯 Hiding roulette container on init");
+    }
+    if (rouletteOverlay) {
+      rouletteOverlay.style.display = "none";
+      rouletteOverlay.classList.add("hidden");
+    }
+
     if (!window.RouletteAnimationSystem) {
       console.warn(
         "RouletteAnimationSystem not yet available, retrying in 100ms..."
@@ -3925,6 +4025,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("DOMContentLoaded", function () {
     // Set up "Select All" functionality
     setupSelectAllCheckboxes();
+
+    // Run immediate cleanup on page load
+    if (
+      window.RouletteAnimationSystem &&
+      window.RouletteAnimationSystem.cleanupAllAnimationContainers
+    ) {
+      window.RouletteAnimationSystem.cleanupAllAnimationContainers();
+    }
   });
 
   // Function to setup Select All checkboxes (moved outside event listener)
@@ -4891,8 +4999,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 fetch("https://api.github.com/repos/paultaki/TheFinalsLoadout/commits/main")
-  .then(res => res.json())
-  .then(data => {
+  .then((res) => res.json())
+  .then((data) => {
     const hash = data.sha.slice(0, 7);
     const date = new Date(data.commit.author.date).toLocaleDateString();
     const el = document.getElementById("deploy-version");

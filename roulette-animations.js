@@ -21,6 +21,9 @@ class RouletteAnimationSystem {
       totalDuration: 2000, // 2 seconds total
       decelerationStart: 0.5, // Start decelerating at 50% through
     };
+    
+    // Set up cleanup interval to catch any lingering containers
+    this.setupCleanupInterval();
   }
 
   // Main entry point for the full animation sequence
@@ -28,33 +31,32 @@ class RouletteAnimationSystem {
     if (this.animating) return;
 
     this.animating = true;
+    window.state.isRouletteAnimating = true; // Set global flag
 
-    // Hide main UI elements
-    document.querySelector(".selection-container").style.display = "none";
-    document.getElementById("output").style.display = "none";
+    // Don't hide anything - keep everything visible
+    // document.querySelector(".selection-container").style.display = "none";
+    // document.getElementById("output").style.display = "none";
 
-    // Show roulette container
+    // Show roulette overlay and container
+    const rouletteOverlay = document.getElementById("roulette-overlay");
     const rouletteContainer = document.getElementById("roulette-container");
+    
     if (!rouletteContainer) {
       console.error("Roulette container not found!");
       return;
     }
 
-    // Show container by removing hidden class
+    // Force cleanup of ALL animation containers before starting
+    RouletteAnimationSystem.cleanupAllAnimationContainers();
+    
+    // Show overlay and container by removing hidden class
+    if (rouletteOverlay) {
+      rouletteOverlay.classList.remove("hidden");
+    }
     rouletteContainer.classList.remove("hidden");
 
-    // Force container visible with inline styles
-    console.log("FORCING ROULETTE CONTAINER VISIBLE");
-    rouletteContainer.style.display = "flex";
-    rouletteContainer.style.visibility = "visible";
-    rouletteContainer.style.opacity = "1";
-    rouletteContainer.style.position = "fixed";
-    rouletteContainer.style.top = "0";
-    rouletteContainer.style.left = "0";
-    rouletteContainer.style.width = "100vw";
-    rouletteContainer.style.height = "100vh";
-    rouletteContainer.style.zIndex = "999999";
-    rouletteContainer.style.background = "rgba(0, 0, 0, 0.95)";
+    // Container visibility is handled by CSS, no need for inline styles
+    console.log("SHOWING ROULETTE CONTAINER");
 
     // Debug container visibility
     console.log("Roulette container visibility check:", {
@@ -81,7 +83,15 @@ class RouletteAnimationSystem {
     // Brief pause before starting the actual slot machine
     await this.delay(500);
 
-    // Hide roulette container
+    // Hide roulette overlay and container
+    if (rouletteOverlay) {
+      rouletteOverlay.classList.add("hidden");
+    }
+    
+    // Clear inline styles and hide container
+    rouletteContainer.style.display = "";
+    rouletteContainer.style.visibility = "";
+    rouletteContainer.style.opacity = "";
     rouletteContainer.classList.add("hidden");
 
     // Restore body scrolling
@@ -90,9 +100,9 @@ class RouletteAnimationSystem {
     // Show the selection display
     this.showSelectionDisplay();
 
-    // Show the main container and output
-    document.querySelector(".selection-container").style.display = "block";
-    document.getElementById("output").style.display = "block";
+    // Everything stays visible, no need to show/hide
+    // document.querySelector(".selection-container").style.display = "block";
+    // document.getElementById("output").style.display = "block";
 
     // Set the state for the original system
     console.log(`🔗 Roulette transferring to main system: selectedClass = "${this.selectedClass}", totalSpins = ${this.selectedSpins}`);
@@ -101,10 +111,22 @@ class RouletteAnimationSystem {
     console.log(`✅ Main state updated: selectedClass = "${window.state.selectedClass}"`);
 
     this.animating = false;
+    window.state.isRouletteAnimating = false; // Clear global flag
 
     // Trigger the original spin mechanism
     console.log(`🚀 Calling window.spinLoadout() with selectedClass = "${window.state.selectedClass}"`);
     window.spinLoadout();
+    
+    // Final cleanup - remove any lingering animation containers
+    setTimeout(() => {
+      const allAnimationContainers = document.querySelectorAll('div[style*="position: fixed"][style*="z-index: 999999"]');
+      allAnimationContainers.forEach(container => {
+        if (container.parentNode) {
+          console.log("🧹 Cleaning up lingering animation container");
+          container.remove();
+        }
+      });
+    }, 100);
   }
 
   // Animate class selection roulette
@@ -136,6 +158,9 @@ class RouletteAnimationSystem {
     
     // Create a completely new DOM structure that we control
     const animationContainer = document.createElement("div");
+    animationContainer.className = "roulette-animation-container";
+    animationContainer.setAttribute("data-roulette-phase", "class-selection");
+    animationContainer.dataset.createdAt = Date.now();
     animationContainer.style.cssText = `
     position: fixed;
     top: 0;
@@ -232,15 +257,8 @@ class RouletteAnimationSystem {
     let currentIndex = 0;
     const startTime = Date.now();
     
-    // Select winner from available classes only
-    const availableWinnerIndex = Math.floor(Math.random() * availableClasses.length);
-    this.selectedClass = availableClasses[availableWinnerIndex];
-    
-    // Find the index in the full class options array for animation purposes
-    const winnerIndex = this.classOptions.indexOf(this.selectedClass);
-    
-    console.log(`🎲 Roulette selected class: ${this.selectedClass} from available: ${availableClasses.join(', ')}`);
-    console.log(`🎯 Winner index in full options: ${winnerIndex} (${this.classOptions[winnerIndex]})`);
+    // Don't predetermine winner - let animation decide
+    let winnerIndex = 0;
 
     return new Promise((resolve, reject) => {
       // Safety timeout to prevent infinite animations
@@ -260,7 +278,25 @@ class RouletteAnimationSystem {
         const elapsed = Date.now() - startTime;
 
         if (elapsed >= this.classAnimationConfig.totalDuration) {
-          // Final selection with comprehensive error handling
+          // Final selection - use whatever we landed on
+          winnerIndex = currentIndex;
+          
+          // Make sure we're selecting from available classes only
+          const displayedClasses = ["Light", "Medium", "Heavy"];
+          const selectedClassName = displayedClasses[winnerIndex];
+          
+          // Check if this class is available
+          if (availableClasses.includes(selectedClassName)) {
+            this.selectedClass = selectedClassName;
+          } else {
+            // If we landed on an excluded class, pick a random available one
+            this.selectedClass = availableClasses[Math.floor(Math.random() * availableClasses.length)];
+            // Find its index for display
+            winnerIndex = displayedClasses.indexOf(this.selectedClass);
+          }
+          
+          console.log(`🎲 Animation landed on: ${selectedClassName}, final selection: ${this.selectedClass}`);
+          
           try {
             if (classElements && classElements.length > 0 && winnerIndex >= 0 && winnerIndex < classElements.length) {
               classElements.forEach((el, idx) => {
@@ -357,13 +393,8 @@ class RouletteAnimationSystem {
               Math.pow(decelerationProgress, 2);
         }
 
-        // Safety check for animation bounds
-        if (elapsed >= this.classAnimationConfig.totalDuration - 500) {
-          currentIndex = winnerIndex;
-          speed = 500;
-        } else {
-          currentIndex = (currentIndex + 1) % this.classOptions.length;
-        }
+        // Continue cycling through options naturally
+        currentIndex = (currentIndex + 1) % this.classOptions.length;
 
         // Ensure speed is within reasonable bounds to prevent crashes
         speed = Math.max(10, Math.min(1000, speed));
@@ -415,6 +446,9 @@ class RouletteAnimationSystem {
   async animateSpinSelection() {
     // Create a completely new DOM structure
     const animationContainer = document.createElement("div");
+    animationContainer.className = "roulette-animation-container";
+    animationContainer.setAttribute("data-roulette-phase", "spin-selection");
+    animationContainer.dataset.createdAt = Date.now();
     animationContainer.style.cssText = `
     position: fixed;
     top: 0;
@@ -504,8 +538,8 @@ class RouletteAnimationSystem {
     // Animation logic
     let currentIndex = 0;
     const startTime = Date.now();
-    const winnerIndex = Math.floor(Math.random() * this.spinOptions.length);
-    this.selectedSpins = this.spinOptions[winnerIndex];
+    // Don't predetermine winner - let animation decide
+    let winnerIndex = 0;
 
     return new Promise((resolve) => {
       // Safety timeout to prevent infinite animations
@@ -525,7 +559,10 @@ class RouletteAnimationSystem {
         const elapsed = Date.now() - startTime;
 
         if (elapsed >= this.spinAnimationConfig.totalDuration) {
-          // Final selection with error handling
+          // Final selection - use whatever we landed on
+          winnerIndex = currentIndex;
+          this.selectedSpins = this.spinOptions[winnerIndex];
+          
           try {
             if (spinElements[winnerIndex]) {
               spinElements[winnerIndex].style.opacity = "1";
@@ -609,15 +646,8 @@ class RouletteAnimationSystem {
               Math.pow(decelerationProgress, 2);
         }
 
-        // Ensure the animation stops on the predetermined winner
-        if (elapsed >= this.spinAnimationConfig.totalDuration - 600) {
-          // Force stop on winner in final 600ms
-          currentIndex = winnerIndex;
-          speed = this.spinAnimationConfig.finalSpeed;
-        } else {
-          // Normal cycling through options
-          currentIndex = (currentIndex + 1) % this.spinOptions.length;
-        }
+        // Continue cycling through options naturally
+        currentIndex = (currentIndex + 1) % this.spinOptions.length;
 
         // Ensure speed is within reasonable bounds
         speed = Math.max(10, Math.min(1000, speed));
@@ -805,6 +835,36 @@ class RouletteAnimationSystem {
     const availableClasses = includedClasses.length > 0 ? includedClasses : allClasses;
     console.log('🎲 Roulette available classes:', availableClasses);
     return availableClasses;
+  }
+  
+  // Set up interval to continuously clean up any rogue animation containers
+  setupCleanupInterval() {
+    // Run cleanup every 500ms to catch any containers that might persist
+    setInterval(() => {
+      // Only clean up containers that are NOT currently animating
+      if (!this.animating) {
+        const containers = document.querySelectorAll('.roulette-animation-container');
+        
+        containers.forEach(container => {
+          // Remove any leftover containers when not animating
+          console.log('🧹 Removing leftover animation container');
+          container.remove();
+        });
+      }
+    }, 500);
+  }
+  
+  // Clean up all animation containers immediately
+  static cleanupAllAnimationContainers() {
+    // Only clean up if there's no active animation
+    if (!window.rouletteSystem || !window.rouletteSystem.animating) {
+      const containers = document.querySelectorAll('.roulette-animation-container');
+      
+      containers.forEach(container => {
+        console.log('🧹 Force removing animation container:', container);
+        container.remove();
+      });
+    }
   }
 }
 
