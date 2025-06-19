@@ -6388,28 +6388,32 @@ details[open].adjustment summary::after {
   display: none;
 }
 
-.roulette-title{
-  font-size:48px;
-  font-weight:900;
-  letter-spacing:8px;
-  margin-bottom:50px;
+.roulette-title {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  margin-bottom: 50px;
 
-  background:linear-gradient(45deg,#00f3ff,#ff00ff,#ffb700);
-  background-size:300%;          /* nicer gradient sweep if you animate */
-  -webkit-background-clip:text;
-  background-clip:text;          /* spec version */
-  -webkit-text-fill-color:transparent;
-  color:#fff;                    /* fallback for non-WebKit */
+  background: linear-gradient(45deg, #00f3ff, #ff00ff, #ffb700);
+  background-size: 300%; /* nicer gradient sweep if you animate */
+  -webkit-background-clip: text;
+  background-clip: text; /* spec version */
+  -webkit-text-fill-color: transparent;
+  color: #fff; /* fallback for non-WebKit */
 
-  animation:titleGlow 2s ease-in-out infinite;
+  animation: titleGlow 2s ease-in-out infinite;
 }
 
 /* example keyframes if you don’t already have them */
-@keyframes titleGlow{
-  0%,100%{filter:brightness(1)}
-  50%   {filter:brightness(1.4)}
+@keyframes titleGlow {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.4);
+  }
 }
-
 
 @keyframes titleGlow {
   0%,
@@ -7240,3 +7244,5 @@ details[open].adjustment summary::after {
 .class-label.heavy {
   color: #ffaa00;
 }
+
+/* force redeploy */
