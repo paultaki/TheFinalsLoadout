@@ -2692,16 +2692,17 @@ async function addToHistory(
     newEntry.classList.add("spicy-loadout");
   }
 
-  // Generate optional badge
-  const optionalBadge = generateOptionalBadge(
-    selectedWeapon,
-    selectedSpec,
-    selectedGadgets,
-    classType
-  );
-  const badgeHTML = optionalBadge
-    ? `<div class="loadout-badge ${optionalBadge.type}" title="${optionalBadge.tooltip}">${optionalBadge.text}</div>`
-    : "";
+  // Generate optional badge - DISABLED
+  // const optionalBadge = generateOptionalBadge(
+  //   selectedWeapon,
+  //   selectedSpec,
+  //   selectedGadgets,
+  //   classType
+  // );
+  // const badgeHTML = optionalBadge
+  //   ? `<div class="loadout-badge ${optionalBadge.type}" title="${optionalBadge.tooltip}">${optionalBadge.text}</div>`
+  //   : "";
+  const badgeHTML = ""; // Overlay tags removed
 
   // Create initial entry with loading roast state
   newEntry.innerHTML = `
