@@ -2503,11 +2503,11 @@ function addCelebrationEffects() {
     }
   }
 
-  // Add a "LOADOUT LOCKED!" banner
+  // Add a "POP. POUR. PERFORM." banner
   const banner = document.createElement("div");
   banner.className = "celebration-banner";
   banner.innerHTML = `
-    <div class="banner-text">LOADOUT LOCKED!</div>
+    <div class="banner-text">POP. POUR. PERFORM.</div>
     <div class="banner-subtext">Ready to dominate The Finals</div>
   `;
   itemsContainer.appendChild(banner);
@@ -2678,6 +2678,7 @@ async function addToHistory(
   const historyList = document.getElementById("history-list");
   const newEntry = document.createElement("div");
   newEntry.classList.add("history-entry");
+  newEntry.setAttribute("data-class", classType.toLowerCase());
 
   // Generate a fun name based on the loadout
   const loadoutName = generateLoadoutName(
@@ -2744,6 +2745,7 @@ async function addToHistory(
       </div>
       <div class="roast-section loading">
         <div class="roast-content">
+          <span class="fire-emoji">🔥</span>
           <span class="roast-text">Analyzing loadout configuration...</span>
         </div>
       </div>
@@ -2998,8 +3000,8 @@ function saveHistory() {
       const badge = badgeElement
         ? {
             text: badgeElement.textContent,
-            type: badgeElement.classList.contains("legendary-trash")
-              ? "legendary-trash"
+            type: badgeElement.classList.contains("legendary-chaos")
+              ? "legendary-chaos"
               : "special",
             tooltip: badgeElement.getAttribute("title") || "",
           }
@@ -3060,6 +3062,7 @@ function loadHistory() {
 
     const entry = document.createElement("div");
     entry.classList.add("history-entry", "visible"); // Add visible class immediately
+    entry.setAttribute("data-class", entryData.classType.toLowerCase());
 
     // Add spicy class if needed
     if (entryData.isSpicy) {
@@ -3245,8 +3248,8 @@ function generateLoadoutName(classType, weapon, spec) {
   return template;
 }
 
-// Check if loadout deserves LEGENDARY TRASH badge
-function shouldShowLegendaryTrashBadge(
+// Check if loadout deserves LEGENDARY CHAOS badge
+function shouldShowLegendaryChaossBadge(
   weapon,
   spec,
   gadgets,
@@ -3297,12 +3300,12 @@ function generateOptionalBadge(
   classType,
   analysisRating = null
 ) {
-  // Check for LEGENDARY TRASH first (highest priority)
-  if (shouldShowLegendaryTrashBadge(weapon, spec, gadgets, analysisRating)) {
+  // Check for LEGENDARY CHAOS first (highest priority)
+  if (shouldShowLegendaryChaossBadge(weapon, spec, gadgets, analysisRating)) {
     return {
-      text: "🔥 LEGENDARY TRASH",
-      type: "legendary-trash",
-      tooltip: "This loadout broke the meta—in the worst possible way.",
+      text: "🔥 LEGENDARY CHAOS",
+      type: "legendary-chaos",
+      tooltip: "This loadout is pure chaos—embrace the madness!",
     };
   }
 
