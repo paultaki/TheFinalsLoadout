@@ -887,6 +887,39 @@
       </div>
     </section>
 
+    <!-- Meta Trends Section -->
+    <section class="py-8 border-t border-b border-finals-gold/20 bg-finals-dark/70">
+      <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-finals-gold mb-4">📊 Meta Trends (June 2025)</h2>
+        <div class="grid md:grid-cols-3 gap-6 text-sm text-gray-300">
+          <div>
+            <h3 class="text-finals-green font-semibold mb-2">📈 Rising</h3>
+            <ul class="list-disc list-inside space-y-1">
+              <li>LH1 – Back in play after buff to 42 dmg</li>
+              <li>M134 Minigun – Stronger due to environment scaling</li>
+              <li>Pike-556 – Outranging SMGs in Ranked</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-finals-yellow font-semibold mb-2">🟨 Stable</h3>
+            <ul class="list-disc list-inside space-y-1">
+              <li>XP‑54 – Still top-tier SMG</li>
+              <li>SA1216 – Remains the king of shotguns</li>
+              <li>AKM – Reliable all-rounder</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-finals-red font-semibold mb-2">📉 Falling</h3>
+            <ul class="list-disc list-inside space-y-1">
+              <li>Sledgehammer – Damage nerfs hit hard</li>
+              <li>Cerberus 12GA – No longer a must-pick</li>
+              <li>Throwing Knives – Still too situational</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Weapon Rankings -->
     <section class="py-8">
       <div class="container mx-auto px-4">
@@ -912,7 +945,18 @@
                 >
               </div>
               <div class="text-sm text-gray-300 mb-3">
-                <p><strong>DPS:</strong> ~240 | <strong>TTK:</strong> ~0.64s</p>
+                <p><strong>DPS:</strong> ~240 | <strong>TTK:</strong> ~0.64s
+                  <div class="relative group inline-block ml-1">
+                    <span class="text-sm text-gray-400 cursor-help group-hover:underline">ⓘ</span>
+                    <div class="absolute hidden group-hover:block bg-gray-900 text-white text-xs rounded p-2 z-50 w-48 mt-1 shadow-lg">
+                      <strong>TTK by Class</strong><br />
+                      🟦 Light: 0.64s<br />
+                      🟪 Medium: 1.06s<br />
+                      🟨 Heavy: 1.48s
+                    </div>
+                  </div>
+                </p>
+                <p class="text-xs font-medium mt-1 text-yellow-400">🟨 Stable</p>
                 <p>Low recoil, versatile, community favorite</p>
               </div>
               <div class="text-xs text-gray-400">
@@ -935,7 +979,17 @@
                 >
               </div>
               <div class="text-sm text-gray-300 mb-3">
-                <p><strong>DPS:</strong> ~240 | <strong>TTK:</strong> ~0.50s</p>
+                <p><strong>DPS:</strong> ~240 | <strong>TTK:</strong> ~0.50s
+                  <div class="relative group inline-block ml-1">
+                    <span class="text-sm text-gray-400 cursor-help group-hover:underline">ⓘ</span>
+                    <div class="absolute hidden group-hover:block bg-gray-900 text-white text-xs rounded p-2 z-50 w-48 mt-1 shadow-lg">
+                      <strong>TTK by Class</strong><br />
+                      🟦 Light: 0.50s<br />
+                      🟪 Medium: 0.75s<br />
+                      🟨 Heavy: 1.00s
+                    </div>
+                  </div>
+                </p>
                 <p>40 dmg/shot, fast reload, deadly up close</p>
               </div>
               <div class="text-xs text-gray-400">
@@ -958,7 +1012,17 @@
                 >
               </div>
               <div class="text-sm text-gray-300 mb-3">
-                <p><strong>DPS:</strong> ~265 | <strong>TTK:</strong> ~0.54s</p>
+                <p><strong>DPS:</strong> ~265 | <strong>TTK:</strong> ~0.54s
+                  <div class="relative group inline-block ml-1">
+                    <span class="text-sm text-gray-400 cursor-help group-hover:underline">ⓘ</span>
+                    <div class="absolute hidden group-hover:block bg-gray-900 text-white text-xs rounded p-2 z-50 w-48 mt-1 shadow-lg">
+                      <strong>TTK by Class</strong><br />
+                      🟦 Light: 0.54s<br />
+                      🟪 Medium: 0.81s<br />
+                      🟨 Heavy: 1.08s
+                    </div>
+                  </div>
+                </p>
                 <p>Fastest SMG, recoil-heavy but deadly</p>
               </div>
               <div class="text-xs text-gray-400">
@@ -1035,6 +1099,30 @@
                 <p>✅ Great for flanking builds</p>
               </div>
             </div>
+
+            <!-- LH1 -->
+            <div
+              class="weapon-card bg-finals-dark rounded-lg p-4 border border-finals-blue/30"
+              data-tier="a"
+              data-class="light"
+            >
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="font-bold text-lg">LH1</h4>
+                <span
+                  class="tier-a text-black font-bold px-2 py-1 rounded text-xs"
+                  >A-TIER</span
+                >
+              </div>
+              <div class="text-sm text-gray-300 mb-3">
+                <p><strong>DPS:</strong> ~210 | <strong>TTK:</strong> ~0.58s</p>
+                <p class="text-xs font-medium mt-1 text-green-400">📈 Rising</p>
+                <p>Back in play after buff to 42 dmg</p>
+              </div>
+              <div class="text-xs text-gray-400">
+                <p>✅ Great for: Mid-range combat</p>
+                <p>✅ Consistent damage output</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1109,6 +1197,7 @@
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~200 | <strong>TTK:</strong> ~0.60s</p>
+                <p class="text-xs font-medium mt-1 text-red-400">📉 Falling</p>
                 <p>Two-shot burst, nerfed in S7 but still strong</p>
               </div>
               <div class="text-xs text-gray-400">
@@ -1275,7 +1364,17 @@
                 >
               </div>
               <div class="text-sm text-gray-300 mb-3">
-                <p><strong>DPS:</strong> ~240 | <strong>TTK:</strong> ~0.30s</p>
+                <p><strong>DPS:</strong> ~240 | <strong>TTK:</strong> ~0.30s
+                  <div class="relative group inline-block ml-1">
+                    <span class="text-sm text-gray-400 cursor-help group-hover:underline">ⓘ</span>
+                    <div class="absolute hidden group-hover:block bg-gray-900 text-white text-xs rounded p-2 z-50 w-48 mt-1 shadow-lg">
+                      <strong>TTK by Class</strong><br />
+                      🟦 Light: 0.30s<br />
+                      🟪 Medium: 0.45s<br />
+                      🟨 Heavy: 0.60s
+                    </div>
+                  </div>
+                </p>
                 <p>Fastest TTK, burst fire shotgun</p>
               </div>
               <div class="text-xs text-gray-400">
@@ -1298,7 +1397,18 @@
                 >
               </div>
               <div class="text-sm text-gray-300 mb-3">
-                <p><strong>DPS:</strong> ~275 | <strong>TTK:</strong> ~0.52s</p>
+                <p><strong>DPS:</strong> ~275 | <strong>TTK:</strong> ~0.52s
+                  <div class="relative group inline-block ml-1">
+                    <span class="text-sm text-gray-400 cursor-help group-hover:underline">ⓘ</span>
+                    <div class="absolute hidden group-hover:block bg-gray-900 text-white text-xs rounded p-2 z-50 w-48 mt-1 shadow-lg">
+                      <strong>TTK by Class</strong><br />
+                      🟦 Light: 0.52s<br />
+                      🟪 Medium: 0.78s<br />
+                      🟨 Heavy: 1.04s
+                    </div>
+                  </div>
+                </p>
+                <p class="text-xs font-medium mt-1 text-green-400">📈 Rising</p>
                 <p>Highest sustained DPS, spin-up required</p>
               </div>
               <div class="text-xs text-gray-400">
@@ -1329,8 +1439,45 @@
                 <p>✅ Great finisher weapon</p>
               </div>
             </div>
+
+            <!-- Sledgehammer -->
+            <div
+              class="weapon-card bg-finals-dark rounded-lg p-4 border border-finals-gold/30"
+              data-tier="b"
+              data-class="heavy"
+            >
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="font-bold text-lg">Sledgehammer</h4>
+                <span
+                  class="tier-b text-black font-bold px-2 py-1 rounded text-xs"
+                  >B-TIER</span
+                >
+              </div>
+              <div class="text-sm text-gray-300 mb-3">
+                <p><strong>DPS:</strong> ~180 | <strong>TTK:</strong> ~0.85s</p>
+                <p class="text-xs font-medium mt-1 text-red-400">📉 Falling</p>
+                <p>Damage nerfs hit hard in Season 7</p>
+              </div>
+              <div class="text-xs text-gray-400">
+                <p>⚠️ Nerfed in Season 7</p>
+                <p>✅ Still good for destruction</p>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Community Quotes Section -->
+    <section class="bg-gray-900 border-t border-finals-gold/20 py-6">
+      <div class="container mx-auto px-4">
+        <h2 class="text-xl font-bold text-finals-gold mb-4">🗣️ What the Community's Saying</h2>
+        <ul class="text-sm text-gray-300 space-y-3">
+          <li>"XP‑54 is still the Light GOAT." — Reddit</li>
+          <li>"Pike‑556 melts in Ranked." — Twitch Chat</li>
+          <li>"Sledge got nerfed into the ground." — Reddit</li>
+          <li>"Minigun is finally fun again." — Discord</li>
+        </ul>
       </div>
     </section>
 

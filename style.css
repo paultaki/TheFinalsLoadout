@@ -393,13 +393,13 @@ html {
   border: 1px solid #1a1a1a !important;
   border-radius: 0;
   padding: 14px;
-  margin: 20px 0;
+  margin: 10px 0;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.3s ease;
-  min-height: auto;
+  min-height: 112px;
 }
 
 .history-entry::before {
@@ -702,13 +702,12 @@ html {
   border-radius: 8px;
   padding: 16px;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   max-width: 85%; /* Tighten width by 15% */
   margin: 0 auto; /* Center the container */
   display: flex;
   flex-direction: column;
   gap: 12px;
-  min-height: auto;
 }
 
 .meme-export-container::before {
@@ -2863,10 +2862,6 @@ img {
   right: -5px;
   background: linear-gradient(45deg, #ffb700, #ff7b00);
   color: black;
-  padding: 4px 8px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: bold;
   transform: scale(0);
   opacity: 0;
   z-index: 10;
@@ -7475,7 +7470,7 @@ details[open].adjustment summary::after {
 #history-list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   margin-bottom: 1rem;
 }
 
