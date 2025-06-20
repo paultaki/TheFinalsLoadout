@@ -335,7 +335,39 @@
       }
 
       .tier-badge {
-        animation: tierGlow 2s ease-in-out infinite;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.95em;
+        margin-left: 0.5rem;
+        margin-right: 0.1rem;
+        vertical-align: middle;
+        letter-spacing: 0.02em;
+      }
+      .tier-s-glow {
+        width: 2.1em;
+        height: 2.1em;
+        border-radius: 0.6em;
+        background: #1a1a1a;
+        color: #fff;
+        border: 2px solid #ffe066;
+        box-shadow: 0 0 3px 0.5px #ffe066, 0 0 8px 2px #ffe06633;
+        animation: s-glow 1.2s infinite alternate;
+      }
+      @keyframes s-glow {
+        0% { box-shadow: 0 0 3px 0.5px #ffe066, 0 0 8px 2px #ffe06633; }
+        100% { box-shadow: 0 0 6px 1.5px #ffe066, 0 0 12px 4px #ffe06655; }
+      }
+      .tier-a-circle {
+        width: 2.1em;
+        height: 2.1em;
+        border-radius: 50%;
+        background: #1a1a1a;
+        color: #ff3b3b;
+        border: 2.5px solid #ff3b3b;
+        box-shadow: 0 0 0.5em 0 #ff3b3b44;
+        font-weight: bold;
       }
 
       /* Sticky filter section enhancement */
@@ -939,10 +971,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">XP-54 SMG</h4>
-                <span
-                  class="tier-s text-black font-bold px-2 py-1 rounded text-xs"
-                  >S-TIER</span
-                >
+                <span class="tier-badge tier-s-glow">S</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~240 | <strong>TTK:</strong> ~0.64s
@@ -973,10 +1002,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">V9-S Pistol</h4>
-                <span
-                  class="tier-s text-black font-bold px-2 py-1 rounded text-xs"
-                  >S-TIER</span
-                >
+                <span class="tier-badge tier-s-glow">S</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~240 | <strong>TTK:</strong> ~0.50s
@@ -1006,10 +1032,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">M11 SMG</h4>
-                <span
-                  class="tier-s text-black font-bold px-2 py-1 rounded text-xs"
-                  >S-TIER</span
-                >
+                <span class="tier-badge tier-s-glow">S</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~265 | <strong>TTK:</strong> ~0.54s
@@ -1039,10 +1062,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">ARN-220 Carbine</h4>
-                <span
-                  class="tier-a text-black font-bold px-2 py-1 rounded text-xs"
-                  >A-TIER</span
-                >
+                <span class="tier-badge tier-a-circle">A</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~204 | <strong>TTK:</strong> ~0.66s</p>
@@ -1062,10 +1082,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">SH-1900 (Double-Barrel)</h4>
-                <span
-                  class="tier-b text-black font-bold px-2 py-1 rounded text-xs"
-                  >B-TIER</span
-                >
+                <span class="tier-badge tier-b-circle">B</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~260 | <strong>TTK:</strong> ~0.2s</p>
@@ -1085,10 +1102,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">Sword</h4>
-                <span
-                  class="tier-a text-black font-bold px-2 py-1 rounded text-xs"
-                  >A-TIER</span
-                >
+                <span class="tier-badge tier-a-circle">A</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~148 | <strong>TTK:</strong> ~1.3s</p>
@@ -1108,10 +1122,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">LH1</h4>
-                <span
-                  class="tier-a text-black font-bold px-2 py-1 rounded text-xs"
-                  >A-TIER</span
-                >
+                <span class="tier-badge tier-a-circle">A</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~210 | <strong>TTK:</strong> ~0.58s</p>
@@ -1144,10 +1155,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">AKM</h4>
-                <span
-                  class="tier-s text-black font-bold px-2 py-1 rounded text-xs"
-                  >S-TIER</span
-                >
+                <span class="tier-badge tier-s-glow">S</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~200 | <strong>TTK:</strong> ~0.70s</p>
@@ -1167,10 +1175,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">FAMAS</h4>
-                <span
-                  class="tier-s text-black font-bold px-2 py-1 rounded text-xs"
-                  >S-TIER</span
-                >
+                <span class="tier-badge tier-s-glow">S</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~195 | <strong>TTK:</strong> ~0.76s</p>
@@ -1190,10 +1195,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">Cerberus 12GA</h4>
-                <span
-                  class="tier-s text-black font-bold px-2 py-1 rounded text-xs"
-                  >S-TIER</span
-                >
+                <span class="tier-badge tier-s-glow">S</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~200 | <strong>TTK:</strong> ~0.60s</p>
@@ -1214,10 +1216,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">FCAR Battle Rifle</h4>
-                <span
-                  class="tier-a text-black font-bold px-2 py-1 rounded text-xs"
-                  >A-TIER</span
-                >
+                <span class="tier-badge tier-a-circle">A</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~198 | <strong>TTK:</strong> ~0.67s</p>
@@ -1237,10 +1236,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">CL-40 Launcher</h4>
-                <span
-                  class="tier-a text-black font-bold px-2 py-1 rounded text-xs"
-                  >A-TIER</span
-                >
+                <span class="tier-badge tier-a-circle">A</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~112 | <strong>TTK:</strong> ~0.80s</p>
@@ -1260,10 +1256,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">R.357 Revolver</h4>
-                <span
-                  class="tier-b text-black font-bold px-2 py-1 rounded text-xs"
-                  >B-TIER</span
-                >
+                <span class="tier-badge tier-b-circle">B</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~172 | <strong>TTK:</strong> ~0.86s</p>
@@ -1289,10 +1282,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">ShAK-50</h4>
-                <span
-                  class="tier-s text-black font-bold px-2 py-1 rounded text-xs"
-                  >S-TIER</span
-                >
+                <span class="tier-badge tier-s-glow">S</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~210 | <strong>TTK:</strong> ~0.57s</p>
@@ -1312,10 +1302,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">M60</h4>
-                <span
-                  class="tier-s text-black font-bold px-2 py-1 rounded text-xs"
-                  >S-TIER</span
-                >
+                <span class="tier-badge tier-s-glow">S</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~193 | <strong>TTK:</strong> ~0.72s</p>
@@ -1335,10 +1322,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">Lewis Gun</h4>
-                <span
-                  class="tier-s text-black font-bold px-2 py-1 rounded text-xs"
-                  >S-TIER</span
-                >
+                <span class="tier-badge tier-s-glow">S</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~187 | <strong>TTK:</strong> ~0.72s</p>
@@ -1358,10 +1342,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">SA-1216 Shotgun</h4>
-                <span
-                  class="tier-a text-black font-bold px-2 py-1 rounded text-xs"
-                  >A-TIER</span
-                >
+                <span class="tier-badge tier-a-circle">A</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~240 | <strong>TTK:</strong> ~0.30s
@@ -1391,10 +1372,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">M134 Minigun</h4>
-                <span
-                  class="tier-a text-black font-bold px-2 py-1 rounded text-xs"
-                  >A-TIER</span
-                >
+                <span class="tier-badge tier-a-circle">A</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~275 | <strong>TTK:</strong> ~0.52s
@@ -1425,10 +1403,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">.50 Dual Pistols</h4>
-                <span
-                  class="tier-a text-black font-bold px-2 py-1 rounded text-xs"
-                  >A-TIER</span
-                >
+                <span class="tier-badge tier-a-circle">A</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~168 | <strong>TTK:</strong> ~0.78s</p>
@@ -1448,10 +1423,7 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h4 class="font-bold text-lg">Sledgehammer</h4>
-                <span
-                  class="tier-b text-black font-bold px-2 py-1 rounded text-xs"
-                  >B-TIER</span
-                >
+                <span class="tier-badge tier-b-circle">B</span>
               </div>
               <div class="text-sm text-gray-300 mb-3">
                 <p><strong>DPS:</strong> ~180 | <strong>TTK:</strong> ~0.85s</p>
