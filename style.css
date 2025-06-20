@@ -8029,3 +8029,44 @@ details[open].adjustment summary::after {
     contain: layout style;
   }
 }
+
+@media (max-width: 768px) {
+  .celebration-banner {
+    position: fixed !important;
+    top: 40% !important; /* Moved up from 50% to center over the slot boxes */
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    padding: 0 20px !important;
+    box-sizing: border-box !important;
+    z-index: 1000 !important;
+  }
+
+  .celebration-banner .banner-text {
+    font-size: 6vw !important; /* Responsive font size */
+    letter-spacing: 1px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    line-height: 1.2 !important;
+  }
+
+  .celebration-banner .banner-subtext {
+    font-size: 3vw !important; /* Responsive font size */
+    margin-top: 8px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .celebration-banner .banner-text {
+    font-size: 7vw !important; /* Slightly larger on very small screens */
+    letter-spacing: 0.5px !important;
+  }
+
+  .celebration-banner .banner-subtext {
+    font-size: 4vw !important;
+  }
+}
