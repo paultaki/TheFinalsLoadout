@@ -393,13 +393,13 @@ html {
   border: 1px solid #1a1a1a !important;
   border-radius: 0;
   padding: 14px;
-  margin: 10px 0;
+  margin: 20px 0;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.3s ease;
-  min-height: 112px;
+  min-height: auto;
 }
 
 .history-entry::before {
@@ -702,12 +702,13 @@ html {
   border-radius: 8px;
   padding: 16px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   max-width: 85%; /* Tighten width by 15% */
   margin: 0 auto; /* Center the container */
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-height: auto;
 }
 
 .meme-export-container::before {
@@ -1048,30 +1049,68 @@ html {
 /* Mobile responsiveness for history */
 @media (max-width: 768px) {
   .loadout-details {
-    grid-template-columns: 1fr;
-    justify-items: center;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    margin-bottom: 0.75rem !important;
+    grid-template-columns: unset !important;
+    justify-items: unset !important;
   }
 
   .weapon-item,
   .spec-item {
-    grid-column: 1;
-    justify-self: center;
-    width: 100%;
-    max-width: 280px;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.5rem !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    width: 100% !important;
+    max-width: none !important;
+    grid-column: unset !important;
+    justify-self: unset !important;
+    flex-direction: row !important;
+  }
+
+  .weapon-item {
+    border-left: 3px solid #ffd700 !important;
+  }
+
+  .spec-item {
+    border-left: 3px solid #a855f7 !important;
   }
 
   .gadget-group {
-    flex-direction: column;
-    align-items: center;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.375rem !important;
+    align-items: stretch !important;
+    width: 100% !important;
   }
 
   .gadget-item {
-    width: 100%;
-    max-width: 280px;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.375rem 0.5rem !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-left: 3px solid #3b82f6 !important;
+    width: 100% !important;
+    max-width: none !important;
+    flex-direction: row !important;
   }
 
   .item-name {
-    font-size: 13px;
+    font-size: 0.875rem !important;
+    color: #fff !important;
+    font-weight: 500 !important;
+    flex: 1 !important;
+    line-height: 1.2 !important;
+    display: flex !important;
+    align-items: center !important;
   }
 
   .loadout-header {
@@ -7063,12 +7102,12 @@ details[open].adjustment summary::after {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shinyGradient 4s ease-in-out infinite;
+  animation: shinyGradient 12s ease-in-out infinite; /* Slowed down from 8s to 12s */
   font-weight: 900;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   display: inline-block;
-  filter: drop-shadow(0 0 20px rgba(255, 0, 110, 0.5));
+  /* filter: drop-shadow(0 0 20px rgba(255, 0, 110, 0.5)); */ /* Outer glow removed */
   margin-top: 20px; /* Add space below the logo */
   margin-bottom: 10px;
 }
@@ -7436,13 +7475,17 @@ details[open].adjustment summary::after {
 #history-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   margin-bottom: 1rem;
 }
 
 /* History Entry Card Styles */
 .history-entry {
-  background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 42, 42, 0.95) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(26, 26, 26, 0.95) 0%,
+    rgba(42, 42, 42, 0.95) 100%
+  );
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 1rem;
@@ -7473,13 +7516,22 @@ details[open].adjustment summary::after {
 
 /* Spicy loadout animation */
 .history-entry.spicy-loadout {
-  background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(255, 107, 53, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(26, 26, 26, 0.95) 0%,
+    rgba(255, 107, 53, 0.1) 100%
+  );
   animation: spicyPulse 3s ease-in-out infinite;
 }
 
 @keyframes spicyPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4); }
-  50% { box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+  }
 }
 
 /* Mobile-optimized layout for history entries */
@@ -7519,7 +7571,7 @@ details[open].adjustment summary::after {
     padding: 0.25rem 0.75rem;
     border-radius: 4px;
     text-transform: uppercase;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     letter-spacing: 0.05em;
   }
 
@@ -7547,11 +7599,11 @@ details[open].adjustment summary::after {
     font-size: 0.875rem;
     flex: 1;
   }
-  
+
   .meme-export-container .class-badge {
     display: inline-flex !important;
   }
-  
+
   .meme-export-container .loadout-name {
     display: inline-block !important;
   }
@@ -7559,10 +7611,10 @@ details[open].adjustment summary::after {
   .timestamp {
     font-size: 0.75rem;
     color: #666;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     margin-left: auto;
   }
-  
+
   .meme-export-container .timestamp {
     display: inline-block !important;
   }
@@ -7581,7 +7633,7 @@ details[open].adjustment summary::after {
     z-index: 10;
     animation: badgePulse 2s ease-in-out infinite;
   }
-  
+
   /* Ensure badge is visible within history entry */
   .history-entry {
     position: relative !important;
@@ -7593,8 +7645,13 @@ details[open].adjustment summary::after {
   }
 
   @keyframes badgePulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
   }
 
   /* Mobile loadout details */
@@ -7622,12 +7679,12 @@ details[open].adjustment summary::after {
   .loadout-item.spec-item {
     border-left: 3px solid #a855f7;
   }
-  
+
   /* Apply the same border colors to meme-export-container items */
   .meme-export-container .weapon-item {
     border-left: 3px solid #ffd700 !important;
   }
-  
+
   .meme-export-container .spec-item {
     border-left: 3px solid #a855f7 !important;
   }
@@ -7639,8 +7696,17 @@ details[open].adjustment summary::after {
   }
 
   .loadout-item.gadget-item {
-    border-left: 3px solid #3b82f6;
-    padding: 0.375rem 0.5rem;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.375rem 0.5rem !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-left: 3px solid #3b82f6 !important;
+    width: 100% !important;
+    max-width: none !important;
+    flex-direction: row !important;
   }
 
   .item-icon {
@@ -7725,7 +7791,7 @@ details[open].adjustment summary::after {
     color: #fff;
     font-size: 0.75rem;
     font-weight: 600;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -7747,7 +7813,11 @@ details[open].adjustment summary::after {
   }
 
   .meme-card-btn {
-    background: linear-gradient(45deg, rgba(255, 20, 147, 0.2), rgba(0, 255, 255, 0.2)) !important;
+    background: linear-gradient(
+      45deg,
+      rgba(255, 20, 147, 0.2),
+      rgba(0, 255, 255, 0.2)
+    ) !important;
     border-color: rgba(255, 20, 147, 0.5) !important;
   }
 
@@ -7812,25 +7882,25 @@ details[open].adjustment summary::after {
     gap: 0.75rem !important;
     width: 100% !important;
   }
-  
+
   .meme-export-container::before {
     display: none !important;
   }
-  
+
   .meme-export-container::after {
     display: none !important;
   }
-  
+
   .meme-footer {
     display: none !important;
   }
-  
+
   /* Reset z-index for mobile */
   .meme-export-container > * {
     position: static !important;
     z-index: auto !important;
   }
-  
+
   /* Override meme-export-container specific styles for mobile */
   .meme-export-container .loadout-header {
     display: flex !important;
@@ -7840,7 +7910,7 @@ details[open].adjustment summary::after {
     margin-bottom: 0.75rem !important;
     grid-template-columns: none !important;
   }
-  
+
   .meme-export-container .loadout-details {
     display: flex !important;
     flex-direction: column !important;
@@ -7849,7 +7919,7 @@ details[open].adjustment summary::after {
     grid-template-columns: none !important;
     width: 100% !important;
   }
-  
+
   .meme-export-container .loadout-item {
     display: flex !important;
     flex-direction: row !important;
@@ -7862,7 +7932,7 @@ details[open].adjustment summary::after {
     width: 100% !important;
     box-sizing: border-box !important;
   }
-  
+
   .meme-export-container .item-icon {
     width: 32px !important;
     height: 32px !important;
@@ -7870,12 +7940,12 @@ details[open].adjustment summary::after {
     padding: 0 !important;
     box-shadow: none !important;
   }
-  
+
   .meme-export-container .item-icon.small {
     width: 24px !important;
     height: 24px !important;
   }
-  
+
   .meme-export-container .item-name {
     font-size: 0.875rem !important;
     text-align: left !important;
@@ -7885,11 +7955,11 @@ details[open].adjustment summary::after {
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
   }
-  
+
   .meme-export-container .item-name.small {
     font-size: 0.8125rem !important;
   }
-  
+
   .meme-export-container .gadget-group {
     grid-column: auto !important;
     display: flex !important;
@@ -7903,7 +7973,7 @@ details[open].adjustment summary::after {
     margin-top: 0.25rem !important;
     position: relative !important;
   }
-  
+
   /* Add a label for gadgets */
   .meme-export-container .gadget-group::before {
     content: "GADGETS" !important;
@@ -7918,7 +7988,7 @@ details[open].adjustment summary::after {
     letter-spacing: 0.05em !important;
     display: block !important;
   }
-  
+
   .meme-export-container .gadget-item {
     display: flex !important;
     flex-direction: row !important;
@@ -7931,7 +8001,7 @@ details[open].adjustment summary::after {
     background: transparent !important;
     border: none !important;
   }
-  
+
   /* Override roast section styles for mobile */
   .meme-export-container .roast-section {
     background: rgba(255, 69, 0, 0.1) !important;
@@ -7941,7 +8011,7 @@ details[open].adjustment summary::after {
     margin: 0.75rem 0 !important;
     text-align: left !important;
   }
-  
+
   .meme-export-container .roast-text {
     font-size: 0.8125rem !important;
     font-weight: normal !important;
