@@ -421,13 +421,9 @@
       </div>
 
       <!-- Content Sections -->
-      <div class="patch-content" style="display: block !important">
+      <div class="patch-content">
         <!-- New Content Section -->
-        <section
-          class="patch-section"
-          id="content"
-          style="display: block !important; opacity: 1 !important"
-        >
+        <section class="patch-section" id="content">
           <h2 class="section-title">
             <svg
               width="24"
@@ -445,11 +441,7 @@
           </h2>
 
           <!-- H+ Infuser -->
-          <article
-            class="change-card new visible"
-            data-content="h-infuser"
-            style="display: block !important; opacity: 1 !important"
-          >
+          <article class="change-card new visible" data-content="h-infuser">
             <div class="card-header">
               <div class="weapon-icon">
                 <img
@@ -1373,42 +1365,6 @@
 
       // Initial check
       toggleReturnToTop();
-    </script>
-
-    <script>
-      // Fallback to ensure content is visible
-      document.addEventListener("DOMContentLoaded", function () {
-        // Force all content to be visible
-        const cards = document.querySelectorAll(".change-card");
-        const sections = document.querySelectorAll(".patch-section");
-
-        cards.forEach((card) => {
-          card.style.display = "block";
-          card.style.opacity = "1";
-          card.classList.add("visible");
-        });
-
-        sections.forEach((section) => {
-          section.style.display = "block";
-          section.style.opacity = "1";
-        });
-
-        console.log("Fallback: Made", cards.length, "cards visible");
-      });
-
-      // Additional fallback after a short delay
-      setTimeout(function () {
-        const hiddenCards = document.querySelectorAll(
-          '.change-card[style*="display: none"]'
-        );
-        if (hiddenCards.length > 0) {
-          hiddenCards.forEach((card) => {
-            card.style.display = "block !important";
-            card.style.opacity = "1 !important";
-          });
-          console.log("Fallback: Fixed", hiddenCards.length, "hidden cards");
-        }
-      }, 1000);
     </script>
   </body>
 </html>
