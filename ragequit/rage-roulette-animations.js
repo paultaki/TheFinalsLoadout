@@ -11,7 +11,7 @@ class RageRouletteAnimationSystem {
     
     // Initialize realistic roulette wheel
     this.rouletteWheel = null;
-    this.useRealisticWheel = true; // Toggle for realistic vs simple animation
+    this.useRealisticWheel = false; // Disabled - use original animation for rage quit
 
     // Animation timing configurations (exact copy from main page)
     this.classAnimationConfig = {
