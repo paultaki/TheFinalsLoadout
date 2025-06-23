@@ -1,4 +1,4 @@
-// Rage Quit Roulette Animation System (Copied from main page)
+// Rage Quit Roulette Animation System with Realistic Wheel Physics
 class RageRouletteAnimationSystem {
   constructor() {
     this.classOptions = ["Light", "Medium", "Heavy"];
@@ -8,6 +8,10 @@ class RageRouletteAnimationSystem {
     this.selectedHandicap = null;
     this.selectedHandicapDesc = null;
     this.animating = false;
+    
+    // Initialize realistic roulette wheel
+    this.rouletteWheel = null;
+    this.useRealisticWheel = true; // Toggle for realistic vs simple animation
 
     // Animation timing configurations (exact copy from main page)
     this.classAnimationConfig = {
@@ -101,9 +105,13 @@ class RageRouletteAnimationSystem {
     document.body.style.overflow = "hidden";
 
     try {
-      // Phase 1: Class Selection
+      // Phase 1: Class Selection with Realistic Roulette Wheel
       console.log("🎬 Phase 1: Class Selection");
-      await this.animateClassSelection();
+      if (this.useRealisticWheel && window.RealisticRouletteWheel) {
+        await this.animateRealisticClassSelection();
+      } else {
+        await this.animateClassSelection();
+      }
 
       // Brief pause between phases
       await this.delay(500);
@@ -1109,6 +1117,113 @@ class RageRouletteAnimationSystem {
     handicapContainer.innerHTML = handicapHTML;
   }
 
+  // NEW: Animate class selection with realistic roulette wheel
+  async animateRealisticClassSelection() {
+    try {
+      console.log('🎯 Starting realistic roulette wheel for class selection');
+      
+      // Create container for roulette wheel
+      const animationContainer = document.createElement("div");
+      animationContainer.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(139, 0, 0, 0.95);
+        z-index: 999999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      `;
+      
+      // Title
+      const title = document.createElement("h2");
+      title.textContent = "SPINNING THE WHEEL OF DOOM...";
+      title.style.cssText = `
+        font-size: clamp(28px, 8vw, 48px);
+        font-weight: 900;
+        letter-spacing: clamp(2px, 2vw, 8px);
+        margin-bottom: 20px;
+        color: #ff4444;
+        text-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
+        text-align: center;
+        padding: 0 20px;
+      `;
+      
+      // Roulette wheel container
+      const wheelContainer = document.createElement("div");
+      wheelContainer.id = "realistic-roulette-wheel";
+      wheelContainer.style.cssText = `
+        width: 500px;
+        height: 500px;
+        max-width: 90vw;
+        max-height: 60vh;
+      `;
+      
+      animationContainer.appendChild(title);
+      animationContainer.appendChild(wheelContainer);
+      document.body.appendChild(animationContainer);
+      
+      // Initialize realistic roulette wheel
+      this.rouletteWheel = new window.RealisticRouletteWheel();
+      this.rouletteWheel.init('realistic-roulette-wheel');
+      
+      // Wait for wheel to be ready
+      await this.delay(500);
+      
+      // Set up result listener
+      return new Promise((resolve) => {
+        const handleResult = (event) => {
+          const { pocket, result } = event.detail;
+          console.log('🎰 Roulette result:', pocket, result);
+          
+          // Map pocket to class (0-12: Light, 13-24: Medium, 25-36: Heavy)
+          if (pocket === 0) {
+            // Special case - random class
+            this.selectedClass = this.classOptions[Math.floor(Math.random() * 3)];
+          } else if (pocket <= 12) {
+            this.selectedClass = 'Light';
+          } else if (pocket <= 24) {
+            this.selectedClass = 'Medium';
+          } else {
+            this.selectedClass = 'Heavy';
+          }
+          
+          console.log(`🎲 Selected class: ${this.selectedClass}`);
+          
+          // Show result briefly
+          title.textContent = `${this.selectedClass.toUpperCase()} CLASS SELECTED!`;
+          title.style.color = '#ffd700';
+          
+          // Cleanup
+          setTimeout(() => {
+            document.removeEventListener('rouletteComplete', handleResult);
+            if (this.rouletteWheel) {
+              this.rouletteWheel.destroy();
+              this.rouletteWheel = null;
+            }
+            document.body.removeChild(animationContainer);
+            resolve();
+          }, 1500);
+        };
+        
+        document.addEventListener('rouletteComplete', handleResult);
+        
+        // Start the wheel spin
+        setTimeout(() => {
+          this.rouletteWheel.spin();
+        }, 100);
+      });
+      
+    } catch (error) {
+      console.error('❌ Error in realistic class selection:', error);
+      // Fallback to simple animation
+      return this.animateClassSelection();
+    }
+  }
+  
   // Utility
   delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
