@@ -1,0 +1,984 @@
+/* =====================================
+   OVERLAY SYSTEM STYLES
+   ===================================== */
+
+/* Global overlay container */
+.overlay-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999999;
+  pointer-events: none;
+}
+
+/* Base overlay styles */
+.overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+  pointer-events: auto;
+}
+
+.overlay-backdrop.active {
+  opacity: 1;
+}
+
+/* Overlay content wrapper */
+.overlay-content {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  pointer-events: none;
+}
+
+.overlay-content > * {
+  pointer-events: auto;
+}
+
+/* Reveal card styles */
+.reveal-card {
+  background: radial-gradient(circle at center, #222 0%, #151515 100%);
+  border: 3px solid #FFD52D;
+  border-radius: 20px;
+  padding: 40px 60px;
+  text-align: center;
+  box-shadow: 
+    0 0 50px rgba(255, 215, 0, 0.3), 
+    0 10px 40px rgba(0, 0, 0, 0.8),
+    inset 0 0 30px rgba(255, 215, 0, 0.1);
+  transform: scale(0.8) translateY(20px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 90vw;
+  position: relative;
+  overflow: hidden;
+}
+
+.reveal-card.active {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* Animated background effect */
+.reveal-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+  animation: revealPulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes revealPulse {
+  0%, 100% { 
+    transform: rotate(0deg) scale(1); 
+    opacity: 0.5; 
+  }
+  50% { 
+    transform: rotate(180deg) scale(1.2); 
+    opacity: 0.8; 
+  }
+}
+
+/* Reveal card content */
+.reveal-card h1 {
+  font-family: 'Impact', sans-serif;
+  font-size: 4rem;
+  font-weight: bold;
+  color: #FFD700;
+  margin: 0 0 20px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.8),
+    0 0 40px rgba(255, 215, 0, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { 
+    text-shadow: 
+      0 0 20px rgba(255, 215, 0, 0.8),
+      0 0 40px rgba(255, 215, 0, 0.6),
+      0 2px 4px rgba(0, 0, 0, 0.8);
+  }
+  50% { 
+    text-shadow: 
+      0 0 30px rgba(255, 215, 0, 1),
+      0 0 60px rgba(255, 215, 0, 0.8),
+      0 2px 4px rgba(0, 0, 0, 0.8);
+  }
+}
+
+.reveal-card p {
+  font-size: 2rem;
+  color: #FFD700;
+  margin: 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.reveal-card .sub-text {
+  font-size: 1.2rem;
+  color: #AB47BC;
+  margin-top: 10px;
+  opacity: 0.9;
+}
+
+/* Jackpot special styling */
+.reveal-card.jackpot {
+  border-color: #FF1744;
+  background: 
+    radial-gradient(circle at center, #2a0a0a 0%, #151515 100%),
+    linear-gradient(45deg, #FF1744 0%, #FF6B35 100%);
+  background-blend-mode: normal, overlay;
+}
+
+.reveal-card.jackpot h1 {
+  background: linear-gradient(45deg, #FFD700, #FF6B35, #FF1744);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: jackpotGlow 1s ease-in-out infinite;
+}
+
+@keyframes jackpotGlow {
+  0%, 100% { 
+    filter: brightness(1) drop-shadow(0 0 20px rgba(255, 23, 68, 0.8)); 
+  }
+  50% { 
+    filter: brightness(1.2) drop-shadow(0 0 40px rgba(255, 23, 68, 1)); 
+  }
+}
+
+/* Class picker overlay */
+.class-picker {
+  background: radial-gradient(circle at center, #222 0%, #151515 100%);
+  border: 3px solid #FFD52D;
+  border-radius: 20px;
+  padding: 30px 40px;
+  box-shadow: 
+    0 0 50px rgba(255, 215, 0, 0.3), 
+    0 10px 40px rgba(0, 0, 0, 0.8);
+  max-width: min(450px, 90vw);
+  width: 100%;
+  transform: scale(0.9) translateY(10px);
+  opacity: 0;
+  transition: all 0.3s ease-out;
+}
+
+.class-picker.active {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.class-picker h2 {
+  font-family: 'Impact', sans-serif;
+  font-size: 3rem;
+  color: #FFD700;
+  text-align: center;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.class-picker h3 {
+  font-size: 1.2rem;
+  color: #AB47BC;
+  text-align: center;
+  margin: 0 0 30px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.9;
+}
+
+.class-picker-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.class-picker-button {
+  flex: 1;
+  min-width: 120px;
+  padding: 20px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.class-picker-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 0%, var(--class-color) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.class-picker-button.light {
+  --class-color: #4FC3F7;
+  border-color: #4FC3F7;
+}
+
+.class-picker-button.medium {
+  --class-color: #AB47BC;
+  border-color: #AB47BC;
+}
+
+.class-picker-button.heavy {
+  --class-color: #FF1744;
+  border-color: #FF1744;
+}
+
+.class-picker-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.class-picker-button:hover::before {
+  opacity: 0.2;
+}
+
+.class-picker-button img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+  filter: brightness(0.9);
+  transition: filter 0.3s ease;
+  object-fit: contain;
+}
+
+.class-picker-button:hover img {
+  filter: brightness(1.1) drop-shadow(0 0 10px var(--class-color));
+}
+
+.class-picker-button span {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #FFF;
+  letter-spacing: 0.05em;
+}
+
+.class-picker-button.selected {
+  transform: scale(1.1);
+  box-shadow: 
+    0 0 30px var(--class-color),
+    0 8px 25px rgba(0, 0, 0, 0.5);
+  border-width: 3px;
+}
+
+.class-picker-button.selected::before {
+  opacity: 0.4;
+}
+
+/* Fade animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .reveal-card {
+    padding: 30px 40px;
+  }
+  
+  .reveal-card h1 {
+    font-size: 3rem;
+  }
+  
+  .reveal-card p {
+    font-size: 1.5rem;
+  }
+  
+  .class-picker {
+    padding: 20px;
+  }
+  
+  .class-picker h2 {
+    font-size: 2rem;
+  }
+  
+  .class-picker-buttons {
+    gap: 15px;
+  }
+  
+  .class-picker-button {
+    min-width: 100px;
+    padding: 15px;
+  }
+}
+
+/* =====================================
+   SPIN WHEEL OVERLAY STYLES
+   ===================================== */
+
+.spin-wheel-overlay {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.3s ease-out;
+}
+
+.spin-wheel-overlay.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Spin count wheel container */
+.spin-count-wheel {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Spin wheel title */
+.spin-wheel-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.spin-wheel-title h2 {
+  font-family: 'Impact', sans-serif;
+  font-size: 2.5rem;
+  color: #FFD700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 10px 0;
+  text-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.spin-wheel-title p {
+  font-size: 1.2rem;
+  color: #AB47BC;
+  margin: 0;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Wheel container */
+.wheel-container {
+  background: radial-gradient(circle at center, #222 0%, #151515 100%);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(171, 71, 188, 0.3);
+  border: 2px solid rgba(171, 71, 188, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Scanline effect */
+.wheel-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2px,
+    rgba(255, 255, 255, 0.03) 2px,
+    rgba(255, 255, 255, 0.03) 4px
+  );
+  animation: scanlines 8s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes scanlines {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(10px); }
+}
+
+/* Wheel frame */
+.wheel-frame {
+  position: relative;
+  width: 340px;
+  height: 540px;
+  background: 
+    radial-gradient(black 15%, transparent 16%) 0 0,
+    radial-gradient(black 15%, transparent 16%) 8px 8px,
+    radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
+    radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px,
+    linear-gradient(to bottom, #282828, #1a1a1a);
+  background-size: 16px 16px, 16px 16px, 16px 16px, 16px 16px, 100% 100%;
+  border-radius: 16px;
+  box-shadow: 
+    inset 0 4px 12px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(79, 195, 247, 0.3);
+  border: 2px solid rgba(79, 195, 247, 0.5);
+  overflow: hidden;
+  transition: all 0.5s;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+.wheel-frame.glowing {
+  animation: frameGlow 0.5s ease-out;
+  box-shadow: 
+    inset 0 4px 12px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(255, 215, 0, 0.8),
+    0 0 60px rgba(171, 71, 188, 0.4);
+}
+
+@keyframes frameGlow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Wheel track */
+.wheel-track {
+  position: absolute;
+  inset: 16px;
+  overflow: hidden;
+}
+
+/* Wheel list */
+.wheel-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  list-style: none;
+  transition: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Cards */
+.card {
+  height: 85px;
+  margin: 8px 0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  font-weight: bold;
+  font-family: "Orbitron", "Digital", monospace;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: linear-gradient(to bottom, #0a0a0a 0%, #1a1a1a 100%);
+  border: 2px solid rgba(171, 71, 188, 0.5);
+  color: #FFD700;
+  text-shadow: 
+    0 0 10px rgba(255, 215, 0, 0.8),
+    0 0 20px rgba(255, 215, 0, 0.4);
+  animation: digitalFlicker 3s infinite;
+}
+
+@keyframes digitalFlicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.6; }
+  94% { opacity: 1; }
+  95% { opacity: 0.8; }
+  96% { opacity: 1; }
+}
+
+.card.winner {
+  animation: winnerGlow 1s ease-out, digitalFlicker 3s infinite;
+  box-shadow: 
+    0 0 40px rgba(255, 215, 0, 0.9), 
+    0 0 80px rgba(255, 215, 0, 0.6),
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 0 30px rgba(255, 215, 0, 0.4);
+  transform: scale(1.05);
+}
+
+@keyframes winnerGlow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Number-specific colors */
+.card-1 { border-color: rgba(79, 195, 247, 0.5); }
+.card-2 { border-color: rgba(171, 71, 188, 0.5); }
+.card-3 { border-color: rgba(255, 23, 68, 0.5); }
+.card-4 { border-color: rgba(79, 195, 247, 0.5); }
+.card-5 { border-color: rgba(171, 71, 188, 0.5); }
+
+/* Jackpot card */
+.card-special.jackpot {
+  background: 
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(171, 71, 188, 0.3) 20%,
+      rgba(79, 195, 247, 0.4) 40%,
+      rgba(255, 215, 0, 0.3) 60%,
+      transparent 100%
+    ),
+    linear-gradient(to bottom, #0a0a0a 0%, #1a1a1a 100%);
+  background-size: 200% 100%, 100% 100%;
+  color: #FFD700;
+  border: 2px solid #FFD700;
+  animation: holographicShimmer 3s linear infinite;
+  text-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.8),
+    0 0 40px rgba(255, 215, 0, 0.4);
+  font-size: 24px;
+  line-height: 1.2;
+  text-align: center;
+  padding: 8px;
+}
+
+.card-special.jackpot::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 215, 0, 0.1) 50%,
+    transparent 70%
+  );
+  animation: glintPass 2s ease-in-out infinite;
+}
+
+@keyframes holographicShimmer {
+  0% { background-position: -200% center, 0 0; }
+  100% { background-position: 200% center, 0 0; }
+}
+
+@keyframes glintPass {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Fade overlays */
+.fade-top, .fade-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 128px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.fade-top {
+  top: 0;
+  background: linear-gradient(to bottom, #111827, transparent);
+}
+
+.fade-bottom {
+  bottom: 0;
+  background: linear-gradient(to top, #111827, transparent);
+}
+
+/* Ticker */
+.ticker {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  transform-origin: left center;
+  filter: drop-shadow(0 0 8px rgba(255, 107, 53, 0.6));
+}
+
+.ticker-triangle {
+  width: 0;
+  height: 0;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-right: 20px solid #dc143c;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+  box-shadow: 
+    0 0 20px rgba(255, 107, 53, 0.8),
+    inset 0 0 10px rgba(255, 107, 53, 0.4);
+}
+
+/* Pegs */
+.peg {
+  position: absolute;
+  top: 50%;
+  right: -6px;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(#AB47BC, #7B1FA2);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 4px rgba(0, 0, 0, 0.5) inset, 
+    0 0 10px rgba(171, 71, 188, 0.6),
+    0 0 20px rgba(171, 71, 188, 0.3);
+  z-index: 1;
+  transition: all 0.1s;
+}
+
+/* Removed spin button - auto-spin only */
+
+/* Confetti particles */
+.confetti-particle {
+  position: fixed;
+  top: -10px;
+  width: 10px;
+  height: 10px;
+  transform: rotate(0deg);
+  animation: confettiFall linear;
+  z-index: 999;
+  pointer-events: none;
+}
+
+@keyframes confettiFall {
+  to {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .spin-count-wheel {
+    padding: 10px;
+  }
+  
+  .wheel-container {
+    padding: 16px;
+    border-radius: 16px;
+  }
+  
+  .wheel-frame {
+    width: min(90vw, 300px);
+    height: 400px;
+  }
+  
+  .card {
+    height: 65px;
+    font-size: 28px;
+    margin: 6px 0;
+  }
+  
+  .card-special.jackpot {
+    font-size: 18px;
+    padding: 6px;
+  }
+  
+  .ticker-triangle {
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 16px solid #dc143c;
+  }
+  
+  .peg {
+    width: 8px;
+    height: 8px;
+    right: -4px;
+  }
+  
+  .spin-wheel-title h2 {
+    font-size: 2rem;
+  }
+  
+  .spin-wheel-title p {
+    font-size: 1rem;
+  }
+}
+
+/* =====================================
+   ROULETTE OVERLAY STYLES
+   ===================================== */
+
+/* Roulette overlay container */
+.roulette-overlay {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.3s ease-out;
+}
+
+.roulette-overlay.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Roulette container */
+.roulette-container {
+  text-align: center;
+  padding: 20px;
+  max-width: 600px;
+  width: 100%;
+}
+
+/* Title section */
+.roulette-title {
+  margin-bottom: 30px;
+}
+
+.roulette-title h2 {
+  font-family: 'Impact', sans-serif;
+  font-size: 2.5rem;
+  color: #FFD700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 10px 0;
+  text-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.roulette-title p {
+  font-size: 1.2rem;
+  color: #AB47BC;
+  margin: 0;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Wheel wrapper */
+.roulette-wheel-wrapper {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Main wheel */
+.roulette-wheel {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  transition: transform 0.1s linear;
+}
+
+.roulette-wheel.complete {
+  animation: wheelComplete 0.5s ease-out;
+}
+
+@keyframes wheelComplete {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Wheel SVG */
+.wheel-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.5));
+}
+
+/* Wheel segments */
+.wheel-segment {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.wheel-segment:hover {
+  filter: brightness(1.2);
+}
+
+.wheel-segment.winner {
+  animation: segmentWin 1s ease-out;
+  filter: brightness(1.3) drop-shadow(0 0 20px currentColor);
+}
+
+@keyframes segmentWin {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Wheel labels */
+.wheel-label {
+  font-family: 'Impact', sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+  fill: #FFFFFF;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
+/* Outer ring */
+.wheel-outer-ring {
+  position: absolute;
+  inset: -20px;
+  border: 4px solid #FFD700;
+  border-radius: 50%;
+  box-shadow: 
+    0 0 40px rgba(255, 215, 0, 0.4),
+    inset 0 0 20px rgba(255, 215, 0, 0.2);
+  animation: ringPulse 3s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 40px rgba(255, 215, 0, 0.4),
+      inset 0 0 20px rgba(255, 215, 0, 0.2);
+  }
+  50% { 
+    box-shadow: 
+      0 0 60px rgba(255, 215, 0, 0.6),
+      inset 0 0 30px rgba(255, 215, 0, 0.3);
+  }
+}
+
+/* Pointer removed - ball determines winner */
+
+/* Ball */
+.roulette-ball {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  transition: none;
+}
+
+.ball-inner {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 30%, #FFFFFF 0%, #CCCCCC 50%, #888888 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.5),
+    0 0 10px rgba(255, 255, 255, 0.5),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.3);
+  animation: ballSpin 0.5s linear infinite;
+}
+
+/* Ball landed state */
+.roulette-ball.landed .ball-inner {
+  animation: none;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(255, 215, 0, 0.6),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes ballSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Decorative lights */
+.roulette-lights {
+  position: absolute;
+  inset: -50px;
+  pointer-events: none;
+}
+
+.roulette-lights .light {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: #FFD700;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+  animation: lightBlink 2s ease-in-out infinite;
+}
+
+@keyframes lightBlink {
+  0%, 100% { 
+    opacity: 0.3; 
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+  }
+  50% { 
+    opacity: 1; 
+    box-shadow: 0 0 20px rgba(255, 215, 0, 1);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .roulette-title h2 {
+    font-size: 2rem;
+  }
+  
+  .roulette-title p {
+    font-size: 1rem;
+  }
+  
+  .roulette-wheel-wrapper,
+  .roulette-wheel {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .wheel-label {
+    font-size: 20px;
+  }
+  
+  .roulette-ball {
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+  }
+  
+  .roulette-pointer {
+    transform: translateX(-50%) scale(0.8);
+  }
+}
