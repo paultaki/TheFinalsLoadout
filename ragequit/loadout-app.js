@@ -517,6 +517,21 @@ function finalizeSpin() {
   updateTotalRageQuits();
   displaySelectedHandicap();
   
+  // Save to history if we have a valid loadout
+  if (rageState.finalLoadout && window.addToHistory) {
+    const { classType, weapon, specialization, gadgets } = rageState.finalLoadout;
+    window.addToHistory(
+      classType,
+      weapon,
+      specialization,
+      gadgets,
+      rageState.selectedHandicap || "None",
+      rageState.selectedHandicapDesc || "No handicap selected"
+    );
+  } else if (rageState.finalLoadout) {
+    console.warn("⚠️ addToHistory function not found - history won't be saved");
+  }
+  
   setTimeout(() => {
     resetSpinStateWithoutClearingDisplay();
     showDoubleOrNothingOption();
