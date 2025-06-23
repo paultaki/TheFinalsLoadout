@@ -1289,6 +1289,14 @@ const spinRageQuitLoadout = () => {
 // Make globally available
 window.spinRageQuitLoadout = spinRageQuitLoadout;
 
+// Also expose core functions for debugging
+window.rageQuitDebug = {
+  state: rageState,
+  spin: spinRageQuitLoadout,
+  resetState: resetSpinState,
+  displayLoadout: displayRageQuitLoadout
+};
+
 // AI Roast Integration
 async function fetchRageQuitRoast(classType, weapon, specialization, gadgets, handicap) {
   try {
@@ -1937,106 +1945,137 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize sound toggle
   initializeRageSoundToggle();
   
-  // Check if button exists and add debugging
-  const rageQuitButton = document.getElementById("rage-quit-btn");
-  console.log("🔍 Rage Quit Button found:", !!rageQuitButton);
-  
-  if (rageQuitButton) {
-    console.log("✅ Adding click event listener to rage quit button");
+  // Set up the rage quit button with fallback logic
+  function setupRageQuitButton() {
+    const rageQuitButton = document.getElementById("rage-quit-btn");
+    console.log("🔍 Looking for rage-quit-btn:", !!rageQuitButton);
     
-    // Rage Quit Button Click Event
-    rageQuitButton.addEventListener("click", async function () {
+    if (!rageQuitButton) {
+      console.error("❌ Rage Quit Button not found!");
+      return false;
+    }
+    
+    // Check if listener already added to prevent duplicates
+    if (rageQuitButton.hasAttribute("data-listener-added")) {
+      console.log("⚠️ Button already has listener, skipping");
+      return true;
+    }
+    
+    console.log("✅ Adding click event listener to rage quit button");
+    rageQuitButton.setAttribute("data-listener-added", "true");
+    
+    // Main button click handler
+    rageQuitButton.addEventListener("click", async function(e) {
+      e.preventDefault();
       console.log("🎯 Rage Quit button clicked!");
       console.log("📊 Current state:", {
         isSpinning: rageState.isSpinning,
         animating: window.rageRouletteSystem?.animating,
-        rageRouletteSystemExists: !!window.rageRouletteSystem
-      });
-    
-    if (rageState.isSpinning || (window.rageRouletteSystem && window.rageRouletteSystem.animating)) {
-      console.log("❌ Animation already in progress, skipping");
-      return;
-    }
-
-    // Play click sound
-    const clickSound = document.getElementById("clickSound");
-    if (clickSound && clickSound.readyState >= 2) {
-      clickSound.currentTime = 0;
-      clickSound.play().catch((err) => console.warn("Error playing sound:", err));
-    }
-
-    // Add spinning animation to button
-    this.classList.add('spinning');
-    
-    try {
-      console.log("🚀 Starting rage roulette sequence...");
-      console.log("🔍 RageRouletteAnimationSystem exists:", !!window.rageRouletteSystem);
-      console.log("🔍 RageRouletteAnimationSystem type:", typeof window.rageRouletteSystem);
-      
-      // Check if roulette system is available and working
-      if (!window.rageRouletteSystem) {
-        console.error("❌ RageRouletteAnimationSystem not available!");
-        // Try to reinitialize
-        if (window.RageRouletteAnimationSystem) {
-          console.log("🔄 Attempting to reinitialize RageRouletteAnimationSystem...");
-          window.rageRouletteSystem = new window.RageRouletteAnimationSystem();
-        } else {
-          console.error("❌ RageRouletteAnimationSystem class not found, falling back to direct loadout");
-          spinRageQuitLoadout();
-          return;
-        }
-      }
-      
-      console.log("🎬 Starting full roulette sequence...");
-      console.log("🔍 Checking rageRouletteSystem methods:", {
-        hasStartFullSequence: typeof window.rageRouletteSystem.startFullSequence === 'function',
-        hasAnimateClassSelection: typeof window.rageRouletteSystem.animateClassSelection === 'function',
-        hasAnimateSpinSelection: typeof window.rageRouletteSystem.animateSpinSelection === 'function',
-        hasAnimateHandicapSelection: typeof window.rageRouletteSystem.animateHandicapSelection === 'function'
+        buttonDisabled: this.disabled,
+        buttonClasses: this.className
       });
       
-      // Start the full roulette sequence with error handling
-      await window.rageRouletteSystem.startFullSequence();
-      console.log("✅ Rage roulette sequence completed successfully");
-    } catch (error) {
-      console.error("❌ Error in rage roulette sequence:", error);
-      console.log("🔄 Falling back to direct loadout generation...");
-      
-      // Reset animation state
-      if (window.rageRouletteSystem) {
-        window.rageRouletteSystem.animating = false;
+      // Check if already spinning
+      if (rageState.isSpinning) {
+        console.log("❌ Already spinning, ignoring click");
+        return;
       }
       
-      // Hide roulette container if it's showing
-      const rouletteContainer = document.getElementById("rage-roulette-container");
-      if (rouletteContainer) {
-        rouletteContainer.classList.add("hidden");
-        rouletteContainer.style.display = "none";
+      // Check roulette system animation state if it exists
+      if (window.rageRouletteSystem && window.rageRouletteSystem.animating) {
+        console.log("❌ Roulette animation in progress, ignoring click");
+        return;
       }
       
-      // Restore body scrolling
-      document.body.style.overflow = "";
+      // Disable button to prevent double-clicks
+      this.disabled = true;
+      this.classList.add('spinning', 'disabled');
       
-      // Fall back to direct loadout generation
-      spinRageQuitLoadout();
-    } finally {
-      // Remove spinning animation when done
-      this.classList.remove('spinning');
-    }
-    });
-  } else {
-    console.error("❌ Rage Quit Button not found in DOM!");
-    // Try to find it with a slight delay in case DOM isn't fully loaded
-    setTimeout(() => {
-      const delayedButton = document.getElementById("rage-quit-btn");
-      if (delayedButton) {
-        console.log("✅ Found button on retry, adding listener");
-        delayedButton.addEventListener("click", async function () {
-          console.log("🎯 Delayed Rage Quit button clicked!");
-          if (!rageState.isSpinning) {
+      // Play click sound
+      const clickSound = document.getElementById("clickSound");
+      if (clickSound && isSoundEnabled()) {
+        clickSound.currentTime = 0;
+        clickSound.volume = 0.3;
+        clickSound.play().catch((err) => console.warn("Click sound error:", err));
+      }
+      
+      try {
+        // Check if roulette system is available
+        if (window.rageRouletteSystem && typeof window.rageRouletteSystem.startFullSequence === 'function') {
+          console.log("🎬 Using RageRouletteAnimationSystem...");
+          try {
+            await window.rageRouletteSystem.startFullSequence();
+            console.log("✅ Rage roulette sequence completed");
+          } catch (rouletteError) {
+            console.error("❌ Roulette system error:", rouletteError);
+            console.log("🔄 Falling back to direct spin...");
+            
+            // Reset roulette system state
+            if (window.rageRouletteSystem) {
+              window.rageRouletteSystem.animating = false;
+            }
+            
+            // Clean up any roulette UI
+            const rouletteContainer = document.getElementById("rage-roulette-container");
+            if (rouletteContainer) {
+              rouletteContainer.classList.add("hidden");
+              rouletteContainer.style.display = "none";
+            }
+            document.body.style.overflow = "";
+            
+            // Use direct spin
             spinRageQuitLoadout();
           }
+        } else {
+          console.log("🎰 Using direct spin (no roulette system)...");
+          spinRageQuitLoadout();
+        }
+      } catch (error) {
+        console.error("❌ Button handler error:", error);
+        // Emergency fallback
+        spinRageQuitLoadout();
+      } finally {
+        // Re-enable button after a delay (will be done by resetSpinState)
+        setTimeout(() => {
+          if (!rageState.isSpinning) {
+            this.disabled = false;
+            this.classList.remove('spinning', 'disabled');
+          }
+        }, 500);
+      }
+    });
+    
+    return true;
+  }
+  
+  // Initial button setup
+  const buttonSetup = setupRageQuitButton();
+  
+  if (!buttonSetup) {
+    // Retry setup after a delay if button wasn't found
+    console.log("⏳ Retrying button setup in 500ms...");
+    setTimeout(() => {
+      const retrySetup = setupRageQuitButton();
+      if (!retrySetup) {
+        console.error("❌ Failed to set up rage quit button after retry!");
+        
+        // Final fallback - set up a MutationObserver to watch for the button
+        const observer = new MutationObserver((mutations) => {
+          const button = document.getElementById("rage-quit-btn");
+          if (button) {
+            console.log("✅ Button found via MutationObserver!");
+            setupRageQuitButton();
+            observer.disconnect();
+          }
         });
+        
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+        
+        // Disconnect observer after 5 seconds to prevent memory leaks
+        setTimeout(() => observer.disconnect(), 5000);
       }
     }, 500);
   }
@@ -2116,3 +2155,19 @@ Generated by thefinalsloadout.com/ragequit/`;
     }
   });
 });
+
+// Emergency initialization - ensure button works even if DOM loads differently
+setTimeout(() => {
+  const button = document.getElementById("rage-quit-btn");
+  if (button && !button.hasAttribute("data-listener-added")) {
+    console.log("🚨 Emergency initialization - setting up button handler");
+    button.setAttribute("data-listener-added", "true");
+    button.addEventListener("click", function(e) {
+      e.preventDefault();
+      if (!rageState.isSpinning) {
+        console.log("🎯 Emergency handler: Spinning rage quit loadout");
+        spinRageQuitLoadout();
+      }
+    });
+  }
+}, 2000);
