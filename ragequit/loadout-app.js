@@ -384,9 +384,34 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
 function startSpinAnimation(columns) {
   const startTime = performance.now();
   
+  // Play spinning start sound
+  const spinStartSound = document.getElementById("spinStart");
+  if (spinStartSound && localStorage.getItem('rageSoundEnabled') !== 'false') {
+    spinStartSound.currentTime = 0;
+    spinStartSound.volume = 0.3;
+    spinStartSound.play().catch(() => {});
+  }
+  
+  // Play continuous spinning sound
+  const spinningSound = document.getElementById("spinningSound");
+  if (spinningSound && localStorage.getItem('rageSoundEnabled') !== 'false') {
+    spinningSound.currentTime = 0;
+    spinningSound.volume = 0.2;
+    spinningSound.loop = true;
+    spinningSound.play().catch(() => {});
+  }
+  
   const slotColumns = columns.map((element, index) => {
     const column = new SlotColumn(element, index);
     column.onStop = (columnElement) => {
+      // Play column stop sound
+      const columnStopSound = document.getElementById("columnStop");
+      if (columnStopSound && localStorage.getItem('rageSoundEnabled') !== 'false') {
+        columnStopSound.currentTime = 0;
+        columnStopSound.volume = 0.4;
+        columnStopSound.play().catch(() => {});
+      }
+      
       const container = columnElement.closest(".item-container");
       if (container) {
         container.classList.add("final-flash");
@@ -472,6 +497,22 @@ function startSpinAnimation(columns) {
 // Finalize spin
 function finalizeSpin() {
   console.log("🎯 Finalizing spin");
+  
+  // Stop the spinning sound
+  const spinningSound = document.getElementById("spinningSound");
+  if (spinningSound) {
+    spinningSound.pause();
+    spinningSound.currentTime = 0;
+  }
+  
+  // Play final sound
+  const finalSound = document.getElementById("finalSound");
+  if (finalSound && localStorage.getItem('rageSoundEnabled') !== 'false') {
+    finalSound.currentTime = 0;
+    finalSound.volume = 0.5;
+    finalSound.play().catch(() => {});
+  }
+  
   updateSufferingStreak();
   updateTotalRageQuits();
   displaySelectedHandicap();
@@ -485,6 +526,14 @@ function finalizeSpin() {
 // Reset state
 function resetSpinState() {
   console.log("🔄 Resetting spin state");
+  
+  // Stop the spinning sound
+  const spinningSound = document.getElementById("spinningSound");
+  if (spinningSound) {
+    spinningSound.pause();
+    spinningSound.currentTime = 0;
+  }
+  
   const spinButton = document.getElementById("rage-quit-btn");
   if (spinButton) {
     spinButton.disabled = false;
@@ -505,6 +554,14 @@ function resetSpinState() {
 
 function resetSpinStateWithoutClearingDisplay() {
   console.log("🔄 Resetting spin state (preserving display)");
+  
+  // Stop the spinning sound
+  const spinningSound = document.getElementById("spinningSound");
+  if (spinningSound) {
+    spinningSound.pause();
+    spinningSound.currentTime = 0;
+  }
+  
   const spinButton = document.getElementById("rage-quit-btn");
   if (spinButton) {
     spinButton.disabled = false;
