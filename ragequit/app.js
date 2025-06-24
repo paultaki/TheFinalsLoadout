@@ -1369,73 +1369,59 @@ function addToHistory(
     newEntry.classList.add("spicy-rage-loadout");
   }
 
-  // Create the card structure
+  // Create the card structure - redesigned with text-only rage theme
   newEntry.innerHTML = `
-    <div class="rage-meme-export-container">
-      <div class="rage-loadout-header">
-        <span class="rage-class-badge ${classType.toLowerCase()}">${classType.toUpperCase()}</span>
-        <span class="rage-loadout-name">${loadoutName}</span>
-        <span class="rage-timestamp">Just now</span>
-      </div>
-      <div class="rage-punishment-indicator">
-        <span class="skull-icon">💀</span>
-        <span class="punishment-text">Punishment Level: ${punishmentLevel}</span>
-        <span class="skull-icon">💀</span>
-      </div>
-      <div class="rage-loadout-details">
-        <div class="rage-loadout-item weapon-item">
-          <img src="https://thefinalsloadout.com/images/${weapon.replace(/ /g, "_")}.webp" alt="${weapon}" class="item-icon">
-          <span class="item-name">${weapon}</span>
+    <div class="rage-history-card">
+      <div class="rage-card-header">
+        <div class="rage-class-indicator ${classType.toLowerCase()}">
+          <span class="class-letter">${classType.charAt(0)}</span>
         </div>
-        <div class="rage-loadout-item spec-item">
-          <img src="https://thefinalsloadout.com/images/${specialization.replace(/ /g, "_")}.webp" alt="${specialization}" class="item-icon">
-          <span class="item-name">${specialization}</span>
+        <div class="rage-card-title">
+          <h3>${loadoutName}</h3>
+          <span class="rage-timestamp">Just now</span>
         </div>
-        <div class="rage-gadget-group">
-          ${gadgets.map(g => `
-            <div class="rage-loadout-item gadget-item">
-              <img src="https://thefinalsloadout.com/images/${g.replace(/ /g, "_")}.webp" alt="${g}" class="item-icon small">
-              <span class="item-name small">${g}</span>
-            </div>
-          `).join('')}
+        <div class="punishment-level">
+          <span class="level-number">${punishmentLevel}</span>
+          <span class="level-label">PAIN</span>
         </div>
       </div>
-      <div class="rage-handicap-section">
+      
+      <div class="rage-card-body">
+        <div class="loadout-row">
+          <span class="item-label">WEAPON:</span>
+          <span class="item-value">${weapon}</span>
+        </div>
+        <div class="loadout-row">
+          <span class="item-label">SPECIALIZATION:</span>
+          <span class="item-value">${specialization}</span>
+        </div>
+        <div class="loadout-row gadgets">
+          <span class="item-label">GADGETS:</span>
+          <span class="item-value">${gadgets.join(' • ')}</span>
+        </div>
+        
         ${state.handicapStack && state.handicapStack.length > 0 ? `
-          <div class="rage-handicap-badge">
-            <span class="skull-icon">💀</span>
-            <span class="handicap-name">${state.handicapStack.map(h => h.name).join(', ')}</span>
+          <div class="handicap-row stacked">
+            <span class="item-label">HANDICAPS (${state.sufferingLevel}x):</span>
+            <span class="item-value">${state.handicapStack.map(h => h.name).join(' + ')}</span>
           </div>
-          <div class="rage-handicap-desc">${state.handicapStack.map(h => `${h.name}: ${h.description}`).join(' | ')}</div>
-          <div class="suffering-level-badge">SUFFERING LEVEL: ${state.sufferingLevel}x</div>
         ` : `
-          <div class="rage-handicap-badge">
-            <span class="skull-icon">💀</span>
-            <span class="handicap-name">${handicapName || "None"}</span>
+          <div class="handicap-row">
+            <span class="item-label">HANDICAP:</span>
+            <span class="item-value">${handicapName || "None"}</span>
           </div>
-          <div class="rage-handicap-desc">${handicapDesc || "No handicap selected"}</div>
         `}
       </div>
-      <div class="rage-roast-section">
-        <div class="rage-roast-content">
-          <span class="rage-fire-emoji">🔥</span>
-          <span class="rage-roast-text">${rageRoast}</span>
-        </div>
+      
+      <div class="rage-roast-box">
+        <p>${rageRoast}</p>
       </div>
-      <div class="rage-meme-footer">
-        <span class="rage-meme-watermark">Rage-analyzed by thefinalsloadout.com</span>
+      
+      <div class="rage-card-footer">
+        <button class="rage-copy-btn" onclick="copyRageLoadoutText(this)">
+          COPY BUILD
+        </button>
       </div>
-    </div>
-    <div class="rage-loadout-actions">
-      <button class="rage-copy-build" onclick="copyRageLoadoutText(this)">
-        <span>📋</span> COPY PUNISHMENT
-      </button>
-      <button class="rage-meme-card-btn" onclick="exportRageMemeCard(this)">
-        <span>💀</span> RAGE CARD
-      </button>
-      <button class="rage-survived-btn" onclick="markAsSurvived(this)" title="Mark this loadout as survived">
-        <span>🏆</span> SURVIVED
-      </button>
     </div>
   `;
 
