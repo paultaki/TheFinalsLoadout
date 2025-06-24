@@ -990,10 +990,11 @@ function finalVictoryFlash(columns) {
 //   }
 // }
 function saveHistory() {
-  const entries = Array.from(document.querySelectorAll(".history-entry")).map(
-    (entry) => entry.innerHTML
-  );
-  localStorage.setItem("rageQuitHistory", JSON.stringify(entries));
+  // Save the entire history section HTML
+  const historyList = document.getElementById("history-list");
+  if (historyList) {
+    localStorage.setItem("rageQuitHistoryHTML", historyList.innerHTML);
+  }
 }
 
 // startSpinAnimation is already defined in loadout-app.js
@@ -2222,27 +2223,25 @@ function displayHistory() {
   const historyList = document.getElementById('history-list');
   if (!historyList) return;
   
-  const history = JSON.parse(localStorage.getItem('rageQuitHistory') || '[]');
-  
-  historyList.innerHTML = history.map((entry, index) => `
-    <div class="history-entry" data-entry-id="${entry.id}">
-      <div class="history-header">
-        <span class="history-number">#${index + 1}</span>
-        <span class="history-class">${entry.selectedClass}</span>
-        <span class="history-timestamp">${entry.timestamp}</span>
-      </div>
-      <div class="history-items">
-        ${entry.items.map(item => `<span class="history-item">${item.name}</span>`).join(' • ')}
-      </div>
-      <div class="history-handicap">
-        <strong>Handicap:</strong> ${entry.handicap}
-        ${entry.handicapDescription ? `<br><small>${entry.handicapDescription}</small>` : ''}
-      </div>
-      <div class="history-suffering">Suffering Level: ${entry.sufferingLevel}</div>
-    </div>
-  `).join('');
+  // For now, just return since we're using a different history system
+  // The history is managed by addToHistory function which adds entries directly to the DOM
+  // This function is called on page load but history is already in the DOM from previous sessions
+  return;
 }
 
 function loadHistory() {
-  displayHistory();
+  const historyList = document.getElementById("history-list");
+  if (!historyList) return;
+  
+  // Load saved history HTML
+  const savedHistory = localStorage.getItem("rageQuitHistoryHTML");
+  if (savedHistory) {
+    historyList.innerHTML = savedHistory;
+    
+    // Re-add visibility class to all entries
+    const entries = historyList.querySelectorAll('.rage-history-entry');
+    entries.forEach(entry => {
+      entry.classList.add('visible');
+    });
+  }
 }
