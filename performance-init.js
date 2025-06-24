@@ -17,8 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Cache frequently accessed DOM elements
   const domElements = [
-    '#main-spin-button', '#output', '#roulette-container',
-    '#class-roulette', '#spin-roulette', '#selection-display',
+    '#main-spin-button', '#output', '#selection-display',
     '#history-list', '#filter-panel', '.selection-container'
   ];
   
@@ -66,36 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add mobile optimization class
     document.body.classList.add('mobile-optimized');
     
-    // Reduce particle effects on mobile
-    if (window.RouletteAnimationSystem) {
-      const originalCreateParticle = window.RouletteAnimationSystem.prototype.createParticleEffect;
-      window.RouletteAnimationSystem.prototype.createParticleEffect = function(element) {
-        // Reduce particles from 10 to 5 on mobile
-        const rect = element.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        const particlesContainer = document.createElement('div');
-        particlesContainer.className = 'particles';
-        document.body.appendChild(particlesContainer);
-        
-        for (let i = 0; i < 5; i++) { // Reduced from 10
-          const particle = document.createElement('div');
-          particle.className = 'particle';
-          particle.style.left = centerX + 'px';
-          particle.style.top = centerY + 'px';
-          
-          const angle = (Math.PI * 2 * i) / 5;
-          const distance = 100 + Math.random() * 100;
-          particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
-          particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
-          
-          particlesContainer.appendChild(particle);
-        }
-        
-        setTimeout(() => particlesContainer.remove(), 1000);
-      };
-    }
+    // Mobile performance optimizations applied via CSS
   }
 
   // Cleanup function for page unload

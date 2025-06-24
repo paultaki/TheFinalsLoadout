@@ -2,18 +2,21 @@
 class RealisticRouletteWheel {
   constructor() {
     this.wheelRadius = 200;
+    this.outerTrackRadius = 240; // New outer track for ball
+    this.innerTrackRadius = 180; // Inner boundary before pockets
     this.ballRadius = 8;
     this.pocketCount = 37; // 0-36 like a real roulette wheel
     this.isSpinning = false;
     
     // Physics constants
     this.physics = {
-      wheelFriction: 0.995,
-      ballFriction: 0.985,
-      gravity: 0.3,
-      bounceDamping: 0.6,
-      minBallSpeed: 0.5,
-      minWheelSpeed: 0.1
+      wheelFriction: 0.997, // Slower wheel deceleration
+      ballFriction: 0.996, // Gradual ball deceleration for natural slowing
+      gravity: 0.2, // Gravity for fall
+      bounceDamping: 0.65, // Bounce damping
+      minBallSpeed: 1, // Min speed before stopping
+      minWheelSpeed: 0.1,
+      fallThreshold: 4 // Ball speed threshold to start falling
     };
     
     // State
@@ -21,9 +24,10 @@ class RealisticRouletteWheel {
     this.wheelVelocity = 0;
     this.ballAngle = 0;
     this.ballVelocity = 0;
-    this.ballRadius = this.wheelRadius - 20; // Start on outer track
+    this.ballRadialPosition = this.outerTrackRadius; // Start on outer track
     this.ballHeight = 0;
     this.phase = 'idle'; // idle, spinning, falling, settling, complete
+    this.bounceCount = 0; // Track number of bounces
     
     // Canvas setup
     this.canvas = null;
@@ -89,15 +93,19 @@ class RealisticRouletteWheel {
     
     // Create canvas
     this.canvas = document.createElement('canvas');
-    this.canvas.width = 500;
-    this.canvas.height = 500;
+    this.canvas.width = 600;
+    this.canvas.height = 600;
     this.canvas.style.cssText = `
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
       height: auto;
       display: block;
       margin: 0 auto;
     `;
+    
+    // Ball trail for visual feedback
+    this.ballTrail = [];
+    this.maxTrailLength = 20;
     
     container.innerHTML = '';
     container.appendChild(this.canvas);
@@ -107,19 +115,20 @@ class RealisticRouletteWheel {
     this.render();
   }
   
-  spin(wheelSpeed = 15, ballSpeed = -25) {
+  spin(wheelSpeed = 12, ballSpeed = -20) {
     if (this.isSpinning) return;
     
     this.isSpinning = true;
     this.phase = 'spinning';
     
     // Set initial velocities (wheel and ball spin in opposite directions)
-    this.wheelVelocity = wheelSpeed + Math.random() * 5;
+    this.wheelVelocity = wheelSpeed + Math.random() * 3;
     this.ballVelocity = ballSpeed - Math.random() * 5;
     
     // Reset ball position to outer track
-    this.ballRadius = this.wheelRadius - 20;
+    this.ballRadialPosition = this.outerTrackRadius;
     this.ballHeight = 0;
+    this.bounceCount = 0;
     
     // Start physics simulation
     this.simulate();
@@ -134,6 +143,14 @@ class RealisticRouletteWheel {
     // Update wheel rotation
     this.wheelAngle += this.wheelVelocity;
     this.wheelVelocity *= this.physics.wheelFriction;
+    
+    // Update ball trail
+    const ballX = Math.cos(this.ballAngle) * this.ballRadialPosition;
+    const ballY = Math.sin(this.ballAngle) * this.ballRadialPosition;
+    this.ballTrail.push({ x: ballX, y: ballY, height: this.ballHeight });
+    if (this.ballTrail.length > this.maxTrailLength) {
+      this.ballTrail.shift();
+    }
     
     // Update ball based on phase
     switch (this.phase) {
@@ -155,17 +172,27 @@ class RealisticRouletteWheel {
   simulateSpinningPhase() {
     // Ball spins on outer track
     this.ballAngle += this.ballVelocity;
-    this.ballVelocity *= this.physics.ballFriction;
     
-    // Add slight wobble for realism
-    const wobble = Math.sin(Date.now() * 0.01) * 2;
-    this.ballRadius = this.wheelRadius - 20 + wobble;
+    // Natural deceleration with slight exponential curve for realism
+    const speedRatio = Math.abs(this.ballVelocity) / 20; // Normalize speed
+    const frictionMultiplier = 0.994 + (0.004 * speedRatio); // Higher friction at lower speeds
+    this.ballVelocity *= Math.min(frictionMultiplier, this.physics.ballFriction);
+    
+    // Keep ball on the outer track edge (not floating above)
+    this.ballRadialPosition = this.outerTrackRadius - 10; // Inside the track rim
+    
+    // Add very subtle wobble only at high speeds
+    if (Math.abs(this.ballVelocity) > 10) {
+      const wobble = Math.sin(Date.now() * 0.003) * 0.5;
+      this.ballRadialPosition += wobble;
+    }
     
     // Check if ball has slowed enough to fall
-    if (Math.abs(this.ballVelocity) < 8) {
+    if (Math.abs(this.ballVelocity) < this.physics.fallThreshold) {
       this.phase = 'falling';
       this.ballHeight = 0;
       this.ballFallVelocity = 0;
+      console.log('Ball starting to fall at velocity:', this.ballVelocity);
     }
   }
   
@@ -174,32 +201,44 @@ class RealisticRouletteWheel {
     this.ballFallVelocity += this.physics.gravity;
     this.ballHeight += this.ballFallVelocity;
     
-    // Move ball inward
-    const targetRadius = this.wheelRadius * 0.6; // Inner track radius
-    this.ballRadius -= 2;
+    // Move ball inward from outer track to pocket area
+    const targetRadius = this.wheelRadius * 0.8; // Target radius for pockets
+    const inwardSpeed = 2;
     
-    // Continue ball rotation but slower
-    this.ballAngle += this.ballVelocity * 0.5;
+    if (this.ballRadialPosition > targetRadius) {
+      this.ballRadialPosition -= inwardSpeed;
+    } else {
+      this.ballRadialPosition = targetRadius;
+    }
+    
+    // Continue ball rotation but gradually slower
+    this.ballAngle += this.ballVelocity * 0.8;
     this.ballVelocity *= 0.98;
     
     // Check for bounce on pockets
-    if (this.ballRadius <= targetRadius) {
-      this.ballRadius = targetRadius;
-      
+    if (this.ballRadialPosition <= targetRadius && this.ballHeight > 10) {
       // Bounce effect
-      if (this.ballFallVelocity > 1) {
+      if (this.ballFallVelocity > 0.5 || this.bounceCount < 2) {
         this.ballFallVelocity *= -this.physics.bounceDamping;
         this.ballHeight = Math.max(0, this.ballHeight);
+        this.bounceCount++;
         
         // Add some randomness to bounce direction
-        this.ballVelocity += (Math.random() - 0.5) * 2;
+        const bounceRandomness = (Math.random() - 0.5) * (2 - this.bounceCount * 0.5);
+        this.ballVelocity += bounceRandomness;
         
         // Play bounce sound
         this.playBounceSound();
+        
+        // Occasionally bounce to adjacent pocket
+        if (Math.random() < 0.2 && this.bounceCount === 1) {
+          this.ballAngle += (Math.random() - 0.5) * 0.3;
+        }
       } else {
         // Ball has settled
         this.phase = 'settling';
         this.ballHeight = 0;
+        console.log('Ball settling after', this.bounceCount, 'bounces');
       }
     }
   }
@@ -245,8 +284,15 @@ class RealisticRouletteWheel {
     const centerX = this.canvas.width / 2;
     const centerY = this.canvas.height / 2;
     
-    // Clear canvas
-    ctx.fillStyle = '#0a0a0a';
+    // Clear canvas with dark green felt background
+    ctx.fillStyle = '#0a3d0a';
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    // Add subtle vignette effect
+    const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 300);
+    gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.4)');
+    ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     
     // Draw wheel
@@ -254,6 +300,11 @@ class RealisticRouletteWheel {
     
     // Draw ball
     this.drawBall(ctx, centerX, centerY);
+    
+    // Draw speed indicator during spinning phase
+    if (this.phase === 'spinning' && Math.abs(this.ballVelocity) > 0) {
+      this.drawSpeedIndicator(ctx);
+    }
     
     // Continue render loop
     this.animationId = requestAnimationFrame(() => this.render());
@@ -264,11 +315,33 @@ class RealisticRouletteWheel {
     ctx.translate(centerX, centerY);
     ctx.rotate(this.wheelAngle);
     
-    // Draw outer rim
+    // Draw outer track (where ball spins)
+    // Track bowl shape
+    ctx.beginPath();
+    ctx.arc(0, 0, this.outerTrackRadius + 10, 0, Math.PI * 2);
+    ctx.strokeStyle = '#4a3c28'; // Dark wood
+    ctx.lineWidth = 20;
+    ctx.stroke();
+    
+    // Track surface
+    ctx.beginPath();
+    ctx.arc(0, 0, this.outerTrackRadius, 0, Math.PI * 2);
+    ctx.strokeStyle = '#8b7355'; // Light wood
+    ctx.lineWidth = 20;
+    ctx.stroke();
+    
+    // Inner edge of track
+    ctx.beginPath();
+    ctx.arc(0, 0, this.outerTrackRadius - 20, 0, Math.PI * 2);
+    ctx.strokeStyle = '#5d4e37'; // Medium brown
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    
+    // Draw main wheel rim
     ctx.beginPath();
     ctx.arc(0, 0, this.wheelRadius, 0, Math.PI * 2);
     ctx.strokeStyle = '#8b0000';
-    ctx.lineWidth = 20;
+    ctx.lineWidth = 15;
     ctx.stroke();
     
     // Draw pockets
@@ -283,7 +356,7 @@ class RealisticRouletteWheel {
       // Draw pocket
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.arc(0, 0, this.wheelRadius - 20, -pocketSize/2, pocketSize/2);
+      ctx.arc(0, 0, this.wheelRadius - 15, -pocketSize/2, pocketSize/2);
       ctx.closePath();
       
       ctx.fillStyle = i === 0 ? '#00ff00' : (isRed ? '#dc143c' : '#1a1a1a');
@@ -303,13 +376,23 @@ class RealisticRouletteWheel {
       ctx.fillText(i.toString(), 0, -this.wheelRadius * 0.75);
       ctx.restore();
       
-      // Draw divider
+      // Draw divider (fret)
       ctx.beginPath();
       ctx.moveTo(this.wheelRadius * 0.5, 0);
-      ctx.lineTo(this.wheelRadius - 20, 0);
+      ctx.lineTo(this.wheelRadius - 15, 0);
       ctx.strokeStyle = '#ffd700';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 3;
       ctx.stroke();
+      
+      // Draw fret base (small diamond)
+      ctx.beginPath();
+      ctx.moveTo(this.wheelRadius - 15, 0);
+      ctx.lineTo(this.wheelRadius - 10, -3);
+      ctx.lineTo(this.wheelRadius - 5, 0);
+      ctx.lineTo(this.wheelRadius - 10, 3);
+      ctx.closePath();
+      ctx.fillStyle = '#ffd700';
+      ctx.fill();
       
       ctx.restore();
     }
@@ -330,9 +413,26 @@ class RealisticRouletteWheel {
     ctx.save();
     ctx.translate(centerX, centerY);
     
+    // Draw ball trail for motion blur effect
+    if (this.ballTrail.length > 1 && Math.abs(this.ballVelocity) > 3) {
+      const trailLength = Math.min(this.ballTrail.length, 10); // Shorter trail
+      for (let i = this.ballTrail.length - trailLength; i < this.ballTrail.length - 1; i++) {
+        if (i < 0) continue;
+        const alpha = ((i - (this.ballTrail.length - trailLength)) / trailLength) * 0.2;
+        ctx.globalAlpha = alpha;
+        const trail = this.ballTrail[i];
+        
+        ctx.beginPath();
+        ctx.arc(trail.x, trail.y - trail.height, this.ballRadius * 0.7, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+    
     // Calculate ball position
-    const x = Math.cos(this.ballAngle) * this.ballRadius;
-    const y = Math.sin(this.ballAngle) * this.ballRadius;
+    const x = Math.cos(this.ballAngle) * this.ballRadialPosition;
+    const y = Math.sin(this.ballAngle) * this.ballRadialPosition;
     
     // Draw ball shadow (if falling)
     if (this.phase === 'falling' && this.ballHeight > 2) {
@@ -384,21 +484,65 @@ class RealisticRouletteWheel {
   
   playBounceSound() {
     // Create a simple bounce sound using Web Audio API
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      // Vary pitch based on bounce count for realism
+      const basePitch = 600 + (this.bounceCount * 100);
+      oscillator.frequency.value = basePitch + Math.random() * 200;
+      oscillator.type = 'sine';
+      
+      // Quieter volume for later bounces
+      const volume = 0.3 - (this.bounceCount * 0.08);
+      gainNode.gain.setValueAtTime(Math.max(0.05, volume), audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.08);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.08);
+    } catch (e) {
+      // Silently fail if audio context not available
+    }
+  }
+  
+  drawSpeedIndicator(ctx) {
+    // Draw speed bar at bottom of canvas
+    const barWidth = 200;
+    const barHeight = 10;
+    const x = (this.canvas.width - barWidth) / 2;
+    const y = this.canvas.height - 40;
     
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+    // Background
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect(x - 2, y - 2, barWidth + 4, barHeight + 4);
     
-    oscillator.frequency.value = 800 + Math.random() * 400;
-    oscillator.type = 'sine';
+    // Speed bar
+    const speedPercent = Math.min(Math.abs(this.ballVelocity) / 20, 1);
+    const barFillWidth = barWidth * speedPercent;
     
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+    // Gradient from green to yellow to red
+    const gradient = ctx.createLinearGradient(x, y, x + barWidth, y);
+    gradient.addColorStop(0, '#00ff00');
+    gradient.addColorStop(0.5, '#ffff00');
+    gradient.addColorStop(1, '#ff0000');
     
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.1);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(x, y, barFillWidth, barHeight);
+    
+    // Border
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x, y, barWidth, barHeight);
+    
+    // Label
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '12px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Ball Speed', this.canvas.width / 2, y - 8);
   }
   
   destroy() {
@@ -412,4 +556,6 @@ class RealisticRouletteWheel {
 }
 
 // Export for use
-window.RealisticRouletteWheel = RealisticRouletteWheel;
+if (typeof window !== 'undefined') {
+  window.RealisticRouletteWheel = RealisticRouletteWheel;
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Test</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .test-box {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>CSS Loading Test</h1>
+    <div class="test-box">
+        If this box has a dark background and white text, inline CSS is working.
+    </div>
+    <div class="main-nav">
+        If this has styling from style.css, external CSS is working.
+    </div>
+    <div class="hero-section">
+        This should have hero section styling if style.css loads.
+    </div>
+    
+    <script>
+        window.addEventListener('load', function() {
+            console.log('Number of stylesheets:', document.styleSheets.length);
+            for (let i = 0; i < document.styleSheets.length; i++) {
+                try {
+                    console.log('Stylesheet', i, ':', document.styleSheets[i].href || 'inline');
+                } catch (e) {
+                    console.log('Stylesheet', i, ': Access denied (cross-origin)');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

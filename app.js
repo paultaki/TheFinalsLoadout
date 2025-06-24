@@ -1026,11 +1026,6 @@ const displayLoadout = (classType) => {
   };
 
   const loadoutHTML = `
-    <div class="class-info-display" style="text-align: center; margin-bottom: 20px; font-size: 24px; font-weight: bold; color: #fff;">
-      ${classType} Class${
-    state.currentSpin > 1 ? ` - ${state.currentSpin} spins remaining` : ""
-  }
-    </div>
     <div class="slot-machine-wrapper">
       <div class="items-container">
         <div class="item-container">
@@ -2704,65 +2699,41 @@ async function addToHistory(
   //   : "";
   const badgeHTML = ""; // Overlay tags removed
 
-  // Create initial entry with loading roast state
+  // Create initial entry with clean design
   newEntry.innerHTML = `
-    <div class="meme-export-container">
-      ${badgeHTML}
+    <div class="history-card-content">
       <div class="loadout-header">
         <span class="class-badge ${classType.toLowerCase()}">${classType.toUpperCase()}</span>
         <span class="loadout-name">${loadoutName}</span>
         <span class="timestamp">Just now</span>
       </div>
-      <div class="loadout-details">
-        <div class="loadout-item weapon-item">
-          <img src="images/${selectedWeapon.replace(
-            / /g,
-            "_"
-          )}.webp" alt="${selectedWeapon}" class="item-icon">
-          <span class="item-name">${selectedWeapon}</span>
+      <div class="loadout-items">
+        <div class="loadout-row">
+          <span class="item-label">Weapon:</span>
+          <span class="item-value">${selectedWeapon}</span>
         </div>
-        <div class="loadout-item spec-item">
-          <img src="images/${selectedSpec.replace(
-            / /g,
-            "_"
-          )}.webp" alt="${selectedSpec}" class="item-icon">
-          <span class="item-name">${selectedSpec}</span>
+        <div class="loadout-row">
+          <span class="item-label">Specialization:</span>
+          <span class="item-value">${selectedSpec}</span>
         </div>
-        <div class="gadget-group">
-          ${selectedGadgets
-            .map(
-              (g) => `
-            <div class="loadout-item gadget-item">
-              <img src="images/${g.replace(
-                / /g,
-                "_"
-              )}.webp" alt="${g}" class="item-icon small">
-              <span class="item-name small">${g}</span>
-            </div>
-          `
-            )
-            .join("")}
+        <div class="loadout-row gadgets-row">
+          <span class="item-label">Gadgets:</span>
+          <div class="gadgets-list">
+            ${selectedGadgets.map(g => `<span class="gadget-value">${g}</span>`).join('')}
+          </div>
         </div>
       </div>
       <div class="roast-section loading">
         <div class="roast-content">
-          <span class="fire-emoji">🔥</span>
           <span class="roast-text">Analyzing loadout configuration...</span>
         </div>
       </div>
-      <div class="meme-footer">
-        <span class="meme-watermark">Analyzed by thefinalsloadout.com</span>
-      </div>
-    </div>
-    <div class="loadout-actions">
-      <button class="copy-build" onclick="copyLoadoutText(this)">
-        <span>📋</span> COPY
-      </button>
-      <button class="meme-card-btn" onclick="exportMemeCard(this)">
-        <span>🧠</span> MEME CARD
-      </button>
-      <button class="roast-again-btn" onclick="roastMeAgain(this)" title="Get a new breakdown for this exact loadout">
-        <span>🔁</span> RUN ANALYSIS AGAIN
+      <button class="copy-button" onclick="copyLoadoutText(this)" title="Copy loadout to clipboard">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        Copy
       </button>
     </div>
   `;
@@ -2985,29 +2956,18 @@ function saveHistory() {
       const loadoutName = entry
         .querySelector(".loadout-name")
         ?.textContent.trim();
-      const weapon = entry.querySelector(
-        ".weapon-item .item-name"
-      )?.textContent;
-      const specialization = entry.querySelector(
-        ".spec-item .item-name"
-      )?.textContent;
+      
+      // Get weapon and specialization from the new structure
+      const weaponRow = entry.querySelector(".loadout-row:nth-child(1)");
+      const specRow = entry.querySelector(".loadout-row:nth-child(2)");
+      const weapon = weaponRow?.querySelector(".item-value")?.textContent || "Unknown Weapon";
+      const specialization = specRow?.querySelector(".item-value")?.textContent || "Unknown Special";
+      
+      // Get gadgets from the new structure
       const gadgets = Array.from(
-        entry.querySelectorAll(".gadget-item .item-name")
+        entry.querySelectorAll(".gadget-value")
       ).map((el) => el.textContent);
-      const isSpicy = entry.classList.contains("spicy-loadout");
-
-      // Extract badge data
-      const badgeElement = entry.querySelector(".loadout-badge");
-      const badge = badgeElement
-        ? {
-            text: badgeElement.textContent,
-            type: badgeElement.classList.contains("legendary-chaos")
-              ? "legendary-chaos"
-              : "special",
-            tooltip: badgeElement.getAttribute("title") || "",
-          }
-        : null;
-
+      
       // Extract roast data
       const roastSection = entry.querySelector(".roast-section");
       const roastText = entry.querySelector(".roast-text")?.textContent;
@@ -3020,8 +2980,6 @@ function saveHistory() {
         weapon,
         specialization,
         gadgets,
-        isSpicy,
-        badge,
         roast: isRoastLoading ? null : roastText,
         roastFallback: isRoastFallback,
         timestamp: Date.now(),
@@ -3080,7 +3038,6 @@ function loadHistory() {
       roastSectionHTML = `
         <div class="roast-section${fallbackClass}">
           <div class="roast-content">
-            <span class="fire-emoji">🔥</span>
             <span class="roast-text">${entryData.roast}</span>
           </div>
         </div>
@@ -3090,7 +3047,6 @@ function loadHistory() {
       roastSectionHTML = `
         <div class="roast-section fallback">
           <div class="roast-content">
-            <span class="fire-emoji">🔥</span>
             <span class="roast-text">Analysis unavailable. Still questionable though. 1/10</span>
           </div>
         </div>
@@ -3103,55 +3059,35 @@ function loadHistory() {
       : "";
 
     entry.innerHTML = `
-      <div class="meme-export-container">
-        ${badgeHTML}
+      <div class="history-card-content">
         <div class="loadout-header">
           <span class="class-badge ${entryData.classType.toLowerCase()}">${entryData.classType.toUpperCase()}</span>
           <span class="loadout-name">${entryData.loadoutName}</span>
           <span class="timestamp">${timeAgo}</span>
         </div>
-        <div class="loadout-details">
-          <div class="loadout-item weapon-item">
-            <img src="images/${entryData.weapon.replace(
-              / /g,
-              "_"
-            )}.webp" alt="${entryData.weapon}" class="item-icon">
-            <span class="item-name">${entryData.weapon}</span>
+        <div class="loadout-items">
+          <div class="loadout-row">
+            <span class="item-label">Weapon:</span>
+            <span class="item-value">${entryData.weapon}</span>
           </div>
-          <div class="loadout-item spec-item">
-            <img src="images/${entryData.specialization.replace(
-              / /g,
-              "_"
-            )}.webp" alt="${entryData.specialization}" class="item-icon">
-            <span class="item-name">${entryData.specialization}</span>
+          <div class="loadout-row">
+            <span class="item-label">Specialization:</span>
+            <span class="item-value">${entryData.specialization}</span>
           </div>
-          <div class="gadget-group">
-            ${entryData.gadgets
-              .map(
-                (g) => `
-              <div class="loadout-item gadget-item">
-                <img src="images/${g.replace(
-                  / /g,
-                  "_"
-                )}.webp" alt="${g}" class="item-icon small">
-                <span class="item-name small">${g}</span>
-              </div>
-            `
-              )
-              .join("")}
+          <div class="loadout-row gadgets-row">
+            <span class="item-label">Gadgets:</span>
+            <div class="gadgets-list">
+              ${entryData.gadgets.map(g => `<span class="gadget-value">${g}</span>`).join('')}
+            </div>
           </div>
         </div>
         ${roastSectionHTML}
-        <div class="meme-footer">
-          <span class="meme-watermark">Analyzed by thefinalsloadout.com</span>
-        </div>
-      </div>
-      <div class="loadout-actions">
-        <button class="copy-build" onclick="copyLoadoutText(this)">
-          <span>📋</span> COPY
-        </button>
-        <button class="meme-card-btn" onclick="exportMemeCard(this)">
-          <span>🧠</span> MEME CARD
+        <button class="copy-button" onclick="copyLoadoutText(this)" title="Copy loadout to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Copy
         </button>
       </div>
     `;
@@ -3447,17 +3383,15 @@ window.copyLoadoutText = function (button) {
   const classType = entry.querySelector(".class-badge").textContent.trim();
   const loadoutName = entry.querySelector(".loadout-name").textContent.trim();
 
-  // Get weapon and specialization from text
-  const weapon =
-    entry.querySelector(".weapon-item .item-name")?.textContent ||
-    "Unknown Weapon";
-  const specialization =
-    entry.querySelector(".spec-item .item-name")?.textContent ||
-    "Unknown Special";
+  // Get weapon and specialization from the new structure
+  const weaponRow = entry.querySelector(".loadout-row:nth-child(1)");
+  const specRow = entry.querySelector(".loadout-row:nth-child(2)");
+  const weapon = weaponRow?.querySelector(".item-value")?.textContent || "Unknown Weapon";
+  const specialization = specRow?.querySelector(".item-value")?.textContent || "Unknown Special";
 
-  // Get gadgets from text
+  // Get gadgets from the new structure
   const gadgets = Array.from(
-    entry.querySelectorAll(".gadget-item .item-name")
+    entry.querySelectorAll(".gadget-value")
   ).map((el) => el.textContent);
 
   // Create the copy text
@@ -3470,9 +3404,21 @@ Gadgets: ${gadgets.join(", ")}`;
   navigator.clipboard
     .writeText(copyText)
     .then(() => {
-      button.innerHTML = "<span>✅</span> COPIED!";
+      // Update button with SVG checkmark
+      button.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        Copied!
+      `;
       setTimeout(() => {
-        button.innerHTML = "<span>📋</span> COPY";
+        button.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Copy
+        `;
       }, 2000);
     })
     .catch((err) => {
@@ -3851,54 +3797,398 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Initialize roulette system with retry mechanism
-  function initializeRouletteSystem() {
-    // Ensure roulette container is hidden on init
-    const rouletteContainer = document.getElementById("roulette-container");
-    const rouletteOverlay = document.getElementById("roulette-overlay");
-    if (rouletteContainer) {
-      rouletteContainer.style.display = "none";
-      rouletteContainer.classList.add("hidden");
-      console.log("🎯 Hiding roulette container on init");
-    }
-    if (rouletteOverlay) {
-      rouletteOverlay.style.display = "none";
-      rouletteOverlay.classList.add("hidden");
-    }
-
-    if (!window.RouletteAnimationSystem) {
-      console.warn(
-        "RouletteAnimationSystem not yet available, retrying in 100ms..."
-      );
-      setTimeout(initializeRouletteSystem, 100);
-      return;
-    }
-
-    console.log("✅ RouletteAnimationSystem loaded successfully");
-
-    // Optimize audio for mobile by reducing concurrent sounds
-    const isMobile =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      );
-    if (isMobile) {
-      // Override tick sound frequency on mobile
-      const originalPlayTick =
-        window.RouletteAnimationSystem.prototype.playTickSound;
-      window.RouletteAnimationSystem.prototype.playTickSound = function () {
-        // Only play every 3rd tick on mobile to reduce audio overhead
-        if (!this._tickCounter) this._tickCounter = 0;
-        this._tickCounter++;
-        if (this._tickCounter % 3 === 0) {
-          originalPlayTick.call(this);
+  // Three-card class selection animation
+  async function animateClassSelection() {
+    return new Promise((resolve) => {
+      const classes = getAvailableClasses();
+      if (classes.length === 0) {
+        alert('All classes are excluded! Please select at least one class.');
+        resolve(null);
+        return;
+      }
+      
+      // Create overlay
+      const overlay = document.createElement('div');
+      overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 999999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      `;
+      
+      // Create title
+      const title = document.createElement('h2');
+      title.textContent = 'SELECTING CLASS...';
+      title.style.cssText = `
+        font-size: 48px;
+        font-weight: 900;
+        letter-spacing: 8px;
+        margin-bottom: 30px;
+        color: #ffb700;
+        text-shadow: 0 0 20px rgba(255, 183, 0, 0.8);
+      `;
+      
+      // Create cards container
+      const cardsContainer = document.createElement('div');
+      cardsContainer.style.cssText = `
+        display: flex;
+        gap: 30px;
+        margin-bottom: 40px;
+      `;
+      
+      // Create cards for each available class
+      const cards = [];
+      const allClasses = ['Light', 'Medium', 'Heavy'];
+      allClasses.forEach((className, index) => {
+        const card = document.createElement('div');
+        card.style.cssText = `
+          width: 200px;
+          height: 300px;
+          background: linear-gradient(135deg, #1a1a2e 0%, #0f0f0f 100%);
+          border: 3px solid ${classes.includes(className) ? '#ffb700' : '#333'};
+          border-radius: 15px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          opacity: ${classes.includes(className) ? '1' : '0.3'};
+          transform: scale(0.9);
+          pointer-events: ${classes.includes(className) ? 'auto' : 'none'};
+        `;
+        
+        // Add class image
+        const img = document.createElement('img');
+        img.src = `images/${className.toLowerCase()}_active.webp`;
+        img.style.cssText = `
+          width: 120px;
+          height: 120px;
+          margin-bottom: 20px;
+          object-fit: contain;
+        `;
+        
+        // Add class name
+        const name = document.createElement('div');
+        name.textContent = className.toUpperCase();
+        name.style.cssText = `
+          font-size: 24px;
+          font-weight: bold;
+          color: ${classes.includes(className) ? '#ffb700' : '#666'};
+        `;
+        
+        card.appendChild(img);
+        card.appendChild(name);
+        card.dataset.class = className;
+        
+        if (classes.includes(className)) {
+          cards.push(card);
         }
-      };
-    }
+        
+        cardsContainer.appendChild(card);
+      });
+      
+      overlay.appendChild(title);
+      overlay.appendChild(cardsContainer);
+      document.body.appendChild(overlay);
+      
+      // Animate cards cycling
+      let currentIndex = 0;
+      let cycleCount = 0;
+      const totalCycles = 15 + Math.floor(Math.random() * 10);
+      const selectedIndex = Math.floor(Math.random() * cards.length);
+      
+      function highlightCard(index) {
+        cards.forEach((card, i) => {
+          if (i === index) {
+            card.style.transform = 'scale(1.1)';
+            card.style.borderColor = '#00ff00';
+            card.style.boxShadow = '0 0 30px rgba(0, 255, 0, 0.6)';
+          } else {
+            card.style.transform = 'scale(0.9)';
+            card.style.borderColor = '#ffb700';
+            card.style.boxShadow = 'none';
+          }
+        });
+      }
+      
+      function cycle() {
+        highlightCard(currentIndex);
+        
+        // Play tick sound
+        if (state.soundEnabled) {
+          const tickSound = document.getElementById('tickSound');
+          if (tickSound) {
+            tickSound.volume = 0.3;
+            tickSound.play().catch(() => {});
+          }
+        }
+        
+        cycleCount++;
+        
+        if (cycleCount >= totalCycles) {
+          // Final selection
+          currentIndex = selectedIndex;
+          highlightCard(currentIndex);
+          
+          // Play win sound
+          if (state.soundEnabled) {
+            const winSound = document.getElementById('classWinSound');
+            if (winSound) {
+              winSound.play().catch(() => {});
+            }
+          }
+          
+          const selectedClass = cards[currentIndex].dataset.class;
+          
+          // Show selection text
+          title.textContent = `${selectedClass.toUpperCase()} CLASS SELECTED!`;
+          title.style.color = '#00ff00';
+          
+          // Clean up after delay
+          setTimeout(() => {
+            overlay.remove();
+            resolve(selectedClass);
+          }, 1500);
+        } else {
+          // Continue cycling
+          currentIndex = (currentIndex + 1) % cards.length;
+          
+          // Calculate delay - start fast, slow down
+          const progress = cycleCount / totalCycles;
+          const delay = 50 + Math.pow(progress, 2) * 450;
+          
+          setTimeout(cycle, delay);
+        }
+      }
+      
+      // Start cycling after a brief delay
+      setTimeout(cycle, 500);
+    });
+  }
+  
+  // Spin count selection animation with horizontal circles and fireworks
+  async function animateSpinSelection() {
+    return new Promise((resolve) => {
+      const spinOptions = [1, 2, 3, 4, 5];
+      
+      // Create overlay
+      const overlay = document.createElement('div');
+      overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 999999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      `;
+      
+      // Create title
+      const title = document.createElement('h2');
+      title.textContent = 'SELECTING SPINS...';
+      title.style.cssText = `
+        font-size: 48px;
+        font-weight: 900;
+        letter-spacing: 8px;
+        margin-bottom: 60px;
+        color: #ffb700;
+        text-shadow: 0 0 20px rgba(255, 183, 0, 0.8);
+      `;
+      
+      // Create circles container
+      const circlesContainer = document.createElement('div');
+      circlesContainer.style.cssText = `
+        display: flex;
+        gap: 40px;
+        margin-bottom: 40px;
+      `;
+      
+      // Create circles
+      const circles = [];
+      spinOptions.forEach((num) => {
+        const circle = document.createElement('div');
+        circle.style.cssText = `
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #1a1a2e 0%, #0f0f0f 100%);
+          border: 3px solid #ffb700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 48px;
+          font-weight: bold;
+          color: #ffb700;
+          transition: all 0.3s ease;
+          position: relative;
+        `;
+        circle.textContent = num;
+        circle.dataset.spins = num;
+        circles.push(circle);
+        circlesContainer.appendChild(circle);
+      });
+      
+      // Create spin text
+      const spinText = document.createElement('div');
+      spinText.style.cssText = `
+        font-size: 36px;
+        color: #ffb700;
+        text-transform: uppercase;
+      `;
+      spinText.textContent = 'SPINS';
+      
+      overlay.appendChild(title);
+      overlay.appendChild(circlesContainer);
+      overlay.appendChild(spinText);
+      document.body.appendChild(overlay);
+      
+      // Firework effect function
+      function createFireworks(circle) {
+        const rect = circle.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        for (let i = 0; i < 8; i++) {
+          const particle = document.createElement('div');
+          particle.style.cssText = `
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(45deg, #ffb700, #ff1493);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000001;
+            left: ${centerX}px;
+            top: ${centerY}px;
+          `;
+          
+          const angle = (Math.PI * 2 * i) / 8;
+          const distance = 50 + Math.random() * 30;
+          const targetX = centerX + Math.cos(angle) * distance;
+          const targetY = centerY + Math.sin(angle) * distance;
+          
+          document.body.appendChild(particle);
+          
+          // Animate particle
+          const animation = particle.animate([
+            {
+              transform: 'translate(0, 0) scale(1)',
+              opacity: 1
+            },
+            {
+              transform: `translate(${targetX - centerX}px, ${targetY - centerY}px) scale(0)`,
+              opacity: 0
+            }
+          ], {
+            duration: 600,
+            easing: 'ease-out'
+          });
+          
+          animation.onfinish = () => particle.remove();
+        }
+      }
+      
+      // Highlight function
+      function highlightCircle(index) {
+        circles.forEach((circle, i) => {
+          if (i === index) {
+            circle.style.transform = 'scale(1.2)';
+            circle.style.borderColor = '#00ff00';
+            circle.style.background = 'linear-gradient(135deg, #1a3a1a 0%, #0f1f0f 100%)';
+            circle.style.boxShadow = '0 0 30px rgba(0, 255, 0, 0.6)';
+            createFireworks(circle);
+          } else {
+            circle.style.transform = 'scale(1)';
+            circle.style.borderColor = '#ffb700';
+            circle.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #0f0f0f 100%)';
+            circle.style.boxShadow = 'none';
+          }
+        });
+      }
+      
+      // Animate cycling
+      let currentIndex = 0;
+      let cycleCount = 0;
+      const totalCycles = 15 + Math.floor(Math.random() * 10);
+      const selectedIndex = Math.floor(Math.random() * spinOptions.length);
+      
+      function cycle() {
+        highlightCircle(currentIndex);
+        
+        // Update spin text
+        const currentSpins = spinOptions[currentIndex];
+        spinText.textContent = currentSpins === 1 ? 'SPIN' : 'SPINS';
+        
+        // Play tick sound
+        if (state.soundEnabled) {
+          const tickSound = document.getElementById('tickSound');
+          if (tickSound) {
+            tickSound.volume = 0.3;
+            tickSound.play().catch(() => {});
+          }
+        }
+        
+        cycleCount++;
+        
+        if (cycleCount >= totalCycles) {
+          // Final selection
+          currentIndex = selectedIndex;
+          highlightCircle(currentIndex);
+          
+          const selectedSpins = spinOptions[currentIndex];
+          spinText.textContent = selectedSpins === 1 ? 'SPIN' : 'SPINS';
+          spinText.style.color = '#00ff00';
+          
+          // Play win sound
+          if (state.soundEnabled) {
+            const winSound = document.getElementById('classWinSound');
+            if (winSound) {
+              winSound.play().catch(() => {});
+            }
+          }
+          
+          // Show confirmation
+          title.textContent = `${selectedSpins} ${selectedSpins === 1 ? 'SPIN' : 'SPINS'} SELECTED!`;
+          title.style.color = '#00ff00';
+          
+          // Clean up after delay
+          setTimeout(() => {
+            overlay.remove();
+            resolve(selectedSpins);
+          }, 1500);
+        } else {
+          // Continue cycling
+          currentIndex = (currentIndex + 1) % spinOptions.length;
+          
+          // Calculate delay - start fast, slow down
+          const progress = cycleCount / totalCycles;
+          const delay = 50 + Math.pow(progress, 2) * 350;
+          
+          setTimeout(cycle, delay);
+        }
+      }
+      
+      // Start cycling after a brief delay
+      setTimeout(cycle, 500);
+    });
+  }
+  
+  // Initialize class selection system
+  function initializeClassSelectionSystem() {
+    console.log("🎯 Initializing class selection system...");
 
-    // Initialize the roulette animation system
-    const rouletteSystem = new window.RouletteAnimationSystem();
-
-    // Set up the main SPIN button with debugging
+    // Set up the main SPIN button
     const mainSpinButton = document.getElementById("main-spin-button");
     console.log("🔍 Looking for main-spin-button:", !!mainSpinButton);
 
@@ -3908,32 +4198,80 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("🎯 MAIN SPIN BUTTON CLICKED!");
         console.log("🔍 Current state:", {
           isSpinning: state.isSpinning,
-          rouletteAnimating: rouletteSystem.animating,
           selectedClass: state.selectedClass,
         });
 
-        if (state.isSpinning || rouletteSystem.animating) {
+        if (state.isSpinning) {
           console.log("❌ Animation already in progress, skipping");
           return;
         }
 
         // Add spinning animation
         mainSpinButton.classList.add("spinning");
+        state.isSpinning = true;
 
         try {
-          console.log("🚀 Starting roulette sequence...");
-          // Start the full roulette sequence
-          await rouletteSystem.startFullSequence();
-          console.log("✅ Roulette sequence completed");
+          console.log("🚀 Starting class selection sequence...");
+          
+          // Phase 1: Class Selection
+          const selectedClass = await animateClassSelection();
+          if (!selectedClass) {
+            mainSpinButton.classList.remove("spinning");
+            state.isSpinning = false;
+            return;
+          }
+          
+          console.log(`✅ Class selected: ${selectedClass}`);
+          state.selectedClass = selectedClass;
+          
+          // Brief pause
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // Phase 2: Spin Count Selection
+          const selectedSpins = await animateSpinSelection();
+          console.log(`✅ Spins selected: ${selectedSpins}`);
+          state.totalSpins = selectedSpins;
+          
+          // Show selection display
+          const selectionDisplay = document.getElementById('selection-display');
+          if (selectionDisplay) {
+            const classSpan = selectionDisplay.querySelector('.selection-class');
+            const spinsSpan = selectionDisplay.querySelector('.selection-spins');
+            
+            if (classSpan) {
+              classSpan.textContent = selectedClass.toUpperCase();
+              classSpan.className = `selection-class ${selectedClass.toLowerCase()}`;
+            }
+            if (spinsSpan) {
+              spinsSpan.textContent = `${selectedSpins} SPIN${selectedSpins > 1 ? 'S' : ''}`;
+            }
+            
+            selectionDisplay.classList.remove('hidden');
+            selectionDisplay.classList.add('visible');
+            
+            // Keep the class display visible so users know what was selected
+            // setTimeout(() => {
+            //   selectionDisplay.classList.remove('visible');
+            //   selectionDisplay.classList.add('hidden');
+            // }, 5000);
+          }
+          
+          // Start the spin
+          console.log("🎰 Starting slot machine spin...");
+          state.isSpinning = false; // Reset before calling spinLoadout
+          spinLoadout();
+          
         } catch (error) {
-          console.error("❌ Error in roulette sequence:", error);
+          console.error("❌ Error in class selection sequence:", error);
           console.log("🔄 Falling back to direct random loadout...");
           // Fallback to old system
+          state.isSpinning = false;
           displayRandomLoadout();
+        } finally {
+          // Remove spinning animation when done
+          mainSpinButton.classList.remove("spinning");
+          state.isSpinning = false;
         }
-
-        // Remove spinning animation when done
-        mainSpinButton.classList.remove("spinning");
       });
 
       // Test the button is clickable
@@ -3951,20 +4289,37 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("✅ Found button on retry, setting up...");
           retryButton.addEventListener("click", async () => {
             console.log("🎯 RETRY MAIN SPIN BUTTON CLICKED!");
-            if (state.isSpinning || rouletteSystem.animating) {
+            if (state.isSpinning) {
               return;
             }
 
             retryButton.classList.add("spinning");
+            state.isSpinning = true;
 
             try {
-              await rouletteSystem.startFullSequence();
+              const selectedClass = await animateClassSelection();
+              if (!selectedClass) {
+                retryButton.classList.remove("spinning");
+                state.isSpinning = false;
+                return;
+              }
+              
+              state.selectedClass = selectedClass;
+              await new Promise(resolve => setTimeout(resolve, 500));
+              
+              const selectedSpins = await animateSpinSelection();
+              state.totalSpins = selectedSpins;
+              
+              state.isSpinning = false; // Reset before calling spinLoadout
+              spinLoadout();
             } catch (error) {
-              console.error("❌ Retry roulette error:", error);
+              console.error("❌ Retry error:", error);
+              state.isSpinning = false;
               displayRandomLoadout();
+            } finally {
+              retryButton.classList.remove("spinning");
+              state.isSpinning = false;
             }
-
-            retryButton.classList.remove("spinning");
           });
         } else {
           console.error(
@@ -3975,13 +4330,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Initialize roulette system (DOM is already ready)
-  console.log("🚀 About to call initializeRouletteSystem()");
+  // Initialize class selection system (DOM is already ready)
+  console.log("🚀 About to call initializeClassSelectionSystem()");
   try {
-    initializeRouletteSystem();
-    console.log("✅ initializeRouletteSystem() completed successfully");
+    initializeClassSelectionSystem();
+    console.log("✅ initializeClassSelectionSystem() completed successfully");
   } catch (error) {
-    console.error("❌ Error in initializeRouletteSystem():", error);
+    console.error("❌ Error in initializeClassSelectionSystem():", error);
   }
 
   // EMERGENCY FALLBACK: Set up spin button directly if roulette system fails
@@ -4030,13 +4385,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // Set up "Select All" functionality
     setupSelectAllCheckboxes();
 
-    // Run immediate cleanup on page load
-    if (
-      window.RouletteAnimationSystem &&
-      window.RouletteAnimationSystem.cleanupAllAnimationContainers
-    ) {
-      window.RouletteAnimationSystem.cleanupAllAnimationContainers();
-    }
+    // Cleanup any leftover animations on page load
+    const animationContainers = document.querySelectorAll('[style*="z-index: 999999"]');
+    animationContainers.forEach(container => {
+      if (container.parentNode) {
+        container.remove();
+      }
+    });
   });
 
   // Function to setup Select All checkboxes (moved outside event listener)
