@@ -206,6 +206,11 @@ html {
   margin: 20px auto;
   min-height: 200px;
   contain: layout style;
+  display: none; /* Hidden by default until content is loaded */
+}
+
+#output:not(:empty) {
+  display: block; /* Show when content is added */
 }
 
 .item-container {

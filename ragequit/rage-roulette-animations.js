@@ -137,6 +137,7 @@ class RageRouletteAnimationSystem {
 
     // Hide roulette container
     rouletteContainer.classList.add("hidden");
+    rouletteContainer.style.display = "none";
 
     // Restore body scrolling
     document.body.style.overflow = "";
@@ -149,7 +150,7 @@ class RageRouletteAnimationSystem {
     if (rageButtonContainer2) rageButtonContainer2.style.display = "flex";
     
     const outputElement2 = document.getElementById("output");
-    if (outputElement2) outputElement2.style.display = "block";
+    if (outputElement2) outputElement2.style.display = "flex";
     
     const handicapSection2 = document.querySelector(".handicap-section");
     if (handicapSection2) handicapSection2.style.display = "block";
@@ -244,7 +245,7 @@ class RageRouletteAnimationSystem {
     `;
 
       const img = document.createElement("img");
-      img.src = `../images/${className.toLowerCase()}_active.webp`;
+      img.src = `https://thefinalsloadout.com/images/${className.toLowerCase()}_active.webp`;
       img.style.cssText = `
       width: clamp(60px, 15vw, 120px);
       height: clamp(60px, 15vw, 120px);
@@ -273,7 +274,14 @@ class RageRouletteAnimationSystem {
 
     animationContainer.appendChild(title);
     animationContainer.appendChild(wheel);
-    document.body.appendChild(animationContainer);
+    
+    // Append to the rage-roulette-container instead of body
+    const rouletteContainer = document.getElementById("rage-roulette-container");
+    if (rouletteContainer) {
+      rouletteContainer.appendChild(animationContainer);
+    } else {
+      document.body.appendChild(animationContainer);
+    }
 
     // Now run the animation (EXACT SAME LOGIC as main page)
     let currentIndex = 0;

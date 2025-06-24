@@ -49,17 +49,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize the rage roulette animation system
   let rageRouletteSystem = null;
-  try {
-    if (window.RageRouletteAnimationSystem) {
-      rageRouletteSystem = new window.RageRouletteAnimationSystem();
-      window.rageRouletteSystem = rageRouletteSystem;
-      console.log("✅ RageRouletteAnimationSystem initialized successfully");
-    } else {
-      console.warn("⚠️ RageRouletteAnimationSystem not found, button will use fallback");
+  
+  // Wait a bit for scripts to load if needed
+  const initializeRouletteSystem = () => {
+    try {
+      if (window.RageRouletteAnimationSystem) {
+        rageRouletteSystem = new window.RageRouletteAnimationSystem();
+        window.rageRouletteSystem = rageRouletteSystem;
+        console.log("✅ RageRouletteAnimationSystem initialized successfully");
+        return true;
+      } else {
+        console.warn("⚠️ RageRouletteAnimationSystem not found yet");
+        return false;
+      }
+    } catch (e) {
+      console.error("❌ Failed to initialize RageRouletteAnimationSystem:", e);
+      return false;
     }
-  } catch (e) {
-    console.error("❌ Failed to initialize RageRouletteAnimationSystem:", e);
-  }
+  };
+  
+  // Function to wait for animation system with retries
+  const waitForAnimationSystem = async () => {
+    let attempts = 0;
+    const maxAttempts = 10;
+    
+    while (attempts < maxAttempts) {
+      if (initializeRouletteSystem()) {
+        return true;
+      }
+      await new Promise(resolve => setTimeout(resolve, 100));
+      attempts++;
+    }
+    
+    console.error("❌ RageRouletteAnimationSystem could not be loaded after " + maxAttempts + " attempts");
+    return false;
+  };
+  
+  // Initialize with async wait
+  waitForAnimationSystem();
   
   // Initialize sound toggle
   initializeRageSoundToggle();
@@ -89,11 +116,28 @@ document.addEventListener("DOMContentLoaded", () => {
       // Add spinning animation to button
       this.classList.add('spinning');
       
+      // Ensure animation system is ready
+      if (!rageRouletteSystem || !window.rageRouletteSystem) {
+        console.log("⏳ Waiting for animation system to initialize...");
+        await waitForAnimationSystem();
+      }
+      
       // Start the full roulette sequence if available, otherwise use fallback
-      if (rageRouletteSystem) {
-        await rageRouletteSystem.startFullSequence();
+      if (rageRouletteSystem && window.RageRouletteAnimationSystem) {
+        console.log("🎬 Starting rage roulette animation sequence");
+        try {
+          await rageRouletteSystem.startFullSequence();
+          console.log("✅ Rage roulette animation sequence completed");
+        } catch (error) {
+          console.error("❌ Rage roulette animation error:", error);
+          // Fallback to direct spin
+          if (window.spinRageQuitLoadout) {
+            console.log("Using fallback spinRageQuitLoadout after error");
+            window.spinRageQuitLoadout();
+          }
+        }
       } else if (window.spinRageQuitLoadout) {
-        console.log("Using fallback spinRageQuitLoadout");
+        console.log("⚠️ Animation system not available, using fallback spinRageQuitLoadout");
         window.spinRageQuitLoadout();
       } else {
         console.error("No spin function available!");
@@ -195,598 +239,604 @@ const addGPUHints = () => {
   });
 };
 
-// Loadouts object - Only the worst items for Rage Quit Simulator
-const rageQuitLoadouts = {
-  weapons: [
-    "Throwing Knives", // Light - Low damage, difficult to aim
-    "V9S", // Light - Low damage pistol
-    "XP-54", // Light - Challenging to use effectively
-    "Model 1887", // Medium - Slow reload, limited use
-    "R.357", // Medium - Slow rate of fire, hard to use in close quarters
-    "Riot Shield", // Medium - Limits mobility and offensive capability
-    "KS-23", // Heavy - Very slow reload
-    "Spear", // Heavy - Limited range and difficult to master
-  ],
-  specializations: [
-    "Cloaking Device", // Limited duration, situational
-    "Guardian Turret", // Stationary, can be easily destroyed
-    "Mesh Shield", // Blocks your own line of sight
-    "Winch Claw", // Very situational
-  ],
-  gadgets: [
-    "Breach Charge", // Situational, can self-damage
-    "Thermal Bore", // Limited utility
-    "Vanishing Bomb", // Confusing to use effectively
-    "Glitch Trap", // Situational
-    "Jump Pad", // Very situational
-    "Zipline", // Limited use cases
-    "Anti-Gravity Cube", // Difficult to use properly
-    "Dome Shield", // Can trap yourself
-    "Lockbolt Launcher", // Hard to use effectively
-    "Flashbang", // Can blind yourself
-    "Data Reshaper", // Limited functionality
-    "Proximity Sensor", // Often doesn't help in fast-paced combat
-  ],
-
-  // Replace the handicaps array in your rageQuitLoadouts object with this expanded list
-
-  handicaps: [
-    // Movement Handicaps
-    {
-      name: "Sloth Mode",
-      description: "No Sprinting – Must walk everywhere",
-      icon: "🦥",
-      category: "Movement",
-    },
-    {
-      name: "Bunny Hop Ban",
-      description: "No Jumping – Stairs and ramps only",
-      icon: "🐰",
-      category: "Movement",
-    },
-    {
-      name: "Permanent Crouch",
-      description: "You must stay crouched the entire game",
-      icon: "🧎",
-      category: "Movement",
-    },
-    {
-      name: "Opposite Day",
-      description: "Swap forward/backward and left/right",
-      icon: "🔄",
-      category: "Movement",
-    },
-    {
-      name: "Moonwalk Mode",
-      description: "Walk backward only",
-      icon: "🕴️",
-      category: "Movement",
-    },
-    {
-      name: "Controller Drift",
-      description: "Cannot stop moving unless using an ability",
-      icon: "🎮",
-      category: "Movement",
-    },
-    {
-      name: "Strafe Master",
-      description: "Never move forward - only sideways",
-      icon: "↔️",
-      category: "Movement",
-    },
-    {
-      name: "Zig Zag Only",
-      description: "Must constantly alternate left and right while moving",
-      icon: "⚡",
-      category: "Movement",
-    },
-    {
-      name: "Jump Addict",
-      description: "Must jump constantly while moving",
-      icon: "🏃",
-      category: "Movement",
-    },
-    {
-      name: "Scenic Route",
-      description: "Never take the direct path to objectives",
-      icon: "🗺️",
-      category: "Movement",
-    },
-
-    // Aiming Handicaps
-    {
-      name: "No Scope Challenge",
-      description: "Unmap the ADS button; hipfire only",
-      icon: "🎯",
-      category: "Aiming",
-    },
-    {
-      name: "Flip 'n' Rage",
-      description: "Swap up/down and left/right for aiming",
-      icon: "🔃",
-      category: "Aiming",
-    },
-    {
-      name: "Squirrel Mode",
-      description: "Max out your mouse DPI/sensitivity",
-      icon: "🐿️",
-      category: "Aiming",
-    },
-    {
-      name: "Snail Aim",
-      description: "Set mouse/controller sensitivity to the lowest value",
-      icon: "🐌",
-      category: "Aiming",
-    },
-    {
-      name: "Tunnel Vision",
-      description: "Use only 50% of your normal FOV",
-      icon: "👁️",
-      category: "Aiming",
-    },
-    {
-      name: "Acrobat",
-      description: "You can only shoot while jumping or crouched",
-      icon: "🤸",
-      category: "Aiming",
-    },
-    {
-      name: "Reload Addict",
-      description: "Must reload after every kill or every 3 shots",
-      icon: "🔄",
-      category: "Aiming",
-    },
-    {
-      name: "Quick Draw",
-      description: "No aiming down sights for more than 2 seconds",
-      icon: "⏱️",
-      category: "Aiming",
-    },
-
-    // Audio Handicaps
-    {
-      name: "Mute All",
-      description: "Play with no game sounds",
-      icon: "🔇",
-      category: "Audio",
-    },
-    {
-      name: "Music Only",
-      description: "Turn off all sound effects, keep only music",
-      icon: "🎵",
-      category: "Audio",
-    },
-    {
-      name: "Static Earrape",
-      description: "Set voice chat volume to maximum",
-      icon: "📢",
-      category: "Audio",
-    },
-
-    // Communication Handicaps
-    {
-      name: "Chat Roulette",
-      description: "Must type every action in team chat",
-      icon: "💬",
-      category: "Communication",
-    },
-    {
-      name: "Commentator",
-      description: "Must narrate everything you do on voice chat",
-      icon: "🎙️",
-      category: "Communication",
-    },
-    {
-      name: "Radio Silence",
-      description: "No communication with teammates",
-      icon: "🤐",
-      category: "Communication",
-    },
-
-    {
-      name: "Sing It",
-      description: "Must sing your callouts instead of speaking them",
-      icon: "🎤",
-      category: "Communication",
-    },
-
-    // Gameplay Handicaps
-    {
-      name: "Pacifist Run",
-      description: "Can only engage enemies after teammates do",
-      icon: "☮️",
-      category: "Gameplay",
-    },
-    {
-      name: "Kamikaze",
-      description: "You must rush and melee every enemy you see",
-      icon: "💥",
-      category: "Gameplay",
-    },
-
-    {
-      name: "Collector",
-      description: "Must pick up every item you see",
-      icon: "🧲",
-      category: "Gameplay",
-    },
-    {
-      name: "No Healing",
-      description: "Cannot use healing items or abilities",
-      icon: "❤️‍🩹",
-      category: "Gameplay",
-    },
-    {
-      name: "Lone Wolf",
-      description: "Must stay at least 50m away from teammates",
-      icon: "🐺",
-      category: "Gameplay",
-    },
-    {
-      name: "Shadow",
-      description: "Must follow exactly 10m behind a teammate",
-      icon: "👥",
-      category: "Gameplay",
-    },
-    {
-      name: "Half Magazine",
-      description: "Can only use half of each magazine before reloading",
-      icon: "🔫",
-      category: "Gameplay",
-    },
-    {
-      name: "Countdown",
-      description: "Can only stay in one spot for 5 seconds max",
-      icon: "⏲️",
-      category: "Gameplay",
-    },
-
-    // Visual Handicaps
-    {
-      name: "Low Resolution",
-      description: "Set your resolution to 800x600",
-      icon: "📉",
-      category: "Visual",
-    },
-    {
-      name: "Dark Mode Extreme",
-      description: "Turn brightness to minimum",
-      icon: "🌚",
-      category: "Visual",
-    },
-    {
-      name: "Colorblind Simulation",
-      description: "Enable colorblind mode even if you're not colorblind",
-      icon: "🌈",
-      category: "Visual",
-    },
-    {
-      name: "HUD Free",
-      description: "Disable all HUD elements",
-      icon: "🚫",
-      category: "Visual",
-    },
-    {
-      name: "Motion Blur",
-      description: "Max out motion blur settings",
-      icon: "💫",
-      category: "Visual",
-    },
-
-    // Challenge Handicaps
-    {
-      name: "Melee Only",
-      description: "Can only use melee attacks",
-      icon: "🔪",
-      category: "Challenge",
-    },
-    {
-      name: "No Gadgets",
-      description: "Cannot use any gadgets or abilities",
-      icon: "🛠️",
-      category: "Challenge",
-    },
-    {
-      name: "Grenade Spam",
-      description: "Must throw all grenades immediately when available",
-      icon: "💣",
-      category: "Challenge",
-    },
-
-    {
-      name: "Exposed",
-      description: "Never take cover during firefights",
-      icon: "🎯",
-      category: "Challenge",
-    },
-    {
-      name: "YOLO",
-      description: "If you die, you must quit the match",
-      icon: "💀",
-      category: "Challenge",
-    },
-    {
-      name: "Distracted Gamer",
-      description: "Must watch a video on your phone while playing",
-      icon: "📱",
-      category: "Challenge",
-    },
-    {
-      name: "Bravado",
-      description: "Must emote after every kill",
-      icon: "💃",
-      category: "Challenge",
-    },
-    {
-      name: "The Floor is Lava",
-      description: "Stay off the ground as much as possible",
-      icon: "🌋",
-      category: "Challenge",
-    },
-  ],
-};
+// Loadouts object is already defined in loadout-app.js
+// Commenting out to avoid duplicate declaration error
+// const rageQuitLoadouts = {
+//   weapons: [
+//     "Throwing Knives", // Light - Low damage, difficult to aim
+//     "V9S", // Light - Low damage pistol
+//     "XP-54", // Light - Challenging to use effectively
+//     "Model 1887", // Medium - Slow reload, limited use
+//     "R.357", // Medium - Slow rate of fire, hard to use in close quarters
+//     "Riot Shield", // Medium - Limits mobility and offensive capability
+//     "KS-23", // Heavy - Very slow reload
+//     "Spear", // Heavy - Limited range and difficult to master
+//   ],
+//   specializations: [
+//     "Cloaking Device", // Limited duration, situational
+//     "Guardian Turret", // Stationary, can be easily destroyed
+//     "Mesh Shield", // Blocks your own line of sight
+//     "Winch Claw", // Very situational
+//   ],
+// //   gadgets: [
+//     "Breach Charge", // Situational, can self-damage
+//     "Thermal Bore", // Limited utility
+//     "Vanishing Bomb", // Confusing to use effectively
+//     "Glitch Trap", // Situational
+//     "Jump Pad", // Very situational
+//     "Zipline", // Limited use cases
+//     "Anti-Gravity Cube", // Difficult to use properly
+//     "Dome Shield", // Can trap yourself
+//     "Lockbolt Launcher", // Hard to use effectively
+//     "Flashbang", // Can blind yourself
+//     "Data Reshaper", // Limited functionality
+//     "Proximity Sensor", // Often doesn't help in fast-paced combat
+// //   ],
+// // 
+// //   // Replace the handicaps array in your rageQuitLoadouts object with this expanded list
+// // 
+// //   handicaps: [
+//     // Movement Handicaps
+//     {
+//       name: "Sloth Mode",
+//       description: "No Sprinting – Must walk everywhere",
+//       icon: "🦥",
+//       category: "Movement",
+//     },
+//     {
+//       name: "Bunny Hop Ban",
+//       description: "No Jumping – Stairs and ramps only",
+//       icon: "🐰",
+//       category: "Movement",
+//     },
+//     {
+//       name: "Permanent Crouch",
+//       description: "You must stay crouched the entire game",
+//       icon: "🧎",
+//       category: "Movement",
+//     },
+//     {
+//       name: "Opposite Day",
+//       description: "Swap forward/backward and left/right",
+//       icon: "🔄",
+//       category: "Movement",
+//     },
+//     {
+//       name: "Moonwalk Mode",
+//       description: "Walk backward only",
+//       icon: "🕴️",
+//       category: "Movement",
+//     },
+//     {
+//       name: "Controller Drift",
+//       description: "Cannot stop moving unless using an ability",
+//       icon: "🎮",
+//       category: "Movement",
+//     },
+//     {
+//       name: "Strafe Master",
+//       description: "Never move forward - only sideways",
+//       icon: "↔️",
+//       category: "Movement",
+//     },
+//     {
+//       name: "Zig Zag Only",
+//       description: "Must constantly alternate left and right while moving",
+//       icon: "⚡",
+//       category: "Movement",
+//     },
+//     {
+//       name: "Jump Addict",
+//       description: "Must jump constantly while moving",
+//       icon: "🏃",
+//       category: "Movement",
+//     },
+//     {
+//       name: "Scenic Route",
+//       description: "Never take the direct path to objectives",
+//       icon: "🗺️",
+//       category: "Movement",
+//     },
+// 
+//     // Aiming Handicaps
+//     {
+//       name: "No Scope Challenge",
+//       description: "Unmap the ADS button; hipfire only",
+//       icon: "🎯",
+//       category: "Aiming",
+//     },
+//     {
+//       name: "Flip 'n' Rage",
+//       description: "Swap up/down and left/right for aiming",
+//       icon: "🔃",
+//       category: "Aiming",
+//     },
+//     {
+//       name: "Squirrel Mode",
+//       description: "Max out your mouse DPI/sensitivity",
+//       icon: "🐿️",
+//       category: "Aiming",
+//     },
+//     {
+//       name: "Snail Aim",
+//       description: "Set mouse/controller sensitivity to the lowest value",
+//       icon: "🐌",
+//       category: "Aiming",
+//     },
+//     {
+//       name: "Tunnel Vision",
+//       description: "Use only 50% of your normal FOV",
+//       icon: "👁️",
+//       category: "Aiming",
+//     },
+//     {
+//       name: "Acrobat",
+//       description: "You can only shoot while jumping or crouched",
+//       icon: "🤸",
+//       category: "Aiming",
+//     },
+//     {
+//       name: "Reload Addict",
+//       description: "Must reload after every kill or every 3 shots",
+//       icon: "🔄",
+//       category: "Aiming",
+//     },
+//     {
+//       name: "Quick Draw",
+//       description: "No aiming down sights for more than 2 seconds",
+//       icon: "⏱️",
+//       category: "Aiming",
+//     },
+// 
+//     // Audio Handicaps
+//     {
+//       name: "Mute All",
+//       description: "Play with no game sounds",
+//       icon: "🔇",
+//       category: "Audio",
+//     },
+//     {
+//       name: "Music Only",
+//       description: "Turn off all sound effects, keep only music",
+//       icon: "🎵",
+//       category: "Audio",
+//     },
+//     {
+//       name: "Static Earrape",
+//       description: "Set voice chat volume to maximum",
+//       icon: "📢",
+//       category: "Audio",
+//     },
+// 
+//     // Communication Handicaps
+//     {
+//       name: "Chat Roulette",
+//       description: "Must type every action in team chat",
+//       icon: "💬",
+//       category: "Communication",
+//     },
+//     {
+//       name: "Commentator",
+//       description: "Must narrate everything you do on voice chat",
+//       icon: "🎙️",
+//       category: "Communication",
+//     },
+//     {
+//       name: "Radio Silence",
+//       description: "No communication with teammates",
+//       icon: "🤐",
+//       category: "Communication",
+//     },
+// 
+//     {
+//       name: "Sing It",
+//       description: "Must sing your callouts instead of speaking them",
+//       icon: "🎤",
+//       category: "Communication",
+//     },
+// 
+//     // Gameplay Handicaps
+//     {
+//       name: "Pacifist Run",
+//       description: "Can only engage enemies after teammates do",
+//       icon: "☮️",
+//       category: "Gameplay",
+//     },
+//     {
+//       name: "Kamikaze",
+//       description: "You must rush and melee every enemy you see",
+//       icon: "💥",
+//       category: "Gameplay",
+//     },
+// 
+//     {
+//       name: "Collector",
+//       description: "Must pick up every item you see",
+//       icon: "🧲",
+//       category: "Gameplay",
+//     },
+//     {
+//       name: "No Healing",
+//       description: "Cannot use healing items or abilities",
+//       icon: "❤️‍🩹",
+//       category: "Gameplay",
+//     },
+//     {
+//       name: "Lone Wolf",
+//       description: "Must stay at least 50m away from teammates",
+//       icon: "🐺",
+//       category: "Gameplay",
+//     },
+//     {
+//       name: "Shadow",
+//       description: "Must follow exactly 10m behind a teammate",
+//       icon: "👥",
+//       category: "Gameplay",
+//     },
+//     {
+//       name: "Half Magazine",
+//       description: "Can only use half of each magazine before reloading",
+//       icon: "🔫",
+//       category: "Gameplay",
+//     },
+//     {
+//       name: "Countdown",
+//       description: "Can only stay in one spot for 5 seconds max",
+//       icon: "⏲️",
+//       category: "Gameplay",
+//     },
+// 
+//     // Visual Handicaps
+//     {
+//       name: "Low Resolution",
+//       description: "Set your resolution to 800x600",
+//       icon: "📉",
+//       category: "Visual",
+//     },
+//     {
+//       name: "Dark Mode Extreme",
+//       description: "Turn brightness to minimum",
+//       icon: "🌚",
+//       category: "Visual",
+//     },
+//     {
+//       name: "Colorblind Simulation",
+//       description: "Enable colorblind mode even if you're not colorblind",
+//       icon: "🌈",
+//       category: "Visual",
+//     },
+//     {
+//       name: "HUD Free",
+//       description: "Disable all HUD elements",
+//       icon: "🚫",
+//       category: "Visual",
+//     },
+//     {
+//       name: "Motion Blur",
+//       description: "Max out motion blur settings",
+//       icon: "💫",
+//       category: "Visual",
+//     },
+// 
+//     // Challenge Handicaps
+//     {
+//       name: "Melee Only",
+//       description: "Can only use melee attacks",
+//       icon: "🔪",
+//       category: "Challenge",
+//     },
+//     {
+//       name: "No Gadgets",
+//       description: "Cannot use any gadgets or abilities",
+//       icon: "🛠️",
+//       category: "Challenge",
+//     },
+//     {
+//       name: "Grenade Spam",
+//       description: "Must throw all grenades immediately when available",
+//       icon: "💣",
+//       category: "Challenge",
+//     },
+// 
+//     {
+//       name: "Exposed",
+//       description: "Never take cover during firefights",
+//       icon: "🎯",
+//       category: "Challenge",
+//     },
+//     {
+//       name: "YOLO",
+//       description: "If you die, you must quit the match",
+//       icon: "💀",
+//       category: "Challenge",
+//     },
+//     {
+//       name: "Distracted Gamer",
+//       description: "Must watch a video on your phone while playing",
+//       icon: "📱",
+//       category: "Challenge",
+//     },
+//     {
+//       name: "Bravado",
+//       description: "Must emote after every kill",
+//       icon: "💃",
+//       category: "Challenge",
+//     },
+//     {
+//       name: "The Floor is Lava",
+//       description: "Stay off the ground as much as possible",
+//       icon: "🌋",
+//       category: "Challenge",
+//     },
+// //   ],
+// // };
 
 // Helper functions
-const getRandomUniqueItems = (array, n) => {
-  const shuffled = [...array].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, n);
-};
+// getRandomUniqueItems is already defined in loadout-app.js
+// const getRandomUniqueItems = (array, n) => {
+//   const shuffled = [...array].sort(() => Math.random() - 0.5);
+//   return shuffled.slice(0, n);
+// };
 
-function createItemContainer(items, winningItem = null, isGadget = false) {
-  if (isGadget) {
-    return items
-      .map(
-        (item, index) => `
-        <div class="itemCol ${index === 4 ? "winner" : ""}">
-          <img src="../images/${item.replace(
-            / /g,
-            "_"
-          )}.webp" alt="${item}" onerror="this.src='../images/placeholder.webp'">
-          <p>${item}</p>
-        </div>
-      `
-      )
-      .join("");
-  }
+// createItemContainer is already defined in loadout-app.js
+// function createItemContainer(items, winningItem = null, isGadget = false) {
+//   if (isGadget) {
+//     return items
+//       .map(
+//         (item, index) => `
+//         <div class="itemCol ${index === 4 ? "winner" : ""}">
+//           <img src="../images/${item.replace(
+//             / /g,
+//             "_"
+//           )}.webp" alt="${item}" onerror="this.src='../images/placeholder.webp'">
+//           <p>${item}</p>
+//         </div>
+//       `
+//       )
+//       .join("");
+//   }
+// 
+//   winningItem = winningItem || items[Math.floor(Math.random() * items.length)];
+//   let repeatedItems = items
+//     .filter((item) => item !== winningItem)
+//     .sort(() => Math.random() - 0.5)
+//     .slice(0, 7);
+// 
+//   repeatedItems = [
+//     ...repeatedItems.slice(0, 4),
+//     winningItem,
+//     ...repeatedItems.slice(4),
+//   ];
+// 
+//   while (repeatedItems.length < 8) {
+//     const randomItem = items[Math.floor(Math.random() * items.length)];
+//     repeatedItems.push(randomItem);
+//   }
+// 
+//   return repeatedItems
+//     .map(
+//       (item, index) => `
+//       <div class="itemCol ${index === 4 ? "winner" : ""}">
+//         <img src="../images/${item.replace(
+//           / /g,
+//           "_"
+//         )}.webp" alt="${item}" onerror="this.src='../images/placeholder.webp'">
+//         <p>${item}</p>
+//       </div>
+//     `
+//     )
+//     .join("");
+// }
 
-  winningItem = winningItem || items[Math.floor(Math.random() * items.length)];
-  let repeatedItems = items
-    .filter((item) => item !== winningItem)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 7);
+// displayRageQuitLoadout is already defined in loadout-app.js
+// // const displayRageQuitLoadout = () => {
+//   const outputDiv = document.getElementById("output");
+//   const classes = ["Light", "Medium", "Heavy"];
+//   const selectedClass = classes[Math.floor(Math.random() * classes.length)];
+// 
+//   // ✅ Store the selected class in state for later use
+//   state.selectedClass = selectedClass;
+// 
+//   // ✅ Update the selected class text in the UI
+//   const selectedClassElement = document.getElementById("selected-class");
+//   if (selectedClassElement) {
+//     selectedClassElement.innerText = selectedClass;
+//   } else {
+//     console.warn("⚠️ Warning: #selected-class not found in the DOM!");
+//   }
+// 
+//   // ✅ Ensure weapons, specializations, and gadgets match the selected class
+//   const classSpecificLoadouts = {
+//     Light: {
+//       weapons: ["Throwing Knives", "Recurve Bow", "SR-84", "Dagger"],
+//       specializations: ["Cloaking Device"],
+//       gadgets: [
+//         "Breach Charge",
+//         "Glitch Grenade",
+//         "Gravity Vortex",
+//         "Tracking Dart",
+//         "Flashbang",
+//         "Thermal Bore",
+//       ],
+//     },
+//     Medium: {
+//       weapons: [
+//         "Model 1887",
+//         "R.357",
+//         "Dual Blades",
+//         "Pike-556",
+//         "Riot Shield",
+//       ],
+//       specializations: ["Guardian Turret"],
+//       gadgets: [
+//         "APS Turret",
+//         "Data Reshaper",
+//         "Smoke Grenade",
+//         "Flashbang",
+//         "Gas Mine",
+//         "Glitch Trap",
+//       ],
+//     },
+//     Heavy: {
+//       weapons: ["KS-23", "Spear", "M60", "M32GL"],
+//       specializations: ["Mesh Shield", "Goo Gun"],
+//       gadgets: [
+//         "Anti-Gravity Cube",
+//         "C4",
+//         "Goo Grenade",
+//         "Lockbolt Launcher",
+//         "Pyro Mine",
+//         "Gas Grenade",
+//         "Proximity Sensor",
+//       ],
+//     },
+//   };
+// 
+//   // ✅ Select the correct items based on the chosen class
+//   const selectedWeapon = getRandomUniqueItems(
+//     classSpecificLoadouts[selectedClass].weapons,
+//     1
+//   )[0];
+//   const selectedSpec = getRandomUniqueItems(
+//     classSpecificLoadouts[selectedClass].specializations,
+//     1
+//   )[0];
+// 
+//   // ✅ Pick 3 unique gadgets using the **working method**
+//   const allGadgets = [...classSpecificLoadouts[selectedClass].gadgets];
+//   const gadgetChunks = [[], [], []];
+//   const selectedGadgets = [];
+// 
+//   // Pick 3 unique gadgets for the loadout
+//   for (let i = 0; i < 3; i++) {
+//     const index = Math.floor(Math.random() * allGadgets.length);
+//     selectedGadgets.push(allGadgets[index]);
+//     allGadgets.splice(index, 1);
+//   }
+// 
+//   // Shuffle the remaining gadgets for visual spin randomness
+//   while (allGadgets.length > 0) {
+//     for (let i = 0; i < 3 && allGadgets.length > 0; i++) {
+//       const index = Math.floor(Math.random() * allGadgets.length);
+//       gadgetChunks[i].push(allGadgets[index]);
+//       allGadgets.splice(index, 1);
+//     }
+//   }
+// 
+//   // ✅ Store the final loadout BEFORE the spin animation starts
+//   state.finalLoadout = {
+//     classType: selectedClass,
+//     weapon: selectedWeapon,
+//     specialization: selectedSpec,
+//     gadgets: selectedGadgets,
+//   };
+// 
+//   // Function to create a randomized spin sequence for gadgets
+//   const createGadgetSpinSequence = (winningGadget, chunkIndex) => {
+//     const sequence = new Array(8);
+//     sequence[4] = winningGadget;
+// 
+//     const chunk = gadgetChunks[chunkIndex];
+//     for (let i = 0; i < 8; i++) {
+//       if (i !== 4) {
+//         const randomIndex = Math.floor(Math.random() * chunk.length);
+//         sequence[i] = chunk[randomIndex];
+//       }
+//     }
+//     return sequence;
+//   };
+// 
+//   // ✅ Build the UI correctly
+//   const loadoutHTML = `
+//     <div class="slot-machine-wrapper">
+//       <div class="items-container">
+//         <div class="item-container">
+//           <div class="scroll-container">
+//             ${createItemContainer(
+//               classSpecificLoadouts[selectedClass].weapons,
+//               selectedWeapon
+//             )}
+//           </div>
+//         </div>
+//         <div class="item-container">
+//           <div class="scroll-container">
+//             ${createItemContainer(
+//               classSpecificLoadouts[selectedClass].specializations,
+//               selectedSpec
+//             )}
+//           </div>
+//         </div>
+//         ${selectedGadgets
+//           .map(
+//             (gadget, index) => `
+//             <div class="item-container">
+//               <div class="scroll-container" data-gadget-index="${index}">
+//                 ${createItemContainer(
+//                   createGadgetSpinSequence(gadget, index),
+//                   gadget,
+//                   true
+//                 )}
+//               </div>
+//             </div>
+//           `
+//           )
+//           .join("")}
+//       </div>
+//     </div>
+//   `;
+// 
+//   outputDiv.innerHTML = loadoutHTML;
+// 
+//   setTimeout(() => {
+//     const scrollContainers = Array.from(
+//       document.querySelectorAll(".scroll-container")
+//     );
+//     startSpinAnimation(scrollContainers);
+//   }, 50);
+// };
 
-  repeatedItems = [
-    ...repeatedItems.slice(0, 4),
-    winningItem,
-    ...repeatedItems.slice(4),
-  ];
-
-  while (repeatedItems.length < 8) {
-    const randomItem = items[Math.floor(Math.random() * items.length)];
-    repeatedItems.push(randomItem);
-  }
-
-  return repeatedItems
-    .map(
-      (item, index) => `
-      <div class="itemCol ${index === 4 ? "winner" : ""}">
-        <img src="../images/${item.replace(
-          / /g,
-          "_"
-        )}.webp" alt="${item}" onerror="this.src='../images/placeholder.webp'">
-        <p>${item}</p>
-      </div>
-    `
-    )
-    .join("");
-}
-
-const displayRageQuitLoadout = () => {
-  const outputDiv = document.getElementById("output");
-  const classes = ["Light", "Medium", "Heavy"];
-  const selectedClass = classes[Math.floor(Math.random() * classes.length)];
-
-  // ✅ Store the selected class in state for later use
-  state.selectedClass = selectedClass;
-
-  // ✅ Update the selected class text in the UI
-  const selectedClassElement = document.getElementById("selected-class");
-  if (selectedClassElement) {
-    selectedClassElement.innerText = selectedClass;
-  } else {
-    console.warn("⚠️ Warning: #selected-class not found in the DOM!");
-  }
-
-  // ✅ Ensure weapons, specializations, and gadgets match the selected class
-  const classSpecificLoadouts = {
-    Light: {
-      weapons: ["Throwing Knives", "Recurve Bow", "SR-84", "Dagger"],
-      specializations: ["Cloaking Device"],
-      gadgets: [
-        "Breach Charge",
-        "Glitch Grenade",
-        "Gravity Vortex",
-        "Tracking Dart",
-        "Flashbang",
-        "Thermal Bore",
-      ],
-    },
-    Medium: {
-      weapons: [
-        "Model 1887",
-        "R.357",
-        "Dual Blades",
-        "Pike-556",
-        "Riot Shield",
-      ],
-      specializations: ["Guardian Turret"],
-      gadgets: [
-        "APS Turret",
-        "Data Reshaper",
-        "Smoke Grenade",
-        "Flashbang",
-        "Gas Mine",
-        "Glitch Trap",
-      ],
-    },
-    Heavy: {
-      weapons: ["KS-23", "Spear", "M60", "M32GL"],
-      specializations: ["Mesh Shield", "Goo Gun"],
-      gadgets: [
-        "Anti-Gravity Cube",
-        "C4",
-        "Goo Grenade",
-        "Lockbolt Launcher",
-        "Pyro Mine",
-        "Gas Grenade",
-        "Proximity Sensor",
-      ],
-    },
-  };
-
-  // ✅ Select the correct items based on the chosen class
-  const selectedWeapon = getRandomUniqueItems(
-    classSpecificLoadouts[selectedClass].weapons,
-    1
-  )[0];
-  const selectedSpec = getRandomUniqueItems(
-    classSpecificLoadouts[selectedClass].specializations,
-    1
-  )[0];
-
-  // ✅ Pick 3 unique gadgets using the **working method**
-  const allGadgets = [...classSpecificLoadouts[selectedClass].gadgets];
-  const gadgetChunks = [[], [], []];
-  const selectedGadgets = [];
-
-  // Pick 3 unique gadgets for the loadout
-  for (let i = 0; i < 3; i++) {
-    const index = Math.floor(Math.random() * allGadgets.length);
-    selectedGadgets.push(allGadgets[index]);
-    allGadgets.splice(index, 1);
-  }
-
-  // Shuffle the remaining gadgets for visual spin randomness
-  while (allGadgets.length > 0) {
-    for (let i = 0; i < 3 && allGadgets.length > 0; i++) {
-      const index = Math.floor(Math.random() * allGadgets.length);
-      gadgetChunks[i].push(allGadgets[index]);
-      allGadgets.splice(index, 1);
-    }
-  }
-
-  // ✅ Store the final loadout BEFORE the spin animation starts
-  state.finalLoadout = {
-    classType: selectedClass,
-    weapon: selectedWeapon,
-    specialization: selectedSpec,
-    gadgets: selectedGadgets,
-  };
-
-  // Function to create a randomized spin sequence for gadgets
-  const createGadgetSpinSequence = (winningGadget, chunkIndex) => {
-    const sequence = new Array(8);
-    sequence[4] = winningGadget;
-
-    const chunk = gadgetChunks[chunkIndex];
-    for (let i = 0; i < 8; i++) {
-      if (i !== 4) {
-        const randomIndex = Math.floor(Math.random() * chunk.length);
-        sequence[i] = chunk[randomIndex];
-      }
-    }
-    return sequence;
-  };
-
-  // ✅ Build the UI correctly
-  const loadoutHTML = `
-    <div class="slot-machine-wrapper">
-      <div class="items-container">
-        <div class="item-container">
-          <div class="scroll-container">
-            ${createItemContainer(
-              classSpecificLoadouts[selectedClass].weapons,
-              selectedWeapon
-            )}
-          </div>
-        </div>
-        <div class="item-container">
-          <div class="scroll-container">
-            ${createItemContainer(
-              classSpecificLoadouts[selectedClass].specializations,
-              selectedSpec
-            )}
-          </div>
-        </div>
-        ${selectedGadgets
-          .map(
-            (gadget, index) => `
-            <div class="item-container">
-              <div class="scroll-container" data-gadget-index="${index}">
-                ${createItemContainer(
-                  createGadgetSpinSequence(gadget, index),
-                  gadget,
-                  true
-                )}
-              </div>
-            </div>
-          `
-          )
-          .join("")}
-      </div>
-    </div>
-  `;
-
-  outputDiv.innerHTML = loadoutHTML;
-
-  setTimeout(() => {
-    const scrollContainers = Array.from(
-      document.querySelectorAll(".scroll-container")
-    );
-    startSpinAnimation(scrollContainers);
-  }, 50);
-};
-
-const spinRageQuitLoadout = () => {
-  if (state.isSpinning) return;
-
-  // Disable button during spin
-  const spinButton = document.getElementById("rage-quit-btn");
-  if (spinButton) {
-    spinButton.setAttribute("disabled", "true");
-    spinButton.classList.add('disabled');
-  }
-
-  state.isSpinning = true;
-  state.currentGadgetPool.clear();
-  
-  // Clear previous handicap stack for new game (unless Double or Nothing in progress)
-  if (!document.getElementById('double-or-nothing-container')?.style.display || 
-      document.getElementById('double-or-nothing-container')?.style.display === 'none') {
-    state.handicapStack = [];
-    state.sufferingLevel = 0;
-  }
-
-  // Display loadout and start spinning
-  displayRageQuitLoadout();
-};
+// spinRageQuitLoadout is already defined in loadout-app.js
+// const spinRageQuitLoadout = () => {
+//   if (state.isSpinning) return;
+// 
+//   // Disable button during spin
+//   const spinButton = document.getElementById("rage-quit-btn");
+//   if (spinButton) {
+//     spinButton.setAttribute("disabled", "true");
+//     spinButton.classList.add('disabled');
+//   }
+// 
+//   state.isSpinning = true;
+//   state.currentGadgetPool.clear();
+//   
+//   // Clear previous handicap stack for new game (unless Double or Nothing in progress)
+//   if (!document.getElementById('double-or-nothing-container')?.style.display || 
+//       document.getElementById('double-or-nothing-container')?.style.display === 'none') {
+//     state.handicapStack = [];
+//     state.sufferingLevel = 0;
+//   }
+// 
+//   // Display loadout and start spinning
+//   displayRageQuitLoadout();
+// };
 
 // Make spinRageQuitLoadout available globally for the roulette system
-window.spinRageQuitLoadout = spinRageQuitLoadout;
+// window.spinRageQuitLoadout = spinRageQuitLoadout; // Already defined in loadout-app.js
 
 // Slightly modified physics constants for the Rage Quit Simulator
-const PHYSICS = {
-  ACCELERATION: 3000, // Slower acceleration for gradual build-up
-  MAX_VELOCITY: 3000, // Lower velocity for a controlled spin
-  DECELERATION: -1500, // Gradual slow down for suspense
-  BOUNCE_DAMPENING: 0.2, // Less bouncing to keep the focus on suspense
-  ITEM_HEIGHT: 188,
-  TIMING: {
-    COLUMN_DELAY: 1000, // Increased delay between stops for drama
-    BASE_DURATION: 4000, // Longer spin duration for suspense
-    DECELERATION_TIME: 1800, // Extended deceleration phase
-  },
-};
+// PHYSICS is already defined in loadout-app.js
+// const PHYSICS = {
+//   ACCELERATION: 3000, // Slower acceleration for gradual build-up
+//   MAX_VELOCITY: 3000, // Lower velocity for a controlled spin
+//   DECELERATION: -1500, // Gradual slow down for suspense
+//   BOUNCE_DAMPENING: 0.2, // Less bouncing to keep the focus on suspense
+//   ITEM_HEIGHT: 188,
+//   TIMING: {
+//     COLUMN_DELAY: 1000, // Increased delay between stops for drama
+//     BASE_DURATION: 4000, // Longer spin duration for suspense
+//     DECELERATION_TIME: 1800, // Extended deceleration phase
+//   },
+// };
 
 function finalVictoryFlash(columns) {
   setTimeout(() => {
@@ -810,134 +860,135 @@ function finalVictoryFlash(columns) {
   }, 800);
 }
 
-class SlotColumn {
-  constructor(element, index) {
-    this.element = element;
-    this.index = index;
-    this.velocity = 0;
-    this.position = 0;
-    this.state = "waiting";
-    this.lastTimestamp = null;
-    this.animationStartTime = null;
-    this.maxAnimationDuration = 10000; // 10 second safety timeout
-    this.onStop = null; // Add this callback property
-
-    this.stopDelay = PHYSICS.TIMING.COLUMN_DELAY * index;
-    this.totalDuration = PHYSICS.TIMING.BASE_DURATION + this.stopDelay;
-    this.decelerationTime = PHYSICS.TIMING.DECELERATION_TIME;
-
-    this.targetPosition = 0;
-    this.initialPosition = 0;
-  }
-
-  update(elapsed, deltaTime) {
-    // Safety check for runaway animations
-    if (!this.animationStartTime) {
-      this.animationStartTime = performance.now();
-    } else if (
-      performance.now() - this.animationStartTime >
-      this.maxAnimationDuration
-    ) {
-      console.warn("Animation timeout - forcing stop");
-      this.forceStop();
-      return;
-    }
-
-    if (this.state === "stopped") return;
-
-    // Ensure deltaTime is reasonable
-    const dt = Math.min(deltaTime, 50) / 1000; // Cap at 50ms, convert to seconds
-
-    switch (this.state) {
-      case "accelerating":
-        this.velocity += PHYSICS.ACCELERATION * dt;
-        if (this.velocity >= PHYSICS.MAX_VELOCITY) {
-          this.velocity = PHYSICS.MAX_VELOCITY;
-          this.state = "spinning";
-        }
-        break;
-
-      case "spinning":
-        if (elapsed >= this.totalDuration - this.decelerationTime) {
-          this.state = "decelerating";
-          // Ensure target position is aligned with item height
-          this.targetPosition =
-            Math.ceil(this.position / PHYSICS.ITEM_HEIGHT) *
-            PHYSICS.ITEM_HEIGHT;
-        }
-        break;
-
-      case "decelerating":
-        this.velocity += PHYSICS.DECELERATION * dt;
-
-        // Added safety check for deceleration
-        if (
-          Math.abs(this.position - this.targetPosition) < 1 &&
-          Math.abs(this.velocity) < 50
-        ) {
-          this.forceStop();
-          return;
-        }
-
-        if (this.velocity <= 0) {
-          if (Math.abs(this.velocity) < 100) {
-            this.forceStop();
-          } else {
-            this.velocity = -this.velocity * PHYSICS.BOUNCE_DAMPENING;
-            this.state = "bouncing";
-          }
-        }
-        break;
-
-      case "bouncing":
-        this.velocity += PHYSICS.DECELERATION * 1.2 * dt;
-
-        // Enhanced bounce completion check
-        if (
-          Math.abs(this.velocity) < 50 ||
-          Math.abs(this.position - this.targetPosition) < 5
-        ) {
-          this.forceStop();
-          return;
-        }
-        break;
-    }
-
-    // Update position with boundary checking
-    this.position += this.velocity * dt;
-    this.position = this.normalizePosition(this.position);
-    this.updateVisuals();
-  }
-
-  normalizePosition(pos) {
-    const wrappedPosition = pos % PHYSICS.ITEM_HEIGHT;
-    return wrappedPosition >= 0
-      ? wrappedPosition
-      : wrappedPosition + PHYSICS.ITEM_HEIGHT;
-  }
-
-  forceStop() {
-    this.velocity = 0;
-    this.position = this.targetPosition;
-    this.state = "stopped";
-    this.updateVisuals();
-
-    // Call the onStop callback if it exists
-    if (this.onStop && typeof this.onStop === "function") {
-      this.onStop(this.element);
-    }
-  }
-
-  updateVisuals() {
-    let blur = 0;
-    if (Math.abs(this.velocity) > 3000) blur = 12;
-    else if (Math.abs(this.velocity) > 2000) blur = 8;
-    else if (Math.abs(this.velocity) > 1000) blur = 5;
-
-    this.element.style.transform = `translateY(${this.position}px)`;
-    this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
-  }
-}
+// SlotColumn class is already defined in loadout-app.js
+// class SlotColumn {
+//   constructor(element, index) {
+//     this.element = element;
+//     this.index = index;
+//     this.velocity = 0;
+//     this.position = 0;
+//     this.state = "waiting";
+//     this.lastTimestamp = null;
+//     this.animationStartTime = null;
+//     this.maxAnimationDuration = 10000; // 10 second safety timeout
+//     this.onStop = null; // Add this callback property
+// 
+//     this.stopDelay = PHYSICS.TIMING.COLUMN_DELAY * index;
+//     this.totalDuration = PHYSICS.TIMING.BASE_DURATION + this.stopDelay;
+//     this.decelerationTime = PHYSICS.TIMING.DECELERATION_TIME;
+// 
+//     this.targetPosition = 0;
+//     this.initialPosition = 0;
+//   }
+// 
+//   update(elapsed, deltaTime) {
+//     // Safety check for runaway animations
+//     if (!this.animationStartTime) {
+//       this.animationStartTime = performance.now();
+//     } else if (
+//       performance.now() - this.animationStartTime >
+//       this.maxAnimationDuration
+//     ) {
+//       console.warn("Animation timeout - forcing stop");
+//       this.forceStop();
+//       return;
+//     }
+// 
+//     if (this.state === "stopped") return;
+// 
+//     // Ensure deltaTime is reasonable
+//     const dt = Math.min(deltaTime, 50) / 1000; // Cap at 50ms, convert to seconds
+// 
+//     switch (this.state) {
+//       case "accelerating":
+//         this.velocity += PHYSICS.ACCELERATION * dt;
+//         if (this.velocity >= PHYSICS.MAX_VELOCITY) {
+//           this.velocity = PHYSICS.MAX_VELOCITY;
+//           this.state = "spinning";
+//         }
+//         break;
+// 
+//       case "spinning":
+//         if (elapsed >= this.totalDuration - this.decelerationTime) {
+//           this.state = "decelerating";
+//           // Ensure target position is aligned with item height
+//           this.targetPosition =
+//             Math.ceil(this.position / PHYSICS.ITEM_HEIGHT) *
+//             PHYSICS.ITEM_HEIGHT;
+//         }
+//         break;
+// 
+//       case "decelerating":
+//         this.velocity += PHYSICS.DECELERATION * dt;
+// 
+//         // Added safety check for deceleration
+//         if (
+//           Math.abs(this.position - this.targetPosition) < 1 &&
+//           Math.abs(this.velocity) < 50
+//         ) {
+//           this.forceStop();
+//           return;
+//         }
+// 
+//         if (this.velocity <= 0) {
+//           if (Math.abs(this.velocity) < 100) {
+//             this.forceStop();
+//           } else {
+//             this.velocity = -this.velocity * PHYSICS.BOUNCE_DAMPENING;
+//             this.state = "bouncing";
+//           }
+//         }
+//         break;
+// 
+//       case "bouncing":
+//         this.velocity += PHYSICS.DECELERATION * 1.2 * dt;
+// 
+//         // Enhanced bounce completion check
+//         if (
+//           Math.abs(this.velocity) < 50 ||
+//           Math.abs(this.position - this.targetPosition) < 5
+//         ) {
+//           this.forceStop();
+//           return;
+//         }
+//         break;
+//     }
+// 
+//     // Update position with boundary checking
+//     this.position += this.velocity * dt;
+//     this.position = this.normalizePosition(this.position);
+//     this.updateVisuals();
+//   }
+// 
+//   normalizePosition(pos) {
+//     const wrappedPosition = pos % PHYSICS.ITEM_HEIGHT;
+//     return wrappedPosition >= 0
+//       ? wrappedPosition
+//       : wrappedPosition + PHYSICS.ITEM_HEIGHT;
+//   }
+// 
+//   forceStop() {
+//     this.velocity = 0;
+//     this.position = this.targetPosition;
+//     this.state = "stopped";
+//     this.updateVisuals();
+// 
+//     // Call the onStop callback if it exists
+//     if (this.onStop && typeof this.onStop === "function") {
+//       this.onStop(this.element);
+//     }
+//   }
+// 
+//   updateVisuals() {
+//     let blur = 0;
+//     if (Math.abs(this.velocity) > 3000) blur = 12;
+//     else if (Math.abs(this.velocity) > 2000) blur = 8;
+//     else if (Math.abs(this.velocity) > 1000) blur = 5;
+// 
+//     this.element.style.transform = `translateY(${this.position}px)`;
+//     this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
+//   }
+// }
 function saveHistory() {
   const entries = Array.from(document.querySelectorAll(".history-entry")).map(
     (entry) => entry.innerHTML
@@ -945,160 +996,162 @@ function saveHistory() {
   localStorage.setItem("rageQuitHistory", JSON.stringify(entries));
 }
 
-function startSpinAnimation(columns) {
-  const startTime = performance.now();
-
-  const slotColumns = columns.map((element, index) => {
-    const column = new SlotColumn(element, index);
-
-    // Add the onStop callback for flash effects
-    column.onStop = (columnElement) => {
-      const container = columnElement.closest(".item-container");
-      if (container) {
-        // Apply initial flash effect
-        container.classList.remove("final-flash"); // Ensure restart
-        void container.offsetWidth; // Force reflow
-        container.classList.add("final-flash");
-
-        // Add locked in tag with animation
-        if (!container.querySelector(".locked-tag")) {
-          const lockedTag = document.createElement("div");
-          lockedTag.className = "locked-tag";
-          lockedTag.textContent = "LOCKED IN!";
-          container.appendChild(lockedTag);
-
-          // Small delay for tag animation
-          setTimeout(() => {
-            lockedTag.classList.add("show");
-          }, 150);
-        }
-
-        // Transition from flash to pulse effect
-        setTimeout(() => {
-          container.classList.remove("final-flash");
-          container.classList.add("winner-pulsate");
-        }, 500);
-      }
-    };
-
-    return column;
-  });
-
-  // Reset columns - remove all animations
-  columns.forEach((column) => {
-    const container = column.closest(".item-container");
-    if (container) {
-      container.classList.remove(
-        "landing-flash",
-        "winner-pulsate",
-        "final-flash"
-      );
-
-      // Remove existing locked tag
-      const existingTag = container.querySelector(".locked-tag");
-      if (existingTag) {
-        existingTag.remove();
-      }
-    }
-    column.style.transform = "translateY(0)";
-    column.style.transition = "none";
-  });
-
-  slotColumns.forEach((column) => (column.state = "accelerating"));
-
-  function animate(currentTime) {
-    const elapsed = currentTime - startTime;
-    let isAnimating = false;
-
-    slotColumns.forEach((column) => {
-      if (column.state !== "stopped") {
-        isAnimating = true;
-        const deltaTime = column.lastTimestamp
-          ? currentTime - column.lastTimestamp
-          : 16.67;
-        column.update(elapsed, deltaTime);
-        column.lastTimestamp = currentTime;
-      }
-    });
-
-    if (isAnimating) {
-      requestAnimationFrame(animate);
-    } else {
-      // When all columns are stopped, trigger the victory flash and finalize spin
-      finalVictoryFlash(columns);
-      setTimeout(() => {
-        // Skip spinHandicap since handicap is now selected during roulette phase
-        finalizeSpin();
-      }, 1000);
-    }
-  }
-
-  requestAnimationFrame(animate);
-}
+// startSpinAnimation is already defined in loadout-app.js
+// function startSpinAnimation(columns) {
+//   const startTime = performance.now();
+// 
+//   const slotColumns = columns.map((element, index) => {
+//     const column = new SlotColumn(element, index);
+// 
+//     // Add the onStop callback for flash effects
+//     column.onStop = (columnElement) => {
+//       const container = columnElement.closest(".item-container");
+//       if (container) {
+//         // Apply initial flash effect
+//         container.classList.remove("final-flash"); // Ensure restart
+//         void container.offsetWidth; // Force reflow
+//         container.classList.add("final-flash");
+// 
+//         // Add locked in tag with animation
+//         if (!container.querySelector(".locked-tag")) {
+//           const lockedTag = document.createElement("div");
+//           lockedTag.className = "locked-tag";
+//           lockedTag.textContent = "LOCKED IN!";
+//           container.appendChild(lockedTag);
+// 
+//           // Small delay for tag animation
+//           setTimeout(() => {
+//             lockedTag.classList.add("show");
+//           }, 150);
+//         }
+// 
+//         // Transition from flash to pulse effect
+//         setTimeout(() => {
+//           container.classList.remove("final-flash");
+//           container.classList.add("winner-pulsate");
+//         }, 500);
+//       }
+//     };
+// 
+//     return column;
+//   });
+// 
+//   // Reset columns - remove all animations
+//   columns.forEach((column) => {
+//     const container = column.closest(".item-container");
+//     if (container) {
+//       container.classList.remove(
+//         "landing-flash",
+//         "winner-pulsate",
+//         "final-flash"
+//       );
+// 
+//       // Remove existing locked tag
+//       const existingTag = container.querySelector(".locked-tag");
+//       if (existingTag) {
+//         existingTag.remove();
+//       }
+//     }
+//     column.style.transform = "translateY(0)";
+//     column.style.transition = "none";
+//   });
+// 
+//   slotColumns.forEach((column) => (column.state = "accelerating"));
+// 
+//   function animate(currentTime) {
+//     const elapsed = currentTime - startTime;
+//     let isAnimating = false;
+// 
+//     slotColumns.forEach((column) => {
+//       if (column.state !== "stopped") {
+//         isAnimating = true;
+//         const deltaTime = column.lastTimestamp
+//           ? currentTime - column.lastTimestamp
+//           : 16.67;
+//         column.update(elapsed, deltaTime);
+//         column.lastTimestamp = currentTime;
+//       }
+//     });
+// 
+//     if (isAnimating) {
+//       requestAnimationFrame(animate);
+//     } else {
+//       // When all columns are stopped, trigger the victory flash and finalize spin
+//       finalVictoryFlash(columns);
+//       setTimeout(() => {
+//         // Skip spinHandicap since handicap is now selected during roulette phase
+//         finalizeSpin();
+//       }, 1000);
+//     }
+//   }
+// 
+//   requestAnimationFrame(animate);
+// }
 
 // Final victory flash with enhanced effects for Rage Quit
-function finalVictoryFlash(columns) {
-  // Wait for the last column to finish its individual animation
-  setTimeout(() => {
-    const allContainers = columns.map((col) => col.closest(".item-container"));
-    const itemsContainer = document.querySelector(".items-container");
-
-    // FIRST WAVE: Rapid mega flashes
-    allContainers.forEach((container, index) => {
-      setTimeout(() => {
-        // Remove any existing animation to reset
-        container.classList.remove("mega-flash", "ultra-flash");
-        void container.offsetWidth; // Force reflow
-
-        // Add the mega flash
-        container.classList.add("mega-flash");
-        
-        // Add rapid pulsing effect
-        container.style.animation = "rapidPulse 0.1s ease-in-out 3";
-      }, index * 100); // Much faster - 100ms between each instead of 550ms
-    });
-
-    // SECOND WAVE: Ultra flash after mega flash
-    setTimeout(() => {
-      allContainers.forEach((container, index) => {
-        setTimeout(() => {
-          container.classList.add("ultra-flash");
-          
-          // Create explosive particle effect
-          createExplosiveParticles(container);
-        }, index * 50); // Even faster for second wave
-      });
-    }, 500);
-
-    // FINAL EXPLOSION: All containers flash together
-    setTimeout(() => {
-      // Screen flash effect
-      createScreenFlash();
-      
-      // All containers flash simultaneously
-      allContainers.forEach((container) => {
-        container.style.animation = "explosiveFlash 0.3s ease-out, superPulse 0.2s ease-in-out 5";
-        container.style.boxShadow = "0 0 100px rgba(255, 215, 0, 1), 0 0 200px rgba(255, 140, 0, 0.8)";
-      });
-      
-      // Screen shake effect
-      document.body.style.animation = "victoryShake 0.5s ease-in-out";
-      setTimeout(() => {
-        document.body.style.animation = "";
-      }, 500);
-      
-    }, 1000);
-
-    // CLEANUP: Remove all effects
-    setTimeout(() => {
-      allContainers.forEach((container) => {
-        container.style.animation = "";
-        container.classList.remove("mega-flash", "ultra-flash");
-      });
-    }, 2000);
-
-  }, 400); // Start sooner - 400ms instead of 800ms
-}
+// Duplicate function - commenting out the second occurrence
+// function finalVictoryFlash(columns) {
+//   // Wait for the last column to finish its individual animation
+//   setTimeout(() => {
+//     const allContainers = columns.map((col) => col.closest(".item-container"));
+//     const itemsContainer = document.querySelector(".items-container");
+// 
+//     // FIRST WAVE: Rapid mega flashes
+//     allContainers.forEach((container, index) => {
+//       setTimeout(() => {
+//         // Remove any existing animation to reset
+//         container.classList.remove("mega-flash", "ultra-flash");
+//         void container.offsetWidth; // Force reflow
+// 
+//         // Add the mega flash
+//         container.classList.add("mega-flash");
+//         
+//         // Add rapid pulsing effect
+//         container.style.animation = "rapidPulse 0.1s ease-in-out 3";
+//       }, index * 100); // Much faster - 100ms between each instead of 550ms
+//     });
+// 
+//     // SECOND WAVE: Ultra flash after mega flash
+//     setTimeout(() => {
+//       allContainers.forEach((container, index) => {
+//         setTimeout(() => {
+//           container.classList.add("ultra-flash");
+//           
+//           // Create explosive particle effect
+//           createExplosiveParticles(container);
+//         }, index * 50); // Even faster for second wave
+//       });
+//     }, 500);
+// 
+//     // FINAL EXPLOSION: All containers flash together
+//     setTimeout(() => {
+//       // Screen flash effect
+//       createScreenFlash();
+//       
+//       // All containers flash simultaneously
+//       allContainers.forEach((container) => {
+//         container.style.animation = "explosiveFlash 0.3s ease-out, superPulse 0.2s ease-in-out 5";
+//         container.style.boxShadow = "0 0 100px rgba(255, 215, 0, 1), 0 0 200px rgba(255, 140, 0, 0.8)";
+//       });
+//       
+//       // Screen shake effect
+//       document.body.style.animation = "victoryShake 0.5s ease-in-out";
+//       setTimeout(() => {
+//         document.body.style.animation = "";
+//       }, 500);
+//       
+//     }, 1000);
+// 
+//     // CLEANUP: Remove all effects
+//     setTimeout(() => {
+//       allContainers.forEach((container) => {
+//         container.style.animation = "";
+//         container.classList.remove("mega-flash", "ultra-flash");
+//       });
+//     }, 2000);
+// 
+//   }, 400); // Start sooner - 400ms instead of 800ms
+// }
 
 // Create explosive particle effect
 function createExplosiveParticles(container) {
@@ -1422,95 +1475,96 @@ function loadHistory() {
 }
 
 // Replace the finalizeSpin function in ragequit-app.js with this version:
-function finalizeSpin() {
-  // ✅ Capture the selected items directly from the UI
-  const itemContainers = document.querySelectorAll(
-    ".slot-machine-wrapper .items-container .item-container"
-  );
-
-  if (itemContainers.length < 5) {
-    console.error("⚠️ ERROR: Not enough items in slot machine.");
-    return;
-  }
-
-  try {
-    // ✅ Extract the visible items from the UI
-    const selectedItems = Array.from(itemContainers).map((container) => {
-      const scrollContainer = container.querySelector(".scroll-container");
-      if (!scrollContainer) return "Unknown";
-
-      const allItems = scrollContainer.querySelectorAll(".itemCol");
-      const visibleItem = Array.from(allItems).find((item) => {
-        const rect = item.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        return (
-          rect.top >= containerRect.top &&
-          rect.bottom <= containerRect.bottom &&
-          rect.height > 0 &&
-          rect.width > 0
-        );
-      });
-
-      return visibleItem
-        ? visibleItem.querySelector("p").textContent.trim()
-        : "Unknown";
-    });
-
-    // ✅ Ensure all selections are valid
-    if (selectedItems.includes("Unknown") || selectedItems.length < 5) {
-      console.error("⚠️ ERROR: Some selected items are missing.");
-      return;
-    }
-
-    // ✅ Get the class and handicap (now from roulette selection)
-    const selectedClass = state.selectedClass || "Unknown";
-    let handicapName, handicapDesc;
-    
-    if (state.handicapStack && state.handicapStack.length > 0) {
-      // Use stacked handicaps
-      handicapName = state.handicapStack.map(h => h.name).join(', ');
-      handicapDesc = state.handicapStack.map(h => `${h.name}: ${h.description}`).join(' | ');
-    } else {
-      // Fallback to single handicap
-      handicapName = state.selectedHandicap || "None";
-      handicapDesc = state.selectedHandicapDesc || "No handicap selected";
-    }
-
-    // ✅ Format data correctly
-    const weapon = selectedItems[0];
-    const specialization = selectedItems[1];
-    const gadgets = selectedItems.slice(2); // Keep as array for addToHistory
-
-    // ✅ Add to history
-    addToHistory(
-      selectedClass,
-      weapon,
-      specialization,
-      gadgets,
-      handicapName,
-      handicapDesc
-    );
-
-    // ✅ Display the selected handicap and re-enable button
-    displaySelectedHandicap();
-    
-    // Record this spin in history
-    recordSpinInHistory();
-    
-    setTimeout(() => {
-      // Add celebration animation before reset
-      triggerCelebrationAnimation();
-      
-      // Reset state and re-enable button
-      resetSpinState();
-      
-      // Show Double or Nothing option
-      showDoubleOrNothingOption();
-    }, 1000);
-  } catch (error) {
-    console.error("⚠️ ERROR: Something went wrong finalizing spin:", error);
-  }
-}
+// finalizeSpin is already defined in loadout-app.js
+// function finalizeSpin() {
+//   // ✅ Capture the selected items directly from the UI
+//   const itemContainers = document.querySelectorAll(
+//     ".slot-machine-wrapper .items-container .item-container"
+//   );
+// 
+//   if (itemContainers.length < 5) {
+//     console.error("⚠️ ERROR: Not enough items in slot machine.");
+//     return;
+//   }
+// 
+//   try {
+//     // ✅ Extract the visible items from the UI
+//     const selectedItems = Array.from(itemContainers).map((container) => {
+//       const scrollContainer = container.querySelector(".scroll-container");
+//       if (!scrollContainer) return "Unknown";
+// 
+//       const allItems = scrollContainer.querySelectorAll(".itemCol");
+//       const visibleItem = Array.from(allItems).find((item) => {
+//         const rect = item.getBoundingClientRect();
+//         const containerRect = container.getBoundingClientRect();
+//         return (
+//           rect.top >= containerRect.top &&
+//           rect.bottom <= containerRect.bottom &&
+//           rect.height > 0 &&
+//           rect.width > 0
+//         );
+//       });
+// 
+//       return visibleItem
+//         ? visibleItem.querySelector("p").textContent.trim()
+//         : "Unknown";
+//     });
+// 
+//     // ✅ Ensure all selections are valid
+//     if (selectedItems.includes("Unknown") || selectedItems.length < 5) {
+//       console.error("⚠️ ERROR: Some selected items are missing.");
+//       return;
+//     }
+// 
+//     // ✅ Get the class and handicap (now from roulette selection)
+//     const selectedClass = state.selectedClass || "Unknown";
+//     let handicapName, handicapDesc;
+//     
+//     if (state.handicapStack && state.handicapStack.length > 0) {
+//       // Use stacked handicaps
+//       handicapName = state.handicapStack.map(h => h.name).join(', ');
+//       handicapDesc = state.handicapStack.map(h => `${h.name}: ${h.description}`).join(' | ');
+//     } else {
+//       // Fallback to single handicap
+//       handicapName = state.selectedHandicap || "None";
+//       handicapDesc = state.selectedHandicapDesc || "No handicap selected";
+//     }
+// 
+//     // ✅ Format data correctly
+//     const weapon = selectedItems[0];
+//     const specialization = selectedItems[1];
+//     const gadgets = selectedItems.slice(2); // Keep as array for addToHistory
+// 
+//     // ✅ Add to history
+//     addToHistory(
+//       selectedClass,
+//       weapon,
+//       specialization,
+//       gadgets,
+//       handicapName,
+//       handicapDesc
+//     );
+// 
+//     // ✅ Display the selected handicap and re-enable button
+//     displaySelectedHandicap();
+//     
+//     // Record this spin in history
+//     recordSpinInHistory();
+//     
+//     setTimeout(() => {
+//       // Add celebration animation before reset
+//       triggerCelebrationAnimation();
+//       
+//       // Reset state and re-enable button
+//       resetSpinState();
+//       
+//       // Show Double or Nothing option
+//       showDoubleOrNothingOption();
+//     }, 1000);
+//   } catch (error) {
+//     console.error("⚠️ ERROR: Something went wrong finalizing spin:", error);
+//   }
+// }
 
 function copyLoadoutText(button) {
   const entry = button.closest(".history-entry");

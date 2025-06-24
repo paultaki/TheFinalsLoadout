@@ -11,15 +11,15 @@ const overlayState = {
   isJackpot: false
 };
 
-// Sound manager
+// Sound manager with relative paths
 const overlayAudio = {
-  beep: new Audio('/sounds/beep.mp3'),
-  ding: new Audio('/sounds/ding.mp3'),
-  dingDing: new Audio('/sounds/ding-ding.mp3'),
-  spinning: new Audio('/sounds/spinning.mp3'),
-  transition: new Audio('/sounds/transition.mp3'),
-  roulette: new Audio('/sounds/roulette.mp3'),
-  finalSound: new Audio('/sounds/pop-pour-perform.mp3')
+  beep: new Audio('sounds/beep.mp3'),
+  ding: new Audio('sounds/ding.mp3'),
+  dingDing: new Audio('sounds/ding-ding.mp3'),
+  spinning: new Audio('sounds/spinning.mp3'),
+  transition: new Audio('sounds/transition.mp3'),
+  roulette: new Audio('sounds/roulette.mp3'),
+  finalSound: new Audio('sounds/pop-pour-perform.mp3')
 };
 
 // Preload all sounds
@@ -240,6 +240,29 @@ async function showSpinWheelOverlay() {
     const wheelList = document.getElementById('spin-wheel-list');
     const ticker = document.getElementById('spin-ticker');
     
+    // Get card height
+    const getCardHeight = () => {
+      const card = wheelList.querySelector('.card');
+      return card ? card.getBoundingClientRect().height + 16 : 90;
+    };
+    
+    // Apply transform for infinite scroll
+    const applyInfiniteScroll = (distance) => {
+      const cardHeight = getCardHeight();
+      let normalizedDistance = distance % (SPIN_CARDS.length * cardHeight * 3);
+      if (normalizedDistance > SPIN_CARDS.length * cardHeight * 2) {
+        normalizedDistance -= SPIN_CARDS.length * cardHeight;
+      }
+      // Changed from negative to positive to spin downward
+      wheelList.style.transform = `translateY(${normalizedDistance}px)`;
+      
+      // Ensure transform is applied
+      if (!wheelList) {
+        console.error('wheelList is null!');
+        return;
+      }
+    };
+    
     // Reset animation state
     spinWheelState = {
       isSpinning: false,
@@ -255,27 +278,26 @@ async function showSpinWheelOverlay() {
       decelerateStartVelocity: 0
     };
     
-    // Get card height
-    const getCardHeight = () => {
-      const card = wheelList.querySelector('.card');
-      return card ? card.getBoundingClientRect().height + 16 : 90;
-    };
-    
-    // Apply transform for infinite scroll
-    const applyInfiniteScroll = (distance) => {
+    // Ensure wheel list has initial position at the top for downward spin
+    if (wheelList) {
+      // Start with a small offset so cards are visible
       const cardHeight = getCardHeight();
-      let normalizedDistance = distance % (SPIN_CARDS.length * cardHeight * 3);
-      if (normalizedDistance > SPIN_CARDS.length * cardHeight * 2) {
-        normalizedDistance -= SPIN_CARDS.length * cardHeight;
-      }
-      wheelList.style.transform = `translateY(${-normalizedDistance}px)`;
-    };
+      const initialOffset = cardHeight * SPIN_CARDS.length; // Start at middle of triple list
+      spinWheelState.currentDistance = initialOffset; // Set initial distance
+      applyInfiniteScroll(spinWheelState.currentDistance);
+    }
     
     // Handle ticker animation
     const animateTickerCollision = () => {
       // Play beep sound
-      overlayAudio.beep.currentTime = 0;
-      overlayAudio.beep.play();
+      try {
+        overlayAudio.beep.currentTime = 0;
+        overlayAudio.beep.play().catch(err => {
+          console.warn('Failed to play beep sound:', err);
+        });
+      } catch (e) {
+        console.warn('Beep sound error:', e);
+      }
       
       // Animate ticker rotation
       ticker.animate([
@@ -410,6 +432,12 @@ async function showSpinWheelOverlay() {
         spinWheelState.currentDistance += spinWheelState.currentVelocity * deltaTime;
         spinWheelState.currentVelocity *= Math.pow(SPIN_PHYSICS.friction, deltaTime * 60);
         
+        // Ensure minimum movement for visibility
+        if (spinWheelState.currentDistance < 10 && spinWheelState.currentVelocity > 1000) {
+          // Force initial movement
+          spinWheelState.currentDistance = 10;
+        }
+        
         // Check for tick
         const tickIndex = Math.floor(spinWheelState.currentDistance / cardHeight);
         if (tickIndex !== spinWheelState.lastTickIndex) {
@@ -483,6 +511,15 @@ async function showSpinWheelOverlay() {
       spinWheelState.lastTickIndex = 0;
       spinWheelState.isDecelerating = false;
       
+      // Play spin sound
+      try {
+        overlayAudio.spinning.currentTime = 0;
+        overlayAudio.spinning.volume = 0.3;
+        overlayAudio.spinning.play().catch(() => {});
+      } catch (e) {
+        // Sound not available
+      }
+      
       // Remove glow
       wheelFrame.classList.remove('glowing');
       
@@ -518,12 +555,23 @@ const ROULETTE_CONFIG = {
     { name: 'Medium', color: '#AB47BC' },
     { name: 'Heavy', color: '#FF1744' }
   ],
-  spinDuration: 4000, // Total spin time in ms
-  minRotations: 5, // Minimum full rotations
-  maxRotations: 7, // Maximum full rotations
-  ballDuration: 3800, // Ball animation duration
-  ballRadius: 140, // Ball orbit radius
-  wheelRadius: 160  // Wheel visual radius
+  spinDuration: 8000, // 8 seconds for wheel
+  minRotations: 8, // More rotations for visible spinning
+  maxRotations: 12, // Maximum full rotations
+  ballDuration: 7500, // 7.5 seconds for ball
+  ballRadius: 140, // Ball orbit radius when moving
+  finalRadius: 100, // Ball final position on segment (closer to center)
+  wheelRadius: 160, // Wheel visual radius
+  outerRadius: 185, // Ball starting radius (outer track)
+  // More realistic physics phases
+  phases: {
+    launch: 0.15,      // 15% - initial momentum
+    coast: 0.35,       // 35% - steady high speed
+    decelerate: 0.25,  // 25% - gradual slowdown
+    spiral: 0.15,      // 15% - drop to inner track
+    bounce: 0.07,      // 7% - bouncing between pockets
+    settle: 0.03       // 3% - final settling
+  }
 };
 
 // Animation state for roulette
@@ -538,9 +586,72 @@ let rouletteState = {
   selectedClass: null
 };
 
-// Easing function for realistic spin
-function easeOutCubic(t) {
-  return 1 - Math.pow(1 - t, 3);
+// Realistic physics simulation for roulette ball
+function getRoulettePhysics(progress) {
+  const phases = ROULETTE_CONFIG.phases;
+  
+  if (progress < phases.launch) {
+    // Phase 1: Launch - constant initial speed
+    return {
+      speed: 1.0, // Full speed from start
+      radius: 1.0,
+      wobble: 0,
+      blur: true
+    };
+  } else if (progress < phases.launch + phases.coast) {
+    // Phase 2: Coast - maintain speed
+    return {
+      speed: 1.0, // Maintain full speed
+      radius: 1.0,
+      wobble: 0,
+      blur: true
+    };
+  } else if (progress < phases.launch + phases.coast + phases.decelerate) {
+    // Phase 3: Decelerate - gradual slowdown
+    const p = (progress - phases.launch - phases.coast) / phases.decelerate;
+    return {
+      speed: 1.0 - (p * 0.5), // Linear deceleration from 100% to 50%
+      radius: 1.0,
+      wobble: p * 0.01,
+      blur: p < 0.3
+    };
+  } else if (progress < phases.launch + phases.coast + phases.decelerate + phases.spiral) {
+    // Phase 4: Spiral - drop to inner track
+    const p = (progress - phases.launch - phases.coast - phases.decelerate) / phases.spiral;
+    const speedCurve = 1 - p * 0.7; // Linear slowdown
+    return {
+      speed: 0.5 * speedCurve, // From 50% to 15%
+      radius: 1.0 - (p * 0.25), // Move inward
+      wobble: 0.01 + p * 0.02,
+      blur: false
+    };
+  } else if (progress < phases.launch + phases.coast + phases.decelerate + phases.spiral + phases.bounce) {
+    // Phase 5: Bounce - ball hits dividers
+    const p = (progress - phases.launch - phases.coast - phases.decelerate - phases.spiral) / phases.bounce;
+    const bounceWave = Math.sin(p * Math.PI * 4) * (1 - p);
+    return {
+      speed: 0.15 - (p * 0.13), // Slow from 15% to 2%
+      radius: 0.75 + bounceWave * 0.03,
+      wobble: 0.03 + bounceWave * 0.01,
+      blur: false
+    };
+  } else {
+    // Phase 6: Settle - final rest on segment
+    const p = (progress - phases.launch - phases.coast - phases.decelerate - phases.spiral - phases.bounce) / phases.settle;
+    return {
+      speed: 0.02 * (1 - p),
+      radius: 0.75 - (p * 0.15), // Move further inward to rest on segment
+      wobble: 0,
+      blur: false,
+      settling: true,
+      settleProgress: p
+    };
+  }
+}
+
+// Easing function for wheel rotation - less aggressive slowdown
+function easeOutQuart(t) {
+  return 1 - Math.pow(1 - t, 2.5); // Changed from 4 to 2.5 for more visible spinning
 }
 
 // Main class roulette overlay function
@@ -574,24 +685,27 @@ async function showClassRouletteOverlay() {
       const availableClasses = getAvailableClasses();
       const segments = [];
       
-      // Create 6 segments (double the original 3)
+      // Create 12 segments for more visual excitement
+      const segmentCount = 12;
+      const segmentAngle = 360 / segmentCount;
+      
       if (availableClasses.length === 1) {
         // All segments are the same class
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < segmentCount; i++) {
           segments.push({
             ...availableClasses[0],
-            angle: i * 60,
-            endAngle: (i + 1) * 60
+            angle: i * segmentAngle,
+            endAngle: (i + 1) * segmentAngle
           });
         }
       } else {
-        // Alternate between available classes
-        for (let i = 0; i < 6; i++) {
+        // Alternate between available classes for visual variety
+        for (let i = 0; i < segmentCount; i++) {
           const classIndex = i % availableClasses.length;
           segments.push({
             ...availableClasses[classIndex],
-            angle: i * 60,
-            endAngle: (i + 1) * 60
+            angle: i * segmentAngle,
+            endAngle: (i + 1) * segmentAngle
           });
         }
       }
@@ -630,57 +744,72 @@ async function showClassRouletteOverlay() {
                     <feMergeNode in="SourceGraphic"/>
                   </feMerge>
                 </filter>
+                <clipPath id="centerClip">
+                  <circle cx="200" cy="200" r="35"/>
+                </clipPath>
               </defs>
               
-              <!-- Segments -->
-              <g class="wheel-segments" filter="url(#wheelShadow)">
-                ${segments.map((seg, i) => {
-                  const startAngle = seg.angle * Math.PI / 180;
-                  const endAngle = seg.endAngle * Math.PI / 180;
-                  const x1 = 200 + 160 * Math.cos(startAngle);
-                  const y1 = 200 + 160 * Math.sin(startAngle);
-                  const x2 = 200 + 160 * Math.cos(endAngle);
-                  const y2 = 200 + 160 * Math.sin(endAngle);
-                  
-                  return `
-                    <path 
-                      d="M 200 200 L ${x1} ${y1} A 160 160 0 0 1 ${x2} ${y2} Z"
-                      fill="${seg.color}"
-                      stroke="#FFD700"
-                      stroke-width="3"
-                      class="wheel-segment"
-                      data-class="${seg.name}"
-                    />
-                  `;
-                }).join('')}
+              <!-- Rotating group containing segments and labels -->
+              <g class="wheel-rotating-group" id="wheel-rotating-group">
+                <!-- Segments -->
+                <g class="wheel-segments" filter="url(#wheelShadow)">
+                  ${segments.map((seg, i) => {
+                    const startAngle = seg.angle * Math.PI / 180;
+                    const endAngle = seg.endAngle * Math.PI / 180;
+                    const x1 = 200 + 160 * Math.cos(startAngle);
+                    const y1 = 200 + 160 * Math.sin(startAngle);
+                    const x2 = 200 + 160 * Math.cos(endAngle);
+                    const y2 = 200 + 160 * Math.sin(endAngle);
+                    
+                    return `
+                      <path 
+                        d="M 200 200 L ${x1} ${y1} A 160 160 0 0 1 ${x2} ${y2} Z"
+                        fill="${seg.color}"
+                        stroke="#FFD700"
+                        stroke-width="3"
+                        class="wheel-segment"
+                        data-class="${seg.name}"
+                      />
+                    `;
+                  }).join('')}
+                </g>
+                
+                <!-- Class labels -->
+                <g class="wheel-labels">
+                  ${segments.map((seg) => {
+                    const segmentAngle = seg.endAngle - seg.angle;
+                    const labelAngle = seg.angle + segmentAngle / 2; // Center of segment
+                    const labelRadius = 100;
+                    const x = 200 + labelRadius * Math.cos(labelAngle * Math.PI / 180);
+                    const y = 200 + labelRadius * Math.sin(labelAngle * Math.PI / 180);
+                    const fontSize = segments.length > 6 ? 18 : 24; // Smaller text for 12 segments
+                    
+                    return `
+                      <text 
+                        x="${x}" 
+                        y="${y}" 
+                        text-anchor="middle" 
+                        dominant-baseline="middle"
+                        class="wheel-label"
+                        font-size="${fontSize}"
+                        transform="rotate(${labelAngle} ${x} ${y})"
+                      >
+                        ${seg.name.toUpperCase()}
+                      </text>
+                    `;
+                  }).join('')}
+                </g>
               </g>
               
-              <!-- Class labels -->
-              <g class="wheel-labels">
-                ${segments.map((seg) => {
-                  const labelAngle = seg.angle + 30; // Center of 60-degree segment
-                  const labelRadius = 100;
-                  const x = 200 + labelRadius * Math.cos(labelAngle * Math.PI / 180);
-                  const y = 200 + labelRadius * Math.sin(labelAngle * Math.PI / 180);
-                  
-                  return `
-                    <text 
-                      x="${x}" 
-                      y="${y}" 
-                      text-anchor="middle" 
-                      dominant-baseline="middle"
-                      class="wheel-label"
-                      transform="rotate(${labelAngle} ${x} ${y})"
-                    >
-                      ${seg.name.toUpperCase()}
-                    </text>
-                  `;
-                }).join('')}
+              <!-- Static center hub with logo -->
+              <g class="wheel-static-center">
+                <circle cx="200" cy="200" r="40" fill="#222" stroke="#FFD700" stroke-width="3"/>
+                <image href="images/the-finals.webp" 
+                       x="165" y="165" 
+                       width="70" height="70" 
+                       clip-path="url(#centerClip)"
+                       opacity="0.9"/>
               </g>
-              
-              <!-- Center hub -->
-              <circle cx="200" cy="200" r="40" fill="#222" stroke="#FFD700" stroke-width="3"/>
-              <circle cx="200" cy="200" r="30" fill="#333" stroke="#AB47BC" stroke-width="2"/>
             </svg>
             
             <!-- Ball -->
@@ -704,6 +833,14 @@ async function showClassRouletteOverlay() {
     // Get elements
     const wheel = document.getElementById('roulette-wheel');
     const ball = document.getElementById('roulette-ball');
+    const rotatingGroup = document.getElementById('wheel-rotating-group');
+    
+    // Debug log
+    console.log('🎲 Roulette elements:', {
+      wheel: !!wheel,
+      ball: !!ball,
+      rotatingGroup: !!rotatingGroup
+    });
     
     // Reset state
     rouletteState = {
@@ -714,33 +851,43 @@ async function showClassRouletteOverlay() {
       animationId: null,
       startTime: 0,
       targetRotation: 0,
-      selectedClass: null
+      selectedClass: null,
+      rotatingGroup: rotatingGroup // Cache the element
     };
     
     // Calculate winner based on ball position relative to wheel
     const calculateWinner = () => {
-      // Get final positions
+      // Get final wheel position (positive rotation)
       const wheelAngle = rouletteState.wheelRotation % 360;
       
-      // Get ball's final position (negative rotation, counter-clockwise)
-      // Normalize to positive angle
-      const ballAngle = (((-rouletteState.totalBallRotation) % 360) + 360) % 360;
+      // Get ball's final position
+      const ballAngle = ((-rouletteState.totalBallRotation % 360) + 360) % 360;
       
-      // Calculate which segment the ball is over
-      // Ball position minus wheel rotation gives us the segment
-      const relativeAngle = ((ballAngle - wheelAngle + 360) % 360);
+      // Calculate relative position of ball on wheel
+      // Ball angle minus wheel angle gives us position on the wheel
+      const relativeAngle = ((ballAngle - wheelAngle) + 360) % 360;
       
-      // Find which segment this angle falls into
-      const segmentIndex = Math.floor(relativeAngle / 60);
+      // Find which segment this relative angle falls into
+      const segmentAngle = 360 / segments.length;
+      let segmentIndex = Math.floor(relativeAngle / segmentAngle);
+      
+      // Ensure index is within bounds
+      if (segmentIndex < 0) segmentIndex += segments.length;
+      if (segmentIndex >= segments.length) segmentIndex = segmentIndex % segments.length;
+      
       const winningSegment = segments[segmentIndex];
       
       console.log('🎯 Winner calculation:', {
-        totalBallRotation: rouletteState.totalBallRotation,
-        ballAngle,
-        wheelAngle,
-        relativeAngle,
-        segmentIndex,
-        winner: winningSegment.name
+        wheelRotation: rouletteState.wheelRotation,
+        wheelAngle: wheelAngle,
+        ballRotation: rouletteState.totalBallRotation,
+        ballAngle: ballAngle,
+        relativeAngle: relativeAngle,
+        segmentAngle: segmentAngle,
+        segmentIndex: segmentIndex,
+        totalSegments: segments.length,
+        winner: winningSegment.name,
+        allSegments: segments.map(s => s.name)
       });
       
       return winningSegment.name;
@@ -750,45 +897,146 @@ async function showClassRouletteOverlay() {
     const animateSpin = (timestamp) => {
       if (!rouletteState.startTime) {
         rouletteState.startTime = timestamp;
+        console.log('🎲 Animation started');
       }
       
       const elapsed = timestamp - rouletteState.startTime;
       const progress = Math.min(elapsed / ROULETTE_CONFIG.spinDuration, 1);
       
       // Apply easing
-      const easedProgress = easeOutCubic(progress);
+      const easedProgress = easeOutQuart(progress); // Smoother deceleration
       
       // Update wheel rotation (clockwise)
       rouletteState.wheelRotation = rouletteState.targetRotation * easedProgress;
-      wheel.style.transform = `rotate(${rouletteState.wheelRotation}deg)`;
       
-      // Update ball rotation (counter-clockwise, slowing down)
+      // Log every 30 frames
+      if (Math.floor(timestamp / 500) !== Math.floor((timestamp - 16) / 500)) {
+        console.log('🎲 Wheel rotation:', {
+          rotation: rouletteState.wheelRotation.toFixed(2),
+          progress: progress.toFixed(2),
+          easedProgress: easedProgress.toFixed(2)
+        });
+      }
+      
+      // Use cached rotating group element or find it
+      let rotatingGroup = rouletteState.rotatingGroup;
+      
+      if (!rotatingGroup) {
+        rotatingGroup = document.getElementById('wheel-rotating-group');
+        if (rotatingGroup) {
+          rouletteState.rotatingGroup = rotatingGroup;
+          console.log('🎲 Found rotating group');
+        } else {
+          console.error('Could not find wheel-rotating-group element!');
+          return;
+        }
+      }
+      
+      // Add subtle wheel vibration during high speed
+      if (progress < 0.5) {
+        const vibration = Math.sin(elapsed * 0.1) * 0.5;
+        const rotation = rouletteState.wheelRotation + vibration;
+        // Fixed SVG transform syntax - comma separators
+        rotatingGroup.setAttribute('transform', `rotate(${rotation}, 200, 200)`);
+      } else {
+        // Fixed SVG transform syntax - comma separators
+        rotatingGroup.setAttribute('transform', `rotate(${rouletteState.wheelRotation}, 200, 200)`);
+      }
+      
+      // Update ball using realistic physics
       const ballProgress = Math.min(elapsed / ROULETTE_CONFIG.ballDuration, 1);
-      const ballEased = easeOutCubic(ballProgress);
+      const physics = getRoulettePhysics(ballProgress);
       
-      // Ball rotates counter-clockwise (negative degrees)
-      // Total rotation decreases from fast to slow
-      const totalBallRotations = 8; // Ball makes 8 full rotations
-      const finalBallPosition = Math.random() * 360; // Random final position
+      // Calculate total rotations based on physics speed
+      const totalBallRotations = 10; // More rotations for realism
+      const finalBallPosition = Math.random() * 360;
       
-      // Calculate total ball rotation (negative for counter-clockwise)
-      rouletteState.totalBallRotation = -(totalBallRotations * 360 + finalBallPosition) * ballEased;
+      // Accumulate rotation based on physics speed curve
+      if (!rouletteState.ballAngularPosition) {
+        rouletteState.ballAngularPosition = 0;
+      }
       
-      // Convert to radians for position calculation
-      const ballAngleRad = rouletteState.totalBallRotation * Math.PI / 180;
+      // Update angular position based on current speed
+      const deltaTime = 16; // Approximate frame time in ms
+      const maxAngularVelocity = 8; // Maximum degrees per frame (was 15)
+      const angularVelocity = physics.speed * maxAngularVelocity;
+      rouletteState.ballAngularPosition -= angularVelocity;
       
-      // Keep ball at edge of wheel
-      const ballX = Math.cos(ballAngleRad) * ROULETTE_CONFIG.ballRadius;
-      const ballY = Math.sin(ballAngleRad) * ROULETTE_CONFIG.ballRadius;
+      // Calculate current position
+      const ballAngleRad = rouletteState.ballAngularPosition * Math.PI / 180;
       
+      // Calculate radius based on physics
+      let currentRadius = ROULETTE_CONFIG.outerRadius - 
+        (ROULETTE_CONFIG.outerRadius - ROULETTE_CONFIG.ballRadius) * (1 - physics.radius);
+      
+      // If settling, move to final position on segment
+      if (physics.settling) {
+        const targetRadius = ROULETTE_CONFIG.finalRadius;
+        currentRadius = currentRadius - (currentRadius - targetRadius) * physics.settleProgress;
+        
+        // Also slow down angular movement when settling
+        if (physics.settleProgress > 0.5) {
+          // Start snapping to nearest segment center
+          const segmentAngle = 360 / segments.length;
+          const currentSegment = Math.round((-rouletteState.ballAngularPosition % 360) / segmentAngle);
+          const targetAngle = currentSegment * segmentAngle;
+          const currentAngle = -rouletteState.ballAngularPosition % 360;
+          const angleDiff = targetAngle - currentAngle;
+          
+          // Smoothly interpolate to segment center
+          const snapStrength = (physics.settleProgress - 0.5) * 2; // 0 to 1
+          rouletteState.ballAngularPosition += angleDiff * snapStrength * 0.1;
+        }
+      }
+      
+      // Add wobble for realism
+      const wobbleX = Math.sin(elapsed * 0.02) * physics.wobble * 5;
+      const wobbleY = Math.cos(elapsed * 0.02) * physics.wobble * 5;
+      
+      // Calculate position with wobble
+      const ballX = Math.cos(ballAngleRad) * currentRadius + wobbleX;
+      const ballY = Math.sin(ballAngleRad) * currentRadius + wobbleY;
+      
+      // Apply transform
       ball.style.transform = `translate(${ballX}px, ${ballY}px)`;
       ball.style.opacity = '1';
       
-      // Add ticking sound effect during spin
-      if (elapsed < ROULETTE_CONFIG.ballDuration && elapsed % 100 < 16) {
-        overlayAudio.beep.currentTime = 0;
-        overlayAudio.beep.volume = 0.3;
-        overlayAudio.beep.play();
+      // Apply blur effect during high speed
+      if (physics.blur) {
+        ball.classList.add('high-speed');
+      } else {
+        ball.classList.remove('high-speed');
+      }
+      
+      // Store final position for winner calculation
+      rouletteState.totalBallRotation = rouletteState.ballAngularPosition;
+      
+      // Dynamic sound effects based on physics phase
+      if (physics.speed > 0.1 && overlayState.soundEnabled !== false) {
+        // Calculate tick interval based on ball speed (faster = more frequent)
+        const tickInterval = Math.max(50, 200 * (1 - physics.speed));
+        
+        if (elapsed % tickInterval < 16) {
+          try {
+            overlayAudio.beep.currentTime = 0;
+            overlayAudio.beep.volume = 0.2 + physics.speed * 0.3; // Volume based on speed
+            overlayAudio.beep.playbackRate = 0.8 + physics.speed * 0.4; // Pitch based on speed
+            overlayAudio.beep.play().catch(() => {}); // Silently fail if sound not available
+          } catch (e) {
+            // Sound not available
+          }
+        }
+      }
+      
+      // Special sound when ball drops to inner track
+      if (ballProgress > 0.7 && ballProgress < 0.72 && !rouletteState.dropSoundPlayed && overlayState.soundEnabled !== false) {
+        try {
+          overlayAudio.transition.currentTime = 0;
+          overlayAudio.transition.play().catch(() => {});
+          rouletteState.dropSoundPlayed = true;
+        } catch (e) {
+          // Sound not available
+        }
       }
       
       if (progress < 1) {
@@ -844,6 +1092,7 @@ async function showClassRouletteOverlay() {
     const startSpin = () => {
       if (rouletteState.isSpinning) return;
       
+      console.log('🎲 Starting roulette spin');
       rouletteState.isSpinning = true;
       
       // Calculate target rotation
@@ -852,10 +1101,18 @@ async function showClassRouletteOverlay() {
       const finalAngle = Math.random() * 360;
       rouletteState.targetRotation = rotations * 360 + finalAngle;
       
+      console.log('🎲 Target rotation:', rouletteState.targetRotation);
+      
       // Play spin sound
-      overlayAudio.roulette.currentTime = 0;
-      overlayAudio.roulette.volume = 0.5;
-      overlayAudio.roulette.play();
+      try {
+        overlayAudio.roulette.currentTime = 0;
+        overlayAudio.roulette.volume = 0.5;
+        overlayAudio.roulette.play().catch(err => {
+          console.warn('Failed to play roulette sound:', err);
+        });
+      } catch (e) {
+        console.warn('Roulette sound error:', e);
+      }
       
       // Start animation
       rouletteState.animationId = requestAnimationFrame(animateSpin);

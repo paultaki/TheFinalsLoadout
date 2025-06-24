@@ -1113,6 +1113,7 @@ const displayLoadout = (classType) => {
   try {
     outputDiv.innerHTML = loadoutHTML;
     outputDiv.style.opacity = "1"; // Reset opacity to full when showing real loadout
+    outputDiv.style.display = "block"; // Ensure output div is visible
   } catch (error) {
     console.error("❌ CRASH PREVENTION: Error setting innerHTML:", error);
     return;
@@ -5945,11 +5946,34 @@ function startSlotMachineSequence(classType, spins) {
   }
 }
 
+// Handle Generate Loadout button click
+function handleGenerateLoadout() {
+  // Check if already spinning
+  if (window.state && window.state.isSpinning) {
+    console.log("⚠️ Already spinning, ignoring click");
+    return;
+  }
+
+  // Check if overlay manager is loaded
+  if (window.overlayManager && window.overlayManager.startLoadoutGeneration) {
+    console.log("🎭 Starting overlay flow with roulette...");
+    window.overlayManager.startLoadoutGeneration();
+  } else {
+    console.log("⚠️ Overlay manager not loaded, falling back to direct spin");
+    // Fallback behavior
+    if (!window.state) window.state = {};
+    window.state.selectedClass = "Light";
+    window.state.totalSpins = 1;
+    window.state.currentSpin = 1;
+    displayRandomLoadout();
+  }
+}
+
 // Attach to button
 window.addEventListener("DOMContentLoaded", function () {
   const btn = document.getElementById("main-spin-button");
   if (btn) {
-    btn.textContent = "Generate Loadout";
+    // btn.textContent = "Generate Loadout"; // Keep original SPIN text
     btn.addEventListener("click", handleGenerateLoadout);
   }
 });

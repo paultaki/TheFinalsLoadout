@@ -493,10 +493,19 @@
   margin: 0;
 }
 
+/* Reset list item styles */
+.wheel-list li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+  width: 100%;
+}
+
 /* Cards */
 .card {
   height: 85px;
-  margin: 8px 0;
+  margin: 8px 16px;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -504,6 +513,7 @@
   font-size: 42px;
   font-weight: bold;
   font-family: "Orbitron", "Digital", monospace;
+  width: calc(100% - 32px);
   box-shadow: 
     0 4px 12px rgba(0, 0, 0, 0.3),
     inset 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -802,10 +812,9 @@
   position: relative;
   width: 400px;
   height: 400px;
-  transition: transform 0.1s linear;
 }
 
-.roulette-wheel.complete {
+.roulette-wheel.complete .wheel-svg {
   animation: wheelComplete 0.5s ease-out;
 }
 
@@ -905,11 +914,38 @@
     0 0 10px rgba(255, 255, 255, 0.5),
     inset -2px -2px 4px rgba(0, 0, 0, 0.3);
   animation: ballSpin 0.5s linear infinite;
+  transition: filter 0.2s ease;
+}
+
+/* High speed blur effect */
+.roulette-ball.high-speed .ball-inner {
+  filter: blur(2px);
+  box-shadow: 
+    0 0 15px rgba(255, 255, 255, 0.8),
+    0 0 25px rgba(255, 255, 255, 0.4);
+}
+
+/* Ball trail effect */
+.roulette-ball::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
+  opacity: 0;
+  transform: scale(1.5);
+  transition: opacity 0.3s ease;
+}
+
+.roulette-ball.high-speed::after {
+  opacity: 0.4;
 }
 
 /* Ball landed state */
 .roulette-ball.landed .ball-inner {
   animation: none;
+  filter: none;
   box-shadow: 
     0 2px 4px rgba(0, 0, 0, 0.7),
     0 0 20px rgba(255, 215, 0, 0.6),

@@ -1,5 +1,5 @@
 /* Casino Zone Styles - Full Effects */
-@import url("variables-casino.css");
+/* @import url("variables-casino.css"); -- File doesn't exist, using inline variables */
 
 /* Base Styles */
 body.casino-mode {
@@ -1633,5 +1633,153 @@ body.casino-mode #filter-panel:not(.active) {
   }
   75% {
     transform: scale(0.9) rotate(5deg);
+  }
+}
+
+/* History Cards - Full Casino Style */
+.loadout-history {
+  background: transparent !important;
+}
+
+.loadout-history h2 {
+  color: var(--finals-yellow);
+  text-transform: uppercase;
+  font-family: "Bebas Neue", Impact, sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 10px rgba(255, 229, 0, 0.5);
+}
+
+/* History Card Styling */
+article.loadout {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 3px solid var(--finals-gold);
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.5);
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+article.loadout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.loadout header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.loadout .class-badge {
+  background: var(--gradient-gold-shine);
+  color: #000;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+.loadout .loadout-copy-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.loadout .loadout-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.loadout .loadout-content {
+  padding: 20px;
+}
+
+.loadout .loadout-grid {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.loadout .grid-item label {
+  color: #888;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.loadout .grid-item span {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.loadout .gadgets-list {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.loadout .gadget-item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+}
+
+.loadout .ai-analysis {
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--finals-orange);
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 15px;
+  position: relative;
+}
+
+.loadout .ai-analysis .roast-text {
+  color: #fff;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.loadout .score-badge {
+  position: absolute;
+  top: -12px;
+  right: 15px;
+  background: var(--gradient-orange-pink);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* Slot Machine Golden Borders */
+.casino-mode .item-container {
+  border: 3px solid var(--finals-gold) !important;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 0 10px rgba(255, 215, 0, 0.1);
+}
+
+.casino-mode .item-container.winning {
+  animation: golden-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes golden-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
   }
 }
