@@ -757,13 +757,16 @@ if (document.readyState !== 'loading') {
 }
 
 // When roulette system loads, set it globally
-if (window.RageRouletteAnimationSystem) {
+// Check if it's already initialized by app.js
+if (!window.rageRouletteSystem && window.RageRouletteAnimationSystem) {
   try {
     window.rageRouletteSystem = new window.RageRouletteAnimationSystem();
-    console.log("✅ RAGE QUIT: RageRouletteAnimationSystem initialized");
+    console.log("✅ RAGE QUIT: RageRouletteAnimationSystem initialized in loadout-app.js");
   } catch (e) {
     console.error("❌ RAGE QUIT: Failed to initialize RageRouletteAnimationSystem:", e);
   }
+} else if (window.rageRouletteSystem) {
+  console.log("✅ RAGE QUIT: RageRouletteAnimationSystem already initialized by app.js");
 }
 
 console.log("✅ RAGE QUIT: loadout-app.js fully loaded on live site!");

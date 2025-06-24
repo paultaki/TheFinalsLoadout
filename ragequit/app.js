@@ -48,19 +48,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Initialize the rage roulette animation system
-  const rageRouletteSystem = new window.RageRouletteAnimationSystem();
-  
-  // Make roulette system available globally
-  window.rageRouletteSystem = rageRouletteSystem;
+  let rageRouletteSystem = null;
+  try {
+    if (window.RageRouletteAnimationSystem) {
+      rageRouletteSystem = new window.RageRouletteAnimationSystem();
+      window.rageRouletteSystem = rageRouletteSystem;
+      console.log("✅ RageRouletteAnimationSystem initialized successfully");
+    } else {
+      console.warn("⚠️ RageRouletteAnimationSystem not found, button will use fallback");
+    }
+  } catch (e) {
+    console.error("❌ Failed to initialize RageRouletteAnimationSystem:", e);
+  }
   
   // Initialize sound toggle
   initializeRageSoundToggle();
+  
+  // Remove the existing click handler from loadout-app.js first
+  const rageBtn = document.getElementById("rage-quit-btn");
+  if (rageBtn) {
+    rageBtn.onclick = null;
+    rageBtn.removeAttribute("data-handler-attached");
+  }
   
   // Rage Quit Button Click Event
   document
     .getElementById("rage-quit-btn")
     ?.addEventListener("click", async function () {
-      if (state.isSpinning || rageRouletteSystem.animating) return;
+      if (state.isSpinning || (rageRouletteSystem && rageRouletteSystem.animating)) return;
 
       // Play click sound (if file is valid)
       const clickSound = document.getElementById("clickSound");
@@ -74,8 +89,15 @@ document.addEventListener("DOMContentLoaded", () => {
       // Add spinning animation to button
       this.classList.add('spinning');
       
-      // Start the full roulette sequence
-      await rageRouletteSystem.startFullSequence();
+      // Start the full roulette sequence if available, otherwise use fallback
+      if (rageRouletteSystem) {
+        await rageRouletteSystem.startFullSequence();
+      } else if (window.spinRageQuitLoadout) {
+        console.log("Using fallback spinRageQuitLoadout");
+        window.spinRageQuitLoadout();
+      } else {
+        console.error("No spin function available!");
+      }
       
       // Remove spinning animation when done
       this.classList.remove('spinning');
