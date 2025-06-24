@@ -308,7 +308,10 @@ class RageRouletteAnimationSystem {
           this.playClassWinSound();
 
           setTimeout(() => {
-            document.body.removeChild(animationContainer);
+            // Remove from the correct parent
+            if (animationContainer.parentNode) {
+              animationContainer.parentNode.removeChild(animationContainer);
+            }
             resolve();
           }, 500);
           return;
@@ -453,7 +456,14 @@ class RageRouletteAnimationSystem {
     animationContainer.appendChild(title);
     animationContainer.appendChild(wheel);
     animationContainer.appendChild(statusEl);
-    document.body.appendChild(animationContainer);
+    
+    // Append to the rage-roulette-container instead of body
+    const rouletteContainer = document.getElementById("rage-roulette-container");
+    if (rouletteContainer) {
+      rouletteContainer.appendChild(animationContainer);
+    } else {
+      document.body.appendChild(animationContainer);
+    }
 
     // Animation logic (EXACT SAME as main page)
     let currentIndex = 0;
@@ -478,7 +488,9 @@ class RageRouletteAnimationSystem {
           } SELECTED!`;
 
           setTimeout(() => {
-            document.body.removeChild(animationContainer);
+            if (animationContainer.parentNode) {
+              animationContainer.parentNode.removeChild(animationContainer);
+            };
             resolve();
           }, 500);
           return;
@@ -548,7 +560,9 @@ class RageRouletteAnimationSystem {
             statusEl.textContent = `${this.selectedSpins} SPIN${this.selectedSpins > 1 ? "S" : ""} SELECTED!`;
             setTimeout(() => {
               if (animationContainer.parentNode) {
-                document.body.removeChild(animationContainer);
+                if (animationContainer.parentNode) {
+              animationContainer.parentNode.removeChild(animationContainer);
+            };
               }
               resolve();
             }, 500);
@@ -696,7 +710,14 @@ class RageRouletteAnimationSystem {
     animationContainer.appendChild(title);
     animationContainer.appendChild(wheel);
     animationContainer.appendChild(statusEl);
-    document.body.appendChild(animationContainer);
+    
+    // Append to the rage-roulette-container instead of body
+    const rouletteContainer = document.getElementById("rage-roulette-container");
+    if (rouletteContainer) {
+      rouletteContainer.appendChild(animationContainer);
+    } else {
+      document.body.appendChild(animationContainer);
+    }
 
     // Animation logic - determine winner at the end based on where it stops
     let currentIndex = 0;
@@ -715,7 +736,9 @@ class RageRouletteAnimationSystem {
             console.warn('⚠️ Handicap animation timeout - forcing completion');
             try {
               if (animationContainer && animationContainer.parentNode) {
-                document.body.removeChild(animationContainer);
+                if (animationContainer.parentNode) {
+              animationContainer.parentNode.removeChild(animationContainer);
+            };
               }
             } catch (cleanupError) {
               console.warn('Cleanup error:', cleanupError);
@@ -775,7 +798,9 @@ class RageRouletteAnimationSystem {
               setTimeout(() => {
                 try {
                   if (animationContainer && animationContainer.parentNode) {
-                    document.body.removeChild(animationContainer);
+                    if (animationContainer.parentNode) {
+              animationContainer.parentNode.removeChild(animationContainer);
+            };
                   }
                   resolve();
                 } catch (cleanupError) {
@@ -788,7 +813,9 @@ class RageRouletteAnimationSystem {
               console.error('Final selection error:', finalError);
               try {
                 if (animationContainer && animationContainer.parentNode) {
-                  document.body.removeChild(animationContainer);
+                  if (animationContainer.parentNode) {
+              animationContainer.parentNode.removeChild(animationContainer);
+            };
                 }
               } catch (cleanupError) {
                 console.warn('Emergency cleanup error:', cleanupError);
@@ -860,7 +887,9 @@ class RageRouletteAnimationSystem {
               console.error('Animation recursion error:', animateError);
               try {
                 if (animationContainer && animationContainer.parentNode) {
-                  document.body.removeChild(animationContainer);
+                  if (animationContainer.parentNode) {
+              animationContainer.parentNode.removeChild(animationContainer);
+            };
                 }
                 resolve();
               } catch (emergencyError) {
@@ -874,7 +903,9 @@ class RageRouletteAnimationSystem {
           console.error('Handicap animation error:', outerError);
           try {
             if (animationContainer && animationContainer.parentNode) {
-              document.body.removeChild(animationContainer);
+              if (animationContainer.parentNode) {
+              animationContainer.parentNode.removeChild(animationContainer);
+            };
             }
           } catch (cleanupError) {
             console.warn('Outer cleanup error:', cleanupError);
@@ -1172,7 +1203,14 @@ class RageRouletteAnimationSystem {
       
       animationContainer.appendChild(title);
       animationContainer.appendChild(wheelContainer);
-      document.body.appendChild(animationContainer);
+      
+      // Append to the rage-roulette-container instead of body
+      const rouletteContainer = document.getElementById("rage-roulette-container");
+      if (rouletteContainer) {
+        rouletteContainer.appendChild(animationContainer);
+      } else {
+        document.body.appendChild(animationContainer);
+      }
       
       // Initialize realistic roulette wheel
       this.rouletteWheel = new window.RealisticRouletteWheel();
@@ -1212,7 +1250,9 @@ class RageRouletteAnimationSystem {
               this.rouletteWheel.destroy();
               this.rouletteWheel = null;
             }
-            document.body.removeChild(animationContainer);
+            if (animationContainer.parentNode) {
+              animationContainer.parentNode.removeChild(animationContainer);
+            };
             resolve();
           }, 1500);
         };
