@@ -1,0 +1,510 @@
+/* =====================================
+   LOADOUT HISTORY CARDS - Mobile First Design
+   ===================================== */
+
+/* Container with max-width for desktop */
+.loadout-history {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  position: relative;
+}
+
+/* Section header styling */
+.loadout-history h2 {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 2.5rem;
+  color: #ffd700;
+  text-align: center;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.5),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Chaos counter */
+.chaos-counter {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  color: #ff6b35;
+  opacity: 0.9;
+}
+
+.loadouts-counter {
+  font-weight: bold;
+  color: #ffd700;
+  font-size: 1.3rem;
+}
+
+/* History list container */
+#history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Individual history entry */
+.history-entry {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease-out;
+}
+
+.history-entry.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Casino History Card - Main container */
+.casino-history-card {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+/* Hover effect for desktop */
+@media (hover: hover) {
+  .casino-history-card:hover {
+    border-color: rgba(255, 107, 53, 0.3);
+    box-shadow: 
+      0 6px 30px rgba(0, 0, 0, 0.6),
+      0 0 20px rgba(255, 107, 53, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+  }
+}
+
+/* Card header */
+.loadout-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Class badge */
+.class-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #000;
+  display: inline-block;
+}
+
+.class-badge.light {
+  background: linear-gradient(135deg, #4FC3F7, #29B6F6);
+  box-shadow: 0 2px 8px rgba(79, 195, 247, 0.4);
+}
+
+.class-badge.medium {
+  background: linear-gradient(135deg, #AB47BC, #9C27B0);
+  box-shadow: 0 2px 8px rgba(171, 71, 188, 0.4);
+}
+
+.class-badge.heavy {
+  background: linear-gradient(135deg, #FF7043, #FF5722);
+  box-shadow: 0 2px 8px rgba(255, 112, 67, 0.4);
+}
+
+.class-badge.unknown {
+  background: linear-gradient(135deg, #616161, #424242);
+  box-shadow: 0 2px 8px rgba(97, 97, 97, 0.4);
+}
+
+/* Loadout name */
+.loadout-name {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.4rem;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Timestamp */
+.timestamp {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  text-align: right;
+}
+
+/* Loadout details container */
+.loadout-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* Item rows */
+.weapon-item,
+.spec-item,
+.gadget-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Item labels */
+.item-label {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+/* Item content */
+.item-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Item icons */
+.item-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.item-icon.small {
+  width: 20px;
+  height: 20px;
+}
+
+/* Item names */
+.item-name {
+  font-size: 0.9rem;
+  color: #fff;
+  font-weight: 500;
+}
+
+.item-name.small {
+  font-size: 0.8rem;
+}
+
+/* Gadget list */
+.gadget-list {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.gadget-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* AI Analysis / Roast section */
+.ai-analysis {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-analysis::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent,
+    rgba(255, 215, 0, 0.3),
+    transparent
+  );
+}
+
+.ai-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.roast-text {
+  flex: 1;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.score-badge {
+  background: linear-gradient(135deg, #ffd700, #ff6b35);
+  color: #000;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+/* Loading state */
+.ai-analysis.loading .roast-text {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #ffd700;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Action buttons */
+.loadout-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.loadout-actions button {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.loadout-actions button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.loadout-actions button:active {
+  transform: translateY(0);
+}
+
+/* Copy button specific styling */
+.copy-text-btn:hover {
+  border-color: rgba(79, 195, 247, 0.5);
+  background: rgba(79, 195, 247, 0.1);
+}
+
+.copy-image-btn:hover {
+  border-color: rgba(171, 71, 188, 0.5);
+  background: rgba(171, 71, 188, 0.1);
+}
+
+.roast-again-btn:hover {
+  border-color: rgba(255, 107, 53, 0.5);
+  background: rgba(255, 107, 53, 0.1);
+}
+
+/* Clear history button */
+.clear-history-btn {
+  display: block;
+  margin: 2rem auto 0;
+  background: rgba(255, 23, 68, 0.1);
+  border: 1px solid rgba(255, 23, 68, 0.3);
+  color: #ff1744;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.85rem;
+}
+
+.clear-history-btn:hover {
+  background: rgba(255, 23, 68, 0.2);
+  border-color: rgba(255, 23, 68, 0.5);
+  box-shadow: 0 0 20px rgba(255, 23, 68, 0.3);
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+  .loadout-history {
+    padding: 0 0.5rem;
+  }
+  
+  .casino-history-card {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  .loadout-header {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+  
+  .timestamp {
+    grid-column: 1 / -1;
+    text-align: left;
+    font-size: 0.7rem;
+    margin-top: 0.25rem;
+  }
+  
+  .loadout-name {
+    font-size: 1.2rem;
+  }
+  
+  .item-content {
+    padding: 0.3rem 0.5rem;
+  }
+  
+  .gadget-item {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .ai-analysis {
+    padding: 0.6rem 0.8rem;
+    gap: 0.5rem;
+  }
+  
+  .roast-text {
+    font-size: 0.85rem;
+  }
+  
+  .loadout-actions {
+    flex-wrap: wrap;
+  }
+  
+  .loadout-actions button {
+    min-width: calc(50% - 0.25rem);
+    font-size: 0.7rem;
+    padding: 0.4rem 0.5rem;
+  }
+  
+  .loadout-actions button span {
+    display: none;
+  }
+}
+
+/* Desktop enhancements */
+@media (min-width: 768px) {
+  .loadout-history {
+    padding: 0 2rem;
+  }
+  
+  .casino-history-card {
+    padding: 1.5rem 2rem;
+  }
+  
+  .loadout-header {
+    grid-template-columns: auto 1fr auto auto;
+    gap: 1rem;
+  }
+  
+  .loadout-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .gadget-group {
+    grid-column: 1 / -1;
+  }
+  
+  .item-content {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .gadget-list {
+    gap: 0.75rem;
+  }
+  
+  .ai-analysis {
+    padding: 1rem 1.25rem;
+  }
+  
+  .loadout-actions button {
+    flex: 0 1 auto;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Spicy loadout animation */
+.spicy-loadout .casino-history-card {
+  animation: spicyGlow 3s ease-in-out infinite;
+}
+
+@keyframes spicyGlow {
+  0%, 100% {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    border-color: rgba(255, 107, 53, 0.5);
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.5),
+      0 0 30px rgba(255, 107, 53, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Empty state */
+#history-list:empty::after {
+  content: "No loadouts generated yet. Click 'GENERATE LOADOUT' to start!";
+  display: block;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.3);
+  font-style: italic;
+  padding: 3rem 1rem;
+  font-size: 1.1rem;
+}
