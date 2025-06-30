@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "engines": {
     "node": "20.x",
-    "npm": "10.2.x"
+    "npm": "<11"
   },
   "description": "Refactored loadout randomizer with visual regression testing",
   "type": "module",
