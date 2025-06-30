@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin Wheel Test</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/casino-styles.css">
+    <link rel="stylesheet" href="styles/overlay-system.css">
+    <style>
+        body {
+            background: #1a1a2e;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #ff5722;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body class="casino-mode">
+    <h1>Spin Wheel Test</h1>
+    
+    <button onclick="testSpinWheel()">Test Spin Wheel</button>
+    <button onclick="testRouletteWheel()">Test Roulette Wheel</button>
+    
+    <div id="result"></div>
+    
+    <div id="overlay-root" class="overlay-root"></div>
+    
+    <script src="js/overlay-manager.js"></script>
+    <script>
+        async function testSpinWheel() {
+            console.log('Testing spin wheel...');
+            document.getElementById('result').innerHTML = 'Spinning...';
+            
+            try {
+                const result = await showSpinWheelOverlay();
+                console.log('Spin result:', result);
+                document.getElementById('result').innerHTML = `
+                    <h3>Spin Result:</h3>
+                    <p>Value: ${result.value}</p>
+                    <p>Spins: ${result.spins}</p>
+                    <p>Is Jackpot: ${result.isJackpot ? 'Yes' : 'No'}</p>
+                `;
+            } catch (error) {
+                console.error('Spin wheel error:', error);
+                document.getElementById('result').innerHTML = `Error: ${error.message}`;
+            }
+        }
+        
+        async function testRouletteWheel() {
+            console.log('Testing roulette wheel...');
+            document.getElementById('result').innerHTML = 'Spinning roulette...';
+            
+            try {
+                const result = await showClassRouletteOverlay();
+                console.log('Roulette result:', result);
+                document.getElementById('result').innerHTML = `
+                    <h3>Roulette Result:</h3>
+                    <p>Selected Class: ${result}</p>
+                `;
+            } catch (error) {
+                console.error('Roulette wheel error:', error);
+                document.getElementById('result').innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
