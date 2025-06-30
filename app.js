@@ -4961,24 +4961,98 @@ window.copyLoadoutImage = function (button) {
   button.innerHTML = "<span>⏳</span> Capturing...";
   button.disabled = true;
 
-  // Configure html2canvas for high quality casino mode capture
-  const options = {
-    backgroundColor: "#1a0f3d",
-    scale: 2,
-    useCORS: true,
-    allowTaint: true,
-    width: cardContent.offsetWidth,
-    height: cardContent.offsetHeight,
-    scrollX: 0,
-    scrollY: 0,
-    // Add some padding for the glow effects
-    x: -10,
-    y: -10,
-    windowWidth: cardContent.offsetWidth + 20,
-    windowHeight: cardContent.offsetHeight + 20,
+  // Ensure container and all children are fully visible
+  const originalStyles = {
+    opacity: cardContent.style.opacity,
+    display: cardContent.style.display,
+    visibility: cardContent.style.visibility,
+    minHeight: cardContent.style.minHeight
   };
 
-  html2canvas(cardContent, options)
+  // Force visibility
+  cardContent.style.opacity = '1';
+  cardContent.style.display = 'block';
+  cardContent.style.visibility = 'visible';
+  cardContent.style.minHeight = '1px';
+
+  // Find all images within the container
+  const images = cardContent.querySelectorAll('img');
+  const imagePromises = [];
+
+  // Create promises for each image to ensure they're loaded
+  images.forEach(img => {
+    if (!img.complete || img.naturalHeight === 0) {
+      const promise = new Promise((resolve, reject) => {
+        const tempImg = new Image();
+        tempImg.onload = () => {
+          // Ensure the original img element is properly sized
+          if (img.naturalHeight === 0 || img.naturalWidth === 0) {
+            img.style.minWidth = '1px';
+            img.style.minHeight = '1px';
+          }
+          resolve();
+        };
+        tempImg.onerror = () => {
+          console.warn('Failed to load image:', img.src);
+          // Set minimum dimensions to prevent canvas errors
+          img.style.minWidth = '50px';
+          img.style.minHeight = '50px';
+          resolve(); // Resolve anyway to continue with capture
+        };
+        tempImg.src = img.src;
+      });
+      imagePromises.push(promise);
+    }
+  });
+
+  // Wait for all images to load
+  Promise.all(imagePromises).then(() => {
+    // Force reflow to ensure dimensions are calculated
+    cardContent.offsetHeight; // This forces a reflow
+
+    // Check if container has valid dimensions
+    if (cardContent.offsetWidth === 0 || cardContent.offsetHeight === 0) {
+      console.error('Container has zero dimensions, forcing minimum size');
+      cardContent.style.minWidth = '300px';
+      cardContent.style.minHeight = '200px';
+      cardContent.style.display = 'block';
+    }
+
+    // Configure html2canvas for high quality casino mode capture
+    const options = {
+      backgroundColor: "#1a0f3d",
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      width: Math.max(cardContent.offsetWidth, 300),
+      height: Math.max(cardContent.offsetHeight, 200),
+      scrollX: 0,
+      scrollY: 0,
+      // Add some padding for the glow effects
+      x: -10,
+      y: -10,
+      windowWidth: Math.max(cardContent.offsetWidth + 20, 320),
+      windowHeight: Math.max(cardContent.offsetHeight + 20, 220),
+      onclone: (clonedDoc, element) => {
+        // Ensure cloned element is visible
+        element.style.opacity = '1';
+        element.style.display = 'block';
+        element.style.visibility = 'visible';
+        element.style.minHeight = '1px';
+        
+        // Fix any images in the cloned document
+        const clonedImages = element.querySelectorAll('img');
+        clonedImages.forEach(img => {
+          if (img.naturalWidth === 0 || img.naturalHeight === 0) {
+            img.style.minWidth = '50px';
+            img.style.minHeight = '50px';
+          }
+        });
+      }
+    };
+
+    html2canvas(cardContent, options)
     .then((canvas) => {
       canvas.toBlob(
         (blob) => {
@@ -5014,11 +5088,42 @@ window.copyLoadoutImage = function (button) {
     .catch((err) => {
       console.error("Screenshot failed:", err);
       button.innerHTML = "<span>❌</span> Failed";
+      
+      // Restore original styles
+      cardContent.style.opacity = originalStyles.opacity || '';
+      cardContent.style.display = originalStyles.display || '';
+      cardContent.style.visibility = originalStyles.visibility || '';
+      cardContent.style.minHeight = originalStyles.minHeight || '';
+      
       setTimeout(() => {
         button.innerHTML = originalText;
         button.disabled = false;
       }, UI_TIMING.BUTTON_FEEDBACK_DURATION);
+    })
+    .finally(() => {
+      // Always restore original styles after capture attempt
+      setTimeout(() => {
+        cardContent.style.opacity = originalStyles.opacity || '';
+        cardContent.style.display = originalStyles.display || '';
+        cardContent.style.visibility = originalStyles.visibility || '';
+        cardContent.style.minHeight = originalStyles.minHeight || '';
+      }, 100);
     });
+  }).catch(err => {
+    console.error("Failed to load images:", err);
+    button.innerHTML = "<span>❌</span> Failed";
+    
+    // Restore original styles
+    cardContent.style.opacity = originalStyles.opacity || '';
+    cardContent.style.display = originalStyles.display || '';
+    cardContent.style.visibility = originalStyles.visibility || '';
+    cardContent.style.minHeight = originalStyles.minHeight || '';
+    
+    setTimeout(() => {
+      button.innerHTML = originalText;
+      button.disabled = false;
+    }, 2000);
+  });
 };
 
 // Helper function to download image

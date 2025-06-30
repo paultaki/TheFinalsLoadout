@@ -21,23 +21,10 @@
       as="image"
       fetchpriority="high"
     />
-    <link
-      rel="preload"
-      href="images/light_silhouette.webp"
-      as="image"
-    />
-    <link
-      rel="preload"
-      href="images/medium_silhouette.webp"
-      as="image"
-    />
-    <link
-      rel="preload"
-      href="images/heavy_silhouette.webp"
-      as="image"
-    />
+    <link rel="preload" href="images/light_silhouette.webp" as="image" />
+    <link rel="preload" href="images/medium_silhouette.webp" as="image" />
+    <link rel="preload" href="images/heavy_silhouette.webp" as="image" />
     <link rel="preload" href="style.css" as="style" />
-    <link rel="preload" href="app.js" as="script" />
     <link rel="prefetch" href="images/light_active.webp" />
     <link rel="prefetch" href="images/medium_active.webp" />
     <link rel="prefetch" href="images/heavy_active.webp" />
@@ -163,7 +150,6 @@
         color: #fff;
         text-align: center;
         background: transparent;
-        overflow-x: hidden;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
@@ -176,28 +162,193 @@
         text-transform: uppercase;
       }
 
+      /* Sticky Navigation with Casino Mode styling */
       .main-nav {
         display: flex;
-        justify-content: center;
-        gap: 2rem;
-        padding: 1rem 0;
-        background: rgba(0, 0, 0, 0.2);
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.8) 0%,
+          rgba(123, 47, 227, 0.2) 50%,
+          rgba(0, 0, 0, 0.8) 100%
+        );
         backdrop-filter: blur(10px);
-        position: relative;
-        z-index: 500;
+        -webkit-backdrop-filter: blur(10px);
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 9999;
+        border-bottom: 1px solid rgba(123, 47, 227, 0.3);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        width: 100%;
+        box-sizing: border-box;
       }
 
+      /* Nav links container */
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+      }
+
+      /* Nav links styling */
       .main-nav a {
         color: #fff;
         text-decoration: none;
         padding: 0.5rem 1rem;
         border-radius: 4px;
-        transition: background-color 0.3s;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Casino Mode hover effect */
+      .main-nav a::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(30, 144, 255, 0.4),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .main-nav a:hover::before {
+        left: 100%;
       }
 
       .main-nav a:hover,
       .main-nav a.active {
         background-color: var(--neon-blue);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(30, 144, 255, 0.4);
+      }
+
+      /* Nav controls container */
+      .nav-controls {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-left: auto;
+      }
+
+      /* Nav button styling */
+      .nav-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Ensure SVG icons display properly */
+      .nav-button svg {
+        width: 20px;
+        height: 20px;
+        display: block;
+      }
+
+      /* Sound button specific styles */
+      .sound-toggle-button .sound-on {
+        display: block !important;
+      }
+
+      .sound-toggle-button .sound-off {
+        display: none !important;
+      }
+
+      .sound-toggle-button.muted .sound-on {
+        display: none !important;
+      }
+
+      .sound-toggle-button.muted .sound-off {
+        display: block !important;
+      }
+
+      /* Casino Mode button glow */
+      .nav-button::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(123, 47, 227, 0.6),
+          transparent
+        );
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s;
+      }
+
+      .nav-button:hover {
+        transform: scale(1.1);
+        border-color: rgba(123, 47, 227, 0.6);
+        box-shadow: 0 0 20px rgba(123, 47, 227, 0.4);
+      }
+
+      .nav-button:hover::after {
+        width: 100px;
+        height: 100px;
+      }
+
+      .nav-button.muted {
+        background: rgba(255, 68, 68, 0.6);
+        border-color: rgba(255, 68, 68, 0.4);
+      }
+
+      /* Mobile Navigation (≤640px) */
+      @media (max-width: 640px) {
+        .main-nav {
+          flex-direction: column;
+          padding: 0.75rem 1rem;
+          gap: 0.75rem;
+        }
+
+        .nav-links {
+          width: 100%;
+          justify-content: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .main-nav a {
+          font-size: 0.8rem;
+          padding: 0.4rem 0.8rem;
+        }
+
+        .nav-controls {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .nav-button {
+          width: 36px;
+          height: 36px;
+        }
       }
 
       .headerSection {
@@ -255,34 +406,77 @@
         transform: translateY(0);
       }
 
-      /* Desktop Audio Toggle Positioning */
+      .selection-info {
+        font-size: 1.4rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 1rem 0;
+      }
+
+      .selection-class {
+        font-weight: bold;
+      }
+
+      .selection-class.light {
+        color: #4fc3f7;
+      }
+
+      .selection-class.medium {
+        color: #ab47bc;
+      }
+
+      .selection-class.heavy {
+        color: #ff1744;
+      }
+
+      .selection-divider {
+        margin: 0 0.5rem;
+        opacity: 0.5;
+      }
+
+      .spin-count {
+        color: #ff6b35;
+        font-weight: bold;
+        font-size: 1.6rem;
+        text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+      }
+
+      /* Desktop styles */
       @media (min-width: 769px) {
-        .sound-toggle-button {
-          position: fixed !important;
-          top: 140px !important;
-          right: 16px !important;
-          z-index: 999 !important;
-        }
-        
-        /* Hide mobile sound toggle on desktop */
-        .mobile-sound-toggle {
+        /* Hide selection display when slot machine is visible or any overlay is active */
+        body.slot-machine-active #selection-display,
+        body.overlay-active #selection-display {
           display: none !important;
         }
-
-        .sound-toggle-button:hover {
-          background: rgba(0, 0, 0, 0.8);
-          border-color: rgba(255, 255, 255, 0.4);
-          transform: scale(1.05);
+        
+        /* Hide slot status text on desktop to prevent duplicate */
+        #slot-status-text,
+        .slot-status-bar {
+          display: none !important;
+        }
+        
+        /* Large spin button for desktop */
+        .main-spin-button {
+          width: auto !important;
+          min-width: 280px !important;
+          height: auto !important;
+          padding: 1.2rem 3rem !important;
+          font-size: 2rem !important;
+          font-weight: 800 !important;
+          letter-spacing: 0.1em !important;
+          border-radius: 12px !important;
+          box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4) !important;
+          margin: 2rem auto !important;
         }
 
-        .sound-toggle-button.muted {
-          background: rgba(255, 68, 68, 0.7);
-          border-color: rgba(255, 68, 68, 0.4);
+        .main-spin-button:hover {
+          transform: scale(1.08) !important;
+          box-shadow: 0 10px 35px rgba(255, 107, 53, 0.6) !important;
         }
 
-        .sound-toggle-button.muted:hover {
-          background: rgba(255, 68, 68, 0.8);
-          border-color: rgba(255, 68, 68, 0.6);
+        .main-spin-button:active {
+          transform: scale(1.02) !important;
         }
       }
 
@@ -344,132 +538,14 @@
         letter-spacing: 0.5px;
       }
 
-      /* Base Toggle Button Styles */
-      .sound-toggle-button {
-        position: fixed;
-        right: 16px;
-        top: 280px;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: rgba(0, 0, 0, 0.7);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        color: #fff;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        z-index: 1000;
-        backdrop-filter: blur(10px);
-      }
-
-      .sound-toggle-button:hover {
-        background: rgba(0, 0, 0, 0.8);
-        border-color: rgba(255, 255, 255, 0.4);
-        transform: scale(1.05);
-      }
-
-      .sound-toggle-button.muted {
-        background: rgba(255, 68, 68, 0.7);
-        border-color: rgba(255, 68, 68, 0.4);
-      }
-
-      .sound-toggle-button.muted:hover {
-        background: rgba(255, 68, 68, 0.8);
-        border-color: rgba(255, 68, 68, 0.6);
-      }
-
-      .filter-toggle-button {
-        position: fixed;
-        right: 16px;
-        top: 80px;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: rgba(0, 0, 0, 0.7);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        color: #fff;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        z-index: 1001;
-        backdrop-filter: blur(10px);
-      }
-
-      .filter-toggle-button:hover {
-        background: rgba(0, 0, 0, 0.8);
-        border-color: rgba(255, 255, 255, 0.4);
-        transform: scale(1.05);
-      }
-
-      .filter-toggle-button svg {
-        width: 20px;
-        height: 20px;
-      }
-      
-      /* Force filter button visibility on all devices */
-      #filter-toggle {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-      }
-
-      /* Mobile Sound Toggle Styles */
-      .mobile-sound-toggle {
-        display: none !important;
-      }
+      /* Old fixed position button styles removed - buttons now in nav */
 
       /* Mobile Redesign - Clean & Symmetric */
       @media (max-width: 768px) {
-        /* Position mobile sound toggle in header */
-        .mobile-sound-toggle {
-          display: flex !important;
-          position: absolute !important;
-          top: 10px !important;
-          right: 10px !important;
-          width: 40px !important;
-          height: 40px !important;
-          z-index: 1001 !important;
-          background: rgba(0, 0, 0, 0.7) !important;
-          border: 2px solid rgba(255, 255, 255, 0.2) !important;
-          border-radius: 50% !important;
-          color: #fff !important;
-          align-items: center !important;
-          justify-content: center !important;
-          cursor: pointer !important;
-          transition: all 0.3s ease !important;
-          backdrop-filter: blur(10px) !important;
-        }
-
-        .mobile-sound-toggle:hover {
-          background: rgba(0, 0, 0, 0.8) !important;
-          border-color: rgba(255, 255, 255, 0.4) !important;
-          transform: scale(1.05) !important;
-        }
-
-        .mobile-sound-toggle.muted {
-          background: rgba(255, 68, 68, 0.7) !important;
-          border-color: rgba(255, 68, 68, 0.4) !important;
-        }
-
-        .mobile-sound-toggle.muted:hover {
-          background: rgba(255, 68, 68, 0.8) !important;
-          border-color: rgba(255, 68, 68, 0.6) !important;
-        }
-
-
-        /* Ensure header has relative positioning for absolute child */
-        .headerSection {
-          position: relative;
-        }
         /* Reset and base spacing */
         body {
           margin: 0;
           padding: 0;
-          overflow-x: hidden;
         }
 
         .container {
@@ -499,11 +575,35 @@
         }
 
         .subTitle-mobile {
-          font-size: 14px;
-          font-weight: 600;
-          margin: 8px 0;
-          text-transform: none;
-          letter-spacing: 0.5px;
+          font-size: 2.2rem;
+          font-weight: 900;
+          margin: 1rem 0 0.5rem 0;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: #FFFFFF;
+          text-shadow: 
+            0 0 30px rgba(255, 183, 0, 0.9),
+            0 0 15px rgba(255, 183, 0, 0.8),
+            0 3px 6px rgba(0, 0, 0, 1),
+            2px 2px 0 #000;
+          font-family: "Bebas Neue", sans-serif;
+          -webkit-text-stroke: 1px rgba(255, 183, 0, 0.5);
+        }
+        
+        /* Ensure season update is visible */
+        .season-update-notice {
+          font-size: 1.3rem;
+          font-weight: 700;
+          color: #00D4FF;
+          margin: 0.5rem 0 1.5rem 0;
+          text-shadow: 
+            0 0 25px rgba(0, 212, 255, 0.9),
+            0 0 10px rgba(0, 212, 255, 0.8),
+            0 3px 6px rgba(0, 0, 0, 1),
+            1px 1px 0 #000;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          font-family: "Bebas Neue", sans-serif;
         }
 
         .countdown-mobile {
@@ -790,46 +890,7 @@
           background: rgba(255, 255, 255, 0.15);
         }
 
-        /* Mobile Toggle Button Adjustments - Position below nav bar */
-        .filter-toggle-button,
-        #filter-toggle {
-          display: flex !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-          top: 60px !important;  /* Below navigation bar */
-          right: 70px !important;
-          z-index: 10002 !important;
-          background: rgba(0, 0, 0, 0.8) !important;
-          border: 2px solid rgba(255, 255, 255, 0.3) !important;
-          width: 40px !important;
-          height: 40px !important;
-          position: fixed !important;
-          border-radius: 50% !important;
-          align-items: center !important;
-          justify-content: center !important;
-          cursor: pointer !important;
-          transition: all 0.3s ease !important;
-          backdrop-filter: blur(10px) !important;
-          color: #fff !important;
-        }
-        
-        .filter-toggle-button svg,
-        #filter-toggle svg {
-          width: 18px !important;
-          height: 18px !important;
-          color: #fff !important;
-          fill: none !important;
-          stroke: #fff !important;
-        }
-        
-        .sound-toggle-button {
-          top: 60px !important;  /* Below navigation bar */
-          right: 10px !important;
-          z-index: 10001 !important;
-          width: 40px !important;
-          height: 40px !important;
-        }
-
+        /* Buttons now in nav bar - removed old positioning */
 
         /* slot-machine-wrapper removed - content now generated dynamically */
 
@@ -844,7 +905,7 @@
           background: transparent !important;
           box-shadow: none !important;
         }
-        
+
         /* #output now handles the wrapper styling */
         #output {
           padding: 8px 15px !important;
@@ -899,16 +960,7 @@
 
       /* Promotional Flag for New Filters */
       .promo-flag {
-        position: fixed;
-        top: 70px;
-        right: 75px;
-        z-index: 10000;
-        animation: flagWave 2s ease-in-out infinite;
-        pointer-events: none;
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        transform-origin: center center;
+        display: none !important; /* Hidden since filter button is now in nav */
       }
 
       .flag-content {
@@ -984,9 +1036,14 @@
 
     <!-- Full Styles -->
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles/casino-styles.css" />
+    <link rel="stylesheet" href="styles/overlay-system.css" />
+    <link rel="stylesheet" href="styles/slot-machine.css" />
+    <link rel="stylesheet" href="styles/history-cards.css" />
+    <link rel="stylesheet" href="css/filters.css" />
   </head>
 
-  <body>
+  <body class="casino-mode">
     <!-- Scroll Progress Bar -->
     <div class="scroll-progress-bar" id="scrollProgressBar"></div>
 
@@ -1029,38 +1086,79 @@
     <audio id="spinStart" src="sounds/start-spin.mp3" preload="auto"></audio>
     <audio id="columnStop" src="sounds/click.mp3" preload="auto"></audio>
     <audio id="finalLock" src="sounds/final-sound.mp3" preload="auto"></audio>
+    <audio
+      id="celebrationSound"
+      src="sounds/pop-pour-perform.mp3"
+      preload="auto"
+    ></audio>
 
     <!-- Navigation -->
     <nav class="main-nav">
-      <a href="ragequit/index.html">New Rage Quit</a>
-      <a href="patch-notes/index.html">Patch Notes</a>
-      <a href="feedback/index.html">Feedback</a>
+      <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+      <div class="nav-links">
+        <a href="ragequit/index.html">NEW RAGE QUIT</a>
+        <a href="patch-notes/index.html">PATCH NOTES</a>
+        <a href="#meta">META WEAPONS</a>
+        <a href="feedback/index.html">FEEDBACK</a>
+      </div>
+      <div class="nav-controls">
+        <!-- Filter Toggle Button -->
+        <button
+          id="filter-toggle"
+          class="filter-toggle-button nav-button"
+          aria-label="Toggle filters"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polygon
+              points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+            ></polygon>
+          </svg>
+        </button>
+        <!-- Sound Toggle Button (moved here) -->
+        <button
+          id="sound-toggle"
+          class="sound-toggle-button nav-button"
+          aria-label="Toggle sound"
+        >
+          <svg
+            class="sound-on"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path
+              d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
+            ></path>
+          </svg>
+          <svg
+            class="sound-off"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+      </div>
     </nav>
-
-    <!-- Maintenance Notice -->
-    <div class="maintenance-notice">
-      <p>Heads up: This site's currently under maintenance. Thanks for your patience—I'm a one-man show keeping the chaos running.</p>
-    </div>
-
-    <!-- Filter Toggle Button -->
-    <button
-      id="filter-toggle"
-      class="filter-toggle-button"
-      aria-label="Toggle filters"
-    >
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-      </svg>
-    </button>
 
     <!-- New Filters Promotional Flag -->
     <div id="filters-promo-flag" class="promo-flag">
@@ -1070,182 +1168,242 @@
       </div>
     </div>
 
-    <!-- Sound Toggle Button -->
-    <button
-      id="sound-toggle"
-      class="sound-toggle-button"
-      aria-label="Toggle sound"
-    >
-      <svg
-        class="sound-on"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-        <path
-          d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
-        ></path>
-      </svg>
-      <svg
-        class="sound-off"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        style="display: none"
-      >
-        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-        <line x1="23" y1="9" x2="17" y2="15"></line>
-        <line x1="17" y1="9" x2="23" y2="15"></line>
-      </svg>
-    </button>
-
     <!-- Filter Panel Overlay -->
     <div id="filter-panel-overlay" class="filter-panel-overlay"></div>
 
     <!-- Slide-out Filter Panel -->
     <div id="filter-panel" class="filter-panel slide-out">
-      <div class="panel-header">
-        <h3>Filters</h3>
+      <!-- Header Row -->
+      <div class="filter-header">
+        <h3 class="filter-title">FILTERS</h3>
         <button
           id="close-filter-panel"
-          class="close-panel"
+          class="filter-close"
           aria-label="Close filters"
         >
-          ×
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </button>
       </div>
 
-      <!-- Tab Navigation -->
-      <div class="filter-tabs">
-        <button class="tab-button active" data-tab="weapons">Weapons</button>
-        <button class="tab-button" data-tab="specializations">Specs</button>
-        <button class="tab-button" data-tab="gadgets">Gadgets</button>
+      <!-- Tab Bar -->
+      <div class="filter-tabs" role="tablist">
+        <button
+          class="tab-button active"
+          data-tab="weapons"
+          role="tab"
+          aria-selected="true"
+          aria-controls="weapons-tab"
+        >
+          Weapons
+        </button>
+        <button
+          class="tab-button"
+          data-tab="specializations"
+          role="tab"
+          aria-selected="false"
+          aria-controls="specializations-tab"
+        >
+          Specs
+        </button>
+        <button
+          class="tab-button"
+          data-tab="gadgets"
+          role="tab"
+          aria-selected="false"
+          aria-controls="gadgets-tab"
+        >
+          Gadgets
+        </button>
       </div>
 
-      <!-- Search and Class Filter -->
-      <div class="filter-controls">
+      <!-- Search Bar -->
+      <div class="filter-search-container">
         <input
           type="text"
           id="filter-search"
           placeholder="Search weapons..."
-          class="search-input"
+          class="filter-search-input"
+          aria-label="Search items"
         />
-        <div class="class-filter-buttons">
-          <button class="class-filter active" data-class="all">All</button>
-          <button class="class-filter" data-class="light">Light</button>
-          <button class="class-filter" data-class="medium">Medium</button>
-          <button class="class-filter" data-class="heavy">Heavy</button>
-        </div>
+      </div>
 
-        <!-- Class Selection Filters -->
-        <div class="class-exclusion-section">
-          <h4>Select Classes to Include in Random Selection</h4>
-          <div class="class-exclusion-checkboxes">
-            <label class="exclusion-checkbox">
-              <input
-                type="checkbox"
-                id="exclude-light"
-                data-exclude-class="light"
-                checked
-              />
-              <span class="checkbox-custom"></span>
-              <span class="class-label light">LIGHT</span>
-            </label>
-            <label class="exclusion-checkbox">
-              <input
-                type="checkbox"
-                id="exclude-medium"
-                data-exclude-class="medium"
-                checked
-              />
-              <span class="checkbox-custom"></span>
-              <span class="class-label medium">MEDIUM</span>
-            </label>
-            <label class="exclusion-checkbox">
-              <input
-                type="checkbox"
-                id="exclude-heavy"
-                data-exclude-class="heavy"
-                checked
-              />
-              <span class="checkbox-custom"></span>
-              <span class="class-label heavy">HEAVY</span>
-            </label>
-          </div>
+      <!-- Class Chips -->
+      <div class="filter-class-chips">
+        <button class="class-filter class-chip active" data-class="all">
+          ALL
+        </button>
+        <button class="class-filter class-chip light-chip" data-class="light">
+          LIGHT
+        </button>
+        <button class="class-filter class-chip medium-chip" data-class="medium">
+          MEDIUM
+        </button>
+        <button class="class-filter class-chip heavy-chip" data-class="heavy">
+          HEAVY
+        </button>
+      </div>
+
+      <!-- Class Include Card -->
+      <div class="class-include-card">
+        <h4 class="include-card-title">
+          SELECT CLASSES TO INCLUDE IN RANDOM SELECTION
+        </h4>
+        <div class="class-include-checkboxes">
+          <label class="class-include-checkbox">
+            <input
+              type="checkbox"
+              id="exclude-light"
+              data-exclude-class="light"
+              checked
+            />
+            <span class="checkbox-box light-checkbox"></span>
+            <span class="checkbox-label">LIGHT</span>
+          </label>
+          <label class="class-include-checkbox">
+            <input
+              type="checkbox"
+              id="exclude-medium"
+              data-exclude-class="medium"
+              checked
+            />
+            <span class="checkbox-box medium-checkbox"></span>
+            <span class="checkbox-label">MEDIUM</span>
+          </label>
+          <label class="class-include-checkbox">
+            <input
+              type="checkbox"
+              id="exclude-heavy"
+              data-exclude-class="heavy"
+              checked
+            />
+            <span class="checkbox-box heavy-checkbox"></span>
+            <span class="checkbox-label">HEAVY</span>
+          </label>
         </div>
       </div>
 
       <!-- Filter Content Container -->
       <div class="filter-content-container">
         <!-- Content Area - Weapons Tab (Active by Default) -->
-        <div class="tab-content active" id="weapons-tab">
+        <div class="tab-content active" id="weapons-tab" role="tabpanel">
           <!-- Light Weapons Section -->
-          <div class="item-category light-category">
-            <div class="category-header">
-              <h3>Light Class Weapons</h3>
-              <button class="category-toggle">▼</button>
-            </div>
-            <div class="item-grid" id="light-weapons-grid">
-              <!-- Select All option as first item -->
-              <label class="item-checkbox select-all-checkbox">
-                <input
-                  type="checkbox"
-                  checked
-                  data-type="weapon-selectall"
-                  data-class="light"
-                />
-                <span><strong>Select All Light Weapons</strong></span>
-              </label>
-              <!-- Individual weapons will be populated here by JavaScript -->
-            </div>
-          </div>
-
-          <!-- Medium Weapons Section with Select All -->
-          <div class="item-category medium-category">
-            <div class="category-header">
-              <h3>Medium Class Weapons</h3>
-              <button class="category-toggle">▼</button>
-            </div>
-            <div class="item-grid" id="medium-weapons-grid">
-              <!-- Select All option as first item -->
-              <label class="item-checkbox select-all-checkbox">
-                <input
-                  type="checkbox"
-                  checked
-                  data-type="weapon-selectall"
-                  data-class="medium"
-                />
-                <span><strong>Select All Medium Weapons</strong></span>
-              </label>
-              <!-- Individual weapons will be populated here by JavaScript -->
+          <div class="filter-category-card">
+            <button class="category-header" aria-expanded="true">
+              <span class="category-title">LIGHT WEAPONS</span>
+              <span class="category-caret">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="category-content">
+              <div class="item-list" id="light-weapons-grid">
+                <!-- Select All option as first item -->
+                <label class="item-checkbox select-all-checkbox">
+                  <input
+                    type="checkbox"
+                    checked
+                    data-type="weapon-selectall"
+                    data-class="light"
+                  />
+                  <span class="checkbox-box"></span>
+                  <span class="checkbox-label"
+                    ><strong>Select All Light Weapons</strong></span
+                  >
+                </label>
+                <!-- Individual weapons will be populated here by JavaScript -->
+              </div>
             </div>
           </div>
 
-          <!-- Heavy Weapons Section with Select All -->
-          <div class="item-category heavy-category">
-            <div class="category-header">
-              <h3>Heavy Class Weapons</h3>
-              <button class="category-toggle">▼</button>
+          <!-- Medium Weapons Section -->
+          <div class="filter-category-card">
+            <button class="category-header" aria-expanded="true">
+              <span class="category-title">MEDIUM WEAPONS</span>
+              <span class="category-caret">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="category-content">
+              <div class="item-list" id="medium-weapons-grid">
+                <!-- Select All option as first item -->
+                <label class="item-checkbox select-all-checkbox">
+                  <input
+                    type="checkbox"
+                    checked
+                    data-type="weapon-selectall"
+                    data-class="medium"
+                  />
+                  <span class="checkbox-box"></span>
+                  <span class="checkbox-label"
+                    ><strong>Select All Medium Weapons</strong></span
+                  >
+                </label>
+                <!-- Individual weapons will be populated here by JavaScript -->
+              </div>
             </div>
-            <div class="item-grid" id="heavy-weapons-grid">
-              <!-- Select All option as first item -->
-              <label class="item-checkbox select-all-checkbox">
-                <input
-                  type="checkbox"
-                  checked
-                  data-type="weapon-selectall"
-                  data-class="heavy"
-                />
-                <span><strong>Select All Heavy Weapons</strong></span>
-              </label>
-              <!-- Individual weapons will be populated here by JavaScript -->
+          </div>
+
+          <!-- Heavy Weapons Section -->
+          <div class="filter-category-card">
+            <button class="category-header" aria-expanded="true">
+              <span class="category-title">HEAVY WEAPONS</span>
+              <span class="category-caret">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="category-content">
+              <div class="item-list" id="heavy-weapons-grid">
+                <!-- Select All option as first item -->
+                <label class="item-checkbox select-all-checkbox">
+                  <input
+                    type="checkbox"
+                    checked
+                    data-type="weapon-selectall"
+                    data-class="heavy"
+                  />
+                  <span class="checkbox-box"></span>
+                  <span class="checkbox-label"
+                    ><strong>Select All Heavy Weapons</strong></span
+                  >
+                </label>
+                <!-- Individual weapons will be populated here by JavaScript -->
+              </div>
             </div>
           </div>
         </div>
@@ -1385,50 +1543,18 @@
 
       <!-- Filter Action Buttons -->
       <div class="filter-actions">
-        <button id="reset-filters" class="reset-button">Reset All</button>
-        <button id="apply-filters" class="apply-button">Apply Filters</button>
+        <button id="reset-filters" class="filter-action-btn reset-btn">
+          RESET ALL
+        </button>
+        <button id="apply-filters" class="filter-action-btn apply-btn">
+          APPLY FILTERS
+        </button>
       </div>
     </div>
 
     <!-- Header Section -->
     <section class="headerSection">
       <div class="container">
-        <!-- Mobile Sound Toggle in Header -->
-        <button
-          id="mobile-sound-toggle"
-          class="sound-toggle-button mobile-sound-toggle"
-          aria-label="Toggle sound"
-        >
-          <svg
-            class="sound-on"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path
-              d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
-            ></path>
-          </svg>
-          <svg
-            class="sound-off"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            style="display: none"
-          >
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <line x1="23" y1="9" x2="17" y2="15"></line>
-            <line x1="17" y1="9" x2="23" y2="15"></line>
-          </svg>
-        </button>
-
         <img
           src="images/the-finals-logo.webp"
           alt="The Finals"
@@ -1437,54 +1563,16 @@
           height="auto"
         />
         <h1 class="subTitle-mobile">Random Loadout Generator</h1>
-        <p class="season-update-notice">Season 7 updates coming later today</p>
+        <p class="season-update-notice">Season 7</p>
       </div>
     </section>
 
     <!-- Main Content -->
     <main class="container">
       <div class="selection-container">
-        <div class="class-selection">
-          <div class="btnRow">
-            <img
-              id="light-class"
-              class="class-button"
-              src="images/light_silhouette.webp"
-              data-active="images/light_active.webp"
-              data-default="images/light_silhouette.webp"
-              data-class="Light"
-              alt="Light Class Loadouts"
-              width="80"
-              height="80"
-            />
-            <img
-              id="medium-class"
-              class="class-button"
-              src="images/medium_silhouette.webp"
-              data-active="images/medium_active.webp"
-              data-default="images/medium_silhouette.webp"
-              data-class="Medium"
-              alt="Medium Class Loadouts"
-              width="80"
-              height="80"
-            />
-            <img
-              id="heavy-class"
-              class="class-button"
-              src="images/heavy_silhouette.webp"
-              data-active="images/heavy_active.webp"
-              data-default="images/heavy_silhouette.webp"
-              data-class="Heavy"
-              alt="Heavy Class Loadouts"
-              width="80"
-              height="80"
-            />
-          </div>
-        </div>
-
         <div class="spin-control">
           <button id="main-spin-button" class="main-spin-button">
-            <span class="spin-text">SPIN</span>
+            <span class="spin-text">GENERATE LOADOUT</span>
             <div class="spin-energy"></div>
           </button>
           <div class="spin-status" id="spinStatus"></div>
@@ -1497,54 +1585,7 @@
           </div>
         </div>
 
-        <div id="roulette-container" class="roulette-container hidden">
-          <div id="class-roulette" class="roulette-section">
-            <h2 class="roulette-title">SELECTING CLASS...</h2>
-            <div class="class-roulette-wheel">
-              <div class="class-option light-option" data-class="Light">
-                <img
-                  src="images/light_active.webp"
-                  alt="Light"
-                  width="80"
-                  height="80"
-                  loading="lazy"
-                />
-                <span>LIGHT</span>
-              </div>
-              <div class="class-option medium-option" data-class="Medium">
-                <img
-                  src="images/medium_active.webp"
-                  alt="Medium"
-                  width="80"
-                  height="80"
-                  loading="lazy"
-                />
-                <span>MEDIUM</span>
-              </div>
-              <div class="class-option heavy-option" data-class="Heavy">
-                <img
-                  src="images/heavy_active.webp"
-                  alt="Heavy"
-                  width="80"
-                  height="80"
-                  loading="lazy"
-                />
-                <span>HEAVY</span>
-              </div>
-            </div>
-          </div>
-
-          <div id="spin-roulette" class="roulette-section">
-            <h2 class="roulette-title">CHOOSING SPINS...</h2>
-            <div class="spin-roulette-wheel">
-              <div class="spin-option" data-spins="1"><span>1</span></div>
-              <div class="spin-option" data-spins="2"><span>2</span></div>
-              <div class="spin-option" data-spins="3"><span>3</span></div>
-              <div class="spin-option" data-spins="4"><span>4</span></div>
-              <div class="spin-option" data-spins="5"><span>5</span></div>
-            </div>
-          </div>
-        </div>
+        <div id="roulette-container" class="roulette-container hidden"></div>
 
         <div id="output">
           <!-- Slot machine content will be dynamically generated here -->
@@ -1590,12 +1631,14 @@
       </div>
     </footer>
 
-    <!-- Scripts - restored to working order -->
-    <script defer src="performance-utils.js"></script>
-    <script defer src="roulette-animations.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script defer src="app.js"></script>
-    <script defer src="performance-init.js"></script>
+    <!-- Scripts -->
+    <!-- ES Modules load in order -->
+    <script src="js/roulette-animations.js"></script>
+    <script src="js/overlay-manager.js"></script>
+    <script type="module" src="app.js"></script>
+
+    <!-- Non-module scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
       // FAQ Toggle Script
       document.addEventListener("DOMContentLoaded", function () {
@@ -1737,7 +1780,6 @@
     <!-- Mobile Enhancements -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-
         // Hide selection display on page load
         const selectionDisplay = document.getElementById("selection-display");
         if (selectionDisplay) {
@@ -2147,5 +2189,12 @@
         }, 1000);
       });
     </script>
+
+    <!-- Global Overlay Container -->
+    <div id="overlay-root" class="overlay-root"></div>
+    
+    <!-- New Slot Machine Implementation -->
+    <script src="js/slot-machine.js"></script>
+    <script src="js/slot-integration.js"></script>
   </body>
 </html>
