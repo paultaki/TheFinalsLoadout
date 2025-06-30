@@ -1,0 +1,228 @@
+@import url("styles/variables.css");
+
+/* 
+ * DUAL STYLE SYSTEM IN EFFECT
+ * This file contains shared layout and structure styles only
+ * Colors come from zone-specific CSS files:
+ * - Casino pages: variables-casino.css + casino-styles.css
+ * - Data pages: variables-data.css + data-styles.css
+ */
+
+:root {
+  /* Only keep typography and non-color variables here */
+  --border-subtle: var(--bg-hover); /* Uses zone-specific hover color */
+  --base-font: "Inter", sans-serif;
+  --impact-font: "Bebas Neue", sans-serif;
+}
+
+/* DUAL STYLE SYSTEM - Use appropriate variables for each zone */
+/* Casino Zone (/, /ragequit/): Use var(--finals-gold), var(--finals-orange), etc. */
+/* Data Zone (/patch-notes/, /meta-weapons/): Use var(--accent-primary), var(--text-primary), etc. */
+/* Example: background: #0a0a0a; => background: var(--bg-primary); */
+/* Example: color: #ffd700; => color: var(--finals-gold); (casino) or var(--accent-primary); (data) */
+/* Example: background: #1a1a1a; => background: var(--bg-card); */
+/* Example: color: #ffffff; => color: var(--text-primary); */
+/* Example: color: #666666; => color: var(--text-muted); */
+/* Example: color: #b3b3b3; => color: var(--text-secondary); */
+/* Example: color: #22c55e or #44ff44; => color: var(--accent-success); */
+/* Example: color: #ef4444 or #ff4444; => color: var(--accent-danger); */
+/* Example: color: #3b82f6 or #2563eb; => color: var(--accent-info); */
+
+/* Global Centering Styles */
+body {
+  text-align: center;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+/* Ensure all main content sections are centered */
+.selection-container,
+.class-selection,
+.spin-control,
+.btnRow,
+#output,
+.loadout-history {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0 auto;
+}
+
+/* Center all buttons */
+button {
+  margin: 0 auto;
+  display: block;
+}
+
+/* Center all images */
+img {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Center all headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-align: center;
+  margin: 0 auto;
+}
+
+/* Center all paragraphs */
+p {
+  text-align: center;
+  margin: 0 auto;
+}
+
+/* Center the footer */
+footer {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.footerSection .container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.footerRow {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile slot machine fixes */
+@media (max-width: 768px) {
+  /* 1 center the parent */
+  #output {
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-right: 0; /* kills the rogue negative value */
+    overflow-x: hidden; /* hides any fringe animation bleed */
+  }
+
+  /* 2 re‑box the wrapper */
+  .slot-machine-wrapper {
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    overflow: hidden; /* clips both axes */
+  }
+
+  /* 3 row of five */
+  .items-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 0;
+  }
+
+  /* 4 freeze card size */
+  .items-container > * {
+    flex: 0 1 calc((100% - 4 * 8px) / 5);
+    width: auto;
+    max-width: 80px;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  /* 5 ditch vertical scroll bar */
+  .slot-machine-wrapper {
+    overflow-y: hidden;
+  }
+}
+
+/* --- SLOT MACHINE FLEX SHRINK FIX --- */
+.item-container {
+  flex: 0 1 150px;
+}
+
+@media (max-width: 768px) {
+  .item-container {
+    flex: 0 1 60px;
+  }
+}
+
+/* If there are any other slot machine flex rules using calc() for width, allow shrink: */
+.items-container > .item-container {
+  flex: 0 1 calc((100% - 20px) / 5) !important;
+}
+
+/* ——— Slimmer history cards ——— */
+.history-entry {
+  /* shrink overall footprint */
+  min-height: 72px; /* was 112px */
+  padding: 8px 10px; /* was 14px */
+  width: 100%;
+  max-width: 100%;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure history section is visible */
+#loadout-history {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#history-list {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* hide all item icons to make cards text-only */
+.history-entry .item-icon {
+  display: none;
+}
+
+/* tighten inner layout */
+.loadout-item {
+  gap: 4px;
+  padding: 2px 4px;
+  background: transparent;
+}
+.loadout-details {
+  margin-bottom: 6px;
+}
+
+/* horizontal buttons */
+.loadout-actions {
+  /* already flex but stack on mobile */
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+}
+.loadout-actions button {
+  /* equal-width buttons */
+  flex: 1 1 48%;
+  font-size: 12px;
+  padding: 6px 8px;
+}
