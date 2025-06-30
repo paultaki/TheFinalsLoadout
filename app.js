@@ -1,3 +1,43 @@
+// Import animation constants
+import {
+  SOUND_VOLUMES,
+  ANIMATION_CONSTANTS,
+  UI_TIMING,
+  CELEBRATION_EFFECTS,
+  ROAST_TIMING,
+  EXPORT_SETTINGS,
+  SLOT_TIMING,
+} from "./src/core/Constants.js";
+
+import {
+  startSlotAnimation,
+  addScreenShake,
+  createLockInParticleExplosion,
+  animateCounterTo,
+} from "./src/animation/AnimationEngine.js";
+
+import { SlotMachine } from "./src/components/slots/SlotMachine.js";
+
+// Inline waitForGlobal function to avoid ES6 module issues
+function waitForGlobal(
+  name,
+  timeout = ANIMATION_CONSTANTS.WAIT_FOR_GLOBAL_TIMEOUT
+) {
+  return new Promise((resolve, reject) => {
+    const start = performance.now();
+    const id = setInterval(() => {
+      if (window[name]) {
+        clearInterval(id);
+        return resolve(window[name]);
+      }
+      if (performance.now() - start > timeout) {
+        clearInterval(id);
+        return reject(new Error(`${name} never loaded`));
+      }
+    }, ANIMATION_CONSTANTS.WAIT_FOR_GLOBAL_INTERVAL);
+  });
+}
+
 // Counter loading functionality
 async function loadCounter() {
   try {
@@ -46,7 +86,7 @@ const isMobile =
 
 // Global state
 const state = {
-  selectedClass: null,
+  selectedClass: null, // Deprecated - class selection removed
   isSpinning: false,
   currentSpin: 1,
   totalSpins: 0,
@@ -58,11 +98,34 @@ const state = {
       : localStorage.getItem("soundEnabled") !== "false", // Default to true
   isMobile: isMobile,
   sidebarOpen: false,
-  isRouletteAnimating: false, // Add flag to track roulette animation
+  // isRouletteAnimating: false, // Removed - roulette system deprecated
 };
 
 // Make state globally accessible
 window.state = state;
+
+// Helper function to get available classes based on filters
+function getAvailableClasses() {
+  const allClasses = ["Light", "Medium", "Heavy"];
+  const availableClasses = [];
+  
+  // Check localStorage for exclusions (checked = excluded)
+  ["light", "medium", "heavy"].forEach((className) => {
+    const isExcluded = localStorage.getItem(`exclude-${className}`) === "true";
+    if (!isExcluded) {
+      const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
+      availableClasses.push(capitalizedClass);
+    }
+  });
+  
+  // If all classes are excluded, use all classes as fallback
+  const finalClasses = availableClasses.length > 0 ? availableClasses : allClasses;
+  
+  return finalClasses;
+}
+
+// Make getAvailableClasses globally accessible
+window.getAvailableClasses = getAvailableClasses;
 
 console.log("Initial state:", state);
 console.log(
@@ -120,27 +183,7 @@ let classButtons;
 let spinSelection;
 let outputDiv;
 
-// Physics constants for animations
-const PHYSICS = {
-  ACCELERATION: 8000, // Increased for more dramatic start
-  MAX_VELOCITY: 5000, // Higher max speed for blur effect
-  DECELERATION: -3500, // Smoother deceleration
-  BOUNCE_DAMPENING: 0.4, // More pronounced bounce
-  ITEM_HEIGHT: 188,
-  TIMING: {
-    REGULAR_SPIN: {
-      COLUMN_DELAY: 250, // 0.25s between stops for regular spins
-      BASE_DURATION: 800,
-      DECELERATION_TIME: 400,
-    },
-    FINAL_SPIN: {
-      COLUMN_DELAY: 200, // Base delay (not used with explicit stops)
-      BASE_DURATION: 2500,
-      DECELERATION_TIME: 800,
-      COLUMN_STOPS: [3000, 4000, 5200, 6000, 7000], // More dramatic timing for final spin
-    },
-  },
-};
+// Physics constants now imported from Constants.js
 
 const loadouts = {
   Light: {
@@ -258,19 +301,19 @@ function getFilteredLoadouts() {
   // Create a deep copy of the original loadouts
   const filteredLoadouts = JSON.parse(JSON.stringify(loadouts));
 
-  // Always use the new filter system
+  // Always use the new filter system - look in filter panel
   let checkedWeapons = Array.from(
-    document.querySelectorAll('.item-grid input[data-type="weapon"]:checked')
+    document.querySelectorAll('#filter-panel input[data-type="weapon"]:checked')
   ).map((checkbox) => checkbox.value);
 
   let checkedSpecializations = Array.from(
     document.querySelectorAll(
-      '.item-grid input[data-type="specialization"]:checked'
+      '#filter-panel input[data-type="specialization"]:checked'
     )
   ).map((checkbox) => checkbox.value);
 
   let checkedGadgets = Array.from(
-    document.querySelectorAll('.item-grid input[data-type="gadget"]:checked')
+    document.querySelectorAll('#filter-panel input[data-type="gadget"]:checked')
   ).map((checkbox) => checkbox.value);
 
   console.log("🔸 Filtered weapons:", checkedWeapons);
@@ -448,442 +491,40 @@ const getUniqueGadgets = (classType, loadout) => {
   return selectedGadgets;
 };
 
-function createItemContainer(items, winningItem = null, isGadget = false) {
-  if (isGadget) {
-    // For gadgets, the first item in the array should be the winner (displayed in center)
-    // The animation will be set up to land on the first item (index 0)
-    console.log(
-      `🎰 Creating gadget container with winner: "${items[0]}" and full sequence:`,
-      items
-    );
-    return items
-      .map(
-        (item, index) => `
-        <div class="itemCol ${
-          index === 0 ? "winner" : ""
-        }" data-item-name="${item}">
-          <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
-          <p>${item}</p>
-        </div>
-      `
-      )
-      .join("");
-  }
-
-  winningItem = winningItem || items[Math.floor(Math.random() * items.length)];
-  let repeatedItems = items
-    .filter((item) => item !== winningItem)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 7);
-
-  repeatedItems = [
-    ...repeatedItems.slice(0, 4),
-    winningItem,
-    ...repeatedItems.slice(4),
-  ];
-
-  while (repeatedItems.length < 8) {
-    const randomItem = items[Math.floor(Math.random() * items.length)];
-    repeatedItems.push(randomItem);
-  }
-
-  return repeatedItems
-    .map(
-      (item, index) => `
-      <div class="itemCol ${index === 4 ? "winner" : ""}">
-        <img src="images/${item.replace(/ /g, "_")}.webp" alt="${item}">
-        <p>${item}</p>
-      </div>
-    `
-    )
-    .join("");
-}
+// createItemContainer function removed - now handled by SlotColumn component
 
 // SlotColumn class for animation
-class SlotColumn {
-  constructor(element, index, isFinalSpin) {
-    this.element = element;
-    this.index = index;
-    this.velocity = 0;
-    this.position = 0;
-    this.state = "waiting";
-    this.lastTimestamp = null;
-    this.isFinalSpin = isFinalSpin;
-    this.animationStartTime = null;
-    this.maxAnimationDuration = 10000; // 10 second safety timeout
-    this.overshootAmount = 0;
-    this.snapbackComplete = false;
-
-    const timing = isFinalSpin
-      ? PHYSICS.TIMING.FINAL_SPIN
-      : PHYSICS.TIMING.REGULAR_SPIN;
-
-    // Use explicit stop times for final spin columns
-    if (isFinalSpin && timing.COLUMN_STOPS && timing.COLUMN_STOPS[index]) {
-      this.totalDuration = timing.COLUMN_STOPS[index];
-    } else {
-      this.stopDelay = timing.COLUMN_DELAY * index;
-      this.totalDuration = timing.BASE_DURATION + this.stopDelay;
-    }
-
-    this.decelerationTime = timing.DECELERATION_TIME;
-    this.targetPosition = 0;
-    this.initialPosition = 0;
-
-    // Add reference to container for visual effects
-    this.container = element.closest(".item-container");
-  }
-
-  update(elapsed, deltaTime) {
-    try {
-      // Safety check for runaway animations
-      if (!this.animationStartTime) {
-        this.animationStartTime = performance.now();
-      } else if (
-        performance.now() - this.animationStartTime >
-        this.maxAnimationDuration
-      ) {
-        console.warn("Animation timeout - forcing stop");
-        this.forceStop();
-        return;
-      }
-
-      if (this.state === "stopped") return;
-
-      // Validate inputs
-      if (typeof elapsed !== "number" || isNaN(elapsed) || elapsed < 0) {
-        console.warn("Invalid elapsed time:", elapsed);
-        elapsed = 0;
-      }
-
-      if (typeof deltaTime !== "number" || isNaN(deltaTime) || deltaTime < 0) {
-        console.warn("Invalid deltaTime:", deltaTime);
-        deltaTime = 16.67; // Default to ~60fps
-      }
-
-      // Ensure deltaTime is reasonable
-      const dt = Math.min(deltaTime, 50) / 1000; // Cap at 50ms, convert to seconds
-
-      // Vegas-style physics with distinct phases
-      const accelerationPhase = 500; // 0-500ms
-      const maxSpeedPhase = this.totalDuration - this.decelerationTime - 200; // Account for overshoot
-
-      switch (this.state) {
-        case "accelerating":
-          // Exponential acceleration for dramatic start
-          const accelProgress = Math.min(elapsed / accelerationPhase, 1);
-          const accelMultiplier = 1 + Math.pow(accelProgress, 2) * 2; // Up to 3x acceleration
-
-          this.velocity += PHYSICS.ACCELERATION * dt * accelMultiplier;
-
-          if (
-            elapsed >= accelerationPhase ||
-            this.velocity >= PHYSICS.MAX_VELOCITY
-          ) {
-            this.velocity = PHYSICS.MAX_VELOCITY;
-            this.state = "spinning";
-          }
-          break;
-
-        case "spinning":
-          // Maintain max velocity with slight variations for realism
-          this.velocity = PHYSICS.MAX_VELOCITY + Math.sin(elapsed / 100) * 200;
-
-          if (elapsed >= maxSpeedPhase) {
-            this.state = "decelerating";
-            // Calculate target position with overshoot
-            const baseTarget =
-              Math.ceil(this.position / PHYSICS.ITEM_HEIGHT) *
-              PHYSICS.ITEM_HEIGHT;
-            this.overshootAmount = PHYSICS.ITEM_HEIGHT * 0.3; // 30% overshoot
-            this.targetPosition = baseTarget;
-
-            // For gadget columns, use normal positioning
-            if (this.index >= 2) {
-              this.targetPosition = 0;
-              this.overshootAmount = PHYSICS.ITEM_HEIGHT * 0.2;
-            }
-          }
-          break;
-
-        case "decelerating":
-          // Smooth exponential deceleration
-          const decelProgress =
-            (elapsed - maxSpeedPhase) / this.decelerationTime;
-          const decelMultiplier = Math.pow(1 - Math.min(decelProgress, 1), 2);
-
-          this.velocity = PHYSICS.MAX_VELOCITY * decelMultiplier;
-
-          // Check if we've reached the overshoot point
-          if (
-            !this.snapbackComplete &&
-            this.position >= this.targetPosition + this.overshootAmount
-          ) {
-            this.state = "snapback";
-            this.velocity = -Math.abs(this.velocity) * 0.5; // Reverse at 50% speed
-          } else if (this.velocity < 100) {
-            this.forceStop();
-          }
-          break;
-
-        case "snapback":
-          // Snap back to final position
-          this.velocity += PHYSICS.ACCELERATION * dt * 0.8; // Gentler snapback
-
-          if (
-            this.position <= this.targetPosition ||
-            Math.abs(this.velocity) < 50
-          ) {
-            this.position = this.targetPosition;
-            this.forceStop();
-          }
-          break;
-
-        case "bouncing":
-          // Legacy bounce state (kept for compatibility)
-          this.velocity += PHYSICS.DECELERATION * 1.2 * dt;
-          if (Math.abs(this.velocity) < 50) {
-            this.forceStop();
-          }
-          break;
-      }
-
-      // Update position with safety checks
-      if (
-        typeof this.velocity === "number" &&
-        !isNaN(this.velocity) &&
-        typeof this.position === "number" &&
-        !isNaN(this.position)
-      ) {
-        this.position += this.velocity * dt;
-      } else {
-        console.warn(
-          "Invalid velocity or position values:",
-          this.velocity,
-          this.position
-        );
-        // Reset to safe values
-        this.velocity = 0;
-        this.position = 0;
-      }
-
-      // Don't normalize position for gadget columns when targeting position 0
-      if (
-        this.index >= 2 &&
-        this.targetPosition === 0 &&
-        this.state === "stopped"
-      ) {
-        // Keep exact position for gadgets
-      } else if (this.state !== "snapback") {
-        try {
-          this.position = this.normalizePosition(this.position);
-        } catch (normalizeError) {
-          console.warn("Position normalization error:", normalizeError);
-          this.position = 0; // Safe fallback
-        }
-      }
-
-      // Update visuals with error handling
-      try {
-        this.updateVisuals();
-      } catch (visualError) {
-        console.warn("Update visuals error:", visualError);
-        // Continue without visuals if they fail
-      }
-    } catch (updateError) {
-      console.error("SlotColumn update error:", updateError);
-      // Force stop on critical error to prevent further crashes
-      try {
-        this.forceStop();
-      } catch (stopError) {
-        console.error("Force stop error:", stopError);
-        // Emergency state reset
-        this.state = "stopped";
-        this.velocity = 0;
-      }
-    }
-  }
-
-  normalizePosition(pos) {
-    const wrappedPosition = pos % PHYSICS.ITEM_HEIGHT;
-    return wrappedPosition >= 0
-      ? wrappedPosition
-      : wrappedPosition + PHYSICS.ITEM_HEIGHT;
-  }
-
-  forceStop() {
-    this.velocity = 0;
-    this.position = this.targetPosition;
-    this.state = "stopped";
-
-    // Remove blur classes
-    if (this.container) {
-      this.container.classList.remove("high-speed-blur", "extreme-blur");
-
-      // Add lock-in animation
-      this.container.classList.add("locked", "locking");
-
-      // Flash effect
-      setTimeout(() => {
-        this.container.classList.remove("locking");
-      }, 300);
-
-      // Play column stop sound
-      if (window.state && window.state.soundEnabled) {
-        const columnStopSound = document.getElementById("columnStop");
-        if (columnStopSound) {
-          columnStopSound.currentTime = 0;
-          columnStopSound.volume = 0.5;
-          columnStopSound.play().catch(() => {});
-        }
-      }
-
-      // Add screen shake for dramatic effect (only on final spin)
-      if (this.isFinalSpin && this.index === 0) {
-        document
-          .querySelector(".items-container")
-          ?.classList.add("screen-shake");
-        setTimeout(() => {
-          document
-            .querySelector(".items-container")
-            ?.classList.remove("screen-shake");
-        }, 200);
-      }
-    }
-
-    this.updateVisuals();
-
-    // Reset box shadow
-    if (this.container) {
-      this.container.style.boxShadow = "";
-    }
-  }
-
-  updateVisuals() {
-    try {
-      // Validate velocity before calculations
-      if (typeof this.velocity !== "number" || isNaN(this.velocity)) {
-        console.warn("Invalid velocity in updateVisuals:", this.velocity);
-        this.velocity = 0;
-      }
-
-      if (typeof this.position !== "number" || isNaN(this.position)) {
-        console.warn("Invalid position in updateVisuals:", this.position);
-        this.position = 0;
-      }
-
-      // Vegas-style blur effects based on velocity
-      let blur = 0;
-      let containerClass = "";
-
-      const absVelocity = Math.abs(this.velocity);
-
-      if (absVelocity > 3500) {
-        blur = 8;
-        containerClass = "extreme-blur";
-      } else if (absVelocity > 2000) {
-        blur = 3;
-        containerClass = "high-speed-blur";
-      } else if (absVelocity > 1000) {
-        blur = 1;
-      }
-
-      // Add/remove blur classes on container with error handling
-      if (this.container) {
-        try {
-          this.container.classList.remove("high-speed-blur", "extreme-blur");
-          if (containerClass) {
-            this.container.classList.add(containerClass);
-          }
-        } catch (classError) {
-          console.warn("Class manipulation error:", classError);
-        }
-      }
-
-      // Shake effect during snapback
-      let shakeX = 0;
-      if (this.state === "snapback") {
-        try {
-          shakeX = Math.sin(performance.now() / 50) * 3;
-          // Validate shakeX
-          if (isNaN(shakeX)) {
-            shakeX = 0;
-          }
-        } catch (shakeError) {
-          console.warn("Shake calculation error:", shakeError);
-          shakeX = 0;
-        }
-      }
-
-      // Apply transform and filter with error handling
-      if (this.element) {
-        try {
-          this.element.style.transform = `translate(${shakeX}px, ${this.position}px)`;
-          this.element.style.filter = blur > 0 ? `blur(${blur}px)` : "none";
-        } catch (styleError) {
-          console.warn("Style application error:", styleError);
-          // Try basic fallback
-          try {
-            this.element.style.transform = `translateY(${this.position}px)`;
-            this.element.style.filter = "none";
-          } catch (fallbackError) {
-            console.warn("Fallback style error:", fallbackError);
-          }
-        }
-      }
-
-      // Add slot glow effect at high speeds with error handling
-      if (this.container && absVelocity > 2000) {
-        try {
-          const glowIntensity = 20 + absVelocity / 100;
-          const glowOpacity = 0.2 + absVelocity / 10000;
-
-          // Validate glow values
-          const safeGlowIntensity = Math.max(0, Math.min(glowIntensity, 100));
-          const safeGlowOpacity = Math.max(0, Math.min(glowOpacity, 1));
-
-          this.container.style.boxShadow = `
-            inset 0 10px 30px rgba(0,0,0,0.8),
-            0 0 ${safeGlowIntensity}px rgba(255, 215, 0, ${safeGlowOpacity})
-          `;
-        } catch (glowError) {
-          console.warn("Glow effect error:", glowError);
-          // Remove potentially broken box shadow
-          try {
-            this.container.style.boxShadow = "";
-          } catch (shadowError) {
-            console.warn("Shadow reset error:", shadowError);
-          }
-        }
-      }
-    } catch (visualsError) {
-      console.error("UpdateVisuals critical error:", visualsError);
-      // Emergency cleanup - remove all effects
-      try {
-        if (this.element) {
-          this.element.style.transform = "";
-          this.element.style.filter = "";
-        }
-        if (this.container) {
-          this.container.classList.remove("high-speed-blur", "extreme-blur");
-          this.container.style.boxShadow = "";
-        }
-      } catch (cleanupError) {
-        console.error("Emergency cleanup error:", cleanupError);
-      }
-    }
-  }
-}
+// SlotColumn class removed - now in AnimationEngine.js
 
 // Flag to prevent duplicate history entries
 let isAddingToHistory = false;
 let lastAddedLoadout = null;
+
+// Slot machine instance
+let slotMachine = null;
 
 // Main functions for displaying loadouts
 const displayLoadout = (classType) => {
   // Don't start if roulette is animating
   if (state.isRouletteAnimating) {
     console.log("⏸️ Roulette animating, skipping displayLoadout");
+    return;
+  }
+
+  // Check if we're being called from within the overlay system
+  const overlayOutput = document.getElementById("output");
+  const isInOverlay = overlayOutput && (
+    overlayOutput.closest(".slot-machine-overlay") || 
+    overlayOutput.id === "output" && document.getElementById("output-backup")
+  );
+  
+  if (
+    window.overlayManager &&
+    window.overlayManager.overlayState &&
+    window.overlayManager.overlayState.isActive &&
+    !isInOverlay
+  ) {
+    console.log("⏸️ Overlay active but not slot machine overlay, skipping displayLoadout");
     return;
   }
 
@@ -1025,135 +666,56 @@ const displayLoadout = (classType) => {
     return sequence;
   };
 
-  const loadoutHTML = `
-    <div class="slot-machine-wrapper">
-      <div class="items-container">
-        <div class="item-container">
-          <div class="scroll-container">
-            ${createItemContainer(loadout.weapons, selectedWeapon)}
-          </div>
-        </div>
-        <div class="item-container">
-          <div class="scroll-container">
-            ${createItemContainer(loadout.specializations, selectedSpec)}
-          </div>
-        </div>
-        ${selectedGadgets
-          .map((gadget, index) => {
-            // Escape the gadget name for HTML attributes
-            const escapedGadget = gadget
-              .replace(/"/g, "&quot;")
-              .replace(/'/g, "&#39;");
-            console.log(
-              `🏷️ Creating HTML for Gadget ${
-                index + 1
-              }: Original="${gadget}", Escaped="${escapedGadget}"`
-            );
+  // Create gadget sequences
+  const gadgetSequences = selectedGadgets.map((gadget, index) =>
+    createGadgetSpinSequence(gadget, index)
+  );
 
-            // Debug: Store the original gadget name in a separate attribute for debugging
-            const htmlResult = `
-            <div class="item-container" data-winning-gadget="${escapedGadget}" data-original-gadget="${gadget}" data-gadget-position="${index}">
-              <div class="scroll-container" data-gadget-index="${index}" data-winning-gadget="${escapedGadget}">
-                ${createItemContainer(
-                  createGadgetSpinSequence(gadget, index),
-                  gadget,
-                  true
-                )}
-              </div>
-            </div>
-          `;
-
-            console.log(
-              `🏗️ Generated HTML for gadget ${index + 1}:`,
-              htmlResult.substring(0, 200) + "..."
-            );
-            return htmlResult;
-          })
-          .join("")}
-      </div>
-    </div>
-  `;
-
-  // Safety check for outputDiv
-  if (!outputDiv) {
-    console.error(
-      "❌ CRASH PREVENTION: outputDiv is null, attempting to find element"
-    );
-    outputDiv = document.getElementById("output");
-    if (!outputDiv) {
-      console.error(
-        "❌ CRITICAL: Could not find output element, cannot display loadout"
-      );
-      return;
-    }
+  // Initialize or update slot machine
+  if (!slotMachine) {
+    slotMachine = new SlotMachine({
+      containerId: "output",
+      onComplete: (error, results) => {
+        if (error) {
+          console.error("Slot machine error:", error);
+          return;
+        }
+        // Pass columns to finalizeSpin for backwards compatibility
+        finalizeSpin(results.columns);
+      },
+      onSpinStart: () => {
+        console.log("Spin animation started");
+      },
+    });
   }
 
-  try {
-    outputDiv.innerHTML = loadoutHTML;
-    outputDiv.style.opacity = "1"; // Reset opacity to full when showing real loadout
-  } catch (error) {
-    console.error("❌ CRASH PREVENTION: Error setting innerHTML:", error);
+  // Configure slot machine with current loadout
+  slotMachine.initialize({
+    classType,
+    loadout,
+    selectedWeapon,
+    selectedSpec,
+    selectedGadgets,
+    gadgetSequences,
+    currentSpin: state.currentSpin,
+    isFinalSpin: state.currentSpin === 1,
+  });
+
+  // Render slot machine
+  const container = slotMachine.render();
+
+  if (!container) {
+    console.error("❌ CRITICAL: Failed to render slot machine");
     return;
   }
 
-  setTimeout(() => {
-    try {
-      const scrollContainers = Array.from(
-        document.querySelectorAll(".scroll-container")
-      );
-
-      if (scrollContainers.length === 0) {
-        console.error(
-          "❌ CRASH PREVENTION: No scroll containers found, cannot start animation"
-        );
-        return;
-      }
-
-      startSpinAnimation(scrollContainers);
-    } catch (error) {
-      console.error(
-        "❌ CRASH PREVENTION: Error starting spin animation:",
-        error
-      );
-    }
-  }, 50);
+  // Start spin animation after delay
+  slotMachine.startSpinWithDelay(SLOT_TIMING.ANIMATION_START_DELAY, {
+    soundEnabled: state.soundEnabled,
+  });
 };
 
-// Helper function to get available classes (excluding checked exclusions)
-const getAvailableClasses = () => {
-  const allClasses = ["Light", "Medium", "Heavy"];
-  const availableClasses = [];
-
-  // Check localStorage for exclusions (checked = excluded)
-  ["light", "medium", "heavy"].forEach((className) => {
-    const isExcluded = localStorage.getItem(`exclude-${className}`) === "true";
-    if (!isExcluded) {
-      const capitalizedClass =
-        className.charAt(0).toUpperCase() + className.slice(1);
-      availableClasses.push(capitalizedClass);
-      console.log(`✅ ${capitalizedClass} available in selection`);
-    } else {
-      const capitalizedClass =
-        className.charAt(0).toUpperCase() + className.slice(1);
-      console.log(`🚫 ${capitalizedClass} excluded from selection`);
-    }
-  });
-
-  // If all classes are excluded, use all classes as fallback
-  const finalClasses =
-    availableClasses.length > 0 ? availableClasses : allClasses;
-
-  console.log("🎲 Available classes:", finalClasses);
-  console.log("✅ Non-excluded classes:", availableClasses);
-  console.log("📦 localStorage values:", {
-    "exclude-light": localStorage.getItem("exclude-light"),
-    "exclude-medium": localStorage.getItem("exclude-medium"),
-    "exclude-heavy": localStorage.getItem("exclude-heavy"),
-    "class-system-updated": localStorage.getItem("class-system-updated"),
-  });
-
-  return finalClasses;
-};
+// Note: getAvailableClasses is already defined above at line 108
 
 const displayRandomLoadout = () => {
   // Don't start if roulette is animating
@@ -1210,375 +772,23 @@ const displayRandomLoadout = () => {
   }
 };
 
-// Animation function
-function startSpinAnimation(columns) {
-  // Safety check for columns array
-  if (!columns || !Array.isArray(columns) || columns.length === 0) {
-    console.error(
-      "❌ CRASH PREVENTION: Invalid columns passed to startSpinAnimation"
-    );
-    return;
-  }
-
-  // Final spin is when we're on the last spin (currentSpin === 1)
+// Animation function - now a wrapper for backwards compatibility
+async function startSpinAnimation(columns) {
+  // This function is now called by SlotMachine component
+  // Just pass through to the animation engine
   const isFinalSpin = state.currentSpin === 1;
-  console.log(
-    `🎲 Animation starting with currentSpin = ${state.currentSpin}, isFinalSpin = ${isFinalSpin}`
-  );
 
-  // Play spin start sound
-  if (state.soundEnabled) {
-    const spinStartSound = document.getElementById("spinStart");
-    if (spinStartSound) {
-      spinStartSound.currentTime = 0;
-      spinStartSound.volume = 0.6;
-      spinStartSound.play().catch(() => {});
-    }
+  try {
+    await startSlotAnimation(columns, {
+      isFinalSpin,
+      soundEnabled: state.soundEnabled,
+      onComplete: () => finalizeSpin(columns),
+    });
+  } catch (error) {
+    console.error("Animation error:", error);
+    state.isSpinning = false;
+    finalizeSpin(columns);
   }
-
-  // Play spinning sound
-  if (state.soundEnabled) {
-    const spinningSound = document.getElementById("spinningSound");
-    if (spinningSound) {
-      spinningSound.currentTime = 0;
-      spinningSound.volume = 0.25; // Reduced by 50%
-      spinningSound.play().catch(() => {});
-    }
-  }
-
-  const startTime = performance.now();
-
-  const slotColumns = columns
-    .map((element, index) => {
-      if (!element) {
-        console.error(`❌ CRASH PREVENTION: Column ${index} is null/undefined`);
-        return null;
-      }
-      return new SlotColumn(element, index, isFinalSpin);
-    })
-    .filter((col) => col !== null);
-
-  if (slotColumns.length === 0) {
-    console.error("❌ CRASH PREVENTION: No valid slot columns created");
-    return;
-  }
-
-  // Reset containers
-  columns.forEach((column, index) => {
-    if (!column) {
-      console.error(
-        `❌ CRASH PREVENTION: Column ${index} is null during reset`
-      );
-      return;
-    }
-
-    try {
-      const container = column.closest(".item-container");
-      if (container) {
-        container.classList.remove("landing-flash", "winner-pulsate");
-        const lockedTag = container.querySelector(".locked-tag");
-        if (lockedTag) lockedTag.remove();
-      }
-      column.style.transform = "translateY(0)";
-      column.style.transition = "none";
-    } catch (error) {
-      console.error(
-        `❌ CRASH PREVENTION: Error resetting column ${index}:`,
-        error
-      );
-    }
-  });
-
-  // Initialize animation states clearly
-  slotColumns.forEach((column) => {
-    column.state = "accelerating";
-    column.velocity = 0;
-    column.position = 0;
-    column.lastTimestamp = null;
-  });
-
-  function animate(currentTime) {
-    try {
-      // Safety timeout to prevent infinite animations
-      const elapsed = currentTime - startTime;
-      if (elapsed > 15000) {
-        // 15 second timeout
-        console.warn("⚠️ Slot machine animation safety timeout triggered");
-        // Force stop all columns
-        slotColumns.forEach((column) => {
-          try {
-            if (column && typeof column.forceStop === "function") {
-              column.forceStop();
-            }
-          } catch (stopError) {
-            console.warn("Column force stop error:", stopError);
-          }
-        });
-        // Stop spinning sound
-        try {
-          const spinningSound = document.getElementById("spinningSound");
-          if (spinningSound) {
-            spinningSound.pause();
-            spinningSound.currentTime = 0;
-          }
-        } catch (soundError) {
-          console.warn("Sound stop error:", soundError);
-        }
-        // Force finalize
-        try {
-          finalizeSpin(columns);
-        } catch (finalizeError) {
-          console.error("Force finalize error:", finalizeError);
-        }
-        return;
-      }
-
-      let isAnimating = false;
-
-      slotColumns.forEach((column, index) => {
-        try {
-          if (column && column.state !== "stopped") {
-            isAnimating = true;
-            const deltaTime = column.lastTimestamp
-              ? currentTime - column.lastTimestamp
-              : 16.67;
-
-            // Validate deltaTime is reasonable
-            const safeDeltaTime = Math.max(0, Math.min(deltaTime, 100));
-
-            if (typeof column.update === "function") {
-              column.update(elapsed, safeDeltaTime);
-            } else {
-              console.warn(`Column ${index} missing update method`);
-              // Force stop this broken column
-              if (column) {
-                column.state = "stopped";
-              }
-            }
-            column.lastTimestamp = currentTime;
-          }
-        } catch (columnError) {
-          console.error(`Error updating column ${index}:`, columnError);
-          // Force stop the problematic column to prevent further crashes
-          try {
-            if (column) {
-              column.state = "stopped";
-              if (typeof column.forceStop === "function") {
-                column.forceStop();
-              }
-            }
-          } catch (stopError) {
-            console.warn(`Failed to stop column ${index}:`, stopError);
-          }
-        }
-      });
-
-      if (isAnimating) {
-        try {
-          requestAnimationFrame(animate);
-        } catch (rafError) {
-          console.error("RequestAnimationFrame error:", rafError);
-          // Fallback: use setTimeout
-          setTimeout(() => {
-            try {
-              animate(performance.now());
-            } catch (fallbackError) {
-              console.error("Fallback animation error:", fallbackError);
-              // Force completion
-              try {
-                finalizeSpin(columns);
-              } catch (finalError) {
-                console.error("Final completion error:", finalError);
-              }
-            }
-          }, 16);
-        }
-      } else {
-        console.log("✅ All columns stopped, calling finalizeSpin");
-
-        try {
-          // Stop spinning sound with mobile fix
-          const spinningSound = document.getElementById("spinningSound");
-          if (spinningSound) {
-            spinningSound.pause();
-            spinningSound.currentTime = 0;
-            // Additional stop mechanism for mobile browsers
-            try {
-              spinningSound.src = spinningSound.src; // Force reload on mobile
-            } catch (e) {
-              console.log("Mobile audio reload failed:", e);
-            }
-          }
-
-          // Add visual effects only for final spin
-          if (isFinalSpin) {
-            let lastColumnIndex = columns.length - 1;
-
-            columns.forEach((column, index) => {
-              try {
-                const container = column
-                  ? column.closest(".item-container")
-                  : null;
-                if (container) {
-                  setTimeout(() => {
-                    try {
-                      container.classList.add("landing-flash");
-
-                      let lockedTag = container.querySelector(".locked-tag");
-                      if (!lockedTag) {
-                        lockedTag = document.createElement("div");
-                        lockedTag.className = "locked-tag show";
-                        lockedTag.textContent = "Locked-In";
-                        container.appendChild(lockedTag);
-                      }
-
-                      // Play final sound on FIRST locked tag
-                      if (index === 0 && state.soundEnabled) {
-                        try {
-                          const finalSound =
-                            document.getElementById("finalSound");
-                          if (finalSound) {
-                            finalSound.currentTime = 0;
-                            finalSound.volume = 0.7;
-                            finalSound.play().catch((err) => {
-                              console.log("Could not play final sound:", err);
-                            });
-                          }
-                        } catch (soundError) {
-                          console.warn("Final sound error:", soundError);
-                        }
-                      }
-
-                      // If this is the last column, add celebration effects
-                      if (index === lastColumnIndex) {
-                        console.log(
-                          "🔒 Last locked tag added, disabling spin buttons"
-                        );
-                        try {
-                          const spinBtns =
-                            document.querySelectorAll(".spin-button");
-                          spinBtns.forEach((button) => {
-                            try {
-                              button.disabled = true;
-                              button.setAttribute("disabled", "disabled");
-                              button.classList.add("dimmed");
-                            } catch (btnError) {
-                              console.warn("Button disable error:", btnError);
-                            }
-                          });
-                          console.log(
-                            `Disabled ${spinBtns.length} spin buttons`
-                          );
-                        } catch (buttonError) {
-                          console.warn("Button handling error:", buttonError);
-                        }
-                      }
-
-                      setTimeout(() => {
-                        try {
-                          container.classList.add("winner-pulsate");
-
-                          // Add dramatic screen shake on the last column
-                          if (index === lastColumnIndex) {
-                            try {
-                              addScreenShake();
-                              createLockInParticleExplosion(container);
-                            } catch (effectError) {
-                              console.warn("Screen effect error:", effectError);
-                            }
-                          }
-                        } catch (pulsateError) {
-                          console.warn("Pulsate effect error:", pulsateError);
-                        }
-                      }, 300);
-                    } catch (timeoutError) {
-                      console.error(
-                        `Timeout callback error for column ${index}:`,
-                        timeoutError
-                      );
-                    }
-                  }, index * 200);
-                }
-              } catch (columnEffectError) {
-                console.error(
-                  `Column effect error for index ${index}:`,
-                  columnEffectError
-                );
-              }
-            });
-          }
-
-          // Let finalizeSpin handle whether to continue or end the sequence
-          setTimeout(
-            () => {
-              try {
-                finalizeSpin(columns);
-              } catch (finalizeError) {
-                console.error("Finalize spin error:", finalizeError);
-                // Emergency cleanup
-                try {
-                  state.isSpinning = false;
-                  const mainSpinButton =
-                    document.getElementById("main-spin-button");
-                  if (mainSpinButton) {
-                    mainSpinButton.disabled = false;
-                    mainSpinButton.classList.remove("spinning");
-                  }
-                } catch (emergencyError) {
-                  console.error("Emergency cleanup error:", emergencyError);
-                }
-              }
-            },
-            isFinalSpin ? 1000 : 300
-          ); // Longer delay for final spin
-        } catch (completionError) {
-          console.error("Animation completion error:", completionError);
-          // Force completion with minimal functionality
-          try {
-            setTimeout(() => {
-              try {
-                finalizeSpin(columns);
-              } catch (forceError) {
-                console.error("Force finalize error:", forceError);
-                state.isSpinning = false;
-              }
-            }, 1000);
-          } catch (timeoutError) {
-            console.error("Timeout creation error:", timeoutError);
-            state.isSpinning = false;
-          }
-        }
-      }
-    } catch (animateError) {
-      console.error("Critical animation error:", animateError);
-      // Emergency shutdown
-      try {
-        state.isSpinning = false;
-        const spinningSound = document.getElementById("spinningSound");
-        if (spinningSound) {
-          spinningSound.pause();
-          spinningSound.currentTime = 0;
-        }
-        const mainSpinButton = document.getElementById("main-spin-button");
-        if (mainSpinButton) {
-          mainSpinButton.disabled = false;
-          mainSpinButton.classList.remove("spinning");
-        }
-        // Try to finalize anyway
-        setTimeout(() => {
-          try {
-            finalizeSpin(columns);
-          } catch (emergencyFinalizeError) {
-            console.error("Emergency finalize error:", emergencyFinalizeError);
-          }
-        }, 100);
-      } catch (emergencyError) {
-        console.error("Emergency shutdown error:", emergencyError);
-      }
-    }
-  }
-
-  requestAnimationFrame(animate);
 }
 
 // Filter Tab System
@@ -1610,10 +820,13 @@ function setupFilterSystem() {
     console.log("🖱️ Opening filter panel");
 
     // Show overlay
-    filterOverlay.classList.add("active");
+    filterOverlay.classList.add("open");
 
     // Slide in panel
-    filterPanel.classList.add("active");
+    filterPanel.classList.add("open");
+
+    // Add visual state to button
+    filterToggleBtn.classList.add("panel-open");
 
     // Lock body scroll
     document.body.style.overflow = "hidden";
@@ -1631,10 +844,13 @@ function setupFilterSystem() {
     console.log("🖱️ Closing filter panel");
 
     // Hide overlay
-    filterOverlay.classList.remove("active");
+    filterOverlay.classList.remove("open");
 
     // Slide out panel
-    filterPanel.classList.remove("active");
+    filterPanel.classList.remove("open");
+
+    // Remove visual state from button
+    filterToggleBtn.classList.remove("panel-open");
 
     // Restore body scroll
     document.body.style.overflow = "";
@@ -1645,7 +861,13 @@ function setupFilterSystem() {
   }
 
   // Event listeners
-  filterToggleBtn.addEventListener("click", openPanel);
+  filterToggleBtn.addEventListener("click", () => {
+    if (isPanelOpen) {
+      closePanel();
+    } else {
+      openPanel();
+    }
+  });
   closePanelBtn.addEventListener("click", closePanel);
   filterOverlay.addEventListener("click", closePanel);
 
@@ -1679,7 +901,7 @@ function setupFilterSystem() {
       if (filterStatus && filterStatus.parentNode) {
         filterStatus.parentNode.removeChild(filterStatus);
       }
-    }, 2000);
+    }, UI_TIMING.FILTER_STATUS_DURATION);
   });
 
   // Escape key closes panel
@@ -1720,6 +942,14 @@ function setupFilterSystem() {
             content.classList.remove("active");
           }
         });
+
+        // Reset class filters to ALL when switching tabs
+        const allFilter = document.querySelector(
+          '.class-filter[data-class="all"]'
+        );
+        if (allFilter && !allFilter.classList.contains("active")) {
+          allFilter.click();
+        }
       });
     });
   } else {
@@ -1729,10 +959,11 @@ function setupFilterSystem() {
   // Class filter buttons
   const classFilters = document.querySelectorAll(".class-filter");
   const itemCategories = document.querySelectorAll(".item-category");
+  const filterCategories = document.querySelectorAll(".filter-category-card");
 
-  if (classFilters.length > 0 && itemCategories.length > 0) {
+  if (classFilters.length > 0) {
     console.log(
-      `✅ Found ${classFilters.length} class filters and ${itemCategories.length} item categories`
+      `✅ Found ${classFilters.length} class filters, ${itemCategories.length} item categories, ${filterCategories.length} filter categories`
     );
 
     classFilters.forEach((filter) => {
@@ -1744,17 +975,50 @@ function setupFilterSystem() {
         classFilters.forEach((btn) => btn.classList.remove("active"));
         filter.classList.add("active");
 
-        // Show/hide categories based on selection
-        itemCategories.forEach((category) => {
-          if (
-            selectedClass === "all" ||
-            category.classList.contains(`${selectedClass}-category`)
-          ) {
-            category.style.display = "block";
-          } else {
-            category.style.display = "none";
-          }
-        });
+        // Get the active tab to determine which categories to filter
+        const activeTabContent = document.querySelector(".tab-content.active");
+        if (!activeTabContent) return;
+
+        // Handle weapons tab (uses filter-category-card)
+        if (activeTabContent.id === "weapons-tab") {
+          const weaponCategories = activeTabContent.querySelectorAll(
+            ".filter-category-card"
+          );
+          weaponCategories.forEach((category) => {
+            const title = category.querySelector(".category-title");
+            if (!title) return;
+
+            const categoryClass = title.textContent
+              .toLowerCase()
+              .includes("light")
+              ? "light"
+              : title.textContent.toLowerCase().includes("medium")
+              ? "medium"
+              : title.textContent.toLowerCase().includes("heavy")
+              ? "heavy"
+              : "";
+
+            if (selectedClass === "all" || categoryClass === selectedClass) {
+              category.style.display = "block";
+            } else {
+              category.style.display = "none";
+            }
+          });
+        } else {
+          // Handle specs/gadgets tabs (uses item-category)
+          const categories =
+            activeTabContent.querySelectorAll(".item-category");
+          categories.forEach((category) => {
+            if (
+              selectedClass === "all" ||
+              category.classList.contains(`${selectedClass}-category`)
+            ) {
+              category.style.display = "block";
+            } else {
+              category.style.display = "none";
+            }
+          });
+        }
       });
     });
   } else {
@@ -1852,7 +1116,7 @@ function setupFilterSystem() {
         if (filterStatus && filterStatus.parentNode) {
           filterStatus.parentNode.removeChild(filterStatus);
         }
-      }, 2000);
+      }, UI_TIMING.FILTER_STATUS_DURATION);
 
       console.log("✅ All filters have been reset");
     });
@@ -1860,12 +1124,202 @@ function setupFilterSystem() {
     console.error("❌ Could not find reset button");
   }
 
+  // Setup event delegation for Select All functionality
+  setupSelectAllEventDelegation();
+
   console.log("✅ Filter system setup complete");
+}
+
+// Setup event delegation for Select All checkboxes - survives DOM rebuilds
+function setupSelectAllEventDelegation() {
+  console.log("🎯 Setting up Select All event delegation");
+
+  // Use event delegation on the filter panel
+  const filterPanel = document.getElementById("filter-panel");
+  if (!filterPanel) {
+    console.error("❌ Filter panel not found for event delegation");
+    return;
+  }
+
+  // Single delegated listener for all checkbox interactions
+  filterPanel.addEventListener(
+    "change",
+    function (event) {
+      const target = event.target;
+
+      // Check if it's a checkbox
+      if (target.type !== "checkbox") return;
+
+      // Handle Select All checkbox clicks
+      if (
+        target.hasAttribute("data-type") &&
+        target.getAttribute("data-type").endsWith("-selectall")
+      ) {
+        const classType = target.getAttribute("data-class");
+        const baseType = target
+          .getAttribute("data-type")
+          .replace("-selectall", "");
+        const isChecked = target.checked;
+
+        console.log(
+          `🔄 Select All ${classType} ${baseType} clicked: ${isChecked}`
+        );
+
+        // Find and update all related item checkboxes
+        const relatedBoxes = filterPanel.querySelectorAll(
+          `input[data-type="${baseType}"][data-class="${classType}"]:not([data-type$="selectall"])`
+        );
+
+        relatedBoxes.forEach((box) => {
+          box.checked = isChecked;
+        });
+      }
+      // Handle individual item checkbox clicks
+      else if (
+        target.hasAttribute("data-type") &&
+        target.hasAttribute("data-class")
+      ) {
+        const classType = target.getAttribute("data-class");
+        const itemType = target.getAttribute("data-type");
+
+        // Find and update the related Select All checkbox
+        const selectAllBox = filterPanel.querySelector(
+          `input[data-type="${itemType}-selectall"][data-class="${classType}"]`
+        );
+
+        if (selectAllBox) {
+          updateSelectAllState(selectAllBox);
+        }
+      }
+    },
+    true
+  ); // Use capture phase to ensure we catch events
+
+  console.log("✅ Select All event delegation setup complete");
+}
+
+// Helper function to get included classes from master checkboxes
+function getIncludedClasses() {
+  const classes = [];
+  const lightCheckbox = document.getElementById("exclude-light");
+  const mediumCheckbox = document.getElementById("exclude-medium");
+  const heavyCheckbox = document.getElementById("exclude-heavy");
+
+  if (lightCheckbox && lightCheckbox.checked) classes.push("light");
+  if (mediumCheckbox && mediumCheckbox.checked) classes.push("medium");
+  if (heavyCheckbox && heavyCheckbox.checked) classes.push("heavy");
+
+  return classes;
+}
+
+// Helper function to update Select All checkbox state (checked/indeterminate/unchecked)
+function updateSelectAllState(selectAllCheckbox) {
+  const classType = selectAllCheckbox.getAttribute("data-class");
+  const baseType = selectAllCheckbox
+    .getAttribute("data-type")
+    .replace("-selectall", "");
+
+  // Find all related item checkboxes
+  const relatedBoxes = document.querySelectorAll(
+    `#filter-panel input[data-type="${baseType}"][data-class="${classType}"]:not([data-type$="selectall"])`
+  );
+
+  if (relatedBoxes.length === 0) return;
+
+  let checkedCount = 0;
+  relatedBoxes.forEach((box) => {
+    if (box.checked) checkedCount++;
+  });
+
+  // Update Select All state
+  if (checkedCount === 0) {
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = false;
+  } else if (checkedCount === relatedBoxes.length) {
+    selectAllCheckbox.checked = true;
+    selectAllCheckbox.indeterminate = false;
+  } else {
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = true;
+  }
+}
+
+// Helper function to update all Select All checkboxes
+function updateAllSelectAllStates() {
+  const selectAllCheckboxes = document.querySelectorAll(
+    '#filter-panel input[data-type$="selectall"]'
+  );
+  selectAllCheckboxes.forEach((checkbox) => updateSelectAllState(checkbox));
+}
+
+// Helper function to update category visibility based on included classes
+function updateCategoryVisibility(includedClasses) {
+  // Get all tab contents
+  const tabContents = document.querySelectorAll(".tab-content");
+
+  tabContents.forEach((tabContent) => {
+    // For weapons tab
+    const weaponCategories = tabContent.querySelectorAll(
+      ".filter-category-card"
+    );
+    weaponCategories.forEach((category) => {
+      const title = category.querySelector(".category-title");
+      if (title) {
+        const categoryClass = title.textContent.toLowerCase().includes("light")
+          ? "light"
+          : title.textContent.toLowerCase().includes("medium")
+          ? "medium"
+          : title.textContent.toLowerCase().includes("heavy")
+          ? "heavy"
+          : "";
+
+        if (categoryClass && !includedClasses.includes(categoryClass)) {
+          category.style.display = "none";
+        } else if (categoryClass) {
+          category.style.display = "block";
+        }
+      }
+    });
+
+    // For specs/gadgets tabs
+    const itemCategories = tabContent.querySelectorAll(".item-category");
+    itemCategories.forEach((category) => {
+      const isLight = category.classList.contains("light-category");
+      const isMedium = category.classList.contains("medium-category");
+      const isHeavy = category.classList.contains("heavy-category");
+
+      if (
+        (isLight && !includedClasses.includes("light")) ||
+        (isMedium && !includedClasses.includes("medium")) ||
+        (isHeavy && !includedClasses.includes("heavy"))
+      ) {
+        category.style.display = "none";
+      } else {
+        category.style.display = "block";
+      }
+    });
+  });
 }
 
 // Function to populate filter items from loadouts
 function populateFilterItems() {
   console.log("🔄 Populating filter items...");
+
+  // Save current checkbox states before clearing
+  const savedStates = {};
+  const allCheckboxes = document.querySelectorAll(
+    '#filter-panel input[type="checkbox"][value]'
+  );
+  allCheckboxes.forEach((checkbox) => {
+    const key = `${checkbox.getAttribute("data-type")}-${checkbox.getAttribute(
+      "data-class"
+    )}-${checkbox.value}`;
+    savedStates[key] = checkbox.checked;
+  });
+
+  // Get included classes from master checkboxes
+  const includedClasses = getIncludedClasses();
+  console.log("📋 Included classes:", includedClasses);
 
   // Get weapon grid containers
   const lightWeaponsGrid = document.getElementById("light-weapons-grid");
@@ -1895,88 +1349,112 @@ function populateFilterItems() {
   if (mediumGadgetsGrid) mediumGadgetsGrid.innerHTML = "";
   if (heavyGadgetsGrid) heavyGadgetsGrid.innerHTML = "";
 
-  // Populate weapons
-  populateItemGrid(
-    lightWeaponsGrid,
-    loadouts.Light.weapons,
-    "weapon",
-    "light",
-    "Light Weapons"
-  );
-  populateItemGrid(
-    mediumWeaponsGrid,
-    loadouts.Medium.weapons,
-    "weapon",
-    "medium",
-    "Medium Weapons"
-  );
-  populateItemGrid(
-    heavyWeaponsGrid,
-    loadouts.Heavy.weapons,
-    "weapon",
-    "heavy",
-    "Heavy Weapons"
-  );
+  // Hide/show category containers based on included classes
+  updateCategoryVisibility(includedClasses);
 
-  // Populate specializations
-  populateItemGrid(
-    lightSpecsGrid,
-    loadouts.Light.specializations,
-    "specialization",
-    "light",
-    "Light Specials"
-  );
-  populateItemGrid(
-    mediumSpecsGrid,
-    loadouts.Medium.specializations,
-    "specialization",
-    "medium",
-    "Medium Specials"
-  );
-  populateItemGrid(
-    heavySpecsGrid,
-    loadouts.Heavy.specializations,
-    "specialization",
-    "heavy",
-    "Heavy Specials"
-  );
+  // Only populate grids for included classes
+  if (includedClasses.includes("light")) {
+    // Populate Light items
+    populateItemGrid(
+      lightWeaponsGrid,
+      loadouts.Light.weapons,
+      "weapon",
+      "light",
+      "Light Weapons",
+      savedStates
+    );
+    populateItemGrid(
+      lightSpecsGrid,
+      loadouts.Light.specializations,
+      "specialization",
+      "light",
+      "Light Specials",
+      savedStates
+    );
+    populateItemGrid(
+      lightGadgetsGrid,
+      loadouts.Light.gadgets,
+      "gadget",
+      "light",
+      "Light Gadgets",
+      savedStates
+    );
+  }
 
-  // Populate gadgets
-  populateItemGrid(
-    lightGadgetsGrid,
-    loadouts.Light.gadgets,
-    "gadget",
-    "light",
-    "Light Gadgets"
-  );
-  populateItemGrid(
-    mediumGadgetsGrid,
-    loadouts.Medium.gadgets,
-    "gadget",
-    "medium",
-    "Medium Gadgets"
-  );
-  populateItemGrid(
-    heavyGadgetsGrid,
-    loadouts.Heavy.gadgets,
-    "gadget",
-    "heavy",
-    "Heavy Gadgets"
-  );
+  if (includedClasses.includes("medium")) {
+    // Populate Medium items
+    populateItemGrid(
+      mediumWeaponsGrid,
+      loadouts.Medium.weapons,
+      "weapon",
+      "medium",
+      "Medium Weapons",
+      savedStates
+    );
+    populateItemGrid(
+      mediumSpecsGrid,
+      loadouts.Medium.specializations,
+      "specialization",
+      "medium",
+      "Medium Specials",
+      savedStates
+    );
+    populateItemGrid(
+      mediumGadgetsGrid,
+      loadouts.Medium.gadgets,
+      "gadget",
+      "medium",
+      "Medium Gadgets",
+      savedStates
+    );
+  }
+
+  if (includedClasses.includes("heavy")) {
+    // Populate Heavy items
+    populateItemGrid(
+      heavyWeaponsGrid,
+      loadouts.Heavy.weapons,
+      "weapon",
+      "heavy",
+      "Heavy Weapons",
+      savedStates
+    );
+    populateItemGrid(
+      heavySpecsGrid,
+      loadouts.Heavy.specializations,
+      "specialization",
+      "heavy",
+      "Heavy Specials",
+      savedStates
+    );
+    populateItemGrid(
+      heavyGadgetsGrid,
+      loadouts.Heavy.gadgets,
+      "gadget",
+      "heavy",
+      "Heavy Gadgets",
+      savedStates
+    );
+  }
 
   console.log("✅ Filter items population complete");
 
-  // Setup Select All functionality once items are populated
-  if (typeof setupSelectAllCheckboxes === "function") {
-    setupSelectAllCheckboxes();
-  }
+  // Select All functionality now uses event delegation - no need to reinitialize
+  updateAllSelectAllStates();
 
   // Setup tab content search placeholder update
   setupTabSearchPlaceholder();
 }
 
 // Helper function to populate item grids
-function populateItemGrid(gridElement, items, type, classType, labelText) {
+function populateItemGrid(
+  gridElement,
+  items,
+  type,
+  classType,
+  labelText,
+  savedStates = {}
+) {
   if (!gridElement || !items || items.length === 0) {
     console.warn(`⚠️ Could not populate ${classType} ${type} grid`);
     return;
@@ -1989,18 +1467,25 @@ function populateItemGrid(gridElement, items, type, classType, labelText) {
   selectAllItem.className = "item-checkbox select-all-checkbox";
   selectAllItem.innerHTML = `
     <input type="checkbox" checked data-type="${type}-selectall" data-class="${classType}">
-    <span><strong>Select All ${labelText}</strong></span>
+    <span class="checkbox-box"></span>
+    <span class="checkbox-label"><strong>Select All ${labelText}</strong></span>
   `;
   gridElement.appendChild(selectAllItem);
 
   // Sort items alphabetically, then add individual items
   const sortedItems = [...items].sort((a, b) => a.localeCompare(b));
   sortedItems.forEach((item) => {
+    const key = `${type}-${classType}-${item}`;
+    const isChecked = savedStates[key] !== undefined ? savedStates[key] : true;
+
     const itemElement = document.createElement("label");
     itemElement.className = "item-checkbox";
     itemElement.innerHTML = `
-      <input type="checkbox" value="${item}" checked data-type="${type}" data-class="${classType}">
-      <span>${item}</span>
+      <input type="checkbox" value="${item}" ${
+      isChecked ? "checked" : ""
+    } data-type="${type}" data-class="${classType}">
+      <span class="checkbox-box"></span>
+      <span class="checkbox-label">${item}</span>
     `;
     gridElement.appendChild(itemElement);
   });
@@ -2040,7 +1525,7 @@ async function finalizeSpin(columns) {
       const transitionSound = document.getElementById("transitionSound");
       if (transitionSound) {
         transitionSound.currentTime = 0;
-        transitionSound.volume = 0.6;
+        transitionSound.volume = SOUND_VOLUMES.TRANSITION;
         transitionSound.play().catch(() => {});
       }
     }
@@ -2065,7 +1550,7 @@ async function finalizeSpin(columns) {
       } else {
         displayLoadout(state.selectedClass);
       }
-    }, 500);
+    }, UI_TIMING.NEXT_SPIN_DELAY);
 
     return; // Exit early - we're handling next spin
   }
@@ -2128,12 +1613,25 @@ async function finalizeSpin(columns) {
     btn.style.pointerEvents = "none";
   });
 
-  // Get the final selections from the DOM
-  const itemContainers = document.querySelectorAll(
-    "#output .items-container .item-container"
-  );
+  // Check if items were passed directly (from overlay slot machine)
+  let finalItems = null;
+  
+  if (columns && Array.isArray(columns) && columns.length >= 5) {
+    console.log("📦 Using passed items data from overlay slot machine");
+    finalItems = columns;
+  } else {
+    console.log("🔍 Getting items from DOM");
+    // Get the final selections from the DOM
+    const itemContainers = document.querySelectorAll(
+      "#output .items-container .item-container"
+    );
+    
+    if (itemContainers && itemContainers.length > 0) {
+      console.log(`🔍 Found ${itemContainers.length} item containers in DOM`);
+    }
+  }
 
-  if (itemContainers && itemContainers.length > 0) {
+  if (finalItems || (itemContainers && itemContainers.length > 0)) {
     isAddingToHistory = true; // Set the flag to prevent duplicate calls
     console.log("🔒 Setting isAddingToHistory flag to prevent duplicates");
 
@@ -2141,29 +1639,42 @@ async function finalizeSpin(columns) {
     let savedClass = state.selectedClass;
     console.log("💾 Selected Class Before Processing:", savedClass);
 
-    // If we're using the random class mode, get the actual selected class
-    if (savedClass && savedClass.toLowerCase() === "random") {
-      const activeClassButton = document.querySelector(
-        ".class-button.selected:not([data-class='Random'])"
-      );
-      savedClass = activeClassButton
-        ? activeClassButton.dataset.class
-        : savedClass;
-    }
+    // Class selection code removed - commenting out
+    // if (savedClass && savedClass.toLowerCase() === "random") {
+    //   const activeClassButton = document.querySelector(
+    //     ".class-button.selected:not([data-class='Random'])"
+    //   );
+    //   savedClass = activeClassButton
+    //     ? activeClassButton.dataset.class
+    //     : savedClass;
+    // }
 
-    // BEFORE processing anything, let's debug the containers
-    console.log(`🔍 DEBUGGING: Found ${itemContainers.length} item containers`);
-    itemContainers.forEach((container, index) => {
-      console.log(`Container ${index}:`, {
-        "data-winning-gadget": container.dataset.winningGadget,
-        "data-original-gadget": container.dataset.originalGadget,
-        "data-gadget-position": container.dataset.gadgetPosition,
-        classList: Array.from(container.classList),
+    // Process items based on source
+    let selectedItems;
+    
+    if (finalItems) {
+      // Items were passed directly - extract the names
+      selectedItems = finalItems.map(item => {
+        if (typeof item === 'object' && item.name) {
+          return item.name;
+        }
+        return item;
       });
-    });
+      console.log("📦 Extracted items from passed data:", selectedItems);
+    } else {
+      // BEFORE processing anything, let's debug the containers
+      console.log(`🔍 DEBUGGING: Found ${itemContainers.length} item containers`);
+      itemContainers.forEach((container, index) => {
+        console.log(`Container ${index}:`, {
+          "data-winning-gadget": container.dataset.winningGadget,
+          "data-original-gadget": container.dataset.originalGadget,
+          "data-gadget-position": container.dataset.gadgetPosition,
+          classList: Array.from(container.classList),
+        });
+      });
 
-    // Get all the selected items - use data attributes for gadgets to ensure accuracy
-    const selectedItems = Array.from(itemContainers).map((container, index) => {
+      // Get all the selected items - use data attributes for gadgets to ensure accuracy
+      selectedItems = Array.from(itemContainers).map((container, index) => {
       console.log(`📋 Processing container ${index}:`, container);
 
       // For gadgets (index 2, 3, 4), use multiple fallback methods
@@ -2305,6 +1816,7 @@ async function finalizeSpin(columns) {
       );
       return itemText || "Unknown";
     });
+    } // End of else block for DOM processing
 
     // Debug the selected items
     console.log("🔍 Selected Items:", selectedItems);
@@ -2367,7 +1879,7 @@ async function finalizeSpin(columns) {
 
             console.log("✅ Successfully added to history:", loadoutString);
             isAddingToHistory = false; // Reset the flag
-          }, 500);
+          }, UI_TIMING.HISTORY_ADD_DELAY);
         })
         .catch((error) => {
           console.error(
@@ -2379,7 +1891,7 @@ async function finalizeSpin(columns) {
             addToHistory(savedClass, weapon, specialization, gadgets, "");
             console.log("✅ Added to history without roast:", loadoutString);
             isAddingToHistory = false; // Reset the flag
-          }, 500);
+          }, UI_TIMING.HISTORY_ADD_DELAY);
         });
 
       // Reset the class AFTER saving it
@@ -2400,6 +1912,10 @@ async function finalizeSpin(columns) {
   }
 
   // REMOVED re-enabling code - buttons will stay disabled until user selects a class
+  
+  // Remove the slot machine active class to show selection display again on desktop
+  document.body.classList.remove('slot-machine-active');
+  
   console.log(
     "✅ Spin completed and finalized! Buttons remain disabled until class selection."
   );
@@ -2419,7 +1935,7 @@ function updateSpinCountdown(spinsRemaining) {
 
     if (spinValue === spinsRemaining) {
       button.classList.add("active", "selected");
-      button.style.animation = "moveLeft 0.5s ease-in-out forwards";
+      button.style.animation = `moveLeft ${CELEBRATION_EFFECTS.BUTTON_ANIMATION_DURATION}ms ease-in-out forwards`;
     } else {
       button.style.animation = "none";
     }
@@ -2429,8 +1945,9 @@ function updateSpinCountdown(spinsRemaining) {
 
 // Main spin function
 const spinLoadout = () => {
-  if (state.isSpinning || !state.selectedClass) {
-    console.log("⚠️ Cannot start spin - already spinning or no class selected");
+  // Class selection check removed - now only check if spinning
+  if (state.isSpinning) {
+    console.log("⚠️ Cannot start spin - already spinning");
     return;
   }
 
@@ -2439,10 +1956,10 @@ const spinLoadout = () => {
   state.isSpinning = true;
   state.currentSpin = state.totalSpins;
 
-  // Disable ONLY class buttons during the spin, leave spin buttons enabled
-  document.querySelectorAll(".class-button").forEach((btn) => {
-    btn.setAttribute("disabled", "true");
-  });
+  // Class button disabling removed - class selection system deprecated
+  // document.querySelectorAll(".class-button").forEach((btn) => {
+  //   btn.setAttribute("disabled", "true");
+  // });
 
   document.getElementById("output").scrollIntoView({
     behavior: "smooth",
@@ -2460,12 +1977,12 @@ const spinLoadout = () => {
   );
 
   // Start the first spin
-  // The roulette has already selected the class, so use it directly
+  // Use the selected class if available
   if (
     state.selectedClass &&
     ["Light", "Medium", "Heavy"].includes(state.selectedClass)
   ) {
-    console.log(`🎯 Using class selected by roulette: ${state.selectedClass}`);
+    console.log(`🎯 Using selected class: ${state.selectedClass}`);
     displayLoadout(state.selectedClass);
   } else if (state.selectedClass === "random" || !state.selectedClass) {
     console.log("🎲 Random mode - selecting from available classes");
@@ -2481,17 +1998,52 @@ const spinLoadout = () => {
 // Make spinLoadout globally accessible
 window.spinLoadout = spinLoadout;
 
+// Make displayLoadout globally accessible for overlay manager
+window.displayLoadout = displayLoadout;
+
+// Make finalizeSpin globally accessible for overlay manager
+window.finalizeSpin = finalizeSpin;
+
+// Make other functions globally accessible for slot machine wrapper
+window.getFilteredLoadouts = getFilteredLoadouts;
+window.getRandomUniqueItems = getRandomUniqueItems;
+window.getUniqueGadgets = getUniqueGadgets;
+
+// Override displayLoadout if new slot machine is available
+setTimeout(() => {
+  if (typeof window.displayLoadoutWithNewSlotMachine === 'function') {
+    console.log('🎰 Overriding displayLoadout with new slot machine implementation');
+    window.displayLoadout = window.displayLoadoutWithNewSlotMachine;
+  }
+}, 100);
+
 // Celebration effects function
 function addCelebrationEffects() {
   const itemsContainer = document.querySelector("#output .items-container");
   if (!itemsContainer) return;
+
+  // === Move all .locked-tag elements to body and top layer ===
+  const lockedTags = document.querySelectorAll(".locked-tag");
+  lockedTags.forEach((tag) => {
+    // Get the bounding rect of the tag's parent (item container)
+    const parent = tag.parentElement;
+    const parentRect = parent.getBoundingClientRect();
+    // Set tag to fixed position, centered above its parent
+    tag.style.position = "fixed";
+    tag.style.left = `${parentRect.left + parentRect.width / 2}px`;
+    tag.style.top = `${parentRect.top - 10}px`;
+    tag.style.transform = "translate(-50%, 0)";
+    tag.style.zIndex = "11000";
+    tag.style.pointerEvents = "none";
+    document.body.appendChild(tag);
+  });
 
   // Play celebration sound at the beginning of the animation
   if (state.soundEnabled) {
     const celebrationSound = document.getElementById("celebrationSound");
     if (celebrationSound) {
       celebrationSound.currentTime = 0;
-      celebrationSound.volume = 0.7;
+      celebrationSound.volume = SOUND_VOLUMES.CELEBRATION;
       celebrationSound.play().catch((err) => {
         console.log("Celebration sound play error:", err);
       });
@@ -2547,91 +2099,23 @@ function addCelebrationEffects() {
       itemsContainer.appendChild(floatingText);
 
       // Remove after animation
-      setTimeout(() => floatingText.remove(), 2000);
-    }, index * 100);
+      setTimeout(
+        () => floatingText.remove(),
+        CELEBRATION_EFFECTS.FLOATING_TEXT_DURATION
+      );
+    }, index * CELEBRATION_EFFECTS.FLOATING_TEXT_STAGGER);
   });
 
   // Remove banner after 3 seconds
   setTimeout(() => {
     banner.classList.add("fade-out");
-    setTimeout(() => banner.remove(), 500);
+    setTimeout(() => banner.remove(), CELEBRATION_EFFECTS.BANNER_FADE_DURATION);
     itemsContainer.classList.remove("celebration-flash");
-  }, 3000);
+    // Do NOT restore locked tags to original containers; keep them fixed in place
+  }, CELEBRATION_EFFECTS.BANNER_DISPLAY_DURATION);
 }
 
-// Screen shake effect for dramatic lock-in
-function addScreenShake() {
-  const body = document.body;
-  body.classList.add("screen-shake");
-
-  setTimeout(() => {
-    body.classList.remove("screen-shake");
-  }, 600);
-}
-
-// Particle explosion when cards lock in
-function createLockInParticleExplosion(container) {
-  const rect = container.getBoundingClientRect();
-  const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height / 2;
-
-  // Create multiple waves of particles
-  for (let wave = 0; wave < 3; wave++) {
-    setTimeout(() => {
-      for (let i = 0; i < 12; i++) {
-        const particle = document.createElement("div");
-        particle.className = "lock-in-particle";
-
-        const angle = (360 / 12) * i;
-        const velocity = 150 + wave * 50;
-        const size = Math.random() * 8 + 4;
-
-        particle.style.cssText = `
-          position: fixed;
-          width: ${size}px;
-          height: ${size}px;
-          background: linear-gradient(45deg, #ffff00, #ffd700, #ff8c00);
-          border-radius: 50%;
-          pointer-events: none;
-          z-index: 10000;
-          left: ${centerX}px;
-          top: ${centerY}px;
-          box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-        `;
-
-        document.body.appendChild(particle);
-
-        // Animate particle
-        const radians = (angle * Math.PI) / 180;
-        const endX = centerX + Math.cos(radians) * velocity;
-        const endY = centerY + Math.sin(radians) * velocity;
-
-        particle.animate(
-          [
-            {
-              transform: "translate(0, 0) scale(1)",
-              opacity: 1,
-            },
-            {
-              transform: `translate(${endX - centerX}px, ${
-                endY - centerY
-              }px) scale(0)`,
-              opacity: 0,
-            },
-          ],
-          {
-            duration: 800 + wave * 200,
-            easing: "ease-out",
-          }
-        ).onfinish = () => {
-          if (particle.parentNode) {
-            particle.parentNode.removeChild(particle);
-          }
-        };
-      }
-    }, wave * 100);
-  }
-}
+// Screen shake and particle effects removed - now in AnimationEngine.js
 
 // Global function to stop all audio (useful for mobile)
 window.stopAllAudio = function () {
@@ -2648,7 +2132,7 @@ window.stopAllAudio = function () {
       setTimeout(() => {
         audio.src = src;
         audio.loop = true;
-      }, 100);
+      }, UI_TIMING.AUDIO_RELOAD_DELAY);
     }
   });
   console.log("All audio stopped");
@@ -2699,43 +2183,76 @@ async function addToHistory(
   //   : "";
   const badgeHTML = ""; // Overlay tags removed
 
-  // Create initial entry with clean design
+  // Create initial entry with loading roast state
   newEntry.innerHTML = `
-    <div class="history-card-content">
-      <div class="loadout-header">
+    <article class="casino-history-card">
+      ${badgeHTML}
+      <header class="loadout-header">
         <span class="class-badge ${classType.toLowerCase()}">${classType.toUpperCase()}</span>
-        <span class="loadout-name">${loadoutName}</span>
-        <span class="timestamp">Just now</span>
-      </div>
-      <div class="loadout-items">
-        <div class="loadout-row">
-          <span class="item-label">Weapon:</span>
-          <span class="item-value">${selectedWeapon}</span>
+        <h3 class="loadout-name">${loadoutName}</h3>
+        <time class="timestamp">Just now</time>
+      </header>
+      
+      <div class="loadout-details">
+        <div class="weapon-item">
+          <span class="item-label">WEAPON</span>
+          <div class="item-content">
+            <img src="images/${selectedWeapon.replace(
+              / /g,
+              "_"
+            )}.webp" alt="${selectedWeapon}" class="item-icon">
+            <span class="item-name">${selectedWeapon}</span>
+          </div>
         </div>
-        <div class="loadout-row">
-          <span class="item-label">Specialization:</span>
-          <span class="item-value">${selectedSpec}</span>
+        
+        <div class="spec-item">
+          <span class="item-label">SPECIALIZATION</span>
+          <div class="item-content">
+            <img src="images/${selectedSpec.replace(
+              / /g,
+              "_"
+            )}.webp" alt="${selectedSpec}" class="item-icon">
+            <span class="item-name">${selectedSpec}</span>
+          </div>
         </div>
-        <div class="loadout-row gadgets-row">
-          <span class="item-label">Gadgets:</span>
-          <div class="gadgets-list">
-            ${selectedGadgets.map(g => `<span class="gadget-value">${g}</span>`).join('')}
+        
+        <div class="gadget-group">
+          <span class="item-label">GADGETS</span>
+          <div class="gadget-list">
+            ${selectedGadgets
+              .map(
+                (g) => `
+              <div class="gadget-item">
+                <img src="images/${g.replace(
+                  / /g,
+                  "_"
+                )}.webp" alt="${g}" class="item-icon small">
+                <span class="item-name small">${g}</span>
+              </div>
+            `
+              )
+              .join("")}
           </div>
         </div>
       </div>
-      <div class="roast-section loading">
-        <div class="roast-content">
-          <span class="roast-text">Analyzing loadout configuration...</span>
-        </div>
+      
+      <div class="ai-analysis loading">
+        <span class="ai-icon">🤖</span>
+        <p class="roast-text">
+          <span class="spinner"></span> Generating Loadout Analysis...
+        </p>
+        <span class="score-badge">?/10</span>
       </div>
-      <button class="copy-button" onclick="copyLoadoutText(this)" title="Copy loadout to clipboard">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-        </svg>
-        Copy
-      </button>
-    </div>
+      
+      <footer class="loadout-actions">
+        <button class="copy-text-btn" onclick="copyLoadoutText(this)" title="Copy loadout as text">
+          <span>📋</span> Copy Text
+        </button>
+        <button class="copy-image-btn" onclick="copyLoadoutImage(this)" title="Screenshot this card">
+          <span>📸</span> Copy Image
+        </button>
+      </footer>
+    </article>
   `;
 
   historyList.prepend(newEntry);
@@ -2746,10 +2263,23 @@ async function addToHistory(
   // Use provided roast or generate new one
   if (providedRoast) {
     // Use the roast that was already generated
-    const roastSection = newEntry.querySelector(".roast-section");
+    const analysisSection = newEntry.querySelector(".ai-analysis");
     const roastText = newEntry.querySelector(".roast-text");
-    roastSection.classList.remove("loading");
+    const scoreBadge = newEntry.querySelector(".score-badge");
+
+    analysisSection.classList.remove("loading");
     roastText.textContent = providedRoast;
+
+    // Extract score from roast text
+    const scoreMatch = providedRoast.match(/(\d+)\/10/);
+    if (scoreMatch) {
+      scoreBadge.textContent = scoreMatch[0];
+      // Add class based on score
+      const score = parseInt(scoreMatch[1]);
+      if (score >= 8) analysisSection.classList.add("high-score");
+      else if (score >= 5) analysisSection.classList.add("mid-score");
+      else analysisSection.classList.add("low-score");
+    }
   } else {
     // Generate roast asynchronously (fallback for cases where no roast is provided)
     generateRoast(
@@ -2790,8 +2320,8 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
   roastContainer.className = "slot-machine-roast loading";
   roastContainer.innerHTML = `
     <div class="roast-content">
-      <span class="fire-emoji">🔥</span>
-      <span class="roast-text">Analyzing loadout configuration...</span>
+      <span class="fire-emoji">🎯</span>
+      <span class="roast-text"><span class='spinner'></span> Generating Loadout Analysis...</span>
     </div>
   `;
 
@@ -2800,7 +2330,7 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
 
   let generatedRoast = null;
 
-  // Generate roast
+  // Generate analysis
   try {
     // Check if we're in local development
     const isLocal =
@@ -2810,7 +2340,7 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
 
     if (isLocal) {
       // Skip API call for local development, use fallback immediately
-      throw new Error("Local development - using fallback roasts");
+      throw new Error("Local development - using fallback analysis");
     }
 
     const requestData = {
@@ -2820,9 +2350,9 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
       gadgets: gadgets,
     };
 
-    console.log("🚀 Sending roast request:", requestData);
+    console.log("🚀 Sending analysis request:", requestData);
 
-    const response = await fetch("/api/roast", {
+    const response = await fetch("/api/loadout-analysis", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -2835,9 +2365,9 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
     }
 
     const data = await response.json();
-    console.log("🔥 Received roast response:", data);
+    console.log("🎯 Received analysis response:", data);
 
-    generatedRoast = data.roast;
+    generatedRoast = data.analysis || data.roast;
 
     // Update the roast display
     roastContainer.classList.remove("loading");
@@ -2847,22 +2377,68 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
     // Remove roast after 10 seconds
     setTimeout(() => {
       roastContainer.classList.add("fade-out");
-      setTimeout(() => roastContainer.remove(), 500);
-    }, 10000);
+      setTimeout(() => roastContainer.remove(), ROAST_TIMING.FADE_OUT_DURATION);
+    }, ROAST_TIMING.DISPLAY_DURATION);
   } catch (error) {
-    console.log("Using fallback roast for local development:", error.message);
+    console.log(
+      "Using fallback analysis for local development:",
+      error.message
+    );
 
-    // Fallback roast
-    const fallbackRoasts = [
-      `That ${weapon} on ${classType}? The Finals servers just crashed from cringe. -10/10`,
-      `This ${weapon} combo broke our analysis system. That says enough. 0/10`,
-      `${classType} with ${weapon}? Even the AI is speechless. That's a new low.`,
-      `I've seen bad loadouts, but ${weapon} with ${spec}? This is a war crime.`,
-      `${weapon} + ${spec} = Mathematical proof that some combinations shouldn't exist.`,
+    // Categorize weapons
+    const annoyingWeapons = [
+      "Sword",
+      "Lockbolt X",
+      "SH1900",
+      "Throwing Knives",
+      "Dual Blades",
+      "Riot Shield",
+      "Flamethrower",
+      "Spear",
+      "M32-GL",
+      "CL-40",
+    ];
+    const difficultWeapons = [
+      "M60",
+      "R.357",
+      "CB-01 Repeater",
+      "Recurve Bow",
+      "Dagger",
+      "AKM",
     ];
 
+    const isAnnoying = annoyingWeapons.includes(weapon);
+    const isDifficult = difficultWeapons.includes(weapon);
+
+    // Fallback analysis with new tone (50% funny, 30% encouraging, 20% roast)
+    let fallbackAnalysis = [];
+
+    if (isAnnoying) {
+      fallbackAnalysis = [
+        `${weapon} on ${classType}? Your enemies will hate you, but hey, that's half the battle won! Keep tilting them! 7/10`,
+        `Running ${weapon} with ${spec}? Psychological warfare at its finest. The rage quits will be legendary! 8/10`,
+        `${weapon} + ${gadgets[0]}? You're not here to make friends, and I respect that chaos energy! 7/10`,
+        `This ${weapon} loadout is giving 'main character in a comedy show' vibes. Embrace the mayhem! 8/10`,
+      ];
+    } else if (isDifficult) {
+      fallbackAnalysis = [
+        `${weapon} on ${classType}? You're playing on hard mode and I'm here for it! Master this and you'll be unstoppable. 9/10`,
+        `${weapon} with ${spec}? High risk, high reward - just like ordering sushi from a gas station, but cooler! 8/10`,
+        `Choosing ${weapon} shows confidence. Sure, it's tough, but legends aren't made from easy mode! 8/10`,
+        `${weapon} takes skill, and you're brave enough to try. That's already better than 90% of players! 7/10`,
+      ];
+    } else {
+      fallbackAnalysis = [
+        `${weapon} on ${classType}? Solid choice! You'll confuse enemies AND yourself - perfectly balanced! 6/10`,
+        `${weapon} + ${spec} = Chaotic good energy. Will it work? Maybe! Will it be fun? Absolutely! 7/10`,
+        `This ${weapon} combo is like pineapple on pizza - controversial but surprisingly effective! 7/10`,
+        `${classType} with ${weapon}? You're writing your own meta. Props for creativity! 6/10`,
+        `${weapon} and ${gadgets[0]}? That's thinking outside the loot box! Keep experimenting! 7/10`,
+      ];
+    }
+
     generatedRoast =
-      fallbackRoasts[Math.floor(Math.random() * fallbackRoasts.length)];
+      fallbackAnalysis[Math.floor(Math.random() * fallbackAnalysis.length)];
 
     roastContainer.classList.remove("loading");
     roastContainer.classList.add("fallback");
@@ -2872,14 +2448,14 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
     // Remove roast after 10 seconds
     setTimeout(() => {
       roastContainer.classList.add("fade-out");
-      setTimeout(() => roastContainer.remove(), 500);
-    }, 10000);
+      setTimeout(() => roastContainer.remove(), ROAST_TIMING.FADE_OUT_DURATION);
+    }, ROAST_TIMING.DISPLAY_DURATION);
   }
 
   return generatedRoast;
 }
 
-// Generate AI roast for loadout
+// Generate AI analysis for loadout
 async function generateRoast(
   entryElement,
   classType,
@@ -2887,8 +2463,15 @@ async function generateRoast(
   specialization,
   gadgets
 ) {
-  const roastSection = entryElement.querySelector(".roast-section");
+  const analysisSection = entryElement.querySelector(".ai-analysis");
   const roastText = entryElement.querySelector(".roast-text");
+  const scoreBadge = entryElement.querySelector(".score-badge");
+
+  // Update loading text
+  if (roastText && analysisSection.classList.contains("loading")) {
+    roastText.innerHTML =
+      '<span class="spinner"></span> Generating Loadout Analysis...';
+  }
 
   try {
     // Debug - log what we're sending to the API
@@ -2898,10 +2481,10 @@ async function generateRoast(
       specialization: specialization,
       gadgets: gadgets,
     };
-    console.log("🚀 Sending roast request:", requestData);
+    console.log("🚀 Sending analysis request:", requestData);
 
     // Call our Vercel API endpoint
-    const response = await fetch("/api/roast", {
+    const response = await fetch("/api/loadout-analysis", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -2914,33 +2497,93 @@ async function generateRoast(
     }
 
     const data = await response.json();
-    console.log("🔥 Received roast response:", data);
+    console.log("🎯 Received analysis response:", data);
 
-    // Update the roast section with the AI-generated roast
-    roastSection.classList.remove("loading");
-    roastText.textContent = data.roast;
+    // Update the analysis section with the AI-generated analysis
+    analysisSection.classList.remove("loading");
+    roastText.textContent = data.analysis || data.roast;
+
+    // Extract and display score
+    const scoreMatch = (data.analysis || data.roast).match(/(\d+)\/10/);
+    if (scoreMatch) {
+      scoreBadge.textContent = scoreMatch[0];
+      const score = parseInt(scoreMatch[1]);
+      if (score >= 8) analysisSection.classList.add("high-score");
+      else if (score >= 5) analysisSection.classList.add("mid-score");
+      else analysisSection.classList.add("low-score");
+    }
 
     // Add fallback indicator if API failed
     if (data.fallback) {
-      roastSection.classList.add("fallback");
+      analysisSection.classList.add("fallback");
     }
   } catch (error) {
-    console.error("Error generating roast:", error);
+    console.error("Error generating analysis:", error);
 
-    // Fallback to a generic roast that tries to be more specific
-    const fallbackRoasts = [
-      `${weapon} and ${specialization}? Bold choice, terrible execution. 1/10`,
-      `${classType} with ${weapon}? Your enemies are laughing already. 0/10`,
-      `${specialization} + ${gadgets[0]}? Creative chaos, emphasis on chaos. 2/10`,
-      `This ${weapon} combo broke our analysis system. That says enough. 0/10`,
-      `${classType} class deserves better than this mess. 1/10`,
-      `${weapon} with these gadgets? Identity crisis much? 2/10`,
+    // Categorize weapons
+    const annoyingWeapons = [
+      "Sword",
+      "Lockbolt X",
+      "SH1900",
+      "Throwing Knives",
+      "Dual Blades",
+      "Riot Shield",
+      "Flamethrower",
+      "Spear",
+      "M32-GL",
+      "CL-40",
+    ];
+    const difficultWeapons = [
+      "M60",
+      "R.357",
+      "CB-01 Repeater",
+      "Recurve Bow",
+      "Dagger",
+      "AKM",
     ];
 
-    roastSection.classList.remove("loading");
-    roastSection.classList.add("fallback");
-    roastText.textContent =
-      fallbackRoasts[Math.floor(Math.random() * fallbackRoasts.length)];
+    const isAnnoying = annoyingWeapons.includes(weapon);
+    const isDifficult = difficultWeapons.includes(weapon);
+
+    // Fallback to analysis with new tone
+    let fallbackAnalysis = [];
+
+    if (isAnnoying) {
+      fallbackAnalysis = [
+        `${weapon} and ${specialization}? You're here to ruin someone's day - I like your style! 8/10`,
+        `${classType} with ${weapon}? Maximum tilt potential achieved. The salt will flow! 7/10`,
+        `${specialization} + ${gadgets[0]}? Chaotic evil, but make it fun! 8/10`,
+      ];
+    } else if (isDifficult) {
+      fallbackAnalysis = [
+        `${weapon} and ${specialization}? Playing on expert mode - respect the grind! 8/10`,
+        `${classType} with ${weapon}? You're not here for easy wins, you're here for glory! 9/10`,
+        `Mastering ${weapon} with these gadgets? That's champion mentality right there! 8/10`,
+      ];
+    } else {
+      fallbackAnalysis = [
+        `${weapon} and ${specialization}? Unconventional but intriguing. Science requires sacrifice! 6/10`,
+        `${classType} with ${weapon}? You're inventing the meta, one match at a time! 7/10`,
+        `${specialization} + ${gadgets[0]}? Creative loadout! Success not guaranteed, fun definitely is! 7/10`,
+      ];
+    }
+
+    const selectedAnalysis =
+      fallbackAnalysis[Math.floor(Math.random() * fallbackAnalysis.length)];
+
+    analysisSection.classList.remove("loading");
+    analysisSection.classList.add("fallback");
+    roastText.textContent = selectedAnalysis;
+
+    // Extract and display score
+    const scoreMatch = selectedAnalysis.match(/(\d+)\/10/);
+    if (scoreMatch) {
+      scoreBadge.textContent = scoreMatch[0];
+      const score = parseInt(scoreMatch[1]);
+      if (score >= 8) analysisSection.classList.add("high-score");
+      else if (score >= 5) analysisSection.classList.add("mid-score");
+      else analysisSection.classList.add("low-score");
+    }
   }
 
   // Save history after roast is generated
@@ -2956,18 +2599,29 @@ function saveHistory() {
       const loadoutName = entry
         .querySelector(".loadout-name")
         ?.textContent.trim();
-      
-      // Get weapon and specialization from the new structure
-      const weaponRow = entry.querySelector(".loadout-row:nth-child(1)");
-      const specRow = entry.querySelector(".loadout-row:nth-child(2)");
-      const weapon = weaponRow?.querySelector(".item-value")?.textContent || "Unknown Weapon";
-      const specialization = specRow?.querySelector(".item-value")?.textContent || "Unknown Special";
-      
-      // Get gadgets from the new structure
+      const weapon = entry.querySelector(
+        ".weapon-item .item-name"
+      )?.textContent;
+      const specialization = entry.querySelector(
+        ".spec-item .item-name"
+      )?.textContent;
       const gadgets = Array.from(
-        entry.querySelectorAll(".gadget-value")
+        entry.querySelectorAll(".gadget-item .item-name")
       ).map((el) => el.textContent);
-      
+      const isSpicy = entry.classList.contains("spicy-loadout");
+
+      // Extract badge data
+      const badgeElement = entry.querySelector(".loadout-badge");
+      const badge = badgeElement
+        ? {
+            text: badgeElement.textContent,
+            type: badgeElement.classList.contains("legendary-chaos")
+              ? "legendary-chaos"
+              : "special",
+            tooltip: badgeElement.getAttribute("title") || "",
+          }
+        : null;
+
       // Extract roast data
       const roastSection = entry.querySelector(".roast-section");
       const roastText = entry.querySelector(".roast-text")?.textContent;
@@ -2980,6 +2634,8 @@ function saveHistory() {
         weapon,
         specialization,
         gadgets,
+        isSpicy,
+        badge,
         roast: isRoastLoading ? null : roastText,
         roastFallback: isRoastFallback,
         timestamp: Date.now(),
@@ -3038,6 +2694,7 @@ function loadHistory() {
       roastSectionHTML = `
         <div class="roast-section${fallbackClass}">
           <div class="roast-content">
+            <span class="fire-emoji">🔥</span>
             <span class="roast-text">${entryData.roast}</span>
           </div>
         </div>
@@ -3047,6 +2704,7 @@ function loadHistory() {
       roastSectionHTML = `
         <div class="roast-section fallback">
           <div class="roast-content">
+            <span class="fire-emoji">🔥</span>
             <span class="roast-text">Analysis unavailable. Still questionable though. 1/10</span>
           </div>
         </div>
@@ -3058,38 +2716,102 @@ function loadHistory() {
       ? `<div class="loadout-badge ${entryData.badge.type}" title="${entryData.badge.tooltip}">${entryData.badge.text}</div>`
       : "";
 
-    entry.innerHTML = `
-      <div class="history-card-content">
-        <div class="loadout-header">
-          <span class="class-badge ${entryData.classType.toLowerCase()}">${entryData.classType.toUpperCase()}</span>
-          <span class="loadout-name">${entryData.loadoutName}</span>
-          <span class="timestamp">${timeAgo}</span>
+    // Parse roast and extract score
+    let roastHTML = "";
+    let scoreText = "?/10";
+    let scoreClass = "";
+    
+    if (entryData.roast) {
+      const scoreMatch = entryData.roast.match(/(\d+)\/10/);
+      if (scoreMatch) {
+        scoreText = scoreMatch[0];
+        const score = parseInt(scoreMatch[1]);
+        if (score >= 8) scoreClass = "high-score";
+        else if (score >= 5) scoreClass = "mid-score";
+        else scoreClass = "low-score";
+      }
+      
+      roastHTML = `
+        <div class="ai-analysis ${scoreClass}">
+          <span class="ai-icon">🤖</span>
+          <p class="roast-text">${entryData.roast}</p>
+          <span class="score-badge">${scoreText}</span>
         </div>
-        <div class="loadout-items">
-          <div class="loadout-row">
-            <span class="item-label">Weapon:</span>
-            <span class="item-value">${entryData.weapon}</span>
+      `;
+    } else {
+      // Fallback for old entries without roasts
+      roastHTML = `
+        <div class="ai-analysis low-score">
+          <span class="ai-icon">🤖</span>
+          <p class="roast-text">Analysis unavailable. Still questionable though.</p>
+          <span class="score-badge">1/10</span>
+        </div>
+      `;
+    }
+
+    entry.innerHTML = `
+      <article class="casino-history-card">
+        ${badgeHTML}
+        <header class="loadout-header">
+          <span class="class-badge ${entryData.classType.toLowerCase()}">${entryData.classType.toUpperCase()}</span>
+          <h3 class="loadout-name">${entryData.loadoutName}</h3>
+          <time class="timestamp">${timeAgo}</time>
+        </header>
+        
+        <div class="loadout-details">
+          <div class="weapon-item">
+            <span class="item-label">WEAPON</span>
+            <div class="item-content">
+              <img src="images/${entryData.weapon.replace(
+                / /g,
+                "_"
+              )}.webp" alt="${entryData.weapon}" class="item-icon">
+              <span class="item-name">${entryData.weapon}</span>
+            </div>
           </div>
-          <div class="loadout-row">
-            <span class="item-label">Specialization:</span>
-            <span class="item-value">${entryData.specialization}</span>
+          
+          <div class="spec-item">
+            <span class="item-label">SPECIALIZATION</span>
+            <div class="item-content">
+              <img src="images/${entryData.specialization.replace(
+                / /g,
+                "_"
+              )}.webp" alt="${entryData.specialization}" class="item-icon">
+              <span class="item-name">${entryData.specialization}</span>
+            </div>
           </div>
-          <div class="loadout-row gadgets-row">
-            <span class="item-label">Gadgets:</span>
-            <div class="gadgets-list">
-              ${entryData.gadgets.map(g => `<span class="gadget-value">${g}</span>`).join('')}
+          
+          <div class="gadget-group">
+            <span class="item-label">GADGETS</span>
+            <div class="gadget-list">
+              ${entryData.gadgets
+                .map(
+                  (g) => `
+                <div class="gadget-item">
+                  <img src="images/${g.replace(
+                    / /g,
+                    "_"
+                  )}.webp" alt="${g}" class="item-icon small">
+                  <span class="item-name small">${g}</span>
+                </div>
+              `
+                )
+                .join("")}
             </div>
           </div>
         </div>
-        ${roastSectionHTML}
-        <button class="copy-button" onclick="copyLoadoutText(this)" title="Copy loadout to clipboard">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-          </svg>
-          Copy
-        </button>
-      </div>
+        
+        ${roastHTML}
+        
+        <footer class="loadout-actions">
+          <button class="copy-text-btn" onclick="copyLoadoutText(this)" title="Copy loadout as text">
+            <span>📋</span> Copy Text
+          </button>
+          <button class="copy-image-btn" onclick="copyLoadoutImage(this)" title="Screenshot this card">
+            <span>📸</span> Copy Image
+          </button>
+        </footer>
+      </article>
     `;
 
     historyList.appendChild(entry);
@@ -3320,7 +3042,7 @@ window.exportMemeCard = function (button) {
   // Configure html2canvas options for better quality
   const options = {
     backgroundColor: "#000000",
-    scale: 2, // Higher quality
+    scale: EXPORT_SETTINGS.CANVAS_SCALE, // Higher quality
     useCORS: true,
     allowTaint: true,
     width: memeContainer.offsetWidth,
@@ -3353,7 +3075,7 @@ window.exportMemeCard = function (button) {
         button.innerHTML = originalText;
         button.style.background = "";
         button.disabled = false;
-      }, 2000);
+      }, UI_TIMING.BUTTON_FEEDBACK_DURATION);
     })
     .catch((err) => {
       console.error("Failed to generate meme card:", err);
@@ -3366,7 +3088,7 @@ window.exportMemeCard = function (button) {
         button.innerHTML = originalText;
         button.style.background = "";
         button.disabled = false;
-      }, 2000);
+      }, UI_TIMING.BUTTON_FEEDBACK_DURATION);
     });
 };
 
@@ -3383,15 +3105,17 @@ window.copyLoadoutText = function (button) {
   const classType = entry.querySelector(".class-badge").textContent.trim();
   const loadoutName = entry.querySelector(".loadout-name").textContent.trim();
 
-  // Get weapon and specialization from the new structure
-  const weaponRow = entry.querySelector(".loadout-row:nth-child(1)");
-  const specRow = entry.querySelector(".loadout-row:nth-child(2)");
-  const weapon = weaponRow?.querySelector(".item-value")?.textContent || "Unknown Weapon";
-  const specialization = specRow?.querySelector(".item-value")?.textContent || "Unknown Special";
+  // Get weapon and specialization from text
+  const weapon =
+    entry.querySelector(".weapon-item .item-name")?.textContent ||
+    "Unknown Weapon";
+  const specialization =
+    entry.querySelector(".spec-item .item-name")?.textContent ||
+    "Unknown Special";
 
-  // Get gadgets from the new structure
+  // Get gadgets from text
   const gadgets = Array.from(
-    entry.querySelectorAll(".gadget-value")
+    entry.querySelectorAll(".gadget-item .item-name")
   ).map((el) => el.textContent);
 
   // Create the copy text
@@ -3404,22 +3128,10 @@ Gadgets: ${gadgets.join(", ")}`;
   navigator.clipboard
     .writeText(copyText)
     .then(() => {
-      // Update button with SVG checkmark
-      button.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-        Copied!
-      `;
+      button.innerHTML = "<span>✅</span> COPIED!";
       setTimeout(() => {
-        button.innerHTML = `
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-          </svg>
-          Copy
-        `;
-      }, 2000);
+        button.innerHTML = "<span>📋</span> COPY";
+      }, UI_TIMING.BUTTON_FEEDBACK_DURATION);
     })
     .catch((err) => {
       console.error("Could not copy text: ", err);
@@ -3510,7 +3222,10 @@ function initializeSeasonCountdown() {
   updateCountdown();
 
   // Update every hour (more frequent updates aren't needed for day-based countdown)
-  const countdownInterval = setInterval(updateCountdown, 1000 * 60 * 60);
+  const countdownInterval = setInterval(
+    updateCountdown,
+    UI_TIMING.COUNTDOWN_UPDATE_INTERVAL
+  );
 }
 
 // Sidebar functionality
@@ -3757,7 +3472,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // initializeSeasonCountdown();
 
   // Get DOM elements (disabled - using RouletteAnimationSystem instead)
-  // classButtons = document.querySelectorAll(".class-button");
+  // classButtons = document.querySelectorAll(".class-button"); // Removed - class selection deprecated
   // spinButtons = document.querySelectorAll(".spin-button");
   // spinSelection = document.getElementById("spinSelection");
   try {
@@ -3767,8 +3482,11 @@ document.addEventListener("DOMContentLoaded", () => {
         "❌ CRASH PREVENTION: Could not find output element during initialization"
       );
     } else {
-      // Initialize empty slot machine on page load
-      initializeEmptySlotMachine();
+      // Initialize empty slot machine on page load - DISABLED
+      // initializeEmptySlotMachine();
+      // Keep output hidden until user generates a loadout
+      outputDiv.style.display = "none";
+      outputDiv.style.opacity = "0";
     }
   } catch (error) {
     console.error("❌ CRASH PREVENTION: Error during initialization:", error);
@@ -3797,398 +3515,55 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Three-card class selection animation
-  async function animateClassSelection() {
-    return new Promise((resolve) => {
-      const classes = getAvailableClasses();
-      if (classes.length === 0) {
-        alert('All classes are excluded! Please select at least one class.');
-        resolve(null);
-        return;
-      }
-      
-      // Create overlay
-      const overlay = document.createElement('div');
-      overlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.95);
-        z-index: 999999;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      `;
-      
-      // Create title
-      const title = document.createElement('h2');
-      title.textContent = 'SELECTING CLASS...';
-      title.style.cssText = `
-        font-size: 48px;
-        font-weight: 900;
-        letter-spacing: 8px;
-        margin-bottom: 30px;
-        color: #ffb700;
-        text-shadow: 0 0 20px rgba(255, 183, 0, 0.8);
-      `;
-      
-      // Create cards container
-      const cardsContainer = document.createElement('div');
-      cardsContainer.style.cssText = `
-        display: flex;
-        gap: 30px;
-        margin-bottom: 40px;
-      `;
-      
-      // Create cards for each available class
-      const cards = [];
-      const allClasses = ['Light', 'Medium', 'Heavy'];
-      allClasses.forEach((className, index) => {
-        const card = document.createElement('div');
-        card.style.cssText = `
-          width: 200px;
-          height: 300px;
-          background: linear-gradient(135deg, #1a1a2e 0%, #0f0f0f 100%);
-          border: 3px solid ${classes.includes(className) ? '#ffb700' : '#333'};
-          border-radius: 15px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.3s ease;
-          opacity: ${classes.includes(className) ? '1' : '0.3'};
-          transform: scale(0.9);
-          pointer-events: ${classes.includes(className) ? 'auto' : 'none'};
-        `;
-        
-        // Add class image
-        const img = document.createElement('img');
-        img.src = `images/${className.toLowerCase()}_active.webp`;
-        img.style.cssText = `
-          width: 120px;
-          height: 120px;
-          margin-bottom: 20px;
-          object-fit: contain;
-        `;
-        
-        // Add class name
-        const name = document.createElement('div');
-        name.textContent = className.toUpperCase();
-        name.style.cssText = `
-          font-size: 24px;
-          font-weight: bold;
-          color: ${classes.includes(className) ? '#ffb700' : '#666'};
-        `;
-        
-        card.appendChild(img);
-        card.appendChild(name);
-        card.dataset.class = className;
-        
-        if (classes.includes(className)) {
-          cards.push(card);
-        }
-        
-        cardsContainer.appendChild(card);
-      });
-      
-      overlay.appendChild(title);
-      overlay.appendChild(cardsContainer);
-      document.body.appendChild(overlay);
-      
-      // Animate cards cycling
-      let currentIndex = 0;
-      let cycleCount = 0;
-      const totalCycles = 15 + Math.floor(Math.random() * 10);
-      const selectedIndex = Math.floor(Math.random() * cards.length);
-      
-      function highlightCard(index) {
-        cards.forEach((card, i) => {
-          if (i === index) {
-            card.style.transform = 'scale(1.1)';
-            card.style.borderColor = '#00ff00';
-            card.style.boxShadow = '0 0 30px rgba(0, 255, 0, 0.6)';
-          } else {
-            card.style.transform = 'scale(0.9)';
-            card.style.borderColor = '#ffb700';
-            card.style.boxShadow = 'none';
-          }
-        });
-      }
-      
-      function cycle() {
-        highlightCard(currentIndex);
-        
-        // Play tick sound
-        if (state.soundEnabled) {
-          const tickSound = document.getElementById('tickSound');
-          if (tickSound) {
-            tickSound.volume = 0.3;
-            tickSound.play().catch(() => {});
-          }
-        }
-        
-        cycleCount++;
-        
-        if (cycleCount >= totalCycles) {
-          // Final selection
-          currentIndex = selectedIndex;
-          highlightCard(currentIndex);
-          
-          // Play win sound
-          if (state.soundEnabled) {
-            const winSound = document.getElementById('classWinSound');
-            if (winSound) {
-              winSound.play().catch(() => {});
-            }
-          }
-          
-          const selectedClass = cards[currentIndex].dataset.class;
-          
-          // Show selection text
-          title.textContent = `${selectedClass.toUpperCase()} CLASS SELECTED!`;
-          title.style.color = '#00ff00';
-          
-          // Clean up after delay
-          setTimeout(() => {
-            overlay.remove();
-            resolve(selectedClass);
-          }, 1500);
-        } else {
-          // Continue cycling
-          currentIndex = (currentIndex + 1) % cards.length;
-          
-          // Calculate delay - start fast, slow down
-          const progress = cycleCount / totalCycles;
-          const delay = 50 + Math.pow(progress, 2) * 450;
-          
-          setTimeout(cycle, delay);
-        }
-      }
-      
-      // Start cycling after a brief delay
-      setTimeout(cycle, 500);
-    });
-  }
-  
-  // Spin count selection animation with horizontal circles and fireworks
-  async function animateSpinSelection() {
-    return new Promise((resolve) => {
-      const spinOptions = [1, 2, 3, 4, 5];
-      
-      // Create overlay
-      const overlay = document.createElement('div');
-      overlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.95);
-        z-index: 999999;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      `;
-      
-      // Create title
-      const title = document.createElement('h2');
-      title.textContent = 'SELECTING SPINS...';
-      title.style.cssText = `
-        font-size: 48px;
-        font-weight: 900;
-        letter-spacing: 8px;
-        margin-bottom: 60px;
-        color: #ffb700;
-        text-shadow: 0 0 20px rgba(255, 183, 0, 0.8);
-      `;
-      
-      // Create circles container
-      const circlesContainer = document.createElement('div');
-      circlesContainer.style.cssText = `
-        display: flex;
-        gap: 40px;
-        margin-bottom: 40px;
-      `;
-      
-      // Create circles
-      const circles = [];
-      spinOptions.forEach((num) => {
-        const circle = document.createElement('div');
-        circle.style.cssText = `
-          width: 100px;
-          height: 100px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #1a1a2e 0%, #0f0f0f 100%);
-          border: 3px solid #ffb700;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 48px;
-          font-weight: bold;
-          color: #ffb700;
-          transition: all 0.3s ease;
-          position: relative;
-        `;
-        circle.textContent = num;
-        circle.dataset.spins = num;
-        circles.push(circle);
-        circlesContainer.appendChild(circle);
-      });
-      
-      // Create spin text
-      const spinText = document.createElement('div');
-      spinText.style.cssText = `
-        font-size: 36px;
-        color: #ffb700;
-        text-transform: uppercase;
-      `;
-      spinText.textContent = 'SPINS';
-      
-      overlay.appendChild(title);
-      overlay.appendChild(circlesContainer);
-      overlay.appendChild(spinText);
-      document.body.appendChild(overlay);
-      
-      // Firework effect function
-      function createFireworks(circle) {
-        const rect = circle.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        for (let i = 0; i < 8; i++) {
-          const particle = document.createElement('div');
-          particle.style.cssText = `
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            background: linear-gradient(45deg, #ffb700, #ff1493);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1000001;
-            left: ${centerX}px;
-            top: ${centerY}px;
-          `;
-          
-          const angle = (Math.PI * 2 * i) / 8;
-          const distance = 50 + Math.random() * 30;
-          const targetX = centerX + Math.cos(angle) * distance;
-          const targetY = centerY + Math.sin(angle) * distance;
-          
-          document.body.appendChild(particle);
-          
-          // Animate particle
-          const animation = particle.animate([
-            {
-              transform: 'translate(0, 0) scale(1)',
-              opacity: 1
-            },
-            {
-              transform: `translate(${targetX - centerX}px, ${targetY - centerY}px) scale(0)`,
-              opacity: 0
-            }
-          ], {
-            duration: 600,
-            easing: 'ease-out'
-          });
-          
-          animation.onfinish = () => particle.remove();
-        }
-      }
-      
-      // Highlight function
-      function highlightCircle(index) {
-        circles.forEach((circle, i) => {
-          if (i === index) {
-            circle.style.transform = 'scale(1.2)';
-            circle.style.borderColor = '#00ff00';
-            circle.style.background = 'linear-gradient(135deg, #1a3a1a 0%, #0f1f0f 100%)';
-            circle.style.boxShadow = '0 0 30px rgba(0, 255, 0, 0.6)';
-            createFireworks(circle);
-          } else {
-            circle.style.transform = 'scale(1)';
-            circle.style.borderColor = '#ffb700';
-            circle.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #0f0f0f 100%)';
-            circle.style.boxShadow = 'none';
-          }
-        });
-      }
-      
-      // Animate cycling
-      let currentIndex = 0;
-      let cycleCount = 0;
-      const totalCycles = 15 + Math.floor(Math.random() * 10);
-      const selectedIndex = Math.floor(Math.random() * spinOptions.length);
-      
-      function cycle() {
-        highlightCircle(currentIndex);
-        
-        // Update spin text
-        const currentSpins = spinOptions[currentIndex];
-        spinText.textContent = currentSpins === 1 ? 'SPIN' : 'SPINS';
-        
-        // Play tick sound
-        if (state.soundEnabled) {
-          const tickSound = document.getElementById('tickSound');
-          if (tickSound) {
-            tickSound.volume = 0.3;
-            tickSound.play().catch(() => {});
-          }
-        }
-        
-        cycleCount++;
-        
-        if (cycleCount >= totalCycles) {
-          // Final selection
-          currentIndex = selectedIndex;
-          highlightCircle(currentIndex);
-          
-          const selectedSpins = spinOptions[currentIndex];
-          spinText.textContent = selectedSpins === 1 ? 'SPIN' : 'SPINS';
-          spinText.style.color = '#00ff00';
-          
-          // Play win sound
-          if (state.soundEnabled) {
-            const winSound = document.getElementById('classWinSound');
-            if (winSound) {
-              winSound.play().catch(() => {});
-            }
-          }
-          
-          // Show confirmation
-          title.textContent = `${selectedSpins} ${selectedSpins === 1 ? 'SPIN' : 'SPINS'} SELECTED!`;
-          title.style.color = '#00ff00';
-          
-          // Clean up after delay
-          setTimeout(() => {
-            overlay.remove();
-            resolve(selectedSpins);
-          }, 1500);
-        } else {
-          // Continue cycling
-          currentIndex = (currentIndex + 1) % spinOptions.length;
-          
-          // Calculate delay - start fast, slow down
-          const progress = cycleCount / totalCycles;
-          const delay = 50 + Math.pow(progress, 2) * 350;
-          
-          setTimeout(cycle, delay);
-        }
-      }
-      
-      // Start cycling after a brief delay
-      setTimeout(cycle, 500);
-    });
-  }
-  
-  // Initialize class selection system
-  function initializeClassSelectionSystem() {
-    console.log("🎯 Initializing class selection system...");
+  // Roulette system removed - commenting out initialization
+  /*
+  async function initializeRouletteSystem() {
+    // Ensure roulette container is hidden on init
+    const rouletteContainer = document.getElementById("roulette-container");
+    const rouletteOverlay = document.getElementById("roulette-overlay");
+    if (rouletteContainer) {
+      rouletteContainer.style.display = "none";
+      rouletteContainer.classList.add("hidden");
+      console.log("🎯 Hiding roulette container on init");
+    }
+    if (rouletteOverlay) {
+      rouletteOverlay.style.display = "none";
+      rouletteOverlay.classList.add("hidden");
+    }
 
-    // Set up the main SPIN button
+    // Wait for RouletteAnimationSystem to be available
+    let RouletteAnimationSystem;
+    try {
+      RouletteAnimationSystem = await waitForGlobal('RouletteAnimationSystem');
+      console.log("✅ RouletteAnimationSystem loaded successfully");
+    } catch (error) {
+      console.error("❌ RouletteAnimationSystem failed to load:", error);
+      return;
+    }
+
+    // Optimize audio for mobile by reducing concurrent sounds
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+    if (isMobile) {
+      // Override tick sound frequency on mobile
+      const originalPlayTick =
+        RouletteAnimationSystem.prototype.playTickSound;
+      RouletteAnimationSystem.prototype.playTickSound = function () {
+        // Only play every 3rd tick on mobile to reduce audio overhead
+        if (!this._tickCounter) this._tickCounter = 0;
+        this._tickCounter++;
+        if (this._tickCounter % 3 === 0) {
+          originalPlayTick.call(this);
+        }
+      };
+    }
+
+    // Initialize the roulette animation system
+    const rouletteSystem = new RouletteAnimationSystem();
+
+    // Set up the main SPIN button with debugging
     const mainSpinButton = document.getElementById("main-spin-button");
     console.log("🔍 Looking for main-spin-button:", !!mainSpinButton);
 
@@ -4205,73 +3580,35 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("❌ Animation already in progress, skipping");
           return;
         }
+        
+        // Check if any classes are available
+        const availableClasses = getAvailableClasses();
+        if (availableClasses.length === 0) {
+          alert("Please select at least one class in the filters before spinning!");
+          return;
+        }
 
         // Add spinning animation
         mainSpinButton.classList.add("spinning");
-        state.isSpinning = true;
 
         try {
-          console.log("🚀 Starting class selection sequence...");
-          
-          // Phase 1: Class Selection
-          const selectedClass = await animateClassSelection();
-          if (!selectedClass) {
-            mainSpinButton.classList.remove("spinning");
-            state.isSpinning = false;
-            return;
+          console.log("🚀 Starting overlay sequence...");
+          // Use overlay manager if available
+          if (window.overlayManager && window.overlayManager.startLoadoutGeneration) {
+            window.overlayManager.startLoadoutGeneration();
+          } else {
+            console.log("⚠️ Overlay manager not loaded, falling back to direct spin");
+            displayRandomLoadout();
           }
-          
-          console.log(`✅ Class selected: ${selectedClass}`);
-          state.selectedClass = selectedClass;
-          
-          // Brief pause
-          await new Promise(resolve => setTimeout(resolve, 500));
-          
-          // Phase 2: Spin Count Selection
-          const selectedSpins = await animateSpinSelection();
-          console.log(`✅ Spins selected: ${selectedSpins}`);
-          state.totalSpins = selectedSpins;
-          
-          // Show selection display
-          const selectionDisplay = document.getElementById('selection-display');
-          if (selectionDisplay) {
-            const classSpan = selectionDisplay.querySelector('.selection-class');
-            const spinsSpan = selectionDisplay.querySelector('.selection-spins');
-            
-            if (classSpan) {
-              classSpan.textContent = selectedClass.toUpperCase();
-              classSpan.className = `selection-class ${selectedClass.toLowerCase()}`;
-            }
-            if (spinsSpan) {
-              spinsSpan.textContent = `${selectedSpins} SPIN${selectedSpins > 1 ? 'S' : ''}`;
-            }
-            
-            selectionDisplay.classList.remove('hidden');
-            selectionDisplay.classList.add('visible');
-            
-            // Keep the class display visible so users know what was selected
-            // setTimeout(() => {
-            //   selectionDisplay.classList.remove('visible');
-            //   selectionDisplay.classList.add('hidden');
-            // }, 5000);
-          }
-          
-          // Start the spin
-          console.log("🎰 Starting slot machine spin...");
-          state.isSpinning = false; // Reset before calling spinLoadout
-          spinLoadout();
-          
         } catch (error) {
-          console.error("❌ Error in class selection sequence:", error);
+          console.error("❌ Error in overlay sequence:", error);
           console.log("🔄 Falling back to direct random loadout...");
           // Fallback to old system
-          state.isSpinning = false;
           displayRandomLoadout();
-        } finally {
-          // Remove spinning animation when done
-          mainSpinButton.classList.remove("spinning");
-          state.isSpinning = false;
         }
+
+        // Remove spinning animation when done
+        mainSpinButton.classList.remove("spinning");
       });
 
       // Test the button is clickable
@@ -4289,37 +3626,30 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("✅ Found button on retry, setting up...");
           retryButton.addEventListener("click", async () => {
             console.log("🎯 RETRY MAIN SPIN BUTTON CLICKED!");
-            if (state.isSpinning) {
+            if (state.isSpinning || rouletteSystem.animating) {
               return;
             }
 
             retryButton.classList.add("spinning");
-            state.isSpinning = true;
 
             try {
-              const selectedClass = await animateClassSelection();
-              if (!selectedClass) {
-                retryButton.classList.remove("spinning");
-                state.isSpinning = false;
-                return;
+              const { spinCount, chosenClass } = await rouletteSystem.startFullSequence();
+              console.log(`✅ Retry roulette completed - ${spinCount} spins, ${chosenClass} class`);
+              
+              // Set state and start the slot machine
+              if (window.state) {
+                window.state.totalSpins = spinCount;
+                window.state.selectedClass = chosenClass;
               }
               
-              state.selectedClass = selectedClass;
-              await new Promise(resolve => setTimeout(resolve, 500));
-              
-              const selectedSpins = await animateSpinSelection();
-              state.totalSpins = selectedSpins;
-              
-              state.isSpinning = false; // Reset before calling spinLoadout
+              // Start the real slot machine
               spinLoadout();
             } catch (error) {
-              console.error("❌ Retry error:", error);
-              state.isSpinning = false;
+              console.error("❌ Retry roulette error:", error);
               displayRandomLoadout();
-            } finally {
-              retryButton.classList.remove("spinning");
-              state.isSpinning = false;
             }
+
+            retryButton.classList.remove("spinning");
           });
         } else {
           console.error(
@@ -4329,45 +3659,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 500);
     }
   }
+  */
 
-  // Initialize class selection system (DOM is already ready)
-  console.log("🚀 About to call initializeClassSelectionSystem()");
-  try {
-    initializeClassSelectionSystem();
-    console.log("✅ initializeClassSelectionSystem() completed successfully");
-  } catch (error) {
-    console.error("❌ Error in initializeClassSelectionSystem():", error);
-  }
+  // Roulette system initialization removed
+  /*
+  console.log("🚀 About to call initializeRouletteSystem()");
+  initializeRouletteSystem().then(() => {
+    console.log("✅ initializeRouletteSystem() completed successfully");
+  }).catch(error => {
+    console.error("❌ Error in initializeRouletteSystem():", error);
+  });
+  */
 
-  // EMERGENCY FALLBACK: Set up spin button directly if roulette system fails
-  setTimeout(() => {
-    const fallbackButton = document.getElementById("main-spin-button");
-    console.log(
-      "🔧 Emergency fallback - checking for button:",
-      !!fallbackButton
-    );
-
-    if (fallbackButton && !fallbackButton.hasAttribute("data-listener-added")) {
-      console.log("🔧 Adding emergency fallback listener");
-      fallbackButton.setAttribute("data-listener-added", "true");
-
-      fallbackButton.addEventListener("click", () => {
-        console.log("🎯 EMERGENCY FALLBACK BUTTON CLICKED!");
-
-        if (state.isSpinning) {
-          console.log("Already spinning, ignoring");
-          return;
-        }
-
-        console.log("🔄 Using direct loadout generation");
-        try {
-          displayRandomLoadout();
-        } catch (error) {
-          console.error("Emergency loadout generation failed:", error);
-        }
-      });
-    }
-  }, 1000);
+  // EMERGENCY FALLBACK: Removed - was interfering with overlay flow
 
   const toggleBtn = document.getElementById("toggle-customization");
   const customizationPanel = document.getElementById("customization-panel");
@@ -4385,13 +3689,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // Set up "Select All" functionality
     setupSelectAllCheckboxes();
 
-    // Cleanup any leftover animations on page load
-    const animationContainers = document.querySelectorAll('[style*="z-index: 999999"]');
-    animationContainers.forEach(container => {
-      if (container.parentNode) {
-        container.remove();
-      }
-    });
+    // Run immediate cleanup on page load
+    if (
+      window.RouletteAnimationSystem &&
+      window.RouletteAnimationSystem.cleanupAllAnimationContainers
+    ) {
+      window.RouletteAnimationSystem.cleanupAllAnimationContainers();
+    }
   });
 
   // Function to setup Select All checkboxes (moved outside event listener)
@@ -4648,16 +3952,18 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const activeClassButton = document.querySelector(
-        ".class-button.selected, .class-button.active"
-      );
-      const selectedClass = activeClassButton
-        ? activeClassButton.dataset.class.toLowerCase() === "random"
-          ? document.querySelector(
-              ".class-button.selected:not([data-class='Random'])"
-            )?.dataset.class
-          : activeClassButton.dataset.class
-        : "Unknown";
+      // Class button code removed - using default class selection
+      // const activeClassButton = document.querySelector(
+      //   ".class-button.selected, .class-button.active"
+      // );
+      // const selectedClass = activeClassButton
+      //   ? activeClassButton.dataset.class.toLowerCase() === "random"
+      //     ? document.querySelector(
+      //         ".class-button.selected:not([data-class='Random'])"
+      //       )?.dataset.class
+      //     : activeClassButton.dataset.class
+      //   : "Unknown";
+      const selectedClass = "Unknown"; // Default value since class selection removed
 
       const copyText = `Class: ${selectedClass}
 Weapon: ${selectedItems[0]}
@@ -4744,7 +4050,8 @@ Gadget 3: ${selectedItems[4]}`;
   // This code should be added at the end of your app.js file or
   // wrapped in a DOMContentLoaded event handler
 
-  // Direct implementation of Select All functionality - no dependencies
+  // Old Select All implementation removed - now using event delegation
+  /*
   (function () {
     // Function to immediately set up Select All checkboxes
     function initSelectAll() {
@@ -4871,7 +4178,9 @@ Gadget 3: ${selectedItems[4]}`;
       initSelectAll();
     }, 1000);
   })();
+  */
 
+  /*
   // Additionally, add a global function to manually trigger setup if needed
   window.reinitializeSelectAll = function () {
     console.log("Manually reinitializing Select All functionality");
@@ -4906,6 +4215,7 @@ Gadget 3: ${selectedItems[4]}`;
       });
     })();
   };
+  */
 });
 
 // Increment loadout counter on backend
@@ -5108,24 +4418,12 @@ function updateCounterDisplay(newCount) {
   });
 }
 
-// Animate counter to new value
-function animateCounterTo(element, targetValue) {
-  const currentValue = parseInt(element.textContent.replace(/,/g, "")) || 0;
-  const increment = Math.ceil((targetValue - currentValue) / 30);
-  let current = currentValue;
-
-  const timer = setInterval(() => {
-    current += increment;
-    if (current >= targetValue) {
-      current = targetValue;
-      clearInterval(timer);
-    }
-    element.textContent = current.toLocaleString();
-  }, 50);
-}
+// animateCounterTo function removed - now in AnimationEngine.js
 
 // Roast Me Again functionality
-async function roastMeAgain(button) {
+// Analysis button removed - commenting out function
+/*
+window.roastMeAgain = async function (button) {
   const historyEntry = button.closest(".history-entry");
   if (!historyEntry) {
     console.error("Could not find history entry");
@@ -5162,21 +4460,25 @@ async function roastMeAgain(button) {
     gadgets,
   });
 
-  // Find the roast section and text elements
-  const roastSection = historyEntry.querySelector(".roast-section");
+  // Find the AI analysis section and text elements
+  const analysisSection = historyEntry.querySelector(".ai-analysis");
   const roastText = historyEntry.querySelector(".roast-text");
+  const scoreBadge = historyEntry.querySelector(".score-badge");
 
-  if (!roastSection || !roastText) {
-    console.error("Could not find roast elements in history entry");
+  if (!analysisSection || !roastText) {
+    console.error("Could not find analysis elements in history entry");
     return;
   }
 
   // Disable button and show loading state
   button.disabled = true;
   button.style.opacity = "0.5";
-  roastSection.classList.add("loading");
+  analysisSection.classList.add("loading");
+  analysisSection.classList.remove("high-score", "mid-score", "low-score");
   roastText.style.opacity = "0.5";
-  roastText.textContent = "Generating fresh analysis...";
+  roastText.innerHTML =
+    '<span class="spinner"></span> Generating Loadout Analysis...';
+  scoreBadge.textContent = "?/10";
 
   try {
     const requestData = {
@@ -5188,7 +4490,7 @@ async function roastMeAgain(button) {
 
     console.log("🚀 Sending fresh analysis request:", requestData);
 
-    const response = await fetch("/api/roast", {
+    const response = await fetch("/api/loadout-analysis", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -5201,43 +4503,56 @@ async function roastMeAgain(button) {
     }
 
     const data = await response.json();
-    console.log("🔥 Received fresh analysis response:", data);
+    console.log("🎯 Received fresh analysis response:", data);
 
     // Update with new analysis and add visual feedback
-    roastSection.classList.remove("loading", "fallback");
+    analysisSection.classList.remove("loading", "fallback");
     roastText.style.opacity = "0";
 
     setTimeout(() => {
-      roastText.textContent = data.roast;
+      const analysisText = data.analysis || data.roast;
+      roastText.textContent = analysisText;
       roastText.style.opacity = "1";
       roastText.style.transition = "opacity 0.3s ease";
 
+      // Extract and update score
+      const scoreMatch = analysisText.match(/(\d+)\/10/);
+      if (scoreMatch) {
+        scoreBadge.textContent = scoreMatch[0];
+        const score = parseInt(scoreMatch[1]);
+        if (score >= 8) analysisSection.classList.add("high-score");
+        else if (score >= 5) analysisSection.classList.add("mid-score");
+        else analysisSection.classList.add("low-score");
+      }
+
       // Add a pulse effect to show it's fresh
-      roastSection.style.animation = "pulse 0.6s ease-in-out";
+      analysisSection.style.animation = "pulse 0.6s ease-in-out";
       setTimeout(() => {
-        roastSection.style.animation = "";
+        analysisSection.style.animation = "";
       }, 600);
     }, 150);
   } catch (error) {
     console.error("Error generating fresh analysis:", error);
 
     // Show fallback message
-    roastSection.classList.remove("loading");
-    roastSection.classList.add("fallback");
+    analysisSection.classList.remove("loading");
+    analysisSection.classList.add("fallback", "low-score");
     roastText.style.opacity = "0";
 
     setTimeout(() => {
       roastText.textContent =
-        "Claude's too stunned to respond. Try again later. 0/10";
+        "Claude's too stunned to respond. Try again later.";
       roastText.style.opacity = "1";
       roastText.style.transition = "opacity 0.3s ease";
+      scoreBadge.textContent = "0/10";
     }, 150);
   } finally {
     // Re-enable button
     button.disabled = false;
     button.style.opacity = "1";
   }
-}
+};
+*/
 
 // Initialize class exclusion system
 function initializeClassExclusion() {
@@ -5317,22 +4632,106 @@ function initializeClassExclusion() {
       console.log(
         "✅ Class validation: Checking available classes after toggle..."
       );
+
+      // Count how many checkboxes would be checked after this change
+      let checkedCount = 0;
+      exclusionCheckboxes.forEach((cb) => {
+        if (cb === this) {
+          // For the current checkbox, use the new state
+          if (isChecked) checkedCount++;
+        } else {
+          // For other checkboxes, use their current state
+          if (cb.checked) checkedCount++;
+        }
+      });
+
+      console.log(`✅ Checked count after change: ${checkedCount}`);
+
+      if (checkedCount === 0) {
+        console.warn("⚠️ Cannot deselect all classes! Reverting change.");
+
+        // Prevent the change
+        this.checked = true;
+
+        // Show banner inside filter panel
+        const filterPanel = document.getElementById("filter-panel");
+        if (!filterPanel) return;
+
+        // Check if banner already exists
+        let banner = filterPanel.querySelector(".constraint-banner");
+        if (!banner) {
+          banner = document.createElement("div");
+          banner.className = "constraint-banner";
+          banner.style.cssText = `
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #ff6b35, #ff8e53);
+            color: white;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.6);
+            z-index: 100;
+            animation: bannerSlideDown 0.3s ease;
+            text-align: center;
+          `;
+
+          // Add close button
+          const closeBtn = document.createElement("button");
+          closeBtn.innerHTML = "×";
+          closeBtn.style.cssText = `
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0 5px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+          `;
+          closeBtn.onmouseover = () => (closeBtn.style.opacity = "1");
+          closeBtn.onmouseout = () => (closeBtn.style.opacity = "0.8");
+          closeBtn.onclick = () => banner.remove();
+
+          banner.textContent = "At least one class must remain selected!";
+          banner.appendChild(closeBtn);
+
+          // Insert after header
+          const filterHeader = filterPanel.querySelector(".filter-header");
+          if (filterHeader) {
+            filterHeader.insertAdjacentElement("afterend", banner);
+          } else {
+            filterPanel.insertBefore(banner, filterPanel.firstChild);
+          }
+        }
+
+        // Auto-remove banner after 5 seconds
+        setTimeout(() => {
+          if (banner && banner.parentNode) {
+            banner.style.opacity = "0";
+            banner.style.transform = "translateY(-20px)";
+            setTimeout(() => banner.remove(), 300);
+          }
+        }, 5000);
+
+        return; // Exit early, don't save the change
+      }
+
       const availableClasses = getAvailableClasses();
       console.log(
         "✅ Class validation: Available classes after toggle:",
         availableClasses
       );
-      if (availableClasses.length === 0) {
-        console.warn("⚠️ All classes would be excluded! Reverting change.");
-        alert(
-          "You cannot uncheck all classes! At least one class must remain selected for random generation."
-        );
 
-        // Revert the change - since we inverted the logic, restore the checkbox to checked
-        this.checked = true;
-        localStorage.setItem(`exclude-${className}`, "false"); // false = included
-        console.log(`🔄 Reverted ${className} back to included state`);
-      }
+      // Repopulate filter items to reflect new class selection
+      console.log("🔄 Repopulating filter items after class change...");
+      populateFilterItems();
     });
   });
 
@@ -5355,6 +4754,134 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 500);
     }
   }, 7000); // 7 seconds - middle of the 5-10 second range requested
+
+  // Simple direct spin button setup
+  const setupDirectSpinButton = () => {
+    const spinButton = document.getElementById("main-spin-button");
+    if (!spinButton) {
+      console.error("❌ Could not find main-spin-button");
+      return;
+    }
+
+    console.log("✅ Setting up direct spin button handler");
+
+    // Remove any existing listeners first
+    const newButton = spinButton.cloneNode(true);
+    spinButton.parentNode.replaceChild(newButton, spinButton);
+
+    newButton.addEventListener("click", () => {
+      console.log("🎰 Generate Loadout button clicked!");
+
+      if (state.isSpinning) {
+        console.log("⚠️ Already spinning, ignoring click");
+        return;
+      }
+
+      // Check if overlay manager is loaded
+      if (
+        window.overlayManager &&
+        window.overlayManager.startLoadoutGeneration
+      ) {
+        console.log("🎭 Starting overlay flow...");
+        window.overlayManager.startLoadoutGeneration();
+      } else {
+        console.log(
+          "⚠️ Overlay manager not loaded, falling back to direct spin"
+        );
+
+        // Fallback to original behavior
+        // Set default values if not set
+        if (!state.totalSpins || state.totalSpins === 0) {
+          state.totalSpins = 3; // Default to 3 spins
+          console.log("📊 Setting default spin count to 3");
+        }
+
+        // Select a random class if none selected
+        if (!state.selectedClass) {
+          // Use the existing getAvailableClasses function which handles localStorage correctly
+          const availableClasses = getAvailableClasses();
+
+          state.selectedClass =
+            availableClasses[
+              Math.floor(Math.random() * availableClasses.length)
+            ];
+          console.log(`🎲 Randomly selected class: ${state.selectedClass}`);
+        }
+
+        // Start the spin
+        try {
+          spinLoadout();
+        } catch (error) {
+          console.error("❌ Error starting spin:", error);
+          state.isSpinning = false;
+        }
+      }
+    });
+
+    console.log("✅ Direct spin button handler attached successfully");
+  };
+
+  // Set up the spin button immediately
+  setupDirectSpinButton();
+
+  // Sound toggle is now handled in index.html - removed duplicate handler
+
+  // Initialize filter panel functionality
+  const filterToggle = document.getElementById("filter-toggle");
+  const filterPanel = document.getElementById("filter-panel");
+  const filterOverlay = document.getElementById("filter-panel-overlay");
+  const closeFilterBtn = document.getElementById("close-filter-panel");
+
+  if (filterToggle && filterPanel && filterOverlay) {
+    console.log("🎛️ Initializing filter panel");
+
+    // Open filter panel
+    filterToggle.addEventListener("click", function () {
+      console.log("🎛️ Opening filter panel");
+      filterPanel.classList.remove("slide-out");
+      filterPanel.classList.add("active");
+      filterOverlay.classList.add("active");
+      filterPanel.style.display = "block";
+
+      // Play click sound
+      playSound("clickSound");
+    });
+
+    // Close filter panel
+    const closeFilterPanel = () => {
+      console.log("🎛️ Closing filter panel");
+      filterPanel.classList.remove("active");
+      filterPanel.classList.add("slide-out");
+      filterOverlay.classList.remove("active");
+
+      // Hide after animation
+      setTimeout(() => {
+        if (!filterPanel.classList.contains("active")) {
+          filterPanel.style.display = "none";
+        }
+      }, 300);
+
+      // Play click sound
+      playSound("clickSound");
+    };
+
+    // Close button handler
+    if (closeFilterBtn) {
+      closeFilterBtn.addEventListener("click", closeFilterPanel);
+    }
+
+    // Close on overlay click
+    filterOverlay.addEventListener("click", closeFilterPanel);
+
+    // Close on ESC key
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && filterPanel.classList.contains("active")) {
+        closeFilterPanel();
+      }
+    });
+  } else {
+    console.warn("⚠️ Filter panel elements not found");
+  }
 });
 
 fetch("https://api.github.com/repos/paultaki/TheFinalsLoadout/commits/main")
@@ -5371,3 +4898,261 @@ fetch("https://api.github.com/repos/paultaki/TheFinalsLoadout/commits/main")
     const el = document.getElementById("deploy-version");
     if (el) el.textContent = "Version: unknown";
   });
+
+// Copy loadout as formatted text
+window.copyLoadoutText = function (button) {
+  const entry = button.closest(".history-entry");
+  const classType =
+    entry.querySelector(".class-badge")?.textContent || "Unknown";
+  const loadoutName =
+    entry.querySelector(".loadout-name")?.textContent || "Unnamed Loadout";
+  const weapon =
+    entry.querySelector(".weapon-item .item-name")?.textContent ||
+    "Unknown Weapon";
+  const spec =
+    entry.querySelector(".spec-item .item-name")?.textContent || "Unknown Spec";
+  const gadgets = Array.from(entry.querySelectorAll(".gadget-item .item-name"))
+    .map((el) => el.textContent)
+    .join(", ");
+  const analysis =
+    entry.querySelector(".roast-text")?.textContent || "No analysis available";
+  const score = entry.querySelector(".score-badge")?.textContent || "?/10";
+
+  const text = `${loadoutName} (${classType})
+WEAPON: ${weapon}
+SPECIALIZATION: ${spec}
+GADGETS: ${gadgets}
+
+AI ANALYSIS: ${analysis} ${score}
+
+Generated by thefinalsloadout.com`;
+
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      // Show success animation
+      const originalText = button.innerHTML;
+      button.innerHTML = "<span>✅</span> Copied!";
+      button.classList.add("success");
+
+      setTimeout(() => {
+        button.innerHTML = originalText;
+        button.classList.remove("success");
+      }, 2000);
+    })
+    .catch((err) => {
+      console.error("Failed to copy text:", err);
+      alert("Failed to copy to clipboard");
+    });
+};
+
+// Copy loadout as image
+window.copyLoadoutImage = function (button) {
+  const entry = button.closest(".history-entry");
+  const cardContent = entry.querySelector(".casino-history-card");
+
+  if (!cardContent) {
+    console.error("Card content not found");
+    return;
+  }
+
+  // Show loading state
+  const originalText = button.innerHTML;
+  button.innerHTML = "<span>⏳</span> Capturing...";
+  button.disabled = true;
+
+  // Configure html2canvas for high quality casino mode capture
+  const options = {
+    backgroundColor: "#1a0f3d",
+    scale: 2,
+    useCORS: true,
+    allowTaint: true,
+    width: cardContent.offsetWidth,
+    height: cardContent.offsetHeight,
+    scrollX: 0,
+    scrollY: 0,
+    // Add some padding for the glow effects
+    x: -10,
+    y: -10,
+    windowWidth: cardContent.offsetWidth + 20,
+    windowHeight: cardContent.offsetHeight + 20,
+  };
+
+  html2canvas(cardContent, options)
+    .then((canvas) => {
+      canvas.toBlob(
+        (blob) => {
+          // Try to copy to clipboard first
+          if (navigator.clipboard && window.ClipboardItem) {
+            navigator.clipboard
+              .write([new ClipboardItem({ "image/png": blob })])
+              .then(() => {
+                // Success - image copied to clipboard
+                button.innerHTML = "<span>✅</span> Copied!";
+                button.classList.add("success");
+
+                setTimeout(() => {
+                  button.innerHTML = originalText;
+                  button.classList.remove("success");
+                  button.disabled = false;
+                }, 2000);
+              })
+              .catch((err) => {
+                // Fallback to download if clipboard API fails
+                console.log("Clipboard API failed, downloading instead:", err);
+                downloadImage(canvas, button, originalText);
+              });
+          } else {
+            // Browser doesn't support clipboard API, download instead
+            downloadImage(canvas, button, originalText);
+          }
+        },
+        "image/png",
+        1.0
+      );
+    })
+    .catch((err) => {
+      console.error("Screenshot failed:", err);
+      button.innerHTML = "<span>❌</span> Failed";
+      setTimeout(() => {
+        button.innerHTML = originalText;
+        button.disabled = false;
+      }, UI_TIMING.BUTTON_FEEDBACK_DURATION);
+    });
+};
+
+// Helper function to download image
+function downloadImage(canvas, button, originalText) {
+  const link = document.createElement("a");
+  const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
+  link.download = `finals-loadout-${timestamp}.png`;
+  link.href = canvas.toDataURL("image/png", 1.0);
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  button.innerHTML = "<span>⬇️</span> Downloaded!";
+  setTimeout(() => {
+    button.innerHTML = originalText;
+    button.disabled = false;
+  }, 2000);
+}
+
+// ===== Overlay Sequence for Generate Loadout =====
+// Assumes overlay container exists in index.html and CSS is present
+
+// Utility: Show/hide overlay container
+function showOverlay(contentHtml) {
+  const overlay = document.getElementById("overlay-container");
+  overlay.innerHTML = contentHtml;
+  overlay.style.display = "flex";
+}
+function hideOverlay() {
+  const overlay = document.getElementById("overlay-container");
+  overlay.style.display = "none";
+  overlay.innerHTML = "";
+}
+
+// Overlay function stubs - COMMENTED OUT - Real implementations are in overlay-manager.js
+/*
+function showSpinWheelOverlay() {
+  return new Promise((resolve) => {
+    // TODO: Replace with ported Price is Right wheel overlay
+    showOverlay('<div class="overlay-card">Spinning for # of Spins...</div>');
+    setTimeout(() => {
+      // Simulate result: 3 spins or 'JACKPOT'
+      const result =
+        Math.random() < 0.15 ? "JACKPOT" : Math.floor(Math.random() * 5) + 1;
+      hideOverlay();
+      resolve(result);
+    }, 2000);
+  });
+}
+
+function showOverlayCard(text) {
+  return new Promise((resolve) => {
+    showOverlay(`<div class="overlay-card">${text}</div>`);
+    setTimeout(() => {
+      hideOverlay();
+      resolve();
+    }, 2000);
+  });
+}
+
+function showClassRouletteOverlay() {
+  return new Promise((resolve) => {
+    // TODO: Replace with ported class roulette overlay
+    showOverlay('<div class="overlay-card">Spinning for Class...</div>');
+    setTimeout(() => {
+      // Simulate class selection
+      const classes = ["Light", "Medium", "Heavy"];
+      const selected = classes[Math.floor(Math.random() * classes.length)];
+      hideOverlay();
+      resolve(selected);
+    }, 2000);
+  });
+}
+
+function showClassPickerOverlay() {
+  return new Promise((resolve) => {
+    // TODO: Replace with ported class picker overlay
+    // For now, just pick randomly after 2s
+    showOverlay('<div class="overlay-card">Pick your class! (Simulated)</div>');
+    setTimeout(() => {
+      const classes = ["Light", "Medium", "Heavy"];
+      const selected = classes[Math.floor(Math.random() * classes.length)];
+      hideOverlay();
+      resolve(selected);
+    }, 2000);
+  });
+}
+*/
+
+// Main async sequence for Generate Loadout - COMMENTED OUT - Using overlay-manager.js instead
+/*
+async function handleGenerateLoadout() {
+  if (window.state && window.state.isSpinning) return;
+  if (!window.state) window.state = {};
+  window.state.isSpinning = true;
+
+  // Step 1: Spin wheel overlay
+  const spinCount = await showSpinWheelOverlay();
+  await showOverlayCard(`Number of Spins: ${spinCount}`);
+
+  // Step 2: Jackpot logic
+  if (spinCount === "JACKPOT") {
+    const chosenClass = await showClassPickerOverlay();
+    await showOverlayCard(`You Picked: ${chosenClass}`);
+    // If your card UI provides a random spin number, use it here
+    const randomSpin = Math.floor(Math.random() * 5) + 1;
+    startSlotMachineSequence(chosenClass, randomSpin);
+    window.state.isSpinning = false;
+    return;
+  }
+
+  // Step 3: Class roulette overlay
+  const selectedClass = await showClassRouletteOverlay();
+  await showOverlayCard(`Class Selected: ${selectedClass}`);
+
+  // Step 4: Start slot machine
+  startSlotMachineSequence(selectedClass, spinCount);
+  window.state.isSpinning = false;
+}
+*/
+
+// Slot machine integration
+function startSlotMachineSequence(classType, spins) {
+  // Set state and call your existing slot machine logic
+  if (!window.state) window.state = {};
+  window.state.selectedClass = classType;
+  window.state.totalSpins = spins;
+  // TODO: Replace with your actual slot machine function
+  if (typeof spinLoadout === "function") {
+    spinLoadout(classType, spins);
+  } else {
+    console.log("Slot machine would start with:", classType, spins);
+  }
+}
+
+// REMOVED: Duplicate event listener - already handled in setupDirectSpinButton()
