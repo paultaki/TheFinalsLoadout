@@ -165,7 +165,10 @@
   }
 
   .return-to-top {
-    display: none;
+    bottom: 70px; /* Adjust position to avoid overlapping with mobile UI */
+    right: 15px;
+    width: 45px;
+    height: 45px;
   }
 }
 
