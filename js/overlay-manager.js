@@ -20,12 +20,16 @@ const overlayAudio = {
   transition: new Audio("sounds/transition.mp3"),
   roulette: new Audio("sounds/roulette.mp3"),
   finalSound: new Audio("sounds/pop-pour-perform.mp3"),
+  wheelTickLoop: new Audio("sounds/wheel-tick-loop.mp3"),
 };
 
 // Preload all sounds
 Object.values(overlayAudio).forEach((audio) => {
   audio.preload = "auto";
 });
+
+// Set the wheel tick loop to loop
+overlayAudio.wheelTickLoop.loop = true;
 
 // =====================================
 // OVERLAY CONTAINER MANAGEMENT
@@ -401,18 +405,7 @@ async function showSpinWheelOverlay() {
 
     // Handle pointer tick animation
     const handlePointerTick = (velocity) => {
-      // Play tick sound only if enabled
-      if (window.state && window.state.soundEnabled) {
-        try {
-          overlayAudio.beep.currentTime = 0;
-          overlayAudio.beep.playbackRate = Math.min(2, 0.5 + velocity / 1000);
-          overlayAudio.beep.play().catch((err) => {
-            console.warn("Failed to play beep sound:", err);
-          });
-        } catch (e) {
-          console.warn("Beep sound error:", e);
-        }
-      }
+      // No longer play individual tick sounds - using looped track instead
 
       // Pointer bend
       const bendAmount = Math.min(velocity / 100, 20);
@@ -494,6 +487,16 @@ async function showSpinWheelOverlay() {
       if (spinWheelState.animationId) {
         cancelAnimationFrame(spinWheelState.animationId);
         spinWheelState.animationId = null;
+      }
+      
+      // Stop all spinning sounds
+      try {
+        overlayAudio.spinning.pause();
+        overlayAudio.spinning.currentTime = 0;
+        overlayAudio.wheelTickLoop.pause();
+        overlayAudio.wheelTickLoop.currentTime = 0;
+      } catch (e) {
+        // Sound not available
       }
 
       // Find winner
@@ -705,12 +708,18 @@ async function showSpinWheelOverlay() {
       spinWheelState.lastPegIndex = -1;
       spinWheelState.isDecelerating = false;
 
-      // Play spin sound only if enabled
+      // Play spin sound and wheel tick loop only if enabled
       if (window.state && window.state.soundEnabled) {
         try {
+          // Start spinning sound
           overlayAudio.spinning.currentTime = 0;
           overlayAudio.spinning.volume = 0.3;
           overlayAudio.spinning.play().catch(() => {});
+          
+          // Start wheel tick loop
+          overlayAudio.wheelTickLoop.currentTime = 0;
+          overlayAudio.wheelTickLoop.volume = 0.4;
+          overlayAudio.wheelTickLoop.play().catch(() => {});
         } catch (e) {
           // Sound not available
         }

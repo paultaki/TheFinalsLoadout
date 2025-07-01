@@ -266,10 +266,15 @@ class SlotMachine {
         this.playSound("finalSound");
         // Apply dramatic winner effects
         await this.applyDramaticWinnerEffects();
-      } else {
-        // Play a different sound for intermediate spins
-        console.log(`Playing intermediate sound (${loadout.spinsRemaining} spins remaining)`);
+      } else if (loadout.spinsRemaining === 1) {
+        // Play Tabby Tune only on the 2nd to last spin
+        console.log('Playing Tabby Tune (2nd to last spin)');
         this.playSound("spinWinSound");
+        // Apply simple winner effects
+        this.applyWinnerEffects();
+      } else {
+        // No sound for other intermediate spins
+        console.log(`Intermediate spin (${loadout.spinsRemaining} spins remaining) - no sound`);
         // Apply simple winner effects
         this.applyWinnerEffects();
       }
@@ -955,6 +960,10 @@ class SlotMachine {
 
   // Apply dramatic winner effects for final spin
   async applyDramaticWinnerEffects() {
+    // Play celebration sound right when animation starts
+    console.log('Playing celebration sound (pop-pour-perform)');
+    this.playSound("celebrationSound");
+    
     // First apply basic effects
     this.applyWinnerEffects();
     
