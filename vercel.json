@@ -3,21 +3,7 @@
   "outputDirectory": ".",
   "installCommand": "echo 'No dependencies to install'",
   "framework": null,
-  "functions": {
-    "api/roast.js": {
-      "runtime": "nodejs20.x",
-      "maxDuration": 30
-    },
-    "api/counter.js": {
-      "runtime": "nodejs20.x"
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/index.html"
-    }
-  ],
+  "rewrites": [{ "source": "/", "destination": "/index.html" }],
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
