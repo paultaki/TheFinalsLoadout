@@ -1627,13 +1627,8 @@ async function startLoadoutGeneration() {
       // Jackpot path - class was already selected in the modal
       overlayState.selectedClass = spinResult.classWeight;
       
-      // Show jackpot celebration reveal
-      await showRevealCard({
-        title: "JACKPOT!",
-        subtitle: `${spinResult.spins} ${spinResult.spins === 1 ? "SPIN" : "SPINS"} with ${overlayState.selectedClass.toUpperCase()} CLASS!`,
-        duration: 2500,
-        isJackpot: true,
-      });
+      // Skip the reveal card and go straight to slot machine
+      // The user already knows they got a jackpot and selected their class
     } else {
       // Normal path - show spin count reveal first
       await showRevealCard({

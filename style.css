@@ -154,10 +154,32 @@
 
 /* Mobile Navigation - Simplified */
 @media (max-width: 768px) {
-  .main-nav,
-  .footerSection,
-  .filter-toggle-button {
+  .footerSection {
     display: none !important;
+  }
+  
+  /* Keep nav visible on mobile with filter and sound buttons */
+  .main-nav {
+    display: flex !important;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+  }
+  
+  /* Ensure nav controls are visible and properly styled on mobile */
+  .nav-controls {
+    display: flex !important;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  
+  /* Ensure nav buttons are visible on mobile */
+  .nav-button,
+  .filter-toggle-button,
+  .sound-toggle-button {
+    display: flex !important;
+    width: 40px;
+    height: 40px;
   }
 
   .scroll-progress-bar {
