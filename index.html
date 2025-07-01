@@ -2004,26 +2004,9 @@
               source.connect(audioContext.destination);
               source.start();
 
-              // Try to play all audio elements silently to preload them
-              const audioElements = document.querySelectorAll("audio");
-              audioElements.forEach((audio) => {
-                // Skip celebration sounds - don't preload by playing
-                if (audio.id === 'celebrationSound' || audio.id === 'spinWinSound' || audio.id === 'finalSound') {
-                  return;
-                }
-                
-                audio.volume = 0;
-                const playPromise = audio.play();
-                if (playPromise !== undefined) {
-                  playPromise
-                    .then(() => {
-                      audio.pause();
-                      audio.currentTime = 0;
-                      audio.volume = 1;
-                    })
-                    .catch(() => {});
-                }
-              });
+              // Don't try to play any audio elements during initialization
+              // Modern browsers handle preload="auto" properly
+              // This prevents any accidental sound playback
 
               audioInitialized = true;
               console.log("Audio initialized successfully");

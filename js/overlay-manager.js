@@ -72,6 +72,9 @@ function clearOverlay() {
   
   // Remove overlay-active class from body
   document.body.classList.remove('overlay-active');
+  
+  // Clear valid spin sequence flag
+  window.isValidSpinSequence = false;
 }
 
 // =====================================
@@ -106,7 +109,7 @@ function showRevealCard(options) {
     if (window.state && window.state.soundEnabled) {
       if (isJackpot) {
         overlayAudio.dingDing.currentTime = 0;
-        overlayAudio.dingDing.play();
+        window.safePlay(overlayAudio.dingDing);
         // Stop jackpot sound after 1.5s
         setTimeout(() => {
           overlayAudio.dingDing.pause();
@@ -114,7 +117,7 @@ function showRevealCard(options) {
         }, 1500);
       } else {
         overlayAudio.ding.currentTime = 0;
-        overlayAudio.ding.play();
+        window.safePlay(overlayAudio.ding);
       }
     }
 
@@ -513,7 +516,7 @@ async function showSpinWheelOverlay() {
       if (window.state && window.state.soundEnabled) {
         if (result.isJackpot) {
           overlayAudio.dingDing.currentTime = 0;
-          overlayAudio.dingDing.play();
+          window.safePlay(overlayAudio.dingDing);
           // Stop jackpot sound after 1.5s
           setTimeout(() => {
             overlayAudio.dingDing.pause();
@@ -521,7 +524,7 @@ async function showSpinWheelOverlay() {
           }, 1500);
         } else {
           overlayAudio.ding.currentTime = 0;
-          overlayAudio.ding.play();
+          window.safePlay(overlayAudio.ding);
         }
       }
 
@@ -714,12 +717,12 @@ async function showSpinWheelOverlay() {
           // Start spinning sound
           overlayAudio.spinning.currentTime = 0;
           overlayAudio.spinning.volume = 0.3;
-          overlayAudio.spinning.play().catch(() => {});
+          window.safePlay(overlayAudio.spinning);
           
           // Start wheel tick loop
           overlayAudio.wheelTickLoop.currentTime = 0;
           overlayAudio.wheelTickLoop.volume = 0.4;
-          overlayAudio.wheelTickLoop.play().catch(() => {});
+          window.safePlay(overlayAudio.wheelTickLoop);
         } catch (e) {
           // Sound not available
         }
@@ -1428,7 +1431,7 @@ async function showClassRouletteOverlay() {
       // Play win sound only if enabled
       if (window.state && window.state.soundEnabled) {
         overlayAudio.ding.currentTime = 0;
-        overlayAudio.ding.play();
+        window.safePlay(overlayAudio.ding);
       }
 
       // Add landed class to ball
@@ -1596,6 +1599,9 @@ async function startLoadoutGeneration() {
   }
 
   try {
+    // Set valid spin sequence flag
+    window.isValidSpinSequence = true;
+    
     // Clear any existing static slot machine from main page
     const mainOutput = document.getElementById("output");
     if (mainOutput) {
@@ -1676,6 +1682,9 @@ async function startLoadoutGeneration() {
     }
 
     overlayState.isActive = false;
+    
+    // Clear valid spin sequence flag
+    window.isValidSpinSequence = false;
   }
 }
 

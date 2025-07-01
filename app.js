@@ -18,6 +18,56 @@ import {
 
 import { SlotMachine } from "./src/components/slots/SlotMachine.js";
 
+// =====================================================
+// GLOBAL AUDIO MANAGEMENT SYSTEM
+// =====================================================
+
+// Global flag to track user interaction
+window.userHasInteracted = false;
+
+// Set up interaction tracking
+document.addEventListener('click', () => {
+  window.userHasInteracted = true;
+}, { once: true });
+
+document.addEventListener('touchstart', () => {
+  window.userHasInteracted = true;
+}, { once: true });
+
+// Safe audio play function that respects user interaction
+window.safePlay = function(audio) {
+  if (!audio) {
+    console.warn('safePlay: No audio element provided');
+    return Promise.resolve();
+  }
+  
+  // Check if user has interacted and sound is enabled
+  if (!window.userHasInteracted) {
+    console.log(`safePlay: Blocked ${audio.id || 'audio'} - waiting for user interaction`);
+    return Promise.resolve();
+  }
+  
+  // Check if sound is enabled in state
+  if (window.state && !window.state.soundEnabled) {
+    console.log(`safePlay: Blocked ${audio.id || 'audio'} - sound is disabled`);
+    return Promise.resolve();
+  }
+  
+  // Safe play with error handling
+  try {
+    audio.currentTime = 0;
+    return audio.play().catch(err => {
+      console.warn(`safePlay: Failed to play ${audio.id || 'audio'}:`, err.message);
+    });
+  } catch (e) {
+    console.warn(`safePlay: Exception playing ${audio.id || 'audio'}:`, e);
+    return Promise.resolve();
+  }
+};
+
+// Global flag to track if we're in a valid spin sequence
+window.isValidSpinSequence = false;
+
 // Inline waitForGlobal function to avoid ES6 module issues
 function waitForGlobal(
   name,
@@ -1557,8 +1607,12 @@ async function finalizeSpin(columns) {
 
   console.log("🎯 Final spin, recording loadout");
 
-  // Add celebration effects
-  addCelebrationEffects();
+  // Add celebration effects only if we're in a valid spin sequence
+  if (window.isValidSpinSequence && window.userHasInteracted) {
+    addCelebrationEffects();
+  } else {
+    console.log("Skipping celebration - not in valid spin sequence or no user interaction");
+  }
 
   // Also ensure spinning sound is fully stopped (mobile fix)
   const spinningSound = document.getElementById("spinningSound");
@@ -2039,14 +2093,11 @@ function addCelebrationEffects() {
   });
 
   // Play celebration sound at the beginning of the animation
-  if (state.soundEnabled) {
+  if (state.soundEnabled && window.isValidSpinSequence) {
     const celebrationSound = document.getElementById("celebrationSound");
     if (celebrationSound) {
-      celebrationSound.currentTime = 0;
       celebrationSound.volume = SOUND_VOLUMES.CELEBRATION;
-      celebrationSound.play().catch((err) => {
-        console.log("Celebration sound play error:", err);
-      });
+      window.safePlay(celebrationSound);
     }
   }
 

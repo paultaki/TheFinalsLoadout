@@ -1051,8 +1051,13 @@ class SlotMachine {
   playSound(soundId) {
     const sound = document.getElementById(soundId);
     if (sound && window.state?.soundEnabled) {
-      sound.currentTime = 0;
-      sound.play().catch(() => {});
+      // Use safePlay if available, otherwise fall back to direct play
+      if (window.safePlay) {
+        window.safePlay(sound);
+      } else {
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+      }
     }
   }
 
