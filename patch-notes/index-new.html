@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patch Notes v4.2.0 | The Finals</title>
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  
+  <!-- Import The Finals typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style-new.css">
+</head>
+<body>
+  <nav class="main-nav">
+    <a href="/">Home</a>
+    <a href="/ragequit/">Rage Quit</a>
+    <a href="/patch-notes/" class="active">Patch Notes</a>
+    <a href="/feedback/">Feedback</a>
+  </nav>
+
+  <main class="patch-notes">
+    <!-- Hero Section -->
+    <header class="patch-header">
+      <div class="patch-meta">
+        <span class="patch-version">v4.2.0</span>
+        <time class="patch-date">May 1, 2025</time>
+      </div>
+      <h1 class="patch-title">Close Quarters</h1>
+      <p class="patch-summary">Nullifier joins the arsenal, SA1216 gets reality check, Vegas gets seasonal makeover</p>
+      
+      <!-- Quick Stats Bar -->
+      <div class="patch-stats">
+        <div class="stat-item buffs">
+          <span class="stat-count">4</span>
+          <span class="stat-label">Buffs</span>
+        </div>
+        <div class="stat-item nerfs">
+          <span class="stat-count">4</span>
+          <span class="stat-label">Nerfs</span>
+        </div>
+        <div class="stat-item new">
+          <span class="stat-count">3</span>
+          <span class="stat-label">New</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sticky Navigation -->
+    <nav class="patch-nav" data-sticky>
+      <button class="nav-item active" data-section="weapons">Weapons</button>
+      <button class="nav-item" data-section="gadgets">Gadgets</button>
+      <button class="nav-item" data-section="specializations">Specializations</button>
+      <button class="nav-item" data-section="maps">Maps</button>
+      <button class="nav-item" data-section="qol">Quality of Life</button>
+    </nav>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <button class="filter-button active" data-filter="all">All Changes</button>
+      <button class="filter-button" data-filter="buff">Buffs Only</button>
+      <button class="filter-button" data-filter="nerf">Nerfs Only</button>
+      <button class="filter-button" data-filter="new">New Content</button>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="patch-content">
+      <!-- Weapons Section -->
+      <section class="patch-section" id="weapons">
+        <h2 class="section-title">Weapon Adjustments</h2>
+        
+        <!-- 93R Buff -->
+        <article class="change-card buff" data-weapon="93R">
+          <div class="change-header">
+            <img src="../images/93R.webp" alt="93R" class="weapon-icon">
+            <h3 class="weapon-name">93R</h3>
+            <span class="change-type buff">BUFF</span>
+          </div>
+          
+          <div class="change-details">
+            <div class="stat-change">
+              <span class="stat-name">Damage Falloff Start</span>
+              <div class="stat-bar">
+                <div class="stat-before" style="width: 60%"></div>
+                <div class="stat-after buff" style="width: 70%"></div>
+              </div>
+              <span class="stat-values">18m → 20m</span>
+            </div>
+            
+            <div class="stat-change">
+              <span class="stat-name">Damage Falloff End</span>
+              <div class="stat-bar">
+                <div class="stat-before" style="width: 65%"></div>
+                <div class="stat-after buff" style="width: 80%"></div>
+              </div>
+              <span class="stat-values">30m → 36m</span>
+            </div>
+          </div>
+          
+          <p class="change-summary">Increased effective range to better compete with other burst weapons at medium distance.</p>
+        </article>
+
+        <!-- SA1216 Nerf -->
+        <article class="change-card nerf" data-weapon="SA1216">
+          <div class="change-header">
+            <img src="../images/SA_1216.webp" alt="SA1216" class="weapon-icon">
+            <h3 class="weapon-name">SA1216</h3>
+            <span class="change-type nerf">NERF</span>
+          </div>
+          
+          <div class="change-details">
+            <div class="stat-change">
+              <span class="stat-name">Spread Angle</span>
+              <div class="stat-bar">
+                <div class="stat-before" style="width: 40%"></div>
+                <div class="stat-after nerf" style="width: 50%"></div>
+              </div>
+              <span class="stat-values">+25% wider spread</span>
+            </div>
+            
+            <div class="stat-change">
+              <span class="stat-name">Fire Rate</span>
+              <div class="stat-bar">
+                <div class="stat-before" style="width: 80%"></div>
+                <div class="stat-after nerf" style="width: 75%"></div>
+              </div>
+              <span class="stat-values">1000ms → 1100ms</span>
+            </div>
+          </div>
+          
+          <p class="change-summary">Reduced effectiveness at range while maintaining close-quarters dominance.</p>
+        </article>
+
+        <!-- Nullifier New -->
+        <article class="change-card new" data-weapon="Nullifier">
+          <div class="change-header">
+            <img src="../images/Nullifier.webp" alt="Nullifier" class="weapon-icon">
+            <h3 class="weapon-name">Nullifier</h3>
+            <span class="change-type new">NEW</span>
+          </div>
+          
+          <div class="change-details">
+            <div class="stat-info">
+              <span class="stat-label">Class:</span>
+              <span class="stat-value">Medium</span>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Type:</span>
+              <span class="stat-value">Special Weapon</span>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Effect:</span>
+              <span class="stat-value">Disables gadgets and specializations on hit</span>
+            </div>
+          </div>
+          
+          <p class="change-summary">Renamed from "Stun Gun". Temporarily disables enemy abilities, creating new tactical opportunities.</p>
+        </article>
+      </section>
+
+      <!-- Gadgets Section -->
+      <section class="patch-section" id="gadgets">
+        <h2 class="section-title">Gadget Updates</h2>
+        
+        <!-- Health Canister New -->
+        <article class="change-card new" data-gadget="Health Canister">
+          <div class="change-header">
+            <img src="../images/Health_Canister.webp" alt="Health Canister" class="weapon-icon">
+            <h3 class="weapon-name">Health Canister</h3>
+            <span class="change-type new">NEW</span>
+          </div>
+          
+          <div class="change-details">
+            <div class="stat-info">
+              <span class="stat-label">Available to:</span>
+              <span class="stat-value">All Classes</span>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Uses:</span>
+              <span class="stat-value">1 per gadget slot</span>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Healing:</span>
+              <span class="stat-value">50 HP over 3 seconds</span>
+            </div>
+          </div>
+          
+          <p class="change-summary">New self-healing option for all classes. Can be thrown to teammates for support plays.</p>
+        </article>
+      </section>
+
+      <!-- Maps Section -->
+      <section class="patch-section" id="maps">
+        <h2 class="section-title">Map Changes</h2>
+        
+        <!-- Las Vegas -->
+        <article class="change-card new" data-map="Las Vegas">
+          <div class="change-header">
+            <h3 class="weapon-name">Las Vegas 2032</h3>
+            <span class="change-type new">RETURNING</span>
+          </div>
+          
+          <div class="change-details">
+            <p class="change-summary">The neon-soaked streets of Las Vegas return with a seasonal makeover. New destruction points added to casino facades and updated lighting for better visibility.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- Quality of Life Section -->
+      <section class="patch-section" id="qol">
+        <h2 class="section-title">Quality of Life</h2>
+        
+        <!-- Club Size -->
+        <article class="change-card buff" data-qol="club-size">
+          <div class="change-header">
+            <h3 class="weapon-name">Club System</h3>
+            <span class="change-type buff">IMPROVED</span>
+          </div>
+          
+          <div class="change-details">
+            <div class="stat-change">
+              <span class="stat-name">Maximum Members</span>
+              <div class="stat-bar">
+                <div class="stat-before" style="width: 50%"></div>
+                <div class="stat-after buff" style="width: 100%"></div>
+              </div>
+              <span class="stat-values">50 → 100</span>
+            </div>
+            
+            <p class="change-summary">Clubs can now support up to 100 members with multi-channel chat support for better organization.</p>
+          </div>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <script src="app-new.js"></script>
+</body>
+</html>

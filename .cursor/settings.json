@@ -1,0 +1,8 @@
+{
+  "defaultModel": "gpt-4",
+  "showEditorInstructions": true,
+  "chatVisibility": "visible",
+  "tabSize": 2,
+  "autoSave": true,
+  "formatOnSave": true
+}
