@@ -2039,14 +2039,18 @@ body {
 
 /* Mobile Styles - Improved Layout */
 @media (max-width: 768px) {
-  /* Hide desktop sound toggle on mobile */
+  /* Show sound toggle on mobile next to filter button */
   #sound-toggle.sound-toggle-button {
-    display: none !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
-  /* Show only mobile sound toggle on mobile */
-  #mobile-sound-toggle.mobile-sound-toggle {
+  /* Ensure nav controls are properly displayed */
+  .nav-controls {
     display: flex !important;
+    gap: 8px;
+    align-items: center;
   }
 
   /* Mobile slot machine - let desktop styles scale naturally */
