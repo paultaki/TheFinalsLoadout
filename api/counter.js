@@ -11,11 +11,12 @@ export default async function handler(req, res) {
     const finalCount = count || 0;
     console.log("Final count:", finalCount);
     
-    res.status(200).json({ count: finalCount });
+    res.status(200).json({ count: finalCount, totalGenerated: finalCount });
   } catch (error) {
     console.error("Failed to get counter:", error);
     res.status(500).json({ 
       count: 0, 
+      totalGenerated: 0,
       error: error.message,
       debug: "Check Vercel function logs"
     });

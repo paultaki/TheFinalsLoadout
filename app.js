@@ -4304,7 +4304,9 @@ Gadget 3: ${selectedItems[4]}`;
 function updateTotalLoadoutsDisplay(count) {
   const totalLoadoutsElement = document.getElementById("total-loadouts");
   if (totalLoadoutsElement) {
-    const formattedCount = count.toLocaleString();
+    // Add null/undefined check to prevent toLocaleString error
+    const safeCount = count != null ? count : 0;
+    const formattedCount = safeCount.toLocaleString();
     totalLoadoutsElement.innerHTML = `🔥 <span class="loadouts-counter">${formattedCount}</span> total analyses delivered`;
     console.log("✅ Updated total-loadouts display:", formattedCount);
   }
