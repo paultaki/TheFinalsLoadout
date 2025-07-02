@@ -144,7 +144,7 @@ function showRevealCard(options) {
 
 // Jackpot card factory
 function makeJackpotCard() {
-  const spins = 2 + Math.floor(Math.random() * 3); // 2, 3, or 4
+  const spins = 3; // Always 3 spins for jackpot
   return {
     value: 'JACKPOT',
     spins: spins,

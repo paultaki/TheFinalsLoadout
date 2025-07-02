@@ -15,6 +15,10 @@
     "test:visual": "percy exec -- playwright test",
     "ci": "npm run typecheck && npm run test && npm run test:visual"
   },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0",
+    "@vercel/kv": "^1.0.1"
+  },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@playwright/test": "^1.44.0",

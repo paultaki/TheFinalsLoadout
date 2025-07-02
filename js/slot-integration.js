@@ -30,7 +30,11 @@ window.startSlotMachine = async function(classType, spinCount) {
   if (window.slotMachineInstance && window.slotMachineInstance.statusBar) {
     const statusText = window.slotMachineInstance.statusBar.querySelector("#slot-status-text");
     if (statusText) {
-      statusText.textContent = `${classType} Class - ${spinCount} spins remaining`;
+      if (spinCount === 1) {
+        statusText.textContent = `${classType} Class - FINAL SPIN`;
+      } else {
+        statusText.textContent = `${classType} Class - ${spinCount} SPINS REMAINING`;
+      }
     }
   }
   
@@ -57,7 +61,14 @@ async function executeSpinSequence(classType, totalSpins) {
     if (window.slotMachineInstance && window.slotMachineInstance.statusBar) {
       const statusText = window.slotMachineInstance.statusBar.querySelector("#slot-status-text");
       if (statusText) {
-        statusText.textContent = `${classType} Class - ${spinsRemaining} spins remaining`;
+        // Show proper status based on current spin
+        if (isLastSpin) {
+          statusText.textContent = `${classType} Class - FINAL SPIN`;
+        } else if (spinsRemaining === 1) {
+          statusText.textContent = `${classType} Class - 1 SPIN REMAINING`;
+        } else {
+          statusText.textContent = `${classType} Class - ${spinsRemaining} SPINS REMAINING`;
+        }
       }
     }
     
