@@ -30,7 +30,8 @@
       "Bash(pkill:*)",
       "Bash(npx vite:*)",
       "Bash(cat:*)",
-      "Bash(vercel dev:*)"
+      "Bash(vercel dev:*)",
+      "WebFetch(domain:thefinalsloadout.com)"
     ]
   },
   "enableAllProjectMcpServers": false
