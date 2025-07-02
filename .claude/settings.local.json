@@ -31,7 +31,8 @@
       "Bash(npx vite:*)",
       "Bash(cat:*)",
       "Bash(vercel dev:*)",
-      "WebFetch(domain:thefinalsloadout.com)"
+      "WebFetch(domain:thefinalsloadout.com)",
+      "Bash(env)"
     ]
   },
   "enableAllProjectMcpServers": false
