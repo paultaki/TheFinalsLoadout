@@ -3496,8 +3496,38 @@ function initializeEmptySlotMachine() {
   }
 }
 
+// Clean up old cached data to prevent memory buildup
+function cleanupOldCachedData() {
+  try {
+    // Clean up localStorage data older than 7 days
+    const savedHistory = JSON.parse(localStorage.getItem("loadoutHistory")) || [];
+    const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+    
+    const recentHistory = savedHistory.filter(entry => {
+      return !entry.timestamp || entry.timestamp > oneWeekAgo;
+    });
+    
+    if (recentHistory.length < savedHistory.length) {
+      console.log(`🧹 Cleaned up ${savedHistory.length - recentHistory.length} old history entries`);
+      localStorage.setItem("loadoutHistory", JSON.stringify(recentHistory));
+    }
+    
+    // Clear any orphaned performance cache
+    if (window.performanceCache) {
+      window.performanceCache.clear();
+    }
+    
+    console.log("✅ Memory cleanup completed");
+  } catch (error) {
+    console.error("Error during cleanup:", error);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded");
+  
+  // Clean up old cached data to prevent memory buildup
+  cleanupOldCachedData();
 
   // Load initial counter value
   // loadInitialCounter();

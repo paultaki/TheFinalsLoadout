@@ -3262,64 +3262,7 @@ img {
 .main-nav a:hover::after {
   transform: scaleX(1);
 }
-/* Base spin button styling */
-.spin-button {
-  background-color: #8e44ad !important; /* Purple background */
-  color: white !important;
-  border: none !important;
-  border-radius: 50% !important; /* Make them circular */
-  width: 50px !important; /* Fixed width */
-  height: 50px !important; /* Fixed height */
-  font-size: 18px !important;
-  font-weight: bold !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer !important;
-  margin: 0 5px !important;
-  padding: 0 !important; /* Remove padding */
-  transition: transform 0.2s ease, box-shadow 0.2s ease !important; /* Support your animations */
-}
 
-/* Hover Effect - Kept from your existing code */
-.spin-button:hover {
-  background-color: #9b59b6 !important; /* Lighter purple on hover */
-  transform: translateY(-3px) scale(1.1) !important;
-  box-shadow: 0 8px 20px rgba(255, 0, 255, 0.6) !important;
-}
-
-/* Click (Press-In) Effect - Kept from your existing code */
-.spin-button:active {
-  transform: scale(0.9) !important;
-  transition: transform 0.1s ease-out !important;
-}
-
-/* 🔥 Active (Selected) Spin Button - Strong Glow */
-.spin-button.active {
-  background: linear-gradient(
-    135deg,
-    #ff1493,
-    #00ffff
-  ) !important; /* Neon Pink → Cyan */
-  box-shadow: 0 0 20px rgba(255, 20, 147, 0.8), 0 0 15px rgba(0, 255, 255, 0.8) !important; /* Strong Pink & Cyan Glow */
-  border: 3px solid rgba(255, 20, 147, 0.8) !important; /* Hot Pink Border */
-  transform: scale(1.1); /* Slightly enlarges the button */
-}
-
-/* 🔥 Hover Effect - Keeps Glow Even When Active */
-.spin-button:hover,
-.spin-button.active:hover {
-  box-shadow: 0 0 25px rgba(255, 20, 147, 1), 0 0 20px rgba(0, 255, 255, 1),
-    0 0 30px rgba(255, 255, 255, 0.6); /* Even Stronger Glow */
-  transform: scale(1.15); /* Extra scale-up effect on hover */
-}
-
-/* Specific fix for spin buttons container */
-#spinSelection .btnRow {
-  display: flex !important;
-  justify-content: center !important;
-  margin: 10px 0 !important;
-}
 
 /* Header logo size */
 .finals-logo,

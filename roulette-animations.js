@@ -755,21 +755,21 @@ class RouletteAnimationSystem {
     return availableClasses;
   }
   
-  // Set up interval to continuously clean up any rogue animation containers
+  // Set up cleanup observer instead of interval
   setupCleanupInterval() {
-    // Run cleanup every 500ms to catch any containers that might persist
-    setInterval(() => {
-      // Only clean up containers that are NOT currently animating
+    // Clean up after each animation completes instead of running forever
+    this.cleanupAfterAnimation = () => {
       if (!this.animating) {
         const containers = document.querySelectorAll('.roulette-animation-container');
-        
-        containers.forEach(container => {
-          // Remove any leftover containers when not animating
-          console.log('🧹 Removing leftover animation container');
-          container.remove();
-        });
+        if (containers.length > 0) {
+          console.log('🧹 Cleaning up', containers.length, 'animation containers');
+          containers.forEach(container => container.remove());
+        }
       }
-    }, 500);
+    };
+    
+    // Only clean up when DOM changes or animation ends
+    document.addEventListener('animationend', this.cleanupAfterAnimation);
   }
   
   // Clean up all animation containers immediately
