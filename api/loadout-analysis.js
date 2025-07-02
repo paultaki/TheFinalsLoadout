@@ -167,11 +167,8 @@ export default async function handler(req, res) {
       model: 'claude-3-5-haiku-latest',
       max_tokens: 350,
       temperature: 0.7,
+      system: SYSTEM_PROMPT,
       messages: [
-        {
-          role: 'system',
-          content: SYSTEM_PROMPT
-        },
         {
           role: 'user',
           content: JSON.stringify(loadoutData)
