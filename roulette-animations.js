@@ -488,7 +488,8 @@ class RouletteAnimationSystem {
               spinElements[winnerIndex].style.boxShadow = "0 0 40px rgba(123, 47, 227, 0.8)";
             }
 
-            this.playSpinWinSound();
+            // Removed this.playSpinWinSound() to prevent double sound
+            // The second sound will play when the slot machine starts
             
             if (statusEl) {
               statusEl.textContent = `${this.selectedSpins} SPIN${
