@@ -104,6 +104,9 @@ function showRevealCard(options) {
         overlayAudio.dingDing.pause();
         overlayAudio.dingDing.currentTime = 0;
       }, 1500);
+    } else {
+      overlayAudio.ding.currentTime = 0;
+      overlayAudio.ding.play();
     }
     
     // Auto dismiss

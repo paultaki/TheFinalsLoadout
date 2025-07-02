@@ -109,7 +109,8 @@ function showRevealCard(options) {
           overlayAudio.dingDing.currentTime = 0;
         }, 1500);
       } else {
-        // Removed ding.mp3 on spin selector stop to prevent duplicate sound (sound will still play on the subsequent reveal card).
+        overlayAudio.ding.currentTime = 0;
+        overlayAudio.ding.play();
       }
     }
 
