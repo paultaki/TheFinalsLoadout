@@ -1,0 +1,120 @@
+/**
+ * Mobile Performance Optimizations
+ * Reduces animation complexity and improves performance on mobile devices
+ */
+
+/* Disable expensive animations on mobile */
+@media (max-width: 768px) {
+  /* Force hardware acceleration on animated elements */
+  .slot-scroll,
+  .slot-cell,
+  .slot-item,
+  .item-container {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    perspective: 1000px;
+    -webkit-perspective: 1000px;
+  }
+
+  /* Simplify animations */
+  * {
+    animation-timing-function: linear !important;
+  }
+
+  /* Disable blur effects completely on mobile */
+  .high-speed-blur,
+  .extreme-blur {
+    filter: none !important;
+  }
+
+  /* Reduce shadow complexity */
+  .slot-item {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  /* Disable complex gradients during animation */
+  .spinning .slot-item {
+    background: #1a1a1a !important;
+    border-image: none !important;
+    border-color: #444 !important;
+  }
+
+  /* Reduce glow effects */
+  .winner-glow {
+    animation: winner-glow-mobile 1s ease-in-out !important;
+  }
+
+  @keyframes winner-glow-mobile {
+    0%, 100% {
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    }
+  }
+
+  /* Disable particle effects on very small screens */
+  @media (max-width: 480px) {
+    .lock-in-particle {
+      display: none !important;
+    }
+  }
+
+  /* Optimize font rendering during animations */
+  .spinning .slot-cell p {
+    font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeSpeed;
+  }
+
+  /* Reduce animation duration for quicker response */
+  .slot-cell {
+    transition-duration: 0.15s !important;
+  }
+
+  /* Use simpler transforms */
+  .slot-scroll {
+    will-change: transform;
+    contain: layout style paint;
+  }
+}
+
+/* Low-end device optimizations */
+@media (max-width: 768px) and (max-device-memory: 4GB) {
+  /* Disable all non-essential animations */
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Keep only essential slot machine animation */
+  .slot-scroll {
+    transition: none !important;
+  }
+
+  /* Disable shadows and glows */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Simplify borders */
+  .slot-item {
+    border: 1px solid #444 !important;
+  }
+}
+
+/* Reduce motion for accessibility and performance */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .slot-scroll {
+    transition: none !important;
+  }
+}

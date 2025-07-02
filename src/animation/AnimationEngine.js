@@ -18,6 +18,15 @@ import {
   CELEBRATION_EFFECTS
 } from '../core/Constants.js';
 
+import {
+  isMobile,
+  isLowEndDevice,
+  getOptimizedPhysics,
+  getOptimizedVisuals,
+  performanceMonitor,
+  MOBILE_FRAME_SETTINGS
+} from '../core/MobileOptimizations.js';
+
 /**
  * SlotColumn class handles individual column animations
  */
@@ -35,9 +44,11 @@ class SlotColumn {
     this.overshootAmount = 0;
     this.snapbackComplete = false;
 
+    // Use mobile-optimized physics if on mobile
+    const physics = getOptimizedPhysics() || SLOT_PHYSICS;
     const timing = isFinalSpin
-      ? SLOT_PHYSICS.TIMING.FINAL_SPIN
-      : SLOT_PHYSICS.TIMING.REGULAR_SPIN;
+      ? physics.TIMING.FINAL_SPIN
+      : physics.TIMING.REGULAR_SPIN;
 
     // Use explicit stop times for final spin columns
     if (isFinalSpin && timing.COLUMN_STOPS && timing.COLUMN_STOPS[index]) {
@@ -82,8 +93,14 @@ class SlotColumn {
         deltaTime = SLOT_TIMING.FRAME_DURATION; // Default to ~60fps
       }
 
+      // Use mobile-optimized frame settings if on mobile
+      const frameSettings = isMobile() ? MOBILE_FRAME_SETTINGS : { FRAME_DURATION: SLOT_TIMING.FRAME_DURATION };
+      
       // Ensure deltaTime is reasonable
       const dt = Math.min(deltaTime, VELOCITY_THRESHOLDS.DT_CAP) / 1000; // Cap at 50ms, convert to seconds
+      
+      // Get physics values (mobile-optimized if applicable)
+      const physics = getOptimizedPhysics() || SLOT_PHYSICS;
 
       // Vegas-style physics with distinct phases
       const accelerationPhase = ANIMATION_PHASES.ACCELERATION_PHASE; // 0-500ms
@@ -95,34 +112,34 @@ class SlotColumn {
           const accelProgress = Math.min(elapsed / accelerationPhase, 1);
           const accelMultiplier = 1 + Math.pow(accelProgress, ANIMATION_PHASES.ACCELERATION_POWER) * (ANIMATION_PHASES.ACCELERATION_MAX_MULT - 1); // Up to 3x acceleration
 
-          this.velocity += SLOT_PHYSICS.ACCELERATION * dt * accelMultiplier;
+          this.velocity += physics.ACCELERATION * dt * accelMultiplier;
 
           if (
             elapsed >= accelerationPhase ||
-            this.velocity >= SLOT_PHYSICS.MAX_VELOCITY
+            this.velocity >= physics.MAX_VELOCITY
           ) {
-            this.velocity = SLOT_PHYSICS.MAX_VELOCITY;
+            this.velocity = physics.MAX_VELOCITY;
             this.state = "spinning";
           }
           break;
 
         case "spinning":
           // Maintain max velocity with slight variations for realism
-          this.velocity = SLOT_PHYSICS.MAX_VELOCITY + Math.sin(elapsed / ANIMATION_PHASES.VELOCITY_VARIATION_RATE) * ANIMATION_PHASES.VELOCITY_VARIATION;
+          this.velocity = physics.MAX_VELOCITY + Math.sin(elapsed / ANIMATION_PHASES.VELOCITY_VARIATION_RATE) * ANIMATION_PHASES.VELOCITY_VARIATION;
 
           if (elapsed >= maxSpeedPhase) {
             this.state = "decelerating";
             // Calculate target position with overshoot
             const baseTarget =
-              Math.ceil(this.position / SLOT_PHYSICS.ITEM_HEIGHT) *
-              SLOT_PHYSICS.ITEM_HEIGHT;
-            this.overshootAmount = SLOT_PHYSICS.ITEM_HEIGHT * ANIMATION_PHASES.OVERSHOOT_AMOUNT; // 30% overshoot
+              Math.ceil(this.position / physics.ITEM_HEIGHT) *
+              physics.ITEM_HEIGHT;
+            this.overshootAmount = physics.ITEM_HEIGHT * ANIMATION_PHASES.OVERSHOOT_AMOUNT; // 30% overshoot
             this.targetPosition = baseTarget;
 
             // For gadget columns, use normal positioning
             if (this.index >= 2) {
               this.targetPosition = 0;
-              this.overshootAmount = SLOT_PHYSICS.ITEM_HEIGHT * ANIMATION_PHASES.OVERSHOOT_AMOUNT_GADGET;
+              this.overshootAmount = physics.ITEM_HEIGHT * ANIMATION_PHASES.OVERSHOOT_AMOUNT_GADGET;
             }
           }
           break;
@@ -296,17 +313,24 @@ class SlotColumn {
       // Vegas-style blur effects based on velocity
       let blur = 0;
       let containerClass = "";
+      
+      // Get visual settings (mobile-optimized if applicable)
+      const visualSettings = getOptimizedVisuals();
+      const blurEnabled = !visualSettings || visualSettings.BLUR_ENABLED;
 
-      const absVelocity = Math.abs(this.velocity);
+      if (blurEnabled) {
+        const absVelocity = Math.abs(this.velocity);
+        const maxBlur = visualSettings ? visualSettings.MAX_BLUR : BLUR_THRESHOLDS.EXTREME_BLUR;
 
-      if (absVelocity > BLUR_THRESHOLDS.EXTREME_VELOCITY) {
-        blur = BLUR_THRESHOLDS.EXTREME_BLUR;
-        containerClass = "extreme-blur";
-      } else if (absVelocity > BLUR_THRESHOLDS.HIGH_VELOCITY) {
-        blur = BLUR_THRESHOLDS.HIGH_BLUR;
-        containerClass = "high-speed-blur";
-      } else if (absVelocity > BLUR_THRESHOLDS.MEDIUM_VELOCITY) {
-        blur = BLUR_THRESHOLDS.MEDIUM_BLUR;
+        if (absVelocity > BLUR_THRESHOLDS.EXTREME_VELOCITY) {
+          blur = Math.min(BLUR_THRESHOLDS.EXTREME_BLUR, maxBlur);
+          containerClass = "extreme-blur";
+        } else if (absVelocity > BLUR_THRESHOLDS.HIGH_VELOCITY) {
+          blur = Math.min(BLUR_THRESHOLDS.HIGH_BLUR, maxBlur);
+          containerClass = "high-speed-blur";
+        } else if (absVelocity > BLUR_THRESHOLDS.MEDIUM_VELOCITY) {
+          blur = Math.min(BLUR_THRESHOLDS.MEDIUM_BLUR, maxBlur);
+        }
       }
 
       // Add/remove blur classes on container with error handling
@@ -323,9 +347,12 @@ class SlotColumn {
 
       // Shake effect during snapback
       let shakeX = 0;
-      if (this.state === "snapback") {
+      const shakeEnabled = !visualSettings || visualSettings.SCREEN_SHAKE_ENABLED;
+      
+      if (this.state === "snapback" && shakeEnabled) {
         try {
-          shakeX = Math.sin(performance.now() / SHAKE_EFFECTS.SNAPBACK_SHAKE_RATE) * SHAKE_EFFECTS.SNAPBACK_SHAKE_AMOUNT;
+          const shakeIntensity = visualSettings ? visualSettings.SCREEN_SHAKE_INTENSITY : 1;
+          shakeX = Math.sin(performance.now() / SHAKE_EFFECTS.SNAPBACK_SHAKE_RATE) * SHAKE_EFFECTS.SNAPBACK_SHAKE_AMOUNT * shakeIntensity;
           // Validate shakeX
           if (isNaN(shakeX)) {
             shakeX = 0;
@@ -596,6 +623,11 @@ export function startSlotAnimation(columns, options = {}) {
           }
         });
 
+        // Update performance monitor on mobile
+        if (isMobile()) {
+          performanceMonitor.update();
+        }
+
         if (isAnimating) {
           try {
             requestAnimationFrame(animate);
@@ -770,10 +802,18 @@ export function createLockInParticleExplosion(container) {
   const centerX = rect.left + rect.width / 2;
   const centerY = rect.top + rect.height / 2;
 
+  // Get visual settings for mobile optimization
+  const visualSettings = getOptimizedVisuals();
+  const particleMultiplier = visualSettings ? visualSettings.PARTICLE_COUNT_MULTIPLIER : 1;
+  
+  // Reduce particles on mobile
+  const waveCount = Math.ceil(PARTICLE_EFFECTS.WAVE_COUNT * particleMultiplier);
+  const particlesPerWave = Math.ceil(PARTICLE_EFFECTS.PARTICLES_PER_WAVE * particleMultiplier);
+
   // Create multiple waves of particles
-  for (let wave = 0; wave < PARTICLE_EFFECTS.WAVE_COUNT; wave++) {
+  for (let wave = 0; wave < waveCount; wave++) {
     setTimeout(() => {
-      for (let i = 0; i < PARTICLE_EFFECTS.PARTICLES_PER_WAVE; i++) {
+      for (let i = 0; i < particlesPerWave; i++) {
         const particle = document.createElement("div");
         particle.className = "lock-in-particle";
 
