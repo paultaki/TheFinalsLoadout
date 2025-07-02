@@ -207,23 +207,23 @@ async function loadInitialCounter() {
       const data = await response.json();
       console.log("✅ Initial counter loaded:", data.totalGenerated);
 
-      // Update all counter displays
-      updateCounterDisplay(data.totalGenerated);
-      updateTotalLoadoutsDisplay(data.totalGenerated);
+      // Counter functionality removed
+      // updateCounterDisplay(data.totalGenerated);
+      // updateTotalLoadoutsDisplay(data.totalGenerated);
     } else {
       console.warn("⚠️ Failed to load initial counter, using default 1231");
-      // Fallback to 1231
-      updateCounterDisplay(1231);
-      updateTotalLoadoutsDisplay(1231);
+      // Counter functionality removed
+      // updateCounterDisplay(1231);
+      // updateTotalLoadoutsDisplay(1231);
     }
   } catch (error) {
     console.warn(
       "⚠️ Error loading initial counter, using default 1231:",
       error
     );
-    // Fallback to 1231
-    updateCounterDisplay(1231);
-    updateTotalLoadoutsDisplay(1231);
+    // Counter functionality removed
+    // updateCounterDisplay(1231);
+    // updateTotalLoadoutsDisplay(1231);
   }
 }
 
@@ -1909,9 +1909,10 @@ async function finalizeSpin(columns) {
       lastAddedLoadout = loadoutString;
 
       // Increment the global loadouts counter
-      console.log("🚀🚀🚀 ABOUT TO CALL incrementLoadoutCounter 🚀🚀🚀");
-      await incrementLoadoutCounter();
-      console.log("✅✅✅ incrementLoadoutCounter COMPLETED ✅✅✅");
+      // Counter functionality removed
+      // console.log("🚀🚀🚀 ABOUT TO CALL incrementLoadoutCounter 🚀🚀🚀");
+      // await incrementLoadoutCounter();
+      // console.log("✅✅✅ incrementLoadoutCounter COMPLETED ✅✅✅");
 
       // Also fetch and update counter display as backup
       // console.log('🚀🚀🚀 ABOUT TO CALL fetchAndUpdateCounter 🚀🚀🚀');
@@ -4307,7 +4308,8 @@ function updateTotalLoadoutsDisplay(count) {
     // Add null/undefined check to prevent toLocaleString error
     const safeCount = count != null ? count : 0;
     const formattedCount = safeCount.toLocaleString();
-    totalLoadoutsElement.innerHTML = `🔥 <span class="loadouts-counter">${formattedCount}</span> total analyses delivered`;
+    // Counter display removed
+    // totalLoadoutsElement.innerHTML = `🔥 <span class="loadouts-counter">${formattedCount}</span> total analyses delivered`;
     console.log("✅ Updated total-loadouts display:", formattedCount);
   }
 }
