@@ -373,9 +373,6 @@ async function showSpinWheelOverlay() {
           overlayAudio.dingDing.pause();
           overlayAudio.dingDing.currentTime = 0;
         }, 1500);
-      } else {
-        overlayAudio.ding.currentTime = 0;
-        overlayAudio.ding.play();
       }
       
       // Add glow effect
