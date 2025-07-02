@@ -29,7 +29,8 @@
       "Bash(ss:*)",
       "Bash(pkill:*)",
       "Bash(npx vite:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(vercel dev:*)"
     ]
   },
   "enableAllProjectMcpServers": false

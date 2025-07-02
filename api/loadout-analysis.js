@@ -1,6 +1,19 @@
-const Anthropic = require('@anthropic-ai/sdk');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { Anthropic } from '@anthropic-ai/sdk';
 
-module.exports = async function handler(req, res) {
+// Get directory path for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load system prompt from file
+const SYSTEM_PROMPT = fs.readFileSync(
+  path.join(__dirname, 'claude_analysis_prompt.txt'),
+  'utf8'
+);
+
+export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -137,57 +150,33 @@ module.exports = async function handler(req, res) {
 
     const persona = personaMap[analysisStyle] || 'tactical analyst';
 
-    const prompt = `
-You are ${persona}. Deliver a short, punchy analysis in EXACTLY 15-20 words that references the SPECIFIC items. Include a rating at the end (X/10).
-
-Class: ${classType}
-Weapon: ${weapon} (${weaponTier})
-Special: ${specialization} (${specTier})
-Gadgets: ${gadgets.join(', ')} (${gadgetTiers.join(', ')})
-
-Analysis Style: ${analysisStyle}
-
-IMPORTANT: Match the style! Reference actual items. Be specific about synergies. DO NOT include any prefixes like "Here's a roast:" or "Analysis:" - start directly with your analysis. STRICT LIMIT: 15-20 WORDS INCLUDING THE RATING.
-
-${analysisStyle} Examples:
-${analysisStyle === 'tactical' ? `
-- "FCAR + Guardian Turret provides solid mid-range control. Add Jump Pads for repositioning. 7/10"
-- "M11 with Grappling Hook enables aggressive flanks. Smoke covers retreats. Solid hit-and-run. 8/10"
-- "Lewis Gun suppression pairs well with Barricade. Zone denial specialist. 7.5/10"` : ''}
-${analysisStyle === 'roast' ? `
-- "93R burst damage? More like burst disappointment. Uninstall. 0/10"
-- "Thermal Bore on Light? You drilled a hole to watch yourself die. 1/10"
-- "CB-01 Repeater? Even the training bots feel bad killing you. 0/10"` : ''}
-${analysisStyle === 'funny' ? `
-- "Sledgehammer + Winch Claw? Fishing for players with malicious intent. 8/10"
-- "Riot Shield + Healing Beam? Professional third wheel. At least you're useful. 6/10"
-- "Throwing Knives + Cloaking? Mall ninja reached final form. 5/10"` : ''}
-${analysisStyle === 'supportive' ? `
-- "Recurve Bow takes skill! With practice, you'll surprise everyone. Keep grinding! 6/10"
-- "Anti-Gravity Cube has niche uses. Creative players make it work! 5/10"
-- "M26 Matter hits hard up close. Work those angles! 5.5/10"` : ''}
-${analysisStyle === 'sarcastic' ? `
-- "Oh wow, FCAR and Defibs. How original. Next you'll discover fire. 9/10"
-- "Lewis Gun with Dome Shield. Groundbreaking tactics from 1917. 8/10"
-- "M60 and C4. Someone watched a YouTube guide. 8.5/10"` : ''}
-${analysisStyle === 'hype' ? `
-- "THROWING KNIVES WITH DASH?! Ninja mode ACTIVATED! Let's GO! 9/10"
-- "Flamethrower Charge N Slam combo?! MAXIMUM CHAOS ENERGY! 9.5/10"
-- "Dual Blades with Vanishing Bomb?! ANIME PROTAGONIST TIME! 8/10"` : ''}
-
-Keep it punchy. Never more than 25 words. Match the style!
-`;
+    // Prepare the loadout data for the API
+    const loadoutData = {
+      specialization,
+      weapon,
+      gadgets,
+      classType,
+      weaponTier,
+      specTier,
+      gadgetTiers,
+      analysisStyle,
+      persona
+    };
 
     const message = await anthropic.messages.create({
       model: 'claude-3-5-haiku-latest',
-      max_tokens: 150,
-      temperature: 1.0,
+      max_tokens: 350,
+      temperature: 0.7,
       messages: [
         {
-          role: 'user',
-          content: prompt,
+          role: 'system',
+          content: SYSTEM_PROMPT
         },
-      ],
+        {
+          role: 'user',
+          content: JSON.stringify(loadoutData)
+        }
+      ]
     });
 
     // Ensure we have valid content
