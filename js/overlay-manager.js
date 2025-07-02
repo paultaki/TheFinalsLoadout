@@ -1377,6 +1377,8 @@ async function showClassRouletteOverlay() {
       rouletteState.totalBallRotation = rouletteState.ballAngularPosition;
 
       // Dynamic sound effects based on physics phase
+      // Commented out beep sounds - only roulette.mp3 should play
+      /*
       if (physics.speed > 0.1 && window.state && window.state.soundEnabled) {
         // Calculate tick interval based on ball speed (faster = more frequent)
         const tickInterval = Math.max(50, 200 * (1 - physics.speed));
@@ -1392,6 +1394,7 @@ async function showClassRouletteOverlay() {
           }
         }
       }
+      */
 
       // Special sound when ball drops to inner track
       if (
@@ -1429,10 +1432,11 @@ async function showClassRouletteOverlay() {
       rouletteState.selectedClass = winner;
 
       // Play win sound only if enabled
-      if (window.state && window.state.soundEnabled) {
-        overlayAudio.ding.currentTime = 0;
-        window.safePlay(overlayAudio.ding);
-      }
+      // REMOVED: ding.mp3 sound when wheel stops - keeping only the popup card sound
+      // if (window.state && window.state.soundEnabled) {
+      //   overlayAudio.ding.currentTime = 0;
+      //   window.safePlay(overlayAudio.ding);
+      // }
 
       // Add landed class to ball
       ball.classList.add("landed");

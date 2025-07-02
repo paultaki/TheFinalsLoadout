@@ -961,8 +961,9 @@ class SlotMachine {
   // Apply dramatic winner effects for final spin
   async applyDramaticWinnerEffects() {
     // Play celebration sound right when animation starts
-    console.log('Playing celebration sound (pop-pour-perform)');
-    this.playSound("celebrationSound");
+    // Commented out to avoid duplicate with app.js celebration sound
+    // console.log('Playing celebration sound (pop-pour-perform)');
+    // this.playSound("celebrationSound");
     
     // First apply basic effects
     this.applyWinnerEffects();
