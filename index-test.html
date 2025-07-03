@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Slot Machine History - Test</title>
+
+    <!-- Fonts from main site -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap">
+
+    <!-- Test Styles -->
+    <link rel="stylesheet" href="style-test.css">
+
+    <!-- html2canvas for image export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body class="casino-mode">
+    <!-- Test Controls -->
+    <div class="test-controls">
+        <h1>Static Slot Machine History Test</h1>
+        <button id="add-test-item" class="test-button">Add Test History Item</button>
+        <button id="clear-history" class="test-button">Clear History</button>
+    </div>
+
+    <!-- History Container -->
+    <div id="slot-history-container" class="slot-history-container">
+        <h2 class="history-title">
+            <span class="title-icon">🎰</span>
+            <span>Loadout History</span>
+            <span class="history-count" id="history-count">(0)</span>
+        </h2>
+        <div id="history-list" class="history-list">
+            <!-- Static slot machine items will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Audio Elements -->
+    <audio id="addSound" src="sounds/chang.mp3" preload="auto"></audio>
+    <audio id="copySound" src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="exportSound" src="sounds/final-sound.mp3" preload="auto"></audio>
+
+    <!-- Scripts -->
+    <script src="app-test.js"></script>
+    <script src="slot-history-test.js"></script>
+</body>
+</html>
