@@ -3353,6 +3353,34 @@ body {
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  background: linear-gradient(
+    135deg,
+    #e8e8e8 0%,
+    #ffffff 15%,
+    #d4a5ff 35%,
+    #ffffff 50%,
+    #c79dff 65%,
+    #ffffff 85%,
+    #b8b8b8 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: metallic-shine 3s ease-in-out infinite;
+}
+
+@keyframes metallic-shine {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .title-icon {
