@@ -40,19 +40,19 @@ window.safePlay = function(audio) {
     console.warn('safePlay: No audio element provided');
     return Promise.resolve();
   }
-  
+
   // Check if user has interacted and sound is enabled
   if (!window.userHasInteracted) {
     console.log(`safePlay: Blocked ${audio.id || 'audio'} - waiting for user interaction`);
     return Promise.resolve();
   }
-  
+
   // Check if sound is enabled in state
   if (window.state && !window.state.soundEnabled) {
     console.log(`safePlay: Blocked ${audio.id || 'audio'} - sound is disabled`);
     return Promise.resolve();
   }
-  
+
   // Safe play with error handling
   try {
     audio.currentTime = 0;
@@ -158,7 +158,7 @@ window.state = state;
 function getAvailableClasses() {
   const allClasses = ["Light", "Medium", "Heavy"];
   const availableClasses = [];
-  
+
   // Check localStorage for exclusions (checked = excluded)
   ["light", "medium", "heavy"].forEach((className) => {
     const isExcluded = localStorage.getItem(`exclude-${className}`) === "true";
@@ -167,10 +167,10 @@ function getAvailableClasses() {
       availableClasses.push(capitalizedClass);
     }
   });
-  
+
   // If all classes are excluded, use all classes as fallback
   const finalClasses = availableClasses.length > 0 ? availableClasses : allClasses;
-  
+
   return finalClasses;
 }
 
@@ -564,10 +564,10 @@ const displayLoadout = (classType) => {
   // Check if we're being called from within the overlay system
   const overlayOutput = document.getElementById("output");
   const isInOverlay = overlayOutput && (
-    overlayOutput.closest(".slot-machine-overlay") || 
+    overlayOutput.closest(".slot-machine-overlay") ||
     overlayOutput.id === "output" && document.getElementById("output-backup")
   );
-  
+
   if (
     window.overlayManager &&
     window.overlayManager.overlayState &&
@@ -1669,7 +1669,7 @@ async function finalizeSpin(columns) {
 
   // Check if items were passed directly (from overlay slot machine)
   let finalItems = null;
-  
+
   if (columns && Array.isArray(columns) && columns.length >= 5) {
     console.log("📦 Using passed items data from overlay slot machine");
     finalItems = columns;
@@ -1679,7 +1679,7 @@ async function finalizeSpin(columns) {
     const itemContainers = document.querySelectorAll(
       "#output .items-container .item-container"
     );
-    
+
     if (itemContainers && itemContainers.length > 0) {
       console.log(`🔍 Found ${itemContainers.length} item containers in DOM`);
     }
@@ -1705,7 +1705,7 @@ async function finalizeSpin(columns) {
 
     // Process items based on source
     let selectedItems;
-    
+
     if (finalItems) {
       // Items were passed directly - extract the names
       selectedItems = finalItems.map(item => {
@@ -1967,13 +1967,22 @@ async function finalizeSpin(columns) {
   }
 
   // REMOVED re-enabling code - buttons will stay disabled until user selects a class
-  
+
   // Remove the slot machine active class to show selection display again on desktop
   document.body.classList.remove('slot-machine-active');
-  
+
   console.log(
     "✅ Spin completed and finalized! Buttons remain disabled until class selection."
   );
+
+  // ✅ Add to history
+  const loadout = {
+      class: classType,
+      weapon: { name: selectedWeapon, image: `images/${selectedWeapon.replace(/ /g, '_')}.webp` },
+      specialization: { name: selectedSpec, image: `images/${selectedSpec.replace(/ /g, '_')}.webp` },
+      gadgets: selectedGadgets.map(g => ({ name: g, image: `images/${g.replace(/ /g, '_')}.webp` }))
+  };
+  slotHistoryManager.addToHistory(loadout);
 }
 
 // Update UI functions
@@ -2244,7 +2253,7 @@ async function addToHistory(
         <h3 class="loadout-name">${loadoutName}</h3>
         <time class="timestamp">Just now</time>
       </header>
-      
+
       <div class="loadout-details">
         <div class="weapon-item">
           <span class="item-label">WEAPON</span>
@@ -2256,7 +2265,7 @@ async function addToHistory(
             <span class="item-name">${selectedWeapon}</span>
           </div>
         </div>
-        
+
         <div class="spec-item">
           <span class="item-label">SPECIALIZATION</span>
           <div class="item-content">
@@ -2267,7 +2276,7 @@ async function addToHistory(
             <span class="item-name">${selectedSpec}</span>
           </div>
         </div>
-        
+
         <div class="gadget-group">
           <span class="item-label">GADGETS</span>
           <div class="gadget-list">
@@ -2287,7 +2296,7 @@ async function addToHistory(
           </div>
         </div>
       </div>
-      
+
       <div class="ai-analysis loading">
         <span class="ai-icon">🤖</span>
         <p class="roast-text">
@@ -2295,7 +2304,7 @@ async function addToHistory(
         </p>
         <span class="score-badge">?/10</span>
       </div>
-      
+
       <footer class="loadout-actions">
         <button class="copy-text-btn" onclick="copyLoadoutText(this)" title="Copy loadout as text">
           <span>📋</span> Copy Text
@@ -2772,7 +2781,7 @@ function loadHistory() {
     let roastHTML = "";
     let scoreText = "?/10";
     let scoreClass = "";
-    
+
     if (entryData.roast) {
       const scoreMatch = entryData.roast.match(/(\d+)\/10/);
       if (scoreMatch) {
@@ -2782,7 +2791,7 @@ function loadHistory() {
         else if (score >= 5) scoreClass = "mid-score";
         else scoreClass = "low-score";
       }
-      
+
       roastHTML = `
         <div class="ai-analysis ${scoreClass}">
           <span class="ai-icon">🤖</span>
@@ -2809,7 +2818,7 @@ function loadHistory() {
           <h3 class="loadout-name">${entryData.loadoutName}</h3>
           <time class="timestamp">${timeAgo}</time>
         </header>
-        
+
         <div class="loadout-details">
           <div class="weapon-item">
             <span class="item-label">WEAPON</span>
@@ -2821,7 +2830,7 @@ function loadHistory() {
               <span class="item-name">${entryData.weapon}</span>
             </div>
           </div>
-          
+
           <div class="spec-item">
             <span class="item-label">SPECIALIZATION</span>
             <div class="item-content">
@@ -2832,7 +2841,7 @@ function loadHistory() {
               <span class="item-name">${entryData.specialization}</span>
             </div>
           </div>
-          
+
           <div class="gadget-group">
             <span class="item-label">GADGETS</span>
             <div class="gadget-list">
@@ -2852,9 +2861,9 @@ function loadHistory() {
             </div>
           </div>
         </div>
-        
+
         ${roastHTML}
-        
+
         <footer class="loadout-actions">
           <button class="copy-text-btn" onclick="copyLoadoutText(this)" title="Copy loadout as text">
             <span>📋</span> Copy Text
@@ -3365,7 +3374,7 @@ function disableBlurEffectsOnMobile() {
       .velocity-blur {
         filter: none !important;
       }
-      
+
       .item-container.spinning {
         filter: none !important;
       }
@@ -3387,11 +3396,11 @@ function reduceMobileAnimationDurations() {
         animation-duration: 0.5s !important;
         transition-duration: 0.15s !important;
       }
-      
+
       .winner {
         animation-duration: 0.5s !important;
       }
-      
+
       @keyframes winnerFlash {
         0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
         50% { box-shadow: 0 0 25px rgba(255, 183, 0, 0.7); }
@@ -3503,21 +3512,21 @@ function cleanupOldCachedData() {
     // Clean up localStorage data older than 7 days
     const savedHistory = JSON.parse(localStorage.getItem("loadoutHistory")) || [];
     const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
-    
+
     const recentHistory = savedHistory.filter(entry => {
       return !entry.timestamp || entry.timestamp > oneWeekAgo;
     });
-    
+
     if (recentHistory.length < savedHistory.length) {
       console.log(`🧹 Cleaned up ${savedHistory.length - recentHistory.length} old history entries`);
       localStorage.setItem("loadoutHistory", JSON.stringify(recentHistory));
     }
-    
+
     // Clear any orphaned performance cache
     if (window.performanceCache) {
       window.performanceCache.clear();
     }
-    
+
     console.log("✅ Memory cleanup completed");
   } catch (error) {
     console.error("Error during cleanup:", error);
@@ -3526,7 +3535,7 @@ function cleanupOldCachedData() {
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded");
-  
+
   // Clean up old cached data to prevent memory buildup
   cleanupOldCachedData();
 
@@ -3662,7 +3671,7 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("❌ Animation already in progress, skipping");
           return;
         }
-        
+
         // Check if any classes are available
         const availableClasses = getAvailableClasses();
         if (availableClasses.length === 0) {
@@ -3717,13 +3726,13 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
               const { spinCount, chosenClass } = await rouletteSystem.startFullSequence();
               console.log(`✅ Retry roulette completed - ${spinCount} spins, ${chosenClass} class`);
-              
+
               // Set state and start the slot machine
               if (window.state) {
                 window.state.totalSpins = spinCount;
                 window.state.selectedClass = chosenClass;
               }
-              
+
               // Start the real slot machine
               spinLoadout();
             } catch (error) {
@@ -3913,7 +3922,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Select current button
       button.classList.add("selected", "active");
       button.src = button.dataset.active; // Change image to active
-      
+
       // No longer using gadget queues - each spin gets fresh random selection
 
       // Handle "Random" class selection
@@ -3922,14 +3931,14 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log('🎲 Random class button: Fetching available classes...');
         let availableClasses = getAvailableClasses();
         console.log('🎲 Random class button: Received available classes:', availableClasses);
-        
+
         // If no classes are available (all excluded), show warning and use all classes
         if (availableClasses.length === 0) {
           console.warn('⚠️ All classes excluded! Using all classes instead.');
           alert('All classes are excluded! Please uncheck at least one class to continue.');
           availableClasses = ["Light", "Medium", "Heavy"];
         }
-        
+
         const randomClass = availableClasses[Math.floor(Math.random() * availableClasses.length)];
         state.selectedClass = randomClass;
         console.log(`🎲 Randomly Chosen Class: ${randomClass}`);
@@ -4298,1051 +4307,195 @@ Gadget 3: ${selectedItems[4]}`;
     })();
   };
   */
-});
 
-// Increment loadout counter on backend
-// Update the total loadouts counter element specifically
-function updateTotalLoadoutsDisplay(count) {
-  const totalLoadoutsElement = document.getElementById("total-loadouts");
-  if (totalLoadoutsElement) {
-    // Add null/undefined check to prevent toLocaleString error
-    const safeCount = count != null ? count : 0;
-    const formattedCount = safeCount.toLocaleString();
-    // Counter display removed
-    // totalLoadoutsElement.innerHTML = `🔥 <span class="loadouts-counter">${formattedCount}</span> total analyses delivered`;
-    console.log("✅ Updated total-loadouts display:", formattedCount);
-  }
-}
+  // ===========================
+  // History Manager
+  // ===========================
+  class SlotHistoryManager {
+      constructor() {
+          this.history = [];
+          this.maxHistory = 5; // Display 5 by default
+          this.spinCounter = 0;
+          this.soundEnabled = true;
+          this.showAll = false;
+          this.loadFromStorage();
+      }
 
-async function incrementLoadoutCounter() {
-  try {
-    console.log("📊 Incrementing loadout counter...");
+      loadFromStorage() {
+          try {
+              const savedHistory = localStorage.getItem('slotMachineHistory');
+              const savedCounter = localStorage.getItem('slotMachineSpinCounter');
+              if (savedHistory) {
+                  this.history = JSON.parse(savedHistory);
+              }
+              if (savedCounter) {
+                  this.spinCounter = parseInt(savedCounter, 10);
+              }
+          } catch (error) {
+              console.error('Failed to load history from storage:', error);
+          }
+      }
 
-    // Check if we're in local development
-    const isLocal =
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1" ||
-      window.location.hostname === "";
+      saveToStorage() {
+          try {
+              localStorage.setItem('slotMachineHistory', JSON.stringify(this.history));
+              localStorage.setItem('slotMachineSpinCounter', this.spinCounter.toString());
+          } catch (error) {
+              console.error('Failed to save history to storage:', error);
+          }
+      }
 
-    if (isLocal) {
-      // Use local fallback for development
-      const currentCount = parseInt(
-        localStorage.getItem("localCounter") || "5321"
-      );
-      const newCount = currentCount + 1;
-      localStorage.setItem("localCounter", newCount.toString());
+      addToHistory(loadout) {
+          loadout.spinNumber = ++this.spinCounter;
+          loadout.timestamp = new Date();
+          this.history.unshift(loadout);
+          this.saveToStorage();
+          this.render();
+          this.playSound('addSound');
+          this.showToast('Loadout saved to history!');
+      }
 
-      console.log("✅ Local counter incremented to:", newCount);
-      updateCounterDisplay(newCount);
-      updateTotalLoadoutsDisplay(newCount);
-      return;
-    }
+      clearHistory() {
+          this.history = [];
+          this.spinCounter = 0;
+          this.saveToStorage();
+          this.render();
+          this.showToast('History cleared!');
+      }
 
-    const response = await fetch("/api/spin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+      toggleShowAll() {
+          this.showAll = !this.showAll;
+          this.render();
+      }
 
-    console.log(
-      "📡 API Response status:",
-      response.status,
-      response.statusText
-    );
+      render() {
+          const historyList = document.getElementById('history-list');
+          const historyCount = document.getElementById('history-count');
+          if (!historyList || !historyCount) return;
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log("✅ Counter incremented successfully:", data.totalGenerated);
+          historyCount.textContent = `(${this.history.length})`;
 
-      // Update both the general counter display and the specific total-loadouts element
-      updateCounterDisplay(data.totalGenerated);
-      updateTotalLoadoutsDisplay(data.totalGenerated);
+          if (this.history.length === 0) {
+              historyList.innerHTML = `<div class="empty-state"><p>No loadouts yet. Spin the wheel!</p></div>`;
+              return;
+          }
 
-      // Also re-fetch from counter API to ensure accuracy
-      await refreshCounterFromAPI();
-    } else {
-      const errorText = await response.text();
-      console.error(
-        "❌ Failed to increment counter:",
-        response.status,
-        errorText
-      );
-      // Try to refresh from API anyway
-      await refreshCounterFromAPI();
-    }
-  } catch (error) {
-    console.error("❌ Network error incrementing counter:", error.message);
-    console.error("❌ Full error:", error);
+          const itemsToShow = this.showAll ? this.history : this.history.slice(0, this.maxHistory);
+          historyList.innerHTML = itemsToShow.map((loadout, index) => this.createHistoryItemHTML(loadout, index)).join('');
 
-    // Try to refresh from API as fallback
-    try {
-      await refreshCounterFromAPI();
-    } catch (refreshError) {
-      console.error(
-        "❌ Also failed to refresh counter from API:",
-        refreshError
-      );
-      // As final fallback, just show that we tried
-      console.warn(
-        "🔢 Counter update failed completely - continuing with cached value"
-      );
-    }
-  }
-}
+          if (this.history.length > this.maxHistory) {
+              const expandButton = document.createElement('button');
+              expandButton.className = 'expand-history-btn';
+              expandButton.textContent = this.showAll ? 'Show Less' : `Show All (${this.history.length} total)`;
+              expandButton.onclick = () => this.toggleShowAll();
+              historyList.appendChild(expandButton);
+          }
 
-// Re-fetch counter from API to ensure accuracy
-async function refreshCounterFromAPI() {
-  try {
-    console.log("🔄 Refreshing counter from API...");
+          this.attachEventListeners();
+      }
 
-    const response = await fetch("/api/counter");
-    if (response.ok) {
-      const data = await response.json();
-      console.log("✅ Refreshed counter from API:", data.totalGenerated);
+      createHistoryItemHTML(loadout, index) {
+          const timeAgo = this.getTimeAgo(loadout.timestamp);
+          return `
+              <div class="static-slot-item" data-index="${index}">
+                  <div class="item-header">
+                      <div class="item-metadata">
+                          <span class="class-badge ${loadout.class.toLowerCase()}">${loadout.class.toUpperCase()} CLASS</span>
+                          <span class="spin-number">#${loadout.spinNumber}</span>
+                          <span class="timestamp">${timeAgo}</span>
+                      </div>
+                      <div class="action-buttons">
+                          <button class="action-btn copy-text" data-index="${index}">Copy Text</button>
+                          <button class="action-btn copy-image" data-index="${index}">Copy Image</button>
+                      </div>
+                  </div>
+                  <div class="slot-display" id="slot-display-${index}">
+                      <div class="slot-box ${loadout.class.toLowerCase()}">
+                          <div class="slot-label">WEAPON</div>
+                          <img src="${loadout.weapon.image}" alt="${loadout.weapon.name}" class="slot-image" onerror="this.src='images/placeholder.webp';">
+                          <div class="slot-name">${loadout.weapon.name}</div>
+                      </div>
+                      <div class="slot-box ${loadout.class.toLowerCase()}">
+                          <div class="slot-label">SPECIAL</div>
+                          <img src="${loadout.specialization.image}" alt="${loadout.specialization.name}" class="slot-image" onerror="this.src='images/placeholder.webp';">
+                          <div class="slot-name">${loadout.specialization.name}</div>
+                      </div>
+                      ${loadout.gadgets.map((gadget, i) => `
+                          <div class="slot-box ${loadout.class.toLowerCase()}">
+                              <div class="slot-label">GADGET ${i + 1}</div>
+                              <img src="${gadget.image}" alt="${gadget.name}" class="slot-image" onerror="this.src='images/placeholder.webp';">
+                              <div class="slot-name">${gadget.name}</div>
+                          </div>
+                      `).join('')}
+                  </div>
+                  <div class="particles"></div>
+              </div>`;
+      }
 
-      updateCounterDisplay(data.totalGenerated);
-      updateTotalLoadoutsDisplay(data.totalGenerated);
-    } else {
-      console.warn("⚠️ Failed to refresh counter from API");
-    }
-  } catch (error) {
-    console.warn("⚠️ Error refreshing counter from API:", error);
-  }
-}
+      getTimeAgo(timestamp) {
+          // ... (implementation from app-test.js)
+      }
 
-// Simple function to fetch and update counter display
-async function fetchAndUpdateCounter() {
-  try {
-    console.log("🔄🔄🔄 FETCHANDUPDATECOUNTER CALLED 🔄🔄🔄");
-    alert("fetchAndUpdateCounter called!"); // Very visible debugging
+      copyAsText(index) {
+          // ... (implementation from app-test.js)
+      }
 
-    const response = await fetch("/api/counter");
-    console.log("📡 Response status:", response.status);
+      async copyAsImage(index) {
+          // ... (implementation from app-test.js)
+      }
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log("✅ Counter fetched:", data.totalGenerated);
-      alert(`Counter fetched: ${data.totalGenerated}`); // Very visible debugging
+      attachEventListeners() {
+          // ... (implementation from app-test.js)
+      }
 
-      // Update all elements with class 'loadouts-counter'
-      const counterElements = document.querySelectorAll(".loadouts-counter");
-      console.log("🎯 Found counter elements:", counterElements.length);
+      createParticles(element) {
+          // ... (implementation from app-test.js)
+      }
 
-      counterElements.forEach((element, index) => {
-        const oldValue = element.textContent;
-        element.textContent = data.totalGenerated.toLocaleString();
-        console.log(
-          `Updated element ${index}: "${oldValue}" → "${element.textContent}"`
-        );
-      });
+      playSound(soundId) {
+          // ... (implementation from app-test.js)
+      }
 
-      console.log("✅ Updated", counterElements.length, "counter elements");
-      alert(
-        `Updated ${
-          counterElements.length
-        } elements to ${data.totalGenerated.toLocaleString()}`
-      );
-    } else {
-      console.warn("⚠️ Failed to fetch counter");
-      alert("Failed to fetch counter");
-    }
-  } catch (error) {
-    console.warn("⚠️ Error fetching counter:", error);
-    alert(`Error: ${error.message}`);
-  }
-}
-
-// Test function to manually update counter (for debugging)
-window.testUpdateCounter = async function () {
-  console.log("🧪 Manual counter test started");
-  alert("Testing counter update...");
-
-  try {
-    const response = await fetch("/api/counter");
-    const data = await response.json();
-    console.log("Test counter value:", data.totalGenerated);
-
-    const elements = document.querySelectorAll(".loadouts-counter");
-    console.log("Found elements:", elements.length);
-
-    elements.forEach((el) => {
-      console.log("Updating element:", el);
-      el.textContent = data.totalGenerated.toLocaleString();
-      el.style.color = "red"; // Make it obvious
-      el.style.fontWeight = "bold";
-    });
-
-    alert(`Updated ${elements.length} elements to ${data.totalGenerated}`);
-  } catch (error) {
-    console.error("Test failed:", error);
-    alert("Test failed: " + error.message);
-  }
-};
-
-// Update counter display on the page
-function updateCounterDisplay(newCount) {
-  if (!newCount) {
-    console.log("⚠️ updateCounterDisplay called with no count:", newCount);
-    return;
+      showToast(message) {
+          // ... (implementation from app-test.js)
+      }
   }
 
-  console.log("📊 Updating counter display to:", newCount);
-  const counterElements = document.querySelectorAll(".loadouts-counter");
-  console.log("📊 Found counter elements:", counterElements.length);
+  const slotHistoryManager = new SlotHistoryManager();
 
-  counterElements.forEach((element) => {
-    console.log("📊 Updating element:", element);
-    if (element.dataset.countup === "true") {
-      // If using countup animation
-      animateCounterTo(element, newCount);
-    } else {
-      // Simple text update
-      element.textContent = newCount.toLocaleString();
-    }
-  });
-}
+  // =====================================================
+  // GLOBAL AUDIO MANAGEMENT SYSTEM
+  // ... existing code ...
+  async function finalizeSpin(columns) {
+    // ... existing code ...
 
-// animateCounterTo function removed - now in AnimationEngine.js
-
-// Roast Me Again functionality
-// Analysis button removed - commenting out function
-/*
-window.roastMeAgain = async function (button) {
-  const historyEntry = button.closest(".history-entry");
-  if (!historyEntry) {
-    console.error("Could not find history entry");
-    return;
-  }
-
-  // Extract loadout data from the history entry
-  const classElement = historyEntry.querySelector(".class-badge");
-  const weaponElement = historyEntry.querySelector(".weapon-item .item-name");
-  const specElement = historyEntry.querySelector(".spec-item .item-name");
-  const gadgetElements = historyEntry.querySelectorAll(
-    ".gadget-item .item-name"
-  );
-
-  if (
-    !classElement ||
-    !weaponElement ||
-    !specElement ||
-    gadgetElements.length === 0
-  ) {
-    console.error("Could not extract loadout data from history entry");
-    return;
-  }
-
-  const classType = classElement.textContent.trim();
-  const weapon = weaponElement.textContent.trim();
-  const specialization = specElement.textContent.trim();
-  const gadgets = Array.from(gadgetElements).map((el) => el.textContent.trim());
-
-  console.log("🔁 Roasting again:", {
-    classType,
-    weapon,
-    specialization,
-    gadgets,
-  });
-
-  // Find the AI analysis section and text elements
-  const analysisSection = historyEntry.querySelector(".ai-analysis");
-  const roastText = historyEntry.querySelector(".roast-text");
-  const scoreBadge = historyEntry.querySelector(".score-badge");
-
-  if (!analysisSection || !roastText) {
-    console.error("Could not find analysis elements in history entry");
-    return;
-  }
-
-  // Disable button and show loading state
-  button.disabled = true;
-  button.style.opacity = "0.5";
-  analysisSection.classList.add("loading");
-  analysisSection.classList.remove("high-score", "mid-score", "low-score");
-  roastText.style.opacity = "0.5";
-  roastText.innerHTML =
-    '<span class="spinner"></span> Generating Loadout Analysis...';
-  scoreBadge.textContent = "?/10";
-
-  try {
-    const requestData = {
-      class: classType,
-      weapon: weapon,
-      specialization: specialization,
-      gadgets: gadgets,
+    // ✅ Add to history
+    const loadout = {
+        class: classType,
+        weapon: { name: selectedWeapon, image: `images/${selectedWeapon.replace(/ /g, '_')}.webp` },
+        specialization: { name: selectedSpec, image: `images/${selectedSpec.replace(/ /g, '_')}.webp` },
+        gadgets: selectedGadgets.map(g => ({ name: g, image: `images/${g.replace(/ /g, '_')}.webp` }))
     };
+    slotHistoryManager.addToHistory(loadout);
 
-    console.log("🚀 Sending fresh analysis request:", requestData);
-
-    const response = await fetch("/api/loadout-analysis", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log("🎯 Received fresh analysis response:", data);
-
-    // Update with new analysis and add visual feedback
-    analysisSection.classList.remove("loading", "fallback");
-    roastText.style.opacity = "0";
-
-    setTimeout(() => {
-      const analysisText = data.analysis || data.roast;
-      roastText.textContent = analysisText;
-      roastText.style.opacity = "1";
-      roastText.style.transition = "opacity 0.3s ease";
-
-      // Extract and update score
-      const scoreMatch = analysisText.match(/(\d+)\/10/);
-      if (scoreMatch) {
-        scoreBadge.textContent = scoreMatch[0];
-        const score = parseInt(scoreMatch[1]);
-        if (score >= 8) analysisSection.classList.add("high-score");
-        else if (score >= 5) analysisSection.classList.add("mid-score");
-        else analysisSection.classList.add("low-score");
-      }
-
-      // Add a pulse effect to show it's fresh
-      analysisSection.style.animation = "pulse 0.6s ease-in-out";
-      setTimeout(() => {
-        analysisSection.style.animation = "";
-      }, 600);
-    }, 150);
-  } catch (error) {
-    console.error("Error generating fresh analysis:", error);
-
-    // Show fallback message
-    analysisSection.classList.remove("loading");
-    analysisSection.classList.add("fallback", "low-score");
-    roastText.style.opacity = "0";
-
-    setTimeout(() => {
-      roastText.textContent =
-        "Claude's too stunned to respond. Try again later.";
-      roastText.style.opacity = "1";
-      roastText.style.transition = "opacity 0.3s ease";
-      scoreBadge.textContent = "0/10";
-    }, 150);
-  } finally {
-    // Re-enable button
-    button.disabled = false;
-    button.style.opacity = "1";
+    // ... existing code ...
   }
-};
-*/
-
-// Initialize class exclusion system
-function initializeClassExclusion() {
-  console.log("✅ Initializing class inclusion system...");
-
-  // One-time cleanup: Reset class preferences for new intuitive system
-  if (!localStorage.getItem("class-system-updated")) {
-    console.log("🔄 Updating class system to new intuitive logic...");
-    localStorage.removeItem("exclude-light");
-    localStorage.removeItem("exclude-medium");
-    localStorage.removeItem("exclude-heavy");
-    localStorage.setItem("class-system-updated", "true");
-    console.log("✅ Class system updated to intuitive logic");
-  }
-
-  // Get all exclusion checkboxes
-  const exclusionCheckboxes = document.querySelectorAll("[data-exclude-class]");
-
-  if (exclusionCheckboxes.length === 0) {
-    console.warn("⚠️ No class exclusion checkboxes found");
-    return;
-  }
-
-  console.log(`✅ Found ${exclusionCheckboxes.length} inclusion checkboxes`);
-
-  // Load saved settings from localStorage
-  // Remember: checked=included, localStorage exclude='true' means excluded
-  exclusionCheckboxes.forEach((checkbox) => {
-    const className = checkbox.getAttribute("data-exclude-class");
-    const saved = localStorage.getItem(`exclude-${className}`);
-    if (saved === "true") {
-      // exclude='true' means class is excluded, so checkbox should be unchecked
-      checkbox.checked = false;
-      console.log(`🚫 Loaded exclusion for ${className} (unchecked)`);
-    } else if (saved === "false") {
-      // exclude='false' means class is included, so checkbox should be checked
-      checkbox.checked = true;
-      console.log(`✅ Loaded inclusion for ${className} (checked)`);
-    } else if (saved === null) {
-      // Default to all classes included (checked) for new users
-      checkbox.checked = true;
-      localStorage.setItem(`exclude-${className}`, "false");
-      console.log(`✅ Defaulted inclusion for ${className} (checked)`);
-    }
-  });
-
-  // Add event listeners to save preferences
-  exclusionCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener("change", function () {
-      const className = this.getAttribute("data-exclude-class");
-      const isChecked = this.checked;
-
-      // Save to localStorage
-      // UI says "Select Classes to Include" so checked should mean INCLUDED
-      // We invert the logic: checked=included means exclude=false in localStorage
-      const localStorageKey = `exclude-${className}`;
-      const valueToSave = (!isChecked).toString(); // Invert: checked=included means exclude=false
-      localStorage.setItem(localStorageKey, valueToSave);
-
-      // Detailed debugging logging
-      console.log("🔍 CHECKBOX DEBUG INFO:");
-      console.log(`  1) Checkbox ID: ${this.id || "No ID set"}`);
-      console.log(`  2) Checked state: ${isChecked}`);
-      console.log(`  3) localStorage key: ${localStorageKey}`);
-      console.log(`  4) Value being saved: ${valueToSave}`);
-
-      // Verification read-back
-      const verificationValue = localStorage.getItem(localStorageKey);
-      console.log(`  5) Verification read-back: ${verificationValue}`);
-      console.log(
-        `  📝 Summary: ${isChecked ? "✅" : "🚫"} ${className} class ${
-          isChecked ? "included" : "excluded"
-        }`
-      );
-
-      // Validate that at least one class remains available
-      console.log(
-        "✅ Class validation: Checking available classes after toggle..."
-      );
-
-      // Count how many checkboxes would be checked after this change
-      let checkedCount = 0;
-      exclusionCheckboxes.forEach((cb) => {
-        if (cb === this) {
-          // For the current checkbox, use the new state
-          if (isChecked) checkedCount++;
-        } else {
-          // For other checkboxes, use their current state
-          if (cb.checked) checkedCount++;
-        }
-      });
-
-      console.log(`✅ Checked count after change: ${checkedCount}`);
-
-      if (checkedCount === 0) {
-        console.warn("⚠️ Cannot deselect all classes! Reverting change.");
-
-        // Prevent the change
-        this.checked = true;
-
-        // Show banner inside filter panel
-        const filterPanel = document.getElementById("filter-panel");
-        if (!filterPanel) return;
-
-        // Check if banner already exists
-        let banner = filterPanel.querySelector(".constraint-banner");
-        if (!banner) {
-          banner = document.createElement("div");
-          banner.className = "constraint-banner";
-          banner.style.cssText = `
-            position: absolute;
-            top: 60px;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #ff6b35, #ff8e53);
-            color: white;
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.6);
-            z-index: 100;
-            animation: bannerSlideDown 0.3s ease;
-            text-align: center;
-          `;
-
-          // Add close button
-          const closeBtn = document.createElement("button");
-          closeBtn.innerHTML = "×";
-          closeBtn.style.cssText = `
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 0 5px;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-          `;
-          closeBtn.onmouseover = () => (closeBtn.style.opacity = "1");
-          closeBtn.onmouseout = () => (closeBtn.style.opacity = "0.8");
-          closeBtn.onclick = () => banner.remove();
-
-          banner.textContent = "At least one class must remain selected!";
-          banner.appendChild(closeBtn);
-
-          // Insert after header
-          const filterHeader = filterPanel.querySelector(".filter-header");
-          if (filterHeader) {
-            filterHeader.insertAdjacentElement("afterend", banner);
-          } else {
-            filterPanel.insertBefore(banner, filterPanel.firstChild);
-          }
-        }
-
-        // Auto-remove banner after 5 seconds
-        setTimeout(() => {
-          if (banner && banner.parentNode) {
-            banner.style.opacity = "0";
-            banner.style.transform = "translateY(-20px)";
-            setTimeout(() => banner.remove(), 300);
-          }
-        }, 5000);
-
-        return; // Exit early, don't save the change
-      }
-
-      const availableClasses = getAvailableClasses();
-      console.log(
-        "✅ Class validation: Available classes after toggle:",
-        availableClasses
-      );
-
-      // Repopulate filter items to reflect new class selection
-      console.log("🔄 Repopulating filter items after class change...");
-      populateFilterItems();
-    });
-  });
-
-  console.log("✅ Class inclusion system initialized");
-}
-
-// Auto-dismiss the filters promotional banner after 7 seconds
-document.addEventListener("DOMContentLoaded", function () {
-  setTimeout(() => {
-    const promoFlag = document.getElementById("filters-promo-flag");
-    if (promoFlag && !promoFlag.classList.contains("dismissed")) {
-      console.log("🏷️ Auto-dismissing filters promo flag after 7 seconds");
-      promoFlag.classList.add("dismissed");
-
-      // Remove from DOM after fade animation completes
-      setTimeout(() => {
-        if (promoFlag.parentNode) {
-          promoFlag.remove();
-        }
-      }, 500);
-    }
-  }, 7000); // 7 seconds - middle of the 5-10 second range requested
-
-  // Simple direct spin button setup
-  const setupDirectSpinButton = () => {
-    const spinButton = document.getElementById("main-spin-button");
-    if (!spinButton) {
-      console.error("❌ Could not find main-spin-button");
-      return;
-    }
-
-    console.log("✅ Setting up direct spin button handler");
-
-    // Remove any existing listeners first
-    const newButton = spinButton.cloneNode(true);
-    spinButton.parentNode.replaceChild(newButton, spinButton);
-
-    newButton.addEventListener("click", () => {
-      console.log("🎰 Generate Loadout button clicked!");
-
-      if (state.isSpinning) {
-        console.log("⚠️ Already spinning, ignoring click");
-        return;
-      }
-
-      // Check if overlay manager is loaded
-      if (
-        window.overlayManager &&
-        window.overlayManager.startLoadoutGeneration
-      ) {
-        console.log("🎭 Starting overlay flow...");
-        window.overlayManager.startLoadoutGeneration();
-      } else {
-        console.log(
-          "⚠️ Overlay manager not loaded, falling back to direct spin"
-        );
-
-        // Fallback to original behavior
-        // Set default values if not set
-        if (!state.totalSpins || state.totalSpins === 0) {
-          state.totalSpins = 3; // Default to 3 spins
-          console.log("📊 Setting default spin count to 3");
-        }
-
-        // Select a random class if none selected
-        if (!state.selectedClass) {
-          // Use the existing getAvailableClasses function which handles localStorage correctly
-          const availableClasses = getAvailableClasses();
-
-          state.selectedClass =
-            availableClasses[
-              Math.floor(Math.random() * availableClasses.length)
-            ];
-          console.log(`🎲 Randomly selected class: ${state.selectedClass}`);
-        }
-
-        // Start the spin
-        try {
-          spinLoadout();
-        } catch (error) {
-          console.error("❌ Error starting spin:", error);
-          state.isSpinning = false;
-        }
-      }
-    });
-
-    console.log("✅ Direct spin button handler attached successfully");
-  };
-
-  // Set up the spin button immediately
-  setupDirectSpinButton();
-
-  // Sound toggle is now handled in index.html - removed duplicate handler
-
-  // Initialize filter panel functionality
-  const filterToggle = document.getElementById("filter-toggle");
-  const filterPanel = document.getElementById("filter-panel");
-  const filterOverlay = document.getElementById("filter-panel-overlay");
-  const closeFilterBtn = document.getElementById("close-filter-panel");
-
-  if (filterToggle && filterPanel && filterOverlay) {
-    console.log("🎛️ Initializing filter panel");
-
-    // Open filter panel
-    filterToggle.addEventListener("click", function () {
-      console.log("🎛️ Opening filter panel");
-      filterPanel.classList.remove("slide-out");
-      filterPanel.classList.add("active");
-      filterOverlay.classList.add("active");
-      filterPanel.style.display = "block";
-
-      // Play click sound
-      playSound("clickSound");
-    });
-
-    // Close filter panel
-    const closeFilterPanel = () => {
-      console.log("🎛️ Closing filter panel");
-      filterPanel.classList.remove("active");
-      filterPanel.classList.add("slide-out");
-      filterOverlay.classList.remove("active");
-
-      // Hide after animation
-      setTimeout(() => {
-        if (!filterPanel.classList.contains("active")) {
-          filterPanel.style.display = "none";
-        }
-      }, 300);
-
-      // Play click sound
-      playSound("clickSound");
-    };
-
-    // Close button handler
-    if (closeFilterBtn) {
-      closeFilterBtn.addEventListener("click", closeFilterPanel);
-    }
-
-    // Close on overlay click
-    filterOverlay.addEventListener("click", closeFilterPanel);
-
-    // Close on ESC key
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && filterPanel.classList.contains("active")) {
-        closeFilterPanel();
-      }
-    });
-  } else {
-    console.warn("⚠️ Filter panel elements not found");
-  }
-});
-
-fetch("https://api.github.com/repos/paultaki/TheFinalsLoadout/commits/main")
-  .then((res) => res.json())
-  .then((data) => {
-    const hash = data.sha.slice(0, 7);
-    const date = new Date(data.commit.author.date).toLocaleDateString();
-    const el = document.getElementById("deploy-version");
-    if (el) {
-      el.innerHTML = `Version: <a href="https://github.com/paultaki/TheFinalsLoadout/commit/${hash}" target="_blank">${hash}</a> (${date})`;
-    }
-  })
-  .catch(() => {
-    const el = document.getElementById("deploy-version");
-    if (el) el.textContent = "Version: unknown";
-  });
-
-// Copy loadout as formatted text
-window.copyLoadoutText = function (button) {
-  const entry = button.closest(".history-entry");
-  const classType =
-    entry.querySelector(".class-badge")?.textContent || "Unknown";
-  const loadoutName =
-    entry.querySelector(".loadout-name")?.textContent || "Unnamed Loadout";
-  const weapon =
-    entry.querySelector(".weapon-item .item-name")?.textContent ||
-    "Unknown Weapon";
-  const spec =
-    entry.querySelector(".spec-item .item-name")?.textContent || "Unknown Spec";
-  const gadgets = Array.from(entry.querySelectorAll(".gadget-item .item-name"))
-    .map((el) => el.textContent)
-    .join(", ");
-  const analysis =
-    entry.querySelector(".roast-text")?.textContent || "No analysis available";
-  const score = entry.querySelector(".score-badge")?.textContent || "?/10";
-
-  const text = `${loadoutName} (${classType})
-WEAPON: ${weapon}
-SPECIALIZATION: ${spec}
-GADGETS: ${gadgets}
-
-AI ANALYSIS: ${analysis} ${score}
-
-Generated by thefinalsloadout.com`;
-
-  navigator.clipboard
-    .writeText(text)
-    .then(() => {
-      // Show success animation
-      const originalText = button.innerHTML;
-      button.innerHTML = "<span>✅</span> Copied!";
-      button.classList.add("success");
-
-      setTimeout(() => {
-        button.innerHTML = originalText;
-        button.classList.remove("success");
-      }, 2000);
-    })
-    .catch((err) => {
-      console.error("Failed to copy text:", err);
-      alert("Failed to copy to clipboard");
-    });
-};
-
-// Copy loadout as image
-window.copyLoadoutImage = function (button) {
-  const entry = button.closest(".history-entry");
-  const cardContent = entry.querySelector(".casino-history-card");
-
-  if (!cardContent) {
-    console.error("Card content not found");
-    return;
-  }
-
-  // Show loading state
-  const originalText = button.innerHTML;
-  button.innerHTML = "<span>⏳</span> Capturing...";
-  button.disabled = true;
-
-  // Ensure container and all children are fully visible
-  const originalStyles = {
-    opacity: cardContent.style.opacity,
-    display: cardContent.style.display,
-    visibility: cardContent.style.visibility,
-    minHeight: cardContent.style.minHeight
-  };
-
-  // Force visibility
-  cardContent.style.opacity = '1';
-  cardContent.style.display = 'block';
-  cardContent.style.visibility = 'visible';
-  cardContent.style.minHeight = '1px';
-
-  // Find all images within the container
-  const images = cardContent.querySelectorAll('img');
-  const imagePromises = [];
-
-  // Create promises for each image to ensure they're loaded
-  images.forEach(img => {
-    if (!img.complete || img.naturalHeight === 0) {
-      const promise = new Promise((resolve, reject) => {
-        const tempImg = new Image();
-        tempImg.onload = () => {
-          // Ensure the original img element is properly sized
-          if (img.naturalHeight === 0 || img.naturalWidth === 0) {
-            img.style.minWidth = '1px';
-            img.style.minHeight = '1px';
-          }
-          resolve();
-        };
-        tempImg.onerror = () => {
-          console.warn('Failed to load image:', img.src);
-          // Set minimum dimensions to prevent canvas errors
-          img.style.minWidth = '50px';
-          img.style.minHeight = '50px';
-          resolve(); // Resolve anyway to continue with capture
-        };
-        tempImg.src = img.src;
-      });
-      imagePromises.push(promise);
-    }
-  });
-
-  // Wait for all images to load
-  Promise.all(imagePromises).then(() => {
-    // Force reflow to ensure dimensions are calculated
-    cardContent.offsetHeight; // This forces a reflow
-
-    // Check if container has valid dimensions
-    if (cardContent.offsetWidth === 0 || cardContent.offsetHeight === 0) {
-      console.error('Container has zero dimensions, forcing minimum size');
-      cardContent.style.minWidth = '300px';
-      cardContent.style.minHeight = '200px';
-      cardContent.style.display = 'block';
-    }
-
-    // Configure html2canvas for high quality casino mode capture
-    const options = {
-      backgroundColor: "#1a0f3d",
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      logging: false,
-      width: Math.max(cardContent.offsetWidth, 300),
-      height: Math.max(cardContent.offsetHeight, 200),
-      scrollX: 0,
-      scrollY: 0,
-      // Add some padding for the glow effects
-      x: -10,
-      y: -10,
-      windowWidth: Math.max(cardContent.offsetWidth + 20, 320),
-      windowHeight: Math.max(cardContent.offsetHeight + 20, 220),
-      onclone: (clonedDoc, element) => {
-        // Ensure cloned element is visible
-        element.style.opacity = '1';
-        element.style.display = 'block';
-        element.style.visibility = 'visible';
-        element.style.minHeight = '1px';
-        
-        // Fix any images in the cloned document
-        const clonedImages = element.querySelectorAll('img');
-        clonedImages.forEach(img => {
-          if (img.naturalWidth === 0 || img.naturalHeight === 0) {
-            img.style.minWidth = '50px';
-            img.style.minHeight = '50px';
-          }
+  // ... existing code ...
+  // Remove old history functions: addToHistory, saveHistory, loadHistory, and the clear-history listener.
+  // ... existing code ...
+  document.addEventListener("DOMContentLoaded", () => {
+    // ... (existing initializations)
+
+    // Initial render of history
+    slotHistoryManager.render();
+
+    // Clear history button
+    const clearButton = document.getElementById('clear-history');
+    if(clearButton) {
+        clearButton.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all history?')) {
+                slotHistoryManager.clearHistory();
+            }
         });
-      }
-    };
-
-    html2canvas(cardContent, options)
-    .then((canvas) => {
-      canvas.toBlob(
-        (blob) => {
-          // Try to copy to clipboard first
-          if (navigator.clipboard && window.ClipboardItem) {
-            navigator.clipboard
-              .write([new ClipboardItem({ "image/png": blob })])
-              .then(() => {
-                // Success - image copied to clipboard
-                button.innerHTML = "<span>✅</span> Copied!";
-                button.classList.add("success");
-
-                setTimeout(() => {
-                  button.innerHTML = originalText;
-                  button.classList.remove("success");
-                  button.disabled = false;
-                }, 2000);
-              })
-              .catch((err) => {
-                // Fallback to download if clipboard API fails
-                console.log("Clipboard API failed, downloading instead:", err);
-                downloadImage(canvas, button, originalText);
-              });
-          } else {
-            // Browser doesn't support clipboard API, download instead
-            downloadImage(canvas, button, originalText);
-          }
-        },
-        "image/png",
-        1.0
-      );
-    })
-    .catch((err) => {
-      console.error("Screenshot failed:", err);
-      button.innerHTML = "<span>❌</span> Failed";
-      
-      // Restore original styles
-      cardContent.style.opacity = originalStyles.opacity || '';
-      cardContent.style.display = originalStyles.display || '';
-      cardContent.style.visibility = originalStyles.visibility || '';
-      cardContent.style.minHeight = originalStyles.minHeight || '';
-      
-      setTimeout(() => {
-        button.innerHTML = originalText;
-        button.disabled = false;
-      }, UI_TIMING.BUTTON_FEEDBACK_DURATION);
-    })
-    .finally(() => {
-      // Always restore original styles after capture attempt
-      setTimeout(() => {
-        cardContent.style.opacity = originalStyles.opacity || '';
-        cardContent.style.display = originalStyles.display || '';
-        cardContent.style.visibility = originalStyles.visibility || '';
-        cardContent.style.minHeight = originalStyles.minHeight || '';
-      }, 100);
-    });
-  }).catch(err => {
-    console.error("Failed to load images:", err);
-    button.innerHTML = "<span>❌</span> Failed";
-    
-    // Restore original styles
-    cardContent.style.opacity = originalStyles.opacity || '';
-    cardContent.style.display = originalStyles.display || '';
-    cardContent.style.visibility = originalStyles.visibility || '';
-    cardContent.style.minHeight = originalStyles.minHeight || '';
-    
-    setTimeout(() => {
-      button.innerHTML = originalText;
-      button.disabled = false;
-    }, 2000);
+    }
   });
-};
-
-// Helper function to download image
-function downloadImage(canvas, button, originalText) {
-  const link = document.createElement("a");
-  const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
-  link.download = `finals-loadout-${timestamp}.png`;
-  link.href = canvas.toDataURL("image/png", 1.0);
-
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-
-  button.innerHTML = "<span>⬇️</span> Downloaded!";
-  setTimeout(() => {
-    button.innerHTML = originalText;
-    button.disabled = false;
-  }, 2000);
-}
-
-// ===== Overlay Sequence for Generate Loadout =====
-// Assumes overlay container exists in index.html and CSS is present
-
-// Utility: Show/hide overlay container
-function showOverlay(contentHtml) {
-  const overlay = document.getElementById("overlay-container");
-  overlay.innerHTML = contentHtml;
-  overlay.style.display = "flex";
-}
-function hideOverlay() {
-  const overlay = document.getElementById("overlay-container");
-  overlay.style.display = "none";
-  overlay.innerHTML = "";
-}
-
-// Overlay function stubs - COMMENTED OUT - Real implementations are in overlay-manager.js
-/*
-function showSpinWheelOverlay() {
-  return new Promise((resolve) => {
-    // TODO: Replace with ported Price is Right wheel overlay
-    showOverlay('<div class="overlay-card">Spinning for # of Spins...</div>');
-    setTimeout(() => {
-      // Simulate result: 3 spins or 'JACKPOT'
-      const result =
-        Math.random() < 0.15 ? "JACKPOT" : Math.floor(Math.random() * 5) + 1;
-      hideOverlay();
-      resolve(result);
-    }, 2000);
-  });
-}
-
-function showOverlayCard(text) {
-  return new Promise((resolve) => {
-    showOverlay(`<div class="overlay-card">${text}</div>`);
-    setTimeout(() => {
-      hideOverlay();
-      resolve();
-    }, 2000);
-  });
-}
-
-function showClassRouletteOverlay() {
-  return new Promise((resolve) => {
-    // TODO: Replace with ported class roulette overlay
-    showOverlay('<div class="overlay-card">Spinning for Class...</div>');
-    setTimeout(() => {
-      // Simulate class selection
-      const classes = ["Light", "Medium", "Heavy"];
-      const selected = classes[Math.floor(Math.random() * classes.length)];
-      hideOverlay();
-      resolve(selected);
-    }, 2000);
-  });
-}
-
-function showClassPickerOverlay() {
-  return new Promise((resolve) => {
-    // TODO: Replace with ported class picker overlay
-    // For now, just pick randomly after 2s
-    showOverlay('<div class="overlay-card">Pick your class! (Simulated)</div>');
-    setTimeout(() => {
-      const classes = ["Light", "Medium", "Heavy"];
-      const selected = classes[Math.floor(Math.random() * classes.length)];
-      hideOverlay();
-      resolve(selected);
-    }, 2000);
-  });
-}
-*/
-
-// Main async sequence for Generate Loadout - COMMENTED OUT - Using overlay-manager.js instead
-/*
-async function handleGenerateLoadout() {
-  if (window.state && window.state.isSpinning) return;
-  if (!window.state) window.state = {};
-  window.state.isSpinning = true;
-
-  // Step 1: Spin wheel overlay
-  const spinCount = await showSpinWheelOverlay();
-  await showOverlayCard(`Number of Spins: ${spinCount}`);
-
-  // Step 2: Jackpot logic
-  if (spinCount === "JACKPOT") {
-    const chosenClass = await showClassPickerOverlay();
-    await showOverlayCard(`You Picked: ${chosenClass}`);
-    // If your card UI provides a random spin number, use it here
-    const randomSpin = Math.floor(Math.random() * 5) + 1;
-    startSlotMachineSequence(chosenClass, randomSpin);
-    window.state.isSpinning = false;
-    return;
-  }
-
-  // Step 3: Class roulette overlay
-  const selectedClass = await showClassRouletteOverlay();
-  await showOverlayCard(`Class Selected: ${selectedClass}`);
-
-  // Step 4: Start slot machine
-  startSlotMachineSequence(selectedClass, spinCount);
-  window.state.isSpinning = false;
-}
-*/
-
-// Slot machine integration
-function startSlotMachineSequence(classType, spins) {
-  // Set state and call your existing slot machine logic
-  if (!window.state) window.state = {};
-  window.state.selectedClass = classType;
-  window.state.totalSpins = spins;
-  // TODO: Replace with your actual slot machine function
-  if (typeof spinLoadout === "function") {
-    spinLoadout(classType, spins);
-  } else {
-    console.log("Slot machine would start with:", classType, spins);
-  }
-}
-
-// REMOVED: Duplicate event listener - already handled in setupDirectSpinButton()

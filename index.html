@@ -1029,7 +1029,6 @@
     <link rel="stylesheet" href="styles/casino-styles.css" />
     <link rel="stylesheet" href="styles/overlay-system.css" />
     <link rel="stylesheet" href="styles/slot-machine.css" />
-    <link rel="stylesheet" href="styles/history-cards.css" />
     <link rel="stylesheet" href="css/filters.css" />
     <link rel="stylesheet" href="css/mobile-performance.css" />
   </head>
@@ -1584,13 +1583,16 @@
       </div>
 
       <section id="loadout-history" class="loadout-history">
-        <h2>🏆 Recent Chaos</h2>
-        <div id="history-list">
-          <!-- History entries will be populated here -->
+        <div id="slot-history-container" class="slot-history-container">
+            <h2 class="history-title">
+                <span class="title-icon">🎰</span>
+                <span>Loadout History</span>
+                <span class="history-count" id="history-count">(0)</span>
+            </h2>
+            <div id="history-list" class="history-list">
+                <!-- Static slot machine items will be inserted here -->
+            </div>
         </div>
-        <button id="clear-history" class="clear-history-btn">
-          Clear History
-        </button>
       </section>
     </main>
 
@@ -1618,6 +1620,14 @@
         </div>
       </div>
     </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Audio Elements -->
+    <audio id="addSound" src="sounds/chang.mp3" preload="auto"></audio>
+    <audio id="copySound"src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="exportSound" src="sounds/final-sound.mp3" preload="auto"></audio>
 
     <!-- Scripts -->
     <!-- ES Modules load in order -->
