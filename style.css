@@ -3358,6 +3358,7 @@ body {
 .title-icon {
   font-size: 2rem;
   animation: iconPulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
 }
 
 @keyframes iconPulse {
@@ -3368,7 +3369,8 @@ body {
 .history-count {
   font-size: 1.5rem;
   color: var(--neon-yellow);
-  opacity: 0.8;
+  opacity: 1;
+  text-shadow: 0 0 10px rgba(255, 183, 0, 0.8);
 }
 
 /* Static Slot Machine Item */
@@ -3592,6 +3594,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #fff !important;
 }
 
 /* Expand/Collapse Button */
@@ -3670,6 +3673,7 @@ body {
 
   .slot-name {
       font-size: 0.8rem;
+      color: #fff !important;
   }
 }
 
@@ -3701,6 +3705,7 @@ body {
 
   .slot-name {
       font-size: 0.7rem;
+      color: #fff !important;
   }
 
   .action-buttons {
@@ -3782,5 +3787,105 @@ body {
   100% {
       transform: translateY(-100px) scale(1);
       opacity: 0;
+  }
+}
+
+/* AI Analysis Section */
+.ai-analysis {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 170, 0, 0.1));
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.ai-analysis.loading {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.ai-analysis.loading .roast-text {
+  opacity: 0.7;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.ai-analysis.high-score {
+  border-color: #00ff00;
+  background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 200, 0, 0.1));
+}
+
+.ai-analysis.mid-score {
+  border-color: #ffd700;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 170, 0, 0.1));
+}
+
+.ai-analysis.low-score {
+  border-color: #ff4444;
+  background: linear-gradient(135deg, rgba(255, 68, 68, 0.1), rgba(255, 100, 100, 0.1));
+}
+
+.ai-analysis.fallback {
+  border-style: dashed;
+  opacity: 0.8;
+}
+
+.ai-icon {
+  font-size: 24px;
+  animation: robotBounce 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes robotBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.roast-text {
+  flex: 1;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #fff;
+  font-style: italic;
+}
+
+.score-badge {
+  background: linear-gradient(45deg, #ffd700, #ffa500);
+  color: #000;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+  flex-shrink: 0;
+  animation: scorePulse 2s ease-in-out infinite;
+}
+
+@keyframes scorePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Mobile responsive AI analysis */
+@media (max-width: 768px) {
+  .ai-analysis {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .roast-text {
+    font-size: 0.8rem;
+  }
+
+  .score-badge {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
   }
 }

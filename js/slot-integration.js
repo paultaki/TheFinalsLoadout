@@ -15,17 +15,17 @@ document.addEventListener('DOMContentLoaded', function() {
 // Start slot machine with loadout data - handles multiple spins
 window.startSlotMachine = async function(classType, spinCount) {
   console.log('🎰 Starting slot machine sequence:', classType, 'with', spinCount, 'spins');
-  
+
   // Add class to body to hide duplicate text on desktop
   document.body.classList.add('slot-machine-active');
-  
+
   // Update state
   if (!window.state) window.state = {};
   window.state.selectedClass = classType;
   window.state.totalSpins = spinCount;
   window.state.currentSpin = spinCount;
   window.state.spinsLeft = spinCount;
-  
+
   // Update initial status display
   if (window.slotMachineInstance && window.slotMachineInstance.statusBar) {
     const statusText = window.slotMachineInstance.statusBar.querySelector("#slot-status-text");
@@ -37,7 +37,7 @@ window.startSlotMachine = async function(classType, spinCount) {
       }
     }
   }
-  
+
   // Execute all spins
   await executeSpinSequence(classType, spinCount);
 };
@@ -46,56 +46,60 @@ window.startSlotMachine = async function(classType, spinCount) {
 async function executeSpinSequence(classType, totalSpins) {
   for (let spinNum = 1; spinNum <= totalSpins; spinNum++) {
     console.log(`🎰 Executing spin ${spinNum} of ${totalSpins}`);
-    
+
     // Check if slot machine is already animating (safety check)
     if (window.slotMachineInstance && window.slotMachineInstance.isAnimating) {
       console.log('Animation already in progress, waiting...');
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-    
+
     // Calculate remaining spins for this iteration
     const spinsRemaining = totalSpins - spinNum;
     const isLastSpin = spinNum === totalSpins;
-    
+
     // Update the status bar to show remaining spins
     if (window.slotMachineInstance && window.slotMachineInstance.statusBar) {
       const statusText = window.slotMachineInstance.statusBar.querySelector("#slot-status-text");
       if (statusText) {
-        // Show proper status based on current spin
+        // Show proper status based on current spin - display what the user expects to see
         if (isLastSpin) {
           statusText.textContent = `${classType} Class - FINAL SPIN`;
-        } else if (spinsRemaining === 1) {
-          statusText.textContent = `${classType} Class - 1 SPIN REMAINING`;
         } else {
-          statusText.textContent = `${classType} Class - ${spinsRemaining} SPINS REMAINING`;
+          // Show the total remaining including current spin (what user expects)
+          const totalRemaining = totalSpins - spinNum + 1;
+          if (totalRemaining === 1) {
+            statusText.textContent = `${classType} Class - FINAL SPIN`;
+          } else {
+            statusText.textContent = `${classType} Class - ${totalRemaining} SPINS REMAINING`;
+          }
         }
       }
     }
-    
+
     // Generate new loadout for each spin
     const loadoutData = generateLoadoutForSpin(classType, spinsRemaining);
-    
+
     if (!loadoutData) {
       console.error('Failed to generate loadout');
       return;
     }
-    
+
     // Display the loadout
     window.slotMachineInstance.displayLoadout(loadoutData);
-    
+
     // Short pause before animation
     await new Promise(resolve => setTimeout(resolve, 300));
-    
+
     try {
       // Animate with callback
       await new Promise((resolve) => {
         window.slotMachineInstance.animateSlots(loadoutData, () => {
           console.log(`Spin ${spinNum} animation complete`);
-          
+
           // Update state
           window.state.currentSpin--;
           window.state.spinsLeft--;
-          
+
           // On final spin, handle completion
           if (isLastSpin && typeof window.finalizeSpin === 'function') {
             const items = [
@@ -105,23 +109,23 @@ async function executeSpinSequence(classType, totalSpins) {
             ];
             window.finalizeSpin(items);
           }
-          
+
           resolve();
         });
       });
-      
+
       // Pause between spins (except after last spin)
       if (!isLastSpin) {
         console.log(`Waiting before next spin...`);
         await new Promise(resolve => setTimeout(resolve, 1500));
       }
-      
+
     } catch (error) {
       console.error(`Slot machine animation error on spin ${spinNum}:`, error);
       break;
     }
   }
-  
+
   console.log('🎰 Spin sequence complete!');
 }
 
@@ -130,31 +134,31 @@ function generateLoadoutForSpin(classType, spinsRemaining) {
   // Get the filtered loadouts
   const filteredLoadouts = window.getFilteredLoadouts();
   const loadout = filteredLoadouts[classType];
-  
+
   if (!loadout) {
     console.error('No loadout data for class:', classType);
     return null;
   }
-  
+
   // Select random items with error checking
   let selectedWeapon, selectedSpec;
-  
+
   if (loadout.weapons && loadout.weapons.length > 0) {
     selectedWeapon = window.getRandomUniqueItems(loadout.weapons, 1)[0];
   } else {
     console.error('No weapons available for', classType);
     selectedWeapon = { name: 'Default Weapon' };
   }
-  
+
   if (loadout.specializations && loadout.specializations.length > 0) {
     selectedSpec = window.getRandomUniqueItems(loadout.specializations, 1)[0];
   } else {
     console.error('No specializations available for', classType);
     selectedSpec = { name: 'Default Spec' };
   }
-  
+
   const selectedGadgets = window.getUniqueGadgets(classType, loadout);
-  
+
   // Create loadout object
   const loadoutData = {
     classType: classType,
@@ -172,7 +176,7 @@ function generateLoadoutForSpin(classType, spinsRemaining) {
     specObject: selectedSpec,
     gadgetObjects: selectedGadgets
   };
-  
+
   console.log(`Generated loadout for spin (${spinsRemaining} remaining):`, loadoutData);
   return loadoutData;
 }
