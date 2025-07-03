@@ -544,14 +544,37 @@ body.low-performance-mode * {
 }
 
 .subTitle-mobile {
-  background: linear-gradient(135deg, #ffd700, #ffed4e, #ffd700);
+  background: linear-gradient(
+    135deg,
+    #e8e8e8 0%,
+    #ffffff 15%,
+    #d4a5ff 35%,
+    #ffffff 50%,
+    #c79dff 65%,
+    #ffffff 85%,
+    #b8b8b8 100%
+  );
+  background-size: 300% 300%;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 1px white, 0 0 3px rgba(255, 255, 255, 0.8),
-    0 0 10px rgba(255, 215, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.8);
+  color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   text-align: center;
   margin: 0 auto 1rem auto;
   display: block;
+  position: relative;
+  animation: metallic-shine 3s ease-in-out infinite;
+}
+
+@keyframes metallic-shine {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .season-update-notice {

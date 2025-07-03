@@ -69,10 +69,10 @@ function clearOverlay() {
   root.innerHTML = "";
   root.style.pointerEvents = "none";
   overlayState.currentOverlay = null;
-  
+
   // Remove overlay-active class from body
   document.body.classList.remove('overlay-active');
-  
+
   // Clear valid spin sequence flag
   window.isValidSpinSequence = false;
 }
@@ -249,8 +249,8 @@ async function showSpinWheelOverlay() {
             : card.label;
 
           return `
-          <li class="card ${card.className || ""}" 
-              data-index="${index}" 
+          <li class="card ${card.className || ""}"
+              data-index="${index}"
               data-spins="${card.spins || 1}"
               data-value="${card.value || ""}">
             <div class="card-content">${labelHtml}</div>
@@ -273,15 +273,15 @@ async function showSpinWheelOverlay() {
           <div class="wheel-frame" id="spin-wheel-frame">
             <div class="fade-top"></div>
             <div class="fade-bottom"></div>
-            
+
             <div class="pointer" id="spin-pointer">
               <div class="pointer-arm" id="pointer-arm">
                 <div class="pointer-tip"></div>
               </div>
             </div>
-            
+
             <!-- Pegs will be generated dynamically -->
-            
+
             <div class="wheel-track">
               <ul class="wheel-list" id="spin-wheel-list">
                 ${cardsHtml}
@@ -299,12 +299,12 @@ async function showSpinWheelOverlay() {
     const wheelList = document.getElementById("spin-wheel-list");
     const pointer = document.getElementById("spin-pointer");
     const pointerArm = document.getElementById("pointer-arm");
-    
+
     // Create pegs dynamically
     const createPegs = () => {
       const pegCount = 9;
       const pegSpacing = 100 / (pegCount + 1);
-      
+
       for (let i = 0; i < pegCount; i++) {
         const peg = document.createElement('div');
         peg.className = 'peg';
@@ -416,7 +416,7 @@ async function showSpinWheelOverlay() {
       setTimeout(() => {
         pointerArm.style.transform = "rotate(0deg)";
       }, 80);
-      
+
       // Peg hit animation
       const cardHeight = getCardHeight();
       const currentPegIndex = Math.floor((spinWheelState.currentDistance % (cardHeight * 10)) / cardHeight);
@@ -430,7 +430,7 @@ async function showSpinWheelOverlay() {
             peg.style.transform = "scale(1)";
           }, 50);
         }
-        
+
         // Cabinet shake - reduced by half
         wheelFrame.animate([
           { transform: "translateX(-2px)" },
@@ -440,7 +440,7 @@ async function showSpinWheelOverlay() {
           duration: 90,
           iterations: 1,
         });
-        
+
         // Heartbeat effect for slow speeds
         if (velocity < 120) {
           wheelFrame.animate([
@@ -491,7 +491,7 @@ async function showSpinWheelOverlay() {
         cancelAnimationFrame(spinWheelState.animationId);
         spinWheelState.animationId = null;
       }
-      
+
       // Stop all spinning sounds
       try {
         overlayAudio.spinning.pause();
@@ -539,7 +539,7 @@ async function showSpinWheelOverlay() {
         // Extra confetti for jackpot
         setTimeout(() => createSpinConfetti(), 300);
         setTimeout(() => createSpinConfetti(), 600);
-        
+
         // Show jackpot modal after a short delay
         setTimeout(() => {
           showJackpotModal(result.spins).then((classWeight) => {
@@ -718,7 +718,7 @@ async function showSpinWheelOverlay() {
           overlayAudio.spinning.currentTime = 0;
           overlayAudio.spinning.volume = 0.3;
           window.safePlay(overlayAudio.spinning);
-          
+
           // Start wheel tick loop
           overlayAudio.wheelTickLoop.currentTime = 0;
           overlayAudio.wheelTickLoop.volume = 0.4;
@@ -774,32 +774,32 @@ function showJackpotModal(spins) {
   return new Promise((resolve) => {
     // Get available classes
     const availableClasses = window.getAvailableClasses ? window.getAvailableClasses() : ["Light", "Medium", "Heavy"];
-    
+
     // If only one class available, auto-select it
     if (availableClasses.length === 1) {
       console.log("🎯 Auto-selecting only available class:", availableClasses[0]);
       resolve(availableClasses[0]);
       return;
     }
-    
+
     // If no classes available, show error
     if (availableClasses.length === 0) {
       alert("Please select at least one class in the filters!");
       resolve(null);
       return;
     }
-    
+
     const { backdrop, content } = createOverlayStructure();
-    
+
     // Create jackpot modal
     const modal = document.createElement("div");
     modal.className = "jackpot-modal-content";
-    
+
     // Build class buttons dynamically
-    const classButtonsHTML = availableClasses.map(cls => 
+    const classButtonsHTML = availableClasses.map(cls =>
       `<button class="class-button ${cls.toLowerCase()}" data-weight="${cls}">${cls}</button>`
     ).join('');
-    
+
     modal.innerHTML = `
       <div class="jackpot-title">JACKPOT!</div>
       <div class="jackpot-message">You earned <span class="jackpot-spins">${spins}</span> spins!</div>
@@ -808,25 +808,25 @@ function showJackpotModal(spins) {
         ${classButtonsHTML}
       </div>
     `;
-    
+
     content.appendChild(modal);
-    
+
     // Animate in
     requestAnimationFrame(() => {
       backdrop.classList.add("active");
       modal.classList.add("active");
     });
-    
+
     // Handle class selection
     const buttons = modal.querySelectorAll(".class-button");
     buttons.forEach(button => {
       button.addEventListener("click", (e) => {
         const classWeight = e.target.dataset.weight;
-        
+
         // Animate out
         modal.classList.remove("active");
         backdrop.classList.remove("active");
-        
+
         setTimeout(() => {
           clearOverlay();
           resolve(classWeight);
@@ -980,13 +980,13 @@ async function showClassRouletteOverlay() {
     // Get available classes from filters using global function
     const getAvailableClassesForRoulette = () => {
       const availableClasses = window.getAvailableClasses ? window.getAvailableClasses() : ["Light", "Medium", "Heavy"];
-      
+
       const classConfigs = {
         "Light": { name: "Light", color: "#4FC3F7" },
         "Medium": { name: "Medium", color: "#AB47BC" },
         "Heavy": { name: "Heavy", color: "#FF1744" }
       };
-      
+
       const available = availableClasses.map(cls => classConfigs[cls]);
 
       // If no classes selected, show error
@@ -1001,7 +1001,7 @@ async function showClassRouletteOverlay() {
     // Generate wheel segments
     const generateSegments = () => {
       const availableClasses = getAvailableClassesForRoulette();
-      
+
       if (!availableClasses) {
         return null;
       }
@@ -1036,14 +1036,14 @@ async function showClassRouletteOverlay() {
     };
 
     const segments = generateSegments();
-    
+
     // If no classes available, exit early
     if (!segments) {
       clearOverlay();
       resolve(null);
       return;
     }
-    
+
     console.log("🎯 Generated segments:", segments);
 
     // Create roulette container
@@ -1055,12 +1055,12 @@ async function showClassRouletteOverlay() {
           <h2>SELECTING CLASS</h2>
           <p>Fate decides your build...</p>
         </div>
-        
+
         <div class="roulette-wheel-wrapper">
           <div class="roulette-wheel" id="roulette-wheel">
             <!-- Outer decorative ring -->
             <div class="wheel-outer-ring"></div>
-            
+
             <!-- Main wheel with segments -->
             <svg class="wheel-svg" viewBox="0 0 400 400" width="400" height="400" preserveAspectRatio="xMidYMid meet">
               <defs>
@@ -1078,7 +1078,7 @@ async function showClassRouletteOverlay() {
                   <circle cx="200" cy="200" r="35"/>
                 </clipPath>
               </defs>
-              
+
               <!-- Rotating group containing segments and labels -->
               <g class="wheel-rotating-group" id="wheel-rotating-group">
                 <!-- Segments -->
@@ -1094,7 +1094,7 @@ async function showClassRouletteOverlay() {
                       const y2 = 200 + radius * Math.sin(endAngle);
 
                       return `
-                      <path 
+                      <path
                         d="M 200 200 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z"
                         fill="${seg.color}"
                         stroke="#FFD700"
@@ -1106,7 +1106,7 @@ async function showClassRouletteOverlay() {
                     })
                     .join("")}
                 </g>
-                
+
                 <!-- Class labels -->
                 <g class="wheel-labels">
                   ${segments
@@ -1123,10 +1123,10 @@ async function showClassRouletteOverlay() {
                       const fontSize = segments.length > 6 ? 18 : 24; // Smaller text for 12 segments
 
                       return `
-                      <text 
-                        x="${x}" 
-                        y="${y}" 
-                        text-anchor="middle" 
+                      <text
+                        x="${x}"
+                        y="${y}"
+                        text-anchor="middle"
                         dominant-baseline="middle"
                         class="wheel-label"
                         font-size="${fontSize}"
@@ -1139,24 +1139,24 @@ async function showClassRouletteOverlay() {
                     .join("")}
                 </g>
               </g>
-              
+
               <!-- Static center hub with logo -->
               <g class="wheel-static-center">
                 <circle cx="200" cy="200" r="40" fill="#222" stroke="#FFD700" stroke-width="3"/>
-                <image href="images/the-finals.webp" 
-                       x="165" y="165" 
-                       width="70" height="70" 
+                <image href="images/the-finals.webp"
+                       x="175" y="175"
+                       width="50" height="50"
                        clip-path="url(#centerClip)"
                        opacity="0.9"/>
               </g>
             </svg>
-            
+
             <!-- Ball -->
             <div class="roulette-ball" id="roulette-ball">
               <div class="ball-inner"></div>
             </div>
           </div>
-          
+
           <!-- Decorative lights -->
           <div class="roulette-lights">
             ${Array(12)
@@ -1605,7 +1605,7 @@ async function startLoadoutGeneration() {
   try {
     // Set valid spin sequence flag
     window.isValidSpinSequence = true;
-    
+
     // Clear any existing static slot machine from main page
     const mainOutput = document.getElementById("output");
     if (mainOutput) {
@@ -1636,7 +1636,7 @@ async function startLoadoutGeneration() {
     if (spinResult.isJackpot) {
       // Jackpot path - class was already selected in the modal
       overlayState.selectedClass = spinResult.classWeight;
-      
+
       // Skip the reveal card and go straight to slot machine
       // The user already knows they got a jackpot and selected their class
     } else {
@@ -1647,10 +1647,10 @@ async function startLoadoutGeneration() {
         duration: 2000,
         isJackpot: false,
       });
-      
+
       // Then show roulette for class selection
       overlayState.selectedClass = await showClassRouletteOverlay();
-      
+
       // Check if roulette was cancelled (no classes available)
       if (!overlayState.selectedClass) {
         console.log("❌ No class selected, cancelling flow");
@@ -1686,7 +1686,7 @@ async function startLoadoutGeneration() {
     }
 
     overlayState.isActive = false;
-    
+
     // Clear valid spin sequence flag
     window.isValidSpinSequence = false;
   }
@@ -1698,7 +1698,7 @@ async function startLoadoutGeneration() {
 
 async function showSlotMachineOverlay(selectedClass, spinCount) {
   console.log("🎰 Showing slot machine overlay...");
-  
+
   // Add class to body to hide duplicate text on desktop
   document.body.classList.add('overlay-active');
 
@@ -1743,18 +1743,18 @@ async function showSlotMachineOverlay(selectedClass, spinCount) {
 
       // Create a temporary slot machine instance for the overlay
       const overlayOutput = document.getElementById("overlay-slot-output");
-      
+
       if (overlayOutput) {
         // Create a new slot machine instance for the overlay
         const overlaySlotMachine = new SlotMachine('overlay-slot-output');
         overlaySlotMachine.init();
-        
+
         // Store the original instance temporarily
         const originalSlotMachine = window.slotMachineInstance;
         window.slotMachineInstance = overlaySlotMachine;
-        
+
         console.log("🎰 Starting slot machine in overlay with:", selectedClass);
-        
+
         // Start the slot machine
         if (typeof window.startSlotMachine === "function") {
           window.startSlotMachine(selectedClass, spinCount);
@@ -1762,7 +1762,7 @@ async function showSlotMachineOverlay(selectedClass, spinCount) {
         // Monkey patch finalizeSpin to handle overlay completion
         const originalFinalizeSpin = window.finalizeSpin;
         let hasHandledFinalSpin = false;
-        
+
         window.finalizeSpin = function (columns) {
           // Call original function
           if (originalFinalizeSpin) {
@@ -1779,28 +1779,28 @@ async function showSlotMachineOverlay(selectedClass, spinCount) {
               // Copy the final slot machine content to the main page
               const overlayOut = document.getElementById("output");
               const originalOut = document.getElementById("output-backup");
-              
+
               if (overlayOut && originalOut) {
                 // Clone the slot machine content
                 const finalContent = overlayOut.innerHTML;
-                
+
                 // Create a wrapper for the smaller final slot machine
                 const wrapper = document.createElement('div');
                 wrapper.className = 'final-slot-machine-wrapper';
                 wrapper.innerHTML = finalContent;
-                
+
                 // Add final glow effect to all item containers
                 const itemContainers = wrapper.querySelectorAll('.slot-item');
                 itemContainers.forEach(container => {
                   container.classList.add('final-glow');
                 });
-                
+
                 // Copy to main page output with wrapper
                 originalOut.innerHTML = wrapper.outerHTML;
                 originalOut.style.display = 'block';
                 originalOut.style.opacity = '1';
                 originalOut.classList.add('final-result');
-                
+
                 // Restore IDs
                 overlayOut.id = "overlay-slot-output";
                 originalOut.id = "output";
@@ -1819,7 +1819,7 @@ async function showSlotMachineOverlay(selectedClass, spinCount) {
               }, 300);
             }, 2000); // Wait 2 seconds after animation completes
           }
-          
+
           // Restore the original slot machine instance after completion
           window.slotMachineInstance = originalSlotMachine;
         };
