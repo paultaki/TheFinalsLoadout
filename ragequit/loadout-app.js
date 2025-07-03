@@ -25,69 +25,71 @@ window.rageState = rageState;
 window.state = rageState; // For compatibility
 console.log("✅ RAGE QUIT: window.rageState initialized");
 
-// Rage Quit Loadouts - Only the worst items
+
+// Rage Quit Loadouts – Season 7 (worst‑of‑the‑worst)
 const rageQuitLoadouts = {
   Light: {
+    // weapons that struggle to secure TTK and have very low usage
     weapons: [
-      "Throwing Knives",
-      "V9S",
-      "XP-54",
-      "Dagger",
-      "Recurve Bow",
+      "93R",             // burst pistol, weak beyond 10 m
+      "Throwing Knives", // relies on flawless aim, tiny hit‑box
+      "Dagger",          // highest skill floor, lowest reward
+      "Recurve Bow",     // meme pick since S5 nerfs
+      "V9S"              // silenced pea‑shooter, poor DPS
     ],
-    specializations: ["Cloaking Device"],
+    // only “bad” option left after Dash & Grapple
+    specializations: ["Cloaking Device"],      // B‑tier but still the least effective of the three
+    // all C‑, D‑ or E‑tier gadgets
     gadgets: [
-      "Breach Charge",
-      "Thermal Bore",
-      "Vanishing Bomb",
-      "Glitch Grenade",
-      "Tracking Dart",
-      "Flashbang",
-    ],
+      "Gravity Vortex",  // E‑tier: fun physics, zero lethality
+      "Tracking Dart",   // E‑tier: team rarely capitalises
+      "Thermal Bore",    // C‑tier: too slow, too loud
+      "Breach Charge",   // C‑tier: telegraphed entry, low damage
+      "Flashbang",       // un‑rated but generally unloved after nerfs
+      "Gas Grenade"      // minimal damage, easy to avoid
+    ]
   },
+
   Medium: {
     weapons: [
-      "Model 1887",
-      "R.357",
-      "Riot Shield",
-      "Dual Blades",
-      "CB-01 Repeater",
+      "CL-40",           // grenade arc random, long swap time
+      "R.357",           // four shots then a holiday‑length reload
+      "CB-01 Repeater",  // niche hip‑fire gimmick, poor range
+      "Dual Blades",     // melee + medium mobility = pain
+      "Riot Shield"      // perfect for tilting teammates, not enemies
     ],
-    specializations: ["Guardian Turret"],
+    specializations: ["Guardian Turret"],       // least impact after Demat & Beam
     gadgets: [
-      "APS Turret",
-      "Data Reshaper",
-      "Jump Pad",
-      "Zipline",
-      "Glitch Trap",
-      "Proximity Sensor",
-      "Smoke Grenade",
-      "Flashbang",
-      "Gas Mine",
-    ],
+      "APS Turret",      // E‑tier even after +1 projectile buff
+      "Data Reshaper",   // E‑tier RNG clown device
+      "Glitch Trap",     // E‑tier: rare, easily spotted
+      "Proximity Sensor",// E‑tier: constant false alarms
+      "Explosive Mine",  // D‑tier: bright red lights scream “shoot me”
+      "Gas Mine"         // C‑tier: small radius, low damage
+    ]
   },
+
   Heavy: {
     weapons: [
-      "KS-23",
-      "Spear",
-      "M60",
-      "Sledgehammer",
+      "Flamethrower",    // spectacular visuals, terrible reach
+      "KS-23",           // slug shotgun that whiffs past 8 m
+      "Spear",           // animation‑locked, easy to kite
+      "SA 1216",         // low per‑pellet damage, long reload
+      "M60"              // suppressed LMG look‑cool‑die‑slow
     ],
-    specializations: [
-      "Mesh Shield",
-      "Goo Gun",
-    ],
+    specializations: ["Goo Gun"],               // only B‑tier choice, recently nerfed
     gadgets: [
-      "Anti-Gravity Cube",
-      "Dome Shield",
-      "Lockbolt Launcher",
-      "Pyro Mine",
-      "Gas Grenade",
-      "C4",
-      "Proximity Sensor",
-    ],
-  },
+      "Anti-Gravity Cube", // E‑tier gimmick despite cooldown buff
+      "Proximity Sensor",  // E‑tier: still bad on Heavy
+      "Pyro Mine",         // C‑tier: easy to spot, low trigger rate
+      "Explosive Mine",    // D‑tier: see Medium remarks
+      "C4",                // C‑tier: blinking self‑own device
+      "Gas Grenade"        // low damage, large tell‑tale cloud
+    ]
+  }
 };
+
+
 
 // Physics constants
 const PHYSICS = {
@@ -112,18 +114,18 @@ const getRandomUniqueItems = (array, n) => {
 const getUniqueGadgets = (classType, loadout) => {
   console.log(`🔍 Selecting unique gadgets for ${classType}`);
   const cleanedGadgets = [...new Set(loadout.gadgets)];
-  
+
   if (cleanedGadgets.length < 3) {
     console.error(`❌ Not enough unique gadgets for ${classType}!`);
     return cleanedGadgets;
   }
-  
+
   const shuffledGadgets = [...cleanedGadgets];
   for (let i = shuffledGadgets.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffledGadgets[i], shuffledGadgets[j]] = [shuffledGadgets[j], shuffledGadgets[i]];
   }
-  
+
   const selectedGadgets = shuffledGadgets.slice(0, 3);
   console.log(`✅ Selected gadgets:`, selectedGadgets);
   return selectedGadgets;
@@ -252,7 +254,7 @@ class SlotColumn {
 // Main spin function
 const spinRageQuitLoadout = () => {
   console.log("🎰 spinRageQuitLoadout called!");
-  
+
   if (rageState.isSpinning) {
     console.log("⚠️ Already spinning, ignoring");
     return;
@@ -266,8 +268,8 @@ const spinRageQuitLoadout = () => {
 
   rageState.isSpinning = true;
   rageState.currentGadgetPool.clear();
-  
-  if (!document.getElementById('double-or-nothing-container')?.style.display || 
+
+  if (!document.getElementById('double-or-nothing-container')?.style.display ||
       document.getElementById('double-or-nothing-container')?.style.display === 'none') {
     rageState.handicapStack = [];
     rageState.sufferingLevel = 0;
@@ -281,7 +283,7 @@ const displayRageQuitLoadout = () => {
   const slotMachineSection = document.querySelector('.slot-machine-section');
   const handicapSection = document.querySelector('.handicap-section');
   const heroSection = document.querySelector('.hero');
-  
+
   if (slotMachineSection) {
     slotMachineSection.classList.add('centered');
   }
@@ -293,16 +295,16 @@ const displayRageQuitLoadout = () => {
   }
 
   const outputDiv = document.getElementById("output");
-  
+
   let selectedClass = rageState.selectedClass;
   if (!selectedClass) {
     const availableClasses = getAvailableClasses();
-    selectedClass = availableClasses.length === 0 
+    selectedClass = availableClasses.length === 0
       ? ["Light", "Medium", "Heavy"][Math.floor(Math.random() * 3)]
       : availableClasses[Math.floor(Math.random() * availableClasses.length)];
     rageState.selectedClass = selectedClass;
   }
-  
+
   console.log(`🎯 Using selected class: ${selectedClass}`);
 
   const selectedClassElement = document.getElementById("selected-class");
@@ -383,7 +385,7 @@ function createItemContainer(items, winningItem = null, isGadget = false) {
 // Start animation
 function startSpinAnimation(columns) {
   const startTime = performance.now();
-  
+
   // Play spinning start sound
   const spinStartSound = document.getElementById("spinStart");
   if (spinStartSound && localStorage.getItem('rageSoundEnabled') !== 'false') {
@@ -391,7 +393,7 @@ function startSpinAnimation(columns) {
     spinStartSound.volume = 0.3;
     spinStartSound.play().catch(() => {});
   }
-  
+
   // Play continuous spinning sound
   const spinningSound = document.getElementById("spinningSound");
   if (spinningSound && localStorage.getItem('rageSoundEnabled') !== 'false') {
@@ -400,7 +402,7 @@ function startSpinAnimation(columns) {
     spinningSound.loop = true;
     spinningSound.play().catch(() => {});
   }
-  
+
   const slotColumns = columns.map((element, index) => {
     const column = new SlotColumn(element, index);
     column.onStop = (columnElement) => {
@@ -411,7 +413,7 @@ function startSpinAnimation(columns) {
         columnStopSound.volume = 0.4;
         columnStopSound.play().catch(() => {});
       }
-      
+
       const container = columnElement.closest(".item-container");
       if (container) {
         container.classList.add("final-flash");
@@ -457,7 +459,7 @@ function startSpinAnimation(columns) {
         finalizeSpin();
         return;
       }
-      
+
       let isAnimating = false;
       slotColumns.forEach((column, index) => {
         try {
@@ -497,14 +499,14 @@ function startSpinAnimation(columns) {
 // Finalize spin
 function finalizeSpin() {
   console.log("🎯 Finalizing spin");
-  
+
   // Stop the spinning sound
   const spinningSound = document.getElementById("spinningSound");
   if (spinningSound) {
     spinningSound.pause();
     spinningSound.currentTime = 0;
   }
-  
+
   // Play final sound
   const finalSound = document.getElementById("finalSound");
   if (finalSound && localStorage.getItem('rageSoundEnabled') !== 'false') {
@@ -512,11 +514,11 @@ function finalizeSpin() {
     finalSound.volume = 0.5;
     finalSound.play().catch(() => {});
   }
-  
+
   updateSufferingStreak();
   updateTotalRageQuits();
   displaySelectedHandicap();
-  
+
   // Save to history if we have a valid loadout
   if (rageState.finalLoadout && window.addToHistory) {
     const { classType, weapon, specialization, gadgets } = rageState.finalLoadout;
@@ -531,7 +533,7 @@ function finalizeSpin() {
   } else if (rageState.finalLoadout) {
     console.warn("⚠️ addToHistory function not found - history won't be saved");
   }
-  
+
   setTimeout(() => {
     resetSpinStateWithoutClearingDisplay();
     showDoubleOrNothingOption();
@@ -541,14 +543,14 @@ function finalizeSpin() {
 // Reset state
 function resetSpinState() {
   console.log("🔄 Resetting spin state");
-  
+
   // Stop the spinning sound
   const spinningSound = document.getElementById("spinningSound");
   if (spinningSound) {
     spinningSound.pause();
     spinningSound.currentTime = 0;
   }
-  
+
   const spinButton = document.getElementById("rage-quit-btn");
   if (spinButton) {
     spinButton.disabled = false;
@@ -569,14 +571,14 @@ function resetSpinState() {
 
 function resetSpinStateWithoutClearingDisplay() {
   console.log("🔄 Resetting spin state (preserving display)");
-  
+
   // Stop the spinning sound
   const spinningSound = document.getElementById("spinningSound");
   if (spinningSound) {
     spinningSound.pause();
     spinningSound.currentTime = 0;
   }
-  
+
   const spinButton = document.getElementById("rage-quit-btn");
   if (spinButton) {
     spinButton.disabled = false;
@@ -632,10 +634,10 @@ function updateTotalRageQuits() {
 function displaySelectedHandicap() {
   const handicapContainer = document.getElementById("handicap-container");
   if (!handicapContainer) return;
-  
+
   const selectedHandicap = rageState.selectedHandicap;
   const selectedHandicapDesc = rageState.selectedHandicapDesc;
-  
+
   if (selectedHandicap) {
     const handicapHTML = `
       <div class="handicap-display">
@@ -676,29 +678,29 @@ window.rageQuitDebug = {
 // BULLETPROOF BUTTON SETUP
 function attachButtonHandler() {
   const btn = document.getElementById("rage-quit-btn");
-  
+
   if (!btn) {
     console.error("❌ RAGE QUIT: rage-quit-btn not found!");
     return false;
   }
-  
+
   if (btn.hasAttribute("data-handler-attached")) {
     console.log("⚠️ RAGE QUIT: Handler already attached");
     return true;
   }
-  
+
   console.log("🎯 RAGE QUIT: Attaching click handler to button");
   btn.setAttribute("data-handler-attached", "true");
-  
+
   btn.onclick = function(e) {
     e.preventDefault();
     console.log("🔥 RAGE QUIT: Button clicked!");
-    
+
     if (rageState.isSpinning) {
       console.log("⚠️ Already spinning");
       return;
     }
-    
+
     // Check if roulette system exists and use it, otherwise direct spin
     if (window.rageRouletteSystem && typeof window.rageRouletteSystem.startFullSequence === 'function') {
       console.log("🎬 Using RageRouletteAnimationSystem");
@@ -711,7 +713,7 @@ function attachButtonHandler() {
       spinRageQuitLoadout();
     }
   };
-  
+
   console.log("✅ RAGE QUIT: Button handler attached successfully!");
   return true;
 }
@@ -726,7 +728,7 @@ if (!buttonReady) {
     console.log("⏰ RAGE QUIT: Retrying button setup...");
     const retrySuccess = attachButtonHandler();
     console.log("🔍 RAGE QUIT: Retry result:", retrySuccess ? "SUCCESS" : "FAILED");
-    
+
     if (!retrySuccess) {
       // Final fallback with mutation observer
       const observer = new MutationObserver(() => {
@@ -737,7 +739,7 @@ if (!buttonReady) {
           observer.disconnect();
         }
       });
-      
+
       observer.observe(document.body, { childList: true, subtree: true });
       setTimeout(() => observer.disconnect(), 10000); // Stop after 10 seconds
     }
@@ -748,7 +750,7 @@ if (!buttonReady) {
 if (document.readyState !== 'loading') {
   const streakEl = document.getElementById('currentStreak');
   if (streakEl) streakEl.textContent = rageState.sufferingStreak.toLocaleString();
-  
+
   const totalEl = document.getElementById('totalRageQuits');
   if (totalEl) {
     const total = parseInt(localStorage.getItem('totalRageQuits')) || 3144;
