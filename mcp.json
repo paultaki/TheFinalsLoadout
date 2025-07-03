@@ -1,0 +1,32 @@
+{
+    "mcpServers": {
+        "firecrawl-mcp": {
+            "command": "npx",
+            "args": ["-y", "firecrawl-mcp"],
+            "env": {
+                "FIRECRAWL_API_KEY": "fc-29a1b49efa6a48b6b93575e26e8a49c8"
+            }
+        },
+        "perplexity-mcp": {
+            "env": {
+                "PERPLEXITY_API_KEY": "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",
+                "PERPLEXITY_MODEL": "sonar"
+            },
+            "command": "npx",
+            "args": [
+                "-y",
+                "perplexity-mcp"
+            ]
+        },
+        "dataforseo": {
+            "command": "npm",
+            "args": [
+                "start"
+            ],
+            "env": {
+                "DATAFORSEO_LOGIN": "paul@paultakisaki.com",
+                "DATAFORSEO_PASSWORD": "c102b90788a831f7"
+            }
+        }
+    }
+}
