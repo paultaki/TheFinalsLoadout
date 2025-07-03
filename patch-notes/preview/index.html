@@ -63,10 +63,10 @@
       }
     </script>
 
-    <!-- Google Analytics -->
+    <!-- Google Tag Manager -->
     <script
       async
-      src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"
+      src="https://www.googletagmanager.com/gtag/js?id=GTM-5H76V88"
     ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -74,8 +74,9 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-      gtag("config", "G-GVGKYFGZ1Z");
+      gtag("config", "GTM-5H76V88");
     </script>
+    <!-- End Google Tag Manager -->
 
     <!-- Fonts & Favicon -->
     <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
@@ -225,16 +226,16 @@
             <span class="stat-label">Weapon Changes</span>
           </div>
           <div class="stat-item">
+            <span class="stat-number" data-count="1">0</span>
+            <span class="stat-label">New Mode</span>
+          </div>
+          <div class="stat-item">
             <span class="stat-number" data-count="2">0</span>
             <span class="stat-label">Major Features</span>
           </div>
           <div class="stat-item">
             <span class="stat-number" data-count="12">0</span>
             <span class="stat-label">Free Rewards</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number" data-count="25">0</span>
-            <span class="stat-label">Bug Fixes</span>
           </div>
         </div>
 
@@ -267,6 +268,58 @@
 
     <!-- Main Content -->
     <main class="main-content">
+      <!-- TLDR Section -->
+      <section class="tldr-section" id="tldr">
+        <div class="section-header">
+          <h2 class="section-title">What Changed (Why You Should Care)</h2>
+        </div>
+        <div class="tldr-grid">
+          <!-- Critical Changes -->
+          <div class="tldr-item nerf" data-aos="fade-up">
+            <span class="icon">💥</span>
+            <div class="tldr-content">
+              <strong>CL-40 self-damage +35%</strong>
+              <span class="tldr-desc">No more free feet shots</span>
+            </div>
+          </div>
+          <div class="tldr-item rework" data-aos="fade-up" data-aos-delay="100">
+            <span class="icon">🏥</span>
+            <div class="tldr-content">
+              <strong>Healing Emitter reworked</strong>
+              <span class="tldr-desc">Can't drop & forget</span>
+            </div>
+          </div>
+          <div class="tldr-item fix" data-aos="fade-up" data-aos-delay="200">
+            <span class="icon">💨</span>
+            <div class="tldr-content">
+              <strong>Smoke detection fixed</strong>
+              <span class="tldr-desc">Recon gadgets see through</span>
+            </div>
+          </div>
+          <div class="tldr-item buff" data-aos="fade-up" data-aos-delay="300">
+            <span class="icon">🔨</span>
+            <div class="tldr-content">
+              <strong>Sledgehammer reliable</strong>
+              <span class="tldr-desc">Hit detection improved</span>
+            </div>
+          </div>
+          <div class="tldr-item new" data-aos="fade-up" data-aos-delay="400">
+            <span class="icon">🚀</span>
+            <div class="tldr-content">
+              <strong>Blast Off! mode live</strong>
+              <span class="tldr-desc">Low gravity explosive chaos</span>
+            </div>
+          </div>
+          <div class="tldr-item new" data-aos="fade-up" data-aos-delay="500">
+            <span class="icon">🏗️</span>
+            <div class="tldr-content">
+              <strong>Destruction 2.0</strong>
+              <span class="tldr-desc">Buildings collapse realistically</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Weapons Section -->
       <section class="content-section" id="weapons">
         <div class="section-header">
@@ -363,9 +416,9 @@
                   <span class="impact-text">META IMPACT</span>
                 </div>
                 <p>
-                  No more free feet-shots. Splashing at your boots chunks ~20 HP
-                  more. Still melts Healing Emitter bunkers—just costs you
-                  blood.
+                  Splashing at your feet now costs ~20 more HP. Full damage
+                  requires better accuracy. Still melts Healing Emitter
+                  bunkers—just costs you blood.
                 </p>
               </div>
 
@@ -434,14 +487,14 @@
             </div>
           </article>
 
-          <!-- Heavy Buffs Card -->
+          <!-- H+ Infuser Nerf Card -->
           <article
-            class="change-card buff"
+            class="change-card nerf"
             data-aos="fade-up"
             data-aos-delay="100"
           >
             <div class="card-header">
-              <div class="change-type buff">BUFF</div>
+              <div class="change-type nerf">NERF</div>
               <div class="impact-level medium">MEDIUM IMPACT</div>
               <div class="card-actions">
                 <button class="action-btn" aria-label="Share">
@@ -462,32 +515,58 @@
             <div class="card-content">
               <div class="weapon-showcase">
                 <div class="weapon-image">
-                  <img src="../images/M60.webp" alt="M60" loading="lazy" />
-                  <div class="image-glow buff"></div>
+                  <img
+                    src="../images/H+_Infuser.webp"
+                    alt="H+ Infuser"
+                    loading="lazy"
+                  />
+                  <div class="image-glow nerf"></div>
                 </div>
                 <div class="weapon-info">
-                  <h3 class="weapon-name">Heavy Class Buffs</h3>
-                  <div class="weapon-class heavy">HEAVY</div>
+                  <h3 class="weapon-name">H+ Infuser</h3>
+                  <div class="weapon-class light">LIGHT</div>
                   <p class="weapon-description">
-                    Multiple heavy weapons receive damage and mobility
-                    improvements.
+                    25% less healing makes pocket medic plays less oppressive
+                    during cashout steals.
                   </p>
                 </div>
               </div>
 
-              <div class="buff-highlights">
-                <div class="buff-item">
-                  <span class="buff-label">M60 Damage</span>
-                  <span class="buff-change">+15%</span>
+              <div class="before-after">
+                <div class="stat-comparison-header">
+                  <h4>Healing Per Shot</h4>
                 </div>
-                <div class="buff-item">
-                  <span class="buff-label">SA1216 Range</span>
-                  <span class="buff-change">+20%</span>
+                <div class="comparison-container">
+                  <div class="comparison-item">
+                    <div class="comparison-label">Before</div>
+                    <div class="stat-value old-good">20</div>
+                  </div>
+                  <div class="comparison-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M5 12h14m-7-7 7 7-7 7"></path>
+                    </svg>
+                  </div>
+                  <div class="comparison-item">
+                    <div class="comparison-label">After</div>
+                    <div class="stat-value new-bad">15</div>
+                  </div>
                 </div>
-                <div class="buff-item">
-                  <span class="buff-label">Movement Speed</span>
-                  <span class="buff-change">+8%</span>
+              </div>
+
+              <div class="change-impact">
+                <div class="impact-header">
+                  <span class="impact-icon">💉</span>
+                  <span class="impact-text">META IMPACT</span>
                 </div>
+                <p>
+                  25% less healing makes pocket medic plays less oppressive
+                  during cashout steals. Flat healing per second reduced.
+                </p>
               </div>
             </div>
           </article>
@@ -529,10 +608,10 @@
                 </div>
                 <div class="weapon-info">
                   <h3 class="weapon-name">Healing Emitter</h3>
-                  <div class="weapon-class medium">MEDIUM</div>
+                  <div class="weapon-class heavy">HEAVY</div>
                   <p class="weapon-description">
                     Smart placement now crucial - can't drop and forget anymore.
-                    Retrieval system added.
+                    Cooldown starts when destroyed, not deployed.
                   </p>
                 </div>
               </div>
@@ -639,6 +718,154 @@
               </div>
             </div>
           </article>
+
+          <!-- Sledgehammer Buff Card -->
+          <article
+            class="change-card buff"
+            data-aos="fade-up"
+            data-aos-delay="300"
+          >
+            <div class="card-header">
+              <div class="change-type buff">BUFF</div>
+              <div class="impact-level medium">MEDIUM IMPACT</div>
+              <div class="card-actions">
+                <button class="action-btn" aria-label="Share">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                    <polyline points="16,6 12,2 8,6"></polyline>
+                    <line x1="12" y1="2" x2="12" y2="15"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-content">
+              <div class="weapon-showcase">
+                <div class="weapon-image">
+                  <img
+                    src="../images/Sledgehammer.webp"
+                    alt="Sledgehammer"
+                    loading="lazy"
+                  />
+                  <div class="image-glow buff"></div>
+                </div>
+                <div class="weapon-info">
+                  <h3 class="weapon-name">Sledgehammer</h3>
+                  <div class="weapon-class all">ALL CLASSES</div>
+                  <p class="weapon-description">
+                    Fewer ghost swings - melee finally feels consistent with
+                    improved hit detection.
+                  </p>
+                </div>
+              </div>
+
+              <div class="before-after">
+                <div class="stat-comparison-header">
+                  <h4>Primary Attack Height</h4>
+                </div>
+                <div class="comparison-container">
+                  <div class="comparison-item">
+                    <div class="comparison-label">Before</div>
+                    <div class="stat-value old-bad">15cm</div>
+                  </div>
+                  <div class="comparison-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M5 12h14m-7-7 7 7-7 7"></path>
+                    </svg>
+                  </div>
+                  <div class="comparison-item">
+                    <div class="comparison-label">After</div>
+                    <div class="stat-value new-good">25cm</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="change-impact">
+                <div class="impact-header">
+                  <span class="impact-icon">🔨</span>
+                  <span class="impact-text">GAMEPLAY IMPACT</span>
+                </div>
+                <p>
+                  67% taller hit detection means fewer frustrating misses.
+                  Sledgehammer is now a reliable melee option across all
+                  classes.
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Weapon Swap Speed Changes -->
+          <div
+            class="weapon-speed-grid"
+            data-aos="fade-up"
+            data-aos-delay="400"
+          >
+            <h3>Weapon Draw/Holster Speed Changes</h3>
+
+            <!-- Winners (Faster) -->
+            <div class="speed-category buff">
+              <h4>⚡ Faster Swaps</h4>
+              <div class="speed-item">93R: 0.20s → 0.15s (both)</div>
+              <div class="speed-item">XP-54: 0.23s → 0.20s</div>
+            </div>
+
+            <!-- Losers (Slower) -->
+            <div class="speed-category nerf">
+              <h4>🐌 Slower Swaps</h4>
+              <div class="speed-items">
+                <div class="speed-item">AKM: 0.23s → 0.30s equip</div>
+                <div class="speed-item">FCAR: 0.20s → 0.30s equip</div>
+                <div class="speed-item">FAMAS: 0.20s → 0.30s equip</div>
+                <div class="speed-item">
+                  Lewis Gun: 0.23s → 0.35s (heaviest)
+                </div>
+                <div class="speed-item">LH1: 0.15s → 0.30s (doubled)</div>
+                <div class="speed-item">
+                  Model 1887: 0.15s → 0.30s (doubled)
+                </div>
+                <div class="speed-item">SR-84: 0.15s → 0.30s (doubled)</div>
+              </div>
+            </div>
+
+            <p class="speed-impact">
+              Impact: Quick-swap playstyles nerfed. Commit to your primary
+              weapon.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Critical Bug Fixes Section -->
+      <section class="bug-fixes-section" id="bug-fixes">
+        <div class="section-header">
+          <h2 class="section-title">Game-Changing Fixes</h2>
+        </div>
+
+        <div class="fix-card major" data-aos="fade-up">
+          <h3>🔍 Smoke Detection Fixed</h3>
+          <p class="fix-description">
+            Tracking Dart, Sonar Grenade, and Proximity Sensor now properly
+            reveal enemies through smoke
+          </p>
+          <p class="fix-impact">
+            <strong>Meta Impact:</strong> Smoke grenades no longer hard-counter
+            recon. This is huge.
+          </p>
+        </div>
+
+        <div class="fix-card minor" data-aos="fade-up" data-aos-delay="100">
+          <h3>🚪 Doors More Responsive</h3>
+          <p>Reduced interaction delay for smoother gameplay</p>
         </div>
       </section>
 
@@ -782,6 +1009,54 @@
                 <span class="reward-item">ImpOscar Sticker</span>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+      <!-- Class Impact Section -->
+      <section class="class-impact-section" id="class-impact">
+        <div class="section-header">
+          <h2 class="section-title">Who Wins, Who Loses?</h2>
+        </div>
+
+        <div class="impact-table">
+          <div class="impact-row light" data-aos="fade-up">
+            <div class="class-badge">LIGHT</div>
+            <div class="changes">
+              <span class="nerf">H+ Infuser nerfed</span>
+              <span class="buff">93R faster swaps</span>
+            </div>
+            <div class="verdict">Slight Nerf</div>
+          </div>
+
+          <div
+            class="impact-row medium"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
+            <div class="class-badge">MEDIUM</div>
+            <div class="changes">
+              <span class="nerf">CL-40 self-damage up</span>
+              <span class="buff">Blast Off! exclusive</span>
+            </div>
+            <div class="verdict">Neutral</div>
+          </div>
+
+          <div class="impact-row heavy" data-aos="fade-up" data-aos-delay="200">
+            <div class="class-badge">HEAVY</div>
+            <div class="changes">
+              <span class="rework">Healing Emitter rework</span>
+              <span class="nerf">Lewis Gun slower</span>
+            </div>
+            <div class="verdict">Skill Gap ↑</div>
+          </div>
+        </div>
+
+        <div class="try-again-section" data-aos="fade-up" data-aos-delay="300">
+          <h3>🔄 Give These Another Shot</h3>
+          <div class="try-items">
+            <div class="try-item">KS-23 (accuracy buffed)</div>
+            <div class="try-item">Sledgehammer (hits register now)</div>
+            <div class="try-item">Detection gadgets (smoke counter)</div>
           </div>
         </div>
       </section>

@@ -1,435 +1,736 @@
-// Enhanced Patch Notes Interactive System
-class PatchNotesApp {
+/**
+ * THE FINALS PATCH NOTES - BLAST OFF!
+ * Interactive Gaming Experience
+ * Enhanced with spectacular effects and smooth animations
+ */
+
+class BlastOffExperience {
   constructor() {
-    this.initializeContent();
-    this.initializeNavigation();
-    this.initializeFilters();
-    this.initializeSearch();
-    this.initializeIntersectionObserver();
-    this.initializeSmoothScroll();
-    this.initializeStats();
-    this.initializeCardInteractions();
+    this.audioEnabled = true;
+    this.particles = [];
+    this.loadingProgress = 0;
+    this.scrollProgress = 0;
+    this.activeSection = "weapons";
+
+    this.init();
   }
 
-  // Initialize content visibility
-  initializeContent() {
-    // Ensure all content is visible by default
-    const changeCards = document.querySelectorAll(".change-card");
-    const patchSections = document.querySelectorAll(".patch-section");
-
-    changeCards.forEach((card) => {
-      card.style.display = "block";
-      card.classList.add("visible");
-      card.dataset.hidden = "false";
-    });
-
-    patchSections.forEach((section) => {
-      section.style.display = "block";
-    });
-
-    // Show the first section by default
-    const firstSection = document.querySelector(".patch-section");
-    if (firstSection) {
-      firstSection.style.display = "block";
-    }
-
-    // Ensure navigation shows first item as active
-    const firstNavItem = document.querySelector(".nav-item");
-    if (firstNavItem) {
-      firstNavItem.classList.add("active");
-    }
-
-    // Ensure filter shows "all" as active
-    const allFilter = document.querySelector(
-      '.filter-button[data-filter="all"]'
-    );
-    if (allFilter) {
-      allFilter.classList.add("active");
-    }
-
-    console.log("Content initialized:", changeCards.length, "cards found");
+  init() {
+    this.setupEventListeners();
+    this.startLoadingSequence();
+    this.createParticleSystem();
+    this.setupScrollEffects();
+    this.initSmartNavigation();
+    this.setupTabSystem();
+    this.setupModalSystem();
+    this.setupFAB();
+    this.startAnimationLoop();
   }
 
-  // Enhanced Navigation System
-  initializeNavigation() {
-    const navItems = document.querySelectorAll(".nav-item");
+  // ============================================
+  // LOADING SYSTEM
+  // ============================================
 
-    navItems.forEach((button) => {
-      button.addEventListener("click", (e) => {
-        // Remove active class from all
-        navItems.forEach((b) => b.classList.remove("active"));
+  startLoadingSequence() {
+    const loadingScreen = document.getElementById("loadingScreen");
+    const progressBar = document.getElementById("loadingProgress");
+    const percentage = document.getElementById("loadingPercentage");
 
-        // Add to clicked
-        e.target.closest(".nav-item").classList.add("active");
+    // Create loading particles
+    this.createLoadingParticles();
 
-        // Smooth scroll to section
-        const sectionId = e.target.closest(".nav-item").dataset.section;
-        const section = document.getElementById(sectionId);
+    // Simulate loading with realistic timing
+    const loadingSteps = [
+      { progress: 15, delay: 300, text: "Loading assets..." },
+      { progress: 35, delay: 500, text: "Initializing systems..." },
+      { progress: 60, delay: 400, text: "Preparing experience..." },
+      { progress: 85, delay: 600, text: "Almost ready..." },
+      { progress: 100, delay: 300, text: "Blast off!" },
+    ];
 
-        if (section) {
-          const navHeight = document.querySelector(".patch-nav").offsetHeight;
-          const mainNavHeight =
-            document.querySelector(".main-nav").offsetHeight;
-          const targetPosition =
-            section.offsetTop - navHeight - mainNavHeight - 20;
+    let currentStep = 0;
 
-          window.scrollTo({
-            top: targetPosition,
-            behavior: "smooth",
-          });
-        }
-      });
-    });
-  }
-
-  // Enhanced Filter System
-  initializeFilters() {
-    const filterButtons = document.querySelectorAll(".filter-button");
-    const changeCards = document.querySelectorAll(".change-card");
-
-    filterButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        // Update active state
-        filterButtons.forEach((b) => b.classList.remove("active"));
-        button.classList.add("active");
-
-        const filter = button.dataset.filter;
-
-        // Filter cards with animation
-        changeCards.forEach((card) => {
-          if (filter === "all") {
-            card.dataset.hidden = "false";
-            card.style.display = "block";
-            setTimeout(() => card.classList.add("visible"), 10);
-          } else {
-            if (card.classList.contains(filter)) {
-              card.dataset.hidden = "false";
-              card.style.display = "block";
-              setTimeout(() => card.classList.add("visible"), 10);
-            } else {
-              card.dataset.hidden = "true";
-              card.classList.remove("visible");
-              setTimeout(() => {
-                if (card.dataset.hidden === "true") {
-                  card.style.display = "none";
-                }
-              }, 300);
-            }
-          }
-        });
-
-        // Update stats
-        this.updateVisibleStats();
-      });
-    });
-  }
-
-  // Enhanced Search System
-  initializeSearch() {
-    const searchInput = document.querySelector(".patch-search");
-    const searchClear = document.querySelector(".search-clear");
-    const changeCards = document.querySelectorAll(".change-card");
-
-    if (!searchInput) return;
-
-    searchInput.addEventListener("input", (e) => {
-      const query = e.target.value.toLowerCase().trim();
-
-      // Show/hide clear button
-      if (query.length > 0) {
-        searchClear.style.display = "block";
-      } else {
-        searchClear.style.display = "none";
+    const updateProgress = () => {
+      if (currentStep >= loadingSteps.length) {
+        this.completeLoading();
+        return;
       }
 
-      // Search through cards
-      changeCards.forEach((card) => {
-        const text = card.textContent.toLowerCase();
-        const matches = text.includes(query);
+      const step = loadingSteps[currentStep];
 
-        if (query === "" || matches) {
-          card.style.display = "block";
-          card.classList.add("visible");
-          if (query !== "") {
-            card.classList.add("highlight");
-          } else {
-            card.classList.remove("highlight");
-          }
-        } else {
-          card.style.display = "none";
-          card.classList.remove("visible", "highlight");
-        }
+      // Animate progress bar
+      this.animateValue(this.loadingProgress, step.progress, 300, (value) => {
+        this.loadingProgress = value;
+        progressBar.style.width = `${value}%`;
+        percentage.textContent = `${Math.round(value)}%`;
       });
 
-      // Update filter counts
-      this.updateSearchStats(query);
-    });
-
-    // Clear search
-    searchClear.addEventListener("click", () => {
-      searchInput.value = "";
-      searchClear.style.display = "none";
-
-      changeCards.forEach((card) => {
-        card.style.display = "block";
-        card.classList.add("visible");
-        card.classList.remove("highlight");
-      });
-
-      this.updateSearchStats("");
-    });
-  }
-
-  // Update search statistics
-  updateSearchStats(query) {
-    const visibleCards = document.querySelectorAll(
-      '.change-card:not([style*="display: none"])'
-    );
-    let buffs = 0,
-      nerfs = 0,
-      newItems = 0;
-
-    visibleCards.forEach((card) => {
-      if (card.classList.contains("buff")) buffs++;
-      if (card.classList.contains("nerf")) nerfs++;
-      if (card.classList.contains("new")) newItems++;
-    });
-
-    // Update filter counts
-    this.updateFilterCount(
-      '.filter-button[data-filter="all"]',
-      visibleCards.length
-    );
-    this.updateFilterCount('.filter-button[data-filter="buff"]', buffs);
-    this.updateFilterCount('.filter-button[data-filter="nerf"]', nerfs);
-    this.updateFilterCount('.filter-button[data-filter="new"]', newItems);
-  }
-
-  // Update filter count display
-  updateFilterCount(selector, count) {
-    const button = document.querySelector(selector);
-    if (button) {
-      const countElement = button.querySelector(".filter-count");
-      if (countElement) {
-        countElement.textContent = count;
-      }
-    }
-  }
-
-  // Enhanced Intersection Observer
-  initializeIntersectionObserver() {
-    const sections = document.querySelectorAll(".patch-section");
-    const navItems = document.querySelectorAll(".nav-item");
-
-    const options = {
-      root: null,
-      rootMargin: "-20% 0px -70% 0px",
-      threshold: 0,
+      currentStep++;
+      setTimeout(updateProgress, step.delay);
     };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const sectionId = entry.target.id;
-
-          navItems.forEach((item) => {
-            if (item.dataset.section === sectionId) {
-              item.classList.add("active");
-            } else {
-              item.classList.remove("active");
-            }
-          });
-        }
-      });
-    }, options);
-
-    sections.forEach((section) => observer.observe(section));
+    // Start loading after brief delay
+    setTimeout(updateProgress, 500);
   }
 
-  // Enhanced Smooth Scroll
-  initializeSmoothScroll() {
-    // Handle all internal links
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener("click", function (e) {
+  createLoadingParticles() {
+    const container = document.getElementById("loadingParticles");
+    const particleCount = 50;
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement("div");
+      particle.className = "loading-particle";
+
+      // Random position
+      particle.style.left = Math.random() * 100 + "%";
+      particle.style.top = Math.random() * 100 + "%";
+
+      // Random animation delay
+      particle.style.animationDelay = Math.random() * 3 + "s";
+      particle.style.animationDuration = 2 + Math.random() * 2 + "s";
+
+      container.appendChild(particle);
+    }
+  }
+
+  completeLoading() {
+    const loadingScreen = document.getElementById("loadingScreen");
+
+    // Fade out loading screen
+    loadingScreen.classList.add("hidden");
+    document.body.classList.remove("loading");
+
+    // Start main experience
+    setTimeout(() => {
+      this.startMainExperience();
+    }, 500);
+  }
+
+  startMainExperience() {
+    // Initialize hero particles
+    this.createHeroParticles();
+
+    // Start counter animations
+    this.animateCounters();
+
+    // Show smart navigation after scroll
+    setTimeout(() => {
+      this.checkSmartNavVisibility();
+    }, 1000);
+
+    // Trigger entrance animations
+    this.triggerEntranceAnimations();
+  }
+
+  // ============================================
+  // PARTICLE SYSTEM
+  // ============================================
+
+  createHeroParticles() {
+    const container = document.getElementById("heroParticles");
+    const particleCount = 30;
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement("div");
+      particle.className = "hero-particle";
+
+      // Random properties
+      const size = 1 + Math.random() * 3;
+      const x = Math.random() * 100;
+      const y = Math.random() * 100;
+      const duration = 4 + Math.random() * 4;
+      const delay = Math.random() * 2;
+
+      particle.style.cssText = `
+                left: ${x}%;
+                top: ${y}%;
+                width: ${size}px;
+                height: ${size}px;
+                animation-duration: ${duration}s;
+                animation-delay: ${delay}s;
+            `;
+
+      container.appendChild(particle);
+    }
+  }
+
+  createParticleSystem() {
+    // Create floating particles for various interactions
+    this.particlePool = [];
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement("div");
+      particle.style.cssText = `
+                position: fixed;
+                width: 4px;
+                height: 4px;
+                background: var(--neon-cyan);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 10000;
+                opacity: 0;
+                transition: all 0.3s ease;
+            `;
+      document.body.appendChild(particle);
+      this.particlePool.push(particle);
+    }
+  }
+
+  createParticleExplosion(x, y, color = "var(--neon-cyan)", count = 8) {
+    for (let i = 0; i < count; i++) {
+      const particle = this.getParticle();
+      if (!particle) continue;
+
+      const angle = (Math.PI * 2 * i) / count;
+      const velocity = 50 + Math.random() * 100;
+      const targetX = x + Math.cos(angle) * velocity;
+      const targetY = y + Math.sin(angle) * velocity;
+
+      particle.style.left = x + "px";
+      particle.style.top = y + "px";
+      particle.style.background = color;
+      particle.style.opacity = "1";
+      particle.style.transform = "scale(1)";
+
+      // Animate particle
+      setTimeout(() => {
+        particle.style.left = targetX + "px";
+        particle.style.top = targetY + "px";
+        particle.style.opacity = "0";
+        particle.style.transform = "scale(0)";
+      }, 10);
+
+      // Return to pool
+      setTimeout(() => {
+        this.returnParticle(particle);
+      }, 500);
+    }
+  }
+
+  getParticle() {
+    return this.particlePool.find((p) => p.style.opacity === "0");
+  }
+
+  returnParticle(particle) {
+    particle.style.opacity = "0";
+    particle.style.transform = "scale(0)";
+  }
+
+  // ============================================
+  // SCROLL EFFECTS
+  // ============================================
+
+  setupScrollEffects() {
+    let ticking = false;
+
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          this.updateScrollProgress();
+          this.updateNavigation();
+          this.checkSmartNavVisibility();
+          this.updateSectionProgress();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+
+  updateScrollProgress() {
+    const scrollTop = window.pageYOffset;
+    const docHeight =
+      document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+
+    const progressBar = document.getElementById("scrollProgress");
+    if (progressBar) {
+      progressBar.style.width = `${progress}%`;
+    }
+
+    this.scrollProgress = progress;
+  }
+
+  updateNavigation() {
+    const nav = document.getElementById("mainNav");
+    const scrolled = window.pageYOffset > 100;
+
+    if (scrolled) {
+      nav.classList.add("scrolled");
+    } else {
+      nav.classList.remove("scrolled");
+    }
+  }
+
+  checkSmartNavVisibility() {
+    const smartNav = document.getElementById("smartNav");
+    const heroHeight = document.getElementById("hero").offsetHeight;
+    const scrolled = window.pageYOffset > heroHeight * 0.8;
+
+    if (scrolled) {
+      smartNav.classList.add("visible");
+    } else {
+      smartNav.classList.remove("visible");
+    }
+  }
+
+  updateSectionProgress() {
+    const sections = document.querySelectorAll(".content-section");
+    const progressIndicator = document.querySelector("#readingProgress::after");
+
+    let currentSection = null;
+    let maxVisibility = 0;
+
+    sections.forEach((section) => {
+      const rect = section.getBoundingClientRect();
+      const visibility = this.calculateVisibility(rect);
+
+      if (visibility > maxVisibility) {
+        maxVisibility = visibility;
+        currentSection = section;
+      }
+    });
+
+    if (currentSection) {
+      this.activeSection = currentSection.id;
+      this.updateActiveNavSection();
+    }
+  }
+
+  calculateVisibility(rect) {
+    const windowHeight = window.innerHeight;
+    const elementTop = rect.top;
+    const elementBottom = rect.bottom;
+
+    if (elementBottom < 0 || elementTop > windowHeight) {
+      return 0;
+    }
+
+    const visibleTop = Math.max(0, elementTop);
+    const visibleBottom = Math.min(windowHeight, elementBottom);
+    const visibleHeight = visibleBottom - visibleTop;
+    const elementHeight = rect.height;
+
+    return visibleHeight / elementHeight;
+  }
+
+  // ============================================
+  // SMART NAVIGATION
+  // ============================================
+
+  initSmartNavigation() {
+    const navSections = document.querySelectorAll(".nav-section");
+
+    navSections.forEach((section) => {
+      section.addEventListener("click", (e) => {
         e.preventDefault();
-
-        const target = document.querySelector(this.getAttribute("href"));
-        if (target) {
-          const navHeight = document.querySelector(".patch-nav").offsetHeight;
-          const mainNavHeight =
-            document.querySelector(".main-nav").offsetHeight;
-          const targetPosition =
-            target.offsetTop - navHeight - mainNavHeight - 20;
-
-          window.scrollTo({
-            top: targetPosition,
-            behavior: "smooth",
-          });
-        }
+        const targetId = section.getAttribute("href").substring(1);
+        this.scrollToSection(targetId);
+        this.playSound("clickSound");
       });
     });
   }
 
-  // Enhanced Stats Counter
-  initializeStats() {
-    const statCounts = document.querySelectorAll(".stat-count");
+  scrollToSection(sectionId) {
+    const target = document.getElementById(sectionId);
+    if (!target) return;
 
-    statCounts.forEach((stat) => {
-      const finalValue = parseInt(stat.textContent);
-      let currentValue = 0;
-      const increment = finalValue / 30; // 30 frames
-      const duration = 1000; // 1 second
+    const navHeight = document.getElementById("mainNav").offsetHeight;
+    const targetPosition = target.offsetTop - navHeight - 20;
 
-      const updateCounter = () => {
-        currentValue += increment;
+    this.smoothScrollTo(targetPosition, 800);
+  }
 
-        if (currentValue < finalValue) {
-          stat.textContent = Math.floor(currentValue);
-          requestAnimationFrame(updateCounter);
-        } else {
-          stat.textContent = finalValue;
-        }
-      };
+  smoothScrollTo(target, duration) {
+    const start = window.pageYOffset;
+    const distance = target - start;
+    let startTime = null;
 
-      // Start animation when visible
-      const observer = new IntersectionObserver((entries) => {
+    const animation = (currentTime) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1);
+
+      // Easing function
+      const ease = this.easeInOutCubic(progress);
+      window.scrollTo(0, start + distance * ease);
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      }
+    };
+
+    requestAnimationFrame(animation);
+  }
+
+  easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+  }
+
+  updateActiveNavSection() {
+    const navSections = document.querySelectorAll(".nav-section");
+
+    navSections.forEach((section) => {
+      const href = section.getAttribute("href").substring(1);
+      if (href === this.activeSection) {
+        section.classList.add("active");
+      } else {
+        section.classList.remove("active");
+      }
+    });
+  }
+
+  // ============================================
+  // TAB SYSTEM
+  // ============================================
+
+  setupTabSystem() {
+    const tabButtons = document.querySelectorAll(".tab-btn");
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const tabName = button.getAttribute("data-tab");
+        const card = button.closest(".change-card");
+
+        this.switchTab(card, tabName);
+        this.playSound("clickSound");
+      });
+    });
+  }
+
+  switchTab(card, activeTab) {
+    // Update buttons
+    const buttons = card.querySelectorAll(".tab-btn");
+    buttons.forEach((btn) => {
+      if (btn.getAttribute("data-tab") === activeTab) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+
+    // Update content
+    const contents = card.querySelectorAll(".tab-content");
+    contents.forEach((content) => {
+      if (content.getAttribute("data-tab") === activeTab) {
+        content.classList.add("active");
+      } else {
+        content.classList.remove("active");
+      }
+    });
+  }
+
+  // ============================================
+  // MODAL SYSTEM
+  // ============================================
+
+  setupModalSystem() {
+    const quickSummaryBtn = document.getElementById("quickSummary");
+    const modal = document.getElementById("summaryModal");
+    const closeBtn = document.getElementById("modalClose");
+
+    quickSummaryBtn?.addEventListener("click", () => {
+      this.openModal();
+    });
+
+    closeBtn?.addEventListener("click", () => {
+      this.closeModal();
+    });
+
+    modal?.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        this.closeModal();
+      }
+    });
+
+    // ESC key to close
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal?.classList.contains("active")) {
+        this.closeModal();
+      }
+    });
+  }
+
+  openModal() {
+    const modal = document.getElementById("summaryModal");
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+    this.playSound("clickSound");
+  }
+
+  closeModal() {
+    const modal = document.getElementById("summaryModal");
+    modal.classList.remove("active");
+    document.body.style.overflow = "";
+    this.playSound("clickSound");
+  }
+
+  // ============================================
+  // FLOATING ACTION BUTTON
+  // ============================================
+
+  setupFAB() {
+    const fabContainer = document.querySelector(".fab-container");
+    const mainFab = document.getElementById("mainFab");
+    const subFabs = document.querySelectorAll(".sub-fab");
+
+    mainFab?.addEventListener("click", () => {
+      fabContainer.classList.toggle("open");
+      this.playSound("clickSound");
+    });
+
+    subFabs.forEach((fab) => {
+      fab.addEventListener("click", () => {
+        const action = fab.getAttribute("data-action");
+        this.handleFABAction(action);
+        fabContainer.classList.remove("open");
+      });
+    });
+
+    // Close FAB menu when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!fabContainer.contains(e.target)) {
+        fabContainer.classList.remove("open");
+      }
+    });
+  }
+
+  handleFABAction(action) {
+    switch (action) {
+      case "top":
+        this.smoothScrollTo(0, 800);
+        break;
+      case "share":
+        this.shareContent();
+        break;
+      case "bookmark":
+        this.bookmarkPage();
+        break;
+    }
+    this.playSound("clickSound");
+  }
+
+  shareContent() {
+    if (navigator.share) {
+      navigator.share({
+        title: "THE FINALS - Update 7.3.0: BLAST OFF!",
+        text: "Check out the explosive new update for The Finals!",
+        url: window.location.href,
+      });
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(window.location.href);
+      this.showNotification("Link copied to clipboard!");
+    }
+  }
+
+  bookmarkPage() {
+    // Add to favorites (browser dependent)
+    try {
+      window.external.AddFavorite(window.location.href, document.title);
+    } catch (e) {
+      this.showNotification("Press Ctrl+D to bookmark this page");
+    }
+  }
+
+  // ============================================
+  // ANIMATIONS & EFFECTS
+  // ============================================
+
+  animateCounters() {
+    const counters = document.querySelectorAll("[data-count]");
+
+    counters.forEach((counter) => {
+      const target = parseInt(counter.getAttribute("data-count"));
+      this.animateValue(0, target, 2000, (value) => {
+        counter.textContent = Math.round(value);
+      });
+    });
+  }
+
+  animateValue(start, end, duration, callback) {
+    let startTime = null;
+
+    const animation = (currentTime) => {
+      if (startTime === null) startTime = currentTime;
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+
+      const value = start + (end - start) * this.easeOutQuart(progress);
+      callback(value);
+
+      if (progress < 1) {
+        requestAnimationFrame(animation);
+      }
+    };
+
+    requestAnimationFrame(animation);
+  }
+
+  easeOutQuart(t) {
+    return 1 - --t * t * t * t;
+  }
+
+  triggerEntranceAnimations() {
+    // Add AOS-like animations
+    const elements = document.querySelectorAll("[data-aos]");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            updateCounter();
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
             observer.unobserve(entry.target);
           }
         });
-      });
+      },
+      { threshold: 0.1 }
+    );
 
-      observer.observe(stat);
+    elements.forEach((el) => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(30px)";
+      el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+      observer.observe(el);
     });
   }
 
-  // Card Interactions
-  initializeCardInteractions() {
+  startAnimationLoop() {
+    const animate = () => {
+      this.updateParticles();
+      this.updateGlowEffects();
+      requestAnimationFrame(animate);
+    };
+    animate();
+  }
+
+  updateParticles() {
+    // Update any active particle animations
+    this.particles.forEach((particle, index) => {
+      if (particle.life <= 0) {
+        this.particles.splice(index, 1);
+        return;
+      }
+
+      particle.life--;
+      particle.element.style.opacity = particle.life / 100;
+    });
+  }
+
+  updateGlowEffects() {
+    // Dynamic glow effects based on scroll position
     const cards = document.querySelectorAll(".change-card");
 
     cards.forEach((card) => {
-      // Add hover effects
-      card.addEventListener("mouseenter", () => {
-        card.style.transform = "translateY(-4px)";
-      });
+      const rect = card.getBoundingClientRect();
+      const visibility = this.calculateVisibility(rect);
 
-      card.addEventListener("mouseleave", () => {
-        card.style.transform = "translateY(0)";
-      });
-
-      // Add click to expand functionality
-      const actionBtn = card.querySelector(".action-btn");
-      if (actionBtn) {
-        actionBtn.addEventListener("click", (e) => {
-          e.preventDefault();
-          this.toggleCardDetails(card);
-        });
+      if (visibility > 0.5) {
+        card.style.boxShadow = `0 0 ${
+          20 + visibility * 20
+        }px rgba(123, 47, 227, ${0.2 + visibility * 0.3})`;
       }
     });
   }
 
-  // Toggle card details
-  toggleCardDetails(card) {
-    const actionBtn = card.querySelector(".action-btn");
-    const detailsSection = card.querySelector(".card-details-expanded");
+  // ============================================
+  // UTILITY FUNCTIONS
+  // ============================================
 
-    if (!detailsSection) {
-      // Create expanded details section
-      const expandedSection = document.createElement("div");
-      expandedSection.className = "card-details-expanded";
-      expandedSection.innerHTML = `
-        <div class="expanded-content">
-          <h4>Detailed Analysis</h4>
-          <p>This change will have a significant impact on the meta. Players should expect to see new strategies emerge as teams adapt to these new tools.</p>
-          <div class="meta-impact">
-            <h5>Meta Impact: High</h5>
-            <div class="impact-bar">
-              <div class="impact-fill" style="width: 85%"></div>
-            </div>
-          </div>
-        </div>
-      `;
+  setupEventListeners() {
+    // Explore button
+    document.getElementById("exploreButton")?.addEventListener("click", () => {
+      this.scrollToSection("weapons");
+    });
 
-      card.appendChild(expandedSection);
+    // Interactive elements click effects
+    document.addEventListener("click", (e) => {
+      if (e.target.matches(".cta-button, .action-btn, .nav-link, .fab")) {
+        // Create particle explosion at click point
+        const rect = e.target.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        this.createParticleExplosion(x, y);
+      }
+    });
 
-      // Update button text
-      actionBtn.innerHTML = `
-        <span>Hide Details</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="18,15 12,9 6,15"/>
-        </svg>
-      `;
-    } else {
-      // Remove expanded section
-      detailsSection.remove();
-
-      // Update button text
-      actionBtn.innerHTML = `
-        <span>View Details</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="6,9 12,15 18,9"/>
-        </svg>
-      `;
-    }
-  }
-
-  // Update visible stats when filtering
-  updateVisibleStats() {
-    const visibleCards = document.querySelectorAll(
-      '.change-card:not([data-hidden="true"])'
+    // Card hover effects
+    document.addEventListener(
+      "mouseenter",
+      (e) => {
+        if (e.target.matches(".change-card")) {
+          e.target.style.transform = "translateY(-10px) scale(1.02)";
+        }
+      },
+      true
     );
-    let buffs = 0,
-      nerfs = 0,
-      newItems = 0;
 
-    visibleCards.forEach((card) => {
-      if (card.classList.contains("buff")) buffs++;
-      if (card.classList.contains("nerf")) nerfs++;
-      if (card.classList.contains("new")) newItems++;
-    });
-
-    // Update stat displays with animation
-    this.animateStatUpdate(".stat-item.buffs .stat-count", buffs);
-    this.animateStatUpdate(".stat-item.nerfs .stat-count", nerfs);
-    this.animateStatUpdate(".stat-item.new .stat-count", newItems);
+    document.addEventListener(
+      "mouseleave",
+      (e) => {
+        if (e.target.matches(".change-card")) {
+          e.target.style.transform = "";
+        }
+      },
+      true
+    );
   }
 
-  animateStatUpdate(selector, newValue) {
-    const element = document.querySelector(selector);
-    if (!element) return;
+  showNotification(message) {
+    const notification = document.createElement("div");
+    notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(123, 47, 227, 0.3);
+            z-index: 10000;
+            animation: slideInRight 0.3s ease;
+        `;
+    notification.textContent = message;
 
-    const currentValue = parseInt(element.textContent);
-    const difference = newValue - currentValue;
-    const steps = 20;
-    const stepValue = difference / steps;
-    let step = 0;
+    document.body.appendChild(notification);
 
-    const update = () => {
-      step++;
-      if (step <= steps) {
-        element.textContent = Math.round(currentValue + stepValue * step);
-        requestAnimationFrame(update);
-      } else {
-        element.textContent = newValue;
-      }
+    setTimeout(() => {
+      notification.style.animation = "slideOutRight 0.3s ease";
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 300);
+    }, 3000);
+  }
+
+  // Performance optimization
+  debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
     };
-
-    update();
   }
 }
 
-// Global function for card details toggle
-function toggleDetails(button) {
-  const card = button.closest(".change-card");
-  const app = window.patchNotesApp;
-  if (app) {
-    app.toggleCardDetails(card);
-  }
-}
-
-// Initialize the app
+// Initialize the experience when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
-  window.patchNotesApp = new PatchNotesApp();
+  new BlastOffExperience();
 });
+
+// Add CSS animations for notifications
+const style = document.createElement("style");
+style.textContent = `
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOutRight {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
