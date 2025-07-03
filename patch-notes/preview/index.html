@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>THE FINALS - Update 7.3.0: BLAST OFF! | Patch Notes</title>
+    <meta
+      name="description"
+      content="Experience the explosive Update 7.3.0: BLAST OFF! New weapons, maps, and game-changing features await. Dive into the chaos."
+    />
+    <link rel="canonical" href="https://thefinalsloadout.com/patch-notes/" />
+
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="The Finals Season 7: The Divide Patch Notes (June 2025) - Meta Changes & New Content"
+    />
+    <meta
+      property="og:description"
+      content="Season 7: The Divide brings new specializations, Nozomi map, weapon balance changes, and Practice Range. Complete v7.0 patch notes inside!"
+    />
+    <meta
+      property="og:image"
+      content="https://www.thefinalsloadout.com/images/patch-notes-v690.webp"
+    />
+    <meta
+      property="og:url"
+      content="https://www.thefinalsloadout.com/patch-notes/"
+    />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="The Finals Season 7: The Divide Patch Notes (June 2025) - Meta Changes & New Content"
+    />
+    <meta
+      name="twitter:description"
+      content="Get the complete Season 7 breakdown: H+ Infuser, Breach Drill, Healing Emitter, KS-23 & ARN-220 buffs, XP-54 nerf, and new Nozomi map."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.thefinalsloadout.com/images/patch-notes-v690.webp"
+    />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "The Finals Season 7: The Divide Patch Notes (June 2025) - Meta Changes & New Content",
+        "description": "Official patch notes for The Finals Season 7: The Divide. New specializations (H+ Infuser, Breach Drill, Healing Emitter), Nozomi map, weapon balance changes, Practice Range, and more in v7.0.",
+        "url": "https://www.thefinalsloadout.com/patch-notes/",
+        "image": "https://www.thefinalsloadout.com/images/patch-notes-v690.webp",
+        "author": {
+          "@type": "Organization",
+          "name": "Paul Takisaki"
+        }
+      }
+    </script>
+
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-GVGKYFGZ1Z");
+    </script>
+
+    <!-- Fonts & Favicon -->
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="style.css" as="style" />
+    <link rel="preload" href="app.js" as="script" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Season 7 Table Styles -->
+    <style>
+      .balance-table {
+        margin: 1rem 0;
+        overflow-x: auto;
+      }
+
+      .balance-table table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .balance-table th,
+      .balance-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .balance-table th {
+        background: rgba(0, 0, 0, 0.5);
+        font-weight: 600;
+        color: #ffb700;
+      }
+
+      .weapon-icon-small {
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+
+      .buff-row {
+        background: rgba(76, 175, 80, 0.1);
+      }
+
+      .nerf-row {
+        background: rgba(244, 67, 54, 0.1);
+      }
+    </style>
+  </head>
+
+  <body class="loading">
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+      <div class="loading-content">
+        <div class="loading-logo">
+          <div class="logo-text">THE FINALS</div>
+          <div class="loading-subtitle">BLAST OFF!</div>
+        </div>
+        <div class="loading-bar">
+          <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+        <div class="loading-percentage" id="loadingPercentage">0%</div>
+      </div>
+      <div class="loading-particles" id="loadingParticles"></div>
+    </div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress">
+      <div class="scroll-progress-bar" id="scrollProgress"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="main-nav" id="mainNav">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <div class="logo-text">THE FINALS</div>
+          <div class="logo-subtitle">PATCH NOTES</div>
+        </div>
+        <div class="nav-links">
+          <a href="https://thefinalsloadout.com/" class="nav-link">
+            <span class="nav-icon">🎯</span>
+            <span>LOADOUT GENERATOR</span>
+          </a>
+          <a href="https://thefinalsloadout.com/ragequit" class="nav-link">
+            <span class="nav-icon">😡</span>
+            <span>RAGE QUIT</span>
+          </a>
+          <a href="https://thefinalsloadout.com/meta-weapons" class="nav-link">
+            <span class="nav-icon">⚔️</span>
+            <span>META WEAPONS</span>
+          </a>
+          <a href="https://thefinalsloadout.com/feedback" class="nav-link">
+            <span class="nav-icon">💬</span>
+            <span>FEEDBACK</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+      <div class="hero-background">
+        <div class="hero-gradient"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-particles" id="heroParticles"></div>
+      </div>
+
+      <div class="hero-content">
+        <div class="hero-badge">
+          <div class="badge-glow"></div>
+          <span class="badge-text">Update 7.3.0</span>
+        </div>
+
+        <div class="hero-title">
+          <span class="title-main">BLAST OFF!</span>
+          <span class="title-subtitle"
+            >Low gravity chaos with explosive rewards</span
+          >
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-number" data-count="17">0</span>
+            <span class="stat-label">Weapon Changes</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="2">0</span>
+            <span class="stat-label">Major Features</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="12">0</span>
+            <span class="stat-label">Free Rewards</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="25">0</span>
+            <span class="stat-label">Bug Fixes</span>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <button class="cta-button primary" id="exploreButton">
+            <span>EXPLORE CHANGES</span>
+            <div class="button-glow"></div>
+          </button>
+          <button class="cta-button secondary" id="quickSummary">
+            <span>QUICK SUMMARY</span>
+            <div class="button-glow"></div>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-scroll-indicator">
+        <div class="scroll-text">Scroll to explore</div>
+        <svg
+          class="scroll-arrow"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M7 13l3 3 7-7"></path>
+          <path d="M12 17V3"></path>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Weapons Section -->
+      <section class="content-section" id="weapons">
+        <div class="section-header">
+          <div class="section-badge">
+            <span class="badge-icon">⚔️</span>
+            <span>ARSENAL REVOLUTION</span>
+          </div>
+          <h2 class="section-title">Weapon Overhaul</h2>
+          <p class="section-subtitle">
+            Major balance changes that reshape the meta and introduce powerful
+            new options
+          </p>
+        </div>
+
+        <div class="changes-grid">
+          <!-- CL-40 Nerf Card -->
+          <article class="change-card nerf featured" data-aos="fade-up">
+            <div class="card-header">
+              <div class="change-type nerf">NERF</div>
+              <div class="impact-level high">HIGH IMPACT</div>
+              <div class="card-actions">
+                <button class="action-btn" aria-label="Share">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                    <polyline points="16,6 12,2 8,6"></polyline>
+                    <line x1="12" y1="2" x2="12" y2="15"></line>
+                  </svg>
+                </button>
+                <button class="action-btn" aria-label="Bookmark">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-content">
+              <div class="weapon-showcase">
+                <div class="weapon-image">
+                  <img src="../images/CL-40.webp" alt="CL-40" loading="lazy" />
+                  <div class="image-glow nerf"></div>
+                </div>
+                <div class="weapon-info">
+                  <h3 class="weapon-name">CL-40</h3>
+                  <div class="weapon-class medium">MEDIUM</div>
+                  <p class="weapon-description">
+                    The explosive powerhouse gets accuracy and self-damage nerfs
+                    to prevent feet-shot abuse.
+                  </p>
+                </div>
+              </div>
+
+              <div class="before-after">
+                <div class="stat-comparison-header">
+                  <h4>Self-Damage Multiplier</h4>
+                </div>
+                <div class="comparison-container">
+                  <div class="comparison-item">
+                    <div class="comparison-label">Before</div>
+                    <div class="stat-value old-good">1.25x</div>
+                  </div>
+                  <div class="comparison-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M5 12h14m-7-7 7 7-7 7"></path>
+                    </svg>
+                  </div>
+                  <div class="comparison-item">
+                    <div class="comparison-label">After</div>
+                    <div class="stat-value new-bad">1.35x</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="change-impact">
+                <div class="impact-header">
+                  <span class="impact-icon">💥</span>
+                  <span class="impact-text">META IMPACT</span>
+                </div>
+                <p>
+                  No more free feet-shots. Splashing at your boots chunks ~20 HP
+                  more. Still melts Healing Emitter bunkers—just costs you
+                  blood.
+                </p>
+              </div>
+
+              <div class="change-details">
+                <div class="detail-tabs">
+                  <button class="tab-btn active" data-tab="overview">
+                    Overview
+                  </button>
+                  <button class="tab-btn" data-tab="stats">Stats</button>
+                  <button class="tab-btn" data-tab="tips">Tips</button>
+                </div>
+
+                <div class="tab-content active" data-tab="overview">
+                  <ul class="feature-list">
+                    <li>
+                      <span class="tip-icon">💥</span>
+                      Self-damage multiplier: 1.25x → 1.35x (+35%)
+                    </li>
+                    <li>
+                      <span class="tip-icon">🎯</span>
+                      Inner blast radius: 60cm → 50cm
+                    </li>
+                    <li>
+                      <span class="tip-icon">⚠️</span>
+                      Requires more accuracy for maximum damage
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="tab-content" data-tab="stats">
+                  <div class="stats-table">
+                    <div class="stat-row">
+                      <span>Self-Damage</span>
+                      <span class="stat-highlight">1.25x → 1.35x</span>
+                    </div>
+                    <div class="stat-row">
+                      <span>Inner Blast Radius</span>
+                      <span class="stat-highlight">60cm → 50cm</span>
+                    </div>
+                    <div class="stat-row">
+                      <span>Max Damage</span>
+                      <span class="stat-highlight">Unchanged</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tab-content" data-tab="tips">
+                  <div class="tips-list">
+                    <div class="tip-item">
+                      <span class="tip-icon">🎯</span>
+                      <span>Aim for direct hits rather than splash damage</span>
+                    </div>
+                    <div class="tip-item">
+                      <span class="tip-icon">💊</span>
+                      <span>Carry more healing items for self-damage</span>
+                    </div>
+                    <div class="tip-item">
+                      <span class="tip-icon">🏥</span>
+                      <span
+                        >Still excellent against Healing Emitter clusters</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Heavy Buffs Card -->
+          <article
+            class="change-card buff"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
+            <div class="card-header">
+              <div class="change-type buff">BUFF</div>
+              <div class="impact-level medium">MEDIUM IMPACT</div>
+              <div class="card-actions">
+                <button class="action-btn" aria-label="Share">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                    <polyline points="16,6 12,2 8,6"></polyline>
+                    <line x1="12" y1="2" x2="12" y2="15"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-content">
+              <div class="weapon-showcase">
+                <div class="weapon-image">
+                  <img src="../images/M60.webp" alt="M60" loading="lazy" />
+                  <div class="image-glow buff"></div>
+                </div>
+                <div class="weapon-info">
+                  <h3 class="weapon-name">Heavy Class Buffs</h3>
+                  <div class="weapon-class heavy">HEAVY</div>
+                  <p class="weapon-description">
+                    Multiple heavy weapons receive damage and mobility
+                    improvements.
+                  </p>
+                </div>
+              </div>
+
+              <div class="buff-highlights">
+                <div class="buff-item">
+                  <span class="buff-label">M60 Damage</span>
+                  <span class="buff-change">+15%</span>
+                </div>
+                <div class="buff-item">
+                  <span class="buff-label">SA1216 Range</span>
+                  <span class="buff-change">+20%</span>
+                </div>
+                <div class="buff-item">
+                  <span class="buff-label">Movement Speed</span>
+                  <span class="buff-change">+8%</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Healing Emitter Rework Card -->
+          <article
+            class="change-card rework"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            <div class="card-header">
+              <div class="change-type rework">REWORK</div>
+              <div class="impact-level high">HIGH IMPACT</div>
+              <div class="card-actions">
+                <button class="action-btn" aria-label="Share">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                    <polyline points="16,6 12,2 8,6"></polyline>
+                    <line x1="12" y1="2" x2="12" y2="15"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-content">
+              <div class="weapon-showcase">
+                <div class="weapon-image">
+                  <img
+                    src="../images/Healing_Emitter.webp"
+                    alt="Healing Emitter"
+                    loading="lazy"
+                  />
+                  <div class="image-glow rework"></div>
+                </div>
+                <div class="weapon-info">
+                  <h3 class="weapon-name">Healing Emitter</h3>
+                  <div class="weapon-class medium">MEDIUM</div>
+                  <p class="weapon-description">
+                    Smart placement now crucial - can't drop and forget anymore.
+                    Retrieval system added.
+                  </p>
+                </div>
+              </div>
+
+              <div class="before-after">
+                <div class="stat-comparison-header">
+                  <h4>Cooldown Start</h4>
+                </div>
+                <div class="comparison-container">
+                  <div class="comparison-item">
+                    <div class="comparison-label">Before</div>
+                    <div class="stat-value old-bad">On Deploy</div>
+                  </div>
+                  <div class="comparison-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M5 12h14m-7-7 7 7-7 7"></path>
+                    </svg>
+                  </div>
+                  <div class="comparison-item">
+                    <div class="comparison-label">After</div>
+                    <div class="stat-value new-good">On Destroy</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="change-impact">
+                <div class="impact-header">
+                  <span class="impact-icon">🏥</span>
+                  <span class="impact-text">META IMPACT</span>
+                </div>
+                <p>
+                  Smart placement becomes critical. Manual retrieval (3s
+                  cooldown) vs remote (15s). Lazy deployments backfire.
+                </p>
+              </div>
+
+              <div class="change-details">
+                <div class="detail-tabs">
+                  <button class="tab-btn active" data-tab="overview">
+                    Overview
+                  </button>
+                  <button class="tab-btn" data-tab="stats">Stats</button>
+                  <button class="tab-btn" data-tab="tips">Tips</button>
+                </div>
+
+                <div class="tab-content active" data-tab="overview">
+                  <ul class="feature-list">
+                    <li>
+                      <span class="tip-icon">⏱️</span>
+                      Cooldown starts on destruction, not deployment
+                    </li>
+                    <li>
+                      <span class="tip-icon">🔄</span>
+                      Manual retrieval: 3s cooldown remaining
+                    </li>
+                    <li>
+                      <span class="tip-icon">📱</span>
+                      Remote retrieval: 15s cooldown remaining
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="tab-content" data-tab="stats">
+                  <div class="stats-table">
+                    <div class="stat-row">
+                      <span>Base Cooldown</span>
+                      <span class="stat-highlight">35s → 30s</span>
+                    </div>
+                    <div class="stat-row">
+                      <span>Manual Retrieval</span>
+                      <span class="stat-highlight">3s cooldown</span>
+                    </div>
+                    <div class="stat-row">
+                      <span>Remote Retrieval</span>
+                      <span class="stat-highlight">15s cooldown</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tab-content" data-tab="tips">
+                  <div class="tips-list">
+                    <div class="tip-item">
+                      <span class="tip-icon">🎯</span>
+                      <span>Place in defensible positions you can reach</span>
+                    </div>
+                    <div class="tip-item">
+                      <span class="tip-icon">⚠️</span>
+                      <span>Avoid careless deployments in open areas</span>
+                    </div>
+                    <div class="tip-item">
+                      <span class="tip-icon">🔄</span>
+                      <span
+                        >Use manual retrieval when possible for faster
+                        reset</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Maps Section -->
+      <section class="content-section" id="maps">
+        <div class="section-header">
+          <div class="section-badge">
+            <span class="badge-icon">🗺️</span>
+            <span>DESTRUCTION UPGRADES</span>
+          </div>
+          <h2 class="section-title">Destruction 2.0</h2>
+          <p class="section-subtitle">
+            Buildings collapse realistically with improved physics and visuals
+          </p>
+        </div>
+
+        <div class="maps-showcase">
+          <article class="map-card" data-aos="fade-up">
+            <div class="map-image">
+              <img
+                src="../images/placeholder.webp"
+                alt="Kyoto Pagoda"
+                loading="lazy"
+              />
+              <div class="map-overlay">
+                <h3 class="map-name">Kyoto Pagoda</h3>
+                <div class="map-type">REALISTIC COLLAPSE</div>
+                <div class="map-features">
+                  <span class="feature">New Physics</span>
+                  <span class="feature">Natural Fall</span>
+                  <span class="feature">Weight-Based</span>
+                </div>
+                <button class="map-preview-btn">
+                  <span>PREVIEW DESTRUCTION</span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="map-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="map-image">
+              <img
+                src="../images/placeholder.webp"
+                alt="Skyway Stadium"
+                loading="lazy"
+              />
+              <div class="map-overlay">
+                <h3 class="map-name">Skyway Stadium</h3>
+                <div class="map-type">CHAIN REACTIONS</div>
+                <div class="map-features">
+                  <span class="feature">Building Damage</span>
+                  <span class="feature">Knock-on Effects</span>
+                  <span class="feature">Realistic Break</span>
+                </div>
+                <button class="map-preview-btn">
+                  <span>PREVIEW DESTRUCTION</span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Events Section -->
+      <section class="content-section" id="events">
+        <div class="section-header">
+          <div class="section-badge">
+            <span class="badge-icon">🎉</span>
+            <span>SPECIAL EVENTS</span>
+          </div>
+          <h2 class="section-title">Blast Off! & More</h2>
+          <p class="section-subtitle">
+            New limited-time mode, World Tour updates, and store refresh
+          </p>
+        </div>
+
+        <div class="event-timeline">
+          <div class="timeline-item active" data-aos="fade-up">
+            <div class="timeline-date">
+              <span class="date-day">03</span>
+              <span class="date-month">JUL</span>
+            </div>
+            <div class="timeline-content">
+              <h3 class="event-title">Blast Off! Mode</h3>
+              <p class="event-description">
+                Low gravity Medium-only mode with explosive locked loadouts and
+                pixelated effects
+              </p>
+              <div class="event-rewards">
+                <span class="reward-item">12 Free Rewards</span>
+                <span class="reward-item">Quickplay Points</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
+            <div class="timeline-date">
+              <span class="date-day">04</span>
+              <span class="date-month">JUL</span>
+            </div>
+            <div class="timeline-content">
+              <h3 class="event-title">4th of July Store</h3>
+              <p class="event-description">
+                20+ new cosmetics including mesh hoodwear and rocket fists
+              </p>
+              <div class="event-rewards">
+                <span class="reward-item">Patriotic Skins</span>
+                <span class="reward-item">Twitch Drops</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
+            <div class="timeline-date">
+              <span class="date-day">NOW</span>
+              <span class="date-month">LIVE</span>
+            </div>
+            <div class="timeline-content">
+              <h3 class="event-title">World Tour: CNS</h3>
+              <p class="event-description">
+                CNS takes over with Standard Cashout - "open your eyes"
+              </p>
+              <div class="event-rewards">
+                <span class="reward-item">Broadcast Blaze Set</span>
+                <span class="reward-item">ImpOscar Sticker</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Smart Navigation -->
+    <div class="smart-nav" id="smartNav">
+      <div class="smart-nav-content">
+        <div class="nav-sections">
+          <a href="#hero" class="nav-section">
+            <span class="section-icon">🏠</span>
+            <span>Hero</span>
+          </a>
+          <a href="#weapons" class="nav-section">
+            <span class="section-icon">⚔️</span>
+            <span>Weapons</span>
+          </a>
+          <a href="#maps" class="nav-section">
+            <span class="section-icon">🗺️</span>
+            <span>Maps</span>
+          </a>
+          <a href="#events" class="nav-section">
+            <span class="section-icon">🎉</span>
+            <span>Events</span>
+          </a>
+        </div>
+        <div class="nav-progress">
+          <div class="progress-indicator" id="readingProgress"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="fab-container">
+      <button class="fab main-fab" id="mainFab">
+        <svg
+          class="fab-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M12 5v14m7-7H5"></path>
+        </svg>
+      </button>
+      <div class="fab-menu">
+        <button class="fab sub-fab" data-action="top">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M18 15l-6-6-6 6"></path>
+          </svg>
+        </button>
+        <button class="fab sub-fab" data-action="share">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+            <polyline points="16,6 12,2 8,6"></polyline>
+            <line x1="12" y1="2" x2="12" y2="15"></line>
+          </svg>
+        </button>
+        <button class="fab sub-fab" data-action="bookmark">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Summary Modal -->
+    <div class="modal-overlay" id="summaryModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">BLAST OFF! Quick Summary</h3>
+          <button class="modal-close" id="modalClose">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="summary-grid">
+            <div class="summary-item nerf">
+              <div class="summary-icon">💥</div>
+              <div class="summary-content">
+                <h3>CL-40 Nerfed</h3>
+                <p>
+                  Self-damage up 35%, blast radius down - no more free
+                  feet-shots
+                </p>
+              </div>
+            </div>
+            <div class="summary-item rework">
+              <div class="summary-icon">🏥</div>
+              <div class="summary-content">
+                <h3>Healing Emitter Reworked</h3>
+                <p>
+                  Smart placement now crucial - can't drop and forget anymore
+                </p>
+              </div>
+            </div>
+            <div class="summary-item new">
+              <div class="summary-icon">🚀</div>
+              <div class="summary-content">
+                <h3>Blast Off! Mode</h3>
+                <p>Low gravity Medium-only mode with explosive loadouts</p>
+              </div>
+            </div>
+            <div class="summary-item new">
+              <div class="summary-icon">🏗️</div>
+              <div class="summary-content">
+                <h3>Destruction 2.0</h3>
+                <p>Buildings collapse realistically with chain reactions</p>
+              </div>
+            </div>
+            <div class="summary-item fix">
+              <div class="summary-icon">🔍</div>
+              <div class="summary-content">
+                <h3>Smoke Counter Fixed</h3>
+                <p>
+                  Detection gadgets now see through smoke - major meta shift
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio Files -->
+    <audio id="hoverSound" preload="auto">
+      <source src="../sounds/hover.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="clickSound" preload="auto">
+      <source src="../sounds/click.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="explosionSound" preload="auto">
+      <source src="../sounds/explosion.mp3" type="audio/mpeg" />
+    </audio>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+  </body>
+</html>
