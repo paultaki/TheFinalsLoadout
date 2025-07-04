@@ -1,0 +1,337 @@
+[
+  {
+    "category": "Weapon",
+    "term": "ARN\u2011220",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "FAMAS",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "FCAR",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "XP\u201154",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "LH1",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "Model 1887",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "SH1900",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "KS\u201123",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "Cerberus",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "CL\u201140",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "M32\u2011GL",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "Lewis Gun",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "M134 Minigun",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "R.357",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "93R",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "AKM",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "AKS\u201174U",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "DEagle",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "V9S",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "Sword",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "Sledgehammer",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "Throwing Knives",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Weapon",
+    "term": "Flamethrower",
+    "def": "Season\u20117 weapon"
+  },
+  {
+    "category": "Gadget",
+    "term": "C4",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "RPG\u20117",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Breach Drill",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "APS Turret",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Mesh Shield",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Dome Shield",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Healing Beam",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Healing Emitter",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Gateway",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Grappling Hook",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Zipline",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Flashbang",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Smoke Grenade",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Stun Gun",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Goo Grenade",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Goo Gun",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Jump Pad",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Zipline",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Glitch Grenade",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Evasive Dash",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "H+ Infuser",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Gadget",
+    "term": "Vanisher",
+    "def": "Usable gadget"
+  },
+  {
+    "category": "Mode",
+    "term": "Cashout",
+    "def": "Game mode"
+  },
+  {
+    "category": "Mode",
+    "term": "Quick Cash",
+    "def": "Game mode"
+  },
+  {
+    "category": "Mode",
+    "term": "Terminal Attack",
+    "def": "Game mode"
+  },
+  {
+    "category": "Mode",
+    "term": "Power Shift",
+    "def": "Game mode"
+  },
+  {
+    "category": "Mode",
+    "term": "Team Deathmatch",
+    "def": "Game mode"
+  },
+  {
+    "category": "Mode",
+    "term": "World Tour",
+    "def": "Game mode"
+  },
+  {
+    "category": "Mode",
+    "term": "Ranked Tournament",
+    "def": "Game mode"
+  },
+  {
+    "category": "Mode",
+    "term": "Blast Off!",
+    "def": "Game mode"
+  },
+  {
+    "category": "Mode",
+    "term": "Bank\u2011It",
+    "def": "Game mode"
+  },
+  {
+    "category": "Map",
+    "term": "NOZOMI",
+    "def": "Arena map"
+  },
+  {
+    "category": "Map",
+    "term": "CITADEL",
+    "def": "Arena map"
+  },
+  {
+    "category": "Map",
+    "term": "Kyoto",
+    "def": "Arena map"
+  },
+  {
+    "category": "Map",
+    "term": "Monaco",
+    "def": "Arena map"
+  },
+  {
+    "category": "Map",
+    "term": "Seoul",
+    "def": "Arena map"
+  },
+  {
+    "category": "Map",
+    "term": "Skyway Stadium",
+    "def": "Arena map"
+  },
+  {
+    "category": "Map",
+    "term": "Fortune Stadium",
+    "def": "Arena map"
+  },
+  {
+    "category": "Specialization",
+    "term": "Cloaking Device",
+    "def": "Class specialization"
+  },
+  {
+    "category": "Specialization",
+    "term": "Recon Sense",
+    "def": "Class specialization"
+  },
+  {
+    "category": "Specialization",
+    "term": "Guardian Turret",
+    "def": "Class specialization"
+  },
+  {
+    "category": "Specialization",
+    "term": "Charge\u2011N\u2011Slam",
+    "def": "Class specialization"
+  },
+  {
+    "category": "Specialization",
+    "term": "Dash",
+    "def": "Class specialization"
+  },
+  {
+    "category": "Specialization",
+    "term": "Winch Claw",
+    "def": "Class specialization"
+  }
+]

@@ -88,6 +88,9 @@
       rel="stylesheet"
     />
 
+    <!-- AI Chat Widget Styles -->
+    <link rel="stylesheet" href="../css/finals-chat.css" />
+
     <style>
       /* Quantum-inspired color palette */
       :root {
@@ -634,7 +637,11 @@
       .generate-loadout-button {
         display: inline-block;
         padding: 1rem 2rem;
-        background: linear-gradient(135deg, var(--quantum-purple), var(--quantum-blue));
+        background: linear-gradient(
+          135deg,
+          var(--quantum-purple),
+          var(--quantum-blue)
+        );
         color: white;
         text-decoration: none;
         border-radius: 12px;
@@ -659,7 +666,12 @@
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
         transition: left 0.5s ease;
       }
 
@@ -1500,5 +1512,8 @@
         });
       });
     </script>
+
+    <!-- AI Chat Widget -->
+    <script src="../js/chat-widget.js" defer></script>
   </body>
 </html>

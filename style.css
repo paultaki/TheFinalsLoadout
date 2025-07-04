@@ -4014,3 +4014,187 @@ body {
     }
 }
 
+/* AI Analysis Animated Loading Effect */
+.ai-loading-animation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.ai-loading-shapes {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: shapesFloat 3s ease-in-out infinite;
+}
+
+.ai-loading-shape {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  animation: shapeGlow 2s ease-in-out infinite;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.ai-loading-shape:nth-child(1) {
+  background: linear-gradient(45deg, #ffff00, #ffd700);
+  color: #ffff00;
+  animation-delay: 0s;
+}
+
+.ai-loading-shape:nth-child(2) {
+  background: linear-gradient(45deg, #ff8c00, #ff6b35);
+  color: #ff8c00;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  animation-delay: 0.2s;
+}
+
+.ai-loading-shape:nth-child(3) {
+  background: linear-gradient(45deg, #ff6b6b, #ff4757);
+  color: #ff6b6b;
+  width: 16px;
+  height: 10px;
+  border-radius: 3px;
+  animation-delay: 0.4s;
+}
+
+.ai-loading-shape:nth-child(4) {
+  background: linear-gradient(45deg, #ff69b4, #e91e63);
+  color: #ff69b4;
+  border-radius: 50%;
+  animation-delay: 0.6s;
+}
+
+.ai-loading-shape:nth-child(5) {
+  background: linear-gradient(45deg, #9c27b0, #8e24aa);
+  color: #9c27b0;
+  width: 14px;
+  height: 14px;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  animation-delay: 0.8s;
+}
+
+.ai-loading-shape:nth-child(6) {
+  background: linear-gradient(45deg, #673ab7, #5e35b1);
+  color: #673ab7;
+  width: 10px;
+  height: 16px;
+  border-radius: 2px;
+  animation-delay: 1s;
+}
+
+.ai-loading-shape:nth-child(7) {
+  background: linear-gradient(45deg, #2196f3, #1976d2);
+  color: #2196f3;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  animation-delay: 1.2s;
+}
+
+.ai-loading-shape:nth-child(8) {
+  background: linear-gradient(45deg, #00bcd4, #0097a7);
+  color: #00bcd4;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  animation-delay: 1.4s;
+}
+
+@keyframes shapesFloat {
+  0%, 100% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes shapeGlow {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+    box-shadow: 0 0 8px currentColor;
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.2) translateY(-2px);
+    box-shadow: 0 0 16px currentColor, 0 0 32px currentColor;
+    filter: brightness(1.3);
+  }
+}
+
+.ai-loading-text {
+  color: #fff;
+  font-size: 0.9rem;
+  margin-left: 12px;
+  opacity: 0.9;
+  animation: textPulse 2s ease-in-out infinite;
+}
+
+@keyframes textPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* Apply to AI Analysis Loading States */
+.ai-analysis.loading .roast-text {
+  opacity: 0.7;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Slot Machine Roast Loading Animation */
+.slot-machine-roast.loading .roast-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slot-machine-roast .ai-loading-animation {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.slot-machine-roast .ai-loading-text {
+  white-space: nowrap;
+  font-style: italic;
+}
+
+/* Mobile optimization for loading animation */
+@media (max-width: 768px) {
+  .ai-loading-shapes {
+    gap: 8px;
+  }
+  
+  .ai-loading-shape {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .ai-loading-shape:nth-child(3) {
+    width: 14px;
+    height: 8px;
+  }
+  
+  .ai-loading-shape:nth-child(6) {
+    width: 8px;
+    height: 14px;
+  }
+  
+  .ai-loading-shape:nth-child(7) {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .ai-loading-text {
+    font-size: 0.8rem;
+    margin-left: 8px;
+  }
+}
+

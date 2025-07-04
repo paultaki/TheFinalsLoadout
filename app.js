@@ -2168,7 +2168,21 @@ async function displayRoastBelowSlotMachine(classType, weapon, spec, gadgets) {
   roastContainer.innerHTML = `
     <div class="roast-content">
       <span class="fire-emoji">🎯</span>
-      <span class="roast-text"><span class='spinner'></span> Generating Loadout Analysis...</span>
+      <span class="roast-text">
+        <div class="ai-loading-animation">
+          <div class="ai-loading-shapes">
+            <div class="ai-loading-shape"></div>
+            <div class="ai-loading-shape"></div>
+            <div class="ai-loading-shape"></div>
+            <div class="ai-loading-shape"></div>
+            <div class="ai-loading-shape"></div>
+            <div class="ai-loading-shape"></div>
+            <div class="ai-loading-shape"></div>
+            <div class="ai-loading-shape"></div>
+          </div>
+          <div class="ai-loading-text">Generating Loadout Analysis...</div>
+        </div>
+      </span>
     </div>
   `;
 
@@ -2316,8 +2330,21 @@ async function generateRoast(
 
   // Update loading text
   if (roastText && analysisSection.classList.contains("loading")) {
-    roastText.innerHTML =
-      '<span class="spinner"></span> Generating Loadout Analysis...';
+    roastText.innerHTML = `
+      <div class="ai-loading-animation">
+        <div class="ai-loading-shapes">
+          <div class="ai-loading-shape"></div>
+          <div class="ai-loading-shape"></div>
+          <div class="ai-loading-shape"></div>
+          <div class="ai-loading-shape"></div>
+          <div class="ai-loading-shape"></div>
+          <div class="ai-loading-shape"></div>
+          <div class="ai-loading-shape"></div>
+          <div class="ai-loading-shape"></div>
+        </div>
+        <div class="ai-loading-text">Generating Loadout Analysis...</div>
+      </div>
+    `;
   }
 
   try {
@@ -3304,7 +3331,21 @@ class SlotHistoryManager {
                 </div>
                 <div class="ai-analysis loading" id="ai-analysis-${index}">
                     <div class="ai-icon">🤖</div>
-                    <div class="roast-text">Generating AI analysis...</div>
+                    <div class="roast-text">
+                        <div class="ai-loading-animation">
+                            <div class="ai-loading-shapes">
+                                <div class="ai-loading-shape"></div>
+                                <div class="ai-loading-shape"></div>
+                                <div class="ai-loading-shape"></div>
+                                <div class="ai-loading-shape"></div>
+                                <div class="ai-loading-shape"></div>
+                                <div class="ai-loading-shape"></div>
+                                <div class="ai-loading-shape"></div>
+                                <div class="ai-loading-shape"></div>
+                            </div>
+                            <div class="ai-loading-text">Generating AI analysis...</div>
+                        </div>
+                    </div>
                     <div class="score-badge">?/10</div>
                 </div>
                 <div class="particles"></div>

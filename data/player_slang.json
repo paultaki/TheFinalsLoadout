@@ -1,0 +1,254 @@
+[
+  {
+    "term": "Tap",
+    "def": "Activating a vault to release the cash box."
+  },
+  {
+    "term": "Plug",
+    "def": "Inserting the cash box into a cash\u2011out station."
+  },
+  {
+    "term": "Setup",
+    "def": "Fortifying a plugged cash\u2011out (C4, mines, turrets, goo, barrels)."
+  },
+  {
+    "term": "Cashout Manip",
+    "def": "Moving or knocking a cash\u2011out station to a stronger position (winch, barrels, goo)."
+  },
+  {
+    "term": "Early Plug",
+    "def": "Plugging a cash box immediately to set tempo and fight for the second vault."
+  },
+  {
+    "term": "Split",
+    "def": "Two cash boxes plugged at roughly the same time in different stations."
+  },
+  {
+    "term": "Stagger",
+    "def": "Second cash box is plugged ~45\u201160\u202fs after the first to control both stations."
+  },
+  {
+    "term": "Double\u2011Up",
+    "def": "Both cash boxes plugged into the same station for a single high\u2011value cash\u2011out."
+  },
+  {
+    "term": "Roll\u2011out",
+    "def": "Team\u2019s opening movement path using jump pads, ziplines, or gateways."
+  },
+  {
+    "term": "Slant Pad",
+    "def": "Jump pad placed at an angle for horizontal launch (goo\u2011pad if placed on goo)."
+  },
+  {
+    "term": "Cocoon",
+    "def": "Goo\u2011gun and anti\u2011grav combo to seal a cash\u2011out to ceiling/roof."
+  },
+  {
+    "term": "Gate Bomb",
+    "def": "Gateway placed near cash\u2011out then explosives or team push through portal."
+  },
+  {
+    "term": "Drop",
+    "def": "Blowing the floor under a cash\u2011out (C4, RPG, Breach) to stall a steal."
+  },
+  {
+    "term": "Teamwipe",
+    "def": "Eliminating all three opponents before respawns."
+  },
+  {
+    "term": "Winch",
+    "def": "Using the winch to pull a cash\u2011out or object."
+  },
+  {
+    "term": "Knock",
+    "def": "Throwing barrels or explosives to topple a cash\u2011out."
+  },
+  {
+    "term": "Goo\u2011Pad",
+    "def": "Slant\u2011pad made by placing jump\u2011pad on goo."
+  },
+  {
+    "term": "Dive\u2011Bomb",
+    "def": "Gateway placed high; drop through portal for vertical entry."
+  },
+  {
+    "term": "Mega\u2011Pad",
+    "def": "Large map jump pad (environmental)."
+  },
+  {
+    "term": "God Zip",
+    "def": "Long fixed zipline across map."
+  },
+  {
+    "term": "Pad\u2011Shotty",
+    "def": "Jump\u2011pad into mid\u2011air shotgun blast."
+  },
+  {
+    "term": "Pad\u2011Sword",
+    "def": "Jump\u2011pad into sword slam."
+  },
+  {
+    "term": "ADS\u2011Only",
+    "def": "Handicap forcing aim\u2011down\u2011sights at all times."
+  },
+  {
+    "term": "No\u2011Heal",
+    "def": "Handicap banning healing gadgets."
+  },
+  {
+    "term": "One\u2011Life",
+    "def": "Handicap\u2014no respawns."
+  },
+  {
+    "term": "Sloth\u2011Mode",
+    "def": "Handicap\u2014reduced movement speed."
+  },
+  {
+    "term": "Winch\u2011Knock",
+    "def": "Combo of winching then barrel\u2011knocking a cash\u2011out."
+  },
+  {
+    "term": "Pocket\u2011Carry",
+    "def": "Running the cash box while teammates escort."
+  },
+  {
+    "term": "Third\u2011Party",
+    "def": "Attacking two teams already fighting."
+  },
+  {
+    "term": "Quick\u2011Plug",
+    "def": "Fast insert cash box immediately after vault opens."
+  },
+  {
+    "term": "Late\u2011Steal",
+    "def": "Taking cash\u2011out in final seconds."
+  },
+  {
+    "term": "Spawn\u2011Block",
+    "def": "Using Goo or Shield to deny respawn area."
+  },
+  {
+    "term": "Pad\u2011RPG",
+    "def": "Jump\u2011pad launch into mid\u2011air RPG shot."
+  },
+  {
+    "term": "Gate\u2011RPG",
+    "def": "Gateway portal shot with RPG."
+  },
+  {
+    "term": "Cash\u2011Run",
+    "def": "Solo dash to bank coins (Bank\u2011It)."
+  },
+  {
+    "term": "Coin\u2011Trail",
+    "def": "Visible coins behind a rich contestant."
+  },
+  {
+    "term": "HV\u2011Target",
+    "def": "High\u2011value target carrying many coins."
+  },
+  {
+    "term": "Map\u2011Pad",
+    "def": "Pre\u2011placed environmental jump pad."
+  },
+  {
+    "term": "Bubble",
+    "def": "Dome Shield shorthand."
+  },
+  {
+    "term": "Anti\u2011Proj",
+    "def": "APS turret."
+  },
+  {
+    "term": "Beam\u2011Me",
+    "def": "Healing Beam me call\u2011out."
+  },
+  {
+    "term": "Zip\u2011Stack",
+    "def": "Stacking multiple zips for speed."
+  },
+  {
+    "term": "Mine\u2011Carpet",
+    "def": "Cover area with explosive mines."
+  },
+  {
+    "term": "Goo\u2011Wall",
+    "def": "Vertical Goo barrier."
+  },
+  {
+    "term": "Peek\u2011Shot",
+    "def": "Quick corner exposure then back."
+  },
+  {
+    "term": "Tap\u2011Cancel",
+    "def": "Canceling a vault tap to deny others."
+  },
+  {
+    "term": "Winch\u2011Brake",
+    "def": "Shooting winch rope to drop cash\u2011out."
+  },
+  {
+    "term": "Bridge\u2011Cheese",
+    "def": "Using construction bridges to stall."
+  },
+  {
+    "term": "Stall\u2011Play",
+    "def": "Delaying cash\u2011out to burn clock."
+  },
+  {
+    "term": "Breach\u2011Drop",
+    "def": "Breach Drill then C4 floor drop."
+  },
+  {
+    "term": "Zip\u2011Chase",
+    "def": "Chasing via long zipline."
+  },
+  {
+    "term": "EMPTurtle",
+    "def": "Stacked Dome + Goo defense."
+  },
+  {
+    "term": "HV\u2011Escort",
+    "def": "Protecting coin\u2011rich teammate."
+  },
+  {
+    "term": "Clutch\u2011Rez",
+    "def": "Risky revive in 1\u2011v\u2011X."
+  },
+  {
+    "term": "Pad\u2011Flick",
+    "def": "SMG flick mid\u2011air off jump pad."
+  },
+  {
+    "term": "Anchor",
+    "def": "Heavy staying on cash\u2011out."
+  },
+  {
+    "term": "Rotate",
+    "def": "Move to next objective."
+  },
+  {
+    "term": "Reset",
+    "def": "Back out to heal and regroup."
+  },
+  {
+    "term": "Eco\u2011Grab",
+    "def": "Quick vault for small payout."
+  },
+  {
+    "term": "Overtime\u2011Plug",
+    "def": "Plug during OT."
+  },
+  {
+    "term": "Pre\u2011Nade",
+    "def": "Throw explosive before push."
+  },
+  {
+    "term": "Info\u2011Ping",
+    "def": "F\u2011ping info call."
+  },
+  {
+    "term": "Hard\u2011Clear",
+    "def": "Destroy entire defense setup."
+  }
+]
