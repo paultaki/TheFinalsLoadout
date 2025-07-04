@@ -514,6 +514,9 @@
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   .slot-machine-overlay .itemCol {
@@ -554,6 +557,9 @@
   /* Fix scrolling items visibility */
   .slot-machine-overlay .item-container .scroll-container {
     clip-path: inset(0 0 0 0);
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   .slot-machine-overlay .item-container .itemCol.winner {
@@ -1298,6 +1304,9 @@
   position: relative;
   width: 400px;
   height: 400px;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .roulette-wheel.complete .wheel-svg {
@@ -1401,6 +1410,9 @@
   pointer-events: none;
   z-index: 5;
   transition: none;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .ball-inner {
@@ -1544,5 +1556,138 @@
   /* Adjust segment strokes for mobile */
   .wheel-segment {
     stroke-width: 1.5;
+  }
+}
+
+/* =====================================
+   MOBILE DOM-BASED ROULETTE STYLES
+   ===================================== */
+
+@media (max-width: 768px) {
+  /* DOM-based wheel container */
+  .dom-roulette-wheel {
+    width: clamp(280px, 70vw, 400px);
+    height: clamp(280px, 70vw, 400px);
+    position: relative;
+    margin: 0 auto;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .dom-wheel-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Rotating wheel with CSS animation */
+  .dom-wheel-rotating {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 50%;
+    transition: transform cubic-bezier(0.17, 0.67, 0.12, 0.99) 4s;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Wheel segments */
+  .dom-wheel-segment {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    right: 0;
+    bottom: 0;
+    transform-origin: 0% 100%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: filter 0.3s ease, opacity 0.3s ease;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Ball animation with easing */
+  .dom-roulette-ball {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle at 30% 30%, #fff, #ccc);
+    border-radius: 50%;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: all 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  /* Fake spin animation keyframes */
+  @keyframes fakeSpin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(1080deg);
+    }
+  }
+
+  /* Ball bounce animation */
+  @keyframes ballBounce {
+    0% {
+      transform: translateX(-50%) translateY(0);
+    }
+    25% {
+      transform: translateX(-50%) translateY(100px) scale(0.9);
+    }
+    40% {
+      transform: translateX(-50%) translateY(80px) scale(0.95);
+    }
+    60% {
+      transform: translateX(-50%) translateY(110px) scale(0.9);
+    }
+    80% {
+      transform: translateX(-50%) translateY(105px) scale(0.92);
+    }
+    100% {
+      transform: translateX(-50%) translateY(120px) scale(0.85);
+    }
+  }
+
+  /* Easing-based animations for mobile */
+  .mobile-spin-animation {
+    animation: fakeSpin 4s cubic-bezier(0.17, 0.67, 0.12, 0.99) forwards;
+  }
+
+  .mobile-ball-animation {
+    animation: ballBounce 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+}
+
+/* General mobile roulette optimizations */
+@media (max-width: 768px) {
+  .roulette-animation-container.mobile-dom-wheel {
+    /* Use simpler background for performance */
+    background: rgba(0, 0, 0, 0.9) !important;
+  }
+
+  /* Disable heavy effects on mobile */
+  .roulette-lights {
+    display: none !important;
+  }
+
+  /* Simplify pointer */
+  .dom-roulette-wheel .pointer {
+    filter: none !important;
   }
 }

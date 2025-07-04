@@ -1447,7 +1447,7 @@ body {
 .smart-nav {
   position: fixed;
   top: 50%;
-  right: var(--spacing-lg);
+  right: -150px; /* Start collapsed off-screen */
   transform: translateY(-50%);
   z-index: 998;
   opacity: 0;
@@ -1458,15 +1458,65 @@ body {
 .smart-nav.visible {
   opacity: 1;
   visibility: visible;
+  right: var(--spacing-sm); /* Closer to edge when visible */
+}
+
+.smart-nav.expanded {
+  right: var(--spacing-sm); /* Fully expanded position */
+}
+
+.smart-nav-toggle {
+  position: absolute;
+  left: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 35px;
+  height: 35px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-medium);
+  color: var(--text-secondary);
+}
+
+.smart-nav-toggle:hover {
+  background: rgba(123, 47, 227, 0.2);
+  color: var(--text-primary);
+  border-color: rgba(123, 47, 227, 0.3);
+}
+
+.smart-nav-toggle svg {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--transition-medium);
+}
+
+.smart-nav.expanded .smart-nav-toggle svg {
+  transform: rotate(90deg);
 }
 
 .smart-nav-content {
   background: var(--bg-glass);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
+  border-radius: 12px;
+  padding: var(--spacing-sm);
+  min-width: 180px;
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all var(--transition-medium);
+}
+
+.smart-nav.expanded .smart-nav-content {
+  max-width: 180px;
+  opacity: 1;
   padding: var(--spacing-md);
-  min-width: 200px;
 }
 
 .nav-sections {
@@ -1658,7 +1708,45 @@ body {
   }
 
   .smart-nav {
-    display: none;
+    right: -120px; /* Start further off-screen on mobile */
+  }
+
+  .smart-nav.visible {
+    right: var(--spacing-xs); /* Closer to edge on mobile */
+  }
+
+  .smart-nav.expanded {
+    right: var(--spacing-xs);
+  }
+
+  .smart-nav-toggle {
+    left: -35px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .smart-nav-toggle svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .smart-nav-content {
+    min-width: 150px;
+    padding: var(--spacing-xs);
+  }
+
+  .smart-nav.expanded .smart-nav-content {
+    max-width: 150px;
+    padding: var(--spacing-sm);
+  }
+
+  .nav-section {
+    padding: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+  }
+
+  .section-icon {
+    font-size: var(--font-size-sm);
   }
 
   .modal-content {

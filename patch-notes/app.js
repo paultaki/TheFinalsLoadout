@@ -319,6 +319,11 @@ class BlastOffExperience {
 
   initSmartNavigation() {
     const navSections = document.querySelectorAll(".nav-section");
+    const navToggle = document.getElementById("smartNavToggle");
+    const smartNav = document.getElementById("smartNav");
+
+    // Initialize collapsed state
+    this.smartNavExpanded = false;
 
     navSections.forEach((section) => {
       section.addEventListener("click", (e) => {
@@ -328,6 +333,45 @@ class BlastOffExperience {
         this.playSound("clickSound");
       });
     });
+
+    // Toggle functionality
+    navToggle?.addEventListener("click", () => {
+      this.toggleSmartNav();
+      this.playSound("clickSound");
+    });
+
+    // Auto-collapse on mobile when clicking outside
+    document.addEventListener("click", (e) => {
+      if (
+        window.innerWidth <= 768 &&
+        this.smartNavExpanded &&
+        !smartNav.contains(e.target)
+      ) {
+        this.collapseSmartNav();
+      }
+    });
+  }
+
+  toggleSmartNav() {
+    const smartNav = document.getElementById("smartNav");
+
+    if (this.smartNavExpanded) {
+      this.collapseSmartNav();
+    } else {
+      this.expandSmartNav();
+    }
+  }
+
+  expandSmartNav() {
+    const smartNav = document.getElementById("smartNav");
+    smartNav.classList.add("expanded");
+    this.smartNavExpanded = true;
+  }
+
+  collapseSmartNav() {
+    const smartNav = document.getElementById("smartNav");
+    smartNav.classList.remove("expanded");
+    this.smartNavExpanded = false;
   }
 
   scrollToSection(sectionId) {

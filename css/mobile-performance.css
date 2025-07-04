@@ -47,7 +47,8 @@
   }
 
   @keyframes winner-glow-mobile {
-    0%, 100% {
+    0%,
+    100% {
       box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
     }
     50% {
@@ -79,10 +80,120 @@
     will-change: transform;
     contain: layout style paint;
   }
+
+  /* === NEW ROULETTE OPTIMIZATIONS === */
+
+  /* Remove backdrop blur on overlay - Phase 1 Quick Win */
+  .overlay-backdrop {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: rgba(0, 0, 0, 0.85) !important;
+  }
+
+  /* GPU acceleration for roulette elements - EXCLUDING SVG elements and containers */
+  .roulette-wheel,
+  .roulette-ball,
+  .scroll-container,
+  .ball-inner {
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  /* SVG elements should NOT have CSS transforms as they use SVG transforms */
+  .wheel-svg,
+  .wheel-rotating-group {
+    /* Do not set any transform or will-change properties */
+  }
+
+  /* Ensure SVG elements can still use their native transform attribute */
+  .wheel-rotating-group[transform] {
+    /* Allow SVG transform attribute to work - no CSS overrides */
+  }
+
+  /* Optimize the wheel container but not the rotating parts */
+  .roulette-wheel-wrapper {
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  /* Disable blur effects on roulette ball */
+  .roulette-ball.high-speed .ball-inner {
+    filter: none !important;
+  }
+
+  /* Simplify roulette shadows */
+  .roulette-wheel {
+    box-shadow: none !important;
+  }
+
+  .roulette-ball {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  /* Disable complex wheel segment animations */
+  .wheel-segment {
+    transition: none !important;
+  }
+
+  /* Reduce particle effects for roulette */
+  .roulette-particle {
+    display: none !important;
+  }
+
+  /* Simplify light animations */
+  .roulette-lights .light {
+    animation: none !important;
+    opacity: 0.5 !important;
+  }
+
+  /* Optimize canvas rendering */
+  canvas {
+    image-rendering: optimizeSpeed !important;
+    image-rendering: -webkit-optimize-contrast !important;
+  }
+
+  /* Reduce filter complexity on mobile */
+  .roulette-inner.spinning-fast {
+    filter: none !important;
+  }
+
+  /* Disable gloss and shine effects */
+  .segment-inner::after,
+  .roulette-wheel::before,
+  .roulette-wheel::after {
+    display: none !important;
+  }
+}
+
+/* Ultra-low performance mode for very slow devices */
+@media (max-width: 768px) and (max-device-memory: 2gb) {
+  /* Disable all non-essential animations */
+  *:not(svg):not(.wheel-rotating-group) {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Keep only essential animations */
+  .roulette-ball {
+    transition: transform 0.1s linear !important;
+  }
+
+  /* Ensure SVG transforms still work */
+  svg,
+  svg * {
+    transform: initial !important;
+    -webkit-transform: initial !important;
+  }
 }
 
 /* Low-end device optimizations */
-@media (max-width: 768px) and (max-device-memory: 4GB) {
+@media (max-width: 768px) and (max-device-memory: 4gb) {
   /* Disable all non-essential animations */
   * {
     animation: none !important;

@@ -1,33 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://thefinalsloadout.com/</loc>
-    <priority>1.0</priority>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://thefinalsloadout.com/ragequit/</loc>
-    <priority>0.8</priority>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://thefinalsloadout.com/patch-notes/</loc>
-    <priority>0.7</priority>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://thefinalsloadout.com/meta-weapons/</loc>
-    <priority>0.8</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://thefinalsloadout.com/feedback/</loc>
-    <priority>0.6</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://thefinalsloadout.com/legal/</loc>
-    <priority>0.3</priority>
-    <changefreq>yearly</changefreq>
-  </url>
+    <!-- Main Page -->
+    <url>
+        <loc>https://thefinalsloadout.com/</loc>
+        <lastmod>2025-01-03</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- Rage Quit Simulator -->
+    <url>
+        <loc>https://thefinalsloadout.com/ragequit/</loc>
+        <lastmod>2025-01-03</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+    <!-- Patch Notes -->
+    <url>
+        <loc>https://thefinalsloadout.com/patch-notes/</loc>
+        <lastmod>2025-01-03</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+    <!-- Meta Weapons -->
+    <url>
+        <loc>https://thefinalsloadout.com/meta-weapons/</loc>
+        <lastmod>2025-01-03</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- Feedback -->
+    <url>
+        <loc>https://thefinalsloadout.com/feedback/</loc>
+        <lastmod>2025-01-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- Legal -->
+    <url>
+        <loc>https://thefinalsloadout.com/legal/</loc>
+        <lastmod>2025-01-03</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.4</priority>
+    </url>
+    
+    <!-- Loadout History -->
+    <url>
+        <loc>https://thefinalsloadout.com/loadout-history.html</loc>
+        <lastmod>2025-01-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
 </urlset>

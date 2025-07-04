@@ -20,16 +20,12 @@ const overlayAudio = {
   transition: new Audio("sounds/transition.mp3"),
   roulette: new Audio("sounds/roulette.mp3"),
   finalSound: new Audio("sounds/pop-pour-perform.mp3"),
-  wheelTickLoop: new Audio("sounds/wheel-tick-loop.mp3"),
 };
 
 // Preload all sounds
 Object.values(overlayAudio).forEach((audio) => {
   audio.preload = "auto";
 });
-
-// Set the wheel tick loop to loop
-overlayAudio.wheelTickLoop.loop = true;
 
 // =====================================
 // OVERLAY CONTAINER MANAGEMENT
@@ -72,9 +68,6 @@ function clearOverlay() {
 
   // Remove overlay-active class from body
   document.body.classList.remove("overlay-active");
-
-  // Clear valid spin sequence flag
-  window.isValidSpinSequence = false;
 }
 
 // =====================================
@@ -109,7 +102,7 @@ function showRevealCard(options) {
     if (window.state && window.state.soundEnabled) {
       if (isJackpot) {
         overlayAudio.dingDing.currentTime = 0;
-        window.safePlay(overlayAudio.dingDing);
+        overlayAudio.dingDing.play();
         // Stop jackpot sound after 1.5s
         setTimeout(() => {
           overlayAudio.dingDing.pause();
@@ -117,7 +110,7 @@ function showRevealCard(options) {
         }, 1500);
       } else {
         overlayAudio.ding.currentTime = 0;
-        window.safePlay(overlayAudio.ding);
+        overlayAudio.ding.play();
       }
     }
 
@@ -144,7 +137,7 @@ function showRevealCard(options) {
 
 // Jackpot card factory
 function makeJackpotCard() {
-  const spins = 3; // Always 3 spins for jackpot
+  const spins = 3; // Always 3 spins
   return {
     value: "JACKPOT",
     spins: spins,
@@ -157,7 +150,7 @@ function makeJackpotCard() {
 // Card configuration
 const SPIN_CARDS = [
   { value: "1", spins: 1, label: "1", className: "card-1" },
-  makeJackpotCard(),
+  { value: "6", spins: 6, label: "6", className: "card-6" },
   { value: "2", spins: 2, label: "2", className: "card-2" },
   { value: "3", spins: 3, label: "3", className: "card-3" },
   { value: "4", spins: 4, label: "4", className: "card-4" },
@@ -249,8 +242,8 @@ async function showSpinWheelOverlay() {
             : card.label;
 
           return `
-          <li class="card ${card.className || ""}"
-              data-index="${index}"
+          <li class="card ${card.className || ""}" 
+              data-index="${index}" 
               data-spins="${card.spins || 1}"
               data-value="${card.value || ""}">
             <div class="card-content">${labelHtml}</div>
@@ -273,15 +266,15 @@ async function showSpinWheelOverlay() {
           <div class="wheel-frame" id="spin-wheel-frame">
             <div class="fade-top"></div>
             <div class="fade-bottom"></div>
-
+            
             <div class="pointer" id="spin-pointer">
               <div class="pointer-arm" id="pointer-arm">
                 <div class="pointer-tip"></div>
               </div>
             </div>
-
+            
             <!-- Pegs will be generated dynamically -->
-
+            
             <div class="wheel-track">
               <ul class="wheel-list" id="spin-wheel-list">
                 ${cardsHtml}
@@ -408,7 +401,18 @@ async function showSpinWheelOverlay() {
 
     // Handle pointer tick animation
     const handlePointerTick = (velocity) => {
-      // No longer play individual tick sounds - using looped track instead
+      // Play tick sound only if enabled
+      if (window.state && window.state.soundEnabled) {
+        try {
+          overlayAudio.beep.currentTime = 0;
+          overlayAudio.beep.playbackRate = Math.min(2, 0.5 + velocity / 1000);
+          overlayAudio.beep.play().catch((err) => {
+            console.warn("Failed to play beep sound:", err);
+          });
+        } catch (e) {
+          console.warn("Beep sound error:", e);
+        }
+      }
 
       // Pointer bend
       const bendAmount = Math.min(velocity / 100, 20);
@@ -500,16 +504,6 @@ async function showSpinWheelOverlay() {
         spinWheelState.animationId = null;
       }
 
-      // Stop all spinning sounds
-      try {
-        overlayAudio.spinning.pause();
-        overlayAudio.spinning.currentTime = 0;
-        overlayAudio.wheelTickLoop.pause();
-        overlayAudio.wheelTickLoop.currentTime = 0;
-      } catch (e) {
-        // Sound not available
-      }
-
       // Find winner
       const { card: winningCard, result } = findWinningCard();
 
@@ -524,15 +518,12 @@ async function showSpinWheelOverlay() {
       if (window.state && window.state.soundEnabled) {
         if (result.isJackpot) {
           overlayAudio.dingDing.currentTime = 0;
-          window.safePlay(overlayAudio.dingDing);
+          overlayAudio.dingDing.play();
           // Stop jackpot sound after 1.5s
           setTimeout(() => {
             overlayAudio.dingDing.pause();
             overlayAudio.dingDing.currentTime = 0;
           }, 1500);
-        } else {
-          overlayAudio.ding.currentTime = 0;
-          window.safePlay(overlayAudio.ding);
         }
       }
 
@@ -719,18 +710,12 @@ async function showSpinWheelOverlay() {
       spinWheelState.lastPegIndex = -1;
       spinWheelState.isDecelerating = false;
 
-      // Play spin sound and wheel tick loop only if enabled
+      // Play spin sound only if enabled
       if (window.state && window.state.soundEnabled) {
         try {
-          // Start spinning sound
           overlayAudio.spinning.currentTime = 0;
-          overlayAudio.spinning.volume = 0.02;
-          window.safePlay(overlayAudio.spinning);
-
-          // Start wheel tick loop
-          overlayAudio.wheelTickLoop.currentTime = 0;
-          overlayAudio.wheelTickLoop.volume = 0.04;
-          window.safePlay(overlayAudio.wheelTickLoop);
+          overlayAudio.spinning.volume = 0.3;
+          overlayAudio.spinning.play().catch(() => {});
         } catch (e) {
           // Sound not available
         }
@@ -1075,12 +1060,12 @@ async function showClassRouletteOverlay() {
           <h2>SELECTING CLASS</h2>
           <p>Fate decides your build...</p>
         </div>
-
+        
         <div class="roulette-wheel-wrapper">
           <div class="roulette-wheel" id="roulette-wheel">
             <!-- Outer decorative ring -->
             <div class="wheel-outer-ring"></div>
-
+            
             <!-- Main wheel with segments -->
             <svg class="wheel-svg" viewBox="0 0 400 400" width="400" height="400" preserveAspectRatio="xMidYMid meet">
               <defs>
@@ -1098,7 +1083,7 @@ async function showClassRouletteOverlay() {
                   <circle cx="200" cy="200" r="35"/>
                 </clipPath>
               </defs>
-
+              
               <!-- Rotating group containing segments and labels -->
               <g class="wheel-rotating-group" id="wheel-rotating-group">
                 <!-- Segments -->
@@ -1114,7 +1099,7 @@ async function showClassRouletteOverlay() {
                       const y2 = 200 + radius * Math.sin(endAngle);
 
                       return `
-                      <path
+                      <path 
                         d="M 200 200 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z"
                         fill="${seg.color}"
                         stroke="#FFD700"
@@ -1126,7 +1111,7 @@ async function showClassRouletteOverlay() {
                     })
                     .join("")}
                 </g>
-
+                
                 <!-- Class labels -->
                 <g class="wheel-labels">
                   ${segments
@@ -1143,10 +1128,10 @@ async function showClassRouletteOverlay() {
                       const fontSize = segments.length > 6 ? 18 : 24; // Smaller text for 12 segments
 
                       return `
-                      <text
-                        x="${x}"
-                        y="${y}"
-                        text-anchor="middle"
+                      <text 
+                        x="${x}" 
+                        y="${y}" 
+                        text-anchor="middle" 
                         dominant-baseline="middle"
                         class="wheel-label"
                         font-size="${fontSize}"
@@ -1159,24 +1144,24 @@ async function showClassRouletteOverlay() {
                     .join("")}
                 </g>
               </g>
-
+              
               <!-- Static center hub with logo -->
               <g class="wheel-static-center">
                 <circle cx="200" cy="200" r="40" fill="#222" stroke="#FFD700" stroke-width="3"/>
-                <image href="images/the-finals.webp"
-                       x="175" y="175"
-                       width="50" height="50"
+                <image href="images/the-finals.webp" 
+                       x="172.5" y="172.5" 
+                       width="55" height="55" 
                        clip-path="url(#centerClip)"
                        opacity="0.9"/>
               </g>
             </svg>
-
+            
             <!-- Ball -->
             <div class="roulette-ball" id="roulette-ball">
               <div class="ball-inner"></div>
             </div>
           </div>
-
+          
           <!-- Decorative lights -->
           <div class="roulette-lights">
             ${Array(12)
@@ -1397,8 +1382,6 @@ async function showClassRouletteOverlay() {
       rouletteState.totalBallRotation = rouletteState.ballAngularPosition;
 
       // Dynamic sound effects based on physics phase
-      // Commented out beep sounds - only roulette.mp3 should play
-      /*
       if (physics.speed > 0.1 && window.state && window.state.soundEnabled) {
         // Calculate tick interval based on ball speed (faster = more frequent)
         const tickInterval = Math.max(50, 200 * (1 - physics.speed));
@@ -1406,7 +1389,7 @@ async function showClassRouletteOverlay() {
         if (elapsed % tickInterval < 16) {
           try {
             overlayAudio.beep.currentTime = 0;
-            overlayAudio.beep.volume = 0.02 + physics.speed * 0.03; // Volume based on speed (ultra quiet)
+            overlayAudio.beep.volume = 0.2 + physics.speed * 0.3; // Volume based on speed
             overlayAudio.beep.playbackRate = 0.8 + physics.speed * 0.4; // Pitch based on speed
             overlayAudio.beep.play().catch(() => {}); // Silently fail if sound not available
           } catch (e) {
@@ -1414,7 +1397,6 @@ async function showClassRouletteOverlay() {
           }
         }
       }
-      */
 
       // Special sound when ball drops to inner track
       if (
@@ -1453,11 +1435,10 @@ async function showClassRouletteOverlay() {
       rouletteState.selectedClass = winner;
 
       // Play win sound only if enabled
-      // REMOVED: ding.mp3 sound when wheel stops - keeping only the popup card sound
-      // if (window.state && window.state.soundEnabled) {
-      //   overlayAudio.ding.currentTime = 0;
-      //   window.safePlay(overlayAudio.ding);
-      // }
+      if (window.state && window.state.soundEnabled) {
+        overlayAudio.ding.currentTime = 0;
+        overlayAudio.ding.play();
+      }
 
       // Add landed class to ball
       ball.classList.add("landed");
@@ -1511,7 +1492,7 @@ async function showClassRouletteOverlay() {
       if (window.state && window.state.soundEnabled) {
         try {
           overlayAudio.roulette.currentTime = 0;
-          overlayAudio.roulette.volume = 0.05;
+          overlayAudio.roulette.volume = 0.5;
           overlayAudio.roulette.play().catch((err) => {
             console.warn("Failed to play roulette sound:", err);
           });
@@ -1626,9 +1607,6 @@ async function startLoadoutGeneration() {
   }
 
   try {
-    // Set valid spin sequence flag
-    window.isValidSpinSequence = true;
-
     // Clear any existing static slot machine from main page
     const mainOutput = document.getElementById("output");
     if (mainOutput) {
@@ -1660,8 +1638,15 @@ async function startLoadoutGeneration() {
       // Jackpot path - class was already selected in the modal
       overlayState.selectedClass = spinResult.classWeight;
 
-      // Skip the reveal card and go straight to slot machine
-      // The user already knows they got a jackpot and selected their class
+      // Show jackpot celebration reveal
+      await showRevealCard({
+        title: "JACKPOT!",
+        subtitle: `${spinResult.spins} ${
+          spinResult.spins === 1 ? "SPIN" : "SPINS"
+        } with ${overlayState.selectedClass.toUpperCase()} CLASS!`,
+        duration: 2500,
+        isJackpot: true,
+      });
     } else {
       // Normal path - show spin count reveal first
       await showRevealCard({
@@ -1711,9 +1696,6 @@ async function startLoadoutGeneration() {
     }
 
     overlayState.isActive = false;
-
-    // Clear valid spin sequence flag
-    window.isValidSpinSequence = false;
   }
 }
 
@@ -1784,6 +1766,22 @@ async function showSlotMachineOverlay(selectedClass, spinCount) {
         if (typeof window.startSlotMachine === "function") {
           window.startSlotMachine(selectedClass, spinCount);
 
+          // Function to update overlay countdown
+          const updateOverlayCountdown = (spinsLeft, selectedClass) => {
+            const spinInfoElement = document.querySelector(
+              ".slot-overlay-header .spin-info"
+            );
+            if (spinInfoElement) {
+              if (spinsLeft === 1) {
+                spinInfoElement.textContent = "FINAL SPIN";
+              } else if (spinsLeft > 1) {
+                spinInfoElement.textContent = `${spinsLeft} ${
+                  spinsLeft === 1 ? "Spin" : "Spins"
+                } Remaining`;
+              }
+            }
+          };
+
           // Monkey patch finalizeSpin to handle overlay completion
           const originalFinalizeSpin = window.finalizeSpin;
           let hasHandledFinalSpin = false;
@@ -1792,6 +1790,11 @@ async function showSlotMachineOverlay(selectedClass, spinCount) {
             // Call original function
             if (originalFinalizeSpin) {
               originalFinalizeSpin.call(this, columns);
+            }
+
+            // Update countdown display if we're not on the final spin
+            if (window.state && window.state.spinsLeft > 0) {
+              updateOverlayCountdown(window.state.spinsLeft, selectedClass);
             }
 
             // Check if this was the final spin (only handle once)

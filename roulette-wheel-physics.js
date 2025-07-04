@@ -97,11 +97,20 @@ class RealisticRouletteWheel {
 
     // Create canvas
     this.canvas = document.createElement("canvas");
-    this.canvas.width = 600;
-    this.canvas.height = 600;
+
+    // Dynamic canvas size based on device - Phase 1 optimization
+    const isMobile =
+      window.state?.isMobile ||
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+    const canvasSize = isMobile ? 300 : 600; // 300px on mobile, 600px on desktop
+
+    this.canvas.width = canvasSize;
+    this.canvas.height = canvasSize;
     this.canvas.style.cssText = `
       width: 100%;
-      max-width: 600px;
+      max-width: ${canvasSize}px;
       height: auto;
       display: block;
       margin: 0 auto;
@@ -109,11 +118,17 @@ class RealisticRouletteWheel {
 
     // Ball trail for visual feedback
     this.ballTrail = [];
-    this.maxTrailLength = 20;
+    this.maxTrailLength = isMobile ? 10 : 20; // Shorter trail on mobile
 
     container.innerHTML = "";
     container.appendChild(this.canvas);
     this.ctx = this.canvas.getContext("2d");
+
+    // Set canvas rendering optimization hints
+    if (isMobile) {
+      this.ctx.imageSmoothingEnabled = false; // Disable smoothing for performance
+      this.ctx.imageSmoothingQuality = "low";
+    }
 
     // Start render loop
     this.render();

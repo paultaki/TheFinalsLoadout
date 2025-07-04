@@ -1154,6 +1154,8 @@ body {
 }
 
 /* Hardware acceleration for smooth animations */
+.roulette-wheel,
+.roulette-ball,
 .scroll-container,
 .itemCol,
 .particle {
