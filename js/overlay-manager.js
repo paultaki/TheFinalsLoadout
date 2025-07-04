@@ -512,6 +512,10 @@ async function showSpinWheelOverlay() {
       cards.forEach((card) => card.classList.remove("winner"));
       if (winningCard) {
         winningCard.classList.add("winner");
+        
+        // Add grow animation to winning card
+        winningCard.style.transition = "transform 0.5s ease-out";
+        winningCard.style.transform = "scale(1.2)";
       }
 
       // Play sound only if enabled
@@ -561,7 +565,7 @@ async function showSpinWheelOverlay() {
               });
             }, 300);
           });
-        }, 2000);
+        }, 3000); // Extra 1 second pause for jackpot
       } else {
         // Cleanup and resolve after delay for non-jackpot
         setTimeout(() => {
@@ -582,7 +586,7 @@ async function showSpinWheelOverlay() {
               isJackpot: false,
             });
           }, 300);
-        }, 2000);
+        }, 3000); // Extra 1 second pause to show winning card
       }
     };
 
@@ -1468,7 +1472,7 @@ async function showClassRouletteOverlay() {
           );
           resolve(winner);
         }, 300);
-      }, 1500);
+      }, 2000); // Extra 0.5 seconds pause to show winning class
     };
 
     // Start the spin
@@ -1637,28 +1641,8 @@ async function startLoadoutGeneration() {
     if (spinResult.isJackpot) {
       // Jackpot path - class was already selected in the modal
       overlayState.selectedClass = spinResult.classWeight;
-
-      // Show jackpot celebration reveal
-      await showRevealCard({
-        title: "JACKPOT!",
-        subtitle: `${spinResult.spins} ${
-          spinResult.spins === 1 ? "SPIN" : "SPINS"
-        } with ${overlayState.selectedClass.toUpperCase()} CLASS!`,
-        duration: 2500,
-        isJackpot: true,
-      });
     } else {
-      // Normal path - show spin count reveal first
-      await showRevealCard({
-        title: spinResult.value,
-        subtitle: `${spinResult.spins} ${
-          spinResult.spins === 1 ? "SPIN" : "SPINS"
-        }!`,
-        duration: 2000,
-        isJackpot: false,
-      });
-
-      // Then show roulette for class selection
+      // Normal path - go directly to roulette for class selection
       overlayState.selectedClass = await showClassRouletteOverlay();
 
       // Check if roulette was cancelled (no classes available)
@@ -1666,13 +1650,6 @@ async function startLoadoutGeneration() {
         console.log("❌ No class selected, cancelling flow");
         return;
       }
-
-      // Show class reveal
-      await showRevealCard({
-        title: overlayState.selectedClass.toUpperCase(),
-        subtitle: "CLASS SELECTED!",
-        duration: 2000,
-      });
     }
 
     // Step 4: Show slot machine overlay
