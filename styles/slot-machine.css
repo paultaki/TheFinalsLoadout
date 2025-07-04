@@ -38,7 +38,7 @@
   justify-content: space-between;
   align-items: stretch;
   width: 100%;
-  gap: 2px;
+  gap: var(--slot-gap, 2px);
   padding: 0 4px;
   background: transparent;
   position: relative;
@@ -264,7 +264,7 @@
   }
 
   .slot-machine-items {
-    gap: 4px;
+    gap: var(--slot-gap, 4px);
     padding: 0 10px;
   }
 
@@ -297,7 +297,7 @@
   }
 
   .slot-machine-items {
-    gap: 6px;
+    gap: var(--slot-gap, 6px);
     padding: 0 20px;
   }
 
@@ -441,7 +441,8 @@
 }
 
 @keyframes nearMissPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
   }
   50% {
@@ -517,9 +518,7 @@
   font-size: 2.5rem;
   font-weight: bold;
   color: #ffd700;
-  text-shadow: 
-    0 0 20px rgba(255, 215, 0, 0.8),
-    0 0 40px rgba(255, 215, 0, 0.6),
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.6),
     0 0 60px rgba(255, 215, 0, 0.4);
   z-index: 1001;
   pointer-events: none;
@@ -614,7 +613,11 @@
   left: 50%;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 60%
+  );
   transform: translate(-50%, -50%);
   animation: flashBurst 0.4s ease-out forwards;
   pointer-events: none;
@@ -704,13 +707,13 @@
 /* Dramatic Winner Effects */
 .slot-item.winner-dramatic {
   animation: winnerDramatic 2s ease-in-out;
-  box-shadow: 
-    0 0 30px rgba(255, 215, 0, 0.8),
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.8),
     inset 0 0 20px rgba(255, 215, 0, 0.3);
 }
 
 @keyframes winnerDramatic {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1) rotateZ(0deg);
     filter: brightness(1);
   }
@@ -774,7 +777,8 @@
 }
 
 @keyframes winnerGlow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.5;
     transform: scale(0.9);
   }
@@ -786,16 +790,37 @@
 
 /* Screen Shake Effect */
 @keyframes screenShake {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-2px, -1px); }
-  20% { transform: translate(2px, -2px); }
-  30% { transform: translate(-1px, 2px); }
-  40% { transform: translate(1px, 1px); }
-  50% { transform: translate(-1px, -2px); }
-  60% { transform: translate(2px, 1px); }
-  70% { transform: translate(-2px, 2px); }
-  80% { transform: translate(1px, -1px); }
-  90% { transform: translate(2px, -1px); }
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-2px, -1px);
+  }
+  20% {
+    transform: translate(2px, -2px);
+  }
+  30% {
+    transform: translate(-1px, 2px);
+  }
+  40% {
+    transform: translate(1px, 1px);
+  }
+  50% {
+    transform: translate(-1px, -2px);
+  }
+  60% {
+    transform: translate(2px, 1px);
+  }
+  70% {
+    transform: translate(-2px, 2px);
+  }
+  80% {
+    transform: translate(1px, -1px);
+  }
+  90% {
+    transform: translate(2px, -1px);
+  }
 }
 
 .screen-shake {
@@ -816,9 +841,15 @@
 }
 
 @keyframes flashFade {
-  0% { opacity: 0; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 /* Glow Trail Effect */
@@ -866,14 +897,24 @@
 }
 
 @keyframes almostWonPulse {
-  0% { opacity: 0; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.1); }
-  100% { opacity: 0; transform: scale(1.2); }
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
 }
 
 /* Pulse Button Effect */
 @keyframes buttonPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(255, 183, 0, 0.4);
   }
@@ -926,9 +967,15 @@
 }
 
 @keyframes countdownPulse {
-  0% { transform: scale(0); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Acceleration Blur */
@@ -939,13 +986,14 @@
 /* Dynamic Slot Borders During Spin */
 .slot-item.animating {
   border-image: linear-gradient(
-    45deg,
-    #ffd700,
-    #ff6b6b,
-    #ffd700,
-    #ff6b6b,
-    #ffd700
-  ) 1;
+      45deg,
+      #ffd700,
+      #ff6b6b,
+      #ffd700,
+      #ff6b6b,
+      #ffd700
+    )
+    1;
   animation: borderRotate 0.5s linear infinite;
 }
 

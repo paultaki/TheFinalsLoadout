@@ -1,0 +1,53 @@
+/* Desktop Fix - High Specificity Override for Slot Machine Spacing */
+
+/* Force desktop CSS variables to take precedence over broken gap declarations */
+@media (min-width: 769px) {
+  :root {
+    --slot-gap: 4px !important; /* tight integration for desktop slot machine */
+  }
+
+  /* High specificity selectors to override broken gap: px declarations */
+  body .items-container,
+  body #output .items-container,
+  body .slot-machine-items,
+  body .slot-machine-overlay .items-container,
+  body #output .slot-machine-items,
+  body .slot-item-container {
+    gap: var(--slot-gap) !important;
+  }
+
+  /* Additional overrides for any hardcoded gaps */
+  body @media (max-width: 768px) .items-container {
+    gap: var(--slot-gap) !important;
+  }
+
+  /* Ensure all slot machine containers use the tight spacing */
+  body .static-slot-item .slot-display,
+  body .slot-display,
+  body .items-container > *,
+  body .slot-machine-component .slot-machine-items,
+  body .slot-machine-items > .slot-item {
+    gap: var(--slot-gap) !important;
+  }
+
+  /* Force override any remaining hardcoded values */
+  body .items-container[style*="gap"],
+  body .slot-machine-items[style*="gap"] {
+    gap: var(--slot-gap) !important;
+  }
+
+  /* Specific override for slot machine items display */
+  .slot-machine-items {
+    display: flex !important;
+    gap: var(--slot-gap) !important;
+    justify-content: center !important;
+    align-items: stretch !important;
+  }
+}
+
+/* Mobile preservation */
+@media (max-width: 768px) {
+  :root {
+    --slot-gap: 8px !important; /* perfect mobile spacing */
+  }
+}

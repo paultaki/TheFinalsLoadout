@@ -309,10 +309,17 @@ body.screen-shake {
   }
 }
 
+/* Desktop Optimizations - Tighter slot machine integration */
+@media (min-width: 769px) {
+  :root {
+    --slot-gap: 4px; /* tight integration for desktop slot machine */
+  }
+}
+
 /* Mobile Optimizations */
 @media (max-width: 768px) {
   :root {
-    --slot-gap: 8px; /* single source of truth */
+    --slot-gap: 8px; /* single source of truth - perfect mobile spacing */
   }
 
   .main-spin-button {
@@ -331,7 +338,7 @@ body.screen-shake {
   }
 
   .items-container {
-    gap: var(--slot-gap);
+    gap: var(--slot-gap); /* Uses mobile 8px gap */
   }
 
   .item-container {
@@ -700,7 +707,7 @@ body.casino-mode #filter-panel:not(.active) {
   flex-direction: row !important;
   justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: var(--slot-gap, 15px);
   padding: 2rem 1rem;
 }
 
@@ -1677,15 +1684,16 @@ article.loadout:hover {
   }
 }
 
-/* Desktop-specific adjustments for tighter slot spacing */
+/* Desktop Slot Machine Integration - Force tight spacing using CSS variable */
 @media (min-width: 769px) {
-  .items-container {
-    gap: 8px !important;
+  .items-container,
+  .slot-machine-items,
+  .slot-machine-overlay .items-container {
+    gap: var(--slot-gap) !important;
   }
 
   /* Overlay-specific desktop adjustments */
   .slot-machine-overlay .items-container {
-    gap: 8px !important;
     padding: 20px 15px !important;
   }
 }

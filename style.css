@@ -1265,7 +1265,7 @@ body {
   }
 
   #output:not(#overlay-slot-output) .items-container {
-    gap: 10px !important;
+    gap: var(--slot-gap, 10px) !important;
     max-width: 100% !important;
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch !important;

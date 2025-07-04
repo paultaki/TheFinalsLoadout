@@ -409,12 +409,12 @@
 /* Desktop-specific overlay styles */
 @media (min-width: 769px) {
   .slot-machine-overlay .items-container {
-    gap: 10px;
+    gap: var(--slot-gap);
     padding: 20px 10px;
   }
-  
+
   .slot-machine-overlay .item-container {
-    margin: 0 5px;
+    margin: 0 2px;
   }
 }
 
@@ -441,7 +441,7 @@
     text-align: center;
     width: 100%;
   }
-  
+
   /* Hide the duplicate status bar on mobile in overlay */
   .slot-machine-overlay .slot-status-bar {
     display: none;
@@ -750,8 +750,14 @@
 }
 
 @keyframes frameGlow {
-  0%, 100% { box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.5); }
-  50% { box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(251, 191, 36, 0.8); }
+  0%,
+  100% {
+    box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba(251, 191, 36, 0.8);
+  }
 }
 
 /* Wheel track */
@@ -801,7 +807,8 @@
   position: relative;
   overflow: hidden;
   transition: box-shadow 0.3s, transform 0.3s;
-  text-shadow: 2px 2px 0 #ffd700, -2px -2px 0 #ffd700, 2px -2px 0 #ffd700, -2px 2px 0 #ffd700;
+  text-shadow: 2px 2px 0 #ffd700, -2px -2px 0 #ffd700, 2px -2px 0 #ffd700,
+    -2px 2px 0 #ffd700;
   transition: all 0.3s ease;
   background: linear-gradient(to bottom, #2a2a2a 0%, #1a1a1a 100%);
   border: 2px solid rgba(171, 71, 188, 0.5);
@@ -859,11 +866,26 @@
 }
 
 /* Number-specific colors */
-.card-1 { background: #d32f2f; color: white; }
-.card-2 { background: #1976d2; color: white; }
-.card-3 { background: #388e3c; color: white; }
-.card-4 { background: #7b1fa2; color: white; }
-.card-5 { background: #f57c00; color: white; }
+.card-1 {
+  background: #d32f2f;
+  color: white;
+}
+.card-2 {
+  background: #1976d2;
+  color: white;
+}
+.card-3 {
+  background: #388e3c;
+  color: white;
+}
+.card-4 {
+  background: #7b1fa2;
+  color: white;
+}
+.card-5 {
+  background: #f57c00;
+  color: white;
+}
 
 /* Jackpot card */
 .card-special.jackpot {
@@ -877,7 +899,8 @@
   );
   color: #333;
   animation: shimmer 2s linear infinite, glitter 3s linear infinite;
-  text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff;
+  text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff,
+    -2px 2px 0 #fff;
   font-size: clamp(18px, 4vw, 24px);
   line-height: 1.2;
   text-align: center;
@@ -901,13 +924,22 @@
 }
 
 @keyframes shimmer {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
 }
 
 @keyframes glitter {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.9; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.9;
+  }
 }
 
 /* Fade overlays */
@@ -1071,8 +1103,13 @@
 }
 
 @keyframes jackpotPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .jackpot-message {
@@ -1147,29 +1184,29 @@
     padding: 24px 16px;
     max-width: 95vw;
   }
-  
+
   .jackpot-title {
     font-size: clamp(36px, 8vw, 56px);
     margin-bottom: 16px;
   }
-  
+
   .jackpot-message {
     font-size: clamp(18px, 4vw, 24px);
     margin-bottom: 12px;
   }
-  
+
   .jackpot-subtitle {
     font-size: clamp(16px, 3.5vw, 20px);
     margin-bottom: 24px;
   }
-  
+
   .class-buttons {
     flex-direction: column;
     width: 100%;
     gap: 12px;
     align-items: center;
   }
-  
+
   .class-button {
     width: 100%;
     max-width: 280px;
@@ -1181,11 +1218,11 @@
     align-items: center;
     justify-content: center;
   }
-  
+
   .class-button:hover {
     transform: none;
   }
-  
+
   .class-button:active {
     transform: scale(0.98);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -1488,7 +1525,7 @@
   .roulette-pointer {
     transform: translateX(-50%) scale(0.8);
   }
-  
+
   /* Fix outer ring visibility on mobile */
   .wheel-outer-ring {
     border-width: 3px;
@@ -1496,12 +1533,14 @@
     background: rgba(0, 0, 0, 0.8);
     opacity: 1 !important;
   }
-  
+
   /* Ensure wheel segments fill properly on mobile */
   .wheel-svg {
-    transform: scale(1.05); /* Slightly scale up to ensure segments reach edge */
+    transform: scale(
+      1.05
+    ); /* Slightly scale up to ensure segments reach edge */
   }
-  
+
   /* Adjust segment strokes for mobile */
   .wheel-segment {
     stroke-width: 1.5;
