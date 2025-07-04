@@ -78,44 +78,29 @@
       gtag("config", "G-GVGKYFGZ1Z");
     </script>
 
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "Meta Weapons Tier List – The Finals Season 7",
-        "description": "Complete Season 7 tier rankings with ARN-220 dominance, FAMAS rise, ShAK-50 supremacy, and post-nerf Sledgehammer rankings. Updated with healing meta insights.",
-        "url": "https://thefinalsloadout.com/meta-weapons/",
-        "image": "https://thefinalsloadout.com/images/the-finals-logo.webp",
-        "author": {
-          "@type": "Person",
-          "name": "Paul Takisaki",
-          "url": "https://www.paultakisaki.com"
-        },
-        "datePublished": "2025-07-01",
-        "dateModified": "2025-07-01"
-      }
-    </script>
-
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
     <style>
-      /* Custom Finals Casino Theme Colors */
+      /* Quantum-inspired color palette */
       :root {
-        --neon-purple: #7b2fe3;
-        --neon-blue: #1e90ff;
-        --neon-cyan: #00f3ff;
-        --neon-pink: #ff1493;
-        --neon-orange: #ff7b00;
-        --neon-yellow: #ffb700;
+        --quantum-cyan: #00f0c0;
+        --quantum-purple: #7b2fe3;
+        --quantum-pink: #ff2a6d;
+        --quantum-blue: #1e90ff;
+        --quantum-yellow: #ffb700;
+        --quantum-dark: #0a0c12;
+        --quantum-component: #181c27;
+        --quantum-border: #3a3f5e;
+        --quantum-text: #e0e7ff;
+        --quantum-secondary: #a0aed0;
       }
 
       /* Base Styles */
@@ -124,22 +109,8 @@
       }
 
       html {
-        background: linear-gradient(-45deg, #1d1a21, #2a1f2d, #1f2a2d, #201c24);
-        background-size: 400% 400%;
-        animation: gradientShift 20s ease infinite;
+        background: var(--quantum-dark);
         min-height: 100%;
-      }
-
-      @keyframes gradientShift {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
       }
 
       body {
@@ -147,7 +118,7 @@
         margin: 0;
         padding: 0;
         min-height: 100vh;
-        color: #fff;
+        color: var(--quantum-text);
         background: transparent;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -156,47 +127,64 @@
       h1,
       h2,
       h3,
-      .impact-text {
-        font-family: "Bebas Neue", sans-serif;
+      h4,
+      h5,
+      h6 {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      /* Quantum grid background */
+      .quantum-grid {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+            rgba(0, 240, 192, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 240, 192, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 0;
+      }
+
+      /* Main container */
+      .main-container {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Navigation */
+      .quantum-nav {
+        background: rgba(24, 28, 39, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--quantum-border);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: 1rem 2rem;
+      }
+
+      .quantum-nav a {
+        color: var(--quantum-secondary);
+        text-decoration: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 8px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.875rem;
+        font-weight: 500;
         letter-spacing: 0.05em;
         text-transform: uppercase;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
       }
 
-      /* Main Navigation Styles */
-      .main-nav {
-        background: linear-gradient(
-          90deg,
-          rgba(0, 0, 0, 0.8) 0%,
-          rgba(123, 47, 227, 0.2) 50%,
-          rgba(0, 0, 0, 0.8) 100%
-        ) !important;
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
-        border-bottom: 1px solid rgba(123, 47, 227, 0.3) !important;
-        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5) !important;
-        padding: 1rem 2rem !important;
-        display: flex !important;
-        gap: 2rem !important;
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 9999 !important;
-      }
-
-      .main-nav a {
-        color: #fff !important;
-        text-decoration: none !important;
-        padding: 0.5rem 1rem !important;
-        border-radius: 4px !important;
-        font-size: 0.9rem !important;
-        font-weight: 600 !important;
-        letter-spacing: 0.1em !important;
-        text-transform: uppercase !important;
-        transition: all 0.3s ease !important;
-        position: relative !important;
-        overflow: hidden !important;
-      }
-
-      .main-nav a::before {
+      .quantum-nav a::before {
         content: "";
         position: absolute;
         top: 0;
@@ -206,100 +194,181 @@
         background: linear-gradient(
           90deg,
           transparent,
-          rgba(30, 144, 255, 0.4),
+          var(--quantum-cyan),
           transparent
         );
         transition: left 0.5s ease;
       }
 
-      .main-nav a:hover::before {
+      .quantum-nav a:hover {
+        color: var(--quantum-cyan);
+        transform: translateY(-2px);
+      }
+
+      .quantum-nav a:hover::before {
         left: 100%;
       }
 
-      .main-nav a:hover,
-      .main-nav a.active {
-        background-color: var(--neon-blue) !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 4px 15px rgba(30, 144, 255, 0.4) !important;
+      .quantum-nav a.active {
+        background: linear-gradient(
+          135deg,
+          var(--quantum-cyan),
+          var(--quantum-blue)
+        );
+        color: var(--quantum-dark);
+        font-weight: 600;
       }
 
-      /* Tier Badge Styles */
+      /* Header */
+      .quantum-header {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 240, 192, 0.1),
+          rgba(123, 47, 227, 0.05)
+        );
+        border-bottom: 1px solid var(--quantum-border);
+        padding: 3rem 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .quantum-title {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        background: linear-gradient(
+          135deg,
+          var(--quantum-cyan),
+          var(--quantum-purple),
+          var(--quantum-pink)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        line-height: 1.1;
+      }
+
+      /* Floating particles */
+      .particle {
+        position: fixed;
+        pointer-events: none;
+        opacity: 0.6;
+        background: var(--quantum-cyan);
+        width: 2px;
+        height: 2px;
+        border-radius: 50%;
+        box-shadow: 0 0 6px var(--quantum-cyan);
+      }
+
+      /* Filter pills */
+      .filter-pill {
+        background: rgba(24, 28, 39, 0.6);
+        border: 1px solid var(--quantum-border);
+        color: var(--quantum-secondary);
+        padding: 0.5rem 1.25rem;
+        border-radius: 24px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .filter-pill:hover {
+        background: rgba(0, 240, 192, 0.1);
+        border-color: var(--quantum-cyan);
+        color: var(--quantum-cyan);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 240, 192, 0.3);
+      }
+
+      .filter-pill.active {
+        background: var(--quantum-cyan);
+        color: var(--quantum-dark);
+        font-weight: 600;
+        border-color: var(--quantum-cyan);
+        box-shadow: 0 0 20px rgba(0, 240, 192, 0.4);
+      }
+
+      /* Tier badges */
+      .tier-badge {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 800;
+        padding: 0.25rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        display: inline-block;
+      }
+
       .tier-s {
         background: linear-gradient(
           135deg,
-          var(--neon-yellow),
-          var(--neon-orange)
+          var(--quantum-yellow),
+          var(--quantum-pink)
         );
-        color: #000;
-        font-weight: 900;
-        padding: 4px 12px;
-        border-radius: 6px;
-        box-shadow: 0 0 20px rgba(255, 183, 0, 0.6);
-        animation: neon-pulse 2s infinite;
-        text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-      }
-
-      @keyframes neon-pulse {
-        0%,
-        100% {
-          box-shadow: 0 0 20px rgba(255, 183, 0, 0.4);
-        }
-        50% {
-          box-shadow: 0 0 30px rgba(255, 183, 0, 0.8);
-        }
+        color: var(--quantum-dark);
+        box-shadow: 0 0 20px rgba(255, 183, 0, 0.5);
+        animation: pulse-glow 2s infinite;
       }
 
       .tier-a {
         background: linear-gradient(
           135deg,
-          var(--neon-purple),
-          var(--neon-blue)
+          var(--quantum-purple),
+          var(--quantum-blue)
         );
         color: white;
-        font-weight: 800;
-        padding: 4px 12px;
-        border-radius: 6px;
         box-shadow: 0 0 15px rgba(123, 47, 227, 0.4);
       }
 
       .tier-b {
-        background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+        background: linear-gradient(
+          135deg,
+          var(--quantum-cyan),
+          var(--quantum-blue)
+        );
         color: white;
-        font-weight: 700;
-        padding: 4px 12px;
-        border-radius: 6px;
-        box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        box-shadow: 0 0 12px rgba(0, 240, 192, 0.3);
       }
 
       .tier-c {
-        background: linear-gradient(135deg, var(--neon-blue), #45b7d1);
+        background: linear-gradient(135deg, #45b7d1, #667eea);
         color: white;
-        font-weight: 600;
-        padding: 4px 12px;
-        border-radius: 6px;
-        box-shadow: 0 0 12px rgba(30, 144, 255, 0.3);
       }
 
       .tier-d {
-        background: linear-gradient(135deg, #666, #999);
+        background: linear-gradient(135deg, #4a5568, #718096);
         color: white;
-        font-weight: 600;
-        padding: 4px 12px;
-        border-radius: 6px;
-        box-shadow: 0 0 10px rgba(102, 102, 102, 0.2);
       }
 
-      /* Weapon Card Styles */
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(255, 183, 0, 0.5);
+          transform: scale(1);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(255, 183, 0, 0.8);
+          transform: scale(1.05);
+        }
+      }
+
+      /* Weapon cards */
       .weapon-card {
-        background: linear-gradient(
-          135deg,
-          rgba(0, 0, 0, 0.8),
-          rgba(123, 47, 227, 0.1)
-        );
-        border: 1px solid rgba(123, 47, 227, 0.3);
+        background: rgba(24, 28, 39, 0.6);
+        border: 1px solid var(--quantum-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
       }
@@ -307,1572 +376,1064 @@
       .weapon-card::before {
         content: "";
         position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
         background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(123, 47, 227, 0.2),
-          transparent
+          45deg,
+          var(--quantum-cyan),
+          var(--quantum-purple),
+          var(--quantum-pink)
         );
-        transition: left 0.5s ease;
-      }
-
-      .weapon-card:hover::before {
-        left: 100%;
+        border-radius: 12px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
       }
 
       .weapon-card:hover {
         transform: translateY(-4px);
-        border-color: var(--neon-purple);
-        box-shadow: 0 8px 30px rgba(123, 47, 227, 0.4);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
       }
 
-      .weapon-card.nerfed {
-        border-color: rgba(255, 68, 68, 0.5);
+      .weapon-card:hover::before {
+        opacity: 0.5;
       }
 
-      .weapon-card.buffed {
-        border-color: rgba(0, 255, 136, 0.5);
+      .weapon-card.tier-s-card {
+        background: rgba(24, 28, 39, 0.4);
+        border: 1px solid rgba(255, 183, 0, 0.4);
+        box-shadow: 0 0 12px rgba(255, 183, 0, 0.1);
       }
 
-      /* Status Indicators */
-      .status-rising {
-        color: var(--neon-cyan);
-        font-weight: 600;
-        text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+      .weapon-card.tier-a-card {
+        background: rgba(123, 47, 227, 0.05);
+        border-color: rgba(123, 47, 227, 0.3);
       }
 
-      .status-falling {
-        color: var(--neon-pink);
-        font-weight: 600;
-        text-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
+      /* Weapon name */
+      .weapon-name {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        font-size: 1.125rem;
+        letter-spacing: 0.02em;
+        color: var(--quantum-text);
+        margin-bottom: 0.5rem;
       }
 
-      .status-stable {
-        color: var(--neon-yellow);
-        font-weight: 600;
-        text-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
-      }
-
-      /* TTK Tooltip */
-      .ttk-tooltip {
-        position: relative;
+      /* Quick stats */
+      .stat-icon {
+        width: 16px;
+        height: 16px;
         display: inline-block;
-        cursor: help;
+        margin-right: 0.25rem;
+        vertical-align: middle;
+        opacity: 0.7;
       }
 
-      .ttk-tooltip .tooltip-content {
-        visibility: hidden;
-        background: linear-gradient(
-          135deg,
-          rgba(0, 0, 0, 0.9),
-          rgba(123, 47, 227, 0.2)
-        );
-        color: white;
-        text-align: left;
-        padding: 10px;
-        border-radius: 6px;
-        position: absolute;
-        z-index: 1000;
-        bottom: 125%;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 200px;
-        border: 1px solid var(--neon-purple);
-        box-shadow: 0 4px 20px rgba(123, 47, 227, 0.3);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        opacity: 0;
-        transition: opacity 0.3s;
+      .stat-value {
+        font-family: "Fira Code", monospace;
+        font-weight: 600;
+        color: var(--quantum-cyan);
+        font-size: 0.875rem;
       }
 
-      .ttk-tooltip:hover .tooltip-content {
-        visibility: visible;
-        opacity: 1;
-      }
-
-      /* Class Colors */
-      .light-header {
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(0, 243, 255, 0.2),
-          transparent
-        );
-        border-left: 4px solid var(--neon-cyan);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-      }
-
-      .medium-header {
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(123, 47, 227, 0.2),
-          transparent
-        );
-        border-left: 4px solid var(--neon-purple);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-      }
-
-      .heavy-header {
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 183, 0, 0.2),
-          transparent
-        );
-        border-left: 4px solid var(--neon-yellow);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-      }
-
-      /* Quick Stats Bar */
+      /* Visual stat bars */
       .stat-bar {
-        height: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 3px;
+        height: 4px;
+        background: rgba(58, 63, 94, 0.5);
+        border-radius: 2px;
         overflow: hidden;
-        position: relative;
-        border: 1px solid rgba(123, 47, 227, 0.2);
+        margin-top: 0.5rem;
       }
 
       .stat-fill {
         height: 100%;
         background: linear-gradient(
           90deg,
-          var(--neon-cyan),
-          var(--neon-purple),
-          var(--neon-yellow)
+          var(--quantum-cyan),
+          var(--quantum-purple)
         );
-        transition: width 0.5s ease;
-        box-shadow: 0 0 10px rgba(123, 47, 227, 0.3);
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 8px rgba(0, 240, 192, 0.5);
       }
 
-      /* Animation for new/updated content */
-      .update-badge {
-        background: linear-gradient(
-          135deg,
-          var(--neon-yellow),
-          var(--neon-orange)
-        );
-        color: black;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        font-weight: bold;
-        text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-        box-shadow: 0 0 15px rgba(255, 183, 0, 0.4);
-        animation: badge-pulse 2s infinite;
-      }
-
-      @keyframes badge-pulse {
-        0%,
-        100% {
-          transform: scale(1);
-          box-shadow: 0 0 15px rgba(255, 183, 0, 0.4);
-        }
-        50% {
-          transform: scale(1.05);
-          box-shadow: 0 0 20px rgba(255, 183, 0, 0.6);
-        }
-      }
-
-      /* Filter pills */
-      .filter-pill {
-        background: rgba(0, 0, 0, 0.6);
-        border: 1px solid rgba(123, 47, 227, 0.3);
-        padding: 6px 16px;
-        border-radius: 20px;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+      /* Status badges */
+      .status-badge {
+        font-family: "Fira Code", monospace;
+        font-size: 0.625rem;
         font-weight: 600;
+        padding: 0.125rem 0.5rem;
+        border-radius: 12px;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.1em;
       }
 
-      .filter-pill:hover {
-        background: rgba(123, 47, 227, 0.2);
-        border-color: var(--neon-purple);
-        box-shadow: 0 4px 15px rgba(123, 47, 227, 0.3);
-        transform: translateY(-2px);
+      .status-meta {
+        background: var(--quantum-cyan);
+        color: var(--quantum-dark);
       }
 
-      .filter-pill.active {
-        background: var(--neon-purple);
-        color: white;
-        font-weight: bold;
-        border-color: var(--neon-purple);
-        box-shadow: 0 0 20px rgba(123, 47, 227, 0.4);
+      .status-buffed {
+        background: rgba(0, 255, 136, 0.2);
+        color: #00ff88;
+        border: 1px solid #00ff88;
       }
 
-      /* Header Styling */
-      .header-section {
+      .status-nerfed {
+        background: rgba(255, 42, 109, 0.2);
+        color: var(--quantum-pink);
+        border: 1px solid var(--quantum-pink);
+      }
+
+      /* Class headers */
+      .class-header {
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .class-header.light {
         background: linear-gradient(
           135deg,
-          rgba(0, 0, 0, 0.8),
-          rgba(123, 47, 227, 0.2)
+          rgba(0, 240, 192, 0.1),
+          rgba(0, 240, 192, 0.05)
         );
-        border-bottom: 2px solid rgba(123, 47, 227, 0.3);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 240, 192, 0.3);
       }
 
-      .main-title {
-        background: linear-gradient(135deg, #7b2fe3, #1e90ff, #00f3ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-shadow: 0 0 20px rgba(123, 47, 227, 0.5);
-        animation: text-glow 3s ease-in-out infinite alternate;
-      }
-
-      @keyframes text-glow {
-        0% {
-          text-shadow: 0 0 20px rgba(123, 47, 227, 0.5);
-        }
-        100% {
-          text-shadow: 0 0 30px rgba(123, 47, 227, 0.8);
-        }
-      }
-
-      /* Alert Section */
-      .alert-section {
+      .class-header.medium {
         background: linear-gradient(
           135deg,
-          rgba(255, 20, 147, 0.2),
-          rgba(255, 68, 68, 0.1)
+          rgba(123, 47, 227, 0.1),
+          rgba(123, 47, 227, 0.05)
         );
-        border: 1px solid rgba(255, 20, 147, 0.3);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(123, 47, 227, 0.3);
+      }
+
+      .class-header.heavy {
+        background: linear-gradient(
+          135deg,
+          rgba(24, 28, 39, 0.6),
+          rgba(24, 28, 39, 0.3)
+        );
+        border: 1px solid rgba(255, 183, 0, 0.3);
       }
 
       /* Responsive */
       @media (max-width: 768px) {
-        .main-nav {
-          gap: 1rem !important;
-          padding: 0.75rem 1rem !important;
-          flex-wrap: wrap;
+        .quantum-nav {
+          padding: 0.75rem 1rem;
         }
 
-        .main-nav a {
-          font-size: 0.8rem !important;
-          padding: 0.4rem 0.8rem !important;
+        .quantum-nav a {
+          font-size: 0.75rem;
+          padding: 0.375rem 0.75rem;
         }
 
         .weapon-card {
-          margin-bottom: 1rem;
+          padding: 1rem;
         }
 
-        .main-title {
-          font-size: 2.5rem !important;
+        .weapon-name {
+          font-size: 1rem;
         }
 
         .filter-pill {
-          font-size: 0.8rem;
-          padding: 4px 12px;
+          font-size: 0.625rem;
+          padding: 0.375rem 0.75rem;
         }
+      }
 
-        /* Mobile optimizations */
-        .weapon-card:hover {
-          transform: translateY(-2px);
-        }
+      /* Tooltip */
+      .tooltip {
+        position: relative;
+        display: inline-block;
+      }
 
-        .tier-s,
-        .tier-a,
-        .tier-b,
-        .tier-c,
-        .tier-d {
-          font-size: 0.8rem;
-          padding: 3px 8px;
-        }
+      .tooltip .tooltip-content {
+        visibility: hidden;
+        background: rgba(24, 28, 39, 0.95);
+        color: var(--quantum-text);
+        text-align: left;
+        padding: 0.75rem;
+        border-radius: 8px;
+        position: absolute;
+        z-index: 1000;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200px;
+        border: 1px solid var(--quantum-border);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-family: "Fira Code", monospace;
+        font-size: 0.75rem;
+        line-height: 1.4;
+      }
 
-        /* Reduce backdrop-filter on mobile for performance */
-        @media (max-width: 480px) {
-          .weapon-card,
-          .filter-pill,
-          .header-section,
-          .alert-section {
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-          }
+      .tooltip:hover .tooltip-content {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      /* Scanline effect */
+      .scanline {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--quantum-cyan),
+          transparent
+        );
+        opacity: 0.5;
+        animation: scanline 8s linear infinite;
+        pointer-events: none;
+        z-index: 999;
+      }
+
+      @keyframes scanline {
+        0% {
+          transform: translateY(-100vh);
         }
+        100% {
+          transform: translateY(100vh);
+        }
+      }
+
+      /* Search bar */
+      .search-bar {
+        background: rgba(24, 28, 39, 0.6);
+        border: 1px solid var(--quantum-border);
+        border-radius: 24px;
+        padding: 0.5rem 1.5rem;
+        font-family: "Fira Code", monospace;
+        font-size: 0.875rem;
+        color: var(--quantum-text);
+        width: 100%;
+        max-width: 300px;
+        transition: all 0.3s ease;
+      }
+
+      .search-bar:focus {
+        outline: none;
+        border-color: var(--quantum-cyan);
+        box-shadow: 0 0 12px rgba(0, 240, 192, 0.3);
       }
     </style>
   </head>
-  <body class="text-white min-h-screen">
-    <!-- Navigation -->
-    <nav class="main-nav">
-      <a href="../index.html">LOADOUT GENERATOR</a>
-      <a href="../ragequit/index.html">Rage Quit</a>
-      <a href="../patch-notes/index.html">Patch Notes</a>
-      <a href="#" class="active">Meta Weapons</a>
-    </nav>
+  <body>
+    <div class="quantum-grid"></div>
+    <div class="scanline"></div>
 
-    <!-- Header -->
-    <header class="header-section py-8">
-      <div class="container mx-auto px-4">
-        <h1 class="main-title text-4xl md:text-5xl font-bold mb-2">
-          Season 7 Meta Weapons Tier List
-        </h1>
-        <p class="text-xl text-gray-300">
-          The Divide Update • Post-Patch Rankings
-        </p>
-        <div class="mt-4 flex flex-wrap gap-2">
-          <span class="update-badge">Updated 7/1/2025</span>
-          <span class="text-sm text-gray-400"
-            >Healing Meta Impact Included</span
-          >
+    <div class="main-container">
+      <!-- Navigation -->
+      <nav class="quantum-nav">
+        <div class="container mx-auto flex justify-between items-center">
+          <div class="flex items-center gap-6">
+            <a href="../index.html">LOADOUT GENERATOR</a>
+            <a href="../ragequit/index.html">RAGE QUIT</a>
+            <a href="../patch-notes/index.html">PATCH NOTES</a>
+            <a href="#" class="active">META WEAPONS</a>
+          </div>
+          <input
+            type="text"
+            class="search-bar"
+            placeholder="Search weapons..."
+            id="searchBar"
+          />
         </div>
-      </div>
-    </header>
+      </nav>
 
-    <!-- Key Changes Alert -->
-    <section class="alert-section py-4">
-      <div class="container mx-auto px-4">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">⚠️</span>
-          <div>
-            <h2 class="text-lg font-bold text-red-400">
-              Major Season 7 Changes
-            </h2>
-            <p class="text-sm text-gray-300">
-              Sledgehammer nerfed (115→100), Cerberus weakened (10→9 pellets),
-              ARN-220 recoil normalized, FAMAS now meta, healing gadgets changed
-              everything
-            </p>
+      <!-- Header -->
+      <header class="quantum-header">
+        <div class="container mx-auto px-4">
+          <h1 class="quantum-title text-5xl md:text-6xl mb-2">
+            Season 7 Meta Weapons
+          </h1>
+          <p class="text-xl text-quantum-secondary">
+            The Divide Update • Tier Rankings • Patch 7.3.0
+          </p>
+          <div class="mt-4 flex items-center gap-4">
+            <span class="status-badge status-meta">UPDATED POST-7.3.0</span>
+            <span class="text-sm text-quantum-secondary"
+              >Major Balance Changes</span
+            >
           </div>
         </div>
-      </div>
-    </section>
+      </header>
 
-    <!-- Quick Filter Section -->
-    <section
-      class="sticky top-0 z-50 py-4 shadow-lg"
-      style="
-        background: linear-gradient(
-          135deg,
-          rgba(0, 0, 0, 0.95),
-          rgba(123, 47, 227, 0.2)
-        );
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-      "
-    >
-      <div class="container mx-auto px-4">
-        <div class="flex flex-wrap gap-2">
-          <button class="filter-pill active" data-filter="all">
-            All Classes
-          </button>
-          <button class="filter-pill" data-filter="light">Light</button>
-          <button class="filter-pill" data-filter="medium">Medium</button>
-          <button class="filter-pill" data-filter="heavy">Heavy</button>
-          <span class="mx-2 text-gray-500">|</span>
-          <button class="filter-pill" data-tier="s">S-Tier Only</button>
-          <button class="filter-pill" data-tier="meta">Meta Picks</button>
+      <!-- Quick Filters -->
+      <section
+        class="sticky top-16 z-50 py-4 bg-quantum-dark/90 backdrop-blur-md border-b border-quantum-border"
+      >
+        <div class="container mx-auto px-4">
+          <div class="flex flex-wrap gap-2 items-center">
+            <button class="filter-pill active" data-filter="all">
+              ALL CLASSES
+            </button>
+            <button class="filter-pill" data-filter="light">LIGHT</button>
+            <button class="filter-pill" data-filter="medium">MEDIUM</button>
+            <button class="filter-pill" data-filter="heavy">HEAVY</button>
+            <span class="mx-2 text-quantum-border">|</span>
+            <button class="filter-pill" data-tier="s">S-TIER</button>
+            <button class="filter-pill" data-tier="meta">META ONLY</button>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Main Content -->
-    <main class="py-8">
-      <div class="container mx-auto px-4">
-        <!-- Light Class Section -->
-        <section class="mb-12" data-class="light">
-          <div class="light-header rounded-lg p-4 mb-6">
-            <h2 class="text-3xl font-bold text-cyan-400">
-              Light Class Weapons
+      <!-- Main Content -->
+      <main class="py-8">
+        <div class="container mx-auto px-4">
+          <!-- Light Class Section -->
+          <section data-class="light" class="mb-12">
+            <div class="class-header light">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h2
+                    class="text-3xl font-bold"
+                    style="color: var(--quantum-cyan)"
+                  >
+                    LIGHT CLASS WEAPONS
+                  </h2>
+                  <p class="text-quantum-secondary mt-1">
+                    High mobility • Close-range dominance
+                  </p>
+                </div>
+                <div class="text-right">
+                  <span
+                    class="text-2xl font-bold"
+                    style="color: var(--quantum-cyan)"
+                    >12</span
+                  >
+                  <p class="text-sm text-quantum-secondary">Weapons</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- S-Tier Light -->
+            <div class="mb-8">
+              <h3 class="text-xl font-bold mb-4 flex items-center gap-3">
+                <span class="tier-badge tier-s">S-TIER</span>
+                <span class="text-quantum-secondary">Meta Defining</span>
+              </h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- XP-54 -->
+                <div class="weapon-card tier-s-card">
+                  <div class="flex justify-between items-start mb-3">
+                    <div>
+                      <h4 class="weapon-name">XP-54 SMG</h4>
+                      <div class="flex gap-2">
+                        <span class="status-badge status-nerfed"
+                          >NERFED 7.3</span
+                        >
+                        <span class="tier-badge tier-s">S</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">DPS</p>
+                      <p class="stat-value">213</p>
+                    </div>
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">DMG</p>
+                      <p class="stat-value">15</p>
+                    </div>
+                    <div class="text-center tooltip">
+                      <p class="text-xs text-quantum-secondary">TTK</p>
+                      <p class="stat-value">0.70s</p>
+                      <div class="tooltip-content">
+                        Light: 0.70s<br />
+                        Medium: 1.16s<br />
+                        Heavy: 1.63s
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="text-sm text-quantum-secondary mb-2">
+                    Still dominant despite nerfs • 16→15 damage • Reliable
+                  </p>
+
+                  <div class="stat-bar">
+                    <div class="stat-fill" style="width: 90%"></div>
+                  </div>
+                </div>
+
+                <!-- ARN-220 -->
+                <div class="weapon-card tier-s-card">
+                  <div class="flex justify-between items-start mb-3">
+                    <div>
+                      <h4 class="weapon-name">ARN-220 Carbine</h4>
+                      <div class="flex gap-2">
+                        <span class="status-badge status-buffed">BUFFED</span>
+                        <span class="tier-badge tier-s">S</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">DPS</p>
+                      <p class="stat-value">227</p>
+                    </div>
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">RANGE</p>
+                      <p class="stat-value">+++</p>
+                    </div>
+                    <div class="text-center tooltip">
+                      <p class="text-xs text-quantum-secondary">TTK</p>
+                      <p class="stat-value">0.66s</p>
+                      <div class="tooltip-content">
+                        Light: 0.66s<br />
+                        Medium: 1.10s<br />
+                        Heavy: 1.54s
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="text-sm text-quantum-secondary mb-2">
+                    The new king? • Laser-accurate • Range advantage
+                  </p>
+
+                  <div class="stat-bar">
+                    <div class="stat-fill" style="width: 96%"></div>
+                  </div>
+                </div>
+
+                <!-- M11 -->
+                <div class="weapon-card tier-s-card">
+                  <div class="flex justify-between items-start mb-3">
+                    <div>
+                      <h4 class="weapon-name">M11 SMG</h4>
+                      <div class="flex gap-2">
+                        <span
+                          class="text-xs px-2 py-1 bg-orange-500/20 text-orange-400 rounded"
+                          >HIGH SKILL</span
+                        >
+                        <span class="tier-badge tier-s">S</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">DPS</p>
+                      <p class="stat-value">267</p>
+                    </div>
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">RPM</p>
+                      <p class="stat-value">1000</p>
+                    </div>
+                    <div class="text-center tooltip">
+                      <p class="text-xs text-quantum-secondary">TTK</p>
+                      <p class="stat-value">0.54s</p>
+                      <div class="tooltip-content">
+                        Light: 0.54s<br />
+                        Medium: 0.90s<br />
+                        Heavy: 1.26s
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="text-sm text-quantum-secondary mb-2">
+                    Highest Light DPS • Extreme recoil • Raw power
+                  </p>
+
+                  <div class="stat-bar">
+                    <div class="stat-fill" style="width: 88%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- A-Tier Light -->
+            <div class="mb-8">
+              <h3 class="text-xl font-bold mb-4 flex items-center gap-3">
+                <span class="tier-badge tier-a">A-TIER</span>
+                <span class="text-quantum-secondary">Strong & Reliable</span>
+              </h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- 93R -->
+                <div class="weapon-card tier-a-card">
+                  <div class="flex justify-between items-start mb-3">
+                    <div>
+                      <h4 class="weapon-name">93R Burst Pistol</h4>
+                      <div class="flex gap-2">
+                        <span class="status-badge status-buffed">BUFFED</span>
+                        <span class="tier-badge tier-a">A</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">MAG</p>
+                      <p class="stat-value">24</p>
+                    </div>
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">BURST</p>
+                      <p class="stat-value">3RD</p>
+                    </div>
+                    <div class="text-center tooltip">
+                      <p class="text-xs text-quantum-secondary">TTK</p>
+                      <p class="stat-value">0.38s</p>
+                      <div class="tooltip-content">
+                        Light: 0.38s<br />
+                        Medium: 0.76s<br />
+                        Heavy: 1.14s
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="text-sm text-quantum-secondary mb-2">
+                    Two-burst potential • Magazine buffed 21→24
+                  </p>
+
+                  <div class="stat-bar">
+                    <div class="stat-fill" style="width: 85%"></div>
+                  </div>
+                </div>
+
+                <!-- V9S -->
+                <div class="weapon-card tier-a-card">
+                  <div class="flex justify-between items-start mb-3">
+                    <div>
+                      <h4 class="weapon-name">V9S Pistol</h4>
+                      <div class="flex gap-2">
+                        <span class="status-badge status-nerfed"
+                          >NERFED 7.3</span
+                        >
+                        <span class="tier-badge tier-a">A</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">DMG</p>
+                      <p class="stat-value">38</p>
+                    </div>
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">MAG</p>
+                      <p class="stat-value">20</p>
+                    </div>
+                    <div class="text-center tooltip">
+                      <p class="text-xs text-quantum-secondary">TTK</p>
+                      <p class="stat-value">0.60s</p>
+                      <div class="tooltip-content">
+                        Light: 0.60s<br />
+                        Medium: 1.20s<br />
+                        Heavy: 1.80s
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="text-sm text-quantum-secondary mb-2">
+                    Heavy hitter • 40→38 damage • Still silenced
+                  </p>
+
+                  <div class="stat-bar">
+                    <div class="stat-fill" style="width: 82%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- B/C/D Tiers condensed -->
+            <div class="mb-8">
+              <h3 class="text-xl font-bold mb-4 flex items-center gap-3">
+                <span class="tier-badge tier-b">B</span>
+                <span class="tier-badge tier-c">C</span>
+                <span class="tier-badge tier-d">D</span>
+                <span class="text-quantum-secondary">Situational & Avoid</span>
+              </h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
+                <!-- Condensed cards for lower tiers -->
+                <div class="weapon-card">
+                  <h4 class="weapon-name text-base">Throwing Knives</h4>
+                  <span class="tier-badge tier-b">B</span>
+                  <p class="text-xs text-quantum-secondary mt-1">
+                    High skill • One-shot potential
+                  </p>
+                </div>
+                <div class="weapon-card">
+                  <h4 class="weapon-name text-base">SR-84 Sniper</h4>
+                  <span class="tier-badge tier-b">B</span>
+                  <p class="text-xs text-quantum-secondary mt-1">
+                    Headshot specialist
+                  </p>
+                </div>
+                <div class="weapon-card">
+                  <h4 class="weapon-name text-base">Dagger</h4>
+                  <span class="tier-badge tier-c">C</span>
+                  <p class="text-xs text-quantum-secondary mt-1">Meme pick</p>
+                </div>
+                <div class="weapon-card">
+                  <h4 class="weapon-name text-base">Dual Blades</h4>
+                  <span class="tier-badge tier-d">D</span>
+                  <p class="text-xs text-red-400 mt-1">Worst weapon - avoid</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Medium Class Section -->
+          <section data-class="medium" class="mb-12">
+            <div class="class-header medium">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h2
+                    class="text-3xl font-bold"
+                    style="color: var(--quantum-purple)"
+                  >
+                    MEDIUM CLASS WEAPONS
+                  </h2>
+                  <p class="text-quantum-secondary mt-1">
+                    Versatile arsenal • All ranges
+                  </p>
+                </div>
+                <div class="text-right">
+                  <span
+                    class="text-2xl font-bold"
+                    style="color: var(--quantum-purple)"
+                    >10</span
+                  >
+                  <p class="text-sm text-quantum-secondary">Weapons</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- S-Tier Medium -->
+            <div class="mb-8">
+              <h3 class="text-xl font-bold mb-4 flex items-center gap-3">
+                <span class="tier-badge tier-s">S-TIER</span>
+                <span class="text-quantum-secondary">Meta Defining</span>
+              </h3>
+              <div class="grid md:grid-cols-2 gap-4">
+                <!-- FAMAS -->
+                <div class="weapon-card tier-s-card">
+                  <div class="flex justify-between items-start mb-3">
+                    <div>
+                      <h4 class="weapon-name">FAMAS Burst Rifle</h4>
+                      <div class="flex gap-2">
+                        <span class="status-badge status-nerfed"
+                          >NERFED 7.3</span
+                        >
+                        <span class="tier-badge tier-s">S</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">DMG</p>
+                      <p class="stat-value">22</p>
+                    </div>
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">BURST</p>
+                      <p class="stat-value">3RD</p>
+                    </div>
+                    <div class="text-center tooltip">
+                      <p class="text-xs text-quantum-secondary">TTK</p>
+                      <p class="stat-value">0.88s</p>
+                      <div class="tooltip-content">
+                        Light: 0.88s<br />
+                        Medium: 1.47s<br />
+                        Heavy: 2.06s
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="text-sm text-quantum-secondary mb-2">
+                    Still meta • 24→22 damage • Recoil increased
+                  </p>
+
+                  <div class="stat-bar">
+                    <div class="stat-fill" style="width: 93%"></div>
+                  </div>
+                </div>
+
+                <!-- AKM -->
+                <div class="weapon-card tier-s-card">
+                  <div class="flex justify-between items-start mb-3">
+                    <div>
+                      <h4 class="weapon-name">AKM Assault Rifle</h4>
+                      <div class="flex gap-2">
+                        <span class="status-badge status-meta">RELIABLE</span>
+                        <span class="tier-badge tier-s">S</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">DPS</p>
+                      <p class="stat-value">200</p>
+                    </div>
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">RPM</p>
+                      <p class="stat-value">600</p>
+                    </div>
+                    <div class="text-center tooltip">
+                      <p class="text-xs text-quantum-secondary">TTK</p>
+                      <p class="stat-value">0.70s</p>
+                      <div class="tooltip-content">
+                        Light: 0.70s<br />
+                        Medium: 1.20s<br />
+                        Heavy: 1.70s
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="text-sm text-quantum-secondary mb-2">
+                    Old reliable • Never disappoints • Workhorse
+                  </p>
+
+                  <div class="stat-bar">
+                    <div class="stat-fill" style="width: 92%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Heavy Class Section -->
+          <section data-class="heavy" class="mb-12">
+            <div class="class-header heavy">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h2
+                    class="text-3xl font-bold"
+                    style="color: var(--quantum-yellow)"
+                  >
+                    HEAVY CLASS WEAPONS
+                  </h2>
+                  <p class="text-quantum-secondary mt-1">
+                    Maximum firepower • Tank builds
+                  </p>
+                </div>
+                <div class="text-right">
+                  <span
+                    class="text-2xl font-bold"
+                    style="color: var(--quantum-yellow)"
+                    >11</span
+                  >
+                  <p class="text-sm text-quantum-secondary">Weapons</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- S-Tier Heavy -->
+            <div class="mb-8">
+              <h3 class="text-xl font-bold mb-4 flex items-center gap-3">
+                <span class="tier-badge tier-s">S-TIER</span>
+                <span class="text-quantum-secondary">Undisputed King</span>
+              </h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- ShAK-50 -->
+                <div class="weapon-card tier-s-card">
+                  <div class="flex justify-between items-start mb-3">
+                    <div>
+                      <h4 class="weapon-name">ShAK-50 Auto Rifle</h4>
+                      <div class="flex gap-2">
+                        <span class="status-badge status-meta"
+                          >👑 META KING</span
+                        >
+                        <span class="tier-badge tier-s">S</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">DPS</p>
+                      <p class="stat-value">210</p>
+                    </div>
+                    <div class="text-center">
+                      <p class="text-xs text-quantum-secondary">RANGE</p>
+                      <p class="stat-value">ALL</p>
+                    </div>
+                    <div class="text-center tooltip">
+                      <p class="text-xs text-quantum-secondary">TTK</p>
+                      <p class="stat-value">0.57s</p>
+                      <div class="tooltip-content">
+                        Light: 0.57s<br />
+                        Medium: 0.95s<br />
+                        Heavy: 1.33s
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="text-sm text-quantum-secondary mb-2">
+                    Versatility monster • Works at all ranges • THE Heavy pick
+                  </p>
+
+                  <div class="stat-bar">
+                    <div class="stat-fill" style="width: 99%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Meta Loadouts Section -->
+          <section class="mb-12">
+            <h2
+              class="text-3xl font-bold mb-6"
+              style="color: var(--quantum-yellow)"
+            >
+              🎯 SEASON 7 META LOADOUTS
             </h2>
-            <p class="text-gray-300 mt-1">
-              High mobility, close-range dominance
-            </p>
-          </div>
-
-          <!-- S-Tier Light -->
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <span class="tier-s">S-TIER</span>
-              <span class="text-gray-400">Meta Defining</span>
-            </h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- XP-54 -->
-              <div class="weapon-card rounded-lg p-5">
-                <div class="flex justify-between items-start mb-3">
+            <div class="grid md:grid-cols-3 gap-6">
+              <div
+                class="weapon-card"
+                style="border-color: var(--quantum-cyan)"
+              >
+                <h3
+                  class="text-xl font-bold mb-4"
+                  style="color: var(--quantum-cyan)"
+                >
+                  LIGHT BUILD
+                </h3>
+                <div class="space-y-3">
                   <div>
-                    <h4 class="text-xl font-bold">XP-54 SMG</h4>
-                    <span class="status-stable text-sm">🟨 STABLE</span>
+                    <p class="text-xs text-quantum-secondary">WEAPON</p>
+                    <p class="font-bold">XP-54 or ARN-220</p>
                   </div>
-                  <span class="tier-s">S</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>DPS:</strong> ~229 | <strong>Fire Rate:</strong> 860
-                    RPM | <strong>TTK:</strong> 0.64/1.06/1.48s (L/M/H)
-                  </p>
-                  <div class="ttk-tooltip">
-                    <span class="text-gray-400 underline">Full TTK ⓘ</span>
-                    <div class="tooltip-content">
-                      <strong>Time to Kill:</strong><br />
-                      🟦 Light (150HP): 0.64s<br />
-                      🟪 Medium (250HP): 1.06s<br />
-                      🟨 Heavy (350HP): 1.48s
-                    </div>
+                  <div>
+                    <p class="text-xs text-quantum-secondary">GADGETS</p>
+                    <p class="font-bold">Stun Gun + Grapple</p>
                   </div>
-                  <p class="text-gray-300">
-                    The undisputed Light GOAT. Low recoil, versatile range, easy
-                    to use. Nerfed in S7: 17→16 damage. Still meta despite
-                    damage nerf.
-                  </p>
-                  <div class="mt-3">
-                    <div class="stat-bar">
-                      <div class="stat-fill" style="width: 95%"></div>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1">
-                      Overall Rating: 95/100
-                    </p>
+                  <div>
+                    <p class="text-xs text-quantum-secondary">SPEC</p>
+                    <p class="font-bold">Evasive Dash</p>
                   </div>
                 </div>
               </div>
 
-              <!-- ARN-220 -->
-              <div class="weapon-card rounded-lg p-5 buffed">
-                <div class="flex justify-between items-start mb-3">
+              <div
+                class="weapon-card"
+                style="border-color: var(--quantum-purple)"
+              >
+                <h3
+                  class="text-xl font-bold mb-4"
+                  style="color: var(--quantum-purple)"
+                >
+                  MEDIUM BUILD
+                </h3>
+                <div class="space-y-3">
                   <div>
-                    <h4 class="text-xl font-bold">ARN-220 Carbine</h4>
-                    <span class="status-rising text-sm">📈 RISING</span>
+                    <p class="text-xs text-quantum-secondary">WEAPON</p>
+                    <p class="font-bold">FAMAS (easy mode)</p>
                   </div>
-                  <span class="tier-s">S</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>DPS:</strong> ~227 |
-                    <strong>TTK:</strong> 0.66/1.10/1.54s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    The new king? Recoil normalization buff made it
-                    laser-accurate. Fantastic range advantage over XP-54. Many
-                    pros now call it "stupid strong." Dual magazine system
-                    (0.75s swap).
-                  </p>
-                  <p class="text-green-400 text-xs font-semibold">
-                    ✨ BUFFED: Recoil normalized
-                  </p>
-                  <div class="mt-3">
-                    <div class="stat-bar">
-                      <div class="stat-fill" style="width: 96%"></div>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1">
-                      Overall Rating: 96/100
-                    </p>
+                  <div>
+                    <p class="text-xs text-quantum-secondary">GADGETS</p>
+                    <p class="font-bold">Defib + Jump Pad</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-quantum-secondary">SPEC</p>
+                    <p class="font-bold">Healing Beam</p>
                   </div>
                 </div>
               </div>
 
-              <!-- M11 -->
-              <div class="weapon-card rounded-lg p-5">
-                <div class="flex justify-between items-start mb-3">
+              <div
+                class="weapon-card"
+                style="border-color: var(--quantum-yellow)"
+              >
+                <h3
+                  class="text-xl font-bold mb-4"
+                  style="color: var(--quantum-yellow)"
+                >
+                  HEAVY BUILD
+                </h3>
+                <div class="space-y-3">
                   <div>
-                    <h4 class="text-xl font-bold">M11 SMG</h4>
-                    <span class="text-sm text-orange-400">⚡ HIGH SKILL</span>
+                    <p class="text-xs text-quantum-secondary">WEAPON</p>
+                    <p class="font-bold">ShAK-50 (no contest)</p>
                   </div>
-                  <span class="tier-s">S</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>DPS:</strong> ~267 |
-                    <strong>Fire Rate:</strong> 1000 RPM |
-                    <strong>TTK:</strong> 0.54/0.90/1.26s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    Highest Light DPS at 1000 RPM, extreme recoil. Raw stats say
-                    S-tier, community says high-A due to difficulty.
-                  </p>
-                  <p class="text-orange-400 text-xs">
-                    ⚠️ Extreme recoil | ✅ Highest Light DPS
-                  </p>
-                  <div class="mt-3">
-                    <div class="stat-bar">
-                      <div class="stat-fill" style="width: 88%"></div>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1">
-                      Overall Rating: 88/100
-                    </p>
+                  <div>
+                    <p class="text-xs text-quantum-secondary">GADGETS</p>
+                    <p class="font-bold">RPG + Dome Shield</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-quantum-secondary">SPEC</p>
+                    <p class="font-bold">Mesh Shield</p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          <!-- A-Tier Light -->
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <span class="tier-a">A-TIER</span>
-              <span class="text-gray-400">Strong & Reliable</span>
-            </h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- 93R -->
-              <div class="weapon-card rounded-lg p-5 buffed">
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">93R Burst Pistol</h4>
-                    <span class="status-rising text-sm">📈 RISING</span>
-                  </div>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>Magazine:</strong> 24 rounds |
-                    <strong>TTK:</strong> 0.38/0.76/1.14s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    Two-burst kill potential on Lights. Better range than XP-54,
-                    more forgiving vs Heavies. Magazine buffed: 21→24 in S7.
-                  </p>
-                  <p class="text-green-400 text-xs font-semibold">
-                    ✨ BUFFED: +3 magazine size
-                  </p>
-                </div>
-              </div>
-
-              <!-- V9-S -->
-              <div class="weapon-card rounded-lg p-5">
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">V9-S Pistol</h4>
-                    <span class="text-sm text-gray-400">Heavy Hitter</span>
-                  </div>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>Damage:</strong> 40/shot |
-                    <strong>TTK:</strong> 0.50/0.75/1.25s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    The .50 cal handcannon. Blazing fast TTK rewards accuracy.
-                    High recoil keeps it from S-tier. Silenced - reduced enemy
-                    detection.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Double Barrel -->
-              <div
-                class="weapon-card rounded-lg p-5"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">SH-1900 Double Barrel</h4>
-                    <span class="text-sm text-red-400">CQB Only</span>
-                  </div>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p><strong>TTK:</strong> 0.20/0.20/0.40s (L/M/H)</p>
-                  <p class="text-gray-300">
-                    Instant delete button at point-blank. Valuable in healing
-                    meta for one-shot potential. Zero range flexibility.
-                  </p>
-                </div>
-              </div>
-
-              <!-- LH1 -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border-2 border-gray-600 buffed"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">LH1 Pistol</h4>
-                    <span class="status-rising text-sm">📈 RISING</span>
-                  </div>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>Damage:</strong> 42 (buffed from 40) |
-                    <strong>TTK:</strong> 0.60/1.00/1.40s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    "Back in play" after damage buff. Still overshadowed by
-                    ARN-220 for range play.
-                  </p>
-                  <p class="text-green-400 text-xs font-semibold">
-                    ✨ BUFFED: +2 damage
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- B-Tier Light -->
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <span class="tier-b">B-TIER</span>
-              <span class="text-gray-400">Situational Picks</span>
-            </h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- Throwing Knives -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">Throwing Knives</h4>
-                    <span class="text-sm text-orange-400">⚡ HIGH SKILL</span>
-                  </div>
-                  <span class="tier-b">B</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p class="text-gray-300">
-                    One-shot potential on Lights. Bonkers burst damage in right
-                    hands. Too unforgiving for most players.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Recurve Bow -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">Recurve Bow</h4>
-                    <span class="text-sm text-orange-400">⚡ HIGH SKILL</span>
-                  </div>
-                  <span class="tier-b">B</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p class="text-gray-300">
-                    Versatile range, good burst vs healing meta. Projectile
-                    physics + charge timing = steep learning curve.
-                  </p>
-                </div>
-              </div>
-
-              <!-- M26 Matter -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">M26 Matter</h4>
-                    <span class="text-sm text-gray-400">Niche</span>
-                  </div>
-                  <span class="tier-b">B</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p class="text-gray-300">
-                    2-shot mag slug pistol. High risk, moderate reward. Long
-                    reload kills multi-target potential.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- C/D-Tier Light -->
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <span class="tier-c">C-TIER</span> &
-              <span class="tier-d">D-TIER</span>
-              <span class="text-gray-400">Avoid These</span>
-            </h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- Dagger -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">Dagger</h4>
-                  <span class="tier-c">C</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p class="text-gray-300">
-                    Basic melee. Hit detection improved but still just a meme
-                    pick.
-                  </p>
-                </div>
-              </div>
-
-              <!-- SR-84 -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">SR-84 Sniper</h4>
-                    <span class="text-sm text-orange-400"
-                      >⚠️ High skill ceiling</span
-                    >
-                  </div>
-                  <span class="tier-b">B</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>DPS:</strong> ~79 |
-                    <strong>TTK:</strong> 1.50/3.00/3.00s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    One-shot headshot vs Light/Medium. Healing meta hurts
-                    follow-ups.
-                  </p>
-                  <p class="text-xs">
-                    ✅ One-shot potential | ⚠️ High skill ceiling
-                  </p>
-                </div>
-              </div>
-
-              <!-- Dual Blades -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-red-700 nerfed"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">Dual Blades</h4>
-                    <span class="status-falling text-sm">📉 TERRIBLE</span>
-                  </div>
-                  <span class="tier-d">D</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p class="text-gray-300">
-                    Worst weapon in the game. Buggy hit reg, poor damage,
-                    useless blocking. "Quite terrible" - Reddit
-                  </p>
-                  <p class="text-red-400 text-xs font-semibold">
-                    ❌ AVOID AT ALL COSTS
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Medium Class Section -->
-        <section class="mb-12" data-class="medium">
-          <div class="medium-header rounded-lg p-4 mb-6">
-            <h2 class="text-3xl font-bold text-purple-400">
-              Medium Class Weapons
-            </h2>
-            <p class="text-gray-300 mt-1">
-              Versatile jack-of-all-trades arsenal
-            </p>
-          </div>
-
-          <!-- S-Tier Medium -->
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <span class="tier-s">S-TIER</span>
-              <span class="text-gray-400">Meta Defining</span>
-            </h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- FAMAS -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border-2 border-purple-500/30 buffed"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">FAMAS Burst Rifle</h4>
-                    <span class="status-rising text-sm">📈 NEW META</span>
-                  </div>
-                  <span class="tier-s">S</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>Fire Rate:</strong> 700 RPM |
-                    <strong>TTK:</strong> 0.76/1.27/1.77s (L/M/H) |
-                    <strong>Fire Mode:</strong> 3-round burst
-                  </p>
-                  <p class="text-gray-300">
-                    THE Medium meta pick. Virtually no recoil with red dot.
-                    Laser headshots at range, solid hip-fire up close. Multiple
-                    buffs = dominance.
-                  </p>
-                  <p class="text-green-400 text-xs font-semibold">
-                    ✨ BUFFED: Recoil eliminated
-                  </p>
-                  <div class="mt-3">
-                    <div class="stat-bar">
-                      <div class="stat-fill" style="width: 98%"></div>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1">
-                      Overall Rating: 98/100
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- AKM -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border-2 border-purple-500/30"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">AKM Assault Rifle</h4>
-                    <span class="status-stable text-sm">🟨 STABLE</span>
-                  </div>
-                  <span class="tier-s">S</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>DPS:</strong> ~200 | <strong>Fire Rate:</strong> 600
-                    RPM | <strong>TTK:</strong> 0.70/1.20/1.70s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    Old reliable. No-frills workhorse that never disappoints.
-                    Not overpowered, never a bad choice.
-                  </p>
-                  <div class="mt-3">
-                    <div class="stat-bar">
-                      <div class="stat-fill" style="width: 92%"></div>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1">
-                      Overall Rating: 92/100
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- A-Tier Medium -->
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <span class="tier-a">A-TIER</span>
-              <span class="text-gray-400">Strong Choices</span>
-            </h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- FCAR -->
-              <div
-                class="weapon-card rounded-lg p-5"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">FCAR Battle Rifle</h4>
-                    <span class="text-sm text-orange-400">Skill Weapon</span>
-                  </div>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>DPS:</strong> ~198 | <strong>Fire Rate:</strong> 650
-                    RPM | <strong>TTK:</strong> 0.69/1.15/1.61s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    Gold standard for skilled players. Master the recoil =
-                    dominate mid-long range.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Repeater -->
-              <div
-                class="weapon-card rounded-lg p-5"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">CB-01 Repeater</h4>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>DPS:</strong> ~110 |
-                    <strong>TTK:</strong> 0.78/1.56/3.12s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    Lever-action rifle, high damage per shot. Two-taps Lights
-                    with headshot.
-                  </p>
-                  <p class="text-xs">
-                    ✅ High damage per shot | ✅ Mid-long range
-                  </p>
-                </div>
-              </div>
-
-              <!-- Pike-556 -->
-              <div
-                class="weapon-card rounded-lg p-5"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">Pike-556</h4>
-                    <span class="status-rising text-sm">📈 RISING</span>
-                  </div>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>DPS:</strong> ~173 |
-                    <strong>TTK:</strong> 0.90/1.50/2.10s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    Semi-auto DMR for long range engagements. "Too strong" say
-                    some.
-                  </p>
-                  <p class="text-xs">
-                    ✅ Long range | ✅ High headshot multiplier
-                  </p>
-                </div>
-              </div>
-
-              <!-- Cerberus -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border-2 border-gray-600 nerfed"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">Cerberus 12GA</h4>
-                    <span class="status-stable text-sm">🟨 STABLE</span>
-                  </div>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>Nerf:</strong> 10→9 pellet damage |
-                    <strong>TTK:</strong> 0.50/0.83/1.17s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    Nerfed but still viable: 10→9 pellet damage. Former S-tier
-                    king, still effective.
-                  </p>
-                  <p class="text-red-400 text-xs font-semibold">
-                    ⚠️ NERFED: Less pellet damage
-                  </p>
-                </div>
-              </div>
-
-              <!-- R.357 -->
-              <div
-                class="weapon-card rounded-lg p-5"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">R.357 Revolver</h4>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p><strong>TTK:</strong> 0.48/0.80/1.12s (L/M/H)</p>
-                  <p class="text-gray-300">
-                    Pocket sniper. Headshot + body = dead Light. High risk, high
-                    reward backup.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- B-Tier Medium -->
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <span class="tier-b">B-TIER</span>
-              <span class="text-gray-400">Niche Picks</span>
-            </h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- CL-40 -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">CL-40 Grenade Launcher</h4>
-                  <span class="tier-b">B</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p><strong>TTK:</strong> 1.00/1.50/2.00s (L/M/H)</p>
-                  <p class="text-gray-300">
-                    Area denial specialist. Easy to counter in high-level play.
-                    Good for objectives.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Sword -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700 nerfed"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">Sword</h4>
-                    <span class="status-falling text-sm">📉 NERFED</span>
-                  </div>
-                  <span class="tier-b">B</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p class="text-gray-300">
-                    Heavy nerfs "butchered" its viability. No longer one-shots
-                    Mediums.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Model 1887 -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">Model 1887</h4>
-                  <span class="tier-c">C</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p><strong>TTK:</strong> 0.40/0.80/1.20s (L/M/H)</p>
-                  <p class="text-gray-300">
-                    Lever shotgun. Range nerfed, unforgiving pump action.
-                    Largely unused now.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Heavy Class Section -->
-        <section class="mb-12" data-class="heavy">
-          <div class="heavy-header rounded-lg p-4 mb-6">
-            <h2 class="text-3xl font-bold text-yellow-500">
-              Heavy Class Weapons
-            </h2>
-            <p class="text-gray-300 mt-1">Big guns, maximum firepower</p>
-          </div>
-
-          <!-- S-Tier Heavy -->
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <span class="tier-s">S-TIER</span>
-              <span class="text-gray-400">Undisputed King</span>
-            </h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- ShAK-50 -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border-2 border-yellow-500/30"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">ShAK-50 Auto Rifle</h4>
-                    <span class="status-stable text-sm">👑 META KING</span>
-                  </div>
-                  <span class="tier-s">S</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>DPS:</strong> 210 |
-                    <strong>TTK:</strong> 0.57/0.95/1.33s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    "Remarkably forgiving" versatility monster. Works at all
-                    ranges. Hip-fire = shotgun, ADS = rifle. THE Heavy meta
-                    pick.
-                  </p>
-                  <div class="mt-3">
-                    <div class="stat-bar">
-                      <div class="stat-fill" style="width: 99%"></div>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1">
-                      Overall Rating: 99/100
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- A-Tier Heavy -->
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <span class="tier-a">A-TIER</span>
-              <span class="text-gray-400">Powerful Alternatives</span>
-            </h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- Dual .50s -->
-              <div
-                class="weapon-card rounded-lg p-5"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">.50 Dual Pistols</h4>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>Damage:</strong> 40/shot each |
-                    <strong>TTK:</strong> 0.45/0.75/1.05s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    Akimbo hand cannons. Mobility + burst for Heavies. Can
-                    contest snipers with good aim.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Lewis Gun -->
-              <div
-                class="weapon-card rounded-lg p-5"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">Lewis Gun</h4>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>Magazine:</strong> 47 rounds |
-                    <strong>TTK:</strong> 0.71/1.19/1.67s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    Best LMG accuracy/range. "Better MG36" with tap-fire
-                    excellence. Highly versatile.
-                  </p>
-                </div>
-              </div>
-
-              <!-- M134 Minigun -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border-2 border-gray-600 buffed"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">M134 Minigun</h4>
-                    <span class="status-rising text-sm">📈 RISING</span>
-                  </div>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>DPS:</strong> 270+ |
-                    <strong>TTK:</strong> 0.52/0.87/1.22s (L/M/H) (spooled)
-                  </p>
-                  <p class="text-gray-300">
-                    Highest sustained DPS. Requires spin-up time. With Healing
-                    Emitter support = "nearly indestructible" turret.
-                  </p>
-                  <p class="text-green-400 text-xs font-semibold">
-                    ✨ BUFFED: Better destruction
-                  </p>
-                </div>
-              </div>
-
-              <!-- SA-1216 -->
-              <div
-                class="weapon-card rounded-lg p-5"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">SA-1216 Auto Shotgun</h4>
-                  <span class="tier-a">A</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>Fire Rate:</strong> 300 RPM (burst) |
-                    <strong>TTK:</strong> 0.30/0.90/2.00s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    4-round burst delete button. Fastest Heavy TTK. With Sledge
-                    nerfed, this is the CQB king.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- B-Tier Heavy -->
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <span class="tier-b">B-TIER</span>
-              <span class="text-gray-400">Situational</span>
-            </h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- M60 -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">M60 LMG</h4>
-                  <span class="tier-b">B</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p>
-                    <strong>Magazine:</strong> 70 rounds |
-                    <strong>TTK:</strong> 0.86/1.43/2.00s (L/M/H)
-                  </p>
-                  <p class="text-gray-300">
-                    Jack of all trades, master of none. Outclassed by Lewis
-                    (range) and ShAK (damage).
-                  </p>
-                </div>
-              </div>
-
-              <!-- Flamethrower -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">Flamethrower</h4>
-                  <span class="tier-b">B</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p><strong>TTK:</strong> 0.75/1.25/1.75s (L/M/H)</p>
-                  <p class="text-gray-300">
-                    Close-range chaos. Better with healing meta's grouped
-                    fights. Still very situational.
-                  </p>
-                </div>
-              </div>
-
-              <!-- KS-23 -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700 buffed"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">KS-23 Pump Shotgun</h4>
-                  <span class="tier-b">B</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p><strong>TTK:</strong> 0.00/0.60/1.20s (L/M/H)</p>
-                  <p class="text-gray-300">
-                    One-shot Lights. Environment destruction buffed. Still too
-                    unforgiving vs auto-shotty.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Sledgehammer -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-red-700 nerfed"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 class="text-xl font-bold">Sledgehammer</h4>
-                    <span class="status-falling text-sm">📉 GUTTED</span>
-                  </div>
-                  <span class="tier-b">B</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p><strong>Nerfs:</strong> 115→100 primary, 200→154 slam</p>
-                  <p class="text-gray-300">
-                    "Nerfed into the ground." No more easy combos. Still
-                    one-shots Lights, but far from must-pick.
-                  </p>
-                  <p class="text-red-400 text-xs font-semibold">
-                    ⚠️ HEAVY NERF: -15% damage
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- C/D-Tier Heavy -->
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <span class="tier-c">C-TIER</span> & Below
-              <span class="text-gray-400">Off-Meta</span>
-            </h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- MGL-32 -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">MGL-32 Grenade Launcher</h4>
-                  <span class="tier-c">C</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p><strong>TTK:</strong> 1.00/1.50/2.00s (L/M/H)</p>
-                  <p class="text-gray-300">
-                    Drum-fed GL. Among least-used weapons. "For fun" only.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Spear -->
-              <div
-                class="weapon-card bg-gray-800 rounded-lg p-5 border border-gray-700"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-xl font-bold">Spear</h4>
-                  <span class="tier-c">C</span>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <p><strong>TTK:</strong> 0.48/0.80/1.12s (L/M/H)</p>
-                  <p class="text-gray-300">
-                    S-tier in Power Shift mode only. Standard play = novelty
-                    pick.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Meta Loadout Recommendations -->
-        <section class="mb-12 weapon-card rounded-lg p-6">
-          <h2
-            class="text-3xl font-bold mb-6"
+          <!-- Key Takeaways -->
+          <section
+            class="weapon-card"
             style="
-              color: var(--neon-yellow);
-              text-shadow: 0 0 15px rgba(255, 183, 0, 0.5);
+              background: rgba(24, 28, 39, 0.4);
+              border: 1px solid rgba(255, 183, 0, 0.3);
             "
           >
-            🎯 Season 7 Meta Loadouts
-          </h2>
-
-          <div class="grid md:grid-cols-3 gap-6">
-            <!-- Light Meta -->
-            <div
-              class="weapon-card rounded-lg p-5"
-              style="border-color: var(--neon-cyan)"
+            <h2
+              class="text-2xl font-bold mb-4"
+              style="color: var(--quantum-yellow)"
             >
-              <h3
-                class="text-xl font-bold mb-4"
-                style="color: var(--neon-cyan)"
-              >
-                Light Meta Build
-              </h3>
-              <div class="space-y-3">
-                <div>
-                  <p class="text-sm text-gray-400">Primary Weapon</p>
-                  <p class="font-bold">XP-54 or ARN-220</p>
-                </div>
-                <div>
-                  <p class="text-sm text-gray-400">Gadgets</p>
-                  <p class="font-bold">Stun Gun + Grappling Hook</p>
-                </div>
-                <div>
-                  <p class="text-sm text-gray-400">Specialization</p>
-                  <p class="font-bold">Evasive Dash</p>
-                </div>
-                <p class="text-xs text-gray-500 mt-3">
-                  Focus: Mobility & picks
-                </p>
-              </div>
+              🔑 KEY TAKEAWAYS - PATCH 7.3.0
+            </h2>
+            <div class="grid md:grid-cols-2 gap-x-8 gap-y-2">
+              <p class="text-sm">
+                • <strong>XP-54</strong> nerfed (16→15) but still S-tier
+              </p>
+              <p class="text-sm">
+                • <strong>FAMAS</strong> nerfed (24→22) + recoil increase
+              </p>
+              <p class="text-sm">
+                • <strong>V9S</strong> damage reduced (40→38)
+              </p>
+              <p class="text-sm">
+                • <strong>Model 1887</strong> buffed significantly
+              </p>
+              <p class="text-sm">
+                • <strong>Mesh Shield</strong> health reduced further
+              </p>
+              <p class="text-sm">
+                • <strong>ARN-220</strong> remains untouched - new king?
+              </p>
             </div>
+          </section>
+        </div>
+      </main>
 
-            <!-- Medium Meta -->
-            <div
-              class="weapon-card rounded-lg p-5"
-              style="border-color: var(--neon-purple)"
-            >
-              <h3
-                class="text-xl font-bold mb-4"
-                style="color: var(--neon-purple)"
-              >
-                Medium Meta Build
-              </h3>
-              <div class="space-y-3">
-                <div>
-                  <p class="text-sm text-gray-400">Primary Weapon</p>
-                  <p class="font-bold">FAMAS (easy mode) or AKM</p>
-                </div>
-                <div>
-                  <p class="text-sm text-gray-400">Gadgets</p>
-                  <p class="font-bold">Defibrillator + Jump Pad</p>
-                </div>
-                <div>
-                  <p class="text-sm text-gray-400">Specialization</p>
-                  <p class="font-bold">Healing Beam</p>
-                </div>
-                <p class="text-xs text-gray-500 mt-3">Focus: Team support</p>
-              </div>
-            </div>
-
-            <!-- Heavy Meta -->
-            <div
-              class="weapon-card rounded-lg p-5"
-              style="border-color: var(--neon-yellow)"
-            >
-              <h3
-                class="text-xl font-bold mb-4"
-                style="color: var(--neon-yellow)"
-              >
-                Heavy Meta Build
-              </h3>
-              <div class="space-y-3">
-                <div>
-                  <p class="text-sm text-gray-400">Primary Weapon</p>
-                  <p class="font-bold">ShAK-50 (no contest)</p>
-                </div>
-                <div>
-                  <p class="text-sm text-gray-400">Gadgets</p>
-                  <p class="font-bold">RPG + Dome Shield</p>
-                </div>
-                <div>
-                  <p class="text-sm text-gray-400">Specialization</p>
-                  <p class="font-bold">Mesh Shield</p>
-                </div>
-                <p class="text-xs text-gray-500 mt-3">
-                  Focus: Anchor & control
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Key Takeaways -->
-        <section
-          class="mb-12 weapon-card rounded-lg p-6"
-          style="
-            border-color: var(--neon-yellow);
-            background: linear-gradient(
-              135deg,
-              rgba(255, 183, 0, 0.1),
-              rgba(0, 0, 0, 0.8)
-            );
-          "
-        >
-          <h2
-            class="text-2xl font-bold mb-4"
-            style="
-              color: var(--neon-yellow);
-              text-shadow: 0 0 15px rgba(255, 183, 0, 0.5);
-            "
-          >
-            🔑 Season 7 Key Takeaways
-          </h2>
-          <ul class="space-y-2 text-gray-300">
-            <li>
-              • <strong>ARN-220</strong> challenges XP-54 for Light supremacy
-              after recoil buff
-            </li>
-            <li>
-              • <strong>FAMAS</strong> is the new Medium meta king - virtually
-              no recoil
-            </li>
-            <li>
-              • <strong>ShAK-50</strong> remains unchallenged as Heavy's best
-              weapon
-            </li>
-            <li>
-              • <strong>Sledgehammer</strong> fell from S to B tier after damage
-              nerfs
-            </li>
-            <li>
-              • <strong>Healing meta</strong> favors burst damage and sustained
-              DPS weapons
-            </li>
-            <li>
-              • <strong>M134 Minigun</strong> rising due to healing synergy
-            </li>
-            <li>
-              • <strong>Cerberus</strong> no longer mandatory after pellet nerf
-            </li>
-            <li>
-              • <strong>Dual Blades</strong> are worst weapon - avoid completely
-            </li>
-          </ul>
-        </section>
-      </div>
-    </main>
-
-    <!-- Footer -->
-    <footer
-      style="
-        background: linear-gradient(
-          135deg,
-          rgba(0, 0, 0, 0.8),
-          rgba(123, 47, 227, 0.2)
-        );
-        border-top: 1px solid rgba(123, 47, 227, 0.3);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-      "
-      class="py-8"
-    >
-      <div class="container mx-auto px-4 text-center">
-        <p class="text-gray-400 mb-2">Season 7 Meta Weapons Guide</p>
-        <p class="text-sm text-gray-500">
-          Data sourced from patch notes, community testing, Reddit discussions,
-          and competitive play analysis
-        </p>
-        <p class="text-xs text-gray-600 mt-4">
-          Last updated: Season 7 "The Divide" | TTK values vs Light (150HP)
-          unless noted
-        </p>
-        <p class="text-xs mt-2" style="color: var(--neon-yellow)">
-          © 2025 TheFinalsLoadout.com | Created by
-          <a
-            href="https://www.paultakisaki.com/"
-            style="color: var(--neon-cyan); text-decoration: none"
-            >Paul Takisaki</a
-          >
-        </p>
-      </div>
-    </footer>
+      <!-- Footer -->
+      <footer class="py-8 border-t border-quantum-border">
+        <div class="container mx-auto px-4 text-center">
+          <p class="text-quantum-secondary mb-2">Season 7 Meta Weapons Guide</p>
+          <p class="text-xs text-quantum-secondary/60">
+            Last updated: Season 7 "The Divide" | Data from patch notes &
+            community testing
+          </p>
+          <p class="text-xs mt-2" style="color: var(--quantum-cyan)">
+            © 2025 TheFinalsLoadout.com | By Paul Takisaki
+          </p>
+        </div>
+      </footer>
+    </div>
 
     <script>
+      // Particle effects
+      function createParticle() {
+        const particle = document.createElement("div");
+        particle.className = "particle";
+        particle.style.left = Math.random() * window.innerWidth + "px";
+        particle.style.top = Math.random() * window.innerHeight + "px";
+        particle.style.animationDuration = Math.random() * 20 + 10 + "s";
+
+        const colors = [
+          "var(--quantum-cyan)",
+          "var(--quantum-purple)",
+          "var(--quantum-pink)",
+        ];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.background = color;
+        particle.style.boxShadow = `0 0 6px ${color}`;
+
+        document.body.appendChild(particle);
+
+        particle.addEventListener("animationend", () => {
+          particle.remove();
+        });
+      }
+
+      // Create particles periodically
+      setInterval(createParticle, 2000);
+
       // Filter functionality
-      document.addEventListener("DOMContentLoaded", function () {
-        const filterButtons = document.querySelectorAll(".filter-pill");
-        const sections = document.querySelectorAll("[data-class]");
-        const weaponCards = document.querySelectorAll(".weapon-card");
+      const filterButtons = document.querySelectorAll(".filter-pill");
+      const sections = document.querySelectorAll("[data-class]");
+      const weaponCards = document.querySelectorAll(".weapon-card");
 
-        let currentClassFilter = "all";
-        let currentTierFilter = null;
+      let currentClassFilter = "all";
+      let currentTierFilter = null;
 
-        filterButtons.forEach((button) => {
-          button.addEventListener("click", function () {
-            const filter = this.dataset.filter;
-            const tier = this.dataset.tier;
+      filterButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const filter = this.dataset.filter;
+          const tier = this.dataset.tier;
 
-            if (filter) {
-              // Class filter
-              document.querySelectorAll("[data-filter]").forEach((btn) => {
+          if (filter) {
+            document.querySelectorAll("[data-filter]").forEach((btn) => {
+              btn.classList.remove("active");
+            });
+            this.classList.add("active");
+            currentClassFilter = filter;
+
+            sections.forEach((section) => {
+              if (filter === "all" || section.dataset.class === filter) {
+                section.style.display = "block";
+              } else {
+                section.style.display = "none";
+              }
+            });
+          }
+
+          if (tier) {
+            if (currentTierFilter === tier) {
+              this.classList.remove("active");
+              currentTierFilter = null;
+            } else {
+              document.querySelectorAll("[data-tier]").forEach((btn) => {
                 btn.classList.remove("active");
               });
               this.classList.add("active");
-              currentClassFilter = filter;
-
-              // Show/hide sections
-              sections.forEach((section) => {
-                if (filter === "all" || section.dataset.class === filter) {
-                  section.style.display = "block";
-                } else {
-                  section.style.display = "none";
-                }
-              });
-
-              // Smooth scroll to first visible section
-              if (filter !== "all") {
-                const targetSection = document.querySelector(
-                  `[data-class="${filter}"]`
-                );
-                if (targetSection) {
-                  targetSection.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                }
-              }
+              currentTierFilter = tier;
             }
 
-            if (tier) {
-              // Tier filter
-              if (currentTierFilter === tier) {
-                this.classList.remove("active");
-                currentTierFilter = null;
-              } else {
-                document.querySelectorAll("[data-tier]").forEach((btn) => {
-                  btn.classList.remove("active");
-                });
-                this.classList.add("active");
-                currentTierFilter = tier;
-              }
+            applyTierFilter();
+          }
+        });
+      });
 
-              // Apply tier filtering
-              if (currentTierFilter === "s") {
-                weaponCards.forEach((card) => {
-                  const tierBadge = card.querySelector(".tier-s");
-                  card.style.display = tierBadge ? "block" : "none";
-                });
-              } else if (currentTierFilter === "meta") {
-                weaponCards.forEach((card) => {
-                  const tierBadge = card.querySelector(".tier-s, .tier-a");
-                  card.style.display = tierBadge ? "block" : "none";
-                });
-              } else {
-                weaponCards.forEach((card) => {
-                  card.style.display = "block";
-                });
-              }
-            }
+      function applyTierFilter() {
+        if (!currentTierFilter) {
+          weaponCards.forEach((card) => {
+            card.style.display = "block";
           });
+          return;
+        }
+
+        weaponCards.forEach((card) => {
+          const hasSBadge = card.querySelector(".tier-s");
+          const hasABadge = card.querySelector(".tier-a");
+
+          if (currentTierFilter === "s") {
+            card.style.display = hasSBadge ? "block" : "none";
+          } else if (currentTierFilter === "meta") {
+            card.style.display = hasSBadge || hasABadge ? "block" : "none";
+          }
+        });
+      }
+
+      // Search functionality
+      const searchBar = document.getElementById("searchBar");
+      searchBar.addEventListener("input", function (e) {
+        const searchTerm = e.target.value.toLowerCase();
+
+        weaponCards.forEach((card) => {
+          const weaponName = card.querySelector(".weapon-name");
+          if (weaponName) {
+            const name = weaponName.textContent.toLowerCase();
+            card.style.display = name.includes(searchTerm) ? "block" : "none";
+          }
         });
       });
     </script>
