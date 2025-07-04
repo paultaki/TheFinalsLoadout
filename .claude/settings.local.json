@@ -32,7 +32,8 @@
       "Bash(cat:*)",
       "Bash(vercel dev:*)",
       "WebFetch(domain:thefinalsloadout.com)",
-      "Bash(env)"
+      "Bash(env)",
+      "Bash(git push:*)"
     ]
   },
   "enableAllProjectMcpServers": false

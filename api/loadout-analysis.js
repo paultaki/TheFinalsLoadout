@@ -205,34 +205,39 @@ GUIDELINES:
 }
 
 export default async function handler(req, res) {
-  // Enable CORS
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET,OPTIONS,PATCH,DELETE,POST,PUT"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-  );
+  try {
+    console.log("🎯 API Handler called");
+    console.log("Method:", req.method);
+    console.log("Body:", req.body);
+    
+    // Enable CORS
+    res.setHeader("Access-Control-Allow-Credentials", true);
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+    );
 
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
+    if (req.method === "OPTIONS") {
+      res.status(200).end();
+      return;
+    }
 
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+    if (req.method !== "POST") {
+      return res.status(405).json({ error: "Method not allowed" });
+    }
 
-  const apiKey = process.env.CLAUDE_API_KEY;
-  if (!apiKey) {
-    console.error("CLAUDE_API_KEY environment variable not found");
-    return res.status(500).json({ error: "API key not configured" });
-  }
+    const apiKey = process.env.CLAUDE_API_KEY;
+    if (!apiKey) {
+      console.error("CLAUDE_API_KEY environment variable not found");
+      return res.status(500).json({ error: "API key not configured" });
+    }
 
-  const anthropic = new Anthropic({ apiKey });
+    const anthropic = new Anthropic({ apiKey });
 
   // Check if this is chat mode or loadout analysis mode
   const { mode, prompt } = req.body;
@@ -477,6 +482,16 @@ export default async function handler(req, res) {
       analysis: specificFallback,
       roast: specificFallback,
       fallback: true,
+    });
+  }
+  } catch (globalError) {
+    console.error("🚨 Global error in API handler:", globalError);
+    res.status(500).json({
+      error: "Internal server error",
+      message: globalError.message,
+      analysis: "This loadout broke our analysis system. 0/10",
+      roast: "This loadout broke our analysis system. 0/10",
+      fallback: true
     });
   }
 };
