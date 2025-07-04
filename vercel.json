@@ -3,7 +3,12 @@
   "outputDirectory": ".",
   "installCommand": "echo 'No dependencies to install'",
   "framework": null,
-  "rewrites": [{ "source": "/", "destination": "/index.html" }],
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/meta-weapons", "destination": "/meta-weapons/index.html" },
+    { "source": "/patch-notes", "destination": "/patch-notes/index.html" },
+    { "source": "/rage-quit", "destination": "/ragequit/index.html" }
+  ],
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
