@@ -5,19 +5,25 @@
 // Initialize slot machine
 window.slotMachineInstance = null;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function () {
   // Initialize slot machine
-  window.slotMachineInstance = new SlotMachine('output');
+  window.slotMachineInstance = new SlotMachine("output");
   window.slotMachineInstance.init();
-  console.log('✅ Slot machine initialized with clean test-page styling');
+  console.log("✅ Slot machine initialized with clean test-page styling");
 });
 
 // Start slot machine with loadout data - handles multiple spins
-window.startSlotMachine = async function(classType, spinCount) {
-  console.log('🎰 Starting slot machine sequence:', classType, 'with', spinCount, 'spins');
+window.startSlotMachine = async function (classType, spinCount) {
+  console.log(
+    "🎰 Starting slot machine sequence:",
+    classType,
+    "with",
+    spinCount,
+    "spins"
+  );
 
   // Add class to body to hide duplicate text on desktop
-  document.body.classList.add('slot-machine-active');
+  document.body.classList.add("slot-machine-active");
 
   // Update state
   if (!window.state) window.state = {};
@@ -28,7 +34,8 @@ window.startSlotMachine = async function(classType, spinCount) {
 
   // Update initial status display
   if (window.slotMachineInstance && window.slotMachineInstance.statusBar) {
-    const statusText = window.slotMachineInstance.statusBar.querySelector("#slot-status-text");
+    const statusText =
+      window.slotMachineInstance.statusBar.querySelector("#slot-status-text");
     if (statusText) {
       if (spinCount === 1) {
         statusText.textContent = `${classType} Class - FINAL SPIN`;
@@ -49,8 +56,8 @@ async function executeSpinSequence(classType, totalSpins) {
 
     // Check if slot machine is already animating (safety check)
     if (window.slotMachineInstance && window.slotMachineInstance.isAnimating) {
-      console.log('Animation already in progress, waiting...');
-      await new Promise(resolve => setTimeout(resolve, 100));
+      console.log("Animation already in progress, waiting...");
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     // Calculate remaining spins for this iteration
@@ -59,7 +66,8 @@ async function executeSpinSequence(classType, totalSpins) {
 
     // Update the status bar to show remaining spins
     if (window.slotMachineInstance && window.slotMachineInstance.statusBar) {
-      const statusText = window.slotMachineInstance.statusBar.querySelector("#slot-status-text");
+      const statusText =
+        window.slotMachineInstance.statusBar.querySelector("#slot-status-text");
       if (statusText) {
         // Show proper status based on current spin - display what the user expects to see
         if (isLastSpin) {
@@ -76,11 +84,26 @@ async function executeSpinSequence(classType, totalSpins) {
       }
     }
 
+    // Also update overlay countdown if it exists
+    const overlaySpinInfo = document.querySelector(
+      ".slot-overlay-header .spin-info"
+    );
+    if (overlaySpinInfo) {
+      const totalRemaining = totalSpins - spinNum + 1;
+      if (totalRemaining === 1) {
+        overlaySpinInfo.textContent = "FINAL SPIN";
+      } else {
+        overlaySpinInfo.textContent = `${totalRemaining} ${
+          totalRemaining === 1 ? "Spin" : "Spins"
+        } Remaining`;
+      }
+    }
+
     // Generate new loadout for each spin
     const loadoutData = generateLoadoutForSpin(classType, spinsRemaining);
 
     if (!loadoutData) {
-      console.error('Failed to generate loadout');
+      console.error("Failed to generate loadout");
       return;
     }
 
@@ -88,7 +111,7 @@ async function executeSpinSequence(classType, totalSpins) {
     window.slotMachineInstance.displayLoadout(loadoutData);
 
     // Short pause before animation
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     try {
       // Animate with callback
@@ -101,11 +124,11 @@ async function executeSpinSequence(classType, totalSpins) {
           window.state.spinsLeft--;
 
           // On final spin, handle completion
-          if (isLastSpin && typeof window.finalizeSpin === 'function') {
+          if (isLastSpin && typeof window.finalizeSpin === "function") {
             const items = [
               loadoutData.weaponObject,
               loadoutData.specObject,
-              ...loadoutData.gadgetObjects
+              ...loadoutData.gadgetObjects,
             ];
             window.finalizeSpin(items);
           }
@@ -117,16 +140,15 @@ async function executeSpinSequence(classType, totalSpins) {
       // Pause between spins (except after last spin)
       if (!isLastSpin) {
         console.log(`Waiting before next spin...`);
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise((resolve) => setTimeout(resolve, 1500));
       }
-
     } catch (error) {
       console.error(`Slot machine animation error on spin ${spinNum}:`, error);
       break;
     }
   }
 
-  console.log('🎰 Spin sequence complete!');
+  console.log("🎰 Spin sequence complete!");
 }
 
 // Generate loadout data for a specific spin
@@ -136,7 +158,7 @@ function generateLoadoutForSpin(classType, spinsRemaining) {
   const loadout = filteredLoadouts[classType];
 
   if (!loadout) {
-    console.error('No loadout data for class:', classType);
+    console.error("No loadout data for class:", classType);
     return null;
   }
 
@@ -146,15 +168,15 @@ function generateLoadoutForSpin(classType, spinsRemaining) {
   if (loadout.weapons && loadout.weapons.length > 0) {
     selectedWeapon = window.getRandomUniqueItems(loadout.weapons, 1)[0];
   } else {
-    console.error('No weapons available for', classType);
-    selectedWeapon = { name: 'Default Weapon' };
+    console.error("No weapons available for", classType);
+    selectedWeapon = { name: "Default Weapon" };
   }
 
   if (loadout.specializations && loadout.specializations.length > 0) {
     selectedSpec = window.getRandomUniqueItems(loadout.specializations, 1)[0];
   } else {
-    console.error('No specializations available for', classType);
-    selectedSpec = { name: 'Default Spec' };
+    console.error("No specializations available for", classType);
+    selectedSpec = { name: "Default Spec" };
   }
 
   const selectedGadgets = window.getUniqueGadgets(classType, loadout);
@@ -164,25 +186,38 @@ function generateLoadoutForSpin(classType, spinsRemaining) {
     classType: classType,
     weapons: selectedWeapon.name || selectedWeapon,
     specializations: selectedSpec.name || selectedSpec,
-    gadgets: selectedGadgets.map(g => typeof g === 'string' ? g : g.name || g),
+    gadgets: selectedGadgets.map((g) =>
+      typeof g === "string" ? g : g.name || g
+    ),
     spinsRemaining: spinsRemaining,
     allItems: {
-      weapons: loadout.weapons ? loadout.weapons.map(w => typeof w === 'string' ? w : w.name || w) : [],
-      specializations: loadout.specializations ? loadout.specializations.map(s => typeof s === 'string' ? s : s.name || s) : [],
-      gadgets: loadout.gadgets ? loadout.gadgets.map(g => typeof g === 'string' ? g : g.name || g) : []
+      weapons: loadout.weapons
+        ? loadout.weapons.map((w) => (typeof w === "string" ? w : w.name || w))
+        : [],
+      specializations: loadout.specializations
+        ? loadout.specializations.map((s) =>
+            typeof s === "string" ? s : s.name || s
+          )
+        : [],
+      gadgets: loadout.gadgets
+        ? loadout.gadgets.map((g) => (typeof g === "string" ? g : g.name || g))
+        : [],
     },
     // Store original objects for finalizeSpin
     weaponObject: selectedWeapon,
     specObject: selectedSpec,
-    gadgetObjects: selectedGadgets
+    gadgetObjects: selectedGadgets,
   };
 
-  console.log(`Generated loadout for spin (${spinsRemaining} remaining):`, loadoutData);
+  console.log(
+    `Generated loadout for spin (${spinsRemaining} remaining):`,
+    loadoutData
+  );
   return loadoutData;
 }
 
 // Direct trigger for overlay manager
-window.triggerSlotMachine = function(classType, spins) {
-  console.log('🎰 Triggering slot machine from overlay');
+window.triggerSlotMachine = function (classType, spins) {
+  console.log("🎰 Triggering slot machine from overlay");
   window.startSlotMachine(classType, spins);
 };
