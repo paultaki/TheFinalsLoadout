@@ -473,11 +473,10 @@ export default async function handler(req, res) {
         fallbacks[Math.floor(Math.random() * fallbacks.length)];
     }
 
-          res.status(200).json({
-        analysis: specificFallback,
-        roast: specificFallback,
-        fallback: true,
-      });
-    }
+    res.status(200).json({
+      analysis: specificFallback,
+      roast: specificFallback,
+      fallback: true,
+    });
   }
 };

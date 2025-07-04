@@ -179,11 +179,26 @@ class SlotMachine {
 
   // Create slot cell with enhanced visual markers
   createSlotCell(item, isWinner = false, isNearMiss = false) {
-    const imageName = item.replace(/ /g, "_");
     const classes = ["slot-cell"];
     if (isWinner) classes.push("winner");
     if (isNearMiss) classes.push("near-miss");
 
+    // Special handling for loading state
+    if (item === "Loading...") {
+      return (
+        '<div class="' +
+        classes.join(" ") +
+        ' loading-cell">' +
+        '<div class="loading-spinner"></div>' +
+        "<p>" +
+        item +
+        "</p>" +
+        "</div>"
+      );
+    }
+
+    const imageName = item.replace(/ /g, "_");
+    
     // Add rarity indicators for psychological impact
     const rarity = this.getItemRarity(item);
     if (rarity) classes.push(`rarity-${rarity}`);
