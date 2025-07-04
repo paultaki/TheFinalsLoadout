@@ -832,8 +832,6 @@ body.casino-mode #filter-panel:not(.active) {
   text-align: center;
 }
 
-/* #history-list styles DISABLED - Using slot machine design instead */
-/*
 #history-list {
   display: flex;
   flex-direction: column;
@@ -841,7 +839,6 @@ body.casino-mode #filter-panel:not(.active) {
   margin-bottom: 2rem;
   align-items: center;
 }
-*/
 
 /* New Text-Only History Entry */
 .history-entry {

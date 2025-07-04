@@ -71,7 +71,7 @@ function clearOverlay() {
   overlayState.currentOverlay = null;
 
   // Remove overlay-active class from body
-  document.body.classList.remove('overlay-active');
+  document.body.classList.remove("overlay-active");
 
   // Clear valid spin sequence flag
   window.isValidSpinSequence = false;
@@ -146,11 +146,11 @@ function showRevealCard(options) {
 function makeJackpotCard() {
   const spins = 3; // Always 3 spins for jackpot
   return {
-    value: 'JACKPOT',
+    value: "JACKPOT",
     spins: spins,
     label: `Jackpot!\nChoose Class\n${spins} Spins`,
-    className: 'card-special jackpot',
-    isJackpot: true
+    className: "card-special jackpot",
+    isJackpot: true,
   };
 }
 
@@ -306,8 +306,8 @@ async function showSpinWheelOverlay() {
       const pegSpacing = 100 / (pegCount + 1);
 
       for (let i = 0; i < pegCount; i++) {
-        const peg = document.createElement('div');
-        peg.className = 'peg';
+        const peg = document.createElement("div");
+        peg.className = "peg";
         peg.style.top = `${pegSpacing * (i + 1)}%`;
         wheelFrame.appendChild(peg);
       }
@@ -419,10 +419,12 @@ async function showSpinWheelOverlay() {
 
       // Peg hit animation
       const cardHeight = getCardHeight();
-      const currentPegIndex = Math.floor((spinWheelState.currentDistance % (cardHeight * 10)) / cardHeight);
+      const currentPegIndex = Math.floor(
+        (spinWheelState.currentDistance % (cardHeight * 10)) / cardHeight
+      );
       if (currentPegIndex !== spinWheelState.lastPegIndex) {
         spinWheelState.lastPegIndex = currentPegIndex;
-        const pegs = wheelFrame.querySelectorAll('.peg');
+        const pegs = wheelFrame.querySelectorAll(".peg");
         const peg = pegs[currentPegIndex % pegs.length];
         if (peg) {
           peg.style.transform = "scale(1.3)";
@@ -432,25 +434,31 @@ async function showSpinWheelOverlay() {
         }
 
         // Cabinet shake - reduced by half
-        wheelFrame.animate([
-          { transform: "translateX(-2px)" },
-          { transform: "translateX(2px)" },
-          { transform: "translateX(0)" },
-        ], {
-          duration: 90,
-          iterations: 1,
-        });
+        wheelFrame.animate(
+          [
+            { transform: "translateX(-2px)" },
+            { transform: "translateX(2px)" },
+            { transform: "translateX(0)" },
+          ],
+          {
+            duration: 90,
+            iterations: 1,
+          }
+        );
 
         // Heartbeat effect for slow speeds
         if (velocity < 120) {
-          wheelFrame.animate([
-            { transform: "scale(1)" },
-            { transform: "scale(1.03)" },
-            { transform: "scale(1)" },
-          ], {
-            duration: 300,
-            easing: "ease-out",
-          });
+          wheelFrame.animate(
+            [
+              { transform: "scale(1)" },
+              { transform: "scale(1.03)" },
+              { transform: "scale(1)" },
+            ],
+            {
+              duration: 300,
+              easing: "ease-out",
+            }
+          );
         }
       }
     };
@@ -558,7 +566,7 @@ async function showSpinWheelOverlay() {
                 value: result.value,
                 spins: result.spins,
                 isJackpot: true,
-                classWeight: classWeight
+                classWeight: classWeight,
               });
             }, 300);
           });
@@ -716,12 +724,12 @@ async function showSpinWheelOverlay() {
         try {
           // Start spinning sound
           overlayAudio.spinning.currentTime = 0;
-          overlayAudio.spinning.volume = 0.3;
+          overlayAudio.spinning.volume = 0.02;
           window.safePlay(overlayAudio.spinning);
 
           // Start wheel tick loop
           overlayAudio.wheelTickLoop.currentTime = 0;
-          overlayAudio.wheelTickLoop.volume = 0.4;
+          overlayAudio.wheelTickLoop.volume = 0.04;
           window.safePlay(overlayAudio.wheelTickLoop);
         } catch (e) {
           // Sound not available
@@ -773,11 +781,16 @@ async function showSpinWheelOverlay() {
 function showJackpotModal(spins) {
   return new Promise((resolve) => {
     // Get available classes
-    const availableClasses = window.getAvailableClasses ? window.getAvailableClasses() : ["Light", "Medium", "Heavy"];
+    const availableClasses = window.getAvailableClasses
+      ? window.getAvailableClasses()
+      : ["Light", "Medium", "Heavy"];
 
     // If only one class available, auto-select it
     if (availableClasses.length === 1) {
-      console.log("🎯 Auto-selecting only available class:", availableClasses[0]);
+      console.log(
+        "🎯 Auto-selecting only available class:",
+        availableClasses[0]
+      );
       resolve(availableClasses[0]);
       return;
     }
@@ -796,9 +809,12 @@ function showJackpotModal(spins) {
     modal.className = "jackpot-modal-content";
 
     // Build class buttons dynamically
-    const classButtonsHTML = availableClasses.map(cls =>
-      `<button class="class-button ${cls.toLowerCase()}" data-weight="${cls}">${cls}</button>`
-    ).join('');
+    const classButtonsHTML = availableClasses
+      .map(
+        (cls) =>
+          `<button class="class-button ${cls.toLowerCase()}" data-weight="${cls}">${cls}</button>`
+      )
+      .join("");
 
     modal.innerHTML = `
       <div class="jackpot-title">JACKPOT!</div>
@@ -819,7 +835,7 @@ function showJackpotModal(spins) {
 
     // Handle class selection
     const buttons = modal.querySelectorAll(".class-button");
-    buttons.forEach(button => {
+    buttons.forEach((button) => {
       button.addEventListener("click", (e) => {
         const classWeight = e.target.dataset.weight;
 
@@ -979,19 +995,23 @@ async function showClassRouletteOverlay() {
 
     // Get available classes from filters using global function
     const getAvailableClassesForRoulette = () => {
-      const availableClasses = window.getAvailableClasses ? window.getAvailableClasses() : ["Light", "Medium", "Heavy"];
+      const availableClasses = window.getAvailableClasses
+        ? window.getAvailableClasses()
+        : ["Light", "Medium", "Heavy"];
 
       const classConfigs = {
-        "Light": { name: "Light", color: "#4FC3F7" },
-        "Medium": { name: "Medium", color: "#AB47BC" },
-        "Heavy": { name: "Heavy", color: "#FF1744" }
+        Light: { name: "Light", color: "#4FC3F7" },
+        Medium: { name: "Medium", color: "#AB47BC" },
+        Heavy: { name: "Heavy", color: "#FF1744" },
       };
 
-      const available = availableClasses.map(cls => classConfigs[cls]);
+      const available = availableClasses.map((cls) => classConfigs[cls]);
 
       // If no classes selected, show error
       if (available.length === 0) {
-        alert("Please select at least one class in the filters before spinning!");
+        alert(
+          "Please select at least one class in the filters before spinning!"
+        );
         return null;
       }
 
@@ -1386,7 +1406,7 @@ async function showClassRouletteOverlay() {
         if (elapsed % tickInterval < 16) {
           try {
             overlayAudio.beep.currentTime = 0;
-            overlayAudio.beep.volume = 0.2 + physics.speed * 0.3; // Volume based on speed
+            overlayAudio.beep.volume = 0.02 + physics.speed * 0.03; // Volume based on speed (ultra quiet)
             overlayAudio.beep.playbackRate = 0.8 + physics.speed * 0.4; // Pitch based on speed
             overlayAudio.beep.play().catch(() => {}); // Silently fail if sound not available
           } catch (e) {
@@ -1401,7 +1421,8 @@ async function showClassRouletteOverlay() {
         ballProgress > 0.7 &&
         ballProgress < 0.72 &&
         !rouletteState.dropSoundPlayed &&
-        window.state && window.state.soundEnabled
+        window.state &&
+        window.state.soundEnabled
       ) {
         try {
           overlayAudio.transition.currentTime = 0;
@@ -1490,7 +1511,7 @@ async function showClassRouletteOverlay() {
       if (window.state && window.state.soundEnabled) {
         try {
           overlayAudio.roulette.currentTime = 0;
-          overlayAudio.roulette.volume = 0.5;
+          overlayAudio.roulette.volume = 0.05;
           overlayAudio.roulette.play().catch((err) => {
             console.warn("Failed to play roulette sound:", err);
           });
@@ -1596,7 +1617,9 @@ async function startLoadoutGeneration() {
   );
 
   // Check if any classes are available
-  const availableClasses = window.getAvailableClasses ? window.getAvailableClasses() : ["Light", "Medium", "Heavy"];
+  const availableClasses = window.getAvailableClasses
+    ? window.getAvailableClasses()
+    : ["Light", "Medium", "Heavy"];
   if (availableClasses.length === 0) {
     alert("Please select at least one class in the filters before spinning!");
     return;
@@ -1609,10 +1632,10 @@ async function startLoadoutGeneration() {
     // Clear any existing static slot machine from main page
     const mainOutput = document.getElementById("output");
     if (mainOutput) {
-      mainOutput.innerHTML = '';
-      mainOutput.style.display = 'none';
-      mainOutput.style.opacity = '0';
-      mainOutput.classList.remove('final-result');
+      mainOutput.innerHTML = "";
+      mainOutput.style.display = "none";
+      mainOutput.style.opacity = "0";
+      mainOutput.classList.remove("final-result");
     }
 
     // Disable main button during flow
@@ -1643,7 +1666,9 @@ async function startLoadoutGeneration() {
       // Normal path - show spin count reveal first
       await showRevealCard({
         title: spinResult.value,
-        subtitle: `${spinResult.spins} ${spinResult.spins === 1 ? "SPIN" : "SPINS"}!`,
+        subtitle: `${spinResult.spins} ${
+          spinResult.spins === 1 ? "SPIN" : "SPINS"
+        }!`,
         duration: 2000,
         isJackpot: false,
       });
@@ -1700,7 +1725,7 @@ async function showSlotMachineOverlay(selectedClass, spinCount) {
   console.log("🎰 Showing slot machine overlay...");
 
   // Add class to body to hide duplicate text on desktop
-  document.body.classList.add('overlay-active');
+  document.body.classList.add("overlay-active");
 
   return new Promise((resolve) => {
     const { backdrop, content } = createOverlayStructure();
@@ -1746,7 +1771,7 @@ async function showSlotMachineOverlay(selectedClass, spinCount) {
 
       if (overlayOutput) {
         // Create a new slot machine instance for the overlay
-        const overlaySlotMachine = new SlotMachine('overlay-slot-output');
+        const overlaySlotMachine = new SlotMachine("overlay-slot-output");
         overlaySlotMachine.init();
 
         // Store the original instance temporarily
@@ -1759,70 +1784,74 @@ async function showSlotMachineOverlay(selectedClass, spinCount) {
         if (typeof window.startSlotMachine === "function") {
           window.startSlotMachine(selectedClass, spinCount);
 
-        // Monkey patch finalizeSpin to handle overlay completion
-        const originalFinalizeSpin = window.finalizeSpin;
-        let hasHandledFinalSpin = false;
+          // Monkey patch finalizeSpin to handle overlay completion
+          const originalFinalizeSpin = window.finalizeSpin;
+          let hasHandledFinalSpin = false;
 
-        window.finalizeSpin = function (columns) {
-          // Call original function
-          if (originalFinalizeSpin) {
-            originalFinalizeSpin.call(this, columns);
-          }
+          window.finalizeSpin = function (columns) {
+            // Call original function
+            if (originalFinalizeSpin) {
+              originalFinalizeSpin.call(this, columns);
+            }
 
-          // Check if this was the final spin (only handle once)
-          if (window.state && window.state.spinsLeft === 0 && !hasHandledFinalSpin) {
-            hasHandledFinalSpin = true;
-            // Auto-close overlay after animations complete
-            // Total time: ~7s for final column + 3s celebration = 10s total
-            // We'll wait 2s after that for a clean transition
-            setTimeout(() => {
-              // Copy the final slot machine content to the main page
-              const overlayOut = document.getElementById("output");
-              const originalOut = document.getElementById("output-backup");
-
-              if (overlayOut && originalOut) {
-                // Clone the slot machine content
-                const finalContent = overlayOut.innerHTML;
-
-                // Create a wrapper for the smaller final slot machine
-                const wrapper = document.createElement('div');
-                wrapper.className = 'final-slot-machine-wrapper';
-                wrapper.innerHTML = finalContent;
-
-                // Add final glow effect to all item containers
-                const itemContainers = wrapper.querySelectorAll('.slot-item');
-                itemContainers.forEach(container => {
-                  container.classList.add('final-glow');
-                });
-
-                // Copy to main page output with wrapper
-                originalOut.innerHTML = wrapper.outerHTML;
-                originalOut.style.display = 'block';
-                originalOut.style.opacity = '1';
-                originalOut.classList.add('final-result');
-
-                // Restore IDs
-                overlayOut.id = "overlay-slot-output";
-                originalOut.id = "output";
-              }
-
-              // Restore original finalizeSpin
-              window.finalizeSpin = originalFinalizeSpin;
-
-              // Animate out overlay
-              slotContainer.classList.remove("active");
-              backdrop.classList.remove("active");
-
+            // Check if this was the final spin (only handle once)
+            if (
+              window.state &&
+              window.state.spinsLeft === 0 &&
+              !hasHandledFinalSpin
+            ) {
+              hasHandledFinalSpin = true;
+              // Auto-close overlay after animations complete
+              // Total time: ~7s for final column + 3s celebration = 10s total
+              // We'll wait 2s after that for a clean transition
               setTimeout(() => {
-                clearOverlay();
-                resolve();
-              }, 300);
-            }, 2000); // Wait 2 seconds after animation completes
-          }
+                // Copy the final slot machine content to the main page
+                const overlayOut = document.getElementById("output");
+                const originalOut = document.getElementById("output-backup");
 
-          // Restore the original slot machine instance after completion
-          window.slotMachineInstance = originalSlotMachine;
-        };
+                if (overlayOut && originalOut) {
+                  // Clone the slot machine content
+                  const finalContent = overlayOut.innerHTML;
+
+                  // Create a wrapper for the smaller final slot machine
+                  const wrapper = document.createElement("div");
+                  wrapper.className = "final-slot-machine-wrapper";
+                  wrapper.innerHTML = finalContent;
+
+                  // Add final glow effect to all item containers
+                  const itemContainers = wrapper.querySelectorAll(".slot-item");
+                  itemContainers.forEach((container) => {
+                    container.classList.add("final-glow");
+                  });
+
+                  // Copy to main page output with wrapper
+                  originalOut.innerHTML = wrapper.outerHTML;
+                  originalOut.style.display = "block";
+                  originalOut.style.opacity = "1";
+                  originalOut.classList.add("final-result");
+
+                  // Restore IDs
+                  overlayOut.id = "overlay-slot-output";
+                  originalOut.id = "output";
+                }
+
+                // Restore original finalizeSpin
+                window.finalizeSpin = originalFinalizeSpin;
+
+                // Animate out overlay
+                slotContainer.classList.remove("active");
+                backdrop.classList.remove("active");
+
+                setTimeout(() => {
+                  clearOverlay();
+                  resolve();
+                }, 300);
+              }, 2000); // Wait 2 seconds after animation completes
+            }
+
+            // Restore the original slot machine instance after completion
+            window.slotMachineInstance = originalSlotMachine;
+          };
         } else {
           console.error("❌ startSlotMachine function not found!");
         }

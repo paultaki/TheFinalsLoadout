@@ -1,0 +1,222 @@
+/* ============================================= */
+/* --- CRITICAL LAYOUT HOTFIX --- */
+/* This file forces the correct layout for the history cards. */
+/* ============================================= */
+
+/* Ensure the main container for the history items is a flex container */
+#history-list {
+  display: flex !important;
+  flex-direction: column !important; /* Each .static-slot-item is a row */
+  align-items: center !important;
+  gap: 2rem !important;
+}
+
+/* Ensure the 5-box display is always a horizontal row */
+.slot-display {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  gap: 1rem !important;
+  width: 100% !important;
+}
+
+/* Hotfix for Slot History Display on Desktop */
+
+/* Ensure static slot items maintain their card styling on desktop */
+@media (min-width: 769px) {
+  /* Override any conflicting styles for slot history container */
+  #slot-history-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  /* Ensure static slot items have proper card styling */
+  .static-slot-item {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.8),
+      rgba(123, 47, 227, 0.1)
+    ) !important;
+    border: 2px solid var(--border-glow, rgba(123, 47, 227, 0.3)) !important;
+    border-radius: 20px !important;
+    padding: 1.5rem !important;
+    margin-bottom: 2rem !important;
+    position: relative !important;
+    overflow: hidden !important;
+    backdrop-filter: blur(10px) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .static-slot-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7),
+      0 0 30px var(--border-glow, rgba(123, 47, 227, 0.5)) !important;
+  }
+
+  /* Ensure slot display maintains horizontal layout */
+  #history-list .slot-display {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 1rem !important;
+    justify-content: center !important;
+    padding: 1rem 0 !important;
+  }
+
+  /* Slot boxes should be properly styled */
+  .slot-box {
+    flex: 1 !important;
+    max-width: 200px !important;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.6),
+      rgba(123, 47, 227, 0.2)
+    ) !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 15px !important;
+    padding: 1rem !important;
+    text-align: center !important;
+    position: relative !important;
+    overflow: hidden !important;
+    transition: all 0.3s ease !important;
+  }
+
+  /* Item header styling */
+  .item-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 1rem !important;
+    padding-bottom: 0.5rem !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+  }
+
+  /* Action buttons */
+  .action-buttons {
+    display: flex !important;
+    gap: 0.5rem !important;
+  }
+
+  .action-btn {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #fff !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 25px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .action-btn:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2) !important;
+  }
+
+  /* Ensure proper image sizing */
+  .slot-image {
+    width: 80px !important;
+    height: 80px !important;
+    object-fit: contain !important;
+    margin: 0 auto 0.5rem !important;
+    border-radius: 8px !important;
+  }
+
+  /* Ensure text is properly styled */
+  .slot-name {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+    word-wrap: break-word !important;
+  }
+
+  /* Class badge styling */
+  .class-badge {
+    font-family: "Bebas Neue", sans-serif !important;
+    font-size: 1.2rem !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    padding: 0.4rem 1rem !important;
+    border-radius: 25px !important;
+    border: 2px solid !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .class-badge.light {
+    color: var(--light-color, #4fc3f7) !important;
+    border-color: var(--light-color, #4fc3f7) !important;
+    box-shadow: 0 0 15px rgba(79, 195, 247, 0.4) !important;
+  }
+
+  .class-badge.medium {
+    color: var(--medium-color, #ab47bc) !important;
+    border-color: var(--medium-color, #ab47bc) !important;
+    box-shadow: 0 0 15px rgba(171, 71, 188, 0.4) !important;
+  }
+
+  .class-badge.heavy {
+    color: var(--heavy-color, #ff1744) !important;
+    border-color: var(--heavy-color, #ff1744) !important;
+    box-shadow: 0 0 15px rgba(255, 23, 68, 0.4) !important;
+  }
+}
+
+/* Additional fix for the slot label styling on desktop */
+@media (min-width: 769px) {
+  .slot-label {
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    margin-bottom: 0.5rem !important;
+    opacity: 0.8 !important;
+  }
+
+  /* Ensure AI analysis section is properly styled */
+  .ai-analysis {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 215, 0, 0.1),
+      rgba(255, 170, 0, 0.1)
+    ) !important;
+    border: 1px solid rgba(255, 215, 0, 0.3) !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    margin: 1rem 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  .roast-text {
+    flex: 1 !important;
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+    color: #fff !important;
+    font-style: italic !important;
+  }
+
+  .score-badge {
+    background: linear-gradient(45deg, #ffd700, #ffa500) !important;
+    color: #000 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 20px !important;
+    font-size: 1rem !important;
+    font-weight: 800 !important;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4) !important;
+  }
+}

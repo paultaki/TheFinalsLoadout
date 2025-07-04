@@ -1005,6 +1005,7 @@
     <link rel="stylesheet" href="styles/slot-machine.css" />
     <link rel="stylesheet" href="css/filters.css" />
     <link rel="stylesheet" href="css/mobile-performance.css" />
+    <link rel="stylesheet" href="styles/hotfix.css" />
   </head>
 
   <body class="casino-mode">
@@ -1527,7 +1528,7 @@
           height="auto"
         />
         <h1 class="subTitle-mobile">Random Loadout Generator</h1>
-        <p class="season-update-notice">Season 7</p>
+        <p class="season-update-notice">SEASON 7</p>
       </div>
     </section>
 
@@ -1643,9 +1644,10 @@
 
     <!-- Scripts -->
     <!-- ES Modules load in order -->
+    <script src="js/volume-control.js?v=1"></script>
     <script src="js/roulette-animations.js?v=2"></script>
     <script src="js/overlay-manager.js?v=2"></script>
-    <script type="module" src="app.js?v=14"></script>
+    <script type="module" src="app.js?v=24"></script>
 
     <!-- Non-module scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -1848,7 +1850,7 @@
           const clickSound = document.getElementById("clickSound");
           if (clickSound) {
             console.log("Click sound element found");
-            clickSound.volume = 0.5;
+            clickSound.volume = 0.05;
             clickSound
               .play()
               .then(() => {

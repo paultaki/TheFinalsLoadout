@@ -1176,14 +1176,6 @@ body {
 /* Force audio button position - override all other rules */
 /* Removed fixed positioning for sound toggle - button now in nav */
 
-@media (min-width: 769px) {
-  #sound-toggle.sound-toggle-button,
-  button#sound-toggle.sound-toggle-button,
-  .sound-toggle-button#sound-toggle {
-    top: 180px !important;
-    right: 20px !important;
-  }
-}
 
 /* Reduce repaints for fixed elements */
 .main-nav {
@@ -1477,10 +1469,25 @@ body {
 .season-update-notice {
   font-size: 1.1rem;
   font-weight: 500;
-  color: #ff6b35;
   margin: 10px 0 20px 0;
   text-align: center;
-  text-shadow: 0 0 8px rgba(255, 107, 53, 0.6);
+  background: linear-gradient(
+    135deg,
+    #e8e8e8 0%,
+    #ffffff 15%,
+    #d4a5ff 35%,
+    #ffffff 50%,
+    #c79dff 65%,
+    #ffffff 85%,
+    #b8b8b8 100%
+  ) !important;
+  background-size: 300% 300% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  text-shadow: none !important;
+  animation: metallic-shine 3s ease-in-out infinite;
 }
 
 @media (max-width: 768px) {
@@ -2693,37 +2700,6 @@ body {
 
 /* Ensure 5 slot machine items are always visible on all screens */
 @media (max-width: 768px) {
-  .items-container {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    overflow-x: visible !important;
-    min-width: auto !important;
-  }
-
-  /* Force exactly 5 items to fit */
-  .items-container > * {
-    flex: 0 0 calc((100% - 32px) / 5) !important;
-    max-width: calc((100% - 32px) / 5) !important;
-    min-width: 0 !important;
-  }
-}
-
-/* Season Update Notice */
-.season-update-notice {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #ff6b35;
-  margin: 10px 0 20px 0;
-  text-align: center;
-  text-shadow: 0 0 8px rgba(255, 107, 53, 0.6);
-}
-
-@media (max-width: 768px) {
-  .season-update-notice {
-    font-size: 1rem;
-    margin: 8px 0 15px 0;
-  }
-}
 
 /* =====================
    Consolidated Animations
@@ -3362,13 +3338,13 @@ body {
     #c79dff 65%,
     #ffffff 85%,
     #b8b8b8 100%
-  );
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  ) !important;
+  background-size: 300% 300% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  text-shadow: none !important;
   position: relative;
   animation: metallic-shine 3s ease-in-out infinite;
 }
@@ -3383,10 +3359,33 @@ body {
   }
 }
 
+.history-count {
+  text-shadow: none !important;
+  background: linear-gradient(
+    135deg,
+    #e8e8e8 0%,
+    #ffffff 15%,
+    #d4a5ff 35%,
+    #ffffff 50%,
+    #c79dff 65%,
+    #ffffff 85%,
+    #b8b8b8 100%
+  ) !important;
+  background-size: 300% 300% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  animation: metallic-shine 3s ease-in-out infinite;
+}
+
 .title-icon {
   font-size: 2rem;
   animation: iconPulse 2s ease-in-out infinite;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+  text-shadow: none !important;
+  filter: none !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
 @keyframes iconPulse {
@@ -3527,7 +3526,8 @@ body {
 }
 /* Slot Machine Display - Now 5 boxes */
 .slot-display {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
   gap: 1rem;
   justify-content: center;
   padding: 1rem 0;
@@ -3595,8 +3595,8 @@ body {
 }
 
 .slot-label {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 0.5rem;
@@ -3606,23 +3606,20 @@ body {
 .slot-image {
   width: 80px;
   height: 80px;
-  margin: 0.5rem auto;
-  border-radius: 10px;
-  object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  object-fit: contain;
+  margin: 0 auto 0.5rem;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
 }
 
 .slot-name {
   font-size: 0.9rem;
   font-weight: 600;
-  margin-top: 0.5rem;
-  line-height: 1.2;
-  height: 2.4em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: #fff !important;
+  margin: 0;
+  line-height: 1.2;
+  text-align: center;
+  word-wrap: break-word;
 }
 
 /* Expand/Collapse Button */
@@ -3722,37 +3719,29 @@ body {
   }
 
   .slot-image {
-      width: 80%;
-      height: auto;
-      max-width: 50px;
+      width: 45px;
+      height: 45px;
   }
 
   .slot-label {
       font-size: 0.6rem;
   }
-
   .slot-name {
       font-size: 0.7rem;
-      color: #fff !important;
   }
-
   .action-buttons {
-      flex-direction: column;
-      width: 100%;
+      gap: 0.5rem;
   }
-
   .action-btn {
-      width: 100%;
-      justify-content: center;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.7rem;
   }
-
   .item-header {
-      flex-direction: column;
-      gap: 1rem;
+      margin-bottom: 0.5rem;
   }
-
   .class-badge {
-      font-size: 1rem;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.7rem;
   }
 }
 
@@ -3917,3 +3906,39 @@ body {
     padding: 0.4rem 0.8rem;
   }
 }
+
+/* Ensure slot machine history works on ALL screen sizes */
+
+/* --- CRITICAL FIX: Enforce horizontal layout for slot display on DESKTOP views --- */
+@media (min-width: 769px) {
+    #history-list .slot-display {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 1rem !important;
+        justify-content: center !important;
+    }
+
+    .static-slot-item {
+        margin-bottom: 2rem;
+    }
+
+    .slot-box {
+        max-width: 220px;
+        padding: 1.25rem;
+    }
+
+    .slot-image {
+        width: 90px;
+        height: 90px;
+    }
+
+    .slot-name {
+        font-size: 1rem;
+    }
+
+    .slot-label {
+        font-size: 0.8rem;
+    }
+}
+

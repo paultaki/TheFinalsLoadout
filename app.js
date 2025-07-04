@@ -3126,8 +3126,12 @@ class SlotHistoryManager {
     render() {
         const historyList = document.getElementById('history-list');
         const historyCount = document.getElementById('history-count');
-        if (!historyList || !historyCount) return;
+        if (!historyList || !historyCount) {
+            console.error('SlotHistoryManager: Could not find history-list or history-count elements');
+            return;
+        }
 
+        console.log('SlotHistoryManager: Rendering history with', this.history.length, 'items');
         historyCount.textContent = `(${this.history.length})`;
 
         if (this.history.length === 0) {
@@ -3136,7 +3140,9 @@ class SlotHistoryManager {
         }
 
         const itemsToShow = this.showAll ? this.history : this.history.slice(0, this.maxHistory);
-        historyList.innerHTML = itemsToShow.map((loadout, index) => this.createHistoryItemHTML(loadout, index)).join('');
+        const htmlContent = itemsToShow.map((loadout, index) => this.createHistoryItemHTML(loadout, index)).join('');
+        console.log('SlotHistoryManager: Generated HTML preview:', htmlContent.substring(0, 500) + '...');
+        historyList.innerHTML = htmlContent;
 
         if (this.history.length > this.maxHistory) {
             const expandButton = document.createElement('button');
@@ -3147,6 +3153,13 @@ class SlotHistoryManager {
         }
 
         this.attachEventListeners();
+
+        // Generate AI analysis for each item after rendering
+        itemsToShow.forEach((loadout, index) => {
+            setTimeout(() => {
+                this.generateAIAnalysis(index);
+            }, 100 * index); // Stagger the API calls to avoid overwhelming the server
+        });
     }
 
     createHistoryItemHTML(loadout, index) {
