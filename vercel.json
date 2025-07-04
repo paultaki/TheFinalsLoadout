@@ -1,7 +1,7 @@
 {
   "buildCommand": "echo 'Skipping build - serving static files directly'",
   "outputDirectory": ".",
-  "installCommand": "echo 'No dependencies to install'",
+  "installCommand": "cd api && npm install",
   "framework": null,
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
