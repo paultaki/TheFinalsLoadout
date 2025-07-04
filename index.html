@@ -101,6 +101,20 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
 
+    <!-- Google Analytics (GA4) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-GVGKYFGZ1Z");
+    </script>
+
     <!-- Critical CSS -->
     <style>
       :root {
@@ -1006,7 +1020,6 @@
     <link rel="stylesheet" href="css/filters.css" />
     <link rel="stylesheet" href="css/mobile-performance.css" />
     <link rel="stylesheet" href="styles/hotfix.css" />
-    <link rel="stylesheet" href="styles/desktop-fix.css" />
   </head>
 
   <body class="casino-mode">
@@ -1643,6 +1656,13 @@
     <audio id="copySound" src="sounds/click.mp3" preload="auto"></audio>
     <audio id="exportSound" src="sounds/final-sound.mp3" preload="auto"></audio>
 
+    <!-- Performance optimization script - load early -->
+    <script src="performance-init.js"></script>
+
+    <!-- Phase 3 Architecture Scripts -->
+    <script src="js/device-profiler.js"></script>
+    <script src="js/animation-loader.js" type="module"></script>
+
     <!-- Scripts -->
     <!-- ES Modules load in order -->
     <script src="js/volume-control.js?v=1"></script>
@@ -1700,43 +1720,6 @@
           }
         }).observe({ entryTypes: ["layout-shift"] });
       }
-    </script>
-
-    <!-- Optimized Google Analytics - load after user interaction -->
-    <script>
-      // Initialize dataLayer early but delay actual GA loading
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      // Load GA after user interaction or 3 seconds (whichever comes first)
-      let gaLoaded = false;
-      function loadGA() {
-        if (gaLoaded) return;
-        gaLoaded = true;
-
-        const script = document.createElement("script");
-        script.async = true;
-        script.src = "https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z";
-        document.head.appendChild(script);
-
-        script.onload = function () {
-          gtag("config", "G-GVGKYFGZ1Z", {
-            page_title: document.title,
-            page_location: window.location.href,
-          });
-        };
-      }
-
-      // Load on user interaction
-      ["click", "scroll", "touchstart", "keydown"].forEach((event) => {
-        document.addEventListener(event, loadGA, { once: true, passive: true });
-      });
-
-      // Fallback: load after 3 seconds
-      setTimeout(loadGA, 3000);
     </script>
 
     <!-- Cloudflare Insights -->
