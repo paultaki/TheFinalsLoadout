@@ -11,7 +11,7 @@ const MAX_VOLUME_CAP = 0.08;
  * @param {number} volume - The intended volume (0-1)
  * @returns {number} - The capped volume (max 0.08)
  */
-function applyVolumeCap(volume) {
+export function applyVolumeCap(volume) {
   return Math.min(volume, MAX_VOLUME_CAP);
 }
 
@@ -20,7 +20,7 @@ function applyVolumeCap(volume) {
  * @param {HTMLAudioElement} audioElement - The audio element
  * @param {number} volume - The intended volume (0-1)
  */
-function setAudioVolume(audioElement, volume) {
+export function setAudioVolume(audioElement, volume) {
   if (audioElement) {
     audioElement.volume = applyVolumeCap(volume);
   }
@@ -31,7 +31,7 @@ function setAudioVolume(audioElement, volume) {
  * @param {HTMLAudioElement} audioElement - The audio element
  * @param {number} volume - The intended volume (0-1)
  */
-function playAudioWithVolume(audioElement, volume) {
+export function playAudioWithVolume(audioElement, volume) {
   if (audioElement) {
     audioElement.volume = applyVolumeCap(volume);
     audioElement.currentTime = 0;
@@ -44,7 +44,7 @@ function playAudioWithVolume(audioElement, volume) {
 /**
  * Ultra-quiet volume presets
  */
-const ULTRA_QUIET_VOLUMES = {
+export const ULTRA_QUIET_VOLUMES = {
   CLICK: 0.02,
   BEEP: 0.03,
   SPIN: 0.04,
