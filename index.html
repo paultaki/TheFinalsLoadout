@@ -960,6 +960,35 @@
           padding: 0.6rem 1.2rem !important;
           font-size: 0.85rem !important;
           margin: 0.75rem auto 0 auto !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.05em !important;
+          border: 2px solid rgba(255, 183, 0, 0.4) !important;
+          border-radius: 8px !important;
+          background: linear-gradient(
+            135deg,
+            rgba(123, 47, 227, 0.1),
+            rgba(30, 144, 255, 0.1)
+          ) !important;
+          color: #ffb700 !important;
+          cursor: pointer !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 8px !important;
+          transition: all 0.3s ease !important;
+          backdrop-filter: blur(10px) !important;
+          box-shadow: 0 2px 10px rgba(255, 183, 0, 0.2) !important;
+        }
+
+        .secondary-filter-button:active {
+          transform: scale(0.95) !important;
+          box-shadow: 0 1px 5px rgba(255, 183, 0, 0.2) !important;
+        }
+
+        .secondary-filter-button svg {
+          opacity: 0.8 !important;
+          width: 16px !important;
+          height: 16px !important;
         }
 
         /* Reduce gaps between sections */
