@@ -26,41 +26,54 @@ import { SlotMachine } from "./src/components/slots/SlotMachine.js";
 window.userHasInteracted = false;
 
 // Set up interaction tracking
-document.addEventListener('click', () => {
-  window.userHasInteracted = true;
-}, { once: true });
+document.addEventListener(
+  "click",
+  () => {
+    window.userHasInteracted = true;
+  },
+  { once: true }
+);
 
-document.addEventListener('touchstart', () => {
-  window.userHasInteracted = true;
-}, { once: true });
+document.addEventListener(
+  "touchstart",
+  () => {
+    window.userHasInteracted = true;
+  },
+  { once: true }
+);
 
 // Safe audio play function that respects user interaction
-window.safePlay = function(audio) {
+window.safePlay = function (audio) {
   if (!audio) {
-    console.warn('safePlay: No audio element provided');
+    console.warn("safePlay: No audio element provided");
     return Promise.resolve();
   }
 
   // Check if user has interacted and sound is enabled
   if (!window.userHasInteracted) {
-    console.log(`safePlay: Blocked ${audio.id || 'audio'} - waiting for user interaction`);
+    console.log(
+      `safePlay: Blocked ${audio.id || "audio"} - waiting for user interaction`
+    );
     return Promise.resolve();
   }
 
   // Check if sound is enabled in state
   if (window.state && !window.state.soundEnabled) {
-    console.log(`safePlay: Blocked ${audio.id || 'audio'} - sound is disabled`);
+    console.log(`safePlay: Blocked ${audio.id || "audio"} - sound is disabled`);
     return Promise.resolve();
   }
 
   // Safe play with error handling
   try {
     audio.currentTime = 0;
-    return audio.play().catch(err => {
-      console.warn(`safePlay: Failed to play ${audio.id || 'audio'}:`, err.message);
+    return audio.play().catch((err) => {
+      console.warn(
+        `safePlay: Failed to play ${audio.id || "audio"}:`,
+        err.message
+      );
     });
   } catch (e) {
-    console.warn(`safePlay: Exception playing ${audio.id || 'audio'}:`, e);
+    console.warn(`safePlay: Exception playing ${audio.id || "audio"}:`, e);
     return Promise.resolve();
   }
 };
@@ -163,13 +176,15 @@ function getAvailableClasses() {
   ["light", "medium", "heavy"].forEach((className) => {
     const isExcluded = localStorage.getItem(`exclude-${className}`) === "true";
     if (!isExcluded) {
-      const capitalizedClass = className.charAt(0).toUpperCase() + className.slice(1);
+      const capitalizedClass =
+        className.charAt(0).toUpperCase() + className.slice(1);
       availableClasses.push(capitalizedClass);
     }
   });
 
   // If all classes are excluded, use all classes as fallback
-  const finalClasses = availableClasses.length > 0 ? availableClasses : allClasses;
+  const finalClasses =
+    availableClasses.length > 0 ? availableClasses : allClasses;
 
   return finalClasses;
 }
@@ -563,10 +578,11 @@ const displayLoadout = (classType) => {
 
   // Check if we're being called from within the overlay system
   const overlayOutput = document.getElementById("output");
-  const isInOverlay = overlayOutput && (
-    overlayOutput.closest(".slot-machine-overlay") ||
-    overlayOutput.id === "output" && document.getElementById("output-backup")
-  );
+  const isInOverlay =
+    overlayOutput &&
+    (overlayOutput.closest(".slot-machine-overlay") ||
+      (overlayOutput.id === "output" &&
+        document.getElementById("output-backup")));
 
   if (
     window.overlayManager &&
@@ -574,7 +590,9 @@ const displayLoadout = (classType) => {
     window.overlayManager.overlayState.isActive &&
     !isInOverlay
   ) {
-    console.log("⏸️ Overlay active but not slot machine overlay, skipping displayLoadout");
+    console.log(
+      "⏸️ Overlay active but not slot machine overlay, skipping displayLoadout"
+    );
     return;
   }
 
@@ -1626,7 +1644,9 @@ async function finalizeSpin(columns) {
   if (window.isValidSpinSequence && window.userHasInteracted) {
     addCelebrationEffects();
   } else {
-    console.log("Skipping celebration - not in valid spin sequence or no user interaction");
+    console.log(
+      "Skipping celebration - not in valid spin sequence or no user interaction"
+    );
   }
 
   // Also ensure spinning sound is fully stopped (mobile fix)
@@ -1701,8 +1721,8 @@ async function finalizeSpin(columns) {
 
     if (finalItems) {
       // Items were passed directly - extract the names
-      selectedItems = finalItems.map(item => {
-        if (typeof item === 'object' && item.name) {
+      selectedItems = finalItems.map((item) => {
+        if (typeof item === "object" && item.name) {
           return item.name;
         }
         return item;
@@ -1710,7 +1730,9 @@ async function finalizeSpin(columns) {
       console.log("📦 Extracted items from passed data:", selectedItems);
     } else {
       // BEFORE processing anything, let's debug the containers
-      console.log(`🔍 DEBUGGING: Found ${itemContainers.length} item containers`);
+      console.log(
+        `🔍 DEBUGGING: Found ${itemContainers.length} item containers`
+      );
       itemContainers.forEach((container, index) => {
         console.log(`Container ${index}:`, {
           "data-winning-gadget": container.dataset.winningGadget,
@@ -1722,97 +1744,101 @@ async function finalizeSpin(columns) {
 
       // Get all the selected items - use data attributes for gadgets to ensure accuracy
       selectedItems = Array.from(itemContainers).map((container, index) => {
-      console.log(`📋 Processing container ${index}:`, container);
+        console.log(`📋 Processing container ${index}:`, container);
 
-      // For gadgets (index 2, 3, 4), use multiple fallback methods
-      if (index >= 2) {
-        const gadgetIndex = index - 2; // Convert to 0-based gadget index
+        // For gadgets (index 2, 3, 4), use multiple fallback methods
+        if (index >= 2) {
+          const gadgetIndex = index - 2; // Convert to 0-based gadget index
 
-        // Method 1: Try data attribute on container
-        const winningGadget = container.dataset.winningGadget;
-        const originalGadget = container.dataset.originalGadget;
+          // Method 1: Try data attribute on container
+          const winningGadget = container.dataset.winningGadget;
+          const originalGadget = container.dataset.originalGadget;
 
-        console.log(`📋 Gadget ${gadgetIndex + 1} data attributes:`, {
-          winningGadget,
-          originalGadget,
-          position: container.dataset.gadgetPosition,
-        });
+          console.log(`📋 Gadget ${gadgetIndex + 1} data attributes:`, {
+            winningGadget,
+            originalGadget,
+            position: container.dataset.gadgetPosition,
+          });
 
-        // Method 2: Try data attribute on scroll container
-        const scrollContainer = container.querySelector(".scroll-container");
-        const scrollWinningGadget = scrollContainer?.dataset.winningGadget;
+          // Method 2: Try data attribute on scroll container
+          const scrollContainer = container.querySelector(".scroll-container");
+          const scrollWinningGadget = scrollContainer?.dataset.winningGadget;
 
-        // Method 3: Use global storage as ultimate fallback
-        const globalGadget =
-          window.currentDisplayedGadgets &&
-          window.currentDisplayedGadgets[gadgetIndex];
+          // Method 3: Use global storage as ultimate fallback
+          const globalGadget =
+            window.currentDisplayedGadgets &&
+            window.currentDisplayedGadgets[gadgetIndex];
 
-        console.log(
-          `📋 All gadget retrieval methods for gadget ${gadgetIndex + 1}:`,
-          {
-            containerData: winningGadget,
-            originalData: originalGadget,
-            scrollData: scrollWinningGadget,
-            globalFallback: globalGadget,
-          }
-        );
-
-        // Use the first available method
-        if (winningGadget) {
-          console.log(`✅ Using container data: "${winningGadget}"`);
-          return winningGadget;
-        } else if (originalGadget) {
-          console.log(`⚠️ Using original-gadget fallback: "${originalGadget}"`);
-          return originalGadget;
-        } else if (scrollWinningGadget) {
           console.log(
-            `⚠️ Using scroll container data: "${scrollWinningGadget}"`
+            `📋 All gadget retrieval methods for gadget ${gadgetIndex + 1}:`,
+            {
+              containerData: winningGadget,
+              originalData: originalGadget,
+              scrollData: scrollWinningGadget,
+              globalFallback: globalGadget,
+            }
           );
-          return scrollWinningGadget;
-        } else if (globalGadget) {
-          console.log(`🔄 Using global fallback: "${globalGadget}"`);
-          return globalGadget;
-        } else {
-          console.error(`❌ All methods failed for gadget ${gadgetIndex + 1}`);
+
+          // Use the first available method
+          if (winningGadget) {
+            console.log(`✅ Using container data: "${winningGadget}"`);
+            return winningGadget;
+          } else if (originalGadget) {
+            console.log(
+              `⚠️ Using original-gadget fallback: "${originalGadget}"`
+            );
+            return originalGadget;
+          } else if (scrollWinningGadget) {
+            console.log(
+              `⚠️ Using scroll container data: "${scrollWinningGadget}"`
+            );
+            return scrollWinningGadget;
+          } else if (globalGadget) {
+            console.log(`🔄 Using global fallback: "${globalGadget}"`);
+            return globalGadget;
+          } else {
+            console.error(
+              `❌ All methods failed for gadget ${gadgetIndex + 1}`
+            );
+            return "Unknown";
+          }
+        }
+
+        // For weapons and specializations, use the visible item method
+        const scrollContainer = container.querySelector(".scroll-container");
+        if (!scrollContainer) {
+          console.error(`❌ No scroll container found for index ${index}`);
           return "Unknown";
         }
-      }
 
-      // For weapons and specializations, use the visible item method
-      const scrollContainer = container.querySelector(".scroll-container");
-      if (!scrollContainer) {
-        console.error(`❌ No scroll container found for index ${index}`);
-        return "Unknown";
-      }
+        // Find all item columns
+        const allItems = scrollContainer.querySelectorAll(".itemCol");
+        console.log(`📋 Found ${allItems.length} items in container ${index}`);
 
-      // Find all item columns
-      const allItems = scrollContainer.querySelectorAll(".itemCol");
-      console.log(`📋 Found ${allItems.length} items in container ${index}`);
+        // Use the EXACT method from old working version
+        const visibleItem = Array.from(allItems).find((item) => {
+          const rect = item.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+          return (
+            rect.top >= containerRect.top &&
+            rect.bottom <= containerRect.bottom &&
+            rect.height > 0 &&
+            rect.width > 0
+          );
+        });
 
-      // Use the EXACT method from old working version
-      const visibleItem = Array.from(allItems).find((item) => {
-        const rect = item.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        return (
-          rect.top >= containerRect.top &&
-          rect.bottom <= containerRect.bottom &&
-          rect.height > 0 &&
-          rect.width > 0
+        if (!visibleItem) {
+          console.error(`❌ No visible item found for index ${index}`);
+          return "Unknown";
+        }
+        const itemText = visibleItem.querySelector("p")?.innerText.trim();
+        console.log(
+          `📋 ${
+            index === 0 ? "Weapon" : "Specialization"
+          } from visible item: "${itemText}"`
         );
+        return itemText || "Unknown";
       });
-
-      if (!visibleItem) {
-        console.error(`❌ No visible item found for index ${index}`);
-        return "Unknown";
-      }
-      const itemText = visibleItem.querySelector("p")?.innerText.trim();
-      console.log(
-        `📋 ${
-          index === 0 ? "Weapon" : "Specialization"
-        } from visible item: "${itemText}"`
-      );
-      return itemText || "Unknown";
-    });
     } // End of else block for DOM processing
 
     // Debug the selected items
@@ -1853,23 +1879,32 @@ async function finalizeSpin(columns) {
 
       // ✅ Add to history using the new SlotHistoryManager
       const loadout = {
-          class: savedClass,
-          weapon: { name: weapon, image: `images/${weapon.replace(/ /g, '_')}.webp` },
-          specialization: { name: specialization, image: `images/${specialization.replace(/ /g, '_')}.webp` },
-          gadgets: gadgets.map(g => ({ name: g, image: `images/${g.replace(/ /g, '_')}.webp` }))
+        class: savedClass,
+        weapon: {
+          name: weapon,
+          image: `images/${weapon.replace(/ /g, "_")}.webp`,
+        },
+        specialization: {
+          name: specialization,
+          image: `images/${specialization.replace(/ /g, "_")}.webp`,
+        },
+        gadgets: gadgets.map((g) => ({
+          name: g,
+          image: `images/${g.replace(/ /g, "_")}.webp`,
+        })),
       };
       slotHistoryManager.addToHistory(loadout);
 
-              // Display roast immediately below the slot machine and get the generated roast
-        displayRoastBelowSlotMachine(savedClass, weapon, specialization, gadgets)
-          .then((generatedRoast) => {
-            console.log("✅ Successfully displayed roast:", loadoutString);
-            isAddingToHistory = false; // Reset the flag
-          })
-          .catch((error) => {
-            console.error("❌ Error displaying roast:", error);
-            isAddingToHistory = false; // Reset the flag
-          });
+      // Display roast immediately below the slot machine and get the generated roast
+      displayRoastBelowSlotMachine(savedClass, weapon, specialization, gadgets)
+        .then((generatedRoast) => {
+          console.log("✅ Successfully displayed roast:", loadoutString);
+          isAddingToHistory = false; // Reset the flag
+        })
+        .catch((error) => {
+          console.error("❌ Error displaying roast:", error);
+          isAddingToHistory = false; // Reset the flag
+        });
 
       // Reset the class AFTER saving it
       state.selectedClass = null;
@@ -1889,7 +1924,7 @@ async function finalizeSpin(columns) {
   }
 
   // Remove the slot machine active class to show selection display again on desktop
-  document.body.classList.remove('slot-machine-active');
+  document.body.classList.remove("slot-machine-active");
 
   console.log(
     "✅ Spin completed and finalized! Buttons remain disabled until class selection."
@@ -1986,8 +2021,10 @@ window.getUniqueGadgets = getUniqueGadgets;
 
 // Override displayLoadout if new slot machine is available
 setTimeout(() => {
-  if (typeof window.displayLoadoutWithNewSlotMachine === 'function') {
-    console.log('🎰 Overriding displayLoadout with new slot machine implementation');
+  if (typeof window.displayLoadoutWithNewSlotMachine === "function") {
+    console.log(
+      "🎰 Overriding displayLoadout with new slot machine implementation"
+    );
     window.displayLoadout = window.displayLoadoutWithNewSlotMachine;
   }
 }, 100);
@@ -3035,15 +3072,20 @@ function initializeEmptySlotMachine() {
 function cleanupOldCachedData() {
   try {
     // Clean up localStorage data older than 7 days
-    const savedHistory = JSON.parse(localStorage.getItem("loadoutHistory")) || [];
-    const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+    const savedHistory =
+      JSON.parse(localStorage.getItem("loadoutHistory")) || [];
+    const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
-    const recentHistory = savedHistory.filter(entry => {
+    const recentHistory = savedHistory.filter((entry) => {
       return !entry.timestamp || entry.timestamp > oneWeekAgo;
     });
 
     if (recentHistory.length < savedHistory.length) {
-      console.log(`🧹 Cleaned up ${savedHistory.length - recentHistory.length} old history entries`);
+      console.log(
+        `🧹 Cleaned up ${
+          savedHistory.length - recentHistory.length
+        } old history entries`
+      );
       localStorage.setItem("loadoutHistory", JSON.stringify(recentHistory));
     }
 
@@ -3062,109 +3104,161 @@ function cleanupOldCachedData() {
 // SLOT HISTORY MANAGER CLASS
 // ===========================
 class SlotHistoryManager {
-    constructor() {
-        this.history = [];
-        this.maxHistory = 5; // Display 5 by default
-        this.spinCounter = 0;
-        this.soundEnabled = true;
-        this.showAll = false;
-        this.loadFromStorage();
+  constructor() {
+    this.history = [];
+    this.maxHistory = 5; // Display 5 by default
+    this.spinCounter = 0;
+    this.soundEnabled = true;
+    this.showAll = false;
+    this.loadFromStorage();
+  }
+
+  loadFromStorage() {
+    try {
+      const savedHistory = localStorage.getItem("slotMachineHistory");
+      const savedCounter = localStorage.getItem("slotMachineSpinCounter");
+      if (savedHistory) {
+        this.history = JSON.parse(savedHistory);
+      }
+      if (savedCounter) {
+        this.spinCounter = parseInt(savedCounter, 10);
+      }
+    } catch (error) {
+      console.error("Failed to load history from storage:", error);
+    }
+  }
+
+  saveToStorage() {
+    try {
+      localStorage.setItem("slotMachineHistory", JSON.stringify(this.history));
+      localStorage.setItem(
+        "slotMachineSpinCounter",
+        this.spinCounter.toString()
+      );
+    } catch (error) {
+      console.error("Failed to save history to storage:", error);
+    }
+  }
+
+  addToHistory(loadout) {
+    loadout.spinNumber = ++this.spinCounter;
+    loadout.timestamp = new Date();
+    this.history.unshift(loadout);
+    this.saveToStorage();
+    this.render();
+    this.playSound("addSound");
+    this.showToast("Loadout saved to history!");
+
+    // Generate AI analysis for the new loadout (index 0)
+    setTimeout(() => {
+      this.generateAIAnalysis(0);
+    }, 1000);
+  }
+
+  clearHistory() {
+    this.history = [];
+    this.spinCounter = 0;
+    this.saveToStorage();
+    this.render();
+    this.showToast("History cleared!");
+  }
+
+  toggleShowAll() {
+    this.showAll = !this.showAll;
+    this.render();
+  }
+
+  render() {
+    const historyList = document.getElementById("history-list");
+    const historyCount = document.getElementById("history-count");
+    if (!historyList || !historyCount) {
+      console.error(
+        "SlotHistoryManager: Could not find history-list or history-count elements"
+      );
+      return;
     }
 
-    loadFromStorage() {
-        try {
-            const savedHistory = localStorage.getItem('slotMachineHistory');
-            const savedCounter = localStorage.getItem('slotMachineSpinCounter');
-            if (savedHistory) {
-                this.history = JSON.parse(savedHistory);
-            }
-            if (savedCounter) {
-                this.spinCounter = parseInt(savedCounter, 10);
-            }
-        } catch (error) {
-            console.error('Failed to load history from storage:', error);
+    console.log(
+      "SlotHistoryManager: Rendering history with",
+      this.history.length,
+      "items"
+    );
+    historyCount.textContent = `(${this.history.length})`;
+
+    if (this.history.length === 0) {
+      historyList.innerHTML = `<div class="empty-state"><p>No loadouts yet. Spin the wheel!</p></div>`;
+      return;
+    }
+
+    const itemsToShow = this.showAll
+      ? this.history
+      : this.history.slice(0, this.maxHistory);
+    const htmlContent = itemsToShow
+      .map((loadout, index) => this.createHistoryItemHTML(loadout, index))
+      .join("");
+    console.log(
+      "SlotHistoryManager: Generated HTML preview:",
+      htmlContent.substring(0, 500) + "..."
+    );
+    historyList.innerHTML = htmlContent;
+
+    if (this.history.length > this.maxHistory) {
+      const expandButton = document.createElement("button");
+      expandButton.className = "expand-history-btn";
+      expandButton.textContent = this.showAll
+        ? "Show Less"
+        : `Show All (${this.history.length} total)`;
+      expandButton.onclick = () => this.toggleShowAll();
+
+      // Find or create the history-controls container
+      let historyControls = document.querySelector(".history-controls");
+      if (!historyControls) {
+        historyControls = document.createElement("div");
+        historyControls.className = "history-controls";
+        historyList.parentNode.appendChild(historyControls);
+      }
+
+      // Remove existing expand button if it exists
+      const existingExpandBtn = historyControls.querySelector(
+        ".expand-history-btn:not(#clear-history)"
+      );
+      if (existingExpandBtn) {
+        existingExpandBtn.remove();
+      }
+
+      // Add the expand button as the first child (before clear button)
+      const clearButton = historyControls.querySelector("#clear-history");
+      if (clearButton) {
+        historyControls.insertBefore(expandButton, clearButton);
+      } else {
+        historyControls.appendChild(expandButton);
+      }
+    } else {
+      // Remove expand button if not needed
+      const historyControls = document.querySelector(".history-controls");
+      if (historyControls) {
+        const existingExpandBtn = historyControls.querySelector(
+          ".expand-history-btn:not(#clear-history)"
+        );
+        if (existingExpandBtn) {
+          existingExpandBtn.remove();
         }
+      }
     }
 
-    saveToStorage() {
-        try {
-            localStorage.setItem('slotMachineHistory', JSON.stringify(this.history));
-            localStorage.setItem('slotMachineSpinCounter', this.spinCounter.toString());
-        } catch (error) {
-            console.error('Failed to save history to storage:', error);
-        }
-    }
+    this.attachEventListeners();
 
-    addToHistory(loadout) {
-        loadout.spinNumber = ++this.spinCounter;
-        loadout.timestamp = new Date();
-        this.history.unshift(loadout);
-        this.saveToStorage();
-        this.render();
-        this.playSound('addSound');
-        this.showToast('Loadout saved to history!');
+    // Generate AI analysis for each item after rendering
+    itemsToShow.forEach((loadout, index) => {
+      setTimeout(() => {
+        this.generateAIAnalysis(index);
+      }, 100 * index); // Stagger the API calls to avoid overwhelming the server
+    });
+  }
 
-        // Generate AI analysis for the new loadout (index 0)
-        setTimeout(() => {
-            this.generateAIAnalysis(0);
-        }, 1000);
-    }
-
-    clearHistory() {
-        this.history = [];
-        this.spinCounter = 0;
-        this.saveToStorage();
-        this.render();
-        this.showToast('History cleared!');
-    }
-
-    toggleShowAll() {
-        this.showAll = !this.showAll;
-        this.render();
-    }
-
-    render() {
-        const historyList = document.getElementById('history-list');
-        const historyCount = document.getElementById('history-count');
-        if (!historyList || !historyCount) {
-            console.error('SlotHistoryManager: Could not find history-list or history-count elements');
-            return;
-        }
-
-        console.log('SlotHistoryManager: Rendering history with', this.history.length, 'items');
-        historyCount.textContent = `(${this.history.length})`;
-
-        if (this.history.length === 0) {
-            historyList.innerHTML = `<div class="empty-state"><p>No loadouts yet. Spin the wheel!</p></div>`;
-            return;
-        }
-
-        const itemsToShow = this.showAll ? this.history : this.history.slice(0, this.maxHistory);
-        const htmlContent = itemsToShow.map((loadout, index) => this.createHistoryItemHTML(loadout, index)).join('');
-        console.log('SlotHistoryManager: Generated HTML preview:', htmlContent.substring(0, 500) + '...');
-        historyList.innerHTML = htmlContent;
-
-        if (this.history.length > this.maxHistory) {
-            const expandButton = document.createElement('button');
-            expandButton.className = 'expand-history-btn';
-            expandButton.textContent = this.showAll ? 'Show Less' : `Show All (${this.history.length} total)`;
-            expandButton.onclick = () => this.toggleShowAll();
-            historyList.appendChild(expandButton);
-        }
-
-        this.attachEventListeners();
-
-        // Generate AI analysis for each item after rendering
-        itemsToShow.forEach((loadout, index) => {
-            setTimeout(() => {
-                this.generateAIAnalysis(index);
-            }, 100 * index); // Stagger the API calls to avoid overwhelming the server
-        });
-    }
-
-    createHistoryItemHTML(loadout, index) {
-        const timeAgo = this.getTimeAgo(loadout.timestamp);
-        return `
+  createHistoryItemHTML(loadout, index) {
+    const timeAgo = this.getTimeAgo(loadout.timestamp);
+    return `
             <div class="static-slot-item" data-index="${index}">
                 <div class="item-header">
                     <div class="item-metadata">
@@ -3180,21 +3274,33 @@ class SlotHistoryManager {
                 <div class="slot-display" id="slot-display-${index}">
                     <div class="slot-box ${loadout.class.toLowerCase()}">
                         <div class="slot-label">WEAPON</div>
-                        <img src="${loadout.weapon.image}" alt="${loadout.weapon.name}" class="slot-image" onerror="this.src='images/placeholder.webp';">
+                        <img src="${loadout.weapon.image}" alt="${
+      loadout.weapon.name
+    }" class="slot-image" onerror="this.src='images/placeholder.webp';">
                         <div class="slot-name">${loadout.weapon.name}</div>
                     </div>
                     <div class="slot-box ${loadout.class.toLowerCase()}">
                         <div class="slot-label">SPECIAL</div>
-                        <img src="${loadout.specialization.image}" alt="${loadout.specialization.name}" class="slot-image" onerror="this.src='images/placeholder.webp';">
-                        <div class="slot-name">${loadout.specialization.name}</div>
+                        <img src="${loadout.specialization.image}" alt="${
+      loadout.specialization.name
+    }" class="slot-image" onerror="this.src='images/placeholder.webp';">
+                        <div class="slot-name">${
+                          loadout.specialization.name
+                        }</div>
                     </div>
-                    ${loadout.gadgets.map((gadget, i) => `
+                    ${loadout.gadgets
+                      .map(
+                        (gadget, i) => `
                         <div class="slot-box ${loadout.class.toLowerCase()}">
                             <div class="slot-label">GADGET ${i + 1}</div>
-                            <img src="${gadget.image}" alt="${gadget.name}" class="slot-image" onerror="this.src='images/placeholder.webp';">
+                            <img src="${gadget.image}" alt="${
+                          gadget.name
+                        }" class="slot-image" onerror="this.src='images/placeholder.webp';">
                             <div class="slot-name">${gadget.name}</div>
                         </div>
-                    `).join('')}
+                    `
+                      )
+                      .join("")}
                 </div>
                 <div class="ai-analysis loading" id="ai-analysis-${index}">
                     <div class="ai-icon">🤖</div>
@@ -3203,51 +3309,56 @@ class SlotHistoryManager {
                 </div>
                 <div class="particles"></div>
             </div>`;
+  }
+
+  getTimeAgo(timestamp) {
+    const now = new Date();
+    const diff = now - new Date(timestamp);
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    if (minutes > 0) return `${minutes}m ago`;
+    return "Just now";
+  }
+
+  copyAsText(index) {
+    const loadout = this.history[index];
+    if (!loadout) return;
+
+    const text = `${loadout.class.toUpperCase()} CLASS LOADOUT #${
+      loadout.spinNumber
     }
-
-    getTimeAgo(timestamp) {
-        const now = new Date();
-        const diff = now - new Date(timestamp);
-        const minutes = Math.floor(diff / 60000);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-
-        if (days > 0) return `${days}d ago`;
-        if (hours > 0) return `${hours}h ago`;
-        if (minutes > 0) return `${minutes}m ago`;
-        return 'Just now';
-    }
-
-    copyAsText(index) {
-        const loadout = this.history[index];
-        if (!loadout) return;
-
-        const text = `${loadout.class.toUpperCase()} CLASS LOADOUT #${loadout.spinNumber}
 Weapon: ${loadout.weapon.name}
 Specialization: ${loadout.specialization.name}
-Gadgets: ${loadout.gadgets.map(g => g.name).join(', ')}
+Gadgets: ${loadout.gadgets.map((g) => g.name).join(", ")}
 
 Generated by thefinalsloadout.com`;
 
-        navigator.clipboard.writeText(text).then(() => {
-            this.showToast('Loadout copied to clipboard!');
-        }).catch(err => {
-            console.error('Failed to copy text: ', err);
-            this.showToast('Failed to copy text');
-        });
-    }
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        this.showToast("Loadout copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+        this.showToast("Failed to copy text");
+      });
+  }
 
-    async copyAsImage(index) {
-        const loadout = this.history[index];
-        if (!loadout) return;
+  async copyAsImage(index) {
+    const loadout = this.history[index];
+    if (!loadout) return;
 
-        try {
-            const slotDisplay = document.getElementById(`slot-display-${index}`);
-            if (!slotDisplay) return;
+    try {
+      const slotDisplay = document.getElementById(`slot-display-${index}`);
+      if (!slotDisplay) return;
 
-            // Add class badge and watermark for image export
-            const tempContainer = document.createElement('div');
-            tempContainer.style.cssText = `
+      // Add class badge and watermark for image export
+      const tempContainer = document.createElement("div");
+      tempContainer.style.cssText = `
                 position: absolute;
                 top: -9999px;
                 left: -9999px;
@@ -3257,24 +3368,29 @@ Generated by thefinalsloadout.com`;
                 font-family: 'Orbitron', monospace;
             `;
 
-            const classBadge = document.createElement('div');
-            classBadge.textContent = `${loadout.class.toUpperCase()} CLASS`;
-            classBadge.style.cssText = `
+      const classBadge = document.createElement("div");
+      classBadge.textContent = `${loadout.class.toUpperCase()} CLASS`;
+      classBadge.style.cssText = `
                 text-align: center;
                 font-size: 18px;
                 font-weight: bold;
-                color: ${loadout.class.toLowerCase() === 'light' ? '#00bcd4' :
-                       loadout.class.toLowerCase() === 'medium' ? '#9c27b0' : '#f44336'};
+                color: ${
+                  loadout.class.toLowerCase() === "light"
+                    ? "#00bcd4"
+                    : loadout.class.toLowerCase() === "medium"
+                    ? "#9c27b0"
+                    : "#f44336"
+                };
                 margin-bottom: 15px;
                 text-shadow: 0 0 10px currentColor;
             `;
 
-            const clonedDisplay = slotDisplay.cloneNode(true);
-            clonedDisplay.style.margin = '0';
+      const clonedDisplay = slotDisplay.cloneNode(true);
+      clonedDisplay.style.margin = "0";
 
-            const watermark = document.createElement('div');
-            watermark.textContent = 'thefinalsloadout.com';
-            watermark.style.cssText = `
+      const watermark = document.createElement("div");
+      watermark.textContent = "thefinalsloadout.com";
+      watermark.style.cssText = `
                 text-align: center;
                 margin-top: 15px;
                 font-size: 12px;
@@ -3282,166 +3398,187 @@ Generated by thefinalsloadout.com`;
                 font-weight: normal;
             `;
 
-            tempContainer.appendChild(classBadge);
-            tempContainer.appendChild(clonedDisplay);
-            tempContainer.appendChild(watermark);
-            document.body.appendChild(tempContainer);
+      tempContainer.appendChild(classBadge);
+      tempContainer.appendChild(clonedDisplay);
+      tempContainer.appendChild(watermark);
+      document.body.appendChild(tempContainer);
 
-            const canvas = await html2canvas(tempContainer, {
-                backgroundColor: '#1a1a1a',
-                scale: 2,
-                useCORS: true
-            });
+      const canvas = await html2canvas(tempContainer, {
+        backgroundColor: "#1a1a1a",
+        scale: 2,
+        useCORS: true,
+      });
 
-            document.body.removeChild(tempContainer);
+      document.body.removeChild(tempContainer);
 
-            canvas.toBlob(blob => {
-                const item = new ClipboardItem({ 'image/png': blob });
-                navigator.clipboard.write([item]).then(() => {
-                    this.showToast('Image copied to clipboard!');
-                }).catch(err => {
-                    console.error('Failed to copy image: ', err);
-                    this.showToast('Failed to copy image');
-                });
-            });
-        } catch (error) {
-            console.error('Failed to copy as image:', error);
-            this.showToast('Failed to copy image');
-        }
+      canvas.toBlob((blob) => {
+        const item = new ClipboardItem({ "image/png": blob });
+        navigator.clipboard
+          .write([item])
+          .then(() => {
+            this.showToast("Image copied to clipboard!");
+          })
+          .catch((err) => {
+            console.error("Failed to copy image: ", err);
+            this.showToast("Failed to copy image");
+          });
+      });
+    } catch (error) {
+      console.error("Failed to copy as image:", error);
+      this.showToast("Failed to copy image");
     }
+  }
 
-    attachEventListeners() {
-        document.querySelectorAll('.copy-text').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const index = parseInt(e.target.dataset.index);
-                this.copyAsText(index);
-            });
-        });
+  attachEventListeners() {
+    document.querySelectorAll(".copy-text").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const index = parseInt(e.target.dataset.index);
+        this.copyAsText(index);
+      });
+    });
 
-        document.querySelectorAll('.copy-image').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const index = parseInt(e.target.dataset.index);
-                this.copyAsImage(index);
-            });
-        });
+    document.querySelectorAll(".copy-image").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const index = parseInt(e.target.dataset.index);
+        this.copyAsImage(index);
+      });
+    });
+  }
+
+  async generateAIAnalysis(index) {
+    const loadout = this.history[index];
+    if (!loadout) return;
+
+    const analysisElement = document.getElementById(`ai-analysis-${index}`);
+    if (!analysisElement) return;
+
+    const roastText = analysisElement.querySelector(".roast-text");
+    const scoreBadge = analysisElement.querySelector(".score-badge");
+
+    try {
+      // Prepare data for the API call
+      const requestData = {
+        class: loadout.class,
+        weapon: loadout.weapon.name,
+        specialization: loadout.specialization.name,
+        gadgets: loadout.gadgets.map((g) => g.name),
+      };
+
+      console.log("🚀 Generating AI analysis for loadout:", requestData);
+
+      // Call the analysis API
+      const response = await fetch("/api/loadout-analysis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("🎯 Received AI analysis:", data);
+
+      // Update the analysis display
+      analysisElement.classList.remove("loading");
+      roastText.textContent = data.analysis || data.roast;
+
+      // Extract and display score
+      const scoreMatch = (data.analysis || data.roast).match(/(\d+)\/10/);
+      if (scoreMatch) {
+        scoreBadge.textContent = scoreMatch[0];
+        const score = parseInt(scoreMatch[1]);
+        if (score >= 8) analysisElement.classList.add("high-score");
+        else if (score >= 5) analysisElement.classList.add("mid-score");
+        else analysisElement.classList.add("low-score");
+      }
+
+      // Add fallback indicator if API failed
+      if (data.fallback) {
+        analysisElement.classList.add("fallback");
+      }
+    } catch (error) {
+      console.error("Error generating AI analysis:", error);
+
+      // Use fallback analysis logic
+      const weapon = loadout.weapon.name;
+      const specialization = loadout.specialization.name;
+      const gadgets = loadout.gadgets.map((g) => g.name);
+
+      // Categorize weapons for fallback
+      const annoyingWeapons = [
+        "Sword",
+        "Lockbolt X",
+        "SH1900",
+        "Throwing Knives",
+        "Dual Blades",
+        "Riot Shield",
+        "Flamethrower",
+        "Spear",
+        "M32-GL",
+        "CL-40",
+      ];
+      const difficultWeapons = [
+        "M60",
+        "R.357",
+        "CB-01 Repeater",
+        "Recurve Bow",
+        "Dagger",
+        "AKM",
+      ];
+
+      const isAnnoying = annoyingWeapons.includes(weapon);
+      const isDifficult = difficultWeapons.includes(weapon);
+
+      let fallbackAnalysis = [];
+
+      if (isAnnoying) {
+        fallbackAnalysis = [
+          `${weapon} and ${specialization}? You're here to ruin someone's day - I like your style! 8/10`,
+          `${loadout.class} with ${weapon}? Maximum tilt potential achieved. The salt will flow! 7/10`,
+          `${specialization} + ${gadgets[0]}? Chaotic evil, but make it fun! 8/10`,
+        ];
+      } else if (isDifficult) {
+        fallbackAnalysis = [
+          `${weapon} and ${specialization}? Playing on expert mode - respect the grind! 8/10`,
+          `${loadout.class} with ${weapon}? You're not here for easy wins, you're here for glory! 9/10`,
+          `Mastering ${weapon} with these gadgets? That's champion mentality right there! 8/10`,
+        ];
+      } else {
+        fallbackAnalysis = [
+          `${weapon} and ${specialization}? Unconventional but intriguing. Science requires sacrifice! 6/10`,
+          `${loadout.class} with ${weapon}? You're inventing the meta, one match at a time! 7/10`,
+          `${specialization} + ${gadgets[0]}? Creative loadout! Success not guaranteed, fun definitely is! 7/10`,
+        ];
+      }
+
+      const selectedAnalysis =
+        fallbackAnalysis[Math.floor(Math.random() * fallbackAnalysis.length)];
+
+      analysisElement.classList.remove("loading");
+      analysisElement.classList.add("fallback");
+      roastText.textContent = selectedAnalysis;
+
+      // Extract and display score
+      const scoreMatch = selectedAnalysis.match(/(\d+)\/10/);
+      if (scoreMatch) {
+        scoreBadge.textContent = scoreMatch[0];
+        const score = parseInt(scoreMatch[1]);
+        if (score >= 8) analysisElement.classList.add("high-score");
+        else if (score >= 5) analysisElement.classList.add("mid-score");
+        else analysisElement.classList.add("low-score");
+      }
     }
+  }
 
-    async generateAIAnalysis(index) {
-        const loadout = this.history[index];
-        if (!loadout) return;
-
-        const analysisElement = document.getElementById(`ai-analysis-${index}`);
-        if (!analysisElement) return;
-
-        const roastText = analysisElement.querySelector('.roast-text');
-        const scoreBadge = analysisElement.querySelector('.score-badge');
-
-        try {
-            // Prepare data for the API call
-            const requestData = {
-                class: loadout.class,
-                weapon: loadout.weapon.name,
-                specialization: loadout.specialization.name,
-                gadgets: loadout.gadgets.map(g => g.name)
-            };
-
-            console.log('🚀 Generating AI analysis for loadout:', requestData);
-
-            // Call the analysis API
-            const response = await fetch('/api/loadout-analysis', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log('🎯 Received AI analysis:', data);
-
-            // Update the analysis display
-            analysisElement.classList.remove('loading');
-            roastText.textContent = data.analysis || data.roast;
-
-            // Extract and display score
-            const scoreMatch = (data.analysis || data.roast).match(/(\d+)\/10/);
-            if (scoreMatch) {
-                scoreBadge.textContent = scoreMatch[0];
-                const score = parseInt(scoreMatch[1]);
-                if (score >= 8) analysisElement.classList.add('high-score');
-                else if (score >= 5) analysisElement.classList.add('mid-score');
-                else analysisElement.classList.add('low-score');
-            }
-
-            // Add fallback indicator if API failed
-            if (data.fallback) {
-                analysisElement.classList.add('fallback');
-            }
-
-        } catch (error) {
-            console.error('Error generating AI analysis:', error);
-
-            // Use fallback analysis logic
-            const weapon = loadout.weapon.name;
-            const specialization = loadout.specialization.name;
-            const gadgets = loadout.gadgets.map(g => g.name);
-
-            // Categorize weapons for fallback
-            const annoyingWeapons = ['Sword', 'Lockbolt X', 'SH1900', 'Throwing Knives', 'Dual Blades', 'Riot Shield', 'Flamethrower', 'Spear', 'M32-GL', 'CL-40'];
-            const difficultWeapons = ['M60', 'R.357', 'CB-01 Repeater', 'Recurve Bow', 'Dagger', 'AKM'];
-
-            const isAnnoying = annoyingWeapons.includes(weapon);
-            const isDifficult = difficultWeapons.includes(weapon);
-
-            let fallbackAnalysis = [];
-
-            if (isAnnoying) {
-                fallbackAnalysis = [
-                    `${weapon} and ${specialization}? You're here to ruin someone's day - I like your style! 8/10`,
-                    `${loadout.class} with ${weapon}? Maximum tilt potential achieved. The salt will flow! 7/10`,
-                    `${specialization} + ${gadgets[0]}? Chaotic evil, but make it fun! 8/10`,
-                ];
-            } else if (isDifficult) {
-                fallbackAnalysis = [
-                    `${weapon} and ${specialization}? Playing on expert mode - respect the grind! 8/10`,
-                    `${loadout.class} with ${weapon}? You're not here for easy wins, you're here for glory! 9/10`,
-                    `Mastering ${weapon} with these gadgets? That's champion mentality right there! 8/10`,
-                ];
-            } else {
-                fallbackAnalysis = [
-                    `${weapon} and ${specialization}? Unconventional but intriguing. Science requires sacrifice! 6/10`,
-                    `${loadout.class} with ${weapon}? You're inventing the meta, one match at a time! 7/10`,
-                    `${specialization} + ${gadgets[0]}? Creative loadout! Success not guaranteed, fun definitely is! 7/10`,
-                ];
-            }
-
-            const selectedAnalysis = fallbackAnalysis[Math.floor(Math.random() * fallbackAnalysis.length)];
-
-            analysisElement.classList.remove('loading');
-            analysisElement.classList.add('fallback');
-            roastText.textContent = selectedAnalysis;
-
-            // Extract and display score
-            const scoreMatch = selectedAnalysis.match(/(\d+)\/10/);
-            if (scoreMatch) {
-                scoreBadge.textContent = scoreMatch[0];
-                const score = parseInt(scoreMatch[1]);
-                if (score >= 8) analysisElement.classList.add('high-score');
-                else if (score >= 5) analysisElement.classList.add('mid-score');
-                else analysisElement.classList.add('low-score');
-            }
-        }
-    }
-
-    createParticles(element) {
-        for (let i = 0; i < 6; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.cssText = `
+  createParticles(element) {
+    for (let i = 0; i < 6; i++) {
+      const particle = document.createElement("div");
+      particle.className = "particle";
+      particle.style.cssText = `
                 position: absolute;
                 width: 4px;
                 height: 4px;
@@ -3453,24 +3590,24 @@ Generated by thefinalsloadout.com`;
                 top: ${Math.random() * 100}%;
                 animation-delay: ${Math.random() * 0.5}s;
             `;
-            element.appendChild(particle);
-            setTimeout(() => particle.remove(), 2000);
-        }
+      element.appendChild(particle);
+      setTimeout(() => particle.remove(), 2000);
     }
+  }
 
-    playSound(soundId) {
-        if (!this.soundEnabled) return;
-        const audio = document.getElementById(soundId);
-        if (audio) {
-            audio.currentTime = 0;
-            audio.play().catch(e => console.log('Audio play failed:', e));
-        }
+  playSound(soundId) {
+    if (!this.soundEnabled) return;
+    const audio = document.getElementById(soundId);
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play().catch((e) => console.log("Audio play failed:", e));
     }
+  }
 
-    showToast(message) {
-        const toast = document.createElement('div');
-        toast.textContent = message;
-        toast.style.cssText = `
+  showToast(message) {
+    const toast = document.createElement("div");
+    toast.textContent = message;
+    toast.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
@@ -3483,12 +3620,12 @@ Generated by thefinalsloadout.com`;
             z-index: 10000;
             animation: slideIn 0.3s ease-out;
         `;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.animation = 'slideOut 0.3s ease-out forwards';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    }
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.style.animation = "slideOut 0.3s ease-out forwards";
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
 }
 
 // Initialize SlotHistoryManager instance (must be before DOMContentLoaded)
@@ -3529,10 +3666,10 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ SlotHistoryManager initialized");
 
   // Set up clear history button
-  const clearButton = document.getElementById('clear-history');
+  const clearButton = document.getElementById("clear-history");
   if (clearButton) {
-    clearButton.addEventListener('click', () => {
-      if (confirm('Are you sure you want to clear all history?')) {
+    clearButton.addEventListener("click", () => {
+      if (confirm("Are you sure you want to clear all history?")) {
         slotHistoryManager.clearHistory();
       }
     });
@@ -3607,7 +3744,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // Check if any classes are available
       const availableClasses = getAvailableClasses();
       if (availableClasses.length === 0) {
-        alert("Please select at least one class in the filters before spinning!");
+        alert(
+          "Please select at least one class in the filters before spinning!"
+        );
         return;
       }
 
@@ -3617,10 +3756,15 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         console.log("🚀 Starting overlay sequence...");
         // Use overlay manager if available
-        if (window.overlayManager && window.overlayManager.startLoadoutGeneration) {
+        if (
+          window.overlayManager &&
+          window.overlayManager.startLoadoutGeneration
+        ) {
           window.overlayManager.startLoadoutGeneration();
         } else {
-          console.log("⚠️ Overlay manager not loaded, falling back to direct spin");
+          console.log(
+            "⚠️ Overlay manager not loaded, falling back to direct spin"
+          );
           displayRandomLoadout();
         }
       } catch (error) {
@@ -3656,7 +3800,9 @@ document.addEventListener("DOMContentLoaded", () => {
           // Check if any classes are available
           const availableClasses = getAvailableClasses();
           if (availableClasses.length === 0) {
-            alert("Please select at least one class in the filters before spinning!");
+            alert(
+              "Please select at least one class in the filters before spinning!"
+            );
             return;
           }
 
@@ -3665,10 +3811,15 @@ document.addEventListener("DOMContentLoaded", () => {
           try {
             console.log("🚀 Starting overlay sequence (retry)...");
             // Use overlay manager if available
-            if (window.overlayManager && window.overlayManager.startLoadoutGeneration) {
+            if (
+              window.overlayManager &&
+              window.overlayManager.startLoadoutGeneration
+            ) {
               window.overlayManager.startLoadoutGeneration();
             } else {
-              console.log("⚠️ Overlay manager not loaded, falling back to direct spin");
+              console.log(
+                "⚠️ Overlay manager not loaded, falling back to direct spin"
+              );
               displayRandomLoadout();
             }
           } catch (error) {
@@ -3679,9 +3830,7 @@ document.addEventListener("DOMContentLoaded", () => {
           retryButton.classList.remove("spinning");
         });
       } else {
-        console.error(
-          "❌ Still could not find main-spin-button after retry!"
-        );
+        console.error("❌ Still could not find main-spin-button after retry!");
       }
     }, 500);
   }
@@ -4221,18 +4370,27 @@ Gadget 3: ${selectedItems[4]}`;
 
   // ===========================
   // History Manager
-// =====================================================
-// GLOBAL AUDIO MANAGEMENT SYSTEM
+  // =====================================================
+  // GLOBAL AUDIO MANAGEMENT SYSTEM
   // ... existing code ...
   async function finalizeSpin(columns) {
     // ... existing code ...
 
     // ✅ Add to history
     const loadout = {
-        class: classType,
-        weapon: { name: selectedWeapon, image: `images/${selectedWeapon.replace(/ /g, '_')}.webp` },
-        specialization: { name: selectedSpec, image: `images/${selectedSpec.replace(/ /g, '_')}.webp` },
-        gadgets: selectedGadgets.map(g => ({ name: g, image: `images/${g.replace(/ /g, '_')}.webp` }))
+      class: classType,
+      weapon: {
+        name: selectedWeapon,
+        image: `images/${selectedWeapon.replace(/ /g, "_")}.webp`,
+      },
+      specialization: {
+        name: selectedSpec,
+        image: `images/${selectedSpec.replace(/ /g, "_")}.webp`,
+      },
+      gadgets: selectedGadgets.map((g) => ({
+        name: g,
+        image: `images/${g.replace(/ /g, "_")}.webp`,
+      })),
     };
     slotHistoryManager.addToHistory(loadout);
 
@@ -4248,13 +4406,13 @@ Gadget 3: ${selectedItems[4]}`;
     slotHistoryManager.render();
 
     // Clear history button
-    const clearButton = document.getElementById('clear-history');
-    if(clearButton) {
-        clearButton.addEventListener('click', () => {
-            if (confirm('Are you sure you want to clear all history?')) {
-                slotHistoryManager.clearHistory();
-            }
-        });
+    const clearButton = document.getElementById("clear-history");
+    if (clearButton) {
+      clearButton.addEventListener("click", () => {
+        if (confirm("Are you sure you want to clear all history?")) {
+          slotHistoryManager.clearHistory();
+        }
+      });
     }
   });
 });
@@ -4370,61 +4528,61 @@ function initializeClassExclusion() {
 // =====================================================
 
 function showErrorModal(title, message) {
-  const modal = document.getElementById('filter-error-modal');
-  const titleElement = modal.querySelector('.error-modal-header h3');
-  const messageElement = document.getElementById('error-modal-message');
+  const modal = document.getElementById("filter-error-modal");
+  const titleElement = modal.querySelector(".error-modal-header h3");
+  const messageElement = document.getElementById("error-modal-message");
 
   // Update content
   titleElement.textContent = `⚠️ ${title}`;
   messageElement.textContent = message;
 
   // Show modal
-  modal.style.display = 'flex';
+  modal.style.display = "flex";
 
   // Focus management
-  const okButton = document.getElementById('error-modal-ok');
+  const okButton = document.getElementById("error-modal-ok");
   if (okButton) {
     okButton.focus();
   }
 }
 
 function hideErrorModal() {
-  const modal = document.getElementById('filter-error-modal');
-  modal.style.display = 'none';
+  const modal = document.getElementById("filter-error-modal");
+  modal.style.display = "none";
 }
 
 // Initialize error modal event listeners
 function initializeErrorModal() {
-  const modal = document.getElementById('filter-error-modal');
-  const closeButton = document.getElementById('close-error-modal');
-  const okButton = document.getElementById('error-modal-ok');
+  const modal = document.getElementById("filter-error-modal");
+  const closeButton = document.getElementById("close-error-modal");
+  const okButton = document.getElementById("error-modal-ok");
 
   if (!modal || !closeButton || !okButton) {
-    console.warn('⚠️ Error modal elements not found');
+    console.warn("⚠️ Error modal elements not found");
     return;
   }
 
   // Close button
-  closeButton.addEventListener('click', hideErrorModal);
+  closeButton.addEventListener("click", hideErrorModal);
 
   // OK button
-  okButton.addEventListener('click', hideErrorModal);
+  okButton.addEventListener("click", hideErrorModal);
 
   // Click outside to close
-  modal.addEventListener('click', function(e) {
+  modal.addEventListener("click", function (e) {
     if (e.target === modal) {
       hideErrorModal();
     }
   });
 
   // Escape key to close
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && modal.style.display === 'flex') {
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && modal.style.display === "flex") {
       hideErrorModal();
     }
   });
 
-  console.log('✅ Error modal initialized');
+  console.log("✅ Error modal initialized");
 }
 
 // =====================================================
@@ -4437,14 +4595,17 @@ function validateFilterSelection() {
 
   // Check each included class for minimum requirements
   for (const className of includedClasses) {
-    const classCapitalized = className.charAt(0).toUpperCase() + className.slice(1);
+    const classCapitalized =
+      className.charAt(0).toUpperCase() + className.slice(1);
 
     // Check weapons (minimum 1)
     const weaponCheckboxes = document.querySelectorAll(
       `#filter-panel input[data-type="weapon"][data-class="${className}"]:checked`
     );
     if (weaponCheckboxes.length === 0) {
-      errors.push(`${classCapitalized} class requires at least 1 weapon selected.`);
+      errors.push(
+        `${classCapitalized} class requires at least 1 weapon selected.`
+      );
     }
 
     // Check specializations (minimum 1)
@@ -4452,7 +4613,9 @@ function validateFilterSelection() {
       `#filter-panel input[data-type="specialization"][data-class="${className}"]:checked`
     );
     if (specCheckboxes.length === 0) {
-      errors.push(`${classCapitalized} class requires at least 1 specialization selected.`);
+      errors.push(
+        `${classCapitalized} class requires at least 1 specialization selected.`
+      );
     }
 
     // Check gadgets (minimum 3)
@@ -4460,12 +4623,14 @@ function validateFilterSelection() {
       `#filter-panel input[data-type="gadget"][data-class="${className}"]:checked`
     );
     if (gadgetCheckboxes.length < 3) {
-      errors.push(`${classCapitalized} class requires at least 3 gadgets selected (currently ${gadgetCheckboxes.length}).`);
+      errors.push(
+        `${classCapitalized} class requires at least 3 gadgets selected (currently ${gadgetCheckboxes.length}).`
+      );
     }
   }
 
   return {
     isValid: errors.length === 0,
-    errors: errors
+    errors: errors,
   };
 }
