@@ -1,28 +1,28 @@
 :root {
-  /* Match The Finals' actual brand colors */
-  --finals-black: #0a0a0a;
-  --finals-white: #f5f5f5;
-  --finals-red: #ff3366;
-  --finals-blue: #00d4ff;
-  --finals-yellow: #ffe500;
+  /* Match The Finals' actual brand colors - mapped to quantum */
+  --finals-black: var(--quantum-dark, #0a0c12);
+  --finals-white: var(--text-primary, #e0e7ff);
+  --finals-red: var(--quantum-red, #ff3366);
+  --finals-blue: var(--quantum-cyan, #00f0c0);
+  --finals-yellow: var(--quantum-gold, #ffb700);
 
-  /* Class-specific (from the game) */
-  --light-blue: #00d4ff;
-  --medium-magenta: #ff00ff;
-  --heavy-orange: #ff6600;
+  /* Class-specific - mapped to quantum */
+  --light-blue: var(--quantum-cyan, #00f0c0);
+  --medium-magenta: var(--quantum-purple, #7b2fe3);
+  --heavy-orange: var(--quantum-gold, #ffb700);
 
-  /* UI states */
-  --bg-primary: #0f0f0f;
-  --bg-card: #1a1a1a;
-  --border-subtle: #2a2a2a;
+  /* UI states - mapped to quantum */
+  --bg-primary: var(--quantum-dark, #0a0c12);
+  --bg-card: var(--quantum-component, #181c27);
+  --border-subtle: var(--quantum-border, #3a3f5e);
 
-  /* Legacy neon colors for backward compatibility */
-  --neon-purple: #7b2fe3;
-  --neon-blue: var(--finals-blue);
-  --neon-cyan: var(--finals-blue);
-  --neon-pink: #ff1493;
-  --neon-orange: var(--heavy-orange);
-  --neon-yellow: var(--finals-yellow);
+  /* Legacy neon colors for backward compatibility - mapped to quantum */
+  --neon-purple: var(--quantum-purple, #7b2fe3);
+  --neon-blue: var(--quantum-blue, #1e90ff);
+  --neon-cyan: var(--quantum-cyan, #00f0c0);
+  --neon-pink: var(--quantum-pink, #ff2a6d);
+  --neon-orange: var(--quantum-orange, #ff6b35);
+  --neon-yellow: var(--quantum-gold, #ffb700);
 
   /* Typography */
   --base-font: "Inter", sans-serif;
@@ -389,25 +389,66 @@ html {
   left: 0;
   right: 0;
   z-index: 1000;
+  background: rgba(10, 12, 18, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--quantum-border);
 }
 
-.main-nav a {
-  color: #fff;
+.main-nav .nav-link {
+  color: var(--text-secondary);
   text-decoration: none;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  border-radius: 8px;
+  font-family: "Fira Code", monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
 }
 
-.main-nav a:hover,
-.main-nav a.active {
-  background-color: var(--neon-blue);
+.main-nav .nav-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--quantum-cyan),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.main-nav .nav-link:hover {
+  color: var(--quantum-cyan);
+  transform: translateY(-2px);
+}
+
+.main-nav .nav-link:hover::before {
+  left: 100%;
+}
+
+.main-nav .nav-link.active {
+  background: linear-gradient(
+    135deg,
+    var(--quantum-cyan),
+    var(--quantum-blue)
+  );
+  color: var(--quantum-dark);
+  font-weight: 600;
 }
 
 .main-nav a[href*="ragequit"] {
+  border: 1px solid var(--quantum-orange) !important;
+  color: var(--quantum-orange) !important;
   background: transparent !important;
-  border: 1px solid #ff6600 !important;
-  color: #ff6600 !important;
 }
 
 /* Nav layout containers */
@@ -849,7 +890,7 @@ body.flexStyle {
 }
 
 .footerSection a {
-  color: #ffb700;
+  color: var(--quantum-gold, #ffb700);
   text-decoration: none;
   transition: opacity 0.3s ease;
 }
@@ -2361,12 +2402,12 @@ img {
 
 /* Force active state styling */
 .main-nav a.active {
-  color: #ffb700 !important; /* Using a specific color since var may not be working */
+  color: var(--quantum-gold, #ffb700) !important; /* Using a specific color since var may not be working */
 }
 
 /* Force hover styling */
 .main-nav a:hover {
-  color: #ffb700 !important;
+  color: var(--quantum-gold, #ffb700) !important;
   transform: translateY(-2px) !important;
 }
 

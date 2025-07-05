@@ -3,47 +3,55 @@
    Cyberpunk Gaming Aesthetic
    ============================================ */
 
-/* CSS Variables - Neon Cyberpunk Palette */
+/* CSS Variables - Quantum Design System Override */
 :root {
-  /* Primary Neon Colors */
-  --neon-purple: #7b2fe3;
-  --neon-blue: #00d4ff;
-  --neon-cyan: #00ffff;
-  --neon-pink: #ff0080;
-  --neon-orange: #ff6b00;
-  --neon-yellow: #ffff00;
-  --neon-green: #00ff41;
+  /* Map to Quantum System */
+  --neon-purple: var(--quantum-purple);
+  --neon-blue: var(--quantum-blue);
+  --neon-cyan: var(--quantum-cyan);
+  --neon-pink: var(--quantum-pink);
+  --neon-orange: var(--quantum-orange);
+  --neon-yellow: var(--quantum-gold); /* Using gold instead of pure yellow */
+  --neon-green: var(--quantum-green);
 
-  /* Dark Theme Base */
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #1a1a2e;
-  --bg-tertiary: #16213e;
-  --bg-card: rgba(26, 26, 46, 0.8);
+  /* Dark Theme Base - Using Quantum */
+  --bg-primary: var(--quantum-dark);
+  --bg-secondary: var(--quantum-component);
+  --bg-tertiary: var(--quantum-component-hover);
+  --bg-card: rgba(24, 28, 39, 0.8);
   --bg-glass: rgba(255, 255, 255, 0.05);
 
-  /* Text Colors */
-  --text-primary: #ffffff;
-  --text-secondary: #b8b8b8;
-  --text-accent: var(--neon-cyan);
-  --text-muted: #6a6a6a;
+  /* Text Colors - Using Quantum */
+  --text-primary: var(--text-primary);
+  --text-secondary: var(--text-secondary);
+  --text-accent: var(--quantum-cyan);
+  --text-muted: var(--text-tertiary);
 
-  /* Gradients */
+  /* Gradients - Simplified */
   --gradient-primary: linear-gradient(
     135deg,
-    var(--neon-purple),
-    var(--neon-blue)
+    var(--quantum-purple),
+    var(--quantum-blue)
   );
   --gradient-secondary: linear-gradient(
     135deg,
-    var(--neon-pink),
-    var(--neon-orange)
+    var(--quantum-orange),
+    var(--quantum-gold)
   );
   --gradient-accent: linear-gradient(
     135deg,
-    var(--neon-cyan),
-    var(--neon-green)
+    var(--quantum-cyan),
+    var(--quantum-blue)
   );
-  --gradient-bg: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+  --gradient-bg: linear-gradient(
+    135deg,
+    var(--quantum-dark) 0%,
+    var(--quantum-component) 50%,
+    var(--quantum-dark) 100%
+  );
+
+  /* Override old rainbow gradients */
+  --rainbow-gradient: var(--gradient-primary);
 
   /* Shadows & Glows */
   --shadow-primary: 0 0 20px rgba(123, 47, 227, 0.3);
@@ -252,15 +260,16 @@ body {
   left: 0;
   width: 100%;
   height: 80px;
-  background: rgba(10, 10, 15, 0.9);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 12, 18, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--quantum-border);
   z-index: 999;
   transition: all var(--transition-medium);
 }
 
 .main-nav.scrolled {
-  background: rgba(10, 10, 15, 0.95);
+  background: rgba(10, 12, 18, 0.98);
   box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -306,18 +315,16 @@ body {
 }
 
 .nav-link {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
   color: var(--text-secondary);
   text-decoration: none;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: 8px;
+  font-family: "Fira Code", monospace;
   font-size: var(--font-size-sm);
   font-weight: 500;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
+  text-transform: uppercase;
   transition: all var(--transition-medium);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: 8px;
   position: relative;
   overflow: hidden;
 }
@@ -329,22 +336,28 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: var(--gradient-primary);
-  opacity: 0.1;
-  transition: left var(--transition-medium);
-}
-
-.nav-link:hover::before {
-  left: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--quantum-cyan),
+    transparent
+  );
+  transition: left 0.5s ease;
 }
 
 .nav-link:hover {
-  color: var(--text-primary);
+  color: var(--quantum-cyan);
   transform: translateY(-2px);
 }
 
-.nav-link .nav-icon {
-  font-size: var(--font-size-md);
+.nav-link:hover::before {
+  left: 100%;
+}
+
+.nav-link.active {
+  background: linear-gradient(135deg, var(--quantum-cyan), var(--quantum-blue));
+  color: var(--quantum-dark);
+  font-weight: 600;
 }
 
 /* Keyframes */
@@ -621,9 +634,9 @@ body {
 }
 
 .preview-class-indicator.heavy {
-  background: rgba(255, 23, 68, 0.2);
-  color: #ff1744;
-  border: 1px solid #ff1744;
+  background: rgba(255, 51, 102, 0.2);
+  color: var(--quantum-red);
+  border: 1px solid var(--quantum-red);
 }
 
 .preview-impact-level {
@@ -1006,9 +1019,8 @@ body {
   height: 100%;
   background: radial-gradient(
     ellipse at center,
-    rgba(123, 47, 227, 0.3) 0%,
-    rgba(0, 212, 255, 0.2) 50%,
-    transparent 100%
+    rgba(123, 47, 227, 0.2) 0%,
+    transparent 70%
   );
   animation: heroGradientPulse 4s ease-in-out infinite alternate;
 }
@@ -1037,8 +1049,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(0, 240, 192, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 192, 0.1) 1px, transparent 1px);
   background-size: 50px 50px;
   animation: gridMove 20s linear infinite;
 }
@@ -1901,27 +1913,27 @@ body {
 }
 
 .change-type.new {
-  background: rgba(0, 212, 255, 0.2);
-  color: var(--neon-blue);
-  border: 1px solid rgba(0, 212, 255, 0.3);
+  background: rgba(255, 183, 0, 0.2);
+  color: var(--quantum-gold);
+  border: 1px solid rgba(255, 183, 0, 0.3);
 }
 
 .change-type.buff {
-  background: rgba(0, 255, 65, 0.2);
-  color: var(--neon-green);
-  border: 1px solid rgba(0, 255, 65, 0.3);
+  background: rgba(0, 255, 136, 0.2);
+  color: var(--quantum-green);
+  border: 1px solid rgba(0, 255, 136, 0.3);
 }
 
 .change-type.nerf {
-  background: rgba(255, 68, 68, 0.2);
-  color: #ff4444;
-  border: 1px solid rgba(255, 68, 68, 0.3);
+  background: rgba(255, 51, 102, 0.2);
+  color: var(--quantum-red);
+  border: 1px solid rgba(255, 51, 102, 0.3);
 }
 
 .change-type.rework {
-  background: rgba(255, 107, 0, 0.2);
-  color: var(--neon-orange);
-  border: 1px solid rgba(255, 107, 0, 0.3);
+  background: rgba(123, 47, 227, 0.2);
+  color: var(--quantum-purple);
+  border: 1px solid rgba(123, 47, 227, 0.3);
 }
 
 .impact-level {
@@ -2024,7 +2036,11 @@ body {
 }
 
 .image-glow.nerf {
-  background: linear-gradient(135deg, #ff4444, var(--neon-orange));
+  background: linear-gradient(
+    135deg,
+    var(--quantum-red),
+    var(--quantum-orange)
+  );
 }
 
 .image-glow.rework {
@@ -2059,21 +2075,21 @@ body {
 }
 
 .weapon-class.light {
-  background: rgba(79, 195, 247, 0.2);
-  color: #4fc3f7;
-  border: 1px solid rgba(79, 195, 247, 0.3);
+  background: rgba(0, 240, 192, 0.2);
+  color: var(--quantum-cyan);
+  border: 1px solid rgba(0, 240, 192, 0.3);
 }
 
 .weapon-class.medium {
-  background: rgba(171, 71, 188, 0.2);
-  color: #ab47bc;
-  border: 1px solid rgba(171, 71, 188, 0.3);
+  background: rgba(123, 47, 227, 0.2);
+  color: var(--quantum-purple);
+  border: 1px solid rgba(123, 47, 227, 0.3);
 }
 
 .weapon-class.heavy {
-  background: rgba(255, 23, 68, 0.2);
-  color: #ff1744;
-  border: 1px solid rgba(255, 23, 68, 0.3);
+  background: rgba(255, 183, 0, 0.2);
+  color: var(--quantum-gold);
+  border: 1px solid rgba(255, 183, 0, 0.3);
 }
 
 .weapon-description {
@@ -2197,7 +2213,7 @@ body {
 }
 
 .stat-value.old {
-  color: #ff4444;
+  color: var(--quantum-red);
   text-decoration: line-through;
 }
 
@@ -2210,11 +2226,11 @@ body {
 }
 
 .stat-value.new-bad {
-  color: #ff4444;
+  color: var(--quantum-red);
 }
 
 .stat-value.old-bad {
-  color: #ff4444;
+  color: var(--quantum-red);
 }
 
 .stat-value.new-good {
@@ -3073,8 +3089,8 @@ body {
 }
 
 .impact-row.heavy .class-badge {
-  border-color: rgba(255, 23, 68, 0.5);
-  color: #ff1744;
+  border-color: rgba(255, 51, 102, 0.5);
+  color: var(--quantum-red);
 }
 
 .changes {
@@ -3092,9 +3108,9 @@ body {
 }
 
 .changes .nerf {
-  background: rgba(255, 68, 68, 0.2);
-  color: #ff4444;
-  border-color: rgba(255, 68, 68, 0.3);
+  background: rgba(255, 51, 102, 0.2);
+  color: var(--quantum-red);
+  border-color: rgba(255, 51, 102, 0.3);
 }
 
 .changes .buff {
@@ -3158,7 +3174,12 @@ body {
 
 /* Additional weapon class styling */
 .weapon-class.all {
-  background: linear-gradient(135deg, #4fc3f7, #ab47bc, #ff1744);
+  background: linear-gradient(
+    135deg,
+    var(--quantum-cyan),
+    var(--quantum-purple),
+    var(--quantum-red)
+  );
   color: white;
   font-weight: 700;
 }

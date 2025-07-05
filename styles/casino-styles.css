@@ -12,7 +12,12 @@ body.casino-mode {
 
 /* Spin Button - Maximum Impact */
 .main-spin-button {
-  background: linear-gradient(135deg, #ff6b35 0%, #ff1744 50%, #ff6b35 100%);
+  background: linear-gradient(
+    135deg,
+    var(--quantum-orange, #ff6b35) 0%,
+    var(--quantum-red, #ff3366) 50%,
+    var(--quantum-orange, #ff6b35) 100%
+  );
   color: white;
   font-family: "Bebas Neue", Impact, sans-serif;
   font-size: 1.8rem;
@@ -20,7 +25,7 @@ body.casino-mode {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   padding: 1.2rem 3rem;
-  border: 3px solid #ffd700;
+  border: 3px solid var(--quantum-gold, #ffb700);
   border-radius: 16px;
   position: relative;
   overflow: hidden;
@@ -1255,7 +1260,11 @@ body.casino-mode #filter-panel:not(.active) {
   flex: 1;
   min-width: 120px;
   padding: 12px 20px;
-  background: linear-gradient(45deg, #7b2fe3, #1e90ff);
+  background: linear-gradient(
+    45deg,
+    var(--quantum-purple, #7b2fe3),
+    var(--quantum-blue, #1e90ff)
+  );
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -1278,11 +1287,19 @@ body.casino-mode #filter-panel:not(.active) {
 }
 
 .copy-image-btn {
-  background: linear-gradient(45deg, #00d4ff, #ff1493);
+  background: linear-gradient(
+    45deg,
+    var(--quantum-cyan, #00f0c0),
+    var(--quantum-pink, #ff2a6d)
+  );
 }
 
 .roast-again-btn {
-  background: linear-gradient(45deg, #ffb700, #ff6b35);
+  background: linear-gradient(
+    45deg,
+    var(--quantum-gold, #ffb700),
+    var(--quantum-orange, #ff6b35)
+  );
 }
 
 /* Success state */

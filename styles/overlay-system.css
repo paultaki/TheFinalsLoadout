@@ -143,14 +143,23 @@
 
 /* Jackpot special styling */
 .reveal-card.jackpot {
-  border-color: #ff1744;
+  border-color: var(--quantum-red, #ff3366);
   background: radial-gradient(circle at center, #2a0a0a 0%, #151515 100%),
-    linear-gradient(45deg, #ff1744 0%, #ff6b35 100%);
+    linear-gradient(
+      45deg,
+      var(--quantum-red, #ff3366) 0%,
+      var(--quantum-orange, #ff6b35) 100%
+    );
   background-blend-mode: normal, overlay;
 }
 
 .reveal-card.jackpot h1 {
-  background: linear-gradient(45deg, #ffd700, #ff6b35, #ff1744);
+  background: linear-gradient(
+    45deg,
+    var(--quantum-gold, #ffb700),
+    var(--quantum-orange, #ff6b35),
+    var(--quantum-red, #ff3366)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
