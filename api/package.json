@@ -1,0 +1,21 @@
+{
+  "name": "the-finals-loadout-api",
+  "version": "1.0.0",
+  "description": "API endpoints for The Finals Loadout Generator",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "the-finals",
+    "loadout",
+    "api",
+    "claude"
+  ],
+  "author": "Paul Takisaki",
+  "license": "MIT"
+}
