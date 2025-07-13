@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Finals World Tour Emerald Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap");
+
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      @keyframes gemEntrance {
+        0% {
+          opacity: 0;
+          transform: scale(0.95) rotate(-5deg);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) rotate(0);
+        }
+      }
+
+      @keyframes glowPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 5px rgba(0, 255, 150, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 15px rgba(0, 255, 150, 0.7);
+        }
+      }
+
+      .gem-icon {
+        animation: gemEntrance 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+      }
+
+      .gem-icon:hover {
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 255, 150, 0.5);
+        transition: box-shadow 0.3s ease;
+      }
+
+      .stat-card {
+        background: radial-gradient(circle, #1a1a1a, #000);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .input-glow:focus {
+        outline: none;
+        border-color: #00ff9f;
+        box-shadow: 0 0 5px #00ff9f;
+        transition: 0.2s;
+      }
+
+      @keyframes numberFlip {
+        0% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        50% {
+          transform: translateY(-10px);
+          opacity: 0;
+        }
+        51% {
+          transform: translateY(10px);
+          opacity: 0;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .flipping {
+        animation: numberFlip 0.3s ease;
+      }
+
+      @keyframes redPulse {
+        0%,
+        100% {
+          color: #ff0000;
+        }
+        50% {
+          color: #cc0000;
+        }
+      }
+
+      .pulse-red {
+        animation: redPulse 2s infinite alternate;
+      }
+
+      @keyframes progressFill {
+        0% {
+          width: 0%;
+        }
+      }
+
+      .progress-fill {
+        animation: progressFill 1s ease-out forwards;
+      }
+
+      @keyframes particle {
+        0% {
+          transform: translate(0, 0);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(10px, -10px);
+          opacity: 0;
+        }
+      }
+
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #00ff9f;
+        border-radius: 50%;
+        animation: particle 2s ease-out;
+      }
+
+      .bar-container {
+        position: relative;
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+
+      .bounce {
+        animation: bounce 0.3s ease-in-out;
+      }
+
+      .rank-row:hover {
+        transform: scale(1.05);
+        transition: 0.2s;
+      }
+
+      .neon {
+        box-shadow: 0 0 10px #00ff9f !important;
+      }
+
+      .emerald-vision {
+        filter: hue-rotate(120deg);
+      }
+    </style>
+  </head>
+  <body class="bg-black text-white min-h-screen p-4">
+    <!-- Hero Section -->
+    <div
+      class="flex flex-col items-center mb-8 relative bg-gradient-to-b from-black to-[#111] p-4 rounded-lg"
+    >
+      <h1 class="text-3xl font-bold tracking-wide text-center">
+        The Finals World Tour Emerald Tracker
+        <span class="text-sm italic text-gray-400">(beta v1)</span>
+      </h1>
+      <svg
+        class="gem-icon w-16 h-16 mt-2"
+        viewBox="0 0 100 100"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <polygon
+          points="50 10, 90 50, 50 90, 10 50"
+          fill="#00ff9f"
+          stroke="#008b6a"
+          stroke-width="2"
+        />
+      </svg>
+    </div>
+
+    <!-- Stats Panels -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+      <div class="stat-card p-4 rounded-lg text-center">
+        <label class="block text-sm">Current Points</label>
+        <input
+          type="number"
+          id="current-points"
+          class="bg-transparent text-2xl font-bold w-full text-center input-glow"
+          value="0"
+        />
+      </div>
+      <div class="stat-card p-4 rounded-lg text-center">
+        <label class="block text-sm">Days Remaining</label>
+        <div id="days-remaining" class="text-2xl font-bold">59</div>
+      </div>
+      <div class="stat-card p-4 rounded-lg text-center">
+        <label class="block text-sm">Points Needed Per Day</label>
+        <div id="points-per-day" class="text-2xl font-bold">0</div>
+      </div>
+      <div class="stat-card p-4 rounded-lg text-center">
+        <label class="block text-sm">Completion</label>
+        <div
+          id="completion"
+          class="text-2xl font-bold"
+          title="The climb starts here"
+        >
+          0%
+        </div>
+      </div>
+      <div class="stat-card p-4 rounded-lg text-center">
+        <label class="block text-sm">Points to Next Rank</label>
+        <div id="points-to-next" class="text-2xl font-bold">0</div>
+      </div>
+      <div class="stat-card p-4 rounded-lg text-center">
+        <label class="block text-sm">Projected Completion</label>
+        <div id="projected" class="text-2xl font-bold">Won't Complete</div>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="mb-8">
+      <label class="block text-sm mb-2">Progress to Emerald 1</label>
+      <div
+        class="bar-container bg-gray-800 h-4 rounded-full overflow-hidden relative"
+      >
+        <div
+          id="progress-fill"
+          class="bg-green-500 h-full progress-fill"
+          style="width: 0%"
+        ></div>
+        <!-- Particles placeholder -->
+        <div id="particles"></div>
+      </div>
+      <div id="progress-text" class="text-center mt-2">0 / 2400</div>
+      <div id="schedule-note" class="text-center text-red-500 text-sm"></div>
+    </div>
+
+    <!-- Rank Ladder -->
+    <div class="mb-8">
+      <label class="block text-sm mb-2">Rank Ladder</label>
+      <div id="ladder" class="flex flex-col gap-2"></div>
+    </div>
+
+    <!-- Daily Points Tracker -->
+    <div class="mb-8">
+      <label class="block text-sm mb-2">Daily Points Tracker</label>
+      <form id="entry-form" class="flex flex-col md:flex-row gap-2 mb-4">
+        <input
+          type="date"
+          id="entry-date"
+          class="bg-gray-800 p-2 rounded input-glow w-full md:w-auto"
+        />
+        <select
+          id="win-type"
+          class="bg-gray-800 p-2 rounded input-glow w-full md:w-auto"
+        >
+          <option value="0">Custom</option>
+          <option value="2">Round 1 (2 pts)</option>
+          <option value="6">Round 2 (6 pts)</option>
+          <option value="14">2nd Place (14 pts)</option>
+          <option value="25">1st Place (25 pts)</option>
+        </select>
+        <input
+          type="number"
+          id="entry-points"
+          placeholder="Points"
+          class="bg-gray-800 p-2 rounded input-glow w-full md:w-auto"
+        />
+        <input
+          type="text"
+          id="entry-notes"
+          placeholder="Notes (optional)"
+          class="bg-gray-800 p-2 rounded input-glow w-full md:w-auto"
+        />
+        <button type="submit" class="bg-green-500 p-2 rounded">
+          Add Entry
+        </button>
+      </form>
+      <div id="recent-entries" class="flex flex-col gap-2"></div>
+    </div>
+
+    <!-- Win Points Reference -->
+    <div
+      class="fixed right-4 top-1/2 transform -translate-y-1/2 bg-[#111] p-4 rounded-lg shadow-lg"
+    >
+      <label class="block text-sm mb-2">Win Points Reference</label>
+      <ul class="text-sm">
+        <li class="hover:scale-110 transition" data-points="2">
+          Round 1: 2
+          <svg class="inline w-4 h-4" fill="#ffd700">
+            <circle cx="8" cy="8" r="8" />
+          </svg>
+        </li>
+        <li class="hover:scale-110 transition" data-points="6">
+          Round 2: 6
+          <svg class="inline w-4 h-4" fill="#ffd700">
+            <circle cx="8" cy="8" r="8" />
+          </svg>
+        </li>
+        <li class="hover:scale-110 transition" data-points="14">
+          2nd Place: 14
+          <svg class="inline w-4 h-4" fill="#ffd700">
+            <circle cx="8" cy="8" r="8" />
+          </svg>
+        </li>
+        <li class="hover:scale-110 transition" data-points="25">
+          1st Place: 25
+          <svg class="inline w-4 h-4" fill="#ffd700">
+            <circle cx="8" cy="8" r="8" />
+          </svg>
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      const TOTAL_POINTS = 2400;
+      const START_DATE = new Date("2025-06-12");
+      const END_DATE = new Date("2025-09-10");
+      const CURRENT_DATE = new Date("2025-07-13");
+      const MS_PER_DAY = 86400000;
+
+      const daysPast = Math.floor((CURRENT_DATE - START_DATE) / MS_PER_DAY);
+      const daysPastIncl = daysPast + 1;
+      const daysTotalIncl =
+        Math.floor((END_DATE - START_DATE) / MS_PER_DAY) + 1;
+      const daysRemaining = Math.floor((END_DATE - CURRENT_DATE) / MS_PER_DAY);
+
+      document.getElementById("days-remaining").textContent = daysRemaining;
+
+      const ranks = [
+        { name: "Gold 4", points: 375, color: "#ffd700" },
+        { name: "Gold 3", points: 450, color: "#ffd700" },
+        { name: "Gold 2", points: 525, color: "#ffd700" },
+        { name: "Gold 1", points: 600, color: "#ffd700" },
+        { name: "Platinum 4", points: 700, color: "#e5e4e2" },
+        { name: "Platinum 3", points: 800, color: "#e5e4e2" },
+        { name: "Platinum 2", points: 900, color: "#e5e4e2" },
+        { name: "Platinum 1", points: 1000, color: "#e5e4e2" },
+        { name: "Diamond 4", points: 1150, color: "#b9f2ff" },
+        { name: "Diamond 3", points: 1300, color: "#b9f2ff" },
+        { name: "Diamond 2", points: 1450, color: "#b9f2ff" },
+        { name: "Diamond 1", points: 1600, color: "#b9f2ff" },
+        { name: "Emerald 4", points: 1800, color: "#50c878" },
+        { name: "Emerald 3", points: 2000, color: "#50c878" },
+        { name: "Emerald 2", points: 2200, color: "#50c878" },
+        { name: "Emerald 1", points: 2400, color: "#50c878" },
+      ];
+
+      let currentPoints = parseInt(
+        localStorage.getItem("currentPoints") || "0"
+      );
+      let dailyEntries = JSON.parse(
+        localStorage.getItem("dailyEntries") || "[]"
+      );
+
+      function updateUI() {
+        document.getElementById("current-points").value = currentPoints;
+        const percent = ((currentPoints / TOTAL_POINTS) * 100).toFixed(1);
+        document.getElementById("completion").textContent = `${percent}%`;
+        let tooltip =
+          "You're " + percent + "% closer to Emerald glory—keep pushing!";
+        if (percent < 50) tooltip = "The climb starts here";
+        else if (percent < 80) tooltip = "You're making great progress!";
+        else tooltip = "Almost there—finish strong!";
+        document.getElementById("completion").title = tooltip;
+
+        document.getElementById("progress-fill").style.width = `${percent}%`;
+        document.getElementById(
+          "progress-text"
+        ).textContent = `${currentPoints} / ${TOTAL_POINTS}`;
+
+        const expected = (TOTAL_POINTS * daysPastIncl) / daysTotalIncl;
+        const behind = (
+          ((expected - currentPoints) / TOTAL_POINTS) *
+          100
+        ).toFixed(1);
+        document.getElementById("schedule-note").textContent =
+          behind > 0
+            ? `${behind}% behind schedule (Day ${daysPastIncl} of ${daysTotalIncl})`
+            : "Ahead of schedule!";
+        if (behind > 0)
+          document.getElementById("schedule-note").classList.add("pulse-red");
+        else
+          document
+            .getElementById("schedule-note")
+            .classList.remove("pulse-red");
+
+        // Particles
+        const particlesContainer = document.getElementById("particles");
+        particlesContainer.innerHTML = "";
+        for (let i = 0; i < 5; i++) {
+          const particle = document.createElement("div");
+          particle.classList.add("particle");
+          particle.style.left = `${percent}%`;
+          particle.style.animationDelay = `${i * 0.4}s`;
+          particlesContainer.appendChild(particle);
+        }
+
+        const pointsNeededPerDay =
+          daysRemaining > 0
+            ? Math.ceil((TOTAL_POINTS - currentPoints) / daysRemaining)
+            : 0;
+        document.getElementById("points-per-day").textContent =
+          pointsNeededPerDay;
+
+        let nextRank = ranks.find((r) => r.points > currentPoints);
+        const pointsToNext = nextRank ? nextRank.points - currentPoints : 0;
+        document.getElementById(
+          "points-to-next"
+        ).textContent = `${pointsToNext} (${nextRank ? nextRank.name : "Max"})`;
+
+        // Projected
+        const avgDaily = daysPast > 0 ? currentPoints / daysPast : 0;
+        let projectedText = "Won't Complete";
+        if (avgDaily > 0) {
+          const daysToGo = Math.ceil((TOTAL_POINTS - currentPoints) / avgDaily);
+          if (daysToGo <= daysRemaining) {
+            const projectedDate = new Date(
+              CURRENT_DATE.getTime() + daysToGo * MS_PER_DAY
+            );
+            projectedText = projectedDate.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            });
+            document.getElementById("projected").classList.remove("pulse-red");
+            document
+              .getElementById("projected")
+              .classList.add("text-green-500");
+          } else {
+            document.getElementById("projected").classList.add("pulse-red");
+          }
+        }
+        document.getElementById("projected").textContent = projectedText;
+
+        // Ladder
+        const ladder = document.getElementById("ladder");
+        ladder.innerHTML = "";
+        ranks.forEach((rank) => {
+          let percentRank = Math.min(
+            100,
+            Math.round((currentPoints / rank.points) * 100)
+          );
+          let gap = Math.max(0, rank.points - currentPoints);
+          let status = "LOCKED";
+          if (currentPoints >= rank.points) {
+            status = "COMPLETE";
+            percentRank = 100;
+            gap = 0;
+          } else if (rank === nextRank) {
+            status = "CURRENT";
+          }
+          const row = document.createElement("div");
+          row.classList =
+            "rank-row flex items-center gap-2 p-2 bg-gray-800 rounded";
+          if (status === "LOCKED") row.style.filter = "grayscale(80%)";
+          row.innerHTML = `
+                    <div class="w-8 h-8 rounded-full" style="background: linear-gradient(135deg, ${rank.color}, darken(${rank.color}, 20%))"></div>
+                    <div>${rank.name}</div>
+                    <div>${rank.points}</div>
+                    <div>${status}</div>
+                    <div>${percentRank}%</div>
+                    <div>${gap} pt gap</div>
+                    <div class="flex-1 bg-gray-700 h-2 rounded-full">
+                        <div style="width: ${percentRank}%; background: ${rank.color};" class="h-full rounded-full"></div>
+                    </div>
+                `;
+          if (status === "COMPLETE") {
+            const check = document.createElement("span");
+            check.textContent = "✓";
+            check.classList.add("bounce", "text-green-500");
+            row.appendChild(check);
+          }
+          row.title =
+            gap > 0 ? `Need approx ${Math.ceil(gap / 25)} wins to bridge` : "";
+          ladder.appendChild(row);
+        });
+
+        // Entries
+        const entriesDiv = document.getElementById("recent-entries");
+        entriesDiv.innerHTML = "";
+        dailyEntries
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .forEach((entry, i) => {
+            const div = document.createElement("div");
+            div.classList = `p-2 rounded ${
+              i % 2 === 0 ? "bg-[#111]" : "bg-[#222]"
+            }`;
+            div.textContent = `${entry.date}: +${entry.points} pts ${
+              entry.notes ? `(${entry.notes})` : ""
+            }`;
+            entriesDiv.appendChild(div);
+          });
+
+        if (currentPoints >= 2400) {
+          confetti({ particleCount: 50, spread: 70 });
+          alert("Legendary status unlocked—share your triumph!");
+        }
+
+        if (currentPoints > 1000) {
+          // Show neon toggle
+          if (!document.getElementById("neon-toggle")) {
+            const toggle = document.createElement("button");
+            toggle.id = "neon-toggle";
+            toggle.textContent = "Neon Mode";
+            toggle.classList =
+              "fixed bottom-4 right-4 bg-green-500 p-2 rounded";
+            toggle.onclick = () => document.body.classList.toggle("neon");
+            document.body.appendChild(toggle);
+          }
+        }
+
+        // Emerald Vision
+        if (!document.getElementById("vision-toggle")) {
+          const toggle = document.createElement("button");
+          toggle.id = "vision-toggle";
+          toggle.textContent = "Emerald Vision";
+          toggle.classList = "fixed bottom-4 left-4 bg-green-500 p-2 rounded";
+          toggle.onclick = () =>
+            document.body.classList.toggle("emerald-vision");
+          document.body.appendChild(toggle);
+        }
+      }
+
+      // Event Listeners
+      const pointsInput = document.getElementById("current-points");
+      let oldPoints = currentPoints;
+      pointsInput.addEventListener(
+        "focus",
+        () => (oldPoints = parseInt(pointsInput.value))
+      );
+      pointsInput.addEventListener("blur", () => {
+        const newPoints = parseInt(pointsInput.value) || 0;
+        if (newPoints !== oldPoints) {
+          pointsInput.classList.add("flipping");
+          setTimeout(() => pointsInput.classList.remove("flipping"), 300);
+          if (newPoints > oldPoints) {
+            // Cha-ching audio (placeholder, add MP3 if desired)
+            // const audio = new Audio('cha-ching.mp3'); audio.volume = 0.3; audio.play();
+          }
+          // Check milestone
+          if (Math.floor(newPoints / 100) > Math.floor(oldPoints / 100)) {
+            alert(`Milestone reached! Preview: Next rank badge`);
+          }
+        }
+        currentPoints = newPoints;
+        localStorage.setItem("currentPoints", currentPoints);
+        updateUI();
+      });
+
+      document.getElementById("entry-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const date = document.getElementById("entry-date").value;
+        let points =
+          parseInt(document.getElementById("entry-points").value) || 0;
+        const notes = document.getElementById("entry-notes").value;
+        dailyEntries.push({ date, points, notes });
+        localStorage.setItem("dailyEntries", JSON.stringify(dailyEntries));
+        // Delta tooltip
+        alert(`+${points} toward Emerald— you're on fire!`);
+        // Uplifting audio placeholder
+        updateUI();
+      });
+
+      document.getElementById("win-type").addEventListener("change", (e) => {
+        document.getElementById("entry-points").value = e.target.value;
+      });
+
+      // Hover on reference
+      document.querySelectorAll(".sidebar li").forEach((li) => {
+        li.addEventListener("mouseover", () => {
+          const pts = parseInt(li.dataset.points);
+          const nextGap = parseInt(
+            document.getElementById("points-to-next").textContent.split(" ")[0]
+          );
+          li.title = `${pts} pts = approx ${((nextGap / pts) * 100).toFixed(
+            0
+          )}% to next rank`;
+        });
+      });
+
+      // Dev Mode
+      window.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key === "D") {
+          currentPoints = 2400;
+          localStorage.setItem("currentPoints", 2400);
+          confetti({ particleCount: 100, spread: 90 });
+          updateUI();
+        }
+      });
+
+      // Initial update
+      updateUI();
+    </script>
+  </body>
+</html>
