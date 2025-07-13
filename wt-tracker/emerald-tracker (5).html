@@ -59,7 +59,6 @@
             height: 200%;
             background: radial-gradient(circle, rgba(80, 200, 120, 0.1) 0%, transparent 70%);
             animation: pulse 4s ease-in-out infinite;
-            pointer-events: none;
         }
         
         @keyframes pulse {
@@ -268,8 +267,6 @@
             text-shadow: 0 0 10px rgba(80, 200, 120, 0.5);
             padding: 5px;
             border-radius: 5px;
-            position: relative;
-            z-index: 10;
         }
         
         #currentPointsInput:hover {
@@ -339,9 +336,15 @@
         <!-- Progress Dashboard -->
         <div class="dashboard">
             <div class="stat-card">
-                <div class="stat-label">Current Points (Click number to edit)</div>
-                <div class="points-input-container">
-                    <input type="number" id="currentPointsInput" value="400" min="0" max="2400">
+                <div class="stat-label">Current Points</div>
+                <div class="stat-value" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <span id="currentPointsDisplay" style="font-size: 2.5em; color: #50C878;">400</span>
+                    <button onclick="editPoints()" style="background: #50C878; border: none; color: #1A1A1A; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold;">EDIT</button>
+                </div>
+                <div id="editPointsContainer" style="display: none;">
+                    <input type="number" id="currentPointsInput" value="400" min="0" max="2400" style="font-size: 1.5em; width: 150px; margin: 10px;">
+                    <button onclick="savePoints()" style="background: #50C878; border: none; color: #1A1A1A; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin: 5px;">SAVE</button>
+                    <button onclick="cancelEdit()" style="background: #808080; border: none; color: #FFF; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin: 5px;">CANCEL</button>
                 </div>
             </div>
             <div class="stat-card">
@@ -447,20 +450,32 @@
         
         // Initialize
         document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
-        document.getElementById('currentPointsInput').value = currentPoints;
-        
-        // Add event listeners for current points input
-        document.getElementById('currentPointsInput').addEventListener('input', function(e) {
-            updateCurrentPoints(e.target.value);
-        });
-        
-        document.getElementById('currentPointsInput').addEventListener('change', function(e) {
-            updateCurrentPoints(e.target.value);
-        });
-        
         updateDashboard();
         renderRankLadder();
         renderDailyEntries();
+        
+        function editPoints() {
+            document.querySelector('.stat-value').style.display = 'none';
+            document.getElementById('editPointsContainer').style.display = 'block';
+            document.getElementById('currentPointsInput').value = currentPoints;
+            document.getElementById('currentPointsInput').focus();
+        }
+        
+        function savePoints() {
+            const newPoints = parseInt(document.getElementById('currentPointsInput').value) || 0;
+            currentPoints = newPoints;
+            localStorage.setItem('currentPoints', currentPoints);
+            document.getElementById('currentPointsDisplay').textContent = currentPoints;
+            document.querySelector('.stat-value').style.display = 'flex';
+            document.getElementById('editPointsContainer').style.display = 'none';
+            updateDashboard();
+            renderRankLadder();
+        }
+        
+        function cancelEdit() {
+            document.querySelector('.stat-value').style.display = 'flex';
+            document.getElementById('editPointsContainer').style.display = 'none';
+        }
         
         function updateCurrentPoints(value) {
             currentPoints = parseInt(value) || 0;
@@ -489,6 +504,7 @@
             }
             
             // Update UI
+            document.getElementById('currentPointsDisplay').textContent = currentPoints;
             document.getElementById('daysRemaining').textContent = daysRemaining;
             document.getElementById('pointsPerDay').textContent = pointsPerDay;
             document.getElementById('completion').textContent = completion + '%';
