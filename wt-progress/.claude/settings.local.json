@@ -3,7 +3,8 @@
     "allow": [
       "Bash(ls:*)",
       "WebFetch(domain:www.thefinalsloadout.com)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "WebFetch(domain:discordapp.com)"
     ],
     "deny": []
   }
