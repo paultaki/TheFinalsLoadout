@@ -314,6 +314,18 @@
             box-shadow: 0 5px 15px rgba(80, 200, 120, 0.4);
         }
         
+        .delete-btn {
+            background: #ff4444;
+            padding: 5px 10px;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        
+        .delete-btn:hover {
+            background: #cc0000;
+            box-shadow: 0 5px 15px rgba(255, 68, 68, 0.4);
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .dashboard {
@@ -508,7 +520,7 @@
                 const prevPoints = index > 0 ? ranks[index - 1].points : 0;
                 const status = currentPoints >= rank.points ? 'completed' : 
                               (currentPoints < rank.points && currentPoints >= prevPoints) ? 'current' : 'locked';
-                const completion = Math.min((currentPoints / rank.points) * 100, 100).toFixed(1);
+                const completion = Math.min((currentPoints / rank.points) * 100, 100).toFixed(0);
                 const gap = Math.max(rank.points - currentPoints, 0);
                 
                 const rankItem = document.createElement('div');
@@ -576,17 +588,47 @@
             const container = document.getElementById('dailyEntries');
             container.innerHTML = '<h3 style="color: #50C878; margin-top: 20px;">Recent Entries</h3>';
             
-            dailyEntries.slice(-5).reverse().forEach(entry => {
+            dailyEntries.slice(-5).reverse().forEach((entry, displayIndex) => {
+                const actualIndex = dailyEntries.length - 1 - displayIndex;
                 const entryDiv = document.createElement('div');
-                entryDiv.style.cssText = 'padding: 10px; margin: 5px 0; background: #2E6349; border-radius: 5px;';
+                entryDiv.style.cssText = 'padding: 10px; margin: 5px 0; background: #2E6349; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;';
                 entryDiv.innerHTML = `
-                    <strong>${entry.date}</strong> - 
-                    <span style="color: #50C878;">+${entry.points} points</span> - 
-                    Total: ${entry.total}
-                    ${entry.notes ? ` - ${entry.notes}` : ''}
+                    <div>
+                        <strong>${entry.date}</strong> - 
+                        <span style="color: #50C878;">+${entry.points} points</span> - 
+                        Total: ${entry.total}
+                        ${entry.notes ? ` - ${entry.notes}` : ''}
+                    </div>
+                    <button class="delete-btn" onclick="deleteEntry(${actualIndex})">Delete</button>
                 `;
                 container.appendChild(entryDiv);
             });
+        }
+        
+        function deleteEntry(index) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                // Get the points from the entry being deleted
+                const deletedPoints = dailyEntries[index].points;
+                
+                // Remove the entry
+                dailyEntries.splice(index, 1);
+                
+                // Recalculate current points
+                currentPoints = dailyEntries.length > 0 ? 
+                    dailyEntries[dailyEntries.length - 1].total : 0;
+                
+                // Update localStorage
+                localStorage.setItem('currentPoints', currentPoints);
+                localStorage.setItem('dailyEntries', JSON.stringify(dailyEntries));
+                
+                // Update input field
+                document.getElementById('currentPointsInput').value = currentPoints;
+                
+                // Update everything
+                updateDashboard();
+                renderRankLadder();
+                renderDailyEntries();
+            }
         }
     </script>
 </body>
