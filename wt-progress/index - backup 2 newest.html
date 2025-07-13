@@ -1278,150 +1278,6 @@
           font-size: 1.2em;
         }
       }
-
-      /* Snapshot Styles */
-      .snapshot-container {
-        position: relative;
-        background: #0d1117;
-        border-radius: 20px;
-        padding: 40px;
-        margin-bottom: 20px;
-      }
-
-      .snapshot-stats {
-        margin-top: 30px;
-        text-align: center;
-        padding: 20px;
-        background: rgba(80, 200, 120, 0.05);
-        border: 1px solid rgba(80, 200, 120, 0.2);
-        border-radius: 16px;
-        position: relative;
-      }
-
-      .ss-stat-line {
-        font-size: 1.2em;
-        font-weight: 600;
-        color: #fff;
-        margin-bottom: 20px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      .ss-progress-container {
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(80, 200, 120, 0.2);
-        border-radius: 50px;
-        padding: 4px;
-        position: relative;
-        height: 40px;
-        overflow: hidden;
-        margin-bottom: 20px;
-      }
-
-      .ss-progress-bar {
-        height: 100%;
-        background: linear-gradient(90deg, #50c878 0%, #00ffcc 100%);
-        border-radius: 50px;
-        transition: width 0.5s ease;
-        box-shadow: 0 0 30px rgba(80, 200, 120, 0.8);
-      }
-
-      .ss-progress-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-weight: 700;
-        font-size: 1.1em;
-        color: #fff;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-        z-index: 10;
-      }
-
-      .ss-watermark {
-        position: absolute;
-        bottom: 10px;
-        right: 15px;
-        font-size: 0.9em;
-        color: rgba(255, 255, 255, 0.5);
-        font-weight: 500;
-        letter-spacing: 0.05em;
-      }
-
-      /* Share Button */
-      .share-progress-btn {
-        display: block;
-        margin: 30px auto;
-        padding: 16px 32px;
-        background: linear-gradient(135deg, #50c878 0%, #00ffcc 100%);
-        border: none;
-        border-radius: 12px;
-        color: #0a0a0a;
-        font-size: 1.1em;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 20px rgba(80, 200, 120, 0.4);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .share-progress-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 30px rgba(80, 200, 120, 0.6);
-      }
-
-      .share-progress-btn:active {
-        transform: translateY(0);
-      }
-
-      .share-progress-btn::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        transform: translate(-50%, -50%);
-        transition: width 0.5s, height 0.5s;
-      }
-
-      .share-progress-btn:hover::before {
-        width: 300px;
-        height: 300px;
-      }
-
-      /* Snapshot-specific overrides */
-      .capturing .snapshot-container {
-        box-shadow: 0 0 80px rgba(80, 200, 120, 0.4);
-        background: linear-gradient(135deg, #0d1117 0%, #0a0a0a 100%);
-      }
-
-      .capturing .dashboard {
-        display: none !important;
-      }
-
-      .capturing .progress-section {
-        display: none !important;
-      }
-
-      .capturing .snapshot-stats {
-        display: block !important;
-      }
-
-      @media (max-width: 768px) {
-        .snapshot-container {
-          padding: 20px;
-        }
-
-        .share-progress-btn {
-          font-size: 1em;
-          padding: 14px 28px;
-        }
-      }
     </style>
   </head>
   <body>
@@ -1441,30 +1297,28 @@
     <div aria-live="polite" aria-atomic="true" class="sr-only" id="aria-live-region"></div>
     
     <div class="container">
-      <!-- Snapshot Container -->
-      <div id="trackerSnapshot" class="snapshot-container">
-        <img
-          src="images/logo.webp"
-          alt="The Finals S7 Emerald Progress Tracker"
-          class="logo"
-          loading="lazy"
-          onerror="this.src='images/logo.png'; this.onerror=null;"
-        />
-        <div
-          style="
-            text-align: center;
-            margin-bottom: 32px;
-            color: #8b949e;
-            font-size: 1.1em;
-            letter-spacing: 0.05em;
-            font-weight: 500;
-          "
-        >
-          (beta v1)
-        </div>
+      <img
+        src="images/logo.webp"
+        alt="The Finals S7 Emerald Progress Tracker"
+        class="logo"
+        loading="lazy"
+        onerror="this.src='images/logo.png'; this.onerror=null;"
+      />
+      <div
+        style="
+          text-align: center;
+          margin-bottom: 32px;
+          color: #8b949e;
+          font-size: 1.1em;
+          letter-spacing: 0.05em;
+          font-weight: 500;
+        "
+      >
+        (beta v1)
+      </div>
 
-        <!-- Progress Dashboard -->
-        <div class="dashboard">
+      <!-- Progress Dashboard -->
+      <div class="dashboard">
         <div class="stat-card primary">
           <div class="stat-label">Current Points (Click to edit)</div>
           <div class="points-input-container">
@@ -1518,27 +1372,6 @@
         </div>
         <div class="pace-indicator" id="paceIndicator"></div>
       </div>
-      
-      <!-- Snapshot Stats for Sharing -->
-      <div class="snapshot-stats" style="display: none;">
-        <div class="ss-stat-line">
-          <span id="ss-points"></span> Points • 
-          <span id="ss-pace"></span> • 
-          ETA: <span id="ss-eta"></span>
-        </div>
-        <div class="ss-progress-container">
-          <div class="ss-progress-bar" id="ss-progress-bar"></div>
-          <div class="ss-progress-text" id="ss-progress-text"></div>
-        </div>
-        <div class="ss-watermark">thefinalsloadout.com</div>
-      </div>
-    </div>
-    <!-- End Snapshot Container -->
-
-    <!-- Share Button -->
-    <button id="shareProgressBtn" class="share-progress-btn">
-      📸 Share My Progress
-    </button>
 
       <!-- Rank Ladder -->
       <div class="rank-ladder">
@@ -2716,78 +2549,6 @@
           renderDailyEntries();
         }
       }
-
-      // Share Progress functionality
-      document.getElementById('shareProgressBtn').addEventListener('click', async function() {
-        const button = this;
-        const originalText = button.textContent;
-        button.disabled = true;
-        button.textContent = '📸 Capturing...';
-
-        try {
-          // Update snapshot values
-          const completion = ((currentPoints / 2400) * 100).toFixed(1);
-          const paceText = document.getElementById('paceIndicator').textContent;
-          const projectedDate = document.getElementById('projectedDate').textContent;
-          
-          // Set snapshot data
-          document.getElementById('ss-points').textContent = currentPoints;
-          document.getElementById('ss-pace').textContent = paceText.includes('ahead') ? 'AHEAD OF PACE' : 
-                                                            paceText.includes('behind') ? 'BEHIND PACE' : 
-                                                            'ON PACE';
-          document.getElementById('ss-eta').textContent = projectedDate;
-          document.getElementById('ss-progress-bar').style.width = completion + '%';
-          document.getElementById('ss-progress-text').textContent = `${currentPoints} / 2400 (${completion}%)`;
-
-          // Add capturing class
-          document.body.classList.add('capturing');
-
-          // Wait for styles to apply
-          await new Promise(resolve => setTimeout(resolve, 100));
-
-          // Capture the snapshot
-          const element = document.getElementById('trackerSnapshot');
-          const canvas = await html2canvas(element, {
-            backgroundColor: '#0d1117',
-            scale: 2,
-            logging: false,
-            useCORS: true,
-            allowTaint: true
-          });
-
-          // Remove capturing class
-          document.body.classList.remove('capturing');
-
-          // Convert to blob and download
-          canvas.toBlob(function(blob) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'emerald-tracker.png';
-            a.click();
-            URL.revokeObjectURL(url);
-
-            // Success feedback
-            button.textContent = '✅ Downloaded!';
-            setTimeout(() => {
-              button.textContent = originalText;
-              button.disabled = false;
-            }, 2000);
-          }, 'image/png', 1.0);
-
-        } catch (error) {
-          console.error('Failed to capture snapshot:', error);
-          document.body.classList.remove('capturing');
-          button.textContent = '❌ Failed';
-          setTimeout(() => {
-            button.textContent = originalText;
-            button.disabled = false;
-          }, 2000);
-        }
-      });
     </script>
-
-    <!-- Load html2canvas from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   </body>
 </html>

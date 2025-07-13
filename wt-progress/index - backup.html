@@ -52,33 +52,6 @@
         box-sizing: border-box;
       }
 
-      /* Accessibility - Screen reader only content */
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border-width: 0;
-      }
-
-      /* Focus indicators */
-      *:focus {
-        outline: 2px solid #50c878;
-        outline-offset: 2px;
-      }
-
-      button:focus,
-      input:focus,
-      a:focus {
-        outline: 3px solid #50c878;
-        outline-offset: 3px;
-        box-shadow: 0 0 0 4px rgba(80, 200, 120, 0.2);
-      }
-
       body {
         background: linear-gradient(
           135deg,
@@ -292,7 +265,7 @@
         }
 
         body {
-          padding-top: 140px; /* More space for mobile nav to avoid covering logo */
+          padding-top: 120px; /* More space for mobile nav */
         }
       }
 
@@ -398,7 +371,7 @@
 
       .stat-label {
         font-size: 0.875em;
-        color: #b8bfc6; /* Improved contrast from #8b949e */
+        color: #8b949e;
         margin-bottom: 12px;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -940,45 +913,11 @@
         justify-content: space-between;
         align-items: center;
         transition: all 0.2s ease;
-        position: relative;
-        overflow: hidden;
       }
 
       .daily-entries-item:hover {
         background: rgba(255, 255, 255, 0.05);
         transform: translateX(4px);
-      }
-
-      /* Swipe to delete styles */
-      .daily-entries-item.swiping {
-        transition: transform 0.1s ease-out;
-      }
-
-      .daily-entries-item.swipe-delete {
-        transform: translateX(-100%);
-        opacity: 0;
-        transition: all 0.3s ease-out;
-      }
-
-      .swipe-delete-bg {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: linear-gradient(to left, #ff4757, #ff6348);
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        padding-right: 20px;
-        color: white;
-        font-weight: bold;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-      }
-
-      .daily-entries-item.show-delete .swipe-delete-bg {
-        opacity: 1;
       }
 
       .entry-points {
@@ -997,50 +936,6 @@
         color: #8b949e;
         font-weight: 400;
         margin-top: 4px;
-      }
-
-      /* Goal Breakdown Styles */
-      .goal-breakdown {
-        margin-top: 15px;
-        padding-top: 15px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        font-size: 0.8em;
-        line-height: 1.6;
-      }
-
-      .goal-option {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin: 8px 0;
-        padding: 8px 12px;
-        background: rgba(0, 0, 0, 0.2);
-        border-radius: 8px;
-        transition: all 0.2s ease;
-      }
-
-      .goal-option:hover {
-        background: rgba(80, 200, 120, 0.1);
-        transform: translateX(4px);
-      }
-
-      .goal-option-label {
-        color: #8b949e;
-        font-weight: 500;
-        font-size: 0.9em;
-      }
-
-      .goal-option-detail {
-        color: #50c878;
-        font-weight: 600;
-      }
-
-      .goal-or {
-        text-align: center;
-        color: #8b949e;
-        font-size: 0.8em;
-        margin: 5px 0;
-        font-style: italic;
       }
 
       /* Notification System */
@@ -1081,7 +976,7 @@
       /* Responsive */
       @media (max-width: 768px) {
         body {
-          padding: 140px 10px 10px 10px; /* Top padding for nav bar */
+          padding: 10px;
         }
 
         .logo {
@@ -1111,115 +1006,50 @@
           width: 120px;
         }
 
-        /* Make rank ladder horizontally scrollable on mobile */
-        .rank-ladder {
-          padding: 15px;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-        }
-
-        #rankLadder {
-          display: flex;
-          gap: 12px;
-          padding-bottom: 10px;
-          min-width: max-content;
-        }
-
+        /* Fix rank ladder for mobile */
         .rank-item {
-          flex: 0 0 auto;
-          width: 280px;
-          display: grid;
-          grid-template-columns: 50px 1fr;
-          grid-template-rows: auto auto auto;
-          gap: 8px;
-          padding: 12px;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          padding: 8px;
           font-size: 0.85em;
         }
 
         .rank-icon {
-          grid-row: 1 / span 3;
           width: 40px;
           height: 40px;
           font-size: 0.7em;
-          margin: auto;
+          margin-right: 10px;
         }
 
         .rank-item > div:nth-child(2) {
-          font-weight: bold;
-          font-size: 1em;
+          flex: 1;
+          min-width: 80px;
         }
 
         .rank-item > div:nth-child(3),
         .rank-item > div:nth-child(4),
         .rank-item > div:nth-child(5),
         .rank-item > div:nth-child(6) {
+          margin: 0 5px;
           font-size: 0.8em;
         }
 
         .mini-progress {
-          grid-column: 1 / -1;
           width: 100%;
           margin-top: 8px;
-          height: 8px;
+          height: 15px;
         }
 
-        /* Make reference card mobile-friendly FAB */
+        /* Make reference card mobile-friendly */
         .reference-card {
           position: fixed;
           bottom: 20px;
           right: 20px;
           top: auto;
           transform: none;
-          width: 56px;
-          height: 56px;
-          padding: 0;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #50c878 0%, #00ffcc 100%);
-          box-shadow: 0 4px 12px rgba(80, 200, 120, 0.4);
-          cursor: pointer;
-          transition: all 0.3s ease;
-          overflow: hidden;
-        }
-
-        .reference-card.expanded {
-          width: auto;
-          height: auto;
-          padding: 20px;
-          border-radius: 16px;
-          background: rgba(255, 255, 255, 0.03);
-          backdrop-filter: blur(10px);
-        }
-
-        .reference-card h3 {
-          display: none;
-        }
-
-        .reference-card.expanded h3 {
-          display: block;
-        }
-
-        .reference-card .reference-item {
-          display: none;
-        }
-
-        .reference-card.expanded .reference-item {
-          display: flex;
-        }
-
-        /* FAB icon */
-        .reference-card::before {
-          content: "?";
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 24px;
-          font-weight: bold;
-          color: #0a0a0a;
-        }
-
-        .reference-card.expanded::before {
-          display: none;
+          font-size: 0.8em;
+          padding: 10px;
         }
 
         /* Daily tracker adjustments */
@@ -1278,150 +1108,6 @@
           font-size: 1.2em;
         }
       }
-
-      /* Snapshot Styles */
-      .snapshot-container {
-        position: relative;
-        background: #0d1117;
-        border-radius: 20px;
-        padding: 40px;
-        margin-bottom: 20px;
-      }
-
-      .snapshot-stats {
-        margin-top: 30px;
-        text-align: center;
-        padding: 20px;
-        background: rgba(80, 200, 120, 0.05);
-        border: 1px solid rgba(80, 200, 120, 0.2);
-        border-radius: 16px;
-        position: relative;
-      }
-
-      .ss-stat-line {
-        font-size: 1.2em;
-        font-weight: 600;
-        color: #fff;
-        margin-bottom: 20px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      .ss-progress-container {
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(80, 200, 120, 0.2);
-        border-radius: 50px;
-        padding: 4px;
-        position: relative;
-        height: 40px;
-        overflow: hidden;
-        margin-bottom: 20px;
-      }
-
-      .ss-progress-bar {
-        height: 100%;
-        background: linear-gradient(90deg, #50c878 0%, #00ffcc 100%);
-        border-radius: 50px;
-        transition: width 0.5s ease;
-        box-shadow: 0 0 30px rgba(80, 200, 120, 0.8);
-      }
-
-      .ss-progress-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-weight: 700;
-        font-size: 1.1em;
-        color: #fff;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-        z-index: 10;
-      }
-
-      .ss-watermark {
-        position: absolute;
-        bottom: 10px;
-        right: 15px;
-        font-size: 0.9em;
-        color: rgba(255, 255, 255, 0.5);
-        font-weight: 500;
-        letter-spacing: 0.05em;
-      }
-
-      /* Share Button */
-      .share-progress-btn {
-        display: block;
-        margin: 30px auto;
-        padding: 16px 32px;
-        background: linear-gradient(135deg, #50c878 0%, #00ffcc 100%);
-        border: none;
-        border-radius: 12px;
-        color: #0a0a0a;
-        font-size: 1.1em;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 20px rgba(80, 200, 120, 0.4);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .share-progress-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 30px rgba(80, 200, 120, 0.6);
-      }
-
-      .share-progress-btn:active {
-        transform: translateY(0);
-      }
-
-      .share-progress-btn::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        transform: translate(-50%, -50%);
-        transition: width 0.5s, height 0.5s;
-      }
-
-      .share-progress-btn:hover::before {
-        width: 300px;
-        height: 300px;
-      }
-
-      /* Snapshot-specific overrides */
-      .capturing .snapshot-container {
-        box-shadow: 0 0 80px rgba(80, 200, 120, 0.4);
-        background: linear-gradient(135deg, #0d1117 0%, #0a0a0a 100%);
-      }
-
-      .capturing .dashboard {
-        display: none !important;
-      }
-
-      .capturing .progress-section {
-        display: none !important;
-      }
-
-      .capturing .snapshot-stats {
-        display: block !important;
-      }
-
-      @media (max-width: 768px) {
-        .snapshot-container {
-          padding: 20px;
-        }
-
-        .share-progress-btn {
-          font-size: 1em;
-          padding: 14px 28px;
-        }
-      }
     </style>
   </head>
   <body>
@@ -1435,36 +1121,67 @@
         <a href="../meta-weapons/index.html" class="nav-link">META WEAPONS</a>
         <a href="#" class="nav-link active">WT TRACKER (BETA)</a>
       </div>
+      <div class="nav-controls">
+        <!-- Sound Toggle Button -->
+        <button
+          id="sound-toggle"
+          class="sound-toggle-button nav-button"
+          aria-label="Toggle sound"
+        >
+          <svg
+            class="sound-on"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path
+              d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
+            ></path>
+          </svg>
+          <svg
+            class="sound-off"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+      </div>
     </nav>
 
-    <!-- ARIA Live Region for announcements -->
-    <div aria-live="polite" aria-atomic="true" class="sr-only" id="aria-live-region"></div>
-    
     <div class="container">
-      <!-- Snapshot Container -->
-      <div id="trackerSnapshot" class="snapshot-container">
-        <img
-          src="images/logo.webp"
-          alt="The Finals S7 Emerald Progress Tracker"
-          class="logo"
-          loading="lazy"
-          onerror="this.src='images/logo.png'; this.onerror=null;"
-        />
-        <div
-          style="
-            text-align: center;
-            margin-bottom: 32px;
-            color: #8b949e;
-            font-size: 1.1em;
-            letter-spacing: 0.05em;
-            font-weight: 500;
-          "
-        >
-          (beta v1)
-        </div>
+      <img
+        src="images/logo.webp"
+        alt="The Finals S7 Emerald Progress Tracker"
+        class="logo"
+        loading="lazy"
+        onerror="this.src='images/logo.png'; this.onerror=null;"
+      />
+      <div
+        style="
+          text-align: center;
+          margin-bottom: 32px;
+          color: #8b949e;
+          font-size: 1.1em;
+          letter-spacing: 0.05em;
+          font-weight: 500;
+        "
+      >
+        (beta v1)
+      </div>
 
-        <!-- Progress Dashboard -->
-        <div class="dashboard">
+      <!-- Progress Dashboard -->
+      <div class="dashboard">
         <div class="stat-card primary">
           <div class="stat-label">Current Points (Click to edit)</div>
           <div class="points-input-container">
@@ -1486,7 +1203,6 @@
         <div class="stat-card primary">
           <div class="stat-label">Points Needed Per Day</div>
           <div class="stat-value" id="pointsPerDay">32</div>
-          <div class="goal-breakdown" id="goalBreakdown"></div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Completion</div>
@@ -1518,27 +1234,6 @@
         </div>
         <div class="pace-indicator" id="paceIndicator"></div>
       </div>
-      
-      <!-- Snapshot Stats for Sharing -->
-      <div class="snapshot-stats" style="display: none;">
-        <div class="ss-stat-line">
-          <span id="ss-points"></span> Points • 
-          <span id="ss-pace"></span> • 
-          ETA: <span id="ss-eta"></span>
-        </div>
-        <div class="ss-progress-container">
-          <div class="ss-progress-bar" id="ss-progress-bar"></div>
-          <div class="ss-progress-text" id="ss-progress-text"></div>
-        </div>
-        <div class="ss-watermark">thefinalsloadout.com</div>
-      </div>
-    </div>
-    <!-- End Snapshot Container -->
-
-    <!-- Share Button -->
-    <button id="shareProgressBtn" class="share-progress-btn">
-      📸 Share My Progress
-    </button>
 
       <!-- Rank Ladder -->
       <div class="rank-ladder">
@@ -1548,16 +1243,8 @@
 
       <!-- Daily Tracker -->
       <div class="daily-tracker">
-        <h2 style="color: #50c878; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-          <span>Daily Points Tracker</span>
-          <div style="display: flex; gap: 10px;">
-            <button onclick="dataIntegrity.createBackup(); showNotification('Backup created', 'success');" style="font-size: 0.8em; padding: 8px 16px;" aria-label="Create backup">
-              Backup
-            </button>
-            <button onclick="dataIntegrity.restoreFromBackup();" style="font-size: 0.8em; padding: 8px 16px; background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);" aria-label="Restore from backup">
-              Restore
-            </button>
-          </div>
+        <h2 style="color: #50c878; margin-bottom: 20px">
+          Daily Points Tracker
         </h2>
         <div class="daily-input">
           <input type="date" id="dateInput" value="" aria-label="Date" />
@@ -1584,97 +1271,40 @@
       </div>
     </div>
 
+    <!-- Win Points Reference -->
+    <div class="reference-card">
+      <h3>Win Points Reference</h3>
+      <div class="reference-item">
+        <span>Round 1</span>
+        <span style="color: #50c878; font-weight: bold">2</span>
+      </div>
+      <div class="reference-item">
+        <span>Round 2</span>
+        <span style="color: #50c878; font-weight: bold">6</span>
+      </div>
+      <div class="reference-item">
+        <span>2nd Place</span>
+        <span style="color: #50c878; font-weight: bold">14</span>
+      </div>
+      <div class="reference-item">
+        <span>1st Place</span>
+        <span style="color: #50c878; font-weight: bold">25</span>
+      </div>
+    </div>
 
     <script>
-      // Notification system with ARIA announcements
+      // Notification system
       function showNotification(message, type = "success") {
         const notification = document.createElement("div");
         notification.className = `notification ${type}`;
         notification.textContent = message;
         document.body.appendChild(notification);
 
-        // Announce to screen readers
-        announceToScreenReader(message);
-
         setTimeout(() => {
           notification.style.animation = "slideIn 0.3s ease-out reverse";
           setTimeout(() => notification.remove(), 300);
         }, 3000);
       }
-
-      // Screen reader announcement function
-      function announceToScreenReader(message) {
-        const liveRegion = document.getElementById('aria-live-region');
-        if (liveRegion) {
-          liveRegion.textContent = message;
-          // Clear after announcement
-          setTimeout(() => {
-            liveRegion.textContent = '';
-          }, 1000);
-        }
-      }
-
-      // Confetti Animation System
-      function createConfetti() {
-        const colors = ['#50c878', '#00ffcc', '#FFD700', '#87CEEB', '#E5E4E2', '#8a2be2'];
-        const confettiCount = 150;
-        const container = document.createElement('div');
-        container.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-          z-index: 10000;
-        `;
-        
-        for (let i = 0; i < confettiCount; i++) {
-          const confetti = document.createElement('div');
-          const color = colors[Math.floor(Math.random() * colors.length)];
-          const size = Math.random() * 10 + 5;
-          const left = Math.random() * 100;
-          const animationDelay = Math.random() * 3;
-          const animationDuration = Math.random() * 3 + 2;
-          
-          confetti.style.cssText = `
-            position: absolute;
-            background-color: ${color};
-            width: ${size}px;
-            height: ${size}px;
-            left: ${left}%;
-            top: -20px;
-            opacity: 1;
-            transform: rotate(${Math.random() * 360}deg);
-            animation: confettiFall ${animationDuration}s linear ${animationDelay}s forwards;
-          `;
-          
-          container.appendChild(confetti);
-        }
-        
-        document.body.appendChild(container);
-        
-        // Remove confetti after animation
-        setTimeout(() => {
-          container.remove();
-        }, 6000);
-      }
-
-      // Add CSS animation for confetti
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes confettiFall {
-          0% {
-            transform: translateY(0) rotate(0deg);
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(100vh) rotate(720deg);
-            opacity: 0;
-          }
-        }
-      `;
-      document.head.appendChild(style);
 
       // Rank data
       const ranks = [
@@ -1696,337 +1326,13 @@
         { name: "Emerald 1", points: 2400, icon: "E1" },
       ];
 
-      // Data Integrity & Recovery System
-      class DataIntegrityManager {
-        constructor() {
-          this.version = '1.0';
-          this.backupKey = 'wt_progress_backup';
-          this.lastValidationKey = 'wt_last_validation';
-        }
-
-        // Create a backup of current data
-        createBackup() {
-          const backup = {
-            version: this.version,
-            timestamp: new Date().toISOString(),
-            currentPoints: currentPoints,
-            dailyEntries: dailyEntries,
-            seasonStartDate: SEASON_START_DATE,
-            seasonEndDate: SEASON_END_DATE
-          };
-          
-          try {
-            localStorage.setItem(this.backupKey, JSON.stringify(backup));
-            console.log('Backup created successfully');
-          } catch (e) {
-            console.error('Failed to create backup:', e);
-          }
-        }
-
-        // Validate data integrity
-        validateData() {
-          const issues = [];
-          
-          // Check 1: Verify running totals
-          let calculatedTotal = 0;
-          dailyEntries.forEach((entry, index) => {
-            calculatedTotal += entry.points;
-            
-            if (entry.total !== calculatedTotal) {
-              issues.push({
-                type: 'total_mismatch',
-                index: index,
-                expected: calculatedTotal,
-                actual: entry.total,
-                entry: entry
-              });
-            }
-            
-            // Check 2: Verify points are within reasonable range
-            if (Math.abs(entry.points) > 100) {
-              issues.push({
-                type: 'suspicious_points',
-                index: index,
-                points: entry.points,
-                entry: entry
-              });
-            }
-          });
-          
-          // Check 3: Verify current points matches last entry
-          if (dailyEntries.length > 0) {
-            const lastEntry = dailyEntries[dailyEntries.length - 1];
-            if (lastEntry.total !== currentPoints) {
-              issues.push({
-                type: 'current_points_mismatch',
-                expected: lastEntry.total,
-                actual: currentPoints
-              });
-            }
-          }
-          
-          // Check 4: Check for duplicate dates
-          const dateCounts = {};
-          dailyEntries.forEach((entry, index) => {
-            if (dateCounts[entry.date]) {
-              issues.push({
-                type: 'duplicate_date',
-                date: entry.date,
-                indices: [dateCounts[entry.date].index, index]
-              });
-            } else {
-              dateCounts[entry.date] = { index: index };
-            }
-          });
-          
-          return issues;
-        }
-
-        // Auto-repair data issues
-        repairData(issues) {
-          let repaired = false;
-          
-          issues.forEach(issue => {
-            switch (issue.type) {
-              case 'total_mismatch':
-                // Fix running totals
-                dailyEntries[issue.index].total = issue.expected;
-                repaired = true;
-                break;
-                
-              case 'current_points_mismatch':
-                // Fix current points to match last entry
-                currentPoints = issue.expected;
-                localStorage.setItem('currentPoints', currentPoints);
-                document.getElementById('currentPointsInput').value = currentPoints;
-                repaired = true;
-                break;
-            }
-          });
-          
-          if (repaired) {
-            localStorage.setItem('dailyEntries', JSON.stringify(dailyEntries));
-            this.createBackup();
-          }
-          
-          return repaired;
-        }
-
-        // Restore from backup
-        restoreFromBackup() {
-          try {
-            const backupData = localStorage.getItem(this.backupKey);
-            if (!backupData) {
-              showNotification('No backup found', 'error');
-              return false;
-            }
-            
-            const backup = JSON.parse(backupData);
-            
-            // Confirm with user
-            const backupDate = new Date(backup.timestamp).toLocaleString();
-            if (confirm(`Restore data from backup created on ${backupDate}? This will overwrite current data.`)) {
-              currentPoints = backup.currentPoints;
-              dailyEntries = backup.dailyEntries;
-              
-              // Save restored data
-              localStorage.setItem('currentPoints', currentPoints);
-              localStorage.setItem('dailyEntries', JSON.stringify(dailyEntries));
-              
-              // Update UI
-              document.getElementById('currentPointsInput').value = currentPoints;
-              updateDashboard();
-              renderRankLadder();
-              renderDailyEntries();
-              
-              showNotification('Data restored successfully', 'success');
-              return true;
-            }
-          } catch (e) {
-            console.error('Failed to restore backup:', e);
-            showNotification('Failed to restore backup', 'error');
-          }
-          
-          return false;
-        }
-
-        // Run validation and show results
-        runValidation() {
-          const issues = this.validateData();
-          
-          if (issues.length === 0) {
-            console.log('Data validation passed');
-            localStorage.setItem(this.lastValidationKey, new Date().toISOString());
-            return true;
-          }
-          
-          console.warn('Data validation found issues:', issues);
-          
-          // Show user the issues
-          let message = 'Data integrity issues found:\n\n';
-          issues.forEach(issue => {
-            switch (issue.type) {
-              case 'total_mismatch':
-                message += `• Running total mismatch on ${issue.entry.date}\n`;
-                break;
-              case 'current_points_mismatch':
-                message += `• Current points don't match last entry\n`;
-                break;
-              case 'duplicate_date':
-                message += `• Duplicate entries for ${issue.date}\n`;
-                break;
-              case 'suspicious_points':
-                message += `• Unusual points value (${issue.points}) on ${issue.entry.date}\n`;
-                break;
-            }
-          });
-          
-          message += '\nWould you like to auto-repair these issues?';
-          
-          if (confirm(message)) {
-            if (this.repairData(issues)) {
-              showNotification('Data repaired successfully', 'success');
-              updateDashboard();
-              renderRankLadder();
-              renderDailyEntries();
-            }
-          }
-          
-          return false;
-        }
-      }
-
-      // Initialize data integrity manager
-      const dataIntegrity = new DataIntegrityManager();
-
-      // Performance Caching System
-      class PerformanceCache {
-        constructor() {
-          this.cache = new Map();
-          this.dependencies = new Map();
-          this.maxCacheSize = 50; // Limit cache size
-          this.cacheHits = 0;
-          this.cacheMisses = 0;
-        }
-
-        // Generate cache key from function name and dependencies
-        generateKey(functionName, ...deps) {
-          return `${functionName}_${deps.join('_')}`;
-        }
-
-        // Get cached value or compute and cache
-        getOrCompute(functionName, computeFn, ...dependencies) {
-          const key = this.generateKey(functionName, ...dependencies);
-          
-          // Check cache
-          if (this.cache.has(key)) {
-            this.cacheHits++;
-            return this.cache.get(key);
-          }
-          
-          // Cache miss - compute value
-          this.cacheMisses++;
-          const value = computeFn();
-          
-          // Store in cache
-          this.cache.set(key, value);
-          
-          // Track dependencies for invalidation
-          dependencies.forEach(dep => {
-            if (!this.dependencies.has(dep)) {
-              this.dependencies.set(dep, new Set());
-            }
-            this.dependencies.get(dep).add(key);
-          });
-          
-          // Limit cache size
-          if (this.cache.size > this.maxCacheSize) {
-            const firstKey = this.cache.keys().next().value;
-            this.cache.delete(firstKey);
-          }
-          
-          return value;
-        }
-
-        // Invalidate cache entries that depend on a value
-        invalidate(...dependencies) {
-          dependencies.forEach(dep => {
-            if (this.dependencies.has(dep)) {
-              this.dependencies.get(dep).forEach(key => {
-                this.cache.delete(key);
-              });
-              this.dependencies.delete(dep);
-            }
-          });
-        }
-
-        // Clear entire cache
-        clear() {
-          this.cache.clear();
-          this.dependencies.clear();
-        }
-
-        // Get cache statistics
-        getStats() {
-          const total = this.cacheHits + this.cacheMisses;
-          const hitRate = total > 0 ? (this.cacheHits / total * 100).toFixed(1) : 0;
-          return {
-            hits: this.cacheHits,
-            misses: this.cacheMisses,
-            hitRate: `${hitRate}%`,
-            size: this.cache.size
-          };
-        }
-      }
-
-      // Initialize performance cache
-      const perfCache = new PerformanceCache();
-
-      // Safe localStorage access with corruption recovery
-      function safeLocalStorageGet(key, defaultValue) {
-        try {
-          const value = localStorage.getItem(key);
-          if (value === null) return defaultValue;
-          
-          // For JSON data
-          if (typeof defaultValue === 'object') {
-            return JSON.parse(value);
-          }
-          
-          // For numeric data
-          if (typeof defaultValue === 'number') {
-            const parsed = parseInt(value);
-            return isNaN(parsed) ? defaultValue : parsed;
-          }
-          
-          return value;
-        } catch (e) {
-          console.error(`Failed to read ${key} from localStorage:`, e);
-          
-          // Attempt recovery from backup
-          if (key === 'dailyEntries' || key === 'currentPoints') {
-            try {
-              const backup = localStorage.getItem('wt_progress_backup');
-              if (backup) {
-                const backupData = JSON.parse(backup);
-                showNotification('Recovered data from backup due to corruption', 'success');
-                
-                if (key === 'dailyEntries') return backupData.dailyEntries || defaultValue;
-                if (key === 'currentPoints') return backupData.currentPoints || defaultValue;
-              }
-            } catch (backupError) {
-              console.error('Backup recovery also failed:', backupError);
-            }
-          }
-          
-          return defaultValue;
-        }
-      }
-
-      // State - with localStorage and corruption recovery
-      let currentPoints = safeLocalStorageGet("currentPoints", 400);
-      let dailyEntries = safeLocalStorageGet("dailyEntries", []);
-      let previousRank = null; // Track previous rank for confetti trigger
+      // State - with localStorage
+      let currentPoints = parseInt(
+        localStorage.getItem("currentPoints") || "400"
+      );
+      let dailyEntries = JSON.parse(
+        localStorage.getItem("dailyEntries") || "[]"
+      );
 
       // Season dates configuration
       const SEASON_START_DATE =
@@ -2062,22 +1368,8 @@
       const yyyy = currentDate.getFullYear();
       const mm = String(currentDate.getMonth() + 1).padStart(2, "0");
       const dd = String(currentDate.getDate()).padStart(2, "0");
-      const todayString = `${yyyy}-${mm}-${dd}`;
-      
-      // Set date input with max date as today
-      const dateInput = document.getElementById("dateInput");
-      dateInput.value = todayString;
-      dateInput.max = todayString; // Prevent future dates
-      dateInput.min = SEASON_START_DATE; // Prevent dates before season start
-      
+      document.getElementById("dateInput").value = `${yyyy}-${mm}-${dd}`;
       document.getElementById("currentPointsInput").value = currentPoints;
-
-      // Debug: Log cache stats periodically (can be removed in production)
-      if (window.location.search.includes('debug')) {
-        setInterval(() => {
-          console.log('Cache Stats:', perfCache.getStats());
-        }, 10000);
-      }
 
       // Debounce function for performance
       function debounce(func, wait) {
@@ -2107,200 +1399,47 @@
           updateCurrentPoints(e.target.value);
         });
 
-      // Run data validation on startup
-      setTimeout(() => {
-        dataIntegrity.runValidation();
-      }, 500);
-
-      // Re-validate when window regains focus (in case of external changes)
-      window.addEventListener('focus', () => {
-        const storedPoints = safeLocalStorageGet("currentPoints", currentPoints);
-        const storedEntries = safeLocalStorageGet("dailyEntries", dailyEntries);
-        
-        if (storedPoints !== currentPoints || JSON.stringify(storedEntries) !== JSON.stringify(dailyEntries)) {
-          console.log('Detected external data change, reloading...');
-          location.reload();
-        }
-      });
-
       updateDashboard();
       renderRankLadder();
       renderDailyEntries();
-
 
       function updateCurrentPoints(value) {
         let newPoints = parseInt(value) || 0;
         // Validate points range
         newPoints = Math.max(0, Math.min(2400, newPoints));
-        
-        // Check for rank achievement before updating
-        const oldRank = getCurrentRank(currentPoints);
-        const newRank = getCurrentRank(newPoints);
-        
         currentPoints = newPoints;
 
         // Update the input if value was clamped
         document.getElementById("currentPointsInput").value = currentPoints;
 
         localStorage.setItem("currentPoints", currentPoints);
-        
-        // Invalidate caches that depend on currentPoints
-        perfCache.invalidate(currentPoints);
-        
         updateDashboard();
         renderRankLadder();
-        
-        // Check if we reached a new rank
-        if (oldRank && newRank && oldRank.points < newRank.points) {
-          createConfetti();
-          showNotification(`🎉 Congratulations! You've reached ${newRank.name}!`, 'success');
-          announceToScreenReader(`Congratulations! You've reached ${newRank.name}!`);
-        }
-        
-        // Create backup after points change
-        dataIntegrity.createBackup();
-      }
-
-      function getCurrentRank(points) {
-        for (let i = ranks.length - 1; i >= 0; i--) {
-          if (points >= ranks[i].points) {
-            return ranks[i];
-          }
-        }
-        return null;
       }
 
       function calculateAveragePointsPerDay() {
-        return perfCache.getOrCompute('avgPointsPerDay', () => {
-          // Calculate average based on total points earned since season start
-          const seasonStart = new Date(SEASON_START_DATE);
-          const today = new Date();
+        // Calculate average based on total points earned since season start
+        const seasonStart = new Date(SEASON_START_DATE);
+        const today = new Date();
 
-          // Set to start of day for accurate calculation
-          seasonStart.setHours(0, 0, 0, 0);
-          today.setHours(0, 0, 0, 0);
+        // Set to start of day for accurate calculation
+        seasonStart.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
 
-          // Calculate days since season start
-          const daysSinceStart = Math.max(
-            1,
-            Math.ceil((today - seasonStart) / (1000 * 60 * 60 * 24))
-          );
+        // Calculate days since season start
+        const daysSinceStart = Math.max(
+          1,
+          Math.ceil((today - seasonStart) / (1000 * 60 * 60 * 24))
+        );
 
-          // Average points per day = current points / days since start
-          return currentPoints / daysSinceStart;
-        }, currentPoints, SEASON_START_DATE);
+        // Average points per day = current points / days since start
+        return currentPoints / daysSinceStart;
       }
 
       function animateValue(element, newValue) {
         element.textContent = newValue;
         element.classList.add("updating");
         setTimeout(() => element.classList.remove("updating"), 500);
-      }
-
-      // Smart Goal Decomposition Functions
-      function decomposeGoal(dailyPoints) {
-        return perfCache.getOrCompute('goalDecomposition', () => {
-          const pointValues = {
-            first: 25,
-            second: 14,
-            round2: 6,
-            round1: 2
-          };
-
-          const combinations = [];
-
-        // Calculate all reasonable combinations
-        // Option 1: First place focus
-        const firstPlaceOnly = Math.ceil(dailyPoints / pointValues.first);
-        if (firstPlaceOnly <= 3) {
-          combinations.push({
-            label: "Win",
-            detail: `${firstPlaceOnly} match${firstPlaceOnly > 1 ? 'es' : ''}`,
-            matches: firstPlaceOnly,
-            difficulty: "high"
-          });
-        }
-
-        // Option 2: Second place focus
-        const secondPlaceOnly = Math.ceil(dailyPoints / pointValues.second);
-        if (secondPlaceOnly <= 4) {
-          combinations.push({
-            label: "2nd Place",
-            detail: `${secondPlaceOnly} time${secondPlaceOnly > 1 ? 's' : ''}`,
-            matches: secondPlaceOnly,
-            difficulty: "medium"
-          });
-        }
-
-        // Option 3: Mixed approach (most realistic)
-        if (dailyPoints >= pointValues.first) {
-          const remaining = dailyPoints - pointValues.first;
-          const seconds = Math.ceil(remaining / pointValues.second);
-          if (seconds <= 2) {
-            combinations.push({
-              label: "Mixed",
-              detail: `1 win + ${seconds > 0 ? seconds + ' second' + (seconds > 1 ? 's' : '') : 'nothing else'}`,
-              matches: 1 + seconds,
-              difficulty: "medium"
-            });
-          }
-        }
-
-        // Option 4: Conservative approach (round 2 qualifications)
-        const round2Only = Math.ceil(dailyPoints / pointValues.round2);
-        if (round2Only <= 8) {
-          combinations.push({
-            label: "Qualify R2",
-            detail: `${round2Only} time${round2Only > 1 ? 's' : ''}`,
-            matches: round2Only,
-            difficulty: "low"
-          });
-        }
-
-        // Option 5: Volume approach
-        const volumeApproach = Math.ceil(dailyPoints / ((pointValues.round2 + pointValues.round1) / 2));
-        if (volumeApproach >= 8 && volumeApproach <= 15) {
-          combinations.push({
-            label: "Volume",
-            detail: `${volumeApproach} matches (mixed results)`,
-            matches: volumeApproach,
-            difficulty: "low"
-          });
-        }
-
-          return combinations.slice(0, 3); // Return top 3 most reasonable options
-        }, dailyPoints);
-      }
-
-      function renderGoalBreakdown(dailyPoints) {
-        const breakdownElement = document.getElementById('goalBreakdown');
-        
-        if (dailyPoints <= 0 || currentPoints >= 2400) {
-          breakdownElement.innerHTML = '';
-          return;
-        }
-
-        const combinations = decomposeGoal(dailyPoints);
-        
-        if (combinations.length === 0) {
-          breakdownElement.innerHTML = '<div class="goal-option-label">Target too high for reasonable daily play</div>';
-          return;
-        }
-
-        let html = '';
-        combinations.forEach((combo, index) => {
-          if (index > 0) {
-            html += '<div class="goal-or">OR</div>';
-          }
-          html += `
-            <div class="goal-option">
-              <span class="goal-option-label">${combo.label}:</span>
-              <span class="goal-option-detail">${combo.detail}</span>
-            </div>
-          `;
-        });
-
-        breakdownElement.innerHTML = html;
       }
 
       function updateDashboard() {
@@ -2367,9 +1506,6 @@
         document.querySelector(
           "#pointsToNext .next-rank-name"
         ).textContent = `(${nextRankName})`;
-        
-        // Render goal breakdown
-        renderGoalBreakdown(pointsPerDay);
         // Update projected completion with appropriate styling
         const projectedElement = document.getElementById("projectedDate");
         animateValue(projectedElement, projectedMessage);
@@ -2492,30 +1628,6 @@
           return;
         }
 
-        // Check for duplicate date
-        const existingEntry = dailyEntries.find(entry => entry.date === date);
-        if (existingEntry) {
-          const confirmReplace = confirm(
-            `An entry already exists for ${date} with ${existingEntry.points} points.\n\n` +
-            `Would you like to replace it with ${points} points?`
-          );
-          
-          if (!confirmReplace) {
-            return;
-          }
-          
-          // Remove the existing entry
-          const index = dailyEntries.findIndex(entry => entry.date === date);
-          dailyEntries.splice(index, 1);
-          
-          // Recalculate running totals from the beginning
-          currentPoints = 0;
-          dailyEntries.forEach(entry => {
-            currentPoints += entry.points;
-            entry.total = currentPoints;
-          });
-        }
-
         // Validate points won't exceed maximum
         if (currentPoints + points > 2400) {
           showNotification("Points cannot exceed 2400 (Emerald 1)", "error");
@@ -2532,17 +1644,6 @@
 
         currentPoints += points;
         dailyEntries.push({ date, points, total: currentPoints, notes });
-
-        // Sort entries by date to maintain chronological order
-        dailyEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
-        
-        // Recalculate all running totals after sorting
-        let runningTotal = 0;
-        dailyEntries.forEach(entry => {
-          runningTotal += entry.points;
-          entry.total = runningTotal;
-        });
-        currentPoints = runningTotal;
 
         // Save to localStorage
         localStorage.setItem("currentPoints", currentPoints);
@@ -2567,9 +1668,6 @@
           }${points} points! Total: ${currentPoints}`,
           "success"
         );
-        
-        // Create backup after adding entry
-        dataIntegrity.createBackup();
       }
 
       function renderDailyEntries() {
@@ -2589,12 +1687,6 @@
             const actualIndex = dailyEntries.length - 1 - displayIndex;
             const entryDiv = document.createElement("div");
             entryDiv.className = "daily-entries-item";
-            
-            // Add swipe delete background
-            const swipeBg = document.createElement('div');
-            swipeBg.className = 'swipe-delete-bg';
-            swipeBg.textContent = 'Delete';
-            entryDiv.appendChild(swipeBg);
 
             // Create content div
             const contentDiv = document.createElement("div");
@@ -2632,58 +1724,6 @@
 
             entryDiv.appendChild(contentDiv);
             entryDiv.appendChild(deleteBtn);
-            
-            // Add swipe functionality on mobile
-            if (window.innerWidth <= 768) {
-              let startX = 0;
-              let currentX = 0;
-              let isSwiping = false;
-              
-              entryDiv.addEventListener('touchstart', function(e) {
-                startX = e.touches[0].clientX;
-                isSwiping = true;
-                this.classList.add('swiping');
-              });
-              
-              entryDiv.addEventListener('touchmove', function(e) {
-                if (!isSwiping) return;
-                
-                currentX = e.touches[0].clientX;
-                const diffX = currentX - startX;
-                
-                if (diffX < 0) { // Swiping left
-                  const translateX = Math.max(diffX, -100);
-                  this.style.transform = `translateX(${translateX}px)`;
-                  
-                  if (Math.abs(diffX) > 50) {
-                    this.classList.add('show-delete');
-                  } else {
-                    this.classList.remove('show-delete');
-                  }
-                }
-              });
-              
-              entryDiv.addEventListener('touchend', function(e) {
-                if (!isSwiping) return;
-                isSwiping = false;
-                this.classList.remove('swiping');
-                
-                const diffX = currentX - startX;
-                
-                if (Math.abs(diffX) > 100) {
-                  // Delete the entry
-                  this.classList.add('swipe-delete');
-                  setTimeout(() => {
-                    deleteEntry(actualIndex);
-                  }, 300);
-                } else {
-                  // Snap back
-                  this.style.transform = '';
-                  this.classList.remove('show-delete');
-                }
-              });
-            }
-            
             container.appendChild(entryDiv);
           });
       }
@@ -2716,78 +1756,6 @@
           renderDailyEntries();
         }
       }
-
-      // Share Progress functionality
-      document.getElementById('shareProgressBtn').addEventListener('click', async function() {
-        const button = this;
-        const originalText = button.textContent;
-        button.disabled = true;
-        button.textContent = '📸 Capturing...';
-
-        try {
-          // Update snapshot values
-          const completion = ((currentPoints / 2400) * 100).toFixed(1);
-          const paceText = document.getElementById('paceIndicator').textContent;
-          const projectedDate = document.getElementById('projectedDate').textContent;
-          
-          // Set snapshot data
-          document.getElementById('ss-points').textContent = currentPoints;
-          document.getElementById('ss-pace').textContent = paceText.includes('ahead') ? 'AHEAD OF PACE' : 
-                                                            paceText.includes('behind') ? 'BEHIND PACE' : 
-                                                            'ON PACE';
-          document.getElementById('ss-eta').textContent = projectedDate;
-          document.getElementById('ss-progress-bar').style.width = completion + '%';
-          document.getElementById('ss-progress-text').textContent = `${currentPoints} / 2400 (${completion}%)`;
-
-          // Add capturing class
-          document.body.classList.add('capturing');
-
-          // Wait for styles to apply
-          await new Promise(resolve => setTimeout(resolve, 100));
-
-          // Capture the snapshot
-          const element = document.getElementById('trackerSnapshot');
-          const canvas = await html2canvas(element, {
-            backgroundColor: '#0d1117',
-            scale: 2,
-            logging: false,
-            useCORS: true,
-            allowTaint: true
-          });
-
-          // Remove capturing class
-          document.body.classList.remove('capturing');
-
-          // Convert to blob and download
-          canvas.toBlob(function(blob) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'emerald-tracker.png';
-            a.click();
-            URL.revokeObjectURL(url);
-
-            // Success feedback
-            button.textContent = '✅ Downloaded!';
-            setTimeout(() => {
-              button.textContent = originalText;
-              button.disabled = false;
-            }, 2000);
-          }, 'image/png', 1.0);
-
-        } catch (error) {
-          console.error('Failed to capture snapshot:', error);
-          document.body.classList.remove('capturing');
-          button.textContent = '❌ Failed';
-          setTimeout(() => {
-            button.textContent = originalText;
-            button.disabled = false;
-          }, 2000);
-        }
-      });
     </script>
-
-    <!-- Load html2canvas from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   </body>
 </html>
