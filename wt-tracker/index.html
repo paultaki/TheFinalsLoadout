@@ -328,18 +328,131 @@
         
         /* Responsive */
         @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
+            body {
+                padding: 10px;
             }
             
+            .logo {
+                max-width: 200px;
+                margin-bottom: 20px;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .stat-card {
+                padding: 15px;
+            }
+            
+            .stat-value {
+                font-size: 2em;
+            }
+            
+            .stat-label {
+                font-size: 0.85em;
+            }
+            
+            #currentPointsInput {
+                font-size: 2em;
+                width: 120px;
+            }
+            
+            /* Fix rank ladder for mobile */
+            .rank-item {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                padding: 8px;
+                font-size: 0.85em;
+            }
+            
+            .rank-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 0.7em;
+                margin-right: 10px;
+            }
+            
+            .rank-item > div:nth-child(2) {
+                flex: 1;
+                min-width: 80px;
+            }
+            
+            .rank-item > div:nth-child(3),
+            .rank-item > div:nth-child(4),
+            .rank-item > div:nth-child(5),
+            .rank-item > div:nth-child(6) {
+                margin: 0 5px;
+                font-size: 0.8em;
+            }
+            
+            .mini-progress {
+                width: 100%;
+                margin-top: 8px;
+                height: 15px;
+            }
+            
+            /* Hide reference card on mobile */
             .reference-card {
-                position: static;
-                margin-top: 20px;
+                display: none;
+            }
+            
+            /* Daily tracker adjustments */
+            .daily-input {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .daily-input input,
+            .daily-input button {
+                width: 100%;
+            }
+            
+            /* Progress section */
+            .progress-section h2 {
+                font-size: 1.3em;
+            }
+            
+            .progress-container {
+                height: 35px;
+            }
+            
+            .progress-text {
+                font-size: 0.9em;
+            }
+            
+            /* Entry display */
+            .daily-tracker {
+                padding: 15px;
+            }
+            
+            /* Delete button positioning */
+            .delete-btn {
+                white-space: nowrap;
+                font-size: 0.8em;
+                padding: 4px 8px;
+            }
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 480px) {
+            .stat-value {
+                font-size: 1.8em;
+            }
+            
+            #currentPointsInput {
+                font-size: 1.8em;
+                width: 100px;
             }
             
             .rank-item {
-                grid-template-columns: 40px 100px 80px 80px 80px 100px;
-                font-size: 0.9em;
+                font-size: 0.75em;
+            }
+            
+            h2 {
+                font-size: 1.2em;
             }
         }
     </style>
