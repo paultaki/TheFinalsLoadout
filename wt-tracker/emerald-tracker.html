@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S7 Emerald Progress Tracker Dashboard - The Finals</title>
+    <style>
+        /* Global Styles - Cyberpunk Aesthetic with Dark Background and Neon Accents */
+        body {
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            width: 100%;
+            background: linear-gradient(to bottom, #1A1A1A, #2E6349);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(80, 200, 120, 0.5); /* Neon emerald glow */
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2 {
+            color: #50C878; /* Emerald green */
+            text-shadow: 0 0 10px #50C878;
+            margin-bottom: 20px;
+        }
+
+        /* Progress Dashboard */
+        .progress-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #2E6349;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(59, 127, 95, 0.7);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            color: #50C878;
+            margin: 10px 0;
+            user-select: text;
+        }
+        
+        /* Editable stat styling */
+        .editable-stat {
+            background: transparent;
+            border: none;
+            text-align: center;
+            width: 100%;
+            font-family: inherit;
+            font-weight: inherit;
+            outline: none;
+            transition: all 0.3s;
+            -moz-appearance: textfield; /* Remove spinner in Firefox */
+        }
+        
+        /* Remove spinner in Chrome/Safari */
+        .editable-stat::-webkit-inner-spin-button,
+        .editable-stat::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        .editable-stat:hover {
+            background: rgba(80, 200, 120, 0.1);
+            border-radius: 5px;
+        }
+        
+        .editable-stat:focus {
+            background: rgba(80, 200, 120, 0.2);
+            border-radius: 5px;
+            border: 2px solid #50C878;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #FFFFFF;
+        }
+
+        /* Highlight for Daily Points Needed */
+        #daily-points-needed {
+            background: linear-gradient(to right, #50C878, #3B7F5F);
+            border: 2px solid #50C878;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(80, 200, 120, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(80, 200, 120, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(80, 200, 120, 0); }
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            background: #2E6349;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+            height: 30px;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #50C878, #3B7F5F);
+            transition: width 0.5s ease-in-out;
+            box-shadow: 0 0 10px #50C878;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #1A1A1A;
+            font-weight: bold;
+        }
+
+        /* Rank Ladder */
+        .rank-ladder {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .rank-row {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .rank-row.completed {
+            background: #50C878;
+            color: #1A1A1A;
+        }
+
+        .rank-row.current {
+            background: #FFD700;
+            color: #1A1A1A;
+            box-shadow: 0 0 15px #FFD700;
+        }
+
+        .rank-row.locked {
+            background: #808080;
+            color: #FFFFFF;
+        }
+
+        .rank-icon {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+            border-radius: 50%;
+            background: #1A1A1A; /* Placeholder for icons */
+        }
+
+        .rank-details {
+            flex: 1;
+        }
+
+        .mini-progress {
+            width: 100px;
+            height: 10px;
+            background: #2E6349;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-left: 10px;
+        }
+
+        .mini-progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #50C878, #3B7F5F);
+        }
+
+        /* Win Points Reference */
+        .win-points-card {
+            background: #2E6349;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 0 15px #3B7F5F;
+        }
+
+        .win-points-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .win-points-table th, .win-points-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #3B7F5F;
+        }
+
+        .win-points-table th {
+            color: #50C878;
+        }
+
+        /* Daily Tracker */
+        .daily-tracker {
+            background: #2E6349;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 15px #3B7F5F;
+        }
+
+        .daily-entry {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .daily-entry input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #1A1A1A;
+            color: #FFFFFF;
+        }
+
+        button {
+            background: #50C878;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: #1A1A1A;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #3B7F5F;
+        }
+
+        .daily-log {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .log-item {
+            padding: 10px;
+            border-bottom: 1px solid #3B7F5F;
+        }
+
+        .log-item.good-day {
+            background: rgba(80, 200, 120, 0.2);
+        }
+
+        /* Input Section */
+        .input-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-section input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #2E6349;
+            color: #FFFFFF;
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h1>S7 Emerald Progress Tracker Dashboard</h1>
+
+        <!-- Input Section -->
+        <div class="input-section" style="display: none;">
+            <label>Current Points: <input type="number" id="current-points" value="400" onchange="updateDashboard()"></label>
+            <label>Days Remaining: <input type="number" id="days-remaining" value="62" onchange="updateDashboard()"></label>
+        </div>
+
+        <!-- Progress Dashboard -->
+        <section class="progress-dashboard">
+            <div class="stat-card">
+                <div class="stat-label">Current Points (Click number to edit)</div>
+                <input type="number" class="stat-value editable-stat" id="stat-current-points" value="400" onchange="handlePointsChange(this.value)" onclick="this.select()">
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Days Remaining</div>
+                <div class="stat-value" id="stat-days-remaining">62</div>
+            </div>
+            <div class="stat-card" id="daily-points-needed">
+                <div class="stat-label">Points Needed Per Day</div>
+                <div class="stat-value" id="stat-daily-needed">32</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Percentage Completion</div>
+                <div class="stat-value" id="stat-completion">16.7%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Points to Next Rank</div>
+                <div class="stat-value" id="stat-points-next">50</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Projected Completion Date</div>
+                <div class="stat-value" id="stat-projected-date">Sep 12, 2025</div>
+            </div>
+        </section>
+
+        <!-- Main Progress Bar -->
+        <h2>Progress to Emerald 1</h2>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="main-progress-bar" style="width: 16.67%;"></div>
+            <div class="progress-text" id="progress-text">16.7%</div>
+        </div>
+
+        <!-- Rank Ladder -->
+        <h2>Rank Ladder</h2>
+        <div class="rank-ladder" id="rank-ladder">
+            <!-- Ranks will be dynamically generated here -->
+        </div>
+
+        <!-- Win Points Reference -->
+        <h2>Win Points Quick Reference</h2>
+        <div class="win-points-card">
+            <table class="win-points-table">
+                <thead>
+                    <tr>
+                        <th>Placement</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Round 1</td><td>2</td></tr>
+                    <tr><td>Round 2</td><td>6</td></tr>
+                    <tr><td>2nd Place</td><td>14</td></tr>
+                    <tr><td>1st Place</td><td>25</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Daily Tracker -->
+        <h2>Daily Points Tracker</h2>
+        <div class="daily-tracker">
+            <div class="daily-entry">
+                <input type="date" id="daily-date" value="">
+                <input type="number" id="daily-points" placeholder="Points Earned Today">
+                <input type="text" id="daily-notes" placeholder="Notes">
+                <button onclick="addDailyEntry()">Add Entry</button>
+            </div>
+            <div class="daily-log" id="daily-log"></div>
+        </div>
+    </div>
+
+    <script>
+        // Rank Data
+        const ranks = [
+            { name: 'Gold 4', points: 375, icon: 'gold4.png' },
+            { name: 'Gold 3', points: 450, icon: 'gold3.png' },
+            { name: 'Gold 2', points: 525, icon: 'gold2.png' },
+            { name: 'Gold 1', points: 600, icon: 'gold1.png' },
+            { name: 'Platinum 4', points: 700, icon: 'platinum4.png' },
+            { name: 'Platinum 3', points: 800, icon: 'platinum3.png' },
+            { name: 'Platinum 2', points: 900, icon: 'platinum2.png' },
+            { name: 'Platinum 1', points: 1000, icon: 'platinum1.png' },
+            { name: 'Diamond 4', points: 1150, icon: 'diamond4.png' },
+            { name: 'Diamond 3', points: 1300, icon: 'diamond3.png' },
+            { name: 'Diamond 2', points: 1450, icon: 'diamond2.png' },
+            { name: 'Diamond 1', points: 1600, icon: 'diamond1.png' },
+            { name: 'Emerald 4', points: 1800, icon: 'emerald4.png' },
+            { name: 'Emerald 3', points: 2000, icon: 'emerald3.png' },
+            { name: 'Emerald 2', points: 2200, icon: 'emerald2.png' },
+            { name: 'Emerald 1', points: 2400, icon: 'emerald1.png' }
+        ];
+
+        const maxPoints = 2400;
+
+        // Local Storage for Daily Entries
+        let dailyEntries = JSON.parse(localStorage.getItem('dailyEntries')) || [];
+
+        function handlePointsChange(value) {
+            const points = parseInt(value) || 0;
+            document.getElementById('current-points').value = points;
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            const currentPoints = parseInt(document.getElementById('current-points').value) || 0;
+            const daysRemaining = parseInt(document.getElementById('days-remaining').value) || 1;
+
+            // Update Stats
+            // Update the input value instead of textContent
+            const currentPointsElement = document.getElementById('stat-current-points');
+            if (!currentPointsElement.matches(':focus')) {
+                currentPointsElement.value = currentPoints;
+            }
+            document.getElementById('stat-days-remaining').textContent = daysRemaining;
+
+            const dailyNeeded = Math.round((maxPoints - currentPoints) / daysRemaining * 100) / 100;
+            document.getElementById('stat-daily-needed').textContent = dailyNeeded;
+
+            const completion = ((currentPoints / maxPoints) * 100).toFixed(1) + '%';
+            document.getElementById('stat-completion').textContent = completion;
+
+            // Points to Next Rank
+            let nextRankPoints = ranks.find(rank => rank.points > currentPoints)?.points || maxPoints;
+            const pointsToNext = nextRankPoints - currentPoints;
+            document.getElementById('stat-points-next').textContent = pointsToNext;
+
+            // Projected Date
+            const daysToComplete = Math.round((maxPoints - currentPoints) / dailyNeeded);
+            const projectedDate = new Date();
+            projectedDate.setDate(projectedDate.getDate() + daysToComplete);
+            document.getElementById('stat-projected-date').textContent = projectedDate.toLocaleDateString();
+
+            // Main Progress Bar
+            document.getElementById('main-progress-bar').style.width = (currentPoints / maxPoints * 100) + '%';
+            document.getElementById('progress-text').textContent = completion;
+
+            // Update Rank Ladder
+            const ladder = document.getElementById('rank-ladder');
+            ladder.innerHTML = '';
+            let prevPoints = 0;
+            ranks.forEach(rank => {
+                const row = document.createElement('div');
+                row.classList.add('rank-row');
+
+                if (currentPoints >= rank.points) {
+                    row.classList.add('completed');
+                } else if (currentPoints >= prevPoints && currentPoints < rank.points) {
+                    row.classList.add('current');
+                } else {
+                    row.classList.add('locked');
+                }
+
+                const icon = document.createElement('img');
+                icon.classList.add('rank-icon');
+                icon.src = rank.icon; // Replace with actual icon URLs or base64
+                icon.alt = rank.name;
+
+                const details = document.createElement('div');
+                details.classList.add('rank-details');
+                details.innerHTML = `<strong>${rank.name}</strong> - ${rank.points} pts<br>Gap: ${Math.max(rank.points - currentPoints, 0)} pts`;
+
+                const miniProgress = document.createElement('div');
+                miniProgress.classList.add('mini-progress');
+                const miniBar = document.createElement('div');
+                miniBar.classList.add('mini-progress-bar');
+                miniBar.style.width = Math.min((currentPoints / rank.points) * 100, 100) + '%';
+                miniProgress.appendChild(miniBar);
+
+                row.appendChild(icon);
+                row.appendChild(details);
+                row.appendChild(miniProgress);
+                ladder.appendChild(row);
+
+                prevPoints = rank.points;
+            });
+        }
+
+        function addDailyEntry() {
+            const date = document.getElementById('daily-date').value;
+            const points = parseInt(document.getElementById('daily-points').value) || 0;
+            const notes = document.getElementById('daily-notes').value;
+
+            if (date && points) {
+                dailyEntries.push({ date, points, notes });
+                localStorage.setItem('dailyEntries', JSON.stringify(dailyEntries));
+                renderDailyLog();
+                document.getElementById('daily-points').value = '';
+                document.getElementById('daily-notes').value = '';
+            }
+        }
+
+        function renderDailyLog() {
+            const log = document.getElementById('daily-log');
+            log.innerHTML = '';
+            const dailyNeeded = parseFloat(document.getElementById('stat-daily-needed').textContent);
+            dailyEntries.forEach(entry => {
+                const item = document.createElement('div');
+                item.classList.add('log-item');
+                if (entry.points > dailyNeeded) {
+                    item.classList.add('good-day');
+                }
+                item.textContent = `${entry.date}: ${entry.points} pts - ${entry.notes}`;
+                log.appendChild(item);
+            });
+        }
+
+        // Initial Update
+        updateDashboard();
+        renderDailyLog();
+
+        // Set today's date as default
+        document.getElementById('daily-date').value = new Date().toISOString().split('T')[0];
+    </script>
+</body>
+</html>
