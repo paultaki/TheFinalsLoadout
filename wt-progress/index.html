@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>S7 World Tour Progress Tracker - The Finals Rank Tracker</title>
+    <title>S7 World Tour Badge Tracker - The Finals Rank Tracker</title>
     <meta
       name="description"
       content="Track your progress to Emerald rank in The Finals Season 7. Monitor daily points, calculate requirements, and reach your goals efficiently."
@@ -476,6 +476,7 @@
         overflow: hidden;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         letter-spacing: -0.05em;
+        color: #000;
       }
 
       .rank-icon::before {
@@ -1177,15 +1178,19 @@
       }
 
       function calculateAveragePointsPerDay() {
-        if (dailyEntries.length === 0) return 0;
-
-        // Get last 7 days of entries or all entries if less than 7
-        const recentEntries = dailyEntries.slice(-7);
-        const totalPoints = recentEntries.reduce(
-          (sum, entry) => sum + entry.points,
-          0
-        );
-        return totalPoints / recentEntries.length;
+        // Calculate average based on total points earned since season start
+        const seasonStart = new Date(SEASON_START_DATE);
+        const today = new Date();
+        
+        // Set to start of day for accurate calculation
+        seasonStart.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+        
+        // Calculate days since season start
+        const daysSinceStart = Math.max(1, Math.ceil((today - seasonStart) / (1000 * 60 * 60 * 24)));
+        
+        // Average points per day = current points / days since start
+        return currentPoints / daysSinceStart;
       }
 
       function animateValue(element, newValue) {
@@ -1200,36 +1205,39 @@
           daysRemaining > 0 ? Math.ceil(pointsNeeded / daysRemaining) : 0;
         const completion = ((currentPoints / 2400) * 100).toFixed(1);
 
-        // Calculate projected completion date
-        const avgPointsPerDay = calculateAveragePointsPerDay();
-        let projectedDate;
+        // Calculate pace-based projection with date
         let projectedMessage;
-
-        if (pointsNeeded === 0) {
+        
+        if (currentPoints >= 2400) {
+          // Player has already reached Emerald 1
           projectedMessage = "Complete!";
-        } else if (avgPointsPerDay === 0) {
-          // No data yet, use required rate
-          if (pointsPerDay > 0 && daysRemaining > 0) {
-            projectedDate = new Date(SEASON_END_DATE);
-            projectedMessage = "On Track";
-          } else {
-            projectedMessage = "Start Playing!";
-          }
         } else {
-          const projectedDays = Math.ceil(pointsNeeded / avgPointsPerDay);
-          projectedDate = new Date();
-          projectedDate.setDate(projectedDate.getDate() + projectedDays);
-
-          // Check if projection exceeds season end
-          const seasonEnd = new Date(SEASON_END_DATE);
-          if (projectedDate > seasonEnd) {
-            projectedMessage = "Won't Complete";
-            projectedDate = seasonEnd;
+          // Calculate average points per day since season start
+          const avgPointsPerDay = calculateAveragePointsPerDay();
+          
+          if (avgPointsPerDay > 0) {
+            // Calculate days needed to complete at current pace
+            const daysToComplete = Math.ceil(pointsNeeded / avgPointsPerDay);
+            
+            // Calculate projected completion date
+            const projectedDate = new Date();
+            projectedDate.setDate(projectedDate.getDate() + daysToComplete);
+            
+            // Check if projection is before season end
+            const seasonEnd = new Date(SEASON_END_DATE);
+            
+            if (projectedDate <= seasonEnd) {
+              // Format the date as "Aug 2"
+              projectedMessage = projectedDate.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric"
+              });
+            } else {
+              projectedMessage = "Won't Complete";
+            }
           } else {
-            projectedMessage = projectedDate.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-            });
+            // Player hasn't started earning points yet
+            projectedMessage = "Won't Complete";
           }
         }
 
@@ -1263,14 +1271,16 @@
         projectedElement.parentElement.classList.remove(
           "warning",
           "success",
-          "error"
+          "error",
+          "primary"
         );
         if (projectedMessage === "Complete!") {
           projectedElement.parentElement.classList.add("success");
         } else if (projectedMessage === "Won't Complete") {
           projectedElement.parentElement.classList.add("error");
-        } else if (projectedMessage === "Start Playing!") {
-          projectedElement.parentElement.classList.add("warning");
+        } else {
+          // It's a date projection - they're on track
+          projectedElement.parentElement.classList.add("primary");
         }
 
         // Update main progress bar
