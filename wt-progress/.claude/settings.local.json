@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(ls:*)",
-      "WebFetch(domain:www.thefinalsloadout.com)"
+      "WebFetch(domain:www.thefinalsloadout.com)",
+      "Bash(find:*)"
     ],
     "deny": []
   }
