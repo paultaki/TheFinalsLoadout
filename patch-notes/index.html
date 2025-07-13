@@ -2,71 +2,71 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
-    <title>THE FINALS - Update 7.3.0: BLAST OFF! | Patch Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com" />
+
+    <!-- SEO Meta Tags -->
+    <title>
+      Patch Notes 7.3.0: BLAST OFF! – The Finals Season 7 | Balance Changes & Updates
+    </title>
     <meta
       name="description"
-      content="Experience the explosive Update 7.3.0: BLAST OFF! New weapons, maps, and game-changing features await. Dive into the chaos."
+      content="The Finals Update 7.3.0 BLAST OFF! brings major balance changes: CL-40 nerf, Healing Emitter rework, Sledgehammer buff, and new Blast Off! mode. Complete patch notes inside."
     />
-    <link rel="canonical" href="https://thefinalsloadout.com/patch-notes/" />
+    <meta
+      name="keywords"
+      content="The Finals patch notes, Season 7 update, BLAST OFF, CL-40 nerf, Healing Emitter rework, weapon balance, The Finals 7.3.0"
+    />
+    <meta name="author" content="Paul Takisaki" />
+    <meta name="robots" content="index, follow" />
 
-    <!-- Open Graph -->
+    <!-- Open Graph Meta Tags -->
     <meta
       property="og:title"
-      content="The Finals Season 7: The Divide Patch Notes (July 2025) - Meta Changes & New Content"
+      content="The Finals Update 7.3.0: BLAST OFF! Patch Notes"
     />
     <meta
       property="og:description"
-      content="Season 7: The Divide brings new specializations, Nozomi map, weapon balance changes, and Practice Range. Complete v7.0 patch notes inside!"
+      content="Major balance update: CL-40 self-damage increased, Healing Emitter reworked, smoke detection fixed. Plus new Blast Off! mode."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://thefinalsloadout.com/patch-notes/"
     />
     <meta
       property="og:image"
-      content="https://www.thefinalsloadout.com/images/patch-notes-v690.webp"
+      content="https://thefinalsloadout.com/images/the-finals-logo.webp"
     />
-    <meta
-      property="og:url"
-      content="https://www.thefinalsloadout.com/patch-notes/"
-    />
-    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Finals Loadout" />
 
-    <!-- Twitter Card -->
+    <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="The Finals Season 7: The Divide Patch Notes (June 2025) - Meta Changes & New Content"
-    />
+    <meta name="twitter:title" content="The Finals Update 7.3.0: BLAST OFF!" />
     <meta
       name="twitter:description"
-      content="Get the complete Season 7 breakdown: H+ Infuser, Breach Drill, Healing Emitter, KS-23 & ARN-220 buffs, XP-54 nerf, and new Nozomi map."
+      content="CL-40 nerfed, Healing Emitter reworked, new low-gravity mode. Full patch notes."
     />
     <meta
       name="twitter:image"
-      content="https://www.thefinalsloadout.com/images/patch-notes-v690.webp"
+      content="https://thefinalsloadout.com/images/the-finals-logo.webp"
     />
 
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "The Finals Season 7: The Divide Patch Notes (June 2025) - Meta Changes & New Content",
-        "description": "Official patch notes for The Finals Season 7: The Divide. New specializations (H+ Infuser, Breach Drill, Healing Emitter), Nozomi map, weapon balance changes, Practice Range, and more in v7.0.",
-        "url": "https://www.thefinalsloadout.com/patch-notes/",
-        "image": "https://www.thefinalsloadout.com/images/patch-notes-v690.webp",
-        "author": {
-          "@type": "Organization",
-          "name": "Paul Takisaki"
-        }
-      }
-    </script>
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://thefinalsloadout.com/patch-notes/" />
 
-    <!-- Google Tag Manager -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+
+    <!-- Google Analytics (GA4) -->
     <script
       async
-      src="https://www.googletagmanager.com/gtag/js?id=GTM-5H76V88"
+      src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"
     ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -74,1127 +74,1237 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-      gtag("config", "GTM-5H76V88");
+      gtag("config", "G-GVGKYFGZ1Z");
     </script>
-    <!-- End Google Tag Manager -->
 
-    <!-- Fonts & Favicon -->
-    <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600;700&display=swap"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
-      media="print"
-      onload="this.media='all'"
     />
-    <noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet"
-      />
-    </noscript>
 
-    <!-- Quantum Design System -->
-    <link rel="stylesheet" href="../css/quantum-design-system.css" />
+    <!-- AI Chat Widget Styles -->
+    <link rel="stylesheet" href="../css/finals-chat.css" />
 
-    <!-- Preload Critical Resources -->
-    <script src="/patch-notes/app.js?v=20250703" defer></script>
-    <link rel="stylesheet" href="/patch-notes/style.css?v=20250703" />
-
-    <!-- Styles -->
-    <link rel="stylesheet" href="style.css" />
-
-    <!-- Season 7 Table Styles -->
     <style>
-      .balance-table {
-        margin: 1rem 0;
-        overflow-x: auto;
+      /* Quantum-inspired color palette */
+      :root {
+        --quantum-cyan: #00f0c0;
+        --quantum-purple: #7b2fe3;
+        --quantum-pink: #ff2a6d;
+        --quantum-blue: #1e90ff;
+        --quantum-yellow: #ffb700;
+        --quantum-dark: #0a0c12;
+        --quantum-component: #181c27;
+        --quantum-border: #3a3f5e;
+        --quantum-text: #e0e7ff;
+        --quantum-secondary: #a0aed0;
+        --quantum-green: #00ff88;
+        --quantum-red: #ff3366;
+        --quantum-orange: #ff6b35;
       }
 
-      .balance-table table {
+      /* Base Styles */
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--quantum-dark);
+        min-height: 100%;
+      }
+
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        color: var(--quantum-text);
+        background: transparent;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      /* Quantum grid background */
+      .quantum-grid {
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
-        border-collapse: collapse;
-        background: rgba(0, 0, 0, 0.3);
+        height: 100%;
+        background-image: linear-gradient(
+            rgba(0, 240, 192, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 240, 192, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 0;
+      }
+
+      /* Main container */
+      .main-container {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Navigation */
+      .quantum-nav {
+        background: rgba(24, 28, 39, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--quantum-border);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: 1rem 2rem;
+      }
+
+      .quantum-nav a {
+        color: var(--quantum-secondary);
+        text-decoration: none;
+        padding: 0.5rem 1.5rem;
         border-radius: 8px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.875rem;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
         overflow: hidden;
       }
 
-      .balance-table th,
-      .balance-table td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      .quantum-nav a::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--quantum-cyan),
+          transparent
+        );
+        transition: left 0.5s ease;
       }
 
-      .balance-table th {
-        background: rgba(0, 0, 0, 0.5);
+      .quantum-nav a:hover {
+        color: var(--quantum-cyan);
+        transform: translateY(-2px);
+      }
+
+      .quantum-nav a:hover::before {
+        left: 100%;
+      }
+
+      .quantum-nav a.active {
+        background: linear-gradient(
+          135deg,
+          var(--quantum-cyan),
+          var(--quantum-blue)
+        );
+        color: var(--quantum-dark);
         font-weight: 600;
-        color: #ffb700;
       }
 
-      .weapon-icon-small {
-        width: 24px;
-        height: 24px;
-        margin-right: 8px;
-        vertical-align: middle;
+      /* Header */
+      .quantum-header {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 240, 192, 0.1),
+          rgba(123, 47, 227, 0.05)
+        );
+        border-bottom: 1px solid var(--quantum-border);
+        padding: 3rem 0;
+        position: relative;
+        overflow: hidden;
       }
 
-      .buff-row {
-        background: rgba(76, 175, 80, 0.1);
+      .quantum-title {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        background: linear-gradient(
+          135deg,
+          var(--quantum-cyan),
+          var(--quantum-purple),
+          var(--quantum-pink)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        line-height: 1.1;
       }
 
-      .nerf-row {
-        background: rgba(244, 67, 54, 0.1);
+      /* Floating particles */
+      .particle {
+        position: fixed;
+        pointer-events: none;
+        opacity: 0.6;
+        background: var(--quantum-cyan);
+        width: 2px;
+        height: 2px;
+        border-radius: 50%;
+        box-shadow: 0 0 6px var(--quantum-cyan);
+      }
+
+      /* Update badges */
+      .update-badge {
+        display: inline-block;
+        padding: 0.375rem 1rem;
+        border-radius: 24px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .update-badge.live {
+        background: rgba(0, 255, 136, 0.2);
+        color: var(--quantum-green);
+        border: 1px solid rgba(0, 255, 136, 0.3);
+      }
+
+      /* Change cards */
+      .change-card {
+        background: rgba(24, 28, 39, 0.6);
+        border: 1px solid var(--quantum-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .change-card::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(
+          45deg,
+          var(--quantum-cyan),
+          var(--quantum-purple),
+          var(--quantum-pink)
+        );
+        border-radius: 12px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+      }
+
+      .change-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+      }
+
+      .change-card:hover::before {
+        opacity: 0.5;
+      }
+
+      /* Change type badges - simplified */
+      .change-type {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.625rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--quantum-text);
+        border: none;
+      }
+
+      .change-type.nerf {
+        color: #ff6b6b;
+      }
+
+      .change-type.buff {
+        color: #51cf66;
+      }
+
+      .change-type.rework {
+        color: #a78bfa;
+      }
+
+      .change-type.new {
+        color: #ffd93d;
+      }
+
+      .change-type.fix {
+        color: #4ecdc4;
+      }
+
+      /* Stat changes */
+      .stat-change {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        margin: 0.5rem 0;
+      }
+
+      .stat-before {
+        color: var(--quantum-secondary);
+        text-decoration: line-through;
+      }
+
+      .stat-after {
+        font-family: "Fira Code", monospace;
+        font-weight: 600;
+      }
+
+      .stat-after.buff {
+        color: var(--quantum-green);
+      }
+
+      .stat-after.nerf {
+        color: var(--quantum-red);
+      }
+
+      /* Section headers */
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .section-icon {
+        font-size: 2rem;
+      }
+
+      /* Quick summary */
+      .tldr-card {
+        background: linear-gradient(
+          135deg,
+          rgba(123, 47, 227, 0.1),
+          rgba(0, 240, 192, 0.05)
+        );
+        border: 1px solid var(--quantum-border);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .tldr-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        transition: all 0.3s ease;
+      }
+
+      .tldr-item:hover {
+        transform: translateX(8px);
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      /* Impact badges */
+      .impact-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 24px;
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+
+      .impact-badge.high {
+        background: rgba(255, 51, 102, 0.2);
+        color: var(--quantum-red);
+        border: 1px solid rgba(255, 51, 102, 0.3);
+      }
+
+      .impact-badge.medium {
+        background: rgba(255, 183, 0, 0.2);
+        color: var(--quantum-yellow);
+        border: 1px solid rgba(255, 183, 0, 0.3);
+      }
+
+      .impact-badge.low {
+        background: rgba(0, 240, 192, 0.2);
+        color: var(--quantum-cyan);
+        border: 1px solid rgba(0, 240, 192, 0.3);
+      }
+
+      /* Weapon image */
+      .weapon-icon {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 8px;
+      }
+
+      /* Footer */
+      footer {
+        border-top: 1px solid var(--quantum-border);
+        padding: 2rem 0;
+        margin-top: 4rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .quantum-nav {
+          padding: 0.75rem 1rem;
+        }
+
+        .quantum-nav a {
+          font-size: 0.75rem;
+          padding: 0.375rem 0.75rem;
+        }
+
+        .change-card {
+          padding: 1rem;
+        }
+
+        .quantum-header {
+          padding: 2rem 0;
+        }
+
+        .quantum-title {
+          font-size: 2rem;
+        }
+      }
+
+      /* Animations */
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(255, 183, 0, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(255, 183, 0, 0.8);
+        }
+      }
+
+      .glow-effect {
+        animation: pulse-glow 2s infinite;
+      }
+
+      /* Scanline effect */
+      .scanline {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--quantum-cyan),
+          transparent
+        );
+        opacity: 0.5;
+        animation: scanline 8s linear infinite;
+        pointer-events: none;
+        z-index: 999;
+      }
+
+      @keyframes scanline {
+        0% {
+          transform: translateY(-100vh);
+        }
+        100% {
+          transform: translateY(100vh);
+        }
+      }
+
+      /* Event mode badge */
+      .event-badge {
+        background: linear-gradient(
+          135deg,
+          var(--quantum-purple),
+          var(--quantum-pink)
+        );
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 24px;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        font-size: 0.875rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        display: inline-block;
+        box-shadow: 0 4px 20px rgba(123, 47, 227, 0.3);
+      }
+
+      /* Class badges */
+      .class-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 16px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .class-badge.light {
+        background: rgba(0, 240, 192, 0.2);
+        color: var(--quantum-cyan);
+        border: 1px solid rgba(0, 240, 192, 0.3);
+      }
+
+      .class-badge.medium {
+        background: rgba(123, 47, 227, 0.2);
+        color: var(--quantum-purple);
+        border: 1px solid rgba(123, 47, 227, 0.3);
+      }
+
+      .class-badge.heavy {
+        background: rgba(255, 183, 0, 0.2);
+        color: var(--quantum-yellow);
+        border: 1px solid rgba(255, 183, 0, 0.3);
+      }
+
+      .class-badge.all {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 240, 192, 0.2),
+          rgba(123, 47, 227, 0.2),
+          rgba(255, 183, 0, 0.2)
+        );
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      /* Metallic Chrome Text Effect */
+      .metallic-title {
+        position: relative;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        text-transform: uppercase;
+        background: linear-gradient(
+          to bottom,
+          #eee 0%,
+          #999 50%,
+          #777 51%,
+          #555 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        text-shadow: 
+          0 1px 0 #ccc,
+          0 2px 0 #c9c9c9,
+          0 3px 0 #bbb,
+          0 4px 0 #b9b9b9,
+          0 5px 0 #aaa,
+          0 6px 1px rgba(0,0,0,.1),
+          0 0 5px rgba(0,0,0,.1),
+          0 1px 3px rgba(0,0,0,.3),
+          0 3px 5px rgba(0,0,0,.2),
+          0 5px 10px rgba(0,0,0,.25);
+        filter: brightness(1.2);
+        z-index: 1;
+      }
+
+      /* Shine sweep effect */
+      .metallic-title::before {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        background: linear-gradient(
+          105deg,
+          transparent 40%,
+          rgba(255, 255, 255, 0.7) 45%,
+          rgba(255, 255, 255, 0.9) 50%,
+          rgba(255, 255, 255, 0.7) 55%,
+          transparent 60%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        animation: metallic-shine 4s ease-in-out infinite;
+        background-size: 200% 100%;
+        background-position: -100% 0;
+      }
+
+      @keyframes metallic-shine {
+        0% {
+          background-position: -100% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+
+      /* Alternative chrome style with more depth */
+      .chrome-title {
+        position: relative;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        text-transform: uppercase;
+        background: linear-gradient(
+          to bottom,
+          #d4d4d4 0%,
+          #f9f9f9 10%,
+          #e8e8e8 25%,
+          #9a9a9a 50%,
+          #787878 51%,
+          #656565 60%,
+          #4b4b4b 80%,
+          #2e2e2e 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        text-shadow: 
+          0 1px 0 rgba(255,255,255,0.4),
+          0 -1px 0 rgba(0,0,0,0.3);
+        letter-spacing: 0.05em;
+      }
+
+      /* Enhanced metallic effect for the main title */
+      h1.quantum-title.metallic-title {
+        margin-bottom: 1rem;
+        line-height: 1.1;
+      }
+
+      /* Mobile adjustments */
+      @media (max-width: 768px) {
+        .metallic-title {
+          text-shadow: 
+            0 1px 0 #ccc,
+            0 2px 0 #bbb,
+            0 3px 0 #aaa,
+            0 4px 1px rgba(0,0,0,.1),
+            0 0 3px rgba(0,0,0,.1);
+        }
       }
     </style>
   </head>
+  <body>
+    <div class="quantum-grid"></div>
+    <div class="scanline"></div>
 
-  <body class="loading">
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-      <div class="loading-content">
-        <div class="loading-logo">
-          <div class="logo-text">THE FINALS</div>
-          <div class="loading-subtitle">BLAST OFF!</div>
-        </div>
-        <div class="loading-bar">
-          <div class="loading-progress" id="loadingProgress"></div>
-        </div>
-        <div class="loading-percentage" id="loadingPercentage">0%</div>
-      </div>
-      <div class="loading-particles" id="loadingParticles"></div>
-    </div>
-
-    <!-- Scroll Progress -->
-    <div class="scroll-progress">
-      <div class="scroll-progress-bar" id="scrollProgress"></div>
-    </div>
-
-    <!-- Navigation -->
-    <nav class="main-nav" id="mainNav">
-      <div class="nav-container">
-        <div class="nav-logo">
-          <div class="logo-text">THE FINALS</div>
-          <div class="logo-subtitle">PATCH NOTES</div>
-        </div>
-        <div class="nav-links">
-          <a href="../index.html" class="nav-link">LOADOUT GENERATOR</a>
-          <a href="../ragequit/index.html" class="nav-link">RAGE QUIT</a>
-          <a href="#" class="nav-link active">PATCH NOTES</a>
-          <a href="../meta-weapons/index.html" class="nav-link">META WEAPONS</a>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero" id="hero">
-      <div class="hero-background">
-        <div class="hero-gradient"></div>
-        <div class="hero-grid"></div>
-        <div class="hero-particles" id="heroParticles"></div>
-      </div>
-
-      <div class="hero-content">
-        <div class="hero-badge">
-          <div class="badge-glow"></div>
-          <span class="badge-text">Update 7.3.0</span>
-        </div>
-
-        <div class="hero-title">
-          <span class="title-main">BLAST OFF!</span>
-          <span class="title-subtitle"
-            >Low gravity chaos with explosive rewards</span
-          >
-        </div>
-
-        <div class="hero-stats">
-          <div class="stat-item">
-            <span class="stat-number" data-count="17">0</span>
-            <span class="stat-label">Weapon Changes</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number" data-count="1">0</span>
-            <span class="stat-label">New Mode</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number" data-count="2">0</span>
-            <span class="stat-label">Major Features</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number" data-count="12">0</span>
-            <span class="stat-label">Free Rewards</span>
+    <div class="main-container">
+      <!-- Navigation -->
+      <nav class="quantum-nav">
+        <div class="container mx-auto flex justify-between items-center">
+          <div class="flex items-center gap-6">
+            <a href="../index.html">LOADOUT GENERATOR</a>
+            <a href="../ragequit/index.html">RAGE QUIT</a>
+            <a href="#" class="active">PATCH NOTES</a>
+            <a href="../meta-weapons/index.html">META WEAPONS</a>
           </div>
         </div>
+      </nav>
 
-        <div class="hero-actions">
-          <button class="cta-button primary" id="exploreButton">
-            <span>EXPLORE CHANGES</span>
-            <div class="button-glow"></div>
-          </button>
-          <button class="cta-button secondary" id="quickSummary">
-            <span>QUICK SUMMARY</span>
-            <div class="button-glow"></div>
-          </button>
-        </div>
-      </div>
-
-      <div class="hero-scroll-indicator">
-        <div class="scroll-text">Scroll to explore</div>
-        <svg
-          class="scroll-arrow"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path d="M7 13l3 3 7-7"></path>
-          <path d="M12 17V3"></path>
-        </svg>
-      </div>
-    </section>
-
-    <!-- Main Content -->
-    <main class="main-content">
-      <!-- TLDR Section -->
-      <section class="tldr-section" id="tldr">
-        <div class="section-header">
-          <h2 class="section-title">What Changed (Why You Should Care)</h2>
-        </div>
-        <div class="tldr-grid">
-          <!-- Critical Changes -->
-          <div class="tldr-item nerf" data-aos="fade-up">
-            <span class="icon">💥</span>
-            <div class="tldr-content">
-              <strong>CL-40 self-damage +35%</strong>
-              <span class="tldr-desc">No more free feet shots</span>
-            </div>
+      <!-- Header -->
+      <header class="quantum-header">
+        <div class="container mx-auto px-4">
+          <div class="flex items-center gap-4 mb-4">
+            <span class="update-badge live">UPDATE 7.3.0</span>
+            <span class="event-badge">🚀 BLAST OFF!</span>
           </div>
-          <div class="tldr-item rework" data-aos="fade-up" data-aos-delay="100">
-            <span class="icon">🏥</span>
-            <div class="tldr-content">
-              <strong>Healing Emitter reworked</strong>
-              <span class="tldr-desc">Can't drop & forget</span>
-            </div>
-          </div>
-          <div class="tldr-item fix" data-aos="fade-up" data-aos-delay="200">
-            <span class="icon">💨</span>
-            <div class="tldr-content">
-              <strong>Smoke detection fixed</strong>
-              <span class="tldr-desc">Recon gadgets see through</span>
-            </div>
-          </div>
-          <div class="tldr-item buff" data-aos="fade-up" data-aos-delay="300">
-            <span class="icon">🔨</span>
-            <div class="tldr-content">
-              <strong>Sledgehammer reliable</strong>
-              <span class="tldr-desc">Hit detection improved</span>
-            </div>
-          </div>
-          <div class="tldr-item new" data-aos="fade-up" data-aos-delay="400">
-            <span class="icon">🚀</span>
-            <div class="tldr-content">
-              <strong>Blast Off! mode live</strong>
-              <span class="tldr-desc">Low gravity explosive chaos</span>
-            </div>
-          </div>
-          <div class="tldr-item new" data-aos="fade-up" data-aos-delay="500">
-            <span class="icon">🏗️</span>
-            <div class="tldr-content">
-              <strong>Destruction 2.0</strong>
-              <span class="tldr-desc">Buildings collapse realistically</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Weapons Section -->
-      <section class="content-section" id="weapons">
-        <div class="section-header">
-          <div class="section-badge">
-            <span class="badge-icon">⚔️</span>
-            <span>ARSENAL REVOLUTION</span>
-          </div>
-          <h2 class="section-title">Weapon Overhaul</h2>
-          <p class="section-subtitle">
-            Major balance changes that reshape the meta and introduce powerful
-            new options
+          <h1 class="quantum-title metallic-title text-5xl md:text-6xl mb-2" data-text="Update 7.3.0: BLAST OFF!">
+            Update 7.3.0: BLAST OFF!
+          </h1>
+          <p class="text-xl text-quantum-secondary">
+            Low gravity chaos • Explosive rewards • Major balance changes
           </p>
+          <div class="mt-4 flex items-center gap-4">
+            <span class="text-sm text-quantum-secondary">July 3, 2025</span>
+            <span class="text-sm text-quantum-secondary">•</span>
+            <span class="text-sm text-quantum-secondary">Season 7: The Divide</span>
+          </div>
         </div>
+      </header>
 
-        <div class="changes-grid">
-          <!-- CL-40 Nerf Card -->
-          <article class="change-card nerf featured" data-aos="fade-up">
-            <div class="card-header">
-              <div class="change-type nerf">NERF</div>
-              <div class="impact-level high">HIGH IMPACT</div>
-              <div class="card-actions">
-                <button class="action-btn" aria-label="Share">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-                    <polyline points="16,6 12,2 8,6"></polyline>
-                    <line x1="12" y1="2" x2="12" y2="15"></line>
-                  </svg>
-                </button>
-                <button class="action-btn" aria-label="Bookmark">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path
-                      d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
-                    ></path>
-                  </svg>
-                </button>
+      <!-- Main Content -->
+      <main class="py-8">
+        <div class="container mx-auto px-4">
+          <!-- Quick Summary Section -->
+          <section class="mb-12">
+            <div class="tldr-card">
+              <h2 class="text-2xl font-bold mb-4" style="color: var(--quantum-yellow)">
+                🎯 TL;DR - What Changed (Why You Should Care)
+              </h2>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div class="tldr-item">
+                  <span class="text-2xl">💥</span>
+                  <div>
+                    <strong style="color: var(--quantum-red)">CL-40 self-damage +35%</strong>
+                    <p class="text-sm text-quantum-secondary">No more free feet shots</p>
+                  </div>
+                </div>
+                <div class="tldr-item">
+                  <span class="text-2xl">🏥</span>
+                  <div>
+                    <strong style="color: var(--quantum-purple)">Healing Emitter reworked</strong>
+                    <p class="text-sm text-quantum-secondary">Can't drop & forget anymore</p>
+                  </div>
+                </div>
+                <div class="tldr-item">
+                  <span class="text-2xl">💨</span>
+                  <div>
+                    <strong style="color: var(--quantum-cyan)">Smoke detection fixed</strong>
+                    <p class="text-sm text-quantum-secondary">Recon gadgets see through</p>
+                  </div>
+                </div>
+                <div class="tldr-item">
+                  <span class="text-2xl">🔨</span>
+                  <div>
+                    <strong style="color: var(--quantum-green)">Sledgehammer reliable</strong>
+                    <p class="text-sm text-quantum-secondary">Hit detection improved</p>
+                  </div>
+                </div>
+                <div class="tldr-item">
+                  <span class="text-2xl">🚀</span>
+                  <div>
+                    <strong style="color: var(--quantum-yellow)">Blast Off! mode live</strong>
+                    <p class="text-sm text-quantum-secondary">Low gravity explosive chaos</p>
+                  </div>
+                </div>
+                <div class="tldr-item">
+                  <span class="text-2xl">🏗️</span>
+                  <div>
+                    <strong style="color: var(--quantum-orange)">Destruction 2.0</strong>
+                    <p class="text-sm text-quantum-secondary">Buildings collapse realistically</p>
+                  </div>
+                </div>
               </div>
             </div>
+          </section>
 
-            <div class="card-content">
-              <div class="weapon-showcase">
-                <div class="weapon-image">
-                  <img src="../images/CL-40.webp" alt="CL-40" loading="lazy" />
-                  <div class="image-glow nerf"></div>
+          <!-- Weapon Changes Section -->
+          <section class="mb-12">
+            <div class="section-header">
+              <span class="section-icon">⚔️</span>
+              <h2 class="text-3xl font-bold">Weapon Overhaul</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+              <!-- CL-40 Nerf -->
+              <div class="change-card">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="flex items-center gap-3">
+                    <img src="../images/CL-40.webp" alt="CL-40" class="weapon-icon" />
+                    <div>
+                      <h3 class="text-xl font-bold mb-1">CL-40</h3>
+                      <div class="flex gap-2">
+                        <span class="change-type nerf">NERF</span>
+                        <span class="impact-badge high">HIGH IMPACT</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="weapon-info">
-                  <h3 class="weapon-name">CL-40</h3>
-                  <div class="weapon-class medium">MEDIUM</div>
-                  <p class="weapon-description">
-                    The explosive powerhouse gets accuracy and self-damage nerfs
-                    to prevent feet-shot abuse.
+                
+                <p class="text-quantum-secondary mb-4">
+                  The explosive powerhouse gets accuracy and self-damage nerfs to prevent feet-shot abuse.
+                </p>
+
+                <div class="space-y-2">
+                  <div class="stat-change">
+                    <span class="text-sm">Self-damage multiplier:</span>
+                    <span class="stat-before">1.25x</span>
+                    <span>→</span>
+                    <span class="stat-after nerf">1.35x (+35%)</span>
+                  </div>
+                  <div class="stat-change">
+                    <span class="text-sm">Inner blast radius:</span>
+                    <span class="stat-before">60cm</span>
+                    <span>→</span>
+                    <span class="stat-after nerf">50cm</span>
+                  </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-black/30 rounded-lg">
+                  <p class="text-sm">
+                    <strong>💥 Meta Impact:</strong> Splashing at your feet now costs ~20 more HP. Still melts Healing Emitter bunkers—just costs you blood.
                   </p>
                 </div>
               </div>
 
-              <div class="before-after">
-                <div class="stat-comparison-header">
-                  <h4>Self-Damage Multiplier</h4>
-                </div>
-                <div class="comparison-container">
-                  <div class="comparison-item">
-                    <div class="comparison-label">Before</div>
-                    <div class="stat-value old-good">1.25x</div>
-                  </div>
-                  <div class="comparison-arrow">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path d="M5 12h14m-7-7 7 7-7 7"></path>
-                    </svg>
-                  </div>
-                  <div class="comparison-item">
-                    <div class="comparison-label">After</div>
-                    <div class="stat-value new-bad">1.35x</div>
+              <!-- H+ Infuser Nerf -->
+              <div class="change-card">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="flex items-center gap-3">
+                    <img src="../images/H+_Infuser.webp" alt="H+ Infuser" class="weapon-icon" />
+                    <div>
+                      <h3 class="text-xl font-bold mb-1">H+ Infuser</h3>
+                      <div class="flex gap-2">
+                        <span class="change-type nerf">NERF</span>
+                        <span class="impact-badge medium">MEDIUM IMPACT</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              <div class="change-impact">
-                <div class="impact-header">
-                  <span class="impact-icon">💥</span>
-                  <span class="impact-text">META IMPACT</span>
-                </div>
-                <p>
-                  Splashing at your feet now costs ~20 more HP. Full damage
-                  requires better accuracy. Still melts Healing Emitter
-                  bunkers—just costs you blood.
+                
+                <p class="text-quantum-secondary mb-4">
+                  25% less healing makes pocket medic plays less oppressive during cashout steals.
                 </p>
-              </div>
 
-              <div class="change-details">
-                <div class="detail-tabs">
-                  <button class="tab-btn active" data-tab="overview">
-                    Overview
-                  </button>
-                  <button class="tab-btn" data-tab="stats">Stats</button>
-                  <button class="tab-btn" data-tab="tips">Tips</button>
+                <div class="space-y-2">
+                  <div class="stat-change">
+                    <span class="text-sm">Healing per shot:</span>
+                    <span class="stat-before">20</span>
+                    <span>→</span>
+                    <span class="stat-after nerf">15 (-25%)</span>
+                  </div>
                 </div>
 
-                <div class="tab-content active" data-tab="overview">
-                  <ul class="feature-list">
-                    <li>
-                      <span class="tip-icon">💥</span>
-                      Self-damage multiplier: 1.25x → 1.35x (+35%)
+                <div class="mt-4 p-3 bg-black/30 rounded-lg">
+                  <p class="text-sm">
+                    <strong>💉 Meta Impact:</strong> Flat healing per second reduced. Less oppressive during crucial moments.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Healing Emitter Rework -->
+              <div class="change-card">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="flex items-center gap-3">
+                    <img src="../images/Healing_Emitter.webp" alt="Healing Emitter" class="weapon-icon" />
+                    <div>
+                      <h3 class="text-xl font-bold mb-1">Healing Emitter</h3>
+                      <div class="flex gap-2">
+                        <span class="change-type rework">REWORK</span>
+                        <span class="impact-badge high">HIGH IMPACT</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <p class="text-quantum-secondary mb-4">
+                  Smart placement now crucial - can't drop and forget anymore. Cooldown starts when destroyed.
+                </p>
+
+                <div class="space-y-2">
+                  <div class="stat-change">
+                    <span class="text-sm">Cooldown start:</span>
+                    <span class="stat-before">On Deploy</span>
+                    <span>→</span>
+                    <span class="stat-after buff">On Destroy</span>
+                  </div>
+                  <div class="stat-change">
+                    <span class="text-sm">Manual retrieval:</span>
+                    <span class="stat-after buff">3s cooldown</span>
+                  </div>
+                  <div class="stat-change">
+                    <span class="text-sm">Remote retrieval:</span>
+                    <span class="stat-after nerf">15s cooldown</span>
+                  </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-black/30 rounded-lg">
+                  <p class="text-sm">
+                    <strong>🏥 Meta Impact:</strong> Smart placement critical. Lazy deployments backfire.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Sledgehammer Buff -->
+              <div class="change-card">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="flex items-center gap-3">
+                    <img src="../images/Sledgehammer.webp" alt="Sledgehammer" class="weapon-icon" />
+                    <div>
+                      <h3 class="text-xl font-bold mb-1">Sledgehammer</h3>
+                      <div class="flex gap-2">
+                        <span class="change-type buff">BUFF</span>
+                        <span class="impact-badge medium">MEDIUM IMPACT</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <p class="text-quantum-secondary mb-4">
+                  Fewer ghost swings - melee finally feels consistent with improved hit detection.
+                </p>
+
+                <div class="space-y-2">
+                  <div class="stat-change">
+                    <span class="text-sm">Primary attack height:</span>
+                    <span class="stat-before">15cm</span>
+                    <span>→</span>
+                    <span class="stat-after buff">25cm (+67%)</span>
+                  </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-black/30 rounded-lg">
+                  <p class="text-sm">
+                    <strong>🔨 Gameplay Impact:</strong> 67% taller hit detection means fewer frustrating misses.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Weapon Swap Speed Changes -->
+            <div class="change-card mt-6">
+              <h3 class="text-xl font-bold mb-4">⚡ Weapon Draw/Holster Speed Changes</h3>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="text-lg font-semibold mb-3" style="color: var(--quantum-green)">
+                    ✅ Faster Swaps
+                  </h4>
+                  <ul class="space-y-2">
+                    <li class="text-sm">
+                      <strong>93R:</strong> 0.20s → 0.15s (both)
                     </li>
-                    <li>
-                      <span class="tip-icon">🎯</span>
-                      Inner blast radius: 60cm → 50cm
-                    </li>
-                    <li>
-                      <span class="tip-icon">⚠️</span>
-                      Requires more accuracy for maximum damage
+                    <li class="text-sm">
+                      <strong>XP-54:</strong> 0.23s → 0.20s
                     </li>
                   </ul>
                 </div>
 
-                <div class="tab-content" data-tab="stats">
-                  <div class="stats-table">
-                    <div class="stat-row">
-                      <span>Self-Damage</span>
-                      <span class="stat-highlight">1.25x → 1.35x</span>
-                    </div>
-                    <div class="stat-row">
-                      <span>Inner Blast Radius</span>
-                      <span class="stat-highlight">60cm → 50cm</span>
-                    </div>
-                    <div class="stat-row">
-                      <span>Max Damage</span>
-                      <span class="stat-highlight">Unchanged</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="tab-content" data-tab="tips">
-                  <div class="tips-list">
-                    <div class="tip-item">
-                      <span class="tip-icon">🎯</span>
-                      <span>Aim for direct hits rather than splash damage</span>
-                    </div>
-                    <div class="tip-item">
-                      <span class="tip-icon">💊</span>
-                      <span>Carry more healing items for self-damage</span>
-                    </div>
-                    <div class="tip-item">
-                      <span class="tip-icon">🏥</span>
-                      <span
-                        >Still excellent against Healing Emitter clusters</span
-                      >
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- H+ Infuser Nerf Card -->
-          <article
-            class="change-card nerf"
-            data-aos="fade-up"
-            data-aos-delay="100"
-          >
-            <div class="card-header">
-              <div class="change-type nerf">NERF</div>
-              <div class="impact-level medium">MEDIUM IMPACT</div>
-              <div class="card-actions">
-                <button class="action-btn" aria-label="Share">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-                    <polyline points="16,6 12,2 8,6"></polyline>
-                    <line x1="12" y1="2" x2="12" y2="15"></line>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div class="card-content">
-              <div class="weapon-showcase">
-                <div class="weapon-image">
-                  <img
-                    src="../images/H+_Infuser.webp"
-                    alt="H+ Infuser"
-                    loading="lazy"
-                  />
-                  <div class="image-glow nerf"></div>
-                </div>
-                <div class="weapon-info">
-                  <h3 class="weapon-name">H+ Infuser</h3>
-                  <div class="weapon-class light">LIGHT</div>
-                  <p class="weapon-description">
-                    25% less healing makes pocket medic plays less oppressive
-                    during cashout steals.
-                  </p>
-                </div>
-              </div>
-
-              <div class="before-after">
-                <div class="stat-comparison-header">
-                  <h4>Healing Per Shot</h4>
-                </div>
-                <div class="comparison-container">
-                  <div class="comparison-item">
-                    <div class="comparison-label">Before</div>
-                    <div class="stat-value old-good">20</div>
-                  </div>
-                  <div class="comparison-arrow">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path d="M5 12h14m-7-7 7 7-7 7"></path>
-                    </svg>
-                  </div>
-                  <div class="comparison-item">
-                    <div class="comparison-label">After</div>
-                    <div class="stat-value new-bad">15</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="change-impact">
-                <div class="impact-header">
-                  <span class="impact-icon">💉</span>
-                  <span class="impact-text">META IMPACT</span>
-                </div>
-                <p>
-                  25% less healing makes pocket medic plays less oppressive
-                  during cashout steals. Flat healing per second reduced.
-                </p>
-              </div>
-            </div>
-          </article>
-
-          <!-- Healing Emitter Rework Card -->
-          <article
-            class="change-card rework"
-            data-aos="fade-up"
-            data-aos-delay="200"
-          >
-            <div class="card-header">
-              <div class="change-type rework">REWORK</div>
-              <div class="impact-level high">HIGH IMPACT</div>
-              <div class="card-actions">
-                <button class="action-btn" aria-label="Share">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-                    <polyline points="16,6 12,2 8,6"></polyline>
-                    <line x1="12" y1="2" x2="12" y2="15"></line>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div class="card-content">
-              <div class="weapon-showcase">
-                <div class="weapon-image">
-                  <img
-                    src="../images/Healing_Emitter.webp"
-                    alt="Healing Emitter"
-                    loading="lazy"
-                  />
-                  <div class="image-glow rework"></div>
-                </div>
-                <div class="weapon-info">
-                  <h3 class="weapon-name">Healing Emitter</h3>
-                  <div class="weapon-class heavy">HEAVY</div>
-                  <p class="weapon-description">
-                    Smart placement now crucial - can't drop and forget anymore.
-                    Cooldown starts when destroyed, not deployed.
-                  </p>
-                </div>
-              </div>
-
-              <div class="before-after">
-                <div class="stat-comparison-header">
-                  <h4>Cooldown Start</h4>
-                </div>
-                <div class="comparison-container">
-                  <div class="comparison-item">
-                    <div class="comparison-label">Before</div>
-                    <div class="stat-value old-bad">On Deploy</div>
-                  </div>
-                  <div class="comparison-arrow">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path d="M5 12h14m-7-7 7 7-7 7"></path>
-                    </svg>
-                  </div>
-                  <div class="comparison-item">
-                    <div class="comparison-label">After</div>
-                    <div class="stat-value new-good">On Destroy</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="change-impact">
-                <div class="impact-header">
-                  <span class="impact-icon">🏥</span>
-                  <span class="impact-text">META IMPACT</span>
-                </div>
-                <p>
-                  Smart placement becomes critical. Manual retrieval (3s
-                  cooldown) vs remote (15s). Lazy deployments backfire.
-                </p>
-              </div>
-
-              <div class="change-details">
-                <div class="detail-tabs">
-                  <button class="tab-btn active" data-tab="overview">
-                    Overview
-                  </button>
-                  <button class="tab-btn" data-tab="stats">Stats</button>
-                  <button class="tab-btn" data-tab="tips">Tips</button>
-                </div>
-
-                <div class="tab-content active" data-tab="overview">
-                  <ul class="feature-list">
-                    <li>
-                      <span class="tip-icon">⏱️</span>
-                      Cooldown starts on destruction, not deployment
-                    </li>
-                    <li>
-                      <span class="tip-icon">🔄</span>
-                      Manual retrieval: 3s cooldown remaining
-                    </li>
-                    <li>
-                      <span class="tip-icon">📱</span>
-                      Remote retrieval: 15s cooldown remaining
-                    </li>
+                <div>
+                  <h4 class="text-lg font-semibold mb-3" style="color: var(--quantum-red)">
+                    🐌 Slower Swaps
+                  </h4>
+                  <ul class="space-y-2">
+                    <li class="text-sm"><strong>AKM:</strong> 0.23s → 0.30s equip</li>
+                    <li class="text-sm"><strong>FCAR:</strong> 0.20s → 0.30s equip</li>
+                    <li class="text-sm"><strong>FAMAS:</strong> 0.20s → 0.30s equip</li>
+                    <li class="text-sm"><strong>Lewis Gun:</strong> 0.23s → 0.35s (heaviest)</li>
+                    <li class="text-sm"><strong>LH1:</strong> 0.15s → 0.30s (doubled)</li>
+                    <li class="text-sm"><strong>Model 1887:</strong> 0.15s → 0.30s (doubled)</li>
+                    <li class="text-sm"><strong>SR-84:</strong> 0.15s → 0.30s (doubled)</li>
                   </ul>
                 </div>
+              </div>
 
-                <div class="tab-content" data-tab="stats">
-                  <div class="stats-table">
-                    <div class="stat-row">
-                      <span>Base Cooldown</span>
-                      <span class="stat-highlight">35s → 30s</span>
-                    </div>
-                    <div class="stat-row">
-                      <span>Manual Retrieval</span>
-                      <span class="stat-highlight">3s cooldown</span>
-                    </div>
-                    <div class="stat-row">
-                      <span>Remote Retrieval</span>
-                      <span class="stat-highlight">15s cooldown</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="tab-content" data-tab="tips">
-                  <div class="tips-list">
-                    <div class="tip-item">
-                      <span class="tip-icon">🎯</span>
-                      <span>Place in defensible positions you can reach</span>
-                    </div>
-                    <div class="tip-item">
-                      <span class="tip-icon">⚠️</span>
-                      <span>Avoid careless deployments in open areas</span>
-                    </div>
-                    <div class="tip-item">
-                      <span class="tip-icon">🔄</span>
-                      <span
-                        >Use manual retrieval when possible for faster
-                        reset</span
-                      >
-                    </div>
-                  </div>
-                </div>
+              <div class="mt-4 p-3 bg-black/30 rounded-lg text-center">
+                <p class="text-sm">
+                  <strong>Impact:</strong> Quick-swap playstyles nerfed. Commit to your primary weapon.
+                </p>
               </div>
             </div>
-          </article>
+          </section>
 
-          <!-- Sledgehammer Buff Card -->
-          <article
-            class="change-card buff"
-            data-aos="fade-up"
-            data-aos-delay="300"
-          >
-            <div class="card-header">
-              <div class="change-type buff">BUFF</div>
-              <div class="impact-level medium">MEDIUM IMPACT</div>
-              <div class="card-actions">
-                <button class="action-btn" aria-label="Share">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-                    <polyline points="16,6 12,2 8,6"></polyline>
-                    <line x1="12" y1="2" x2="12" y2="15"></line>
-                  </svg>
-                </button>
-              </div>
+          <!-- Game-Changing Fixes Section -->
+          <section class="mb-12">
+            <div class="section-header">
+              <span class="section-icon">🔧</span>
+              <h2 class="text-3xl font-bold">Game-Changing Fixes</h2>
             </div>
 
-            <div class="card-content">
-              <div class="weapon-showcase">
-                <div class="weapon-image">
-                  <img
-                    src="../images/Sledgehammer.webp"
-                    alt="Sledgehammer"
-                    loading="lazy"
-                  />
-                  <div class="image-glow buff"></div>
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="change-card">
+                <div class="flex items-center gap-3 mb-3">
+                  <span class="text-2xl">🔍</span>
+                  <h3 class="text-xl font-bold">Smoke Detection Fixed</h3>
+                  <span class="change-type fix">MAJOR FIX</span>
                 </div>
-                <div class="weapon-info">
-                  <h3 class="weapon-name">Sledgehammer</h3>
-                  <div class="weapon-class all">ALL CLASSES</div>
-                  <p class="weapon-description">
-                    Fewer ghost swings - melee finally feels consistent with
-                    improved hit detection.
+                <p class="text-quantum-secondary mb-3">
+                  Tracking Dart, Sonar Grenade, and Proximity Sensor now properly reveal enemies through smoke.
+                </p>
+                <div class="p-3 bg-black/30 rounded-lg">
+                  <p class="text-sm">
+                    <strong style="color: var(--quantum-cyan)">Meta Impact:</strong> Smoke grenades no longer hard-counter recon. This is huge.
                   </p>
                 </div>
               </div>
 
-              <div class="before-after">
-                <div class="stat-comparison-header">
-                  <h4>Primary Attack Height</h4>
+              <div class="change-card">
+                <div class="flex items-center gap-3 mb-3">
+                  <span class="text-2xl">🚪</span>
+                  <h3 class="text-xl font-bold">Doors More Responsive</h3>
+                  <span class="change-type fix">MINOR FIX</span>
                 </div>
-                <div class="comparison-container">
-                  <div class="comparison-item">
-                    <div class="comparison-label">Before</div>
-                    <div class="stat-value old-bad">15cm</div>
-                  </div>
-                  <div class="comparison-arrow">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path d="M5 12h14m-7-7 7 7-7 7"></path>
-                    </svg>
-                  </div>
-                  <div class="comparison-item">
-                    <div class="comparison-label">After</div>
-                    <div class="stat-value new-good">25cm</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="change-impact">
-                <div class="impact-header">
-                  <span class="impact-icon">🔨</span>
-                  <span class="impact-text">GAMEPLAY IMPACT</span>
-                </div>
-                <p>
-                  67% taller hit detection means fewer frustrating misses.
-                  Sledgehammer is now a reliable melee option across all
-                  classes.
+                <p class="text-quantum-secondary">
+                  Reduced interaction delay for smoother gameplay.
                 </p>
               </div>
             </div>
-          </article>
+          </section>
 
-          <!-- Weapon Swap Speed Changes -->
-          <div
-            class="weapon-speed-grid"
-            data-aos="fade-up"
-            data-aos-delay="400"
-          >
-            <h3>Weapon Draw/Holster Speed Changes</h3>
-
-            <!-- Winners (Faster) -->
-            <div class="speed-category buff">
-              <h4>⚡ Faster Swaps</h4>
-              <div class="speed-item">93R: 0.20s → 0.15s (both)</div>
-              <div class="speed-item">XP-54: 0.23s → 0.20s</div>
+          <!-- Destruction 2.0 Section -->
+          <section class="mb-12">
+            <div class="section-header">
+              <span class="section-icon">🏗️</span>
+              <h2 class="text-3xl font-bold">Destruction 2.0</h2>
             </div>
 
-            <!-- Losers (Slower) -->
-            <div class="speed-category nerf">
-              <h4>🐌 Slower Swaps</h4>
-              <div class="speed-items">
-                <div class="speed-item">AKM: 0.23s → 0.30s equip</div>
-                <div class="speed-item">FCAR: 0.20s → 0.30s equip</div>
-                <div class="speed-item">FAMAS: 0.20s → 0.30s equip</div>
-                <div class="speed-item">
-                  Lewis Gun: 0.23s → 0.35s (heaviest)
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="change-card">
+                <h3 class="text-xl font-bold mb-3">Kyoto Pagoda</h3>
+                <div class="flex gap-2 mb-3">
+                  <span class="change-type new">REALISTIC COLLAPSE</span>
                 </div>
-                <div class="speed-item">LH1: 0.15s → 0.30s (doubled)</div>
-                <div class="speed-item">
-                  Model 1887: 0.15s → 0.30s (doubled)
+                <ul class="space-y-2 text-sm text-quantum-secondary">
+                  <li>• New Physics Engine</li>
+                  <li>• Natural Fall Patterns</li>
+                  <li>• Weight-Based Destruction</li>
+                </ul>
+              </div>
+
+              <div class="change-card">
+                <h3 class="text-xl font-bold mb-3">Skyway Stadium</h3>
+                <div class="flex gap-2 mb-3">
+                  <span class="change-type new">CHAIN REACTIONS</span>
                 </div>
-                <div class="speed-item">SR-84: 0.15s → 0.30s (doubled)</div>
+                <ul class="space-y-2 text-sm text-quantum-secondary">
+                  <li>• Building Damage Propagation</li>
+                  <li>• Knock-on Effects</li>
+                  <li>• Realistic Break Points</li>
+                </ul>
               </div>
             </div>
+          </section>
 
-            <p class="speed-impact">
-              Impact: Quick-swap playstyles nerfed. Commit to your primary
-              weapon.
-            </p>
+          <!-- Events Section -->
+          <section class="mb-12">
+            <div class="section-header">
+              <span class="section-icon">🎉</span>
+              <h2 class="text-3xl font-bold">Events & Store</h2>
+            </div>
+
+            <div class="space-y-6">
+              <!-- Blast Off Mode -->
+              <div class="change-card">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="flex items-center gap-3 mb-3">
+                      <span class="text-2xl">🚀</span>
+                      <h3 class="text-xl font-bold">Blast Off! Mode</h3>
+                      <span class="event-badge">NOW LIVE</span>
+                    </div>
+                    <p class="text-quantum-secondary mb-3">
+                      Low gravity Medium-only mode with explosive locked loadouts and pixelated effects.
+                    </p>
+                    <div class="flex gap-3">
+                      <span class="update-badge live">12 Free Rewards</span>
+                      <span class="update-badge live">Quickplay Points</span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-sm text-quantum-secondary">July 3-17</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4th of July Store -->
+              <div class="change-card">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="flex items-center gap-3 mb-3">
+                      <span class="text-2xl">🎆</span>
+                      <h3 class="text-xl font-bold">4th of July Store</h3>
+                    </div>
+                    <p class="text-quantum-secondary mb-3">
+                      20+ new cosmetics including mesh hoodwear and rocket fists.
+                    </p>
+                    <div class="flex gap-3">
+                      <span class="update-badge live">Patriotic Skins</span>
+                      <span class="update-badge live">Twitch Drops</span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-sm text-quantum-secondary">July 4</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- World Tour -->
+              <div class="change-card">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="flex items-center gap-3 mb-3">
+                      <span class="text-2xl">🌍</span>
+                      <h3 class="text-xl font-bold">World Tour: CNS</h3>
+                    </div>
+                    <p class="text-quantum-secondary mb-3">
+                      CNS takes over with Standard Cashout - "open your eyes"
+                    </p>
+                    <div class="flex gap-3">
+                      <span class="update-badge live">Broadcast Blaze Set</span>
+                      <span class="update-badge live">ImpOscar Sticker</span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-sm text-quantum-secondary">Now Live</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Class Impact Analysis -->
+          <section class="mb-12">
+            <div class="section-header">
+              <span class="section-icon">📊</span>
+              <h2 class="text-3xl font-bold">Who Wins, Who Loses?</h2>
+            </div>
+
+            <div class="space-y-4">
+              <div class="change-card">
+                <div class="grid md:grid-cols-3 gap-4 items-center">
+                  <div class="flex items-center gap-3">
+                    <span class="class-badge light">LIGHT</span>
+                  </div>
+                  <div class="flex gap-2 flex-wrap">
+                    <span class="text-sm"><span style="color: var(--quantum-red)">H+ Infuser nerfed</span></span>
+                    <span class="text-sm"><span style="color: var(--quantum-green)">93R faster swaps</span></span>
+                  </div>
+                  <div class="text-right">
+                    <span class="font-bold" style="color: var(--quantum-red)">Slight Nerf</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="change-card">
+                <div class="grid md:grid-cols-3 gap-4 items-center">
+                  <div class="flex items-center gap-3">
+                    <span class="class-badge medium">MEDIUM</span>
+                  </div>
+                  <div class="flex gap-2 flex-wrap">
+                    <span class="text-sm"><span style="color: var(--quantum-red)">CL-40 self-damage up</span></span>
+                    <span class="text-sm"><span style="color: var(--quantum-green)">Blast Off! exclusive</span></span>
+                  </div>
+                  <div class="text-right">
+                    <span class="font-bold" style="color: var(--quantum-yellow)">Neutral</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="change-card">
+                <div class="grid md:grid-cols-3 gap-4 items-center">
+                  <div class="flex items-center gap-3">
+                    <span class="class-badge heavy">HEAVY</span>
+                  </div>
+                  <div class="flex gap-2 flex-wrap">
+                    <span class="text-sm"><span style="color: var(--quantum-purple)">Healing Emitter rework</span></span>
+                    <span class="text-sm"><span style="color: var(--quantum-red)">Lewis Gun slower</span></span>
+                  </div>
+                  <div class="text-right">
+                    <span class="font-bold" style="color: var(--quantum-purple)">Skill Gap ↑</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Try These Again Section -->
+          <section class="mb-12">
+            <div class="change-card glow-effect">
+              <h2 class="text-2xl font-bold mb-4" style="color: var(--quantum-cyan)">
+                🔄 Give These Another Shot
+              </h2>
+              <div class="grid md:grid-cols-3 gap-4">
+                <div class="text-center p-4 bg-black/30 rounded-lg">
+                  <h3 class="font-bold mb-2">KS-23</h3>
+                  <p class="text-sm text-quantum-secondary">Accuracy buffed</p>
+                </div>
+                <div class="text-center p-4 bg-black/30 rounded-lg">
+                  <h3 class="font-bold mb-2">Sledgehammer</h3>
+                  <p class="text-sm text-quantum-secondary">Hits register now</p>
+                </div>
+                <div class="text-center p-4 bg-black/30 rounded-lg">
+                  <h3 class="font-bold mb-2">Detection gadgets</h3>
+                  <p class="text-sm text-quantum-secondary">Smoke counter</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Generate Loadout CTA Section -->
+          <div class="text-center">
+            <a href="../index.html" 
+               class="inline-block px-8 py-4 bg-gradient-to-r from-quantum-purple to-quantum-blue text-white font-bold rounded-xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl">
+              🎰 Generate Loadout
+            </a>
           </div>
         </div>
-      </section>
+      </main>
 
-      <!-- Critical Bug Fixes Section -->
-      <section class="bug-fixes-section" id="bug-fixes">
-        <div class="section-header">
-          <h2 class="section-title">Game-Changing Fixes</h2>
-        </div>
-
-        <div class="fix-card major" data-aos="fade-up">
-          <h3>🔍 Smoke Detection Fixed</h3>
-          <p class="fix-description">
-            Tracking Dart, Sonar Grenade, and Proximity Sensor now properly
-            reveal enemies through smoke
+      <!-- Footer -->
+      <footer class="text-center text-quantum-secondary">
+        <div class="container mx-auto px-4">
+          <p class="mb-2">The Finals Update 7.3.0: BLAST OFF!</p>
+          <p class="text-xs text-quantum-secondary/60">
+            Last updated: July 3, 2025 | Data from official patch notes
           </p>
-          <p class="fix-impact">
-            <strong>Meta Impact:</strong> Smoke grenades no longer hard-counter
-            recon. This is huge.
+          <p class="text-xs mt-2" style="color: var(--quantum-cyan)">
+            © 2025 TheFinalsLoadout.com | By Paul Takisaki
           </p>
         </div>
-
-        <div class="fix-card minor" data-aos="fade-up" data-aos-delay="100">
-          <h3>🚪 Doors More Responsive</h3>
-          <p>Reduced interaction delay for smoother gameplay</p>
-        </div>
-      </section>
-
-      <!-- Maps Section -->
-      <section class="content-section" id="maps">
-        <div class="section-header">
-          <div class="section-badge">
-            <span class="badge-icon">🗺️</span>
-            <span>DESTRUCTION UPGRADES</span>
-          </div>
-          <h2 class="section-title">Destruction 2.0</h2>
-          <p class="section-subtitle">
-            Buildings collapse realistically with improved physics and visuals
-          </p>
-        </div>
-
-        <div class="maps-showcase">
-          <article class="map-card" data-aos="fade-up">
-            <div class="map-image">
-              <div class="map-overlay">
-                <h3 class="map-name">Kyoto Pagoda</h3>
-                <div class="map-type">REALISTIC COLLAPSE</div>
-                <div class="map-features">
-                  <span class="feature">New Physics</span>
-                  <span class="feature">Natural Fall</span>
-                  <span class="feature">Weight-Based</span>
-                </div>
-                <div class="destruction-gif">
-                  <img
-                    src="images/Pagoda.gif"
-                    alt="Kyoto Pagoda Destruction"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <article class="map-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="map-image">
-              <div class="map-overlay">
-                <h3 class="map-name">Skyway Stadium</h3>
-                <div class="map-type">CHAIN REACTIONS</div>
-                <div class="map-features">
-                  <span class="feature">Building Damage</span>
-                  <span class="feature">Knock-on Effects</span>
-                  <span class="feature">Realistic Break</span>
-                </div>
-                <div class="destruction-gif">
-                  <img
-                    src="images/Skyway.gif"
-                    alt="Skyway Stadium Destruction"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <!-- Events Section -->
-      <section class="content-section" id="events">
-        <div class="section-header">
-          <div class="section-badge">
-            <span class="badge-icon">🎉</span>
-            <span>SPECIAL EVENTS</span>
-          </div>
-          <h2 class="section-title">Blast Off! & More</h2>
-          <p class="section-subtitle">
-            New limited-time mode, World Tour updates, and store refresh
-          </p>
-        </div>
-
-        <div class="event-timeline">
-          <div class="timeline-item active" data-aos="fade-up">
-            <div class="timeline-date">
-              <span class="date-day">03</span>
-              <span class="date-month">JUL</span>
-            </div>
-            <div class="timeline-content">
-              <h3 class="event-title">Blast Off! Mode</h3>
-              <p class="event-description">
-                Low gravity Medium-only mode with explosive locked loadouts and
-                pixelated effects
-              </p>
-              <div class="event-rewards">
-                <span class="reward-item">12 Free Rewards</span>
-                <span class="reward-item">Quickplay Points</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
-            <div class="timeline-date">
-              <span class="date-day">04</span>
-              <span class="date-month">JUL</span>
-            </div>
-            <div class="timeline-content">
-              <h3 class="event-title">4th of July Store</h3>
-              <p class="event-description">
-                20+ new cosmetics including mesh hoodwear and rocket fists
-              </p>
-              <div class="event-rewards">
-                <span class="reward-item">Patriotic Skins</span>
-                <span class="reward-item">Twitch Drops</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
-            <div class="timeline-date">
-              <span class="date-day">NOW</span>
-              <span class="date-month">LIVE</span>
-            </div>
-            <div class="timeline-content">
-              <h3 class="event-title">World Tour: CNS</h3>
-              <p class="event-description">
-                CNS takes over with Standard Cashout - "open your eyes"
-              </p>
-              <div class="event-rewards">
-                <span class="reward-item">Broadcast Blaze Set</span>
-                <span class="reward-item">ImpOscar Sticker</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- Class Impact Section -->
-      <section class="class-impact-section" id="class-impact">
-        <div class="section-header">
-          <h2 class="section-title">Who Wins, Who Loses?</h2>
-        </div>
-
-        <div class="impact-table">
-          <div class="impact-row light" data-aos="fade-up">
-            <div class="class-badge">LIGHT</div>
-            <div class="changes">
-              <span class="nerf">H+ Infuser nerfed</span>
-              <span class="buff">93R faster swaps</span>
-            </div>
-            <div class="verdict">Slight Nerf</div>
-          </div>
-
-          <div
-            class="impact-row medium"
-            data-aos="fade-up"
-            data-aos-delay="100"
-          >
-            <div class="class-badge">MEDIUM</div>
-            <div class="changes">
-              <span class="nerf">CL-40 self-damage up</span>
-              <span class="buff">Blast Off! exclusive</span>
-            </div>
-            <div class="verdict">Neutral</div>
-          </div>
-
-          <div class="impact-row heavy" data-aos="fade-up" data-aos-delay="200">
-            <div class="class-badge">HEAVY</div>
-            <div class="changes">
-              <span class="rework">Healing Emitter rework</span>
-              <span class="nerf">Lewis Gun slower</span>
-            </div>
-            <div class="verdict">Skill Gap ↑</div>
-          </div>
-        </div>
-
-        <div class="try-again-section" data-aos="fade-up" data-aos-delay="300">
-          <h3>🔄 Give These Another Shot</h3>
-          <div class="try-items">
-            <div class="try-item">KS-23 (accuracy buffed)</div>
-            <div class="try-item">Sledgehammer (hits register now)</div>
-            <div class="try-item">Detection gadgets (smoke counter)</div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Smart Navigation -->
-    <div class="smart-nav" id="smartNav">
-      <div class="smart-nav-toggle" id="smartNavToggle">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path d="M3 12h18M3 6h18M3 18h18"></path>
-        </svg>
-      </div>
-      <div class="smart-nav-content">
-        <div class="nav-sections">
-          <a href="#hero" class="nav-section">
-            <span class="section-icon">🏠</span>
-            <span>Hero</span>
-          </a>
-          <a href="#weapons" class="nav-section">
-            <span class="section-icon">⚔️</span>
-            <span>Weapons</span>
-          </a>
-          <a href="#maps" class="nav-section">
-            <span class="section-icon">🗺️</span>
-            <span>Maps</span>
-          </a>
-          <a href="#events" class="nav-section">
-            <span class="section-icon">🎉</span>
-            <span>Events</span>
-          </a>
-        </div>
-        <div class="nav-progress">
-          <div class="progress-indicator" id="readingProgress"></div>
-        </div>
-      </div>
+      </footer>
     </div>
 
-    <!-- Floating Action Button -->
-    <div class="fab-container">
-      <button class="fab main-fab" id="mainFab">
-        <svg
-          class="fab-icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path d="M12 5v14m7-7H5"></path>
-        </svg>
-      </button>
-      <div class="fab-menu">
-        <button class="fab sub-fab" data-action="top">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M18 15l-6-6-6 6"></path>
-          </svg>
-        </button>
-        <button class="fab sub-fab" data-action="share">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-            <polyline points="16,6 12,2 8,6"></polyline>
-            <line x1="12" y1="2" x2="12" y2="15"></line>
-          </svg>
-        </button>
-        <button class="fab sub-fab" data-action="bookmark">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
+    <script>
+      // Particle effects (matching meta-weapons page)
+      function createParticle() {
+        const particle = document.createElement("div");
+        particle.className = "particle";
+        particle.style.left = Math.random() * window.innerWidth + "px";
+        particle.style.top = Math.random() * window.innerHeight + "px";
+        particle.style.animationDuration = Math.random() * 20 + 10 + "s";
 
-    <!-- Summary Modal -->
-    <div class="modal-overlay" id="summaryModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="modal-title">BLAST OFF! Quick Summary</h3>
-          <button class="modal-close" id="modalClose">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="summary-grid">
-            <div class="summary-item nerf">
-              <div class="summary-icon">💥</div>
-              <div class="summary-content">
-                <h3>CL-40 Nerfed</h3>
-                <p>
-                  Self-damage up 35%, blast radius down - no more free
-                  feet-shots
-                </p>
-              </div>
-            </div>
-            <div class="summary-item rework">
-              <div class="summary-icon">🏥</div>
-              <div class="summary-content">
-                <h3>Healing Emitter Reworked</h3>
-                <p>
-                  Smart placement now crucial - can't drop and forget anymore
-                </p>
-              </div>
-            </div>
-            <div class="summary-item new">
-              <div class="summary-icon">🚀</div>
-              <div class="summary-content">
-                <h3>Blast Off! Mode</h3>
-                <p>Low gravity Medium-only mode with explosive loadouts</p>
-              </div>
-            </div>
-            <div class="summary-item new">
-              <div class="summary-icon">🏗️</div>
-              <div class="summary-content">
-                <h3>Destruction 2.0</h3>
-                <p>Buildings collapse realistically with chain reactions</p>
-              </div>
-            </div>
-            <div class="summary-item fix">
-              <div class="summary-icon">🔍</div>
-              <div class="summary-content">
-                <h3>Smoke Counter Fixed</h3>
-                <p>
-                  Detection gadgets now see through smoke - major meta shift
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        const colors = [
+          "var(--quantum-cyan)",
+          "var(--quantum-purple)",
+          "var(--quantum-pink)",
+        ];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.background = color;
+        particle.style.boxShadow = `0 0 6px ${color}`;
 
-    <!-- Audio Files -->
-    <audio id="clickSound" preload="auto">
-      <source src="../sounds/click.mp3" type="audio/mpeg" />
-    </audio>
+        document.body.appendChild(particle);
 
-    <!-- Scripts -->
-    <script src="app.js" defer></script>
+        particle.addEventListener("animationend", () => {
+          particle.remove();
+        });
+      }
+
+      // Create particles periodically
+      setInterval(createParticle, 2000);
+
+      // Add some interactivity
+      document.querySelectorAll('.change-card').forEach(card => {
+        card.addEventListener('click', function() {
+          this.style.transform = 'scale(0.98)';
+          setTimeout(() => {
+            this.style.transform = '';
+          }, 100);
+        });
+      });
+    </script>
+
+    <!-- AI Chat Widget -->
+    <script src="../js/chat-widget.js" defer></script>
   </body>
 </html>

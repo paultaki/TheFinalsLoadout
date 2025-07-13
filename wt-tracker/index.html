@@ -607,17 +607,21 @@
         localStorage.getItem("dailyEntries") || "[]"
       );
 
-      // Calculate days remaining from September 10, 2025
-      const endDate = new Date("2025-09-10");
-      const today = new Date();
-      const daysRemaining = Math.ceil(
-        (endDate - today) / (1000 * 60 * 60 * 24)
-      );
+             // Calculate days remaining from September 10, 2025
+       const endDate = new Date("2025-09-10");
+       const today = new Date();
+       today.setHours(0, 0, 0, 0); // Reset to start of day in local timezone
+       endDate.setHours(0, 0, 0, 0); // Reset to start of day in local timezone
+       const daysRemaining = Math.ceil(
+         (endDate - today) / (1000 * 60 * 60 * 24)
+       );
 
       // Initialize
-      document.getElementById("dateInput").value = new Date()
-        .toISOString()
-        .split("T")[0];
+      const currentDate = new Date();
+      const yyyy = currentDate.getFullYear();
+      const mm = String(currentDate.getMonth() + 1).padStart(2, "0");
+      const dd = String(currentDate.getDate()).padStart(2, "0");
+      document.getElementById("dateInput").value = `${yyyy}-${mm}-${dd}`;
       document.getElementById("currentPointsInput").value = currentPoints;
 
       // Add event listeners for current points input
