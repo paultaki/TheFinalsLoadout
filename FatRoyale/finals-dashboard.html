@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Finals Mini-Tourney</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .neon-glow {
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.6);
+        }
+        
+        .gold-glow {
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.8), 0 0 20px rgba(251, 191, 36, 0.6);
+        }
+        
+        .table-glow {
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3), inset 0 0 20px rgba(168, 85, 247, 0.1);
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .cyber-border {
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #a855f7, #fbbf24) 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-black bg-opacity-50 backdrop-blur-sm border-b border-purple-500">
+        <div class="container mx-auto px-4 py-6">
+            <h1 class="text-3xl md:text-5xl font-black text-center neon-glow text-purple-400 mb-4">
+                THE FINALS MINI-TOURNEY
+            </h1>
+            <div class="text-center">
+                <p class="text-lg mb-2 text-gray-300">Next Match In:</p>
+                <div id="countdown" class="text-2xl md:text-4xl font-bold gold-glow text-yellow-400">
+                    Loading...
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Loading/Error Messages -->
+        <div id="loading" class="text-center text-purple-400 pulse mb-8">
+            Initializing tournament data...
+        </div>
+        <div id="error" class="hidden text-center text-red-500 mb-8"></div>
+
+        <!-- Tournament Stats Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Team Standings -->
+            <section aria-labelledby="standings-heading">
+                <h2 id="standings-heading" class="text-2xl font-bold mb-4 text-purple-400 neon-glow">
+                    TEAM STANDINGS
+                </h2>
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 table-glow cyber-border">
+                    <table class="w-full" role="table" aria-label="Team standings">
+                        <thead>
+                            <tr class="border-b border-purple-500">
+                                <th class="text-left py-2 px-4 cursor-pointer hover:text-purple-300 transition-colors"
+                                    onclick="sortTeams('name')">
+                                    Team <span class="text-xs">▼</span>
+                                </th>
+                                <th class="text-right py-2 px-4 cursor-pointer hover:text-purple-300 transition-colors"
+                                    onclick="sortTeams('points')">
+                                    Points <span class="text-xs">▼</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="teamsTable" class="divide-y divide-gray-700">
+                            <!-- Teams will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Player Rankings -->
+            <section aria-labelledby="rankings-heading">
+                <h2 id="rankings-heading" class="text-2xl font-bold mb-4 text-purple-400 neon-glow">
+                    PLAYER RANKINGS
+                </h2>
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 table-glow cyber-border">
+                    <table class="w-full" role="table" aria-label="Player rankings">
+                        <thead>
+                            <tr class="border-b border-purple-500">
+                                <th class="text-left py-2 px-4 cursor-pointer hover:text-purple-300 transition-colors"
+                                    onclick="sortPlayers('name')">
+                                    Player <span class="text-xs">▼</span>
+                                </th>
+                                <th class="text-right py-2 px-4 cursor-pointer hover:text-purple-300 transition-colors"
+                                    onclick="sortPlayers('score')">
+                                    Impact Score <span class="text-xs">▼</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="playersTable" class="divide-y divide-gray-700">
+                            <!-- Players will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- Match Results -->
+        <section aria-labelledby="matches-heading">
+            <h2 id="matches-heading" class="text-2xl font-bold mb-4 text-purple-400 neon-glow">
+                MATCH RESULTS
+            </h2>
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 table-glow cyber-border">
+                <div id="matchesContainer" class="space-y-3">
+                    <!-- Matches will be inserted here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black bg-opacity-50 backdrop-blur-sm border-t border-purple-500 mt-12 py-6">
+        <div class="container mx-auto px-4 text-center text-sm text-gray-400">
+            <p class="mb-2">
+                <a href="https://discord.gg/yourserver" class="text-purple-400 hover:text-purple-300 transition-colors">
+                    Join our Discord
+                </a>
+            </p>
+            <p>Tournament Admin: <span class="text-yellow-400">1-800-FAT-MOMS</span></p>
+            <p class="mt-2 text-xs">
+                <a href="/admin" class="text-gray-600 hover:text-gray-400 transition-colors">
+                    Admin Access
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables
+        let tournamentData = { teams: [], players: [], matches: [] };
+        let sortDirection = { teams: {}, players: {} };
+        const EVENT_END_DATE = new Date('2025-08-02T21:00:00');
+        const POLL_INTERVAL = 30000; // 30 seconds
+
+        // Initialize dashboard
+        async function init() {
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            
+            await fetchData();
+            setInterval(fetchData, POLL_INTERVAL);
+        }
+
+        // Fetch tournament data
+        async function fetchData() {
+            try {
+                // Check if running locally
+                if (window.location.protocol === 'file:') {
+                    // Use embedded data for local testing
+                    tournamentData = {
+                        "teams": [
+                            { "name": "Cashout Kings", "points": 12 },
+                            { "name": "Terminal Velocity", "points": 9 },
+                            { "name": "Power Shifters", "points": 7 },
+                            { "name": "Bank Breakers", "points": 4 }
+                        ],
+                        "players": [
+                            { "name": "xXx_CashGod_xXx", "score": 78.5 },
+                            { "name": "DefuseOrDie", "score": 65.3 },
+                            { "name": "RPG_Spammer", "score": 62.1 },
+                            { "name": "LightningBolt", "score": 58.7 },
+                            { "name": "MediumEnjoyer", "score": 52.4 }
+                        ],
+                        "matches": [
+                            { "round": "1 - Quick Cash", "result": "Cashout Kings 3, Bank Breakers 0" },
+                            { "round": "2 - Terminal Attack", "result": "Terminal Velocity 2, Power Shifters 1" }
+                        ]
+                    };
+                    document.getElementById('loading').classList.add('hidden');
+                    document.getElementById('error').classList.add('hidden');
+                    updateTables();
+                    return;
+                }
+                
+                const response = await fetch('data.json?t=' + Date.now()); // Cache busting
+                if (!response.ok) throw new Error('Failed to fetch data');
+                
+                tournamentData = await response.json();
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('error').classList.add('hidden');
+                
+                updateTables();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('error').classList.remove('hidden');
+                document.getElementById('error').textContent = 'Error loading tournament data. Retrying...';
+            }
+        }
+
+        // Update countdown timer
+        function updateCountdown() {
+            const now = new Date();
+            const diff = EVENT_END_DATE - now;
+            
+            if (diff <= 0) {
+                document.getElementById('countdown').textContent = 'TOURNAMENT ENDED';
+                return;
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            const parts = [];
+            if (days > 0) parts.push(`${days}d`);
+            if (hours > 0) parts.push(`${hours}h`);
+            parts.push(`${minutes}m`);
+            parts.push(`${seconds}s`);
+            
+            document.getElementById('countdown').textContent = parts.join(' ');
+        }
+
+        // Update all tables
+        function updateTables() {
+            updateTeamsTable();
+            updatePlayersTable();
+            updateMatchesDisplay();
+        }
+
+        // Update teams table
+        function updateTeamsTable() {
+            const tbody = document.getElementById('teamsTable');
+            tbody.innerHTML = '';
+            
+            const sortedTeams = [...tournamentData.teams].sort((a, b) => b.points - a.points);
+            
+            sortedTeams.forEach((team, index) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-700 transition-colors';
+                row.innerHTML = `
+                    <td class="py-3 px-4">
+                        ${index === 0 ? '<span class="gold-glow text-yellow-400">👑</span> ' : ''}
+                        <span class="${index === 0 ? 'text-yellow-400 font-bold' : ''}">${team.name}</span>
+                    </td>
+                    <td class="py-3 px-4 text-right font-bold ${index === 0 ? 'text-yellow-400' : 'text-purple-300'}">
+                        ${team.points}
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update players table
+        function updatePlayersTable() {
+            const tbody = document.getElementById('playersTable');
+            tbody.innerHTML = '';
+            
+            const sortedPlayers = [...tournamentData.players].sort((a, b) => b.score - a.score);
+            
+            sortedPlayers.forEach((player, index) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-700 transition-colors';
+                row.innerHTML = `
+                    <td class="py-3 px-4">
+                        ${index === 0 ? '<span class="gold-glow text-yellow-400">🏆</span> ' : ''}
+                        <span class="${index === 0 ? 'text-yellow-400 font-bold' : ''}">${player.name}</span>
+                    </td>
+                    <td class="py-3 px-4 text-right font-bold ${index === 0 ? 'text-yellow-400' : 'text-purple-300'}">
+                        ${player.score}
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update matches display
+        function updateMatchesDisplay() {
+            const container = document.getElementById('matchesContainer');
+            container.innerHTML = '';
+            
+            if (tournamentData.matches.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center">No matches played yet</p>';
+                return;
+            }
+            
+            // Show most recent matches first
+            const reversedMatches = [...tournamentData.matches].reverse();
+            
+            reversedMatches.forEach((match, index) => {
+                const matchDiv = document.createElement('div');
+                matchDiv.className = `p-3 bg-gray-700 bg-opacity-50 rounded ${index === 0 ? 'border border-yellow-400' : ''}`;
+                matchDiv.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                        <span class="text-purple-300 font-semibold">Round ${match.round}</span>
+                        <span class="${index === 0 ? 'text-yellow-400 font-bold' : 'text-gray-300'}">
+                            ${match.result}
+                        </span>
+                    </div>
+                `;
+                container.appendChild(matchDiv);
+            });
+        }
+
+        // Sort teams
+        function sortTeams(field) {
+            const direction = sortDirection.teams[field] || 'desc';
+            tournamentData.teams.sort((a, b) => {
+                if (field === 'name') {
+                    return direction === 'asc' ? 
+                        a.name.localeCompare(b.name) : 
+                        b.name.localeCompare(a.name);
+                } else {
+                    return direction === 'asc' ? a.points - b.points : b.points - a.points;
+                }
+            });
+            sortDirection.teams[field] = direction === 'asc' ? 'desc' : 'asc';
+            updateTeamsTable();
+        }
+
+        // Sort players
+        function sortPlayers(field) {
+            const direction = sortDirection.players[field] || 'desc';
+            tournamentData.players.sort((a, b) => {
+                if (field === 'name') {
+                    return direction === 'asc' ? 
+                        a.name.localeCompare(b.name) : 
+                        b.name.localeCompare(a.name);
+                } else {
+                    return direction === 'asc' ? a.score - b.score : b.score - a.score;
+                }
+            });
+            sortDirection.players[field] = direction === 'asc' ? 'desc' : 'asc';
+            updatePlayersTable();
+        }
+
+        // Start the dashboard
+        init();
+    </script>
+</body>
+</html>
