@@ -3,179 +3,973 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Finals Mini-Tourney</title>
+    <title>THE FINALS | ARENA MASSACRE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Teko:wght@700&display=swap');
         
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blood: #FF0040;
+            --plasma: #00FFFF;
+            --toxic: #39FF14;
+            --molten: #FF6600;
+            --void: #0A0A0A;
+            --chrome: #C0C0C0;
+            --gold: #FFD700;
+            --neon-pink: #FF10F0;
+        }
+
         body {
-            font-family: 'Orbitron', monospace;
+            font-family: 'Teko', sans-serif;
+            background: var(--void);
+            color: white;
+            overflow-x: hidden;
+            cursor: crosshair;
+            min-height: 100vh;
+            position: relative;
         }
-        
-        .neon-glow {
-            text-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.6);
+
+        /* ARENA FLOOR */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                repeating-conic-gradient(from 0deg at 50% 50%, 
+                    transparent 0deg, 
+                    rgba(255, 0, 64, 0.03) 10deg, 
+                    transparent 20deg),
+                radial-gradient(circle at 20% 80%, rgba(255, 16, 240, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(57, 255, 20, 0.1) 0%, transparent 60%);
+            animation: arena-rotate 60s linear infinite;
+            z-index: -2;
         }
-        
-        .gold-glow {
-            text-shadow: 0 0 10px rgba(251, 191, 36, 0.8), 0 0 20px rgba(251, 191, 36, 0.6);
+
+        @keyframes arena-rotate {
+            from { transform: rotate(0deg) scale(1.5); }
+            to { transform: rotate(360deg) scale(1.5); }
         }
-        
-        .table-glow {
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3), inset 0 0 20px rgba(168, 85, 247, 0.1);
+
+        /* STATIC INTERFERENCE */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 255, 0.02) 2px,
+                    rgba(0, 255, 255, 0.02) 4px
+                );
+            animation: static-shift 0.2s steps(10) infinite;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: overlay;
         }
-        
-        .pulse {
-            animation: pulse 2s infinite;
+
+        @keyframes static-shift {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-1px, -1px); }
+            20% { transform: translate(1px, 1px); }
+            30% { transform: translate(-1px, 0); }
+            40% { transform: translate(1px, -1px); }
+            50% { transform: translate(0, 1px); }
         }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+        /* MAIN TITLE MASSACRE */
+        .arena-title {
+            font-family: 'Black Ops One', sans-serif;
+            font-size: clamp(4rem, 12vw, 10rem);
+            text-align: center;
+            line-height: 0.9;
+            margin: 2rem 0;
+            position: relative;
+            transform: perspective(500px) rotateY(-5deg);
+            animation: title-breathe 3s ease-in-out infinite;
         }
-        
-        .cyber-border {
+
+        .arena-title .char {
+            display: inline-block;
+            position: relative;
+            animation: char-float 4s ease-in-out infinite;
+            animation-delay: calc(var(--char-index) * 0.1s);
+        }
+
+        @keyframes title-breathe {
+            0%, 100% { transform: perspective(500px) rotateY(-5deg) scale(1); }
+            50% { transform: perspective(500px) rotateY(5deg) scale(1.05); }
+        }
+
+        @keyframes char-float {
+            0%, 100% { transform: translateY(0) rotateZ(0); }
+            25% { transform: translateY(-10px) rotateZ(-2deg); }
+            75% { transform: translateY(5px) rotateZ(2deg); }
+        }
+
+        /* EACH LETTER DIFFERENT COLOR */
+        .char:nth-child(1) { color: var(--blood); text-shadow: 0 0 30px var(--blood), 0 0 60px var(--blood); }
+        .char:nth-child(2) { color: var(--plasma); text-shadow: 0 0 30px var(--plasma), 0 0 60px var(--plasma); }
+        .char:nth-child(3) { color: var(--toxic); text-shadow: 0 0 30px var(--toxic), 0 0 60px var(--toxic); }
+        .char:nth-child(4) { color: var(--molten); text-shadow: 0 0 30px var(--molten), 0 0 60px var(--molten); }
+        .char:nth-child(5) { color: var(--neon-pink); text-shadow: 0 0 30px var(--neon-pink), 0 0 60px var(--neon-pink); }
+        .char:nth-child(6) { color: var(--plasma); text-shadow: 0 0 30px var(--plasma), 0 0 60px var(--plasma); }
+        .char:nth-child(7) { color: var(--toxic); text-shadow: 0 0 30px var(--toxic), 0 0 60px var(--toxic); }
+        .char:nth-child(8) { color: var(--gold); text-shadow: 0 0 30px var(--gold), 0 0 60px var(--gold); }
+        .char:nth-child(9) { color: var(--blood); text-shadow: 0 0 30px var(--blood), 0 0 60px var(--blood); }
+        .char:nth-child(10) { color: var(--molten); text-shadow: 0 0 30px var(--molten), 0 0 60px var(--molten); }
+
+        /* COUNTDOWN TIMER */
+        .countdown-section {
+            text-align: center;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .countdown-label {
+            font-size: 1.5rem;
+            letter-spacing: 0.5em;
+            color: var(--plasma);
+            text-shadow: 0 0 20px var(--plasma);
+            animation: label-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes label-pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .countdown-timer {
+            font-family: 'Black Ops One', sans-serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            background: linear-gradient(180deg, var(--gold), var(--molten), var(--blood));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 30px var(--molten)) drop-shadow(0 0 60px var(--blood));
+            animation: countdown-burn 1s ease-in-out infinite;
+            letter-spacing: 0.2em;
+        }
+
+        @keyframes countdown-burn {
+            0%, 100% { 
+                filter: drop-shadow(0 0 30px var(--molten)) drop-shadow(0 0 60px var(--blood));
+                transform: scale(1) translateZ(0);
+            }
+            50% { 
+                filter: drop-shadow(0 0 40px var(--gold)) drop-shadow(0 0 80px var(--molten));
+                transform: scale(1.05) translateZ(20px);
+            }
+        }
+
+        /* DATA CONTAINERS */
+        .arena-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            perspective: 1000px;
+        }
+
+        /* HOLOGRAPHIC PANELS */
+        .holo-panel {
+            position: relative;
+            background: rgba(10, 10, 10, 0.8);
             border: 2px solid;
-            border-image: linear-gradient(45deg, #a855f7, #fbbf24) 1;
+            transform-style: preserve-3d;
+            transform: rotateY(0deg);
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .holo-panel:hover {
+            transform: rotateY(5deg) translateZ(20px);
+        }
+
+        .holo-panel::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            background: conic-gradient(
+                var(--blood), 
+                var(--plasma), 
+                var(--toxic), 
+                var(--molten), 
+                var(--neon-pink),
+                var(--blood)
+            );
+            z-index: -1;
+            animation: border-spin 3s linear infinite;
+            filter: blur(8px);
+        }
+
+        @keyframes border-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .holo-panel::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 10, 10, 0.95);
+            z-index: -1;
+        }
+
+        /* PANEL HEADERS */
+        .panel-header {
+            font-family: 'Black Ops One', sans-serif;
+            font-size: 2.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(90deg, 
+                transparent,
+                rgba(255, 0, 64, 0.2),
+                rgba(255, 0, 64, 0.5),
+                rgba(255, 0, 64, 0.2),
+                transparent
+            );
+            background-size: 200% 100%;
+            animation: header-scan 3s linear infinite;
+            letter-spacing: 0.1em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes header-scan {
+            from { background-position: -200% 0; }
+            to { background-position: 200% 0; }
+        }
+
+        .panel-header::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--plasma);
+            opacity: 0.1;
+            font-size: 3rem;
+            animation: ghost-text 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes ghost-text {
+            0%, 100% { 
+                opacity: 0.1; 
+                transform: translateY(-50%) translateX(0);
+            }
+            50% { 
+                opacity: 0.3; 
+                transform: translateY(-50%) translateX(10px);
+            }
+        }
+
+        /* DATA TABLES */
+        .arena-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .arena-table th {
+            padding: 1.5rem;
+            text-align: left;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--plasma);
+            border-bottom: 2px solid var(--plasma);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .arena-table th:hover {
+            color: var(--toxic);
+            text-shadow: 0 0 20px var(--toxic);
+        }
+
+        .arena-table td {
+            padding: 1.2rem 1.5rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .arena-table tr {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .arena-table tbody tr::before {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(57, 255, 20, 0.3), 
+                transparent
+            );
+            transition: left 0.5s ease;
+        }
+
+        .arena-table tbody tr:hover::before {
+            left: 100%;
+        }
+
+        .arena-table tbody tr:hover td {
+            color: var(--toxic);
+            text-shadow: 0 0 10px currentColor;
+            transform: translateX(10px);
+        }
+
+        /* FIRST PLACE DOMINATION */
+        .champion-row td {
+            color: var(--gold) !important;
+            font-size: 1.8rem;
+            text-shadow: 
+                0 0 20px var(--gold),
+                0 0 40px var(--molten),
+                0 0 60px var(--blood);
+            animation: champion-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes champion-pulse {
+            0%, 100% { 
+                transform: scale(1);
+                filter: brightness(1);
+            }
+            50% { 
+                transform: scale(1.02);
+                filter: brightness(1.5);
+            }
+        }
+
+        .trophy-icon {
+            display: inline-block;
+            margin-right: 1rem;
+            font-size: 2rem;
+            animation: trophy-spin 4s ease-in-out infinite;
+        }
+
+        @keyframes trophy-spin {
+            0%, 100% { transform: rotateY(0deg) scale(1); }
+            25% { transform: rotateY(180deg) scale(1.2); }
+            50% { transform: rotateY(360deg) scale(1); }
+            75% { transform: rotateY(180deg) scale(1.2); }
+        }
+
+        /* MATCH RESULTS KILLSTREAK */
+        .killstreak-panel {
+            background: rgba(10, 10, 10, 0.9);
+            border: 3px solid var(--blood);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+
+        .killstreak-panel::before {
+            content: 'KILLSTREAK';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 10rem;
+            font-family: 'Black Ops One', sans-serif;
+            color: var(--blood);
+            opacity: 0.05;
+            letter-spacing: 0.2em;
+            pointer-events: none;
+        }
+
+        .match-entry {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 0, 64, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .match-entry::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--blood);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .match-entry:hover::before {
+            transform: scaleY(1);
+        }
+
+        .match-entry:hover {
+            background: rgba(255, 0, 64, 0.1);
+            padding-left: 3rem;
+        }
+
+        .match-round {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--chrome);
+            opacity: 0.7;
+        }
+
+        .match-score {
+            font-family: 'Black Ops One', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 0.05em;
+            color: white;
+        }
+
+        .latest-match {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid var(--gold);
+            animation: latest-flash 2s ease-in-out infinite;
+        }
+
+        @keyframes latest-flash {
+            0%, 100% { 
+                box-shadow: 
+                    inset 0 0 30px rgba(255, 215, 0, 0.3),
+                    0 0 30px rgba(255, 215, 0, 0.5);
+            }
+            50% { 
+                box-shadow: 
+                    inset 0 0 50px rgba(255, 215, 0, 0.5),
+                    0 0 50px rgba(255, 215, 0, 0.8);
+            }
+        }
+
+        .latest-match .match-score {
+            color: var(--gold);
+            text-shadow: 0 0 20px var(--gold);
+        }
+
+        /* FOOTER CHAOS */
+        .arena-footer {
+            text-align: center;
+            padding: 4rem 0;
+            position: relative;
+            border-top: 2px solid var(--blood);
+            margin-top: 5rem;
+            background: linear-gradient(180deg, transparent, rgba(255, 0, 64, 0.1));
+        }
+
+        .discord-bomb {
+            display: inline-block;
+            padding: 1.5rem 3rem;
+            background: var(--neon-pink);
+            color: var(--void);
+            font-family: 'Black Ops One', sans-serif;
+            font-size: 1.5rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+        }
+
+        .discord-bomb::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .discord-bomb:hover::before {
+            left: 100%;
+        }
+
+        .discord-bomb:hover {
+            transform: scale(1.1) rotate(-2deg);
+            filter: brightness(1.3);
+            box-shadow: 0 0 50px var(--neon-pink);
+        }
+
+        .admin-signature {
+            margin-top: 3rem;
+            font-family: 'Black Ops One', sans-serif;
+            font-size: 3rem;
+            letter-spacing: 0.2em;
+            position: relative;
+            display: inline-block;
+            color: var(--toxic);
+            text-shadow: 
+                0 0 20px var(--toxic),
+                0 0 40px var(--toxic),
+                0 0 60px var(--toxic);
+            animation: signature-glitch 3s infinite;
+        }
+
+        @keyframes signature-glitch {
+            0%, 100% { 
+                text-shadow: 
+                    0 0 20px var(--toxic),
+                    0 0 40px var(--toxic),
+                    0 0 60px var(--toxic);
+                transform: skew(0deg);
+            }
+            20% {
+                text-shadow: 
+                    -3px 0 var(--blood),
+                    3px 0 var(--plasma),
+                    0 0 40px var(--toxic);
+                transform: skew(-5deg);
+            }
+            40% {
+                text-shadow: 
+                    3px 0 var(--molten),
+                    -3px 0 var(--neon-pink),
+                    0 0 40px var(--toxic);
+                transform: skew(5deg);
+            }
+            60% {
+                text-shadow: 
+                    0 3px var(--gold),
+                    0 -3px var(--blood),
+                    0 0 40px var(--toxic);
+                transform: skew(-3deg);
+            }
+        }
+
+        /* LOADING STATE */
+        .loading-state {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5em;
+            color: var(--plasma);
+            text-shadow: 0 0 30px var(--plasma);
+            animation: loading-pulse 1s ease-in-out infinite;
+        }
+
+        .loading-state::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--plasma);
+            margin: 1rem auto;
+            animation: loading-scan 1s ease-in-out infinite;
+        }
+
+        @keyframes loading-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes loading-scan {
+            0%, 100% { transform: scaleX(0); }
+            50% { transform: scaleX(1); }
+        }
+
+        /* ERROR STATE */
+        .error-state {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: var(--blood);
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            animation: error-shake 0.5s ease-in-out infinite;
+        }
+
+        @keyframes error-shake {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            25% { transform: translate(-52%, -50%) rotate(-2deg); }
+            75% { transform: translate(-48%, -50%) rotate(2deg); }
+        }
+
+        /* RESPONSIVE CARNAGE */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .arena-title {
+                font-size: 4rem;
+            }
+
+            .countdown-timer {
+                font-size: 3rem;
+            }
+
+            .panel-header {
+                font-size: 1.8rem;
+            }
+
+            .arena-table td {
+                font-size: 1.2rem;
+                padding: 1rem;
+            }
+
+            .admin-signature {
+                font-size: 2rem;
+            }
+        }
+
+        /* HIDDEN ADMIN LINK */
+        .secret-admin {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            opacity: 0.1;
+            font-size: 0.8rem;
+            color: var(--chrome);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .secret-admin:hover {
+            opacity: 0.5;
+        }
+
+        /* CURSOR TRAIL */
+        .cursor-trail {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--toxic);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            animation: trail-fade 1s ease-out forwards;
+        }
+
+        @keyframes trail-fade {
+            from {
+                transform: scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* BLOOD SPLATTER ON CLICK */
+        .blood-splatter {
+            position: fixed;
+            width: 100px;
+            height: 100px;
+            pointer-events: none;
+            z-index: 9998;
+            animation: splatter 0.5s ease-out forwards;
+        }
+
+        .blood-splatter::before {
+            content: '💥';
+            font-size: 50px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes splatter {
+            from {
+                transform: scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            to {
+                transform: scale(3) rotate(180deg);
+                opacity: 0;
+            }
+        }
+
+        /* RANDOM SCREEN GLITCHES */
+        .glitch-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9997;
+            opacity: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    rgba(255, 0, 64, 0.1) 2px,
+                    transparent 4px
+                );
+            mix-blend-mode: multiply;
+        }
+
+        .glitch-active {
+            animation: full-glitch 0.2s steps(10);
+        }
+
+        @keyframes full-glitch {
+            0% { 
+                opacity: 0;
+                transform: translateX(0);
+            }
+            10% { 
+                opacity: 1;
+                transform: translateX(-5px);
+            }
+            20% { 
+                opacity: 0;
+                transform: translateX(5px);
+            }
+            30% { 
+                opacity: 1;
+                transform: translateX(-10px);
+            }
+            40% { 
+                opacity: 0;
+                transform: translateX(10px);
+            }
+            50% { 
+                opacity: 1;
+                transform: translateX(-5px);
+            }
+            100% { 
+                opacity: 0;
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen">
-    <!-- Header -->
-    <header class="bg-black bg-opacity-50 backdrop-blur-sm border-b border-purple-500">
-        <div class="container mx-auto px-4 py-6">
-            <h1 class="text-3xl md:text-5xl font-black text-center neon-glow text-purple-400 mb-4">
-                THE FINALS MINI-TOURNEY
-            </h1>
-            <div class="text-center">
-                <p class="text-lg mb-2 text-gray-300">Next Match In:</p>
-                <div id="countdown" class="text-2xl md:text-4xl font-bold gold-glow text-yellow-400">
-                    Loading...
-                </div>
-            </div>
-        </div>
-    </header>
+<body>
+    <!-- Glitch Overlay -->
+    <div class="glitch-overlay" id="glitchOverlay"></div>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <!-- Loading/Error Messages -->
-        <div id="loading" class="text-center text-purple-400 pulse mb-8">
-            Initializing tournament data...
-        </div>
-        <div id="error" class="hidden text-center text-red-500 mb-8"></div>
+    <!-- Main Arena -->
+    <div class="arena-container">
+        <!-- Title with split characters -->
+        <h1 class="arena-title" id="mainTitle">
+            <!-- Will be populated by JS -->
+        </h1>
 
-        <!-- Tournament Stats Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Countdown -->
+        <div class="countdown-section">
+            <div class="countdown-label">NEXT MASSACRE BEGINS IN:</div>
+            <div class="countdown-timer" id="countdown">LOADING...</div>
+        </div>
+
+        <!-- Loading/Error states -->
+        <div id="loading" class="loading-state">ESTABLISHING ARENA LINK</div>
+        <div id="error" class="error-state hidden">CONNECTION TERMINATED</div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid" id="statsGrid" style="display: none;">
             <!-- Team Standings -->
-            <section aria-labelledby="standings-heading">
-                <h2 id="standings-heading" class="text-2xl font-bold mb-4 text-purple-400 neon-glow">
-                    TEAM STANDINGS
-                </h2>
-                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 table-glow cyber-border">
-                    <table class="w-full" role="table" aria-label="Team standings">
-                        <thead>
-                            <tr class="border-b border-purple-500">
-                                <th class="text-left py-2 px-4 cursor-pointer hover:text-purple-300 transition-colors"
-                                    onclick="sortTeams('name')">
-                                    Team <span class="text-xs">▼</span>
-                                </th>
-                                <th class="text-right py-2 px-4 cursor-pointer hover:text-purple-300 transition-colors"
-                                    onclick="sortTeams('points')">
-                                    Points <span class="text-xs">▼</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="teamsTable" class="divide-y divide-gray-700">
-                            <!-- Teams will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
+            <section class="holo-panel">
+                <h2 class="panel-header" data-text="TEAM STANDINGS">TEAM STANDINGS</h2>
+                <table class="arena-table">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTeams('name')">SQUAD ▼</th>
+                            <th style="text-align: right" onclick="sortTeams('points')">KILLS ▼</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teamsTable"></tbody>
+                </table>
             </section>
 
             <!-- Player Rankings -->
-            <section aria-labelledby="rankings-heading">
-                <h2 id="rankings-heading" class="text-2xl font-bold mb-4 text-purple-400 neon-glow">
-                    PLAYER RANKINGS
-                </h2>
-                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 table-glow cyber-border">
-                    <table class="w-full" role="table" aria-label="Player rankings">
-                        <thead>
-                            <tr class="border-b border-purple-500">
-                                <th class="text-left py-2 px-4 cursor-pointer hover:text-purple-300 transition-colors"
-                                    onclick="sortPlayers('name')">
-                                    Player <span class="text-xs">▼</span>
-                                </th>
-                                <th class="text-right py-2 px-4 cursor-pointer hover:text-purple-300 transition-colors"
-                                    onclick="sortPlayers('score')">
-                                    Impact Score <span class="text-xs">▼</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="playersTable" class="divide-y divide-gray-700">
-                            <!-- Players will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
+            <section class="holo-panel">
+                <h2 class="panel-header" data-text="PLAYER RANKINGS">ELIMINATION LEADERS</h2>
+                <table class="arena-table">
+                    <thead>
+                        <tr>
+                            <th onclick="sortPlayers('name')">WARRIOR ▼</th>
+                            <th style="text-align: right" onclick="sortPlayers('score')">CARNAGE SCORE ▼</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playersTable"></tbody>
+                </table>
             </section>
         </div>
 
         <!-- Match Results -->
-        <section aria-labelledby="matches-heading">
-            <h2 id="matches-heading" class="text-2xl font-bold mb-4 text-purple-400 neon-glow">
-                MATCH RESULTS
-            </h2>
-            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 table-glow cyber-border">
-                <div id="matchesContainer" class="space-y-3">
-                    <!-- Matches will be inserted here -->
-                </div>
-            </div>
+        <section class="killstreak-panel" id="matchPanel" style="display: none;">
+            <h2 class="panel-header" data-text="MATCH RESULTS">RECENT BLOODBATH</h2>
+            <div id="matchesContainer"></div>
         </section>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-black bg-opacity-50 backdrop-blur-sm border-t border-purple-500 mt-12 py-6">
-        <div class="container mx-auto px-4 text-center text-sm text-gray-400">
-            <p class="mb-2">
-                <a href="https://discord.gg/yourserver" class="text-purple-400 hover:text-purple-300 transition-colors">
-                    Join our Discord
-                </a>
-            </p>
-            <p>Tournament Admin: <span class="text-yellow-400">1-800-FAT-MOMS</span></p>
-            <p class="mt-2 text-xs">
-                <a href="/admin" class="text-gray-600 hover:text-gray-400 transition-colors">
-                    Admin Access
-                </a>
-            </p>
-        </div>
-    </footer>
+        <!-- Footer -->
+        <footer class="arena-footer">
+            <a href="https://discord.gg/yourserver" class="discord-bomb">
+                ENTER THE WARZONE ON DISCORD
+            </a>
+            <div class="admin-signature">1-800-FAT-MOMS</div>
+        </footer>
+    </div>
+
+    <!-- Secret Admin -->
+    <a href="/admin" class="secret-admin">[ADMIN]</a>
 
     <script>
-        // Global variables
+        // Constants
+        const EVENT_END_DATE = new Date('2025-08-02T21:00:00');
+        const POLL_INTERVAL = 30000;
         let tournamentData = { teams: [], players: [], matches: [] };
         let sortDirection = { teams: {}, players: {} };
-        const EVENT_END_DATE = new Date('2025-08-02T21:00:00');
-        const POLL_INTERVAL = 30000; // 30 seconds
 
-        // Initialize dashboard
+        // Initialize
         async function init() {
+            setupTitle();
+            setupCursorEffects();
+            setupClickEffects();
+            setupRandomGlitches();
+            
             updateCountdown();
-            setInterval(updateCountdown, 1000);
+            setInterval(updateCountdown, 100); // Faster updates for more intensity
             
             await fetchData();
             setInterval(fetchData, POLL_INTERVAL);
         }
 
-        // Fetch tournament data
+        // Setup animated title
+        function setupTitle() {
+            const title = document.getElementById('mainTitle');
+            const text = 'THE FINALS';
+            title.innerHTML = text.split('').map((char, i) => 
+                `<span class="char" style="--char-index: ${i}">${char}</span>`
+            ).join('');
+        }
+
+        // Cursor trail effect
+        function setupCursorEffects() {
+            let mouseX = 0, mouseY = 0;
+            let trailCounter = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+
+                trailCounter++;
+                if (trailCounter % 3 === 0) { // Every 3rd movement
+                    const trail = document.createElement('div');
+                    trail.className = 'cursor-trail';
+                    trail.style.left = mouseX + 'px';
+                    trail.style.top = mouseY + 'px';
+                    document.body.appendChild(trail);
+                    
+                    setTimeout(() => trail.remove(), 1000);
+                }
+            });
+        }
+
+        // Click explosion effects
+        function setupClickEffects() {
+            document.addEventListener('click', (e) => {
+                const splatter = document.createElement('div');
+                splatter.className = 'blood-splatter';
+                splatter.style.left = e.clientX - 50 + 'px';
+                splatter.style.top = e.clientY - 50 + 'px';
+                document.body.appendChild(splatter);
+                
+                setTimeout(() => splatter.remove(), 500);
+
+                // Chance for screen shake
+                if (Math.random() < 0.3) {
+                    document.body.style.animation = 'error-shake 0.3s';
+                    setTimeout(() => {
+                        document.body.style.animation = '';
+                    }, 300);
+                }
+            });
+        }
+
+        // Random glitch effects
+        function setupRandomGlitches() {
+            setInterval(() => {
+                if (Math.random() < 0.1) { // 10% chance every interval
+                    const overlay = document.getElementById('glitchOverlay');
+                    overlay.classList.add('glitch-active');
+                    
+                    // Random glitch duration
+                    setTimeout(() => {
+                        overlay.classList.remove('glitch-active');
+                    }, 200);
+
+                    // Chance to glitch text
+                    if (Math.random() < 0.5) {
+                        const elements = document.querySelectorAll('.panel-header, .arena-title .char');
+                        const target = elements[Math.floor(Math.random() * elements.length)];
+                        
+                        const originalText = target.textContent;
+                        target.textContent = glitchText(originalText);
+                        
+                        setTimeout(() => {
+                            target.textContent = originalText;
+                        }, 100);
+                    }
+                }
+            }, 2000);
+        }
+
+        // Glitch text generator
+        function glitchText(text) {
+            const glitchChars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`';
+            return text.split('').map(char => 
+                Math.random() < 0.3 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : char
+            ).join('');
+        }
+
+        // Fetch data
         async function fetchData() {
             try {
-                // Check if running locally
+                // Local test data
                 if (window.location.protocol === 'file:') {
-                    // Use embedded data for local testing
                     tournamentData = {
                         "teams": [
-                            { "name": "Cashout Kings", "points": 12 },
-                            { "name": "Terminal Velocity", "points": 9 },
-                            { "name": "Power Shifters", "points": 7 },
-                            { "name": "Bank Breakers", "points": 4 }
+                            { "name": "CASHOUT KINGS", "points": 12 },
+                            { "name": "TERMINAL VELOCITY", "points": 9 },
+                            { "name": "POWER SHIFTERS", "points": 7 },
+                            { "name": "BANK BREAKERS", "points": 4 }
                         ],
                         "players": [
                             { "name": "xXx_CashGod_xXx", "score": 78.5 },
@@ -185,39 +979,53 @@
                             { "name": "MediumEnjoyer", "score": 52.4 }
                         ],
                         "matches": [
-                            { "round": "1 - Quick Cash", "result": "Cashout Kings 3, Bank Breakers 0" },
-                            { "round": "2 - Terminal Attack", "result": "Terminal Velocity 2, Power Shifters 1" }
+                            { "round": "1 - BANK IT", "result": "CASHOUT KINGS 3, BANK BREAKERS 0" },
+                            { "round": "2 - TERMINAL ATTACK", "result": "TERMINAL VELOCITY 2, POWER SHIFTERS 1" }
                         ]
                     };
-                    document.getElementById('loading').classList.add('hidden');
-                    document.getElementById('error').classList.add('hidden');
+                    
+                    showData();
                     updateTables();
                     return;
                 }
                 
-                const response = await fetch('data.json?t=' + Date.now()); // Cache busting
-                if (!response.ok) throw new Error('Failed to fetch data');
+                const response = await fetch('data.json?t=' + Date.now());
+                if (!response.ok) throw new Error('Arena link severed');
                 
                 tournamentData = await response.json();
-                document.getElementById('loading').classList.add('hidden');
-                document.getElementById('error').classList.add('hidden');
-                
+                showData();
                 updateTables();
+                
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error:', error);
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('error').classList.remove('hidden');
-                document.getElementById('error').textContent = 'Error loading tournament data. Retrying...';
+                
+                // Auto-retry with visual feedback
+                setTimeout(() => {
+                    document.getElementById('error').classList.add('hidden');
+                    document.getElementById('loading').classList.remove('hidden');
+                    fetchData();
+                }, 3000);
             }
         }
 
-        // Update countdown timer
+        // Show data panels
+        function showData() {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('error').classList.add('hidden');
+            document.getElementById('statsGrid').style.display = 'grid';
+            document.getElementById('matchPanel').style.display = 'block';
+        }
+
+        // Update countdown
         function updateCountdown() {
             const now = new Date();
             const diff = EVENT_END_DATE - now;
             
             if (diff <= 0) {
-                document.getElementById('countdown').textContent = 'TOURNAMENT ENDED';
+                document.getElementById('countdown').textContent = 'TOURNAMENT COMPLETE';
+                document.getElementById('countdown').style.animation = 'none';
                 return;
             }
             
@@ -225,14 +1033,19 @@
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            const milliseconds = Math.floor((diff % 1000) / 10);
             
-            const parts = [];
-            if (days > 0) parts.push(`${days}d`);
-            if (hours > 0) parts.push(`${hours}h`);
-            parts.push(`${minutes}m`);
-            parts.push(`${seconds}s`);
+            let timeString = '';
+            if (days > 0) timeString += `${days}D `;
+            if (hours > 0) timeString += `${hours}H `;
+            timeString += `${minutes}M ${seconds}.${milliseconds.toString().padStart(2, '0')}S`;
             
-            document.getElementById('countdown').textContent = parts.join(' ');
+            document.getElementById('countdown').textContent = timeString;
+            
+            // Intensify animation as time runs out
+            if (diff < 60000) {
+                document.getElementById('countdown').style.animation = 'countdown-burn 0.2s ease-in-out infinite';
+            }
         }
 
         // Update all tables
@@ -242,7 +1055,7 @@
             updateMatchesDisplay();
         }
 
-        // Update teams table
+        // Teams table
         function updateTeamsTable() {
             const tbody = document.getElementById('teamsTable');
             tbody.innerHTML = '';
@@ -251,13 +1064,14 @@
             
             sortedTeams.forEach((team, index) => {
                 const row = document.createElement('tr');
-                row.className = 'hover:bg-gray-700 transition-colors';
+                if (index === 0) row.className = 'champion-row';
+                
                 row.innerHTML = `
-                    <td class="py-3 px-4">
-                        ${index === 0 ? '<span class="gold-glow text-yellow-400">👑</span> ' : ''}
-                        <span class="${index === 0 ? 'text-yellow-400 font-bold' : ''}">${team.name}</span>
+                    <td>
+                        ${index === 0 ? '<span class="trophy-icon">🏆</span>' : ''}
+                        ${team.name}
                     </td>
-                    <td class="py-3 px-4 text-right font-bold ${index === 0 ? 'text-yellow-400' : 'text-purple-300'}">
+                    <td style="text-align: right; font-family: 'Black Ops One', sans-serif; font-size: 2rem;">
                         ${team.points}
                     </td>
                 `;
@@ -265,7 +1079,7 @@
             });
         }
 
-        // Update players table
+        // Players table
         function updatePlayersTable() {
             const tbody = document.getElementById('playersTable');
             tbody.innerHTML = '';
@@ -274,13 +1088,14 @@
             
             sortedPlayers.forEach((player, index) => {
                 const row = document.createElement('tr');
-                row.className = 'hover:bg-gray-700 transition-colors';
+                if (index === 0) row.className = 'champion-row';
+                
                 row.innerHTML = `
-                    <td class="py-3 px-4">
-                        ${index === 0 ? '<span class="gold-glow text-yellow-400">🏆</span> ' : ''}
-                        <span class="${index === 0 ? 'text-yellow-400 font-bold' : ''}">${player.name}</span>
+                    <td>
+                        ${index === 0 ? '<span class="trophy-icon">💀</span>' : ''}
+                        ${player.name}
                     </td>
-                    <td class="py-3 px-4 text-right font-bold ${index === 0 ? 'text-yellow-400' : 'text-purple-300'}">
+                    <td style="text-align: right; font-family: 'Black Ops One', sans-serif; font-size: 2rem;">
                         ${player.score}
                     </td>
                 `;
@@ -288,35 +1103,30 @@
             });
         }
 
-        // Update matches display
+        // Matches display
         function updateMatchesDisplay() {
             const container = document.getElementById('matchesContainer');
             container.innerHTML = '';
             
             if (tournamentData.matches.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-center">No matches played yet</p>';
+                container.innerHTML = '<div class="match-entry"><span style="color: #666;">AWAITING FIRST BLOOD</span></div>';
                 return;
             }
             
-            // Show most recent matches first
             const reversedMatches = [...tournamentData.matches].reverse();
             
             reversedMatches.forEach((match, index) => {
                 const matchDiv = document.createElement('div');
-                matchDiv.className = `p-3 bg-gray-700 bg-opacity-50 rounded ${index === 0 ? 'border border-yellow-400' : ''}`;
+                matchDiv.className = `match-entry ${index === 0 ? 'latest-match' : ''}`;
                 matchDiv.innerHTML = `
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                        <span class="text-purple-300 font-semibold">Round ${match.round}</span>
-                        <span class="${index === 0 ? 'text-yellow-400 font-bold' : 'text-gray-300'}">
-                            ${match.result}
-                        </span>
-                    </div>
+                    <span class="match-round">ROUND ${match.round}</span>
+                    <span class="match-score">${match.result}</span>
                 `;
                 container.appendChild(matchDiv);
             });
         }
 
-        // Sort teams
+        // Sorting
         function sortTeams(field) {
             const direction = sortDirection.teams[field] || 'desc';
             tournamentData.teams.sort((a, b) => {
@@ -332,7 +1142,6 @@
             updateTeamsTable();
         }
 
-        // Sort players
         function sortPlayers(field) {
             const direction = sortDirection.players[field] || 'desc';
             tournamentData.players.sort((a, b) => {
@@ -348,7 +1157,7 @@
             updatePlayersTable();
         }
 
-        // Start the dashboard
+        // Start the chaos
         init();
     </script>
 </body>
