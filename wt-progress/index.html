@@ -8,6 +8,7 @@
       name="description"
       content="Track your progress to Emerald rank in The Finals Season 7. Monitor daily points, calculate requirements, and reach your goals efficiently."
     />
+
     <meta
       name="keywords"
       content="The Finals, rank tracker, Emerald rank, Season 7, progress tracker, gaming"
@@ -15,7 +16,10 @@
 
     <!--  Open Graph / Facebook social   -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.thefinalsloadout.com/wt-progress/" />
+    <meta
+      property="og:url"
+      content="https://www.thefinalsloadout.com/wt-progress/"
+    />
     <meta
       property="og:title"
       content="S7 World Tour Progress Tracker - The Finals"
@@ -24,11 +28,17 @@
       property="og:description"
       content="Track your progress to Emerald rank in The Finals Season 7"
     />
-    <meta property="og:image" content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png" />
+    <meta
+      property="og:image"
+      content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png"
+    />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/png" />
-    <meta property="og:url" content="https://www.thefinalsloadout.com/wt-progress/" />
+    <meta
+      property="og:url"
+      content="https://www.thefinalsloadout.com/wt-progress/"
+    />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -40,8 +50,14 @@
       name="twitter:description"
       content="Track your progress to Emerald rank in The Finals Season 7"
     />
-    <meta name="twitter:image" content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png" />
-    <meta name="twitter:url" content="https://www.thefinalsloadout.com/wt-progress/" />
+    <meta
+      name="twitter:image"
+      content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png"
+    />
+    <meta
+      name="twitter:url"
+      content="https://www.thefinalsloadout.com/wt-progress/"
+    />
 
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
     <link rel="apple-touch-icon" href="images/logo.png" />
@@ -1377,7 +1393,7 @@
       }
 
       .share-progress-btn::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 50%;
         left: 50%;
@@ -1438,8 +1454,13 @@
     </nav>
 
     <!-- ARIA Live Region for announcements -->
-    <div aria-live="polite" aria-atomic="true" class="sr-only" id="aria-live-region"></div>
-    
+    <div
+      aria-live="polite"
+      aria-atomic="true"
+      class="sr-only"
+      id="aria-live-region"
+    ></div>
+
     <div class="container">
       <!-- Snapshot Container -->
       <div id="trackerSnapshot" class="snapshot-container">
@@ -1465,80 +1486,79 @@
 
         <!-- Progress Dashboard -->
         <div class="dashboard">
-        <div class="stat-card primary">
-          <div class="stat-label">Current Points (Click to edit)</div>
-          <div class="points-input-container">
-            <input
-              type="number"
-              id="currentPointsInput"
-              value="400"
-              min="0"
-              max="2400"
-              aria-label="Current points"
-              title="Click to edit your current points"
-            />
+          <div class="stat-card primary">
+            <div class="stat-label">Current Points (Click to edit)</div>
+            <div class="points-input-container">
+              <input
+                type="number"
+                id="currentPointsInput"
+                value="400"
+                min="0"
+                max="2400"
+                aria-label="Current points"
+                title="Click to edit your current points"
+              />
+            </div>
+          </div>
+          <div class="stat-card warning">
+            <div class="stat-label">Days Remaining</div>
+            <div class="stat-value" id="daysRemaining">60</div>
+          </div>
+          <div class="stat-card primary">
+            <div class="stat-label">Points Needed Per Day</div>
+            <div class="stat-value" id="pointsPerDay">32</div>
+            <div class="goal-breakdown" id="goalBreakdown"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Completion</div>
+            <div class="stat-value" id="completion">16.7%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Points to Next Rank</div>
+            <div class="stat-value" id="pointsToNext">
+              <span class="next-rank-points">50</span>
+              <span class="next-rank-name"></span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Projected Completion</div>
+            <div class="stat-value" id="projectedDate">Sept 12</div>
           </div>
         </div>
-        <div class="stat-card warning">
-          <div class="stat-label">Days Remaining</div>
-          <div class="stat-value" id="daysRemaining">60</div>
-        </div>
-        <div class="stat-card primary">
-          <div class="stat-label">Points Needed Per Day</div>
-          <div class="stat-value" id="pointsPerDay">32</div>
-          <div class="goal-breakdown" id="goalBreakdown"></div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Completion</div>
-          <div class="stat-value" id="completion">16.7%</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Points to Next Rank</div>
-          <div class="stat-value" id="pointsToNext">
-            <span class="next-rank-points">50</span>
-            <span class="next-rank-name"></span>
+
+        <!-- Main Progress Bar -->
+        <div class="progress-section">
+          <h2>Progress to Emerald 1</h2>
+          <div class="progress-container">
+            <div
+              class="progress-bar"
+              id="mainProgress"
+              style="width: 16.7%"
+            ></div>
+            <div class="progress-text">400 / 2400</div>
           </div>
+          <div class="pace-indicator" id="paceIndicator"></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Projected Completion</div>
-          <div class="stat-value" id="projectedDate">Sept 12</div>
-        </div>
-      </div>
 
-      <!-- Main Progress Bar -->
-      <div class="progress-section">
-        <h2>Progress to Emerald 1</h2>
-        <div class="progress-container">
-          <div
-            class="progress-bar"
-            id="mainProgress"
-            style="width: 16.7%"
-          ></div>
-          <div class="progress-text">400 / 2400</div>
+        <!-- Snapshot Stats for Sharing -->
+        <div class="snapshot-stats" style="display: none">
+          <div class="ss-stat-line">
+            <span id="ss-points"></span> Points • <span id="ss-pace"></span> •
+            ETA: <span id="ss-eta"></span>
+          </div>
+          <div class="ss-progress-container">
+            <div class="ss-progress-bar" id="ss-progress-bar"></div>
+            <div class="ss-progress-text" id="ss-progress-text"></div>
+          </div>
+          <div class="ss-watermark">thefinalsloadout.com</div>
         </div>
-        <div class="pace-indicator" id="paceIndicator"></div>
       </div>
-      
-      <!-- Snapshot Stats for Sharing -->
-      <div class="snapshot-stats" style="display: none;">
-        <div class="ss-stat-line">
-          <span id="ss-points"></span> Points • 
-          <span id="ss-pace"></span> • 
-          ETA: <span id="ss-eta"></span>
-        </div>
-        <div class="ss-progress-container">
-          <div class="ss-progress-bar" id="ss-progress-bar"></div>
-          <div class="ss-progress-text" id="ss-progress-text"></div>
-        </div>
-        <div class="ss-watermark">thefinalsloadout.com</div>
-      </div>
-    </div>
-    <!-- End Snapshot Container -->
+      <!-- End Snapshot Container -->
 
-    <!-- Share Button -->
-    <button id="shareProgressBtn" class="share-progress-btn">
-      📸 Share My Progress
-    </button>
+      <!-- Share Button -->
+      <button id="shareProgressBtn" class="share-progress-btn">
+        📸 Share My Progress
+      </button>
 
       <!-- Rank Ladder -->
       <div class="rank-ladder">
@@ -1548,13 +1568,33 @@
 
       <!-- Daily Tracker -->
       <div class="daily-tracker">
-        <h2 style="color: #50c878; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <h2
+          style="
+            color: #50c878;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
           <span>Daily Points Tracker</span>
-          <div style="display: flex; gap: 10px;">
-            <button onclick="dataIntegrity.createBackup(); showNotification('Backup created', 'success');" style="font-size: 0.8em; padding: 8px 16px;" aria-label="Create backup">
+          <div style="display: flex; gap: 10px">
+            <button
+              onclick="dataIntegrity.createBackup(); showNotification('Backup created', 'success');"
+              style="font-size: 0.8em; padding: 8px 16px"
+              aria-label="Create backup"
+            >
               Backup
             </button>
-            <button onclick="dataIntegrity.restoreFromBackup();" style="font-size: 0.8em; padding: 8px 16px; background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);" aria-label="Restore from backup">
+            <button
+              onclick="dataIntegrity.restoreFromBackup();"
+              style="
+                font-size: 0.8em;
+                padding: 8px 16px;
+                background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);
+              "
+              aria-label="Restore from backup"
+            >
               Restore
             </button>
           </div>
@@ -1584,7 +1624,6 @@
       </div>
     </div>
 
-
     <script>
       // Notification system with ARIA announcements
       function showNotification(message, type = "success") {
@@ -1604,21 +1643,28 @@
 
       // Screen reader announcement function
       function announceToScreenReader(message) {
-        const liveRegion = document.getElementById('aria-live-region');
+        const liveRegion = document.getElementById("aria-live-region");
         if (liveRegion) {
           liveRegion.textContent = message;
           // Clear after announcement
           setTimeout(() => {
-            liveRegion.textContent = '';
+            liveRegion.textContent = "";
           }, 1000);
         }
       }
 
       // Confetti Animation System
       function createConfetti() {
-        const colors = ['#50c878', '#00ffcc', '#FFD700', '#87CEEB', '#E5E4E2', '#8a2be2'];
+        const colors = [
+          "#50c878",
+          "#00ffcc",
+          "#FFD700",
+          "#87CEEB",
+          "#E5E4E2",
+          "#8a2be2",
+        ];
         const confettiCount = 150;
-        const container = document.createElement('div');
+        const container = document.createElement("div");
         container.style.cssText = `
           position: fixed;
           top: 0;
@@ -1628,15 +1674,15 @@
           pointer-events: none;
           z-index: 10000;
         `;
-        
+
         for (let i = 0; i < confettiCount; i++) {
-          const confetti = document.createElement('div');
+          const confetti = document.createElement("div");
           const color = colors[Math.floor(Math.random() * colors.length)];
           const size = Math.random() * 10 + 5;
           const left = Math.random() * 100;
           const animationDelay = Math.random() * 3;
           const animationDuration = Math.random() * 3 + 2;
-          
+
           confetti.style.cssText = `
             position: absolute;
             background-color: ${color};
@@ -1648,12 +1694,12 @@
             transform: rotate(${Math.random() * 360}deg);
             animation: confettiFall ${animationDuration}s linear ${animationDelay}s forwards;
           `;
-          
+
           container.appendChild(confetti);
         }
-        
+
         document.body.appendChild(container);
-        
+
         // Remove confetti after animation
         setTimeout(() => {
           container.remove();
@@ -1661,7 +1707,7 @@
       }
 
       // Add CSS animation for confetti
-      const style = document.createElement('style');
+      const style = document.createElement("style");
       style.textContent = `
         @keyframes confettiFall {
           0% {
@@ -1699,9 +1745,9 @@
       // Data Integrity & Recovery System
       class DataIntegrityManager {
         constructor() {
-          this.version = '1.0';
-          this.backupKey = 'wt_progress_backup';
-          this.lastValidationKey = 'wt_last_validation';
+          this.version = "1.0";
+          this.backupKey = "wt_progress_backup";
+          this.lastValidationKey = "wt_last_validation";
         }
 
         // Create a backup of current data
@@ -1712,103 +1758,104 @@
             currentPoints: currentPoints,
             dailyEntries: dailyEntries,
             seasonStartDate: SEASON_START_DATE,
-            seasonEndDate: SEASON_END_DATE
+            seasonEndDate: SEASON_END_DATE,
           };
-          
+
           try {
             localStorage.setItem(this.backupKey, JSON.stringify(backup));
-            console.log('Backup created successfully');
+            console.log("Backup created successfully");
           } catch (e) {
-            console.error('Failed to create backup:', e);
+            console.error("Failed to create backup:", e);
           }
         }
 
         // Validate data integrity
         validateData() {
           const issues = [];
-          
+
           // Check 1: Verify running totals
           let calculatedTotal = 0;
           dailyEntries.forEach((entry, index) => {
             calculatedTotal += entry.points;
-            
+
             if (entry.total !== calculatedTotal) {
               issues.push({
-                type: 'total_mismatch',
+                type: "total_mismatch",
                 index: index,
                 expected: calculatedTotal,
                 actual: entry.total,
-                entry: entry
+                entry: entry,
               });
             }
-            
+
             // Check 2: Verify points are within reasonable range
             if (Math.abs(entry.points) > 100) {
               issues.push({
-                type: 'suspicious_points',
+                type: "suspicious_points",
                 index: index,
                 points: entry.points,
-                entry: entry
+                entry: entry,
               });
             }
           });
-          
+
           // Check 3: Verify current points matches last entry
           if (dailyEntries.length > 0) {
             const lastEntry = dailyEntries[dailyEntries.length - 1];
             if (lastEntry.total !== currentPoints) {
               issues.push({
-                type: 'current_points_mismatch',
+                type: "current_points_mismatch",
                 expected: lastEntry.total,
-                actual: currentPoints
+                actual: currentPoints,
               });
             }
           }
-          
+
           // Check 4: Check for duplicate dates
           const dateCounts = {};
           dailyEntries.forEach((entry, index) => {
             if (dateCounts[entry.date]) {
               issues.push({
-                type: 'duplicate_date',
+                type: "duplicate_date",
                 date: entry.date,
-                indices: [dateCounts[entry.date].index, index]
+                indices: [dateCounts[entry.date].index, index],
               });
             } else {
               dateCounts[entry.date] = { index: index };
             }
           });
-          
+
           return issues;
         }
 
         // Auto-repair data issues
         repairData(issues) {
           let repaired = false;
-          
-          issues.forEach(issue => {
+
+          issues.forEach((issue) => {
             switch (issue.type) {
-              case 'total_mismatch':
+              case "total_mismatch":
                 // Fix running totals
                 dailyEntries[issue.index].total = issue.expected;
                 repaired = true;
                 break;
-                
-              case 'current_points_mismatch':
+
+              case "current_points_mismatch":
                 // Fix current points to match last entry
                 currentPoints = issue.expected;
-                localStorage.setItem('currentPoints', currentPoints);
-                document.getElementById('currentPointsInput').value = currentPoints;
+                localStorage.setItem("currentPoints", currentPoints);
+                document.getElementById("currentPointsInput").value =
+                  currentPoints;
                 repaired = true;
                 break;
             }
           });
-          
+
           if (repaired) {
-            localStorage.setItem('dailyEntries', JSON.stringify(dailyEntries));
+            localStorage.setItem("dailyEntries", JSON.stringify(dailyEntries));
             this.createBackup();
           }
-          
+
           return repaired;
         }
 
@@ -1817,81 +1864,92 @@
           try {
             const backupData = localStorage.getItem(this.backupKey);
             if (!backupData) {
-              showNotification('No backup found', 'error');
+              showNotification("No backup found", "error");
               return false;
             }
-            
+
             const backup = JSON.parse(backupData);
-            
+
             // Confirm with user
             const backupDate = new Date(backup.timestamp).toLocaleString();
-            if (confirm(`Restore data from backup created on ${backupDate}? This will overwrite current data.`)) {
+            if (
+              confirm(
+                `Restore data from backup created on ${backupDate}? This will overwrite current data.`
+              )
+            ) {
               currentPoints = backup.currentPoints;
               dailyEntries = backup.dailyEntries;
-              
+
               // Save restored data
-              localStorage.setItem('currentPoints', currentPoints);
-              localStorage.setItem('dailyEntries', JSON.stringify(dailyEntries));
-              
+              localStorage.setItem("currentPoints", currentPoints);
+              localStorage.setItem(
+                "dailyEntries",
+                JSON.stringify(dailyEntries)
+              );
+
               // Update UI
-              document.getElementById('currentPointsInput').value = currentPoints;
+              document.getElementById("currentPointsInput").value =
+                currentPoints;
               updateDashboard();
               renderRankLadder();
               renderDailyEntries();
-              
-              showNotification('Data restored successfully', 'success');
+
+              showNotification("Data restored successfully", "success");
               return true;
             }
           } catch (e) {
-            console.error('Failed to restore backup:', e);
-            showNotification('Failed to restore backup', 'error');
+            console.error("Failed to restore backup:", e);
+            showNotification("Failed to restore backup", "error");
           }
-          
+
           return false;
         }
 
         // Run validation and show results
         runValidation() {
           const issues = this.validateData();
-          
+
           if (issues.length === 0) {
-            console.log('Data validation passed');
-            localStorage.setItem(this.lastValidationKey, new Date().toISOString());
+            console.log("Data validation passed");
+            localStorage.setItem(
+              this.lastValidationKey,
+              new Date().toISOString()
+            );
             return true;
           }
-          
-          console.warn('Data validation found issues:', issues);
-          
+
+          console.warn("Data validation found issues:", issues);
+
           // Show user the issues
-          let message = 'Data integrity issues found:\n\n';
-          issues.forEach(issue => {
+          let message = "Data integrity issues found:\n\n";
+          issues.forEach((issue) => {
             switch (issue.type) {
-              case 'total_mismatch':
+              case "total_mismatch":
                 message += `• Running total mismatch on ${issue.entry.date}\n`;
                 break;
-              case 'current_points_mismatch':
+              case "current_points_mismatch":
                 message += `• Current points don't match last entry\n`;
                 break;
-              case 'duplicate_date':
+              case "duplicate_date":
                 message += `• Duplicate entries for ${issue.date}\n`;
                 break;
-              case 'suspicious_points':
+              case "suspicious_points":
                 message += `• Unusual points value (${issue.points}) on ${issue.entry.date}\n`;
                 break;
             }
           });
-          
-          message += '\nWould you like to auto-repair these issues?';
-          
+
+          message += "\nWould you like to auto-repair these issues?";
+
           if (confirm(message)) {
             if (this.repairData(issues)) {
-              showNotification('Data repaired successfully', 'success');
+              showNotification("Data repaired successfully", "success");
               updateDashboard();
               renderRankLadder();
               renderDailyEntries();
             }
           }
-          
+
           return false;
         }
       }
@@ -1911,48 +1969,48 @@
 
         // Generate cache key from function name and dependencies
         generateKey(functionName, ...deps) {
-          return `${functionName}_${deps.join('_')}`;
+          return `${functionName}_${deps.join("_")}`;
         }
 
         // Get cached value or compute and cache
         getOrCompute(functionName, computeFn, ...dependencies) {
           const key = this.generateKey(functionName, ...dependencies);
-          
+
           // Check cache
           if (this.cache.has(key)) {
             this.cacheHits++;
             return this.cache.get(key);
           }
-          
+
           // Cache miss - compute value
           this.cacheMisses++;
           const value = computeFn();
-          
+
           // Store in cache
           this.cache.set(key, value);
-          
+
           // Track dependencies for invalidation
-          dependencies.forEach(dep => {
+          dependencies.forEach((dep) => {
             if (!this.dependencies.has(dep)) {
               this.dependencies.set(dep, new Set());
             }
             this.dependencies.get(dep).add(key);
           });
-          
+
           // Limit cache size
           if (this.cache.size > this.maxCacheSize) {
             const firstKey = this.cache.keys().next().value;
             this.cache.delete(firstKey);
           }
-          
+
           return value;
         }
 
         // Invalidate cache entries that depend on a value
         invalidate(...dependencies) {
-          dependencies.forEach(dep => {
+          dependencies.forEach((dep) => {
             if (this.dependencies.has(dep)) {
-              this.dependencies.get(dep).forEach(key => {
+              this.dependencies.get(dep).forEach((key) => {
                 this.cache.delete(key);
               });
               this.dependencies.delete(dep);
@@ -1969,12 +2027,13 @@
         // Get cache statistics
         getStats() {
           const total = this.cacheHits + this.cacheMisses;
-          const hitRate = total > 0 ? (this.cacheHits / total * 100).toFixed(1) : 0;
+          const hitRate =
+            total > 0 ? ((this.cacheHits / total) * 100).toFixed(1) : 0;
           return {
             hits: this.cacheHits,
             misses: this.cacheMisses,
             hitRate: `${hitRate}%`,
-            size: this.cache.size
+            size: this.cache.size,
           };
         }
       }
@@ -1987,38 +2046,43 @@
         try {
           const value = localStorage.getItem(key);
           if (value === null) return defaultValue;
-          
+
           // For JSON data
-          if (typeof defaultValue === 'object') {
+          if (typeof defaultValue === "object") {
             return JSON.parse(value);
           }
-          
+
           // For numeric data
-          if (typeof defaultValue === 'number') {
+          if (typeof defaultValue === "number") {
             const parsed = parseInt(value);
             return isNaN(parsed) ? defaultValue : parsed;
           }
-          
+
           return value;
         } catch (e) {
           console.error(`Failed to read ${key} from localStorage:`, e);
-          
+
           // Attempt recovery from backup
-          if (key === 'dailyEntries' || key === 'currentPoints') {
+          if (key === "dailyEntries" || key === "currentPoints") {
             try {
-              const backup = localStorage.getItem('wt_progress_backup');
+              const backup = localStorage.getItem("wt_progress_backup");
               if (backup) {
                 const backupData = JSON.parse(backup);
-                showNotification('Recovered data from backup due to corruption', 'success');
-                
-                if (key === 'dailyEntries') return backupData.dailyEntries || defaultValue;
-                if (key === 'currentPoints') return backupData.currentPoints || defaultValue;
+                showNotification(
+                  "Recovered data from backup due to corruption",
+                  "success"
+                );
+
+                if (key === "dailyEntries")
+                  return backupData.dailyEntries || defaultValue;
+                if (key === "currentPoints")
+                  return backupData.currentPoints || defaultValue;
               }
             } catch (backupError) {
-              console.error('Backup recovery also failed:', backupError);
+              console.error("Backup recovery also failed:", backupError);
             }
           }
-          
+
           return defaultValue;
         }
       }
@@ -2063,19 +2127,19 @@
       const mm = String(currentDate.getMonth() + 1).padStart(2, "0");
       const dd = String(currentDate.getDate()).padStart(2, "0");
       const todayString = `${yyyy}-${mm}-${dd}`;
-      
+
       // Set date input with max date as today
       const dateInput = document.getElementById("dateInput");
       dateInput.value = todayString;
       dateInput.max = todayString; // Prevent future dates
       dateInput.min = SEASON_START_DATE; // Prevent dates before season start
-      
+
       document.getElementById("currentPointsInput").value = currentPoints;
 
       // Debug: Log cache stats periodically (can be removed in production)
-      if (window.location.search.includes('debug')) {
+      if (window.location.search.includes("debug")) {
         setInterval(() => {
-          console.log('Cache Stats:', perfCache.getStats());
+          console.log("Cache Stats:", perfCache.getStats());
         }, 10000);
       }
 
@@ -2113,12 +2177,18 @@
       }, 500);
 
       // Re-validate when window regains focus (in case of external changes)
-      window.addEventListener('focus', () => {
-        const storedPoints = safeLocalStorageGet("currentPoints", currentPoints);
+      window.addEventListener("focus", () => {
+        const storedPoints = safeLocalStorageGet(
+          "currentPoints",
+          currentPoints
+        );
         const storedEntries = safeLocalStorageGet("dailyEntries", dailyEntries);
-        
-        if (storedPoints !== currentPoints || JSON.stringify(storedEntries) !== JSON.stringify(dailyEntries)) {
-          console.log('Detected external data change, reloading...');
+
+        if (
+          storedPoints !== currentPoints ||
+          JSON.stringify(storedEntries) !== JSON.stringify(dailyEntries)
+        ) {
+          console.log("Detected external data change, reloading...");
           location.reload();
         }
       });
@@ -2127,36 +2197,40 @@
       renderRankLadder();
       renderDailyEntries();
 
-
       function updateCurrentPoints(value) {
         let newPoints = parseInt(value) || 0;
         // Validate points range
         newPoints = Math.max(0, Math.min(2400, newPoints));
-        
+
         // Check for rank achievement before updating
         const oldRank = getCurrentRank(currentPoints);
         const newRank = getCurrentRank(newPoints);
-        
+
         currentPoints = newPoints;
 
         // Update the input if value was clamped
         document.getElementById("currentPointsInput").value = currentPoints;
 
         localStorage.setItem("currentPoints", currentPoints);
-        
+
         // Invalidate caches that depend on currentPoints
         perfCache.invalidate(currentPoints);
-        
+
         updateDashboard();
         renderRankLadder();
-        
+
         // Check if we reached a new rank
         if (oldRank && newRank && oldRank.points < newRank.points) {
           createConfetti();
-          showNotification(`🎉 Congratulations! You've reached ${newRank.name}!`, 'success');
-          announceToScreenReader(`Congratulations! You've reached ${newRank.name}!`);
+          showNotification(
+            `🎉 Congratulations! You've reached ${newRank.name}!`,
+            "success"
+          );
+          announceToScreenReader(
+            `Congratulations! You've reached ${newRank.name}!`
+          );
         }
-        
+
         // Create backup after points change
         dataIntegrity.createBackup();
       }
@@ -2171,24 +2245,29 @@
       }
 
       function calculateAveragePointsPerDay() {
-        return perfCache.getOrCompute('avgPointsPerDay', () => {
-          // Calculate average based on total points earned since season start
-          const seasonStart = new Date(SEASON_START_DATE);
-          const today = new Date();
+        return perfCache.getOrCompute(
+          "avgPointsPerDay",
+          () => {
+            // Calculate average based on total points earned since season start
+            const seasonStart = new Date(SEASON_START_DATE);
+            const today = new Date();
 
-          // Set to start of day for accurate calculation
-          seasonStart.setHours(0, 0, 0, 0);
-          today.setHours(0, 0, 0, 0);
+            // Set to start of day for accurate calculation
+            seasonStart.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
 
-          // Calculate days since season start
-          const daysSinceStart = Math.max(
-            1,
-            Math.ceil((today - seasonStart) / (1000 * 60 * 60 * 24))
-          );
+            // Calculate days since season start
+            const daysSinceStart = Math.max(
+              1,
+              Math.ceil((today - seasonStart) / (1000 * 60 * 60 * 24))
+            );
 
-          // Average points per day = current points / days since start
-          return currentPoints / daysSinceStart;
-        }, currentPoints, SEASON_START_DATE);
+            // Average points per day = current points / days since start
+            return currentPoints / daysSinceStart;
+          },
+          currentPoints,
+          SEASON_START_DATE
+        );
       }
 
       function animateValue(element, newValue) {
@@ -2199,95 +2278,110 @@
 
       // Smart Goal Decomposition Functions
       function decomposeGoal(dailyPoints) {
-        return perfCache.getOrCompute('goalDecomposition', () => {
-          const pointValues = {
-            first: 25,
-            second: 14,
-            round2: 6,
-            round1: 2
-          };
+        return perfCache.getOrCompute(
+          "goalDecomposition",
+          () => {
+            const pointValues = {
+              first: 25,
+              second: 14,
+              round2: 6,
+              round1: 2,
+            };
 
-          const combinations = [];
+            const combinations = [];
 
-        // Calculate all reasonable combinations
-        // Option 1: First place focus
-        const firstPlaceOnly = Math.ceil(dailyPoints / pointValues.first);
-        if (firstPlaceOnly <= 3) {
-          combinations.push({
-            label: "Win",
-            detail: `${firstPlaceOnly} match${firstPlaceOnly > 1 ? 'es' : ''}`,
-            matches: firstPlaceOnly,
-            difficulty: "high"
-          });
-        }
+            // Calculate all reasonable combinations
+            // Option 1: First place focus
+            const firstPlaceOnly = Math.ceil(dailyPoints / pointValues.first);
+            if (firstPlaceOnly <= 3) {
+              combinations.push({
+                label: "Win",
+                detail: `${firstPlaceOnly} match${
+                  firstPlaceOnly > 1 ? "es" : ""
+                }`,
+                matches: firstPlaceOnly,
+                difficulty: "high",
+              });
+            }
 
-        // Option 2: Second place focus
-        const secondPlaceOnly = Math.ceil(dailyPoints / pointValues.second);
-        if (secondPlaceOnly <= 4) {
-          combinations.push({
-            label: "2nd Place",
-            detail: `${secondPlaceOnly} time${secondPlaceOnly > 1 ? 's' : ''}`,
-            matches: secondPlaceOnly,
-            difficulty: "medium"
-          });
-        }
+            // Option 2: Second place focus
+            const secondPlaceOnly = Math.ceil(dailyPoints / pointValues.second);
+            if (secondPlaceOnly <= 4) {
+              combinations.push({
+                label: "2nd Place",
+                detail: `${secondPlaceOnly} time${
+                  secondPlaceOnly > 1 ? "s" : ""
+                }`,
+                matches: secondPlaceOnly,
+                difficulty: "medium",
+              });
+            }
 
-        // Option 3: Mixed approach (most realistic)
-        if (dailyPoints >= pointValues.first) {
-          const remaining = dailyPoints - pointValues.first;
-          const seconds = Math.ceil(remaining / pointValues.second);
-          if (seconds <= 2) {
-            combinations.push({
-              label: "Mixed",
-              detail: `1 win + ${seconds > 0 ? seconds + ' second' + (seconds > 1 ? 's' : '') : 'nothing else'}`,
-              matches: 1 + seconds,
-              difficulty: "medium"
-            });
-          }
-        }
+            // Option 3: Mixed approach (most realistic)
+            if (dailyPoints >= pointValues.first) {
+              const remaining = dailyPoints - pointValues.first;
+              const seconds = Math.ceil(remaining / pointValues.second);
+              if (seconds <= 2) {
+                combinations.push({
+                  label: "Mixed",
+                  detail: `1 win + ${
+                    seconds > 0
+                      ? seconds + " second" + (seconds > 1 ? "s" : "")
+                      : "nothing else"
+                  }`,
+                  matches: 1 + seconds,
+                  difficulty: "medium",
+                });
+              }
+            }
 
-        // Option 4: Conservative approach (round 2 qualifications)
-        const round2Only = Math.ceil(dailyPoints / pointValues.round2);
-        if (round2Only <= 8) {
-          combinations.push({
-            label: "Qualify R2",
-            detail: `${round2Only} time${round2Only > 1 ? 's' : ''}`,
-            matches: round2Only,
-            difficulty: "low"
-          });
-        }
+            // Option 4: Conservative approach (round 2 qualifications)
+            const round2Only = Math.ceil(dailyPoints / pointValues.round2);
+            if (round2Only <= 8) {
+              combinations.push({
+                label: "Qualify R2",
+                detail: `${round2Only} time${round2Only > 1 ? "s" : ""}`,
+                matches: round2Only,
+                difficulty: "low",
+              });
+            }
 
-        // Option 5: Volume approach
-        const volumeApproach = Math.ceil(dailyPoints / ((pointValues.round2 + pointValues.round1) / 2));
-        if (volumeApproach >= 8 && volumeApproach <= 15) {
-          combinations.push({
-            label: "Volume",
-            detail: `${volumeApproach} matches (mixed results)`,
-            matches: volumeApproach,
-            difficulty: "low"
-          });
-        }
+            // Option 5: Volume approach
+            const volumeApproach = Math.ceil(
+              dailyPoints / ((pointValues.round2 + pointValues.round1) / 2)
+            );
+            if (volumeApproach >= 8 && volumeApproach <= 15) {
+              combinations.push({
+                label: "Volume",
+                detail: `${volumeApproach} matches (mixed results)`,
+                matches: volumeApproach,
+                difficulty: "low",
+              });
+            }
 
-          return combinations.slice(0, 3); // Return top 3 most reasonable options
-        }, dailyPoints);
+            return combinations.slice(0, 3); // Return top 3 most reasonable options
+          },
+          dailyPoints
+        );
       }
 
       function renderGoalBreakdown(dailyPoints) {
-        const breakdownElement = document.getElementById('goalBreakdown');
-        
+        const breakdownElement = document.getElementById("goalBreakdown");
+
         if (dailyPoints <= 0 || currentPoints >= 2400) {
-          breakdownElement.innerHTML = '';
+          breakdownElement.innerHTML = "";
           return;
         }
 
         const combinations = decomposeGoal(dailyPoints);
-        
+
         if (combinations.length === 0) {
-          breakdownElement.innerHTML = '<div class="goal-option-label">Target too high for reasonable daily play</div>';
+          breakdownElement.innerHTML =
+            '<div class="goal-option-label">Target too high for reasonable daily play</div>';
           return;
         }
 
-        let html = '';
+        let html = "";
         combinations.forEach((combo, index) => {
           if (index > 0) {
             html += '<div class="goal-or">OR</div>';
@@ -2367,7 +2461,7 @@
         document.querySelector(
           "#pointsToNext .next-rank-name"
         ).textContent = `(${nextRankName})`;
-        
+
         // Render goal breakdown
         renderGoalBreakdown(pointsPerDay);
         // Update projected completion with appropriate styling
@@ -2493,24 +2587,24 @@
         }
 
         // Check for duplicate date
-        const existingEntry = dailyEntries.find(entry => entry.date === date);
+        const existingEntry = dailyEntries.find((entry) => entry.date === date);
         if (existingEntry) {
           const confirmReplace = confirm(
             `An entry already exists for ${date} with ${existingEntry.points} points.\n\n` +
-            `Would you like to replace it with ${points} points?`
+              `Would you like to replace it with ${points} points?`
           );
-          
+
           if (!confirmReplace) {
             return;
           }
-          
+
           // Remove the existing entry
-          const index = dailyEntries.findIndex(entry => entry.date === date);
+          const index = dailyEntries.findIndex((entry) => entry.date === date);
           dailyEntries.splice(index, 1);
-          
+
           // Recalculate running totals from the beginning
           currentPoints = 0;
-          dailyEntries.forEach(entry => {
+          dailyEntries.forEach((entry) => {
             currentPoints += entry.points;
             entry.total = currentPoints;
           });
@@ -2535,10 +2629,10 @@
 
         // Sort entries by date to maintain chronological order
         dailyEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
-        
+
         // Recalculate all running totals after sorting
         let runningTotal = 0;
-        dailyEntries.forEach(entry => {
+        dailyEntries.forEach((entry) => {
           runningTotal += entry.points;
           entry.total = runningTotal;
         });
@@ -2567,7 +2661,7 @@
           }${points} points! Total: ${currentPoints}`,
           "success"
         );
-        
+
         // Create backup after adding entry
         dataIntegrity.createBackup();
       }
@@ -2589,11 +2683,11 @@
             const actualIndex = dailyEntries.length - 1 - displayIndex;
             const entryDiv = document.createElement("div");
             entryDiv.className = "daily-entries-item";
-            
+
             // Add swipe delete background
-            const swipeBg = document.createElement('div');
-            swipeBg.className = 'swipe-delete-bg';
-            swipeBg.textContent = 'Delete';
+            const swipeBg = document.createElement("div");
+            swipeBg.className = "swipe-delete-bg";
+            swipeBg.textContent = "Delete";
             entryDiv.appendChild(swipeBg);
 
             // Create content div
@@ -2632,58 +2726,59 @@
 
             entryDiv.appendChild(contentDiv);
             entryDiv.appendChild(deleteBtn);
-            
+
             // Add swipe functionality on mobile
             if (window.innerWidth <= 768) {
               let startX = 0;
               let currentX = 0;
               let isSwiping = false;
-              
-              entryDiv.addEventListener('touchstart', function(e) {
+
+              entryDiv.addEventListener("touchstart", function (e) {
                 startX = e.touches[0].clientX;
                 isSwiping = true;
-                this.classList.add('swiping');
+                this.classList.add("swiping");
               });
-              
-              entryDiv.addEventListener('touchmove', function(e) {
+
+              entryDiv.addEventListener("touchmove", function (e) {
                 if (!isSwiping) return;
-                
+
                 currentX = e.touches[0].clientX;
                 const diffX = currentX - startX;
-                
-                if (diffX < 0) { // Swiping left
+
+                if (diffX < 0) {
+                  // Swiping left
                   const translateX = Math.max(diffX, -100);
                   this.style.transform = `translateX(${translateX}px)`;
-                  
+
                   if (Math.abs(diffX) > 50) {
-                    this.classList.add('show-delete');
+                    this.classList.add("show-delete");
                   } else {
-                    this.classList.remove('show-delete');
+                    this.classList.remove("show-delete");
                   }
                 }
               });
-              
-              entryDiv.addEventListener('touchend', function(e) {
+
+              entryDiv.addEventListener("touchend", function (e) {
                 if (!isSwiping) return;
                 isSwiping = false;
-                this.classList.remove('swiping');
-                
+                this.classList.remove("swiping");
+
                 const diffX = currentX - startX;
-                
+
                 if (Math.abs(diffX) > 100) {
                   // Delete the entry
-                  this.classList.add('swipe-delete');
+                  this.classList.add("swipe-delete");
                   setTimeout(() => {
                     deleteEntry(actualIndex);
                   }, 300);
                 } else {
                   // Snap back
-                  this.style.transform = '';
-                  this.classList.remove('show-delete');
+                  this.style.transform = "";
+                  this.classList.remove("show-delete");
                 }
               });
             }
-            
+
             container.appendChild(entryDiv);
           });
       }
@@ -2718,73 +2813,87 @@
       }
 
       // Share Progress functionality
-      document.getElementById('shareProgressBtn').addEventListener('click', async function() {
-        const button = this;
-        const originalText = button.textContent;
-        button.disabled = true;
-        button.textContent = '📸 Capturing...';
+      document
+        .getElementById("shareProgressBtn")
+        .addEventListener("click", async function () {
+          const button = this;
+          const originalText = button.textContent;
+          button.disabled = true;
+          button.textContent = "📸 Capturing...";
 
-        try {
-          // Update snapshot values
-          const completion = ((currentPoints / 2400) * 100).toFixed(1);
-          const paceText = document.getElementById('paceIndicator').textContent;
-          const projectedDate = document.getElementById('projectedDate').textContent;
-          
-          // Set snapshot data
-          document.getElementById('ss-points').textContent = currentPoints;
-          document.getElementById('ss-pace').textContent = paceText.includes('ahead') ? 'AHEAD OF PACE' : 
-                                                            paceText.includes('behind') ? 'BEHIND PACE' : 
-                                                            'ON PACE';
-          document.getElementById('ss-eta').textContent = projectedDate;
-          document.getElementById('ss-progress-bar').style.width = completion + '%';
-          document.getElementById('ss-progress-text').textContent = `${currentPoints} / 2400 (${completion}%)`;
+          try {
+            // Update snapshot values
+            const completion = ((currentPoints / 2400) * 100).toFixed(1);
+            const paceText =
+              document.getElementById("paceIndicator").textContent;
+            const projectedDate =
+              document.getElementById("projectedDate").textContent;
 
-          // Add capturing class
-          document.body.classList.add('capturing');
+            // Set snapshot data
+            document.getElementById("ss-points").textContent = currentPoints;
+            document.getElementById("ss-pace").textContent = paceText.includes(
+              "ahead"
+            )
+              ? "AHEAD OF PACE"
+              : paceText.includes("behind")
+              ? "BEHIND PACE"
+              : "ON PACE";
+            document.getElementById("ss-eta").textContent = projectedDate;
+            document.getElementById("ss-progress-bar").style.width =
+              completion + "%";
+            document.getElementById(
+              "ss-progress-text"
+            ).textContent = `${currentPoints} / 2400 (${completion}%)`;
 
-          // Wait for styles to apply
-          await new Promise(resolve => setTimeout(resolve, 100));
+            // Add capturing class
+            document.body.classList.add("capturing");
 
-          // Capture the snapshot
-          const element = document.getElementById('trackerSnapshot');
-          const canvas = await html2canvas(element, {
-            backgroundColor: '#0d1117',
-            scale: 2,
-            logging: false,
-            useCORS: true,
-            allowTaint: true
-          });
+            // Wait for styles to apply
+            await new Promise((resolve) => setTimeout(resolve, 100));
 
-          // Remove capturing class
-          document.body.classList.remove('capturing');
+            // Capture the snapshot
+            const element = document.getElementById("trackerSnapshot");
+            const canvas = await html2canvas(element, {
+              backgroundColor: "#0d1117",
+              scale: 2,
+              logging: false,
+              useCORS: true,
+              allowTaint: true,
+            });
 
-          // Convert to blob and download
-          canvas.toBlob(function(blob) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'emerald-tracker.png';
-            a.click();
-            URL.revokeObjectURL(url);
+            // Remove capturing class
+            document.body.classList.remove("capturing");
 
-            // Success feedback
-            button.textContent = '✅ Downloaded!';
+            // Convert to blob and download
+            canvas.toBlob(
+              function (blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "emerald-tracker.png";
+                a.click();
+                URL.revokeObjectURL(url);
+
+                // Success feedback
+                button.textContent = "✅ Downloaded!";
+                setTimeout(() => {
+                  button.textContent = originalText;
+                  button.disabled = false;
+                }, 2000);
+              },
+              "image/png",
+              1.0
+            );
+          } catch (error) {
+            console.error("Failed to capture snapshot:", error);
+            document.body.classList.remove("capturing");
+            button.textContent = "❌ Failed";
             setTimeout(() => {
               button.textContent = originalText;
               button.disabled = false;
             }, 2000);
-          }, 'image/png', 1.0);
-
-        } catch (error) {
-          console.error('Failed to capture snapshot:', error);
-          document.body.classList.remove('capturing');
-          button.textContent = '❌ Failed';
-          setTimeout(() => {
-            button.textContent = originalText;
-            button.disabled = false;
-          }, 2000);
-        }
-      });
+          }
+        });
     </script>
 
     <!-- Load html2canvas from CDN -->
