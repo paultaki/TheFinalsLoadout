@@ -43,10 +43,10 @@
     />
     <meta
       property="og:image"
-      content="https://www.thefinalsloadout.com/assets/loadout-social-card@2x.png"
+      content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png"
     />
-    <meta property="og:image:width" content="2400" />
-    <meta property="og:image:height" content="1260" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:url" content="https://www.thefinalsloadout.com/" />
     <meta property="og:type" content="website" />
 
@@ -59,7 +59,7 @@
     />
     <meta
       name="twitter:image"
-      content="https://www.thefinalsloadout.com/assets/loadout-social-card@2x.png"
+      content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png"
     />
 
     <!-- Structured Data -->
@@ -444,10 +444,25 @@
       }
 
       .spin-count {
-        color: #ff6b35;
-        font-weight: bold;
+        font-weight: 800;
         font-size: 1.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        /* Enhanced bright orange/yellow gradient to match overlay */
+        background: linear-gradient(
+          135deg,
+          #ff6b35 0%,
+          #ffb700 50%,
+          #ff8e53 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
         text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+        filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.4));
+        animation: spinCountPulse 2s ease-in-out infinite;
       }
 
       /* Desktop styles */
@@ -1167,6 +1182,7 @@
         <a href="ragequit/index.html" class="nav-link">RAGE QUIT</a>
         <a href="patch-notes/index.html" class="nav-link">PATCH NOTES</a>
         <a href="meta-weapons/index.html" class="nav-link">META WEAPONS</a>
+        <a href="wt-progress/index.html" class="nav-link">WT TRACKER (BETA)</a>
       </div>
       <div class="nav-controls">
         <!-- Filter Toggle Button -->
@@ -1759,6 +1775,9 @@
 
     <!-- Performance optimization script - load early -->
     <script src="performance-init.js"></script>
+
+    <!-- Configuration and Feature Flags -->
+    <script src="js/config.js"></script>
 
     <!-- Phase 3 Architecture Scripts -->
     <script src="js/device-profiler.js"></script>

@@ -162,10 +162,86 @@ const state = {
   isMobile: isMobile,
   sidebarOpen: false,
   // isRouletteAnimating: false, // Removed - roulette system deprecated
+
+  // ================================
+  // SIMPLIFIED RESPIN STATE MANAGEMENT
+  // ================================
+  freeRespinAvailable: false, // Flag for earned free respin
+  isWaitingForUserChoice: false, // Block interactions during choice modal
+  respinInProgress: false, // Prevent multiple respin clicks
+  respinSessionCount: 0, // Track respins per session for abuse prevention
+  currentFinalLoadout: null, // Store current final loadout data for respin
 };
 
 // Make state globally accessible
 window.state = state;
+
+// ================================
+// RESPIN STATE MANAGEMENT HELPERS
+// ================================
+
+// Earn a free respin (called when jackpot hits)
+window.earnFreeRespin = function () {
+  console.log("🎰 earnFreeRespin called! Feature flags:", window.FEATURE_FLAGS);
+
+  if (!window.FEATURE_FLAGS?.JACKPOT_RESPIN) {
+    console.log("🎰 Feature disabled, not earning respin");
+    window.debugRespin("Feature disabled, not earning respin");
+    return false;
+  }
+
+  state.freeRespinAvailable = true;
+  console.log("🎰 Free respin earned! State:", state);
+  window.debugRespin("Free respin earned!");
+  window.trackRespinEvent(
+    window.ANALYTICS_EVENTS?.JACKPOT_EARNED || "jackpot_earned"
+  );
+  return true;
+};
+
+// Consume a free respin (called when user chooses to respin)
+window.consumeFreeRespin = function () {
+  if (!state.freeRespinAvailable) {
+    window.debugRespin("No free respin available to consume");
+    return false;
+  }
+
+  state.freeRespinAvailable = false;
+  state.respinSessionCount++;
+  state.respinInProgress = true;
+
+  window.debugRespin(
+    `Free respin consumed. Session count: ${state.respinSessionCount}`
+  );
+  window.trackRespinEvent(
+    window.ANALYTICS_EVENTS?.RESPIN_CHOSEN || "respin_chosen",
+    {
+      sessionCount: state.respinSessionCount,
+    }
+  );
+
+  return true;
+};
+
+// Reset respin state (called at end of spin sequence)
+window.resetRespinState = function () {
+  state.isWaitingForUserChoice = false;
+  state.respinInProgress = false;
+  state.currentFinalLoadout = null;
+  window.debugRespin("Respin state reset");
+};
+
+// Check if respin feature is enabled and available
+window.isRespinAvailable = function () {
+  const featureEnabled = window.FEATURE_FLAGS?.JACKPOT_RESPIN ?? false;
+  const hasRespins = state.freeRespinAvailable;
+  const notInProgress = !state.respinInProgress;
+  const withinLimit =
+    state.respinSessionCount <
+    (window.RESPIN_CONFIG?.MAX_RESPINS_PER_SESSION ?? 5);
+
+  return featureEnabled && hasRespins && notInProgress && withinLimit;
+};
 
 // Helper function to get available classes based on filters
 function getAvailableClasses() {
@@ -1595,8 +1671,13 @@ function setupTabSearchPlaceholder() {
 
 async function finalizeSpin(columns) {
   console.log("⚠️ Running finalizeSpin with currentSpin:", state.currentSpin);
+  console.log("🎰 Spin state:", {
+    currentSpin: state.currentSpin,
+    totalSpins: state.totalSpins,
+    spinsLeft: state.spinsLeft,
+  });
 
-  // Check if there are more spins to do
+  // Check if there are more spins to do (fix the logic)
   if (state.currentSpin > 1) {
     console.log(
       "🔄 Not final spin, continue sequence. Current spin:",
@@ -1877,8 +1958,13 @@ async function finalizeSpin(columns) {
       }
       lastAddedLoadout = loadoutString;
 
-      // ✅ Add to history using the new SlotHistoryManager
+      // ================================
+      // RESPIN CHOICE MODAL INTEGRATION
+      // ================================
+
+      // ✅ Build final loadout object
       const loadout = {
+        classType: savedClass, // Add classType for respin modal
         class: savedClass,
         weapon: {
           name: weapon,
@@ -1893,7 +1979,94 @@ async function finalizeSpin(columns) {
           image: `images/${g.replace(/ /g, "_")}.webp`,
         })),
       };
-      slotHistoryManager.addToHistory(loadout);
+
+      // ✅ Show choice buttons for final loadout if respin feature is enabled
+      if (
+        window.FEATURE_FLAGS?.JACKPOT_RESPIN &&
+        typeof window.showFinalLoadoutChoiceButtons === "function"
+      ) {
+        console.log("🎰 Respin feature enabled, showing choice buttons");
+        window.debugRespin &&
+          window.debugRespin("Final spin complete, showing choice buttons");
+
+        // Wait for celebration effects to complete
+        setTimeout(async () => {
+          try {
+            const userChoice = await window.showFinalLoadoutChoiceButtons(
+              loadout
+            );
+            window.debugRespin &&
+              window.debugRespin(`User choice: ${userChoice}`);
+
+            if (userChoice === "respin") {
+              // User chose to respin - consume the free respin and restart
+              const respinConsumed = window.consumeFreeRespin
+                ? window.consumeFreeRespin()
+                : false;
+
+              if (respinConsumed) {
+                window.debugRespin &&
+                  window.debugRespin("Starting respin animation");
+
+                // Track respin start
+                window.trackRespinEvent &&
+                  window.trackRespinEvent(
+                    window.ANALYTICS_EVENTS?.RESPIN_COMPLETED ||
+                      "respin_completed",
+                    {
+                      originalClass: savedClass,
+                      originalWeapon: weapon,
+                    }
+                  );
+
+                // REMOVED: Respin is now handled entirely in overlay manager
+                // The choice buttons handle the respin animation directly
+                // This code should not execute anymore since respin returns early from choice handler
+                console.log(
+                  "⚠️ This respin code should not execute - handled in overlay manager"
+                );
+
+                return; // Exit without saving to history - new spin will handle it
+              } else {
+                // No respin available - treat as "keep"
+                window.debugRespin &&
+                  window.debugRespin("No respin available, keeping loadout");
+                window.trackRespinEvent &&
+                  window.trackRespinEvent(
+                    window.ANALYTICS_EVENTS?.RESPIN_ERROR || "respin_error",
+                    { reason: "no_respin_available" }
+                  );
+              }
+            }
+
+            // User chose "keep" or respin failed - save to history
+            window.debugRespin &&
+              window.debugRespin("Saving loadout to history");
+            slotHistoryManager.addToHistory(loadout);
+
+            // Reset respin state
+            window.resetRespinState && window.resetRespinState();
+          } catch (error) {
+            console.error("❌ Error in choice modal:", error);
+            window.trackRespinEvent &&
+              window.trackRespinEvent(
+                window.ANALYTICS_EVENTS?.RESPIN_ERROR || "respin_error",
+                { reason: "modal_error", error: error.message }
+              );
+
+            // Fallback: save to history
+            slotHistoryManager.addToHistory(loadout);
+            window.resetRespinState && window.resetRespinState();
+          }
+        }, window.RESPIN_CONFIG?.FREEZE_DURATION || 1000);
+      } else {
+        // Respin feature disabled or not available - save directly
+        window.debugRespin &&
+          window.debugRespin(
+            "Respin feature disabled, saving directly to history"
+          );
+        slotHistoryManager.addToHistory(loadout);
+      }
 
       // Display roast immediately below the slot machine and get the generated roast
       displayRoastBelowSlotMachine(savedClass, weapon, specialization, gadgets)
@@ -3288,7 +3461,7 @@ class SlotHistoryManager {
     if (this.analysisDebounceTimer) {
       clearTimeout(this.analysisDebounceTimer);
     }
-    
+
     this.analysisDebounceTimer = setTimeout(() => {
       // Generate AI analysis for each item after rendering
       itemsToShow.forEach((loadout, index) => {
@@ -3517,11 +3690,15 @@ Generated by thefinalsloadout.com`;
     }
 
     // Create unique key for this loadout
-    const loadoutKey = `${loadout.class}-${loadout.weapon.name}-${loadout.specialization.name}-${loadout.gadgets.map(g => g.name).join('-')}`;
-    
+    const loadoutKey = `${loadout.class}-${loadout.weapon.name}-${
+      loadout.specialization.name
+    }-${loadout.gadgets.map((g) => g.name).join("-")}`;
+
     // Check if already loading this loadout
     if (this.loadingStates.get(loadoutKey)) {
-      console.log("🔄 Already loading analysis for this loadout, skipping duplicate request");
+      console.log(
+        "🔄 Already loading analysis for this loadout, skipping duplicate request"
+      );
       return;
     }
 
@@ -3538,7 +3715,9 @@ Generated by thefinalsloadout.com`;
 
     // Add to queue if too many concurrent requests
     if (this.activeRequests >= this.maxConcurrentRequests) {
-      console.log("⏳ Queueing AI analysis request (too many concurrent requests)");
+      console.log(
+        "⏳ Queueing AI analysis request (too many concurrent requests)"
+      );
       this.requestQueue.push({ index, loadout, loadoutKey });
       return;
     }
@@ -3599,16 +3778,23 @@ Generated by thefinalsloadout.com`;
       console.error("Error generating AI analysis:", error);
 
       // Handle timeout specifically
-      if (error.name === 'AbortError') {
+      if (error.name === "AbortError") {
         console.log("⏱️ Request timed out, using fallback");
       }
 
       // Check retry attempts - only retry on network errors, not 500s
       const retryCount = this.retryAttempts.get(loadoutKey) || 0;
-      if (retryCount < this.maxRetries && (error.name === 'NetworkError' || error.name === 'TypeError')) {
-        console.log(`🔄 Retrying AI analysis (attempt ${retryCount + 1}/${this.maxRetries})`);
+      if (
+        retryCount < this.maxRetries &&
+        (error.name === "NetworkError" || error.name === "TypeError")
+      ) {
+        console.log(
+          `🔄 Retrying AI analysis (attempt ${retryCount + 1}/${
+            this.maxRetries
+          })`
+        );
         this.retryAttempts.set(loadoutKey, retryCount + 1);
-        
+
         // Exponential backoff
         setTimeout(() => {
           this.loadingStates.delete(loadoutKey);
@@ -3678,19 +3864,19 @@ Generated by thefinalsloadout.com`;
       const fallbackData = {
         analysis: selectedAnalysis,
         roast: selectedAnalysis,
-        fallback: true
+        fallback: true,
       };
-      
+
       // Store fallback analysis in history item
       loadout.aiAnalysis = fallbackData;
       this.saveToStorage();
-      
+
       this.displayAnalysis(analysisElement, fallbackData);
     } finally {
       // Clean up loading state
       this.loadingStates.delete(loadoutKey);
       this.activeRequests--;
-      
+
       // Process queued requests
       this.processQueue();
     }
@@ -3700,13 +3886,13 @@ Generated by thefinalsloadout.com`;
   getCachedAnalysis(loadoutKey) {
     const cached = this.analysisCache.get(loadoutKey);
     if (!cached) return null;
-    
+
     // Check if cache has expired
     if (Date.now() - cached.timestamp > this.cacheExpiryTime) {
       this.analysisCache.delete(loadoutKey);
       return null;
     }
-    
+
     return cached.data;
   }
 
@@ -3714,7 +3900,7 @@ Generated by thefinalsloadout.com`;
   cacheAnalysis(loadoutKey, data) {
     this.analysisCache.set(loadoutKey, {
       data: data,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 
@@ -3722,7 +3908,7 @@ Generated by thefinalsloadout.com`;
   displayAnalysis(analysisElement, data) {
     const roastText = analysisElement.querySelector(".roast-text");
     const scoreBadge = analysisElement.querySelector(".score-badge");
-    
+
     // Update the analysis display
     analysisElement.classList.remove("loading");
     roastText.textContent = data.analysis || data.roast;
@@ -3745,10 +3931,13 @@ Generated by thefinalsloadout.com`;
 
   // Process queued requests
   processQueue() {
-    if (this.requestQueue.length === 0 || this.activeRequests >= this.maxConcurrentRequests) {
+    if (
+      this.requestQueue.length === 0 ||
+      this.activeRequests >= this.maxConcurrentRequests
+    ) {
       return;
     }
-    
+
     const nextRequest = this.requestQueue.shift();
     if (nextRequest) {
       // Small delay to prevent overwhelming the server

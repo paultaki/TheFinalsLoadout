@@ -550,7 +550,7 @@ async function showSpinWheelOverlay() {
 
         // Show jackpot modal after a short delay
         setTimeout(() => {
-          showJackpotModal(result.spins).then((classWeight) => {
+          showJackpotModal(result.spins).then(() => {
             // Stop idle animation
             if (spinWheelState.idleAnimationId) {
               cancelAnimationFrame(spinWheelState.idleAnimationId);
@@ -566,7 +566,7 @@ async function showSpinWheelOverlay() {
                 value: result.value,
                 spins: result.spins,
                 isJackpot: true,
-                classWeight: classWeight,
+                classWeight: null, // No class selection - will proceed to roulette
               });
             }, 300);
           });
@@ -780,50 +780,30 @@ async function showSpinWheelOverlay() {
 
 function showJackpotModal(spins) {
   return new Promise((resolve) => {
-    // Get available classes
-    const availableClasses = window.getAvailableClasses
-      ? window.getAvailableClasses()
-      : ["Light", "Medium", "Heavy"];
-
-    // If only one class available, auto-select it
-    if (availableClasses.length === 1) {
-      console.log(
-        "🎯 Auto-selecting only available class:",
-        availableClasses[0]
-      );
-      resolve(availableClasses[0]);
-      return;
-    }
-
-    // If no classes available, show error
-    if (availableClasses.length === 0) {
-      alert("Please select at least one class in the filters!");
-      resolve(null);
-      return;
-    }
+    // Earn free respin immediately when jackpot hits
+    const respinEarned = window.earnFreeRespin
+      ? window.earnFreeRespin()
+      : false;
+    console.log("🎰 Jackpot hit! Respin earned:", respinEarned);
+    window.debugRespin &&
+      window.debugRespin(`Jackpot hit! Respin earned: ${respinEarned}`);
 
     const { backdrop, content } = createOverlayStructure();
 
-    // Create jackpot modal
+    // Create jackpot modal - simple popup without class selection
     const modal = document.createElement("div");
     modal.className = "jackpot-modal-content";
 
-    // Build class buttons dynamically
-    const classButtonsHTML = availableClasses
-      .map(
-        (cls) =>
-          `<button class="class-button ${cls.toLowerCase()}" data-weight="${cls}">${cls}</button>`
-      )
-      .join("");
-
+    // Simple jackpot message without class selection
     modal.innerHTML = `
       <div class="jackpot-title">JACKPOT!</div>
-      <div class="jackpot-message">You earned <span class="jackpot-spins">${spins}</span> spins!</div>
-      <div class="jackpot-subtitle">Choose Your Class</div>
-      <div class="class-buttons">
-        ${classButtonsHTML}
-      </div>
+      <div class="jackpot-message">${spins} SPINS</div>
+      <div class="jackpot-respin-bonus">+ FREE RESPIN</div>
     `;
+
+    // Debug logging
+    window.debugRespin &&
+      window.debugRespin("Showing jackpot popup", { spins, respinEarned });
 
     content.appendChild(modal);
 
@@ -833,22 +813,16 @@ function showJackpotModal(spins) {
       modal.classList.add("active");
     });
 
-    // Handle class selection
-    const buttons = modal.querySelectorAll(".class-button");
-    buttons.forEach((button) => {
-      button.addEventListener("click", (e) => {
-        const classWeight = e.target.dataset.weight;
-
-        // Animate out
+    // Auto-proceed after showing the jackpot message
+    setTimeout(() => {
         modal.classList.remove("active");
         backdrop.classList.remove("active");
 
         setTimeout(() => {
           clearOverlay();
-          resolve(classWeight);
+          resolve(null); // No class selected - will proceed to roulette
         }, 300);
-      });
-    });
+    }, 2500); // Show jackpot message for 2.5 seconds, then auto-proceed
   });
 }
 
@@ -1409,13 +1383,16 @@ async function startLoadoutGeneration() {
     overlayState.spinCount = spinResult.spins;
     overlayState.isJackpot = spinResult.isJackpot;
 
-    // Step 2: Handle class selection based on jackpot status
+    // Step 2: Handle class selection - both jackpot and normal go through roulette
     if (spinResult.isJackpot) {
-      // Jackpot path - class was already selected in the modal
-      overlayState.selectedClass = spinResult.classWeight;
-
-      // Skip the reveal card and go straight to slot machine
-      // The user already knows they got a jackpot and selected their class
+      console.log("🎰 Jackpot detected, proceeding to class roulette");
+      // Show jackpot reveal first
+      await showRevealCard({
+        title: "JACKPOT!",
+        subtitle: `${spinResult.spins} SPINS + FREE RESPIN`,
+        duration: 2000,
+        isJackpot: true,
+      });
     } else {
       // Normal path - show spin count reveal first
       await showRevealCard({
@@ -1426,23 +1403,23 @@ async function startLoadoutGeneration() {
         duration: 2000,
         isJackpot: false,
       });
-
-      // Then show roulette for class selection
-      overlayState.selectedClass = await showClassRouletteOverlay();
-
-      // Check if roulette was cancelled (no classes available)
-      if (!overlayState.selectedClass) {
-        console.log("❌ No class selected, cancelling flow");
-        return;
-      }
-
-      // Show class reveal
-      await showRevealCard({
-        title: overlayState.selectedClass.toUpperCase(),
-        subtitle: "CLASS SELECTED!",
-        duration: 2000,
-      });
     }
+
+    // Both jackpot and normal proceed to roulette
+    overlayState.selectedClass = await showClassRouletteOverlay();
+
+    // Check if roulette was cancelled (no classes available)
+    if (!overlayState.selectedClass) {
+      console.log("❌ No class selected, cancelling flow");
+      return;
+    }
+
+    // Show class reveal
+    await showRevealCard({
+      title: overlayState.selectedClass.toUpperCase(),
+      subtitle: "CLASS SELECTED!",
+      duration: 2000,
+    });
 
     // Step 4: Show slot machine overlay
     console.log("🎰 Starting slot machine overlay with:", {
