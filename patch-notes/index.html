@@ -2,71 +2,68 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com" />
+
+    <!-- SEO Meta Tags -->
     <title>
-      The Finals Season 7 Patch Notes (June 2025) – The Divide Meta Changes,
-      Buffs & Nerfs
+      Patch Notes 7.3.0: BLAST OFF! – The Finals Season 7 | Balance Changes & Updates
     </title>
     <meta
       name="description"
-      content="Season 7: The Divide is live! Discover new specializations (H+ Infuser, Breach Drill), Nozomi map, weapon buffs for KS-23 & ARN-220, XP-54 nerf, and Practice Range. Full patch notes v7.0."
+      content="The Finals Update 7.3.0 BLAST OFF! brings major balance changes: CL-40 nerf, Healing Emitter rework, Sledgehammer buff, and new Blast Off! mode. Complete patch notes inside."
     />
-    <link rel="canonical" href="https://thefinalsloadout.com/patch-notes/" />
+    <meta
+      name="keywords"
+      content="The Finals patch notes, Season 7 update, BLAST OFF, CL-40 nerf, Healing Emitter rework, weapon balance, The Finals 7.3.0"
+    />
+    <meta name="author" content="Paul Takisaki" />
+    <meta name="robots" content="index, follow" />
 
-    <!-- Open Graph -->
+    <!-- Open Graph Meta Tags -->
     <meta
       property="og:title"
-      content="The Finals Season 7: The Divide Patch Notes (June 2025) - Meta Changes & New Content"
+      content="The Finals Update 7.3.0: BLAST OFF! Patch Notes"
     />
     <meta
       property="og:description"
-      content="Season 7: The Divide brings new specializations, Nozomi map, weapon balance changes, and Practice Range. Complete v7.0 patch notes inside!"
+      content="Major balance update: CL-40 self-damage increased, Healing Emitter reworked, smoke detection fixed. Plus new Blast Off! mode."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://thefinalsloadout.com/patch-notes/"
     />
     <meta
       property="og:image"
-      content="https://www.thefinalsloadout.com/images/patch-notes-v690.webp"
+      content="https://thefinalsloadout.com/images/the-finals-logo.webp"
     />
-    <meta
-      property="og:url"
-      content="https://www.thefinalsloadout.com/patch-notes/"
-    />
-    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Finals Loadout" />
 
-    <!-- Twitter Card -->
+    <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="The Finals Season 7: The Divide Patch Notes (June 2025) - Meta Changes & New Content"
-    />
+    <meta name="twitter:title" content="The Finals Update 7.3.0: BLAST OFF!" />
     <meta
       name="twitter:description"
-      content="Get the complete Season 7 breakdown: H+ Infuser, Breach Drill, Healing Emitter, KS-23 & ARN-220 buffs, XP-54 nerf, and new Nozomi map."
+      content="CL-40 nerfed, Healing Emitter reworked, new low-gravity mode. Full patch notes."
     />
     <meta
       name="twitter:image"
-      content="https://www.thefinalsloadout.com/images/patch-notes-v690.webp"
+      content="https://thefinalsloadout.com/images/the-finals-logo.webp"
     />
 
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "The Finals Season 7: The Divide Patch Notes (June 2025) - Meta Changes & New Content",
-        "description": "Official patch notes for The Finals Season 7: The Divide. New specializations (H+ Infuser, Breach Drill, Healing Emitter), Nozomi map, weapon balance changes, Practice Range, and more in v7.0.",
-        "url": "https://www.thefinalsloadout.com/patch-notes/",
-        "image": "https://www.thefinalsloadout.com/images/patch-notes-v690.webp",
-        "author": {
-          "@type": "Organization",
-          "name": "Paul Takisaki"
-        }
-      }
-    </script>
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://thefinalsloadout.com/patch-notes/" />
 
-    <!-- Google Analytics -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+
+    <!-- Google Analytics (GA4) -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"
@@ -80,1296 +77,1234 @@
       gtag("config", "G-GVGKYFGZ1Z");
     </script>
 
-    <!-- Fonts & Favicon -->
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
-      media="print"
-      onload="this.media='all'"
     />
-    <noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-      />
-    </noscript>
 
-    <!-- Preload Critical Resources -->
-    <link rel="preload" href="/style.css" as="style" />
-    <link rel="preload" href="/patch-notes/style.css" as="style" />
-    <link rel="preload" href="app.js" as="script" />
+    <!-- AI Chat Widget Styles -->
+    <link rel="stylesheet" href="../css/finals-chat.css" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="/style.css" />
-    <link rel="stylesheet" href="/patch-notes/style.css" />
-
-    <!-- Season 7 Table Styles -->
     <style>
-      .balance-table {
-        margin: 1rem 0;
-        overflow-x: auto;
+      /* Quantum-inspired color palette */
+      :root {
+        --quantum-cyan: #00f0c0;
+        --quantum-purple: #7b2fe3;
+        --quantum-pink: #ff2a6d;
+        --quantum-blue: #1e90ff;
+        --quantum-yellow: #ffb700;
+        --quantum-dark: #0a0c12;
+        --quantum-component: #181c27;
+        --quantum-border: #3a3f5e;
+        --quantum-text: #e0e7ff;
+        --quantum-secondary: #a0aed0;
+        --quantum-green: #00ff88;
+        --quantum-red: #ff3366;
+        --quantum-orange: #ff6b35;
       }
 
-      .balance-table table {
+      /* Base Styles */
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--quantum-dark);
+        min-height: 100%;
+      }
+
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        color: var(--quantum-text);
+        background: transparent;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      /* Quantum grid background */
+      .quantum-grid {
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
-        border-collapse: collapse;
-        background: rgba(0, 0, 0, 0.3);
+        height: 100%;
+        background-image: linear-gradient(
+            rgba(0, 240, 192, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 240, 192, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 0;
+      }
+
+      /* Main container */
+      .main-container {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Navigation */
+      .quantum-nav {
+        background: rgba(24, 28, 39, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--quantum-border);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: 1rem 2rem;
+      }
+
+      .quantum-nav a {
+        color: var(--quantum-secondary);
+        text-decoration: none;
+        padding: 0.5rem 1.5rem;
         border-radius: 8px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.875rem;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
         overflow: hidden;
       }
 
-      .balance-table th,
-      .balance-table td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      .quantum-nav a::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--quantum-cyan),
+          transparent
+        );
+        transition: left 0.5s ease;
       }
 
-      .balance-table th {
-        background: rgba(0, 0, 0, 0.5);
+      .quantum-nav a:hover {
+        color: var(--quantum-cyan);
+        transform: translateY(-2px);
+      }
+
+      .quantum-nav a:hover::before {
+        left: 100%;
+      }
+
+      .quantum-nav a.active {
+        background: linear-gradient(
+          135deg,
+          var(--quantum-cyan),
+          var(--quantum-blue)
+        );
+        color: var(--quantum-dark);
         font-weight: 600;
-        color: #ffb700;
       }
 
-      .weapon-icon-small {
-        width: 24px;
-        height: 24px;
-        margin-right: 8px;
-        vertical-align: middle;
+      /* Header */
+      .quantum-header {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 240, 192, 0.1),
+          rgba(123, 47, 227, 0.05)
+        );
+        border-bottom: 1px solid var(--quantum-border);
+        padding: 3rem 0;
+        position: relative;
+        overflow: hidden;
       }
 
-      .buff-row {
-        background: rgba(76, 175, 80, 0.1);
+      .quantum-title {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        background: linear-gradient(
+          135deg,
+          var(--quantum-cyan),
+          var(--quantum-purple),
+          var(--quantum-pink)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        line-height: 1.1;
       }
 
-      .nerf-row {
-        background: rgba(244, 67, 54, 0.1);
+      /* Floating particles */
+      .particle {
+        position: fixed;
+        pointer-events: none;
+        opacity: 0.6;
+        background: var(--quantum-cyan);
+        width: 2px;
+        height: 2px;
+        border-radius: 50%;
+        box-shadow: 0 0 6px var(--quantum-cyan);
+      }
+
+      /* Update badges */
+      .update-badge {
+        display: inline-block;
+        padding: 0.375rem 1rem;
+        border-radius: 24px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .update-badge.live {
+        background: rgba(0, 255, 136, 0.2);
+        color: var(--quantum-green);
+        border: 1px solid rgba(0, 255, 136, 0.3);
+      }
+
+      /* Change cards */
+      .change-card {
+        background: rgba(24, 28, 39, 0.6);
+        border: 1px solid var(--quantum-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .change-card::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(
+          45deg,
+          var(--quantum-cyan),
+          var(--quantum-purple),
+          var(--quantum-pink)
+        );
+        border-radius: 12px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+      }
+
+      .change-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+      }
+
+      .change-card:hover::before {
+        opacity: 0.5;
+      }
+
+      /* Change type badges - simplified */
+      .change-type {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.625rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--quantum-text);
+        border: none;
+      }
+
+      .change-type.nerf {
+        color: #ff6b6b;
+      }
+
+      .change-type.buff {
+        color: #51cf66;
+      }
+
+      .change-type.rework {
+        color: #a78bfa;
+      }
+
+      .change-type.new {
+        color: #ffd93d;
+      }
+
+      .change-type.fix {
+        color: #4ecdc4;
+      }
+
+      /* Stat changes */
+      .stat-change {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        margin: 0.5rem 0;
+      }
+
+      .stat-before {
+        color: var(--quantum-secondary);
+        text-decoration: line-through;
+      }
+
+      .stat-after {
+        font-family: "Fira Code", monospace;
+        font-weight: 600;
+      }
+
+      .stat-after.buff {
+        color: var(--quantum-green);
+      }
+
+      .stat-after.nerf {
+        color: var(--quantum-red);
+      }
+
+      /* Section headers */
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .section-icon {
+        font-size: 2rem;
+      }
+
+      /* Quick summary */
+      .tldr-card {
+        background: linear-gradient(
+          135deg,
+          rgba(123, 47, 227, 0.1),
+          rgba(0, 240, 192, 0.05)
+        );
+        border: 1px solid var(--quantum-border);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .tldr-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        transition: all 0.3s ease;
+      }
+
+      .tldr-item:hover {
+        transform: translateX(8px);
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      /* Impact badges */
+      .impact-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 24px;
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+
+      .impact-badge.high {
+        background: rgba(255, 51, 102, 0.2);
+        color: var(--quantum-red);
+        border: 1px solid rgba(255, 51, 102, 0.3);
+      }
+
+      .impact-badge.medium {
+        background: rgba(255, 183, 0, 0.2);
+        color: var(--quantum-yellow);
+        border: 1px solid rgba(255, 183, 0, 0.3);
+      }
+
+      .impact-badge.low {
+        background: rgba(0, 240, 192, 0.2);
+        color: var(--quantum-cyan);
+        border: 1px solid rgba(0, 240, 192, 0.3);
+      }
+
+      /* Weapon image */
+      .weapon-icon {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 8px;
+      }
+
+      /* Footer */
+      footer {
+        border-top: 1px solid var(--quantum-border);
+        padding: 2rem 0;
+        margin-top: 4rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .quantum-nav {
+          padding: 0.75rem 1rem;
+        }
+
+        .quantum-nav a {
+          font-size: 0.75rem;
+          padding: 0.375rem 0.75rem;
+        }
+
+        .change-card {
+          padding: 1rem;
+        }
+
+        .quantum-header {
+          padding: 2rem 0;
+        }
+
+        .quantum-title {
+          font-size: 2rem;
+        }
+      }
+
+      /* Animations */
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(255, 183, 0, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(255, 183, 0, 0.8);
+        }
+      }
+
+      .glow-effect {
+        animation: pulse-glow 2s infinite;
+      }
+
+      /* Scanline effect */
+      .scanline {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--quantum-cyan),
+          transparent
+        );
+        opacity: 0.5;
+        animation: scanline 8s linear infinite;
+        pointer-events: none;
+        z-index: 999;
+      }
+
+      @keyframes scanline {
+        0% {
+          transform: translateY(-100vh);
+        }
+        100% {
+          transform: translateY(100vh);
+        }
+      }
+
+      /* Event mode badge */
+      .event-badge {
+        background: linear-gradient(
+          135deg,
+          var(--quantum-purple),
+          var(--quantum-pink)
+        );
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 24px;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        font-size: 0.875rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        display: inline-block;
+        box-shadow: 0 4px 20px rgba(123, 47, 227, 0.3);
+      }
+
+      /* Class badges */
+      .class-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 16px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .class-badge.light {
+        background: rgba(0, 240, 192, 0.2);
+        color: var(--quantum-cyan);
+        border: 1px solid rgba(0, 240, 192, 0.3);
+      }
+
+      .class-badge.medium {
+        background: rgba(123, 47, 227, 0.2);
+        color: var(--quantum-purple);
+        border: 1px solid rgba(123, 47, 227, 0.3);
+      }
+
+      .class-badge.heavy {
+        background: rgba(255, 183, 0, 0.2);
+        color: var(--quantum-yellow);
+        border: 1px solid rgba(255, 183, 0, 0.3);
+      }
+
+      .class-badge.all {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 240, 192, 0.2),
+          rgba(123, 47, 227, 0.2),
+          rgba(255, 183, 0, 0.2)
+        );
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      /* Metallic Chrome Text Effect */
+      .metallic-title {
+        position: relative;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        text-transform: uppercase;
+        background: linear-gradient(
+          to bottom,
+          #eee 0%,
+          #999 50%,
+          #777 51%,
+          #555 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        text-shadow: 
+          0 1px 0 #ccc,
+          0 2px 0 #c9c9c9,
+          0 3px 0 #bbb,
+          0 4px 0 #b9b9b9,
+          0 5px 0 #aaa,
+          0 6px 1px rgba(0,0,0,.1),
+          0 0 5px rgba(0,0,0,.1),
+          0 1px 3px rgba(0,0,0,.3),
+          0 3px 5px rgba(0,0,0,.2),
+          0 5px 10px rgba(0,0,0,.25);
+        filter: brightness(1.2);
+        z-index: 1;
+      }
+
+      /* Shine sweep effect */
+      .metallic-title::before {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        background: linear-gradient(
+          105deg,
+          transparent 40%,
+          rgba(255, 255, 255, 0.7) 45%,
+          rgba(255, 255, 255, 0.9) 50%,
+          rgba(255, 255, 255, 0.7) 55%,
+          transparent 60%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        animation: metallic-shine 4s ease-in-out infinite;
+        background-size: 200% 100%;
+        background-position: -100% 0;
+      }
+
+      @keyframes metallic-shine {
+        0% {
+          background-position: -100% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+
+      /* Alternative chrome style with more depth */
+      .chrome-title {
+        position: relative;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        text-transform: uppercase;
+        background: linear-gradient(
+          to bottom,
+          #d4d4d4 0%,
+          #f9f9f9 10%,
+          #e8e8e8 25%,
+          #9a9a9a 50%,
+          #787878 51%,
+          #656565 60%,
+          #4b4b4b 80%,
+          #2e2e2e 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        text-shadow: 
+          0 1px 0 rgba(255,255,255,0.4),
+          0 -1px 0 rgba(0,0,0,0.3);
+        letter-spacing: 0.05em;
+      }
+
+      /* Enhanced metallic effect for the main title */
+      h1.quantum-title.metallic-title {
+        margin-bottom: 1rem;
+        line-height: 1.1;
+      }
+
+      /* Mobile adjustments */
+      @media (max-width: 768px) {
+        .metallic-title {
+          text-shadow: 
+            0 1px 0 #ccc,
+            0 2px 0 #bbb,
+            0 3px 0 #aaa,
+            0 4px 1px rgba(0,0,0,.1),
+            0 0 3px rgba(0,0,0,.1);
+        }
       }
     </style>
   </head>
-
   <body>
-    <!-- Scroll Progress Bar -->
-    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+    <div class="quantum-grid"></div>
+    <div class="scanline"></div>
 
-    <!-- Return to Top Button -->
-    <button
-      class="return-to-top"
-      id="returnToTop"
-      aria-label="Return to top"
-      title="Return to top"
-    >
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <polyline points="18 15 12 9 6 15"></polyline>
-      </svg>
-    </button>
-
-    <nav class="main-nav">
-      <a href="/index.html">Home</a>
-      <a href="/ragequit/index.html">New Rage Quit</a>
-      <a href="/meta-weapons/">Meta Weapons</a>
-      <a href="/feedback/index.html">Feedback</a>
-    </nav>
-
-    <main class="patch-notes">
-      <!-- Hero Section -->
-      <header class="patch-header">
-        <!-- Animated Background -->
-        <div class="hero-background">
-          <div class="floating-icons">
-            <img
-              src="../images/H+_Infuser.webp"
-              alt="H+ Infuser"
-              class="floating-icon"
-            />
-            <img
-              src="../images/Breach_Drill.webp"
-              alt="Breach Drill"
-              class="floating-icon"
-            />
-            <img
-              src="../images/Healing_Emitter.webp"
-              alt="Healing Emitter"
-              class="floating-icon"
-            />
-            <img src="../images/KS-23.webp" alt="KS-23" class="floating-icon" />
-            <img src="../images/XP-54.webp" alt="XP-54" class="floating-icon" />
-          </div>
-        </div>
-
-        <div class="patch-meta">
-          <span class="patch-version">v7.0</span>
-          <span class="season-badge">SEASON 7</span>
-          <time class="patch-date">June 11, 2025</time>
-        </div>
-
-        <h1 class="patch-title">Season 7: The Divide</h1>
-        <p class="patch-summary">
-          The most ambitious season yet brings new specializations, a stunning
-          new map, and game-changing balance updates that will reshape The
-          Finals meta.
-        </p>
-
-        <!-- Quick Stats Bar -->
-        <div class="patch-stats">
-          <div class="stat-item buffs">
-            <span class="stat-count">2</span>
-            <span class="stat-label">Buffs</span>
-          </div>
-          <div class="stat-item nerfs">
-            <span class="stat-count">1</span>
-            <span class="stat-label">Nerfs</span>
-          </div>
-          <div class="stat-item new">
-            <span class="stat-count">6</span>
-            <span class="stat-label">New</span>
-          </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="hero-actions">
-          <button
-            class="hero-btn primary"
-            onclick="document.getElementById('content').scrollIntoView({behavior: 'smooth'})"
-          >
-            <span>Explore Changes</span>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M7 13l5 5 5-5" />
-              <path d="M7 6l5 5 5-5" />
-            </svg>
-          </button>
-          <button
-            class="hero-btn secondary"
-            onclick="window.open('/meta-weapons/', '_blank')"
-          >
-            <span>View Meta Guide</span>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
-              />
-              <path
-                d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
-              />
-            </svg>
-          </button>
-        </div>
-      </header>
-
-      <!-- Enhanced Navigation -->
-      <nav class="patch-nav" data-sticky>
-        <div class="nav-container">
-          <div class="nav-buttons">
-            <button class="nav-item active" data-section="content">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-                />
-                <polyline points="14,2 14,8 20,8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-                <polyline points="10,9 9,9 8,9" />
-              </svg>
-              New Content
-            </button>
-            <button class="nav-item" data-section="maps">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
-                <line x1="8" y1="2" x2="8" y2="18" />
-                <line x1="16" y1="6" x2="16" y2="22" />
-              </svg>
-              Maps
-            </button>
-            <button class="nav-item" data-section="weapons">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                <path d="M2 17l10 5 10-5" />
-                <path d="M2 12l10 5 10-5" />
-              </svg>
-              Balance
-            </button>
-            <button class="nav-item" data-section="events">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
-              Events
-            </button>
-            <button class="nav-item" data-section="fixes">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M9 12l2 2 4-4" />
-                <path d="M21 12c-1 0-2-1-2-2s1-2 2-2 2 1 2 2-1 2-2 2z" />
-                <path d="M3 12c1 0 2-1 2-2s-1-2-2-2-2 1-2 2 1 2 2 2z" />
-                <path d="M12 3c0 1-1 2-2 2s-2-1-2-2 1-2 2-2 2 1 2 2z" />
-                <path d="M12 21c0-1 1-2 2-2s2 1 2 2-1 2-2 2-2-1-2-2z" />
-              </svg>
-              Bug Fixes
-            </button>
+    <div class="main-container">
+      <!-- Navigation -->
+      <nav class="quantum-nav">
+        <div class="container mx-auto flex justify-between items-center">
+          <div class="flex items-center gap-6">
+            <a href="../index.html">LOADOUT GENERATOR</a>
+            <a href="../ragequit/index.html">RAGE QUIT</a>
+            <a href="#" class="active">PATCH NOTES</a>
+            <a href="../meta-weapons/index.html">META WEAPONS</a>
           </div>
         </div>
       </nav>
 
-      <!-- Enhanced Filter Bar -->
-      <div class="filter-bar">
-        <div class="filter-container">
-          <button class="filter-button active" data-filter="all">
-            <span class="filter-count">9</span>
-            All Changes
-          </button>
-          <button class="filter-button" data-filter="buff">
-            <span class="filter-count">2</span>
-            Buffs Only
-          </button>
-          <button class="filter-button" data-filter="nerf">
-            <span class="filter-count">1</span>
-            Nerfs Only
-          </button>
-          <button class="filter-button" data-filter="new">
-            <span class="filter-count">6</span>
-            New Content
-          </button>
+      <!-- Header -->
+      <header class="quantum-header">
+        <div class="container mx-auto px-4">
+          <div class="flex items-center gap-4 mb-4">
+            <span class="update-badge live">UPDATE 7.3.0</span>
+            <span class="event-badge">🚀 BLAST OFF!</span>
+          </div>
+          <h1 class="quantum-title metallic-title text-5xl md:text-6xl mb-2" data-text="Update 7.3.0: BLAST OFF!">
+            Update 7.3.0: BLAST OFF!
+          </h1>
+          <p class="text-xl text-quantum-secondary">
+            Low gravity chaos • Explosive rewards • Major balance changes
+          </p>
+          <div class="mt-4 flex items-center gap-4">
+            <span class="text-sm text-quantum-secondary">July 3, 2025</span>
+            <span class="text-sm text-quantum-secondary">•</span>
+            <span class="text-sm text-quantum-secondary">Season 7: The Divide</span>
+          </div>
         </div>
-      </div>
+      </header>
 
-      <!-- Content Sections -->
-      <div class="patch-content">
-        <!-- New Content Section -->
-        <section class="patch-section" id="content">
-          <h2 class="section-title">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
-            New Content
-          </h2>
+      <!-- Main Content -->
+      <main class="py-8">
+        <div class="container mx-auto px-4">
+          <!-- Quick Summary Section -->
+          <section class="mb-12">
+            <div class="tldr-card">
+              <h2 class="text-2xl font-bold mb-4" style="color: var(--quantum-yellow)">
+                🎯 TL;DR - What Changed (Why You Should Care)
+              </h2>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div class="tldr-item">
+                  <span class="text-2xl">💥</span>
+                  <div>
+                    <strong style="color: var(--quantum-red)">CL-40 self-damage +35%</strong>
+                    <p class="text-sm text-quantum-secondary">No more free feet shots</p>
+                  </div>
+                </div>
+                <div class="tldr-item">
+                  <span class="text-2xl">🏥</span>
+                  <div>
+                    <strong style="color: var(--quantum-purple)">Healing Emitter reworked</strong>
+                    <p class="text-sm text-quantum-secondary">Can't drop & forget anymore</p>
+                  </div>
+                </div>
+                <div class="tldr-item">
+                  <span class="text-2xl">💨</span>
+                  <div>
+                    <strong style="color: var(--quantum-cyan)">Smoke detection fixed</strong>
+                    <p class="text-sm text-quantum-secondary">Recon gadgets see through</p>
+                  </div>
+                </div>
+                <div class="tldr-item">
+                  <span class="text-2xl">🔨</span>
+                  <div>
+                    <strong style="color: var(--quantum-green)">Sledgehammer reliable</strong>
+                    <p class="text-sm text-quantum-secondary">Hit detection improved</p>
+                  </div>
+                </div>
+                <div class="tldr-item">
+                  <span class="text-2xl">🚀</span>
+                  <div>
+                    <strong style="color: var(--quantum-yellow)">Blast Off! mode live</strong>
+                    <p class="text-sm text-quantum-secondary">Low gravity explosive chaos</p>
+                  </div>
+                </div>
+                <div class="tldr-item">
+                  <span class="text-2xl">🏗️</span>
+                  <div>
+                    <strong style="color: var(--quantum-orange)">Destruction 2.0</strong>
+                    <p class="text-sm text-quantum-secondary">Buildings collapse realistically</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
 
-          <!-- H+ Infuser -->
-          <article class="change-card new visible" data-content="h-infuser">
-            <div class="card-header">
-              <div class="weapon-icon">
-                <img
-                  src="../images/H+_Infuser.webp"
-                  alt="H+ Infuser"
-                  loading="lazy"
-                />
+          <!-- Weapon Changes Section -->
+          <section class="mb-12">
+            <div class="section-header">
+              <span class="section-icon">⚔️</span>
+              <h2 class="text-3xl font-bold">Weapon Overhaul</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+              <!-- CL-40 Nerf -->
+              <div class="change-card">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="flex items-center gap-3">
+                    <img src="../images/CL-40.webp" alt="CL-40" class="weapon-icon" />
+                    <div>
+                      <h3 class="text-xl font-bold mb-1">CL-40</h3>
+                      <div class="flex gap-2">
+                        <span class="change-type nerf">NERF</span>
+                        <span class="impact-badge high">HIGH IMPACT</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <p class="text-quantum-secondary mb-4">
+                  The explosive powerhouse gets accuracy and self-damage nerfs to prevent feet-shot abuse.
+                </p>
+
+                <div class="space-y-2">
+                  <div class="stat-change">
+                    <span class="text-sm">Self-damage multiplier:</span>
+                    <span class="stat-before">1.25x</span>
+                    <span>→</span>
+                    <span class="stat-after nerf">1.35x (+35%)</span>
+                  </div>
+                  <div class="stat-change">
+                    <span class="text-sm">Inner blast radius:</span>
+                    <span class="stat-before">60cm</span>
+                    <span>→</span>
+                    <span class="stat-after nerf">50cm</span>
+                  </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-black/30 rounded-lg">
+                  <p class="text-sm">
+                    <strong>💥 Meta Impact:</strong> Splashing at your feet now costs ~20 more HP. Still melts Healing Emitter bunkers—just costs you blood.
+                  </p>
+                </div>
               </div>
-              <div class="change-header">
-                <h3 class="weapon-name">H+ Infuser</h3>
-                <span class="change-type new">LIGHT SPEC</span>
+
+              <!-- H+ Infuser Nerf -->
+              <div class="change-card">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="flex items-center gap-3">
+                    <img src="../images/H+_Infuser.webp" alt="H+ Infuser" class="weapon-icon" />
+                    <div>
+                      <h3 class="text-xl font-bold mb-1">H+ Infuser</h3>
+                      <div class="flex gap-2">
+                        <span class="change-type nerf">NERF</span>
+                        <span class="impact-badge medium">MEDIUM IMPACT</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <p class="text-quantum-secondary mb-4">
+                  25% less healing makes pocket medic plays less oppressive during cashout steals.
+                </p>
+
+                <div class="space-y-2">
+                  <div class="stat-change">
+                    <span class="text-sm">Healing per shot:</span>
+                    <span class="stat-before">20</span>
+                    <span>→</span>
+                    <span class="stat-after nerf">15 (-25%)</span>
+                  </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-black/30 rounded-lg">
+                  <p class="text-sm">
+                    <strong>💉 Meta Impact:</strong> Flat healing per second reduced. Less oppressive during crucial moments.
+                  </p>
+                </div>
               </div>
-              <div class="impact-indicator major">
-                <span>Major</span>
+
+              <!-- Healing Emitter Rework -->
+              <div class="change-card">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="flex items-center gap-3">
+                    <img src="../images/Healing_Emitter.webp" alt="Healing Emitter" class="weapon-icon" />
+                    <div>
+                      <h3 class="text-xl font-bold mb-1">Healing Emitter</h3>
+                      <div class="flex gap-2">
+                        <span class="change-type rework">REWORK</span>
+                        <span class="impact-badge high">HIGH IMPACT</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <p class="text-quantum-secondary mb-4">
+                  Smart placement now crucial - can't drop and forget anymore. Cooldown starts when destroyed.
+                </p>
+
+                <div class="space-y-2">
+                  <div class="stat-change">
+                    <span class="text-sm">Cooldown start:</span>
+                    <span class="stat-before">On Deploy</span>
+                    <span>→</span>
+                    <span class="stat-after buff">On Destroy</span>
+                  </div>
+                  <div class="stat-change">
+                    <span class="text-sm">Manual retrieval:</span>
+                    <span class="stat-after buff">3s cooldown</span>
+                  </div>
+                  <div class="stat-change">
+                    <span class="text-sm">Remote retrieval:</span>
+                    <span class="stat-after nerf">15s cooldown</span>
+                  </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-black/30 rounded-lg">
+                  <p class="text-sm">
+                    <strong>🏥 Meta Impact:</strong> Smart placement critical. Lazy deployments backfire.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Sledgehammer Buff -->
+              <div class="change-card">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="flex items-center gap-3">
+                    <img src="../images/Sledgehammer.webp" alt="Sledgehammer" class="weapon-icon" />
+                    <div>
+                      <h3 class="text-xl font-bold mb-1">Sledgehammer</h3>
+                      <div class="flex gap-2">
+                        <span class="change-type buff">BUFF</span>
+                        <span class="impact-badge medium">MEDIUM IMPACT</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <p class="text-quantum-secondary mb-4">
+                  Fewer ghost swings - melee finally feels consistent with improved hit detection.
+                </p>
+
+                <div class="space-y-2">
+                  <div class="stat-change">
+                    <span class="text-sm">Primary attack height:</span>
+                    <span class="stat-before">15cm</span>
+                    <span>→</span>
+                    <span class="stat-after buff">25cm (+67%)</span>
+                  </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-black/30 rounded-lg">
+                  <p class="text-sm">
+                    <strong>🔨 Gameplay Impact:</strong> 67% taller hit detection means fewer frustrating misses.
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Type:</span>
-                <span class="stat-value">Precision healing gun</span>
+            <!-- Weapon Swap Speed Changes -->
+            <div class="change-card mt-6">
+              <h3 class="text-xl font-bold mb-4">⚡ Weapon Draw/Holster Speed Changes</h3>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="text-lg font-semibold mb-3" style="color: var(--quantum-green)">
+                    ✅ Faster Swaps
+                  </h4>
+                  <ul class="space-y-2">
+                    <li class="text-sm">
+                      <strong>93R:</strong> 0.20s → 0.15s (both)
+                    </li>
+                    <li class="text-sm">
+                      <strong>XP-54:</strong> 0.23s → 0.20s
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 class="text-lg font-semibold mb-3" style="color: var(--quantum-red)">
+                    🐌 Slower Swaps
+                  </h4>
+                  <ul class="space-y-2">
+                    <li class="text-sm"><strong>AKM:</strong> 0.23s → 0.30s equip</li>
+                    <li class="text-sm"><strong>FCAR:</strong> 0.20s → 0.30s equip</li>
+                    <li class="text-sm"><strong>FAMAS:</strong> 0.20s → 0.30s equip</li>
+                    <li class="text-sm"><strong>Lewis Gun:</strong> 0.23s → 0.35s (heaviest)</li>
+                    <li class="text-sm"><strong>LH1:</strong> 0.15s → 0.30s (doubled)</li>
+                    <li class="text-sm"><strong>Model 1887:</strong> 0.15s → 0.30s (doubled)</li>
+                    <li class="text-sm"><strong>SR-84:</strong> 0.15s → 0.30s (doubled)</li>
+                  </ul>
+                </div>
               </div>
-              <div class="stat-info">
-                <span class="stat-label">Class:</span>
-                <span class="stat-value">Light only</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value">Meta-shifting support tool</span>
+
+              <div class="mt-4 p-3 bg-black/30 rounded-lg text-center">
+                <p class="text-sm">
+                  <strong>Impact:</strong> Quick-swap playstyles nerfed. Commit to your primary weapon.
+                </p>
               </div>
             </div>
+          </section>
 
-            <p class="change-summary">
-              Precision healing tool for supporting teammates at range. This new
-              specialization gives Light players a dedicated support role,
-              potentially creating new team compositions and strategies.
-            </p>
-
-            <div class="card-actions">
-              <button class="action-btn" onclick="toggleDetails(this)">
-                <span>View Details</span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6,9 12,15 18,9" />
-                </svg>
-              </button>
-            </div>
-          </article>
-
-          <!-- Breach Drill -->
-          <article class="change-card new" data-content="breach-drill">
-            <div class="card-header">
-              <div class="weapon-icon">
-                <img
-                  src="../images/Breach_Drill.webp"
-                  alt="Breach Drill"
-                  loading="lazy"
-                />
-              </div>
-              <div class="change-header">
-                <h3 class="weapon-name">Breach Drill</h3>
-                <span class="change-type new">MEDIUM SPEC</span>
-              </div>
-              <div class="impact-indicator major">
-                <span>Major</span>
-              </div>
+          <!-- Game-Changing Fixes Section -->
+          <section class="mb-12">
+            <div class="section-header">
+              <span class="section-icon">🔧</span>
+              <h2 class="text-3xl font-bold">Game-Changing Fixes</h2>
             </div>
 
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Type:</span>
-                <span class="stat-value">Wall-penetrating breach tool</span>
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="change-card">
+                <div class="flex items-center gap-3 mb-3">
+                  <span class="text-2xl">🔍</span>
+                  <h3 class="text-xl font-bold">Smoke Detection Fixed</h3>
+                  <span class="change-type fix">MAJOR FIX</span>
+                </div>
+                <p class="text-quantum-secondary mb-3">
+                  Tracking Dart, Sonar Grenade, and Proximity Sensor now properly reveal enemies through smoke.
+                </p>
+                <div class="p-3 bg-black/30 rounded-lg">
+                  <p class="text-sm">
+                    <strong style="color: var(--quantum-cyan)">Meta Impact:</strong> Smoke grenades no longer hard-counter recon. This is huge.
+                  </p>
+                </div>
               </div>
-              <div class="stat-info">
-                <span class="stat-label">Class:</span>
-                <span class="stat-value">Medium only</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value">Tactical positioning advantage</span>
+
+              <div class="change-card">
+                <div class="flex items-center gap-3 mb-3">
+                  <span class="text-2xl">🚪</span>
+                  <h3 class="text-xl font-bold">Doors More Responsive</h3>
+                  <span class="change-type fix">MINOR FIX</span>
+                </div>
+                <p class="text-quantum-secondary">
+                  Reduced interaction delay for smoother gameplay.
+                </p>
               </div>
             </div>
+          </section>
 
-            <p class="change-summary">
-              Drills through walls to create tactical breach points. This tool
-              will fundamentally change how teams approach objective defense,
-              attack strategies, and counter defensive playstyles.
-            </p>
-
-            <div class="expandable-content">
-              <p>
-                The Breach Drill offers new ways to dismantle enemy defenses and
-                open up the battlefield:
-              </p>
-              <ul>
-                <li>
-                  Create new flanking routes to surprise entrenched enemies.
-                </li>
-                <li>
-                  Destroy enemy gadgets placed on the other side of walls.
-                </li>
-                <li>Open sightlines for long-range engagements.</li>
-              </ul>
+          <!-- Destruction 2.0 Section -->
+          <section class="mb-12">
+            <div class="section-header">
+              <span class="section-icon">🏗️</span>
+              <h2 class="text-3xl font-bold">Destruction 2.0</h2>
             </div>
 
-            <div class="card-actions">
-              <button class="action-btn" onclick="toggleDetails(this)">
-                <span>View Details</span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6,9 12,15 18,9" />
-                </svg>
-              </button>
-            </div>
-          </article>
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="change-card">
+                <h3 class="text-xl font-bold mb-3">Kyoto Pagoda</h3>
+                <div class="flex gap-2 mb-3">
+                  <span class="change-type new">REALISTIC COLLAPSE</span>
+                </div>
+                <ul class="space-y-2 text-sm text-quantum-secondary">
+                  <li>• New Physics Engine</li>
+                  <li>• Natural Fall Patterns</li>
+                  <li>• Weight-Based Destruction</li>
+                </ul>
+              </div>
 
-          <!-- Healing Emitter -->
-          <article class="change-card new" data-content="healing-emitter">
-            <div class="card-header">
-              <div class="weapon-icon">
-                <img
-                  src="../images/Healing_Emitter.webp"
-                  alt="Healing Emitter"
-                  loading="lazy"
-                />
-              </div>
-              <div class="change-header">
-                <h3 class="weapon-name">Healing Emitter</h3>
-                <span class="change-type new">HEAVY SPEC</span>
-              </div>
-              <div class="impact-indicator major">
-                <span>Major</span>
+              <div class="change-card">
+                <h3 class="text-xl font-bold mb-3">Skyway Stadium</h3>
+                <div class="flex gap-2 mb-3">
+                  <span class="change-type new">CHAIN REACTIONS</span>
+                </div>
+                <ul class="space-y-2 text-sm text-quantum-secondary">
+                  <li>• Building Damage Propagation</li>
+                  <li>• Knock-on Effects</li>
+                  <li>• Realistic Break Points</li>
+                </ul>
               </div>
             </div>
+          </section>
 
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Type:</span>
-                <span class="stat-value">Deployable healing aura</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Class:</span>
-                <span class="stat-value">Heavy only</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value">Area control and team sustain</span>
-              </div>
+          <!-- Events Section -->
+          <section class="mb-12">
+            <div class="section-header">
+              <span class="section-icon">🎉</span>
+              <h2 class="text-3xl font-bold">Events & Store</h2>
             </div>
 
-            <p class="change-summary">
-              Area healing device that supports entire team positioning. This
-              specialization will make Heavy players essential for objective
-              control and team survival.
-            </p>
+            <div class="space-y-6">
+              <!-- Blast Off Mode -->
+              <div class="change-card">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="flex items-center gap-3 mb-3">
+                      <span class="text-2xl">🚀</span>
+                      <h3 class="text-xl font-bold">Blast Off! Mode</h3>
+                      <span class="event-badge">NOW LIVE</span>
+                    </div>
+                    <p class="text-quantum-secondary mb-3">
+                      Low gravity Medium-only mode with explosive locked loadouts and pixelated effects.
+                    </p>
+                    <div class="flex gap-3">
+                      <span class="update-badge live">12 Free Rewards</span>
+                      <span class="update-badge live">Quickplay Points</span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-sm text-quantum-secondary">July 3-17</p>
+                  </div>
+                </div>
+              </div>
 
-            <div class="card-actions">
-              <button class="action-btn" onclick="toggleDetails(this)">
-                <span>View Details</span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6,9 12,15 18,9" />
-                </svg>
-              </button>
-            </div>
-          </article>
-        </section>
+              <!-- 4th of July Store -->
+              <div class="change-card">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="flex items-center gap-3 mb-3">
+                      <span class="text-2xl">🎆</span>
+                      <h3 class="text-xl font-bold">4th of July Store</h3>
+                    </div>
+                    <p class="text-quantum-secondary mb-3">
+                      20+ new cosmetics including mesh hoodwear and rocket fists.
+                    </p>
+                    <div class="flex gap-3">
+                      <span class="update-badge live">Patriotic Skins</span>
+                      <span class="update-badge live">Twitch Drops</span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-sm text-quantum-secondary">July 4</p>
+                  </div>
+                </div>
+              </div>
 
-        <!-- Maps Section -->
-        <section class="patch-section" id="maps">
-          <h2 class="section-title">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
-              <line x1="8" y1="2" x2="8" y2="18" />
-              <line x1="16" y1="6" x2="16" y2="22" />
-            </svg>
-            New Map
-          </h2>
-
-          <!-- Nozomi/Citadel -->
-          <article class="change-card new" data-map="nozomi-citadel">
-            <div class="card-header">
-              <div class="weapon-icon">
-                <img
-                  src="../images/placeholder.webp"
-                  alt="Nozomi/Citadel"
-                  loading="lazy"
-                />
-              </div>
-              <div class="change-header">
-                <h3 class="weapon-name">Nozomi/Citadel</h3>
-                <span class="change-type new">NEW MAP</span>
-              </div>
-              <div class="impact-indicator major">
-                <span>Major</span>
-              </div>
-            </div>
-
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Theme:</span>
-                <span class="stat-value"
-                  >Dual-themed destructible environment</span
-                >
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Layout:</span>
-                <span class="stat-value"
-                  >Vertical with strategic chokepoints</span
-                >
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value">New tactical opportunities</span>
+              <!-- World Tour -->
+              <div class="change-card">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="flex items-center gap-3 mb-3">
+                      <span class="text-2xl">🌍</span>
+                      <h3 class="text-xl font-bold">World Tour: CNS</h3>
+                    </div>
+                    <p class="text-quantum-secondary mb-3">
+                      CNS takes over with Standard Cashout - "open your eyes"
+                    </p>
+                    <div class="flex gap-3">
+                      <span class="update-badge live">Broadcast Blaze Set</span>
+                      <span class="update-badge live">ImpOscar Sticker</span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-sm text-quantum-secondary">Now Live</p>
+                  </div>
+                </div>
               </div>
             </div>
+          </section>
 
-            <p class="change-summary">
-              Features contrasting architectural styles with extensive
-              destruction opportunities. This map will introduce new vertical
-              gameplay mechanics and strategic positioning options.
-            </p>
-
-            <div class="card-actions">
-              <button class="action-btn" onclick="toggleDetails(this)">
-                <span>View Details</span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6,9 12,15 18,9" />
-                </svg>
-              </button>
-            </div>
-          </article>
-        </section>
-
-        <!-- Balance Changes Section -->
-        <section class="patch-section" id="weapons">
-          <h2 class="section-title">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
-            Key Balance Changes
-          </h2>
-
-          <!-- XP-54 Nerf -->
-          <article class="change-card nerf" data-weapon="xp-54">
-            <div class="card-header">
-              <div class="weapon-icon">
-                <img src="../images/XP-54.webp" alt="XP-54" loading="lazy" />
-              </div>
-              <div class="change-header">
-                <h3 class="weapon-name">XP-54</h3>
-                <span class="change-type nerf">NERF</span>
-              </div>
-              <div class="impact-indicator major">
-                <span>Major</span>
-              </div>
+          <!-- Class Impact Analysis -->
+          <section class="mb-12">
+            <div class="section-header">
+              <span class="section-icon">📊</span>
+              <h2 class="text-3xl font-bold">Who Wins, Who Loses?</h2>
             </div>
 
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Damage:</span>
-                <span class="stat-value">17 → 16</span>
+            <div class="space-y-4">
+              <div class="change-card">
+                <div class="grid md:grid-cols-3 gap-4 items-center">
+                  <div class="flex items-center gap-3">
+                    <span class="class-badge light">LIGHT</span>
+                  </div>
+                  <div class="flex gap-2 flex-wrap">
+                    <span class="text-sm"><span style="color: var(--quantum-red)">H+ Infuser nerfed</span></span>
+                    <span class="text-sm"><span style="color: var(--quantum-green)">93R faster swaps</span></span>
+                  </div>
+                  <div class="text-right">
+                    <span class="font-bold" style="color: var(--quantum-red)">Slight Nerf</span>
+                  </div>
+                </div>
               </div>
-              <div class="stat-info">
-                <span class="stat-label">RPM:</span>
-                <span class="stat-value">850 → 860</span>
+
+              <div class="change-card">
+                <div class="grid md:grid-cols-3 gap-4 items-center">
+                  <div class="flex items-center gap-3">
+                    <span class="class-badge medium">MEDIUM</span>
+                  </div>
+                  <div class="flex gap-2 flex-wrap">
+                    <span class="text-sm"><span style="color: var(--quantum-red)">CL-40 self-damage up</span></span>
+                    <span class="text-sm"><span style="color: var(--quantum-green)">Blast Off! exclusive</span></span>
+                  </div>
+                  <div class="text-right">
+                    <span class="font-bold" style="color: var(--quantum-yellow)">Neutral</span>
+                  </div>
+                </div>
               </div>
-              <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value">Reduced dominance in meta</span>
+
+              <div class="change-card">
+                <div class="grid md:grid-cols-3 gap-4 items-center">
+                  <div class="flex items-center gap-3">
+                    <span class="class-badge heavy">HEAVY</span>
+                  </div>
+                  <div class="flex gap-2 flex-wrap">
+                    <span class="text-sm"><span style="color: var(--quantum-purple)">Healing Emitter rework</span></span>
+                    <span class="text-sm"><span style="color: var(--quantum-red)">Lewis Gun slower</span></span>
+                  </div>
+                  <div class="text-right">
+                    <span class="font-bold" style="color: var(--quantum-purple)">Skill Gap ↑</span>
+                  </div>
+                </div>
               </div>
             </div>
+          </section>
 
-            <p class="change-summary">
-              The XP-54 receives a slight damage reduction and RPM adjustment to
-              bring it more in line with other weapons and reduce its
-              overwhelming presence in the meta.
-            </p>
-
-            <div class="card-actions">
-              <button class="action-btn" onclick="toggleDetails(this)">
-                <span>View Details</span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6,9 12,15 18,9" />
-                </svg>
-              </button>
-            </div>
-          </article>
-
-          <!-- KS-23 Buff -->
-          <article class="change-card buff" data-weapon="ks-23">
-            <div class="card-header">
-              <div class="weapon-icon">
-                <img src="../images/KS-23.webp" alt="KS-23" loading="lazy" />
-              </div>
-              <div class="change-header">
-                <h3 class="weapon-name">KS-23</h3>
-                <span class="change-type buff">BUFF</span>
-              </div>
-              <div class="impact-indicator minor">
-                <span>Minor</span>
+          <!-- Try These Again Section -->
+          <section class="mb-12">
+            <div class="change-card glow-effect">
+              <h2 class="text-2xl font-bold mb-4" style="color: var(--quantum-cyan)">
+                🔄 Give These Another Shot
+              </h2>
+              <div class="grid md:grid-cols-3 gap-4">
+                <div class="text-center p-4 bg-black/30 rounded-lg">
+                  <h3 class="font-bold mb-2">KS-23</h3>
+                  <p class="text-sm text-quantum-secondary">Accuracy buffed</p>
+                </div>
+                <div class="text-center p-4 bg-black/30 rounded-lg">
+                  <h3 class="font-bold mb-2">Sledgehammer</h3>
+                  <p class="text-sm text-quantum-secondary">Hits register now</p>
+                </div>
+                <div class="text-center p-4 bg-black/30 rounded-lg">
+                  <h3 class="font-bold mb-2">Detection gadgets</h3>
+                  <p class="text-sm text-quantum-secondary">Smoke counter</p>
+                </div>
               </div>
             </div>
+          </section>
 
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Accuracy:</span>
-                <span class="stat-value">Significantly improved</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Class:</span>
-                <span class="stat-value">Heavy only</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value">More reliable close-range option</span>
-              </div>
-            </div>
+          <!-- Generate Loadout CTA Section -->
+          <div class="text-center">
+            <a href="../index.html" 
+               class="inline-block px-8 py-4 bg-gradient-to-r from-quantum-purple to-quantum-blue text-white font-bold rounded-xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl">
+              🎰 Generate Loadout
+            </a>
+          </div>
+        </div>
+      </main>
 
-            <p class="change-summary">
-              The KS-23 shotgun receives accuracy improvements, making it a more
-              reliable choice for Heavy players in close-quarters combat
-              situations.
-            </p>
-
-            <div class="card-actions">
-              <button class="action-btn" onclick="toggleDetails(this)">
-                <span>View Details</span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6,9 12,15 18,9" />
-                </svg>
-              </button>
-            </div>
-          </article>
-
-          <!-- ARN-220 Buff -->
-          <article class="change-card buff" data-weapon="arn-220">
-            <div class="card-header">
-              <div class="weapon-icon">
-                <img
-                  src="../images/ARN-220.webp"
-                  alt="ARN-220"
-                  loading="lazy"
-                />
-              </div>
-              <div class="change-header">
-                <h3 class="weapon-name">ARN-220</h3>
-                <span class="change-type buff">BUFF</span>
-              </div>
-              <div class="impact-indicator minor">
-                <span>Minor</span>
-              </div>
-            </div>
-
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Recoil:</span>
-                <span class="stat-value">Unified recoil pattern</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Class:</span>
-                <span class="stat-value">Medium only</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value">More predictable weapon handling</span>
-              </div>
-            </div>
-
-            <p class="change-summary">
-              The ARN-220 receives a unified recoil pattern, making it easier to
-              control and more predictable for Medium players to use
-              effectively.
-            </p>
-
-            <div class="card-actions">
-              <button class="action-btn" onclick="toggleDetails(this)">
-                <span>View Details</span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6,9 12,15 18,9" />
-                </svg>
-              </button>
-            </div>
-          </article>
-
-          <!-- Melee Weapons Buff -->
-          <article class="change-card buff" data-weapon="melee">
-            <div class="card-header">
-              <div class="weapon-icon">
-                <img
-                  src="../images/Sledgehammer.webp"
-                  alt="Melee Weapons"
-                  loading="lazy"
-                />
-              </div>
-              <div class="change-header">
-                <h3 class="weapon-name">All Melee Weapons</h3>
-                <span class="change-type buff">BUFF</span>
-              </div>
-              <div class="impact-indicator major">
-                <span>Major</span>
-              </div>
-            </div>
-
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Hit Detection:</span>
-                <span class="stat-value">Improved accuracy</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Class:</span>
-                <span class="stat-value">All classes</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value">More reliable melee combat</span>
-              </div>
-            </div>
-
-            <p class="change-summary">
-              All melee weapons receive a major overhaul to hit detection,
-              making close-quarters combat more reliable and consistent across
-              all classes. This is a significant step toward making melee a more
-              viable primary option.
-            </p>
-
-            <div class="expandable-content">
-              <p>
-                The hit detection improvements address long-standing community
-                feedback. Key changes include:
-              </p>
-              <ul class="details-list">
-                <li>Improved lunge consistency.</li>
-                <li>Better hit registration on fast-moving targets.</li>
-                <li>Reduced instances of "no-regs" on direct hits.</li>
-              </ul>
-            </div>
-
-            <div class="card-actions">
-              <button class="action-btn" onclick="toggleDetails(this)">
-                <span>View Details</span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6,9 12,15 18,9" />
-                </svg>
-              </button>
-            </div>
-          </article>
-        </section>
-
-        <!-- Events & Features Section -->
-        <section class="patch-section" id="events">
-          <h2 class="section-title">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-              <line x1="16" y1="2" x2="16" y2="6" />
-              <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" />
-            </svg>
-            Events & Features
-          </h2>
-
-          <!-- Practice Range -->
-          <article class="change-card new" data-event="practice-range">
-            <div class="card-header">
-              <div class="weapon-icon">
-                <img
-                  src="../images/placeholder.webp"
-                  alt="Practice Range"
-                  loading="lazy"
-                />
-              </div>
-              <div class="change-header">
-                <h3 class="weapon-name">Practice Range</h3>
-                <span class="change-type new">NEW FEATURE</span>
-              </div>
-              <div class="impact-indicator minor">
-                <span>Minor</span>
-              </div>
-            </div>
-
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Training:</span>
-                <span class="stat-value"
-                  >Training dummies with hit feedback</span
-                >
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Purpose:</span>
-                <span class="stat-value">Weapon testing and aim practice</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value"
-                  >Improved player skill development</span
-                >
-              </div>
-            </div>
-
-            <p class="change-summary">
-              Perfect your aim and test loadouts in a dedicated training
-              environment. This feature will help players improve their skills
-              and experiment with different weapon combinations.
-            </p>
-
-            <div class="card-actions">
-              <button class="action-btn" onclick="toggleDetails(this)">
-                <span>View Details</span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6,9 12,15 18,9" />
-                </svg>
-              </button>
-            </div>
-          </article>
-
-          <!-- XP Dash Event -->
-          <article class="change-card new" data-event="xp-dash">
-            <div class="card-header">
-              <div class="weapon-icon">
-                <img
-                  src="../images/placeholder.webp"
-                  alt="XP Dash Event"
-                  loading="lazy"
-                />
-              </div>
-              <div class="change-header">
-                <h3 class="weapon-name">XP Dash Event</h3>
-                <span class="change-type new">LIVE NOW</span>
-              </div>
-              <div class="impact-indicator minor">
-                <span>Minor</span>
-              </div>
-            </div>
-
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Bonus:</span>
-                <span class="stat-value"
-                  >Increased XP and progression rewards</span
-                >
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Duration:</span>
-                <span class="stat-value">Limited time event</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value">Faster season progression</span>
-              </div>
-            </div>
-
-            <p class="change-summary">
-              Accelerate your Season 7 progression with bonus rewards. This
-              event provides players with increased XP gains to help them unlock
-              new content faster.
-            </p>
-
-            <div class="card-actions">
-              <button class="action-btn" onclick="toggleDetails(this)">
-                <span>View Details</span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6,9 12,15 18,9" />
-                </svg>
-              </button>
-            </div>
-          </article>
-
-          <!-- Deep Shuffle -->
-          <article class="change-card new" data-event="deep-shuffle">
-            <div class="card-header">
-              <div class="weapon-icon">
-                <img
-                  src="../images/placeholder.webp"
-                  alt="Deep Shuffle"
-                  loading="lazy"
-                />
-              </div>
-              <div class="change-header">
-                <h3 class="weapon-name">Deep Shuffle</h3>
-                <span class="change-type new">CUSTOMIZATION</span>
-              </div>
-              <div class="impact-indicator minor">
-                <span>Minor</span>
-              </div>
-            </div>
-
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">System:</span>
-                <span class="stat-value">Advanced cosmetic customization</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Purpose:</span>
-                <span class="stat-value">Enhanced personalization</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value">More player expression options</span>
-              </div>
-            </div>
-
-            <p class="change-summary">
-              Enhanced customization options for personalizing your contestant.
-              This system provides players with more ways to express their
-              individuality in The Finals.
-            </p>
-
-            <div class="card-actions">
-              <button class="action-btn" onclick="toggleDetails(this)">
-                <span>View Details</span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6,9 12,15 18,9" />
-                </svg>
-              </button>
-            </div>
-          </article>
-        </section>
-
-        <!-- Bug Fixes Section -->
-        <section class="patch-section" id="fixes">
-          <h2 class="section-title">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M9 12l2 2 4-4" />
-              <path d="M21 12c-1 0-2-1-2-2s1-2 2-2 2 1 2 2-1 2-2 2z" />
-              <path d="M3 12c1 0 2-1 2-2s-1-2-2-2-2 1-2 2 1 2 2 2z" />
-              <path d="M12 3c0 1-1 2-2 2s-2-1-2-2 1-2 2-2 2 1 2 2z" />
-              <path d="M12 21c0-1 1-2 2-2s2 1 2 2-1 2-2 2-2-1-2-2z" />
-            </svg>
-            Major Bug Fixes
-          </h2>
-
-          <!-- Gameplay Fixes -->
-          <article class="change-card buff" data-fix="gameplay">
-            <div class="card-header">
-              <div class="weapon-icon">
-                <img
-                  src="../images/placeholder.webp"
-                  alt="Gameplay Improvements"
-                  loading="lazy"
-                />
-              </div>
-              <div class="change-header">
-                <h3 class="weapon-name">Gameplay Improvements</h3>
-                <span class="change-type buff">FIXED</span>
-              </div>
-              <div class="impact-indicator minor">
-                <span>Minor</span>
-              </div>
-            </div>
-
-            <div class="change-details">
-              <div class="stat-info">
-                <span class="stat-label">Audio:</span>
-                <span class="stat-value"
-                  >Improved audio positioning and clarity</span
-                >
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Performance:</span>
-                <span class="stat-value">Optimized frame stability</span>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Impact:</span>
-                <span class="stat-value">Better overall game experience</span>
-              </div>
-            </div>
-
-            <p class="change-summary">
-              Various stability and performance improvements across all
-              platforms. These fixes address audio issues, frame rate stability,
-              and overall game performance.
-            </p>
-
-            <div class="card-actions">
-              <button class="action-btn" onclick="toggleDetails(this)">
-                <span>View Details</span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6,9 12,15 18,9" />
-                </svg>
-              </button>
-            </div>
-          </article>
-        </section>
-      </div>
-
-      <!-- FAQ Section -->
-      <section class="patch-faq patch-section" id="faq">
-        <h2 class="section-title">Patch Notes FAQ (Season 7)</h2>
-
-        <div class="faq-item">
-          <h3 class="faq-question">What's new in The Finals Season 7?</h3>
-          <p class="faq-answer">
-            Season 7 introduces three new specializations (H+ Infuser, Breach
-            Drill, Healing Emitter), a new map called Nozomi/Citadel, the
-            Practice Range, XP Dash event, and multiple balance changes
-            including KS-23 buffs and XP-54 nerfs.
+      <!-- Footer -->
+      <footer class="text-center text-quantum-secondary">
+        <div class="container mx-auto px-4">
+          <p class="mb-2">The Finals Update 7.3.0: BLAST OFF!</p>
+          <p class="text-xs text-quantum-secondary/60">
+            Last updated: July 3, 2025 | Data from official patch notes
+          </p>
+          <p class="text-xs mt-2" style="color: var(--quantum-cyan)">
+            © 2025 TheFinalsLoadout.com | By Paul Takisaki
           </p>
         </div>
+      </footer>
+    </div>
 
-        <div class="faq-item">
-          <h3 class="faq-question">
-            Where can I find the best loadouts after the Season 7 update?
-          </h3>
-          <p class="faq-answer">
-            Check out our
-            <a href="/meta-weapons/">Meta Weapons & Loadouts guide</a> for the
-            latest Season 7 tier lists, class-specific builds, and weapon
-            rankings based on updated stats and player feedback.
-          </p>
-        </div>
-
-        <div class="faq-item">
-          <h3 class="faq-question">
-            What weapons got nerfed or buffed in v7.0?
-          </h3>
-          <p class="faq-answer">
-            XP-54 was nerfed (damage and RPM adjustment), while KS-23, ARN-220,
-            and melee weapons received buffs. See the full
-            <a href="#weapons">weapon balance section</a> for details.
-          </p>
-        </div>
-
-        <div class="faq-item">
-          <h3 class="faq-question">When did The Finals Season 7 go live?</h3>
-          <p class="faq-answer">
-            Season 7 launched on June 11, 2025. It's titled "The Divide" and is
-            available across all platforms with crossplay support.
-          </p>
-        </div>
-      </section>
-
-      <!-- JSON-LD Rich Snippet -->
-      <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "What's new in The Finals Season 7?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Season 7 introduces new specializations, a new map, Practice Range, XP Dash, and balance changes including KS-23 buffs and XP-54 nerfs."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Where can I find the best loadouts after the Season 7 update?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Visit the Meta Weapons & Loadouts guide for Season 7 tier lists, builds, and stat breakdowns based on patch v7.0."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "What weapons got nerfed or buffed in v7.0?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "XP-54 received a nerf. KS-23, ARN-220, and melee weapons were buffed in Season 7."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "When did The Finals Season 7 go live?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "The Finals Season 7 launched on June 11, 2025."
-              }
-            }
-          ]
-        }
-      </script>
-    </main>
-
-    <footer class="footerSection" style="text-align: center">
-      <div class="container" style="text-align: center">
-        <div
-          class="footerRow"
-          style="justify-content: center; text-align: center"
-        >
-          <p style="text-align: center; width: 100%; margin: 0 auto">
-            © 2025 TheFinalsLoadout.com | Created by
-            <strong
-              ><a
-                href="https://www.paultakisaki.com/"
-                rel="author"
-                style="color: #ffb700"
-                >Paul Takisaki</a
-              ></strong
-            >
-            |
-            <a href="/legal/index.html" style="color: #ffb700"
-              >Legal Disclaimer</a
-            >
-          </p>
-        </div>
-      </div>
-    </footer>
-
-    <script defer src="/patch-notes/app.js"></script>
-
-    <!-- Scroll Progress Bar and Return to Top Script -->
     <script>
-      // Scroll Progress Bar
-      function updateScrollProgress() {
-        const scrollTop =
-          window.pageYOffset || document.documentElement.scrollTop;
-        const scrollHeight =
-          document.documentElement.scrollHeight -
-          document.documentElement.clientHeight;
-        const scrollProgress = (scrollTop / scrollHeight) * 100;
-        document.getElementById("scrollProgressBar").style.width =
-          scrollProgress + "%";
+      // Particle effects (matching meta-weapons page)
+      function createParticle() {
+        const particle = document.createElement("div");
+        particle.className = "particle";
+        particle.style.left = Math.random() * window.innerWidth + "px";
+        particle.style.top = Math.random() * window.innerHeight + "px";
+        particle.style.animationDuration = Math.random() * 20 + 10 + "s";
+
+        const colors = [
+          "var(--quantum-cyan)",
+          "var(--quantum-purple)",
+          "var(--quantum-pink)",
+        ];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.background = color;
+        particle.style.boxShadow = `0 0 6px ${color}`;
+
+        document.body.appendChild(particle);
+
+        particle.addEventListener("animationend", () => {
+          particle.remove();
+        });
       }
 
-      // Return to Top Button
-      const returnToTopBtn = document.getElementById("returnToTop");
+      // Create particles periodically
+      setInterval(createParticle, 2000);
 
-      function toggleReturnToTop() {
-        if (window.pageYOffset > 300) {
-          returnToTopBtn.classList.add("visible");
-        } else {
-          returnToTopBtn.classList.remove("visible");
-        }
-      }
-
-      returnToTopBtn.addEventListener("click", () => {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
+      // Add some interactivity
+      document.querySelectorAll('.change-card').forEach(card => {
+        card.addEventListener('click', function() {
+          this.style.transform = 'scale(0.98)';
+          setTimeout(() => {
+            this.style.transform = '';
+          }, 100);
         });
       });
-
-      // Add scroll event listeners
-      window.addEventListener("scroll", () => {
-        updateScrollProgress();
-        toggleReturnToTop();
-      });
-
-      // Initial check
-      toggleReturnToTop();
     </script>
+
+    <!-- AI Chat Widget -->
+    <script src="../js/chat-widget.js" defer></script>
   </body>
 </html>

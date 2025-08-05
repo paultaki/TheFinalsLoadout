@@ -1,7 +1,7 @@
 /**
  * filters.css - Filter panel and checkbox styles
  * Part of The Finals Loadout v2
- * 
+ *
  * Sections:
  * - Filter Panel Layout
  * - Checkbox Styling
@@ -20,6 +20,7 @@
   right: -400px;
   width: 400px;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile */
   background: linear-gradient(to bottom, #1a1a2e, #0f0f1e);
   color: #fff;
   box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
@@ -27,6 +28,8 @@
   z-index: 10000;
   overflow-y: auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .filter-panel.slide-out {
@@ -116,7 +119,7 @@
 }
 
 .tab-button.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -192,20 +195,21 @@
 }
 
 .class-chip.light-chip.active {
-  background: #4FC3F7;
-  border-color: #4FC3F7;
+  background: var(--quantum-cyan);
+  border-color: var(--quantum-cyan);
+  color: var(--quantum-dark);
 }
 
 .class-chip.medium-chip.active {
-  background: #AB47BC;
-  border-color: #AB47BC;
+  background: var(--quantum-purple);
+  border-color: var(--quantum-purple);
   color: #fff;
 }
 
 .class-chip.heavy-chip.active {
-  background: #FF1744;
-  border-color: #FF1744;
-  color: #fff;
+  background: var(--quantum-gold);
+  border-color: var(--quantum-gold);
+  color: var(--quantum-dark);
 }
 
 /* ===================================
@@ -261,7 +265,7 @@
 }
 
 .class-checkbox input[type="checkbox"]:checked + .checkbox-box::after {
-  content: '✓';
+  content: "✓";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -272,13 +276,17 @@
 }
 
 .class-checkbox.light input[type="checkbox"]:checked + .checkbox-box {
-  background: #4FC3F7;
-  border-color: #4FC3F7;
+  background: var(--quantum-cyan);
+  border-color: var(--quantum-cyan);
+}
+
+.class-checkbox.light input[type="checkbox"]:checked + .checkbox-box::after {
+  color: var(--quantum-dark);
 }
 
 .class-checkbox.medium input[type="checkbox"]:checked + .checkbox-box {
-  background: #AB47BC;
-  border-color: #AB47BC;
+  background: var(--quantum-purple);
+  border-color: var(--quantum-purple);
 }
 
 .class-checkbox.medium input[type="checkbox"]:checked + .checkbox-box::after {
@@ -286,8 +294,12 @@
 }
 
 .class-checkbox.heavy input[type="checkbox"]:checked + .checkbox-box {
-  background: #FF1744;
-  border-color: #FF1744;
+  background: var(--quantum-gold);
+  border-color: var(--quantum-gold);
+}
+
+.class-checkbox.heavy input[type="checkbox"]:checked + .checkbox-box::after {
+  color: var(--quantum-dark);
 }
 
 .checkbox-label {
@@ -297,15 +309,15 @@
 }
 
 .light .checkbox-label {
-  color: #4FC3F7;
+  color: var(--quantum-cyan);
 }
 
 .medium .checkbox-label {
-  color: #AB47BC;
+  color: var(--quantum-purple);
 }
 
 .heavy .checkbox-label {
-  color: #FF1744;
+  color: var(--quantum-gold);
 }
 
 /* ===================================
@@ -422,12 +434,12 @@
 }
 
 .item-checkbox input[type="checkbox"]:checked + .checkbox-box {
-  background: #4FC3F7;
-  border-color: #4FC3F7;
+  background: #4fc3f7;
+  border-color: #4fc3f7;
 }
 
 .item-checkbox input[type="checkbox"]:checked + .checkbox-box::after {
-  content: '✓';
+  content: "✓";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -463,6 +475,10 @@
   padding: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(to bottom, #1a1a2e, #0f0f1e);
+  z-index: 10;
 }
 
 .filter-btn {
@@ -506,50 +522,67 @@
   .filter-panel {
     width: 100%;
     right: -100%;
+    height: 100%;
+    height: -webkit-fill-available; /* iOS Safari fix */
+    max-height: 100vh;
+    max-height: 100dvh;
   }
-  
+
   .filter-header {
     padding: 15px;
   }
-  
+
   .filter-title {
     font-size: 20px;
   }
-  
+
   .tab-button {
     font-size: 12px;
     padding: 12px;
   }
-  
+
   .filter-class-chips {
     padding: 10px;
   }
-  
+
   .class-chip {
     padding: 6px 12px;
     font-size: 11px;
   }
-  
+
   .category-header {
     padding: 10px;
   }
-  
+
   .category-title {
     font-size: 14px;
   }
-  
+
   .item-checkbox {
     padding: 6px 10px;
   }
-  
+
   .item-checkbox .checkbox-label {
     font-size: 13px;
   }
-  
+
   .filter-actions {
     padding: 15px;
+    padding-bottom: calc(
+      15px + env(safe-area-inset-bottom)
+    ); /* iOS safe area */
   }
-  
+
+  /* Fix for iOS bounce scrolling */
+  .filter-panel {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Ensure content is scrollable on mobile */
+  .tab-content {
+    padding-bottom: 100px; /* Space for action buttons */
+  }
+
   .filter-btn {
     padding: 10px 15px;
     font-size: 12px;
@@ -575,4 +608,135 @@
 
 .filter-panel::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+/* ===================================
+   ERROR MODAL STYLES
+   =================================== */
+
+.error-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.error-modal {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 2px solid #ff4444;
+  border-radius: 12px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(255, 68, 68, 0.3);
+  animation: errorModalSlideIn 0.3s ease-out;
+}
+
+@keyframes errorModalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.error-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(255, 68, 68, 0.2);
+}
+
+.error-modal-header h3 {
+  margin: 0;
+  color: #ff4444;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.close-error-modal {
+  background: none;
+  border: none;
+  color: #ff4444;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.close-error-modal:hover {
+  background: rgba(255, 68, 68, 0.1);
+  transform: scale(1.1);
+}
+
+.error-modal-body {
+  padding: 20px 24px;
+}
+
+.error-modal-body p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.error-modal-footer {
+  padding: 16px 24px 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.error-modal-button {
+  background: linear-gradient(135deg, #ff4444 0%, #cc3333 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.error-modal-button:hover {
+  background: linear-gradient(135deg, #ff6666 0%, #ff4444 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.4);
+}
+
+.error-modal-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .error-modal {
+    max-width: 350px;
+    margin: 20px;
+  }
+
+  .error-modal-header,
+  .error-modal-body,
+  .error-modal-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }

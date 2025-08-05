@@ -12,7 +12,12 @@ body.casino-mode {
 
 /* Spin Button - Maximum Impact */
 .main-spin-button {
-  background: linear-gradient(135deg, #ff6b35 0%, #ff1744 50%, #ff6b35 100%);
+  background: linear-gradient(
+    135deg,
+    var(--quantum-orange, #ff6b35) 0%,
+    var(--quantum-red, #ff3366) 50%,
+    var(--quantum-orange, #ff6b35) 100%
+  );
   color: white;
   font-family: "Bebas Neue", Impact, sans-serif;
   font-size: 1.8rem;
@@ -20,7 +25,7 @@ body.casino-mode {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   padding: 1.2rem 3rem;
-  border: 3px solid #ffd700;
+  border: 3px solid var(--quantum-gold, #ffb700);
   border-radius: 16px;
   position: relative;
   overflow: hidden;
@@ -309,10 +314,17 @@ body.screen-shake {
   }
 }
 
+/* Desktop Optimizations - Tighter slot machine integration */
+@media (min-width: 769px) {
+  :root {
+    --slot-gap: 4px; /* tight integration for desktop slot machine */
+  }
+}
+
 /* Mobile Optimizations */
 @media (max-width: 768px) {
   :root {
-    --slot-gap: 8px; /* single source of truth */
+    --slot-gap: 8px; /* single source of truth - perfect mobile spacing */
   }
 
   .main-spin-button {
@@ -331,7 +343,7 @@ body.screen-shake {
   }
 
   .items-container {
-    gap: var(--slot-gap);
+    gap: var(--slot-gap); /* Uses mobile 8px gap */
   }
 
   .item-container {
@@ -544,14 +556,37 @@ body.low-performance-mode * {
 }
 
 .subTitle-mobile {
-  background: linear-gradient(135deg, #ffd700, #ffed4e, #ffd700);
+  background: linear-gradient(
+    135deg,
+    #e8e8e8 0%,
+    #ffffff 15%,
+    #d4a5ff 35%,
+    #ffffff 50%,
+    #c79dff 65%,
+    #ffffff 85%,
+    #b8b8b8 100%
+  );
+  background-size: 300% 300%;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 1px white, 0 0 3px rgba(255, 255, 255, 0.8),
-    0 0 10px rgba(255, 215, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.8);
+  color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   text-align: center;
   margin: 0 auto 1rem auto;
   display: block;
+  position: relative;
+  animation: metallic-shine 3s ease-in-out infinite;
+}
+
+@keyframes metallic-shine {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .season-update-notice {
@@ -626,11 +661,6 @@ body.low-performance-mode * {
   display: none !important;
 }
 
-/* Hide on initial load */
-#filter-panel.slide-out {
-  right: -400px !important;
-}
-
 /* Active state - slide in */
 #filter-panel.active {
   right: 0;
@@ -682,7 +712,7 @@ body.casino-mode #filter-panel:not(.active) {
   flex-direction: row !important;
   justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: var(--slot-gap, 15px);
   padding: 2rem 1rem;
 }
 
@@ -814,6 +844,8 @@ body.casino-mode #filter-panel:not(.active) {
   text-align: center;
 }
 
+/* #history-list styles DISABLED - Using slot machine design instead */
+/*
 #history-list {
   display: flex;
   flex-direction: column;
@@ -821,6 +853,7 @@ body.casino-mode #filter-panel:not(.active) {
   margin-bottom: 2rem;
   align-items: center;
 }
+*/
 
 /* New Text-Only History Entry */
 .history-entry {
@@ -1087,218 +1120,11 @@ body.casino-mode #filter-panel:not(.active) {
   }
 }
 
-/* =====================================
-   CASINO MODE HISTORY CARDS - MAXIMUM DOPAMINE
-   ===================================== */
+/* OLD casino mode history cards removed - now using slot machine design */
 
-/* Base history entry with epic gradients */
-.history-entry {
-  position: relative;
-  margin: 20px auto;
-  max-width: 900px;
-  background: linear-gradient(135deg, #2d1b69 0%, #1a0f3d 50%, #2d1b69 100%);
-  border: 2px solid rgba(255, 215, 0, 0.2);
-  border-radius: 16px;
-  overflow: visible;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 107, 53, 0.2);
-}
+/* OLD casino history card styles removed - now using slot machine design */
 
-/* Class-specific glow strips */
-.history-entry::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 5px;
-  background: #666;
-  border-radius: 16px 0 0 16px;
-  transition: all 0.3s ease;
-}
-
-.history-entry[data-class="light"]::before {
-  background: linear-gradient(180deg, #00d4ff, #0099cc);
-  box-shadow: 0 0 15px #00d4ff;
-}
-
-.history-entry[data-class="medium"]::before {
-  background: linear-gradient(180deg, #ff00ff, #cc00cc);
-  box-shadow: 0 0 15px #ff00ff;
-}
-
-.history-entry[data-class="heavy"]::before {
-  background: linear-gradient(180deg, #ffaa00, #ff6600);
-  box-shadow: 0 0 15px #ffaa00;
-}
-
-/* Epic hover state */
-.history-entry:hover {
-  transform: translateX(5px) scale(1.02);
-  border-color: #ffd700;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.4),
-    0 0 60px rgba(255, 107, 53, 0.2);
-}
-
-/* Casino card container */
-.casino-history-card {
-  padding: 24px;
-  position: relative;
-}
-
-/* Header section */
-.loadout-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.class-badge {
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  display: inline-flex;
-  align-items: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.class-badge.light {
-  background: linear-gradient(135deg, #00d4ff, #0099cc);
-  color: #000;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
-}
-
-.class-badge.medium {
-  background: linear-gradient(135deg, #ff00ff, #cc00cc);
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.class-badge.heavy {
-  background: linear-gradient(135deg, #ffaa00, #ff6600);
-  color: #000;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
-}
-
-.loadout-name {
-  flex: 1;
-  font-size: 20px;
-  font-weight: 700;
-  color: #ffd700;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-  margin: 0;
-}
-
-.timestamp {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
-  font-style: italic;
-}
-
-/* Loadout details grid */
-.loadout-details {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.weapon-item,
-.spec-item {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 16px;
-  transition: all 0.2s ease;
-}
-
-.weapon-item:hover,
-.spec-item:hover {
-  background: rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 107, 53, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.gadget-group {
-  grid-column: 1 / -1;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 16px;
-}
-
-/* Item labels with glow */
-.item-label {
-  display: block;
-  color: #ffd700;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  margin-bottom: 8px;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-}
-
-/* Item content */
-.item-content {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.item-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  object-fit: cover;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.item-icon.small {
-  width: 40px;
-  height: 40px;
-}
-
-.item-name {
-  flex: 1;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.item-name.small {
-  font-size: 14px;
-}
-
-/* Gadget list */
-.gadget-list {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.gadget-item {
-  flex: 1;
-  min-width: 140px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.gadget-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
-}
+/* OLD item styles removed - now using slot machine design */
 
 /* AI Analysis Section */
 .ai-analysis {
@@ -1434,7 +1260,11 @@ body.casino-mode #filter-panel:not(.active) {
   flex: 1;
   min-width: 120px;
   padding: 12px 20px;
-  background: linear-gradient(45deg, #7b2fe3, #1e90ff);
+  background: linear-gradient(
+    45deg,
+    var(--quantum-purple, #7b2fe3),
+    var(--quantum-blue, #1e90ff)
+  );
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -1457,11 +1287,19 @@ body.casino-mode #filter-panel:not(.active) {
 }
 
 .copy-image-btn {
-  background: linear-gradient(45deg, #00d4ff, #ff1493);
+  background: linear-gradient(
+    45deg,
+    var(--quantum-cyan, #00f0c0),
+    var(--quantum-pink, #ff2a6d)
+  );
 }
 
 .roast-again-btn {
-  background: linear-gradient(45deg, #ffb700, #ff6b35);
+  background: linear-gradient(
+    45deg,
+    var(--quantum-gold, #ffb700),
+    var(--quantum-orange, #ff6b35)
+  );
 }
 
 /* Success state */
@@ -1863,15 +1701,16 @@ article.loadout:hover {
   }
 }
 
-/* Desktop-specific adjustments for tighter slot spacing */
+/* Desktop Slot Machine Integration - Force tight spacing using CSS variable */
 @media (min-width: 769px) {
-  .items-container {
-    gap: 8px !important;
+  .items-container,
+  .slot-machine-items,
+  .slot-machine-overlay .items-container {
+    gap: var(--slot-gap) !important;
   }
 
   /* Overlay-specific desktop adjustments */
   .slot-machine-overlay .items-container {
-    gap: 8px !important;
     padding: 20px 15px !important;
   }
 }

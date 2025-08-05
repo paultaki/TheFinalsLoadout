@@ -7,10 +7,29 @@
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
     <title>RAGE QUIT SIMULATOR | The Finals' Most Brutal Challenge</title>
+    <link rel="canonical" href="https://thefinalsloadout.com/ragequit/">
     <meta
       name="description"
       content="The ultimate masochist's playground. Spin for the worst loadouts, stack punishments, and see how long you can survive."
     />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Rage Quit Simulator - The Finals">
+    <meta property="og:description" content="The ultimate masochist's playground. Spin for the worst loadouts, stack punishments, and see how long you can survive.">
+    <meta property="og:image" content="https://thefinalsloadout.com/images/rage-quit.webp">
+    <meta property="og:url" content="https://thefinalsloadout.com/ragequit/">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Rage Quit Simulator - The Finals">
+    <meta name="twitter:description" content="Spin for the worst loadouts and stack punishments. How long can you survive?">
+    <meta name="twitter:image" content="https://thefinalsloadout.com/images/rage-quit.webp">
+
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
@@ -39,6 +58,23 @@
         page_title: "Rage Quit Simulator",
         page_path: "/ragequit/index.html",
       });
+    </script>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Rage Quit Simulator - The Finals",
+      "description": "The ultimate masochist's playground. Spin for the worst loadouts, stack punishments, and see how long you can survive.",
+      "url": "https://thefinalsloadout.com/ragequit/",
+      "image": "https://thefinalsloadout.com/images/rage-quit.webp",
+      "author": {
+        "@type": "Person",
+        "name": "Paul Takisaki",
+        "url": "https://www.paultakisaki.com"
+      }
+    }
     </script>
 
     <style>
@@ -1431,7 +1467,12 @@
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
         transition: left 0.5s;
       }
 
@@ -1455,7 +1496,8 @@
       }
 
       @keyframes spicyPulse {
-        0%, 100% {
+        0%,
+        100% {
           border-color: var(--blood-red);
           box-shadow: 0 10px 30px rgba(220, 20, 60, 0.2);
         }
@@ -1817,22 +1859,41 @@
         color: var(--gold);
         font-weight: bold;
       }
-      
+
       /* Realistic Roulette Wheel Styles */
       #realistic-roulette-wheel canvas {
         border-radius: 50%;
         box-shadow: 0 0 50px rgba(255, 68, 68, 0.5);
       }
-      
+
       @keyframes rage-shake {
-        0%, 100% { transform: translateX(0); }
-        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-        20%, 40%, 60%, 80% { transform: translateX(5px); }
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+          transform: translateX(-5px);
+        }
+        20%,
+        40%,
+        60%,
+        80% {
+          transform: translateX(5px);
+        }
       }
-      
+
       @keyframes rage-pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
       }
     </style>
   </head>
@@ -1842,10 +1903,9 @@
 
     <!-- Navigation -->
     <nav class="main-nav">
-      <a href="../index.html">Home</a>
+      <a href="../index.html">LOADOUT GENERATOR</a>
       <a href="../patch-notes/index.html">Patch Notes</a>
       <a href="../meta-weapons/">Meta Weapons</a>
-      <a href="../leaderboard/index.html">Leaderboard</a>
       <a href="../feedback/index.html">Feedback</a>
     </nav>
 
@@ -2043,13 +2103,21 @@
     ></audio>
 
     <!-- Keep rage-specific sounds too -->
-    <audio id="rageAlarmSound" src="https://thefinalsloadout.com/ragequit/sounds/glitch.mp3" preload="auto"></audio>
+    <audio
+      id="rageAlarmSound"
+      src="https://thefinalsloadout.com/ragequit/sounds/glitch.mp3"
+      preload="auto"
+    ></audio>
     <audio
       id="rageBuzzerSound"
       src="https://thefinalsloadout.com/ragequit/sounds/metal-clank.mp3"
       preload="auto"
     ></audio>
-    <audio id="rageLaughSound" src="https://thefinalsloadout.com/ragequit/sounds/whisper.mp3" preload="auto"></audio>
+    <audio
+      id="rageLaughSound"
+      src="https://thefinalsloadout.com/ragequit/sounds/whisper.mp3"
+      preload="auto"
+    ></audio>
 
     <!-- Scripts -->
     <script src="https://thefinalsloadout.com/ragequit/loadout-app.js"></script>

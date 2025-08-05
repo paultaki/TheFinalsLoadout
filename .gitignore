@@ -5,3 +5,14 @@ coverage/
 test-results/
 playwright-report/
 *.backup-pre-scaffold
+
+# Ignore legacy and experimental folders
+v2/
+v2-react/
+test/
+private/
+New Test/
+New Folder/
+Backup/
+.claude\CLAUDE.md
+.claude/CLAUDE.md

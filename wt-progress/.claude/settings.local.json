@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "WebFetch(domain:www.thefinalsloadout.com)",
+      "Bash(find:*)",
+      "WebFetch(domain:discordapp.com)"
+    ],
+    "deny": []
+  }
+}

@@ -65,9 +65,9 @@ function clearOverlay() {
   root.innerHTML = "";
   root.style.pointerEvents = "none";
   overlayState.currentOverlay = null;
-  
+
   // Remove overlay-active class from body
-  document.body.classList.remove('overlay-active');
+  document.body.classList.remove("overlay-active");
 }
 
 // =====================================
@@ -137,25 +137,26 @@ function showRevealCard(options) {
 
 // Jackpot card factory
 function makeJackpotCard() {
-  const spins = 2 + Math.floor(Math.random() * 3); // 2, 3, or 4
+  const spins = 3; // Always 3 spins
   return {
-    value: 'JACKPOT',
+    value: "JACKPOT",
     spins: spins,
-    label: `Jackpot!\nChoose Class\n${spins} Spins`,
-    className: 'card-special jackpot',
-    isJackpot: true
+    label: `JACKPOT!\n${spins} SPINS\n+ FREE RESPIN`,
+    className: "card-special jackpot",
+    isJackpot: true,
   };
 }
 
 // Card configuration
 const SPIN_CARDS = [
   { value: "1", spins: 1, label: "1", className: "card-1" },
-  makeJackpotCard(),
   { value: "2", spins: 2, label: "2", className: "card-2" },
+  makeJackpotCard(), // SPREAD: First jackpot card at position 3
   { value: "3", spins: 3, label: "3", className: "card-3" },
   { value: "4", spins: 4, label: "4", className: "card-4" },
-  makeJackpotCard(),
-  { value: "5", spins: 5, label: "5", className: "card-5" },
+  { value: "2", spins: 2, label: "2", className: "card-2" },
+  makeJackpotCard(), // SPREAD: Second jackpot card at position 7
+  { value: "4", spins: 4, label: "4", className: "card-4" },
 ];
 
 // Triple for infinite scroll effect
@@ -242,8 +243,8 @@ async function showSpinWheelOverlay() {
             : card.label;
 
           return `
-          <li class="card ${card.className || ""}" 
-              data-index="${index}" 
+          <li class="card ${card.className || ""}"
+              data-index="${index}"
               data-spins="${card.spins || 1}"
               data-value="${card.value || ""}">
             <div class="card-content">${labelHtml}</div>
@@ -266,15 +267,15 @@ async function showSpinWheelOverlay() {
           <div class="wheel-frame" id="spin-wheel-frame">
             <div class="fade-top"></div>
             <div class="fade-bottom"></div>
-            
+
             <div class="pointer" id="spin-pointer">
               <div class="pointer-arm" id="pointer-arm">
                 <div class="pointer-tip"></div>
               </div>
             </div>
-            
+
             <!-- Pegs will be generated dynamically -->
-            
+
             <div class="wheel-track">
               <ul class="wheel-list" id="spin-wheel-list">
                 ${cardsHtml}
@@ -292,15 +293,15 @@ async function showSpinWheelOverlay() {
     const wheelList = document.getElementById("spin-wheel-list");
     const pointer = document.getElementById("spin-pointer");
     const pointerArm = document.getElementById("pointer-arm");
-    
+
     // Create pegs dynamically
     const createPegs = () => {
       const pegCount = 9;
       const pegSpacing = 100 / (pegCount + 1);
-      
+
       for (let i = 0; i < pegCount; i++) {
-        const peg = document.createElement('div');
-        peg.className = 'peg';
+        const peg = document.createElement("div");
+        peg.className = "peg";
         peg.style.top = `${pegSpacing * (i + 1)}%`;
         wheelFrame.appendChild(peg);
       }
@@ -420,13 +421,15 @@ async function showSpinWheelOverlay() {
       setTimeout(() => {
         pointerArm.style.transform = "rotate(0deg)";
       }, 80);
-      
+
       // Peg hit animation
       const cardHeight = getCardHeight();
-      const currentPegIndex = Math.floor((spinWheelState.currentDistance % (cardHeight * 10)) / cardHeight);
+      const currentPegIndex = Math.floor(
+        (spinWheelState.currentDistance % (cardHeight * 10)) / cardHeight
+      );
       if (currentPegIndex !== spinWheelState.lastPegIndex) {
         spinWheelState.lastPegIndex = currentPegIndex;
-        const pegs = wheelFrame.querySelectorAll('.peg');
+        const pegs = wheelFrame.querySelectorAll(".peg");
         const peg = pegs[currentPegIndex % pegs.length];
         if (peg) {
           peg.style.transform = "scale(1.3)";
@@ -434,27 +437,33 @@ async function showSpinWheelOverlay() {
             peg.style.transform = "scale(1)";
           }, 50);
         }
-        
+
         // Cabinet shake - reduced by half
-        wheelFrame.animate([
-          { transform: "translateX(-2px)" },
-          { transform: "translateX(2px)" },
-          { transform: "translateX(0)" },
-        ], {
-          duration: 90,
-          iterations: 1,
-        });
-        
+        wheelFrame.animate(
+          [
+            { transform: "translateX(-2px)" },
+            { transform: "translateX(2px)" },
+            { transform: "translateX(0)" },
+          ],
+          {
+            duration: 90,
+            iterations: 1,
+          }
+        );
+
         // Heartbeat effect for slow speeds
         if (velocity < 120) {
-          wheelFrame.animate([
-            { transform: "scale(1)" },
-            { transform: "scale(1.03)" },
-            { transform: "scale(1)" },
-          ], {
-            duration: 300,
-            easing: "ease-out",
-          });
+          wheelFrame.animate(
+            [
+              { transform: "scale(1)" },
+              { transform: "scale(1.03)" },
+              { transform: "scale(1)" },
+            ],
+            {
+              duration: 300,
+              easing: "ease-out",
+            }
+          );
         }
       }
     };
@@ -504,6 +513,10 @@ async function showSpinWheelOverlay() {
       cards.forEach((card) => card.classList.remove("winner"));
       if (winningCard) {
         winningCard.classList.add("winner");
+
+        // Add grow animation to winning card
+        winningCard.style.transition = "transform 0.5s ease-out";
+        winningCard.style.transform = "scale(1.2)";
       }
 
       // Play sound only if enabled
@@ -527,13 +540,19 @@ async function showSpinWheelOverlay() {
 
       // Handle jackpot
       if (result.isJackpot) {
+        console.log("🎰 JACKPOT DETECTED! Result:", result);
+
         // Extra confetti for jackpot
         setTimeout(() => createSpinConfetti(), 300);
         setTimeout(() => createSpinConfetti(), 600);
-        
+
         // Show jackpot modal after a short delay
         setTimeout(() => {
-          showJackpotModal(result.spins).then((classWeight) => {
+          console.log(
+            "🎰 About to show jackpot popup with spins:",
+            result.spins
+          );
+          showJackpotModal(result.spins).then(() => {
             // Stop idle animation
             if (spinWheelState.idleAnimationId) {
               cancelAnimationFrame(spinWheelState.idleAnimationId);
@@ -549,11 +568,11 @@ async function showSpinWheelOverlay() {
                 value: result.value,
                 spins: result.spins,
                 isJackpot: true,
-                classWeight: classWeight
+                classWeight: null, // No class selection - will proceed to roulette
               });
             }, 300);
           });
-        }, 2000);
+        }, 2000); // Standard 2 second delay for jackpot
       } else {
         // Cleanup and resolve after delay for non-jackpot
         setTimeout(() => {
@@ -574,7 +593,7 @@ async function showSpinWheelOverlay() {
               isJackpot: false,
             });
           }, 300);
-        }, 2000);
+        }, 3000); // Extra 1 second pause to show winning card
       }
     };
 
@@ -757,67 +776,49 @@ async function showSpinWheelOverlay() {
 
 function showJackpotModal(spins) {
   return new Promise((resolve) => {
-    // Get available classes
-    const availableClasses = window.getAvailableClasses ? window.getAvailableClasses() : ["Light", "Medium", "Heavy"];
-    
-    // If only one class available, auto-select it
-    if (availableClasses.length === 1) {
-      console.log("🎯 Auto-selecting only available class:", availableClasses[0]);
-      resolve(availableClasses[0]);
-      return;
-    }
-    
-    // If no classes available, show error
-    if (availableClasses.length === 0) {
-      alert("Please select at least one class in the filters!");
-      resolve(null);
-      return;
-    }
-    
+    // Earn free respin immediately when jackpot hits
+    const respinEarned = window.earnFreeRespin
+      ? window.earnFreeRespin()
+      : false;
+    console.log("🎰 Jackpot hit! Respin earned:", respinEarned);
+    window.debugRespin &&
+      window.debugRespin(`Jackpot hit! Respin earned: ${respinEarned}`);
+
     const { backdrop, content } = createOverlayStructure();
-    
-    // Create jackpot modal
+
+    // Create jackpot modal - simple popup without class selection
     const modal = document.createElement("div");
     modal.className = "jackpot-modal-content";
-    
-    // Build class buttons dynamically
-    const classButtonsHTML = availableClasses.map(cls => 
-      `<button class="class-button ${cls.toLowerCase()}" data-weight="${cls}">${cls}</button>`
-    ).join('');
-    
+
+    // Simple jackpot message without class selection
     modal.innerHTML = `
       <div class="jackpot-title">JACKPOT!</div>
-      <div class="jackpot-message">You earned <span class="jackpot-spins">${spins}</span> spins!</div>
-      <div class="jackpot-subtitle">Choose Your Class</div>
-      <div class="class-buttons">
-        ${classButtonsHTML}
-      </div>
+      <div class="jackpot-message">${spins} SPINS</div>
+      <div class="jackpot-respin-bonus">+ FREE RESPIN</div>
     `;
-    
+
+    // Debug logging
+    window.debugRespin &&
+      window.debugRespin("Showing jackpot popup", { spins, respinEarned });
+
     content.appendChild(modal);
-    
+
     // Animate in
     requestAnimationFrame(() => {
       backdrop.classList.add("active");
       modal.classList.add("active");
     });
-    
-    // Handle class selection
-    const buttons = modal.querySelectorAll(".class-button");
-    buttons.forEach(button => {
-      button.addEventListener("click", (e) => {
-        const classWeight = e.target.dataset.weight;
-        
-        // Animate out
+
+    // Auto-proceed after showing the jackpot message
+    setTimeout(() => {
         modal.classList.remove("active");
         backdrop.classList.remove("active");
-        
+
         setTimeout(() => {
           clearOverlay();
-          resolve(classWeight);
+          resolve(null); // No class selected - will proceed to roulette
         }, 300);
-      });
-    });
+    }, 2500); // Show jackpot message for 2.5 seconds, then auto-proceed
   });
 }
 
@@ -964,19 +965,23 @@ async function showClassRouletteOverlay() {
 
     // Get available classes from filters using global function
     const getAvailableClassesForRoulette = () => {
-      const availableClasses = window.getAvailableClasses ? window.getAvailableClasses() : ["Light", "Medium", "Heavy"];
-      
+      const availableClasses = window.getAvailableClasses
+        ? window.getAvailableClasses()
+        : ["Light", "Medium", "Heavy"];
+
       const classConfigs = {
-        "Light": { name: "Light", color: "#4FC3F7" },
-        "Medium": { name: "Medium", color: "#AB47BC" },
-        "Heavy": { name: "Heavy", color: "#FF1744" }
+        Light: { name: "Light", color: "#4FC3F7" },
+        Medium: { name: "Medium", color: "#AB47BC" },
+        Heavy: { name: "Heavy", color: "#FF1744" },
       };
-      
-      const available = availableClasses.map(cls => classConfigs[cls]);
+
+      const available = availableClasses.map((cls) => classConfigs[cls]);
 
       // If no classes selected, show error
       if (available.length === 0) {
-        alert("Please select at least one class in the filters before spinning!");
+        alert(
+          "Please select at least one class in the filters before spinning!"
+        );
         return null;
       }
 
@@ -986,7 +991,7 @@ async function showClassRouletteOverlay() {
     // Generate wheel segments
     const generateSegments = () => {
       const availableClasses = getAvailableClassesForRoulette();
-      
+
       if (!availableClasses) {
         return null;
       }
@@ -1021,14 +1026,14 @@ async function showClassRouletteOverlay() {
     };
 
     const segments = generateSegments();
-    
+
     // If no classes available, exit early
     if (!segments) {
       clearOverlay();
       resolve(null);
       return;
     }
-    
+
     console.log("🎯 Generated segments:", segments);
 
     // Create roulette container
@@ -1040,12 +1045,12 @@ async function showClassRouletteOverlay() {
           <h2>SELECTING CLASS</h2>
           <p>Fate decides your build...</p>
         </div>
-        
+
         <div class="roulette-wheel-wrapper">
           <div class="roulette-wheel" id="roulette-wheel">
             <!-- Outer decorative ring -->
             <div class="wheel-outer-ring"></div>
-            
+
             <!-- Main wheel with segments -->
             <svg class="wheel-svg" viewBox="0 0 400 400" width="400" height="400" preserveAspectRatio="xMidYMid meet">
               <defs>
@@ -1063,7 +1068,7 @@ async function showClassRouletteOverlay() {
                   <circle cx="200" cy="200" r="35"/>
                 </clipPath>
               </defs>
-              
+
               <!-- Rotating group containing segments and labels -->
               <g class="wheel-rotating-group" id="wheel-rotating-group">
                 <!-- Segments -->
@@ -1079,7 +1084,7 @@ async function showClassRouletteOverlay() {
                       const y2 = 200 + radius * Math.sin(endAngle);
 
                       return `
-                      <path 
+                      <path
                         d="M 200 200 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z"
                         fill="${seg.color}"
                         stroke="#FFD700"
@@ -1091,7 +1096,7 @@ async function showClassRouletteOverlay() {
                     })
                     .join("")}
                 </g>
-                
+
                 <!-- Class labels -->
                 <g class="wheel-labels">
                   ${segments
@@ -1108,10 +1113,10 @@ async function showClassRouletteOverlay() {
                       const fontSize = segments.length > 6 ? 18 : 24; // Smaller text for 12 segments
 
                       return `
-                      <text 
-                        x="${x}" 
-                        y="${y}" 
-                        text-anchor="middle" 
+                      <text
+                        x="${x}"
+                        y="${y}"
+                        text-anchor="middle"
                         dominant-baseline="middle"
                         class="wheel-label"
                         font-size="${fontSize}"
@@ -1124,24 +1129,24 @@ async function showClassRouletteOverlay() {
                     .join("")}
                 </g>
               </g>
-              
+
               <!-- Static center hub with logo -->
               <g class="wheel-static-center">
                 <circle cx="200" cy="200" r="40" fill="#222" stroke="#FFD700" stroke-width="3"/>
-                <image href="images/the-finals.webp" 
-                       x="165" y="165" 
-                       width="70" height="70" 
+                <image href="images/the-finals.webp"
+                       x="172.5" y="172.5"
+                       width="55" height="55"
                        clip-path="url(#centerClip)"
                        opacity="0.9"/>
               </g>
             </svg>
-            
+
             <!-- Ball -->
             <div class="roulette-ball" id="roulette-ball">
               <div class="ball-inner"></div>
             </div>
           </div>
-          
+
           <!-- Decorative lights -->
           <div class="roulette-lights">
             ${Array(12)
@@ -1383,7 +1388,8 @@ async function showClassRouletteOverlay() {
         ballProgress > 0.7 &&
         ballProgress < 0.72 &&
         !rouletteState.dropSoundPlayed &&
-        window.state && window.state.soundEnabled
+        window.state &&
+        window.state.soundEnabled
       ) {
         try {
           overlayAudio.transition.currentTime = 0;
@@ -1447,7 +1453,7 @@ async function showClassRouletteOverlay() {
           );
           resolve(winner);
         }, 300);
-      }, 1500);
+      }, 2000); // Extra 0.5 seconds pause to show winning class
     };
 
     // Start the spin
@@ -1577,7 +1583,9 @@ async function startLoadoutGeneration() {
   );
 
   // Check if any classes are available
-  const availableClasses = window.getAvailableClasses ? window.getAvailableClasses() : ["Light", "Medium", "Heavy"];
+  const availableClasses = window.getAvailableClasses
+    ? window.getAvailableClasses()
+    : ["Light", "Medium", "Heavy"];
   if (availableClasses.length === 0) {
     alert("Please select at least one class in the filters before spinning!");
     return;
@@ -1587,10 +1595,10 @@ async function startLoadoutGeneration() {
     // Clear any existing static slot machine from main page
     const mainOutput = document.getElementById("output");
     if (mainOutput) {
-      mainOutput.innerHTML = '';
-      mainOutput.style.display = 'none';
-      mainOutput.style.opacity = '0';
-      mainOutput.classList.remove('final-result');
+      mainOutput.innerHTML = "";
+      mainOutput.style.display = "none";
+      mainOutput.style.opacity = "0";
+      mainOutput.classList.remove("final-result");
     }
 
     // Disable main button during flow
@@ -1610,43 +1618,43 @@ async function startLoadoutGeneration() {
     overlayState.spinCount = spinResult.spins;
     overlayState.isJackpot = spinResult.isJackpot;
 
-    // Step 2: Handle class selection based on jackpot status
+    // Step 2: Handle class selection - both jackpot and normal go through roulette
     if (spinResult.isJackpot) {
-      // Jackpot path - class was already selected in the modal
-      overlayState.selectedClass = spinResult.classWeight;
-      
-      // Show jackpot celebration reveal
+      console.log("🎰 Jackpot detected, proceeding to class roulette");
+      // Show jackpot reveal first
       await showRevealCard({
         title: "JACKPOT!",
-        subtitle: `${spinResult.spins} ${spinResult.spins === 1 ? "SPIN" : "SPINS"} with ${overlayState.selectedClass.toUpperCase()} CLASS!`,
-        duration: 2500,
+        subtitle: `${spinResult.spins} SPINS + FREE RESPIN`,
+        duration: 2000,
         isJackpot: true,
       });
     } else {
       // Normal path - show spin count reveal first
       await showRevealCard({
         title: spinResult.value,
-        subtitle: `${spinResult.spins} ${spinResult.spins === 1 ? "SPIN" : "SPINS"}!`,
+        subtitle: `${spinResult.spins} ${
+          spinResult.spins === 1 ? "SPIN" : "SPINS"
+        }!`,
         duration: 2000,
         isJackpot: false,
       });
-      
-      // Then show roulette for class selection
-      overlayState.selectedClass = await showClassRouletteOverlay();
-      
-      // Check if roulette was cancelled (no classes available)
-      if (!overlayState.selectedClass) {
-        console.log("❌ No class selected, cancelling flow");
-        return;
-      }
-
-      // Show class reveal
-      await showRevealCard({
-        title: overlayState.selectedClass.toUpperCase(),
-        subtitle: "CLASS SELECTED!",
-        duration: 2000,
-      });
     }
+
+    // Both jackpot and normal proceed to roulette
+    overlayState.selectedClass = await showClassRouletteOverlay();
+
+    // Check if roulette was cancelled (no classes available)
+    if (!overlayState.selectedClass) {
+      console.log("❌ No class selected, cancelling flow");
+      return;
+    }
+
+    // Show class reveal
+    await showRevealCard({
+      title: overlayState.selectedClass.toUpperCase(),
+      subtitle: "CLASS SELECTED!",
+      duration: 2000,
+    });
 
     // Step 4: Show slot machine overlay
     console.log("🎰 Starting slot machine overlay with:", {
@@ -1678,9 +1686,9 @@ async function startLoadoutGeneration() {
 
 async function showSlotMachineOverlay(selectedClass, spinCount) {
   console.log("🎰 Showing slot machine overlay...");
-  
+
   // Add class to body to hide duplicate text on desktop
-  document.body.classList.add('overlay-active');
+  document.body.classList.add("overlay-active");
 
   return new Promise((resolve) => {
     const { backdrop, content } = createOverlayStructure();
@@ -1723,86 +1731,111 @@ async function showSlotMachineOverlay(selectedClass, spinCount) {
 
       // Create a temporary slot machine instance for the overlay
       const overlayOutput = document.getElementById("overlay-slot-output");
-      
+
       if (overlayOutput) {
         // Create a new slot machine instance for the overlay
-        const overlaySlotMachine = new SlotMachine('overlay-slot-output');
+        const overlaySlotMachine = new SlotMachine("overlay-slot-output");
         overlaySlotMachine.init();
-        
+
         // Store the original instance temporarily
         const originalSlotMachine = window.slotMachineInstance;
         window.slotMachineInstance = overlaySlotMachine;
-        
+
         console.log("🎰 Starting slot machine in overlay with:", selectedClass);
-        
+
         // Start the slot machine
         if (typeof window.startSlotMachine === "function") {
           window.startSlotMachine(selectedClass, spinCount);
 
-        // Monkey patch finalizeSpin to handle overlay completion
-        const originalFinalizeSpin = window.finalizeSpin;
-        let hasHandledFinalSpin = false;
-        
-        window.finalizeSpin = function (columns) {
-          // Call original function
-          if (originalFinalizeSpin) {
-            originalFinalizeSpin.call(this, columns);
-          }
-
-          // Check if this was the final spin (only handle once)
-          if (window.state && window.state.spinsLeft === 0 && !hasHandledFinalSpin) {
-            hasHandledFinalSpin = true;
-            // Auto-close overlay after animations complete
-            // Total time: ~7s for final column + 3s celebration = 10s total
-            // We'll wait 2s after that for a clean transition
-            setTimeout(() => {
-              // Copy the final slot machine content to the main page
-              const overlayOut = document.getElementById("output");
-              const originalOut = document.getElementById("output-backup");
-              
-              if (overlayOut && originalOut) {
-                // Clone the slot machine content
-                const finalContent = overlayOut.innerHTML;
-                
-                // Create a wrapper for the smaller final slot machine
-                const wrapper = document.createElement('div');
-                wrapper.className = 'final-slot-machine-wrapper';
-                wrapper.innerHTML = finalContent;
-                
-                // Add final glow effect to all item containers
-                const itemContainers = wrapper.querySelectorAll('.slot-item');
-                itemContainers.forEach(container => {
-                  container.classList.add('final-glow');
-                });
-                
-                // Copy to main page output with wrapper
-                originalOut.innerHTML = wrapper.outerHTML;
-                originalOut.style.display = 'block';
-                originalOut.style.opacity = '1';
-                originalOut.classList.add('final-result');
-                
-                // Restore IDs
-                overlayOut.id = "overlay-slot-output";
-                originalOut.id = "output";
+          // Function to update overlay countdown
+          const updateOverlayCountdown = (spinsLeft, selectedClass) => {
+            const spinInfoElement = document.querySelector(
+              ".slot-overlay-header .spin-info"
+            );
+            if (spinInfoElement) {
+              if (spinsLeft === 1) {
+                spinInfoElement.textContent = "FINAL SPIN";
+              } else if (spinsLeft > 1) {
+                spinInfoElement.textContent = `${spinsLeft} ${
+                  spinsLeft === 1 ? "Spin" : "Spins"
+                } Remaining`;
               }
+            }
+          };
 
-              // Restore original finalizeSpin
-              window.finalizeSpin = originalFinalizeSpin;
+          // Monkey patch finalizeSpin to handle overlay completion
+          const originalFinalizeSpin = window.finalizeSpin;
+          let hasHandledFinalSpin = false;
 
-              // Animate out overlay
-              slotContainer.classList.remove("active");
-              backdrop.classList.remove("active");
+          window.finalizeSpin = function (columns) {
+            // Call original function
+            if (originalFinalizeSpin) {
+              originalFinalizeSpin.call(this, columns);
+            }
 
+            // Update countdown display if we're not on the final spin
+            if (window.state && window.state.spinsLeft > 0) {
+              updateOverlayCountdown(window.state.spinsLeft, selectedClass);
+            }
+
+            // Check if this was the final spin (only handle once)
+            if (
+              window.state &&
+              window.state.spinsLeft === 0 &&
+              !hasHandledFinalSpin
+            ) {
+              hasHandledFinalSpin = true;
+              // Auto-close overlay after animations complete
+              // Total time: ~7s for final column + 3s celebration = 10s total
+              // We'll wait 2s after that for a clean transition
               setTimeout(() => {
-                clearOverlay();
-                resolve();
-              }, 300);
-            }, 2000); // Wait 2 seconds after animation completes
-          }
-          
-          // Restore the original slot machine instance after completion
-          window.slotMachineInstance = originalSlotMachine;
-        };
+                // Copy the final slot machine content to the main page
+                const overlayOut = document.getElementById("output");
+                const originalOut = document.getElementById("output-backup");
+
+                if (overlayOut && originalOut) {
+                  // Clone the slot machine content
+                  const finalContent = overlayOut.innerHTML;
+
+                  // Create a wrapper for the smaller final slot machine
+                  const wrapper = document.createElement("div");
+                  wrapper.className = "final-slot-machine-wrapper";
+                  wrapper.innerHTML = finalContent;
+
+                  // Add final glow effect to all item containers
+                  const itemContainers = wrapper.querySelectorAll(".slot-item");
+                  itemContainers.forEach((container) => {
+                    container.classList.add("final-glow");
+                  });
+
+                  // Copy to main page output with wrapper
+                  originalOut.innerHTML = wrapper.outerHTML;
+                  originalOut.style.display = "block";
+                  originalOut.style.opacity = "1";
+                  originalOut.classList.add("final-result");
+
+                  // Restore IDs
+                  overlayOut.id = "overlay-slot-output";
+                  originalOut.id = "output";
+                }
+
+                // Restore original finalizeSpin
+                window.finalizeSpin = originalFinalizeSpin;
+
+                // Animate out overlay
+                slotContainer.classList.remove("active");
+                backdrop.classList.remove("active");
+
+                setTimeout(() => {
+                  clearOverlay();
+                  resolve();
+                }, 300);
+              }, 2000); // Wait 2 seconds after animation completes
+            }
+
+            // Restore the original slot machine instance after completion
+            window.slotMachineInstance = originalSlotMachine;
+          };
         } else {
           console.error("❌ startSlotMachine function not found!");
         }
@@ -1818,16 +1851,242 @@ async function showSlotMachineOverlay(selectedClass, spinCount) {
 }
 
 // =====================================
+// FINAL LOADOUT CHOICE MODAL (RESPIN SYSTEM)
+// =====================================
+
+function showFinalLoadoutChoiceModal(loadout) {
+  return new Promise((resolve) => {
+    // Check if respin feature is enabled
+    if (!window.FEATURE_FLAGS?.JACKPOT_RESPIN) {
+      window.debugRespin &&
+        window.debugRespin("Respin feature disabled, auto-keeping loadout");
+      resolve("keep");
+      return;
+    }
+
+    // Check if respin is available
+    const respinAvailable = window.isRespinAvailable
+      ? window.isRespinAvailable()
+      : false;
+    window.debugRespin &&
+      window.debugRespin(
+        `Showing final loadout choice. Respin available: ${respinAvailable}`
+      );
+
+    // Track analytics
+    window.trackRespinEvent &&
+      window.trackRespinEvent(
+        window.ANALYTICS_EVENTS?.RESPIN_CHOICE_SHOWN || "respin_choice_shown",
+        { respinAvailable }
+      );
+
+    // Set state to block other interactions
+    if (window.state) {
+      window.state.isWaitingForUserChoice = true;
+      window.state.currentFinalLoadout = loadout;
+    }
+
+    const { backdrop, content } = createOverlayStructure();
+    backdrop.classList.add("final-choice-backdrop");
+
+    // Create mobile-first modal
+    const modal = document.createElement("div");
+    modal.className = "final-choice-modal";
+
+    // Build loadout summary for preview
+    const loadoutPreview = `
+      <div class="loadout-preview">
+        <div class="preview-title">🎊 Your Final Loadout</div>
+        <div class="preview-class">${loadout.classType.toUpperCase()}</div>
+        <div class="preview-items">
+          <div class="preview-item">
+            <img src="images/${loadout.weapon.name.replace(
+              / /g,
+              "_"
+            )}.webp" alt="${loadout.weapon.name}" loading="lazy" />
+            <span>${loadout.weapon.name}</span>
+          </div>
+          <div class="preview-item">
+            <img src="images/${loadout.specialization.name.replace(
+              / /g,
+              "_"
+            )}.webp" alt="${loadout.specialization.name}" loading="lazy" />
+            <span>${loadout.specialization.name}</span>
+          </div>
+          ${loadout.gadgets
+            .map(
+              (gadget) => `
+            <div class="preview-item">
+              <img src="images/${gadget.name.replace(/ /g, "_")}.webp" alt="${
+                gadget.name
+              }" loading="lazy" />
+              <span>${gadget.name}</span>
+            </div>
+          `
+            )
+            .join("")}
+        </div>
+      </div>
+    `;
+
+    // Create buttons based on respin availability
+    const respinButton = respinAvailable
+      ? `<button class="choice-button respin-button" data-choice="respin">
+           <span class="button-icon">🎰</span>
+           <span class="button-text">USE FREE RESPIN</span>
+         </button>`
+      : `<button class="choice-button respin-button disabled" disabled>
+           <span class="button-icon">🚫</span>
+           <span class="button-text">NO RESPINS AVAILABLE</span>
+         </button>`;
+
+    modal.innerHTML = `
+      <div class="choice-header">
+        <h2 class="choice-title">🎯 FINAL SPIN COMPLETE!</h2>
+        <p class="choice-subtitle">What would you like to do?</p>
+      </div>
+
+      ${loadoutPreview}
+
+      <div class="choice-buttons">
+        <button class="choice-button keep-button" data-choice="keep">
+          <span class="button-icon">💾</span>
+          <span class="button-text">KEEP LOADOUT</span>
+        </button>
+        ${respinButton}
+      </div>
+
+      <div class="choice-info">
+        ${
+          respinAvailable
+            ? '<span class="respin-info">🎫 You have a free respin from your jackpot!</span>'
+            : '<span class="no-respin-info">💡 Earn respins by hitting jackpots on the spin wheel</span>'
+        }
+      </div>
+    `;
+
+    content.appendChild(modal);
+
+    // Auto-timeout after 30 seconds
+    const timeoutId = setTimeout(() => {
+      window.debugRespin &&
+        window.debugRespin("Choice modal timed out, auto-keeping loadout");
+      window.trackRespinEvent &&
+        window.trackRespinEvent(
+          window.ANALYTICS_EVENTS?.RESPIN_ERROR || "respin_error",
+          { reason: "timeout" }
+        );
+      cleanup();
+      resolve("keep");
+    }, window.RESPIN_CONFIG?.CHOICE_TIMEOUT || 30000);
+
+    // Animate in
+    requestAnimationFrame(() => {
+      backdrop.classList.add("active");
+      modal.classList.add("active");
+    });
+
+    // Handle button clicks
+    const handleChoice = (choice) => {
+      clearTimeout(timeoutId);
+
+      // Track analytics
+      const eventName =
+        choice === "respin"
+          ? window.ANALYTICS_EVENTS?.RESPIN_CHOSEN || "respin_chosen"
+          : window.ANALYTICS_EVENTS?.LOADOUT_KEPT || "loadout_kept";
+
+      window.trackRespinEvent &&
+        window.trackRespinEvent(eventName, {
+          loadoutClass: loadout.classType,
+          weapon: loadout.weapon.name,
+          respinAvailable,
+          sessionRespinCount: window.state?.respinSessionCount || 0,
+        });
+
+      window.debugRespin && window.debugRespin(`User chose: ${choice}`);
+      cleanup();
+      resolve(choice);
+    };
+
+    const cleanup = () => {
+      backdrop.classList.remove("active");
+      modal.classList.remove("active");
+
+      // Reset state
+      if (window.state) {
+        window.state.isWaitingForUserChoice = false;
+      }
+
+      setTimeout(() => {
+        clearOverlay();
+      }, 300);
+    };
+
+    // Add event listeners
+    modal.addEventListener("click", (e) => {
+      const button = e.target.closest(".choice-button");
+      if (button && !button.disabled) {
+        const choice = button.dataset.choice;
+
+        // Add visual feedback
+        button.style.transform = "scale(0.95)";
+        button.classList.add("clicked");
+
+        // Play sound if enabled
+        if (window.state?.soundEnabled) {
+          const clickSound = document.getElementById("clickSound");
+          if (clickSound) {
+            clickSound.currentTime = 0;
+            clickSound.volume = 0.3;
+            clickSound.play().catch(() => {});
+          }
+        }
+
+        setTimeout(() => {
+          handleChoice(choice);
+        }, 150);
+      }
+    });
+
+    // Add touch feedback for mobile
+    modal.addEventListener("touchstart", (e) => {
+      const button = e.target.closest(".choice-button");
+      if (button && !button.disabled) {
+        button.style.transform = "scale(0.98)";
+      }
+    });
+
+    // Prevent accidental dismissal by clicking backdrop
+    backdrop.addEventListener("click", (e) => {
+      if (e.target === backdrop) {
+        // Show a gentle reminder instead of closing
+        modal.classList.add("shake");
+        setTimeout(() => {
+          modal.classList.remove("shake");
+        }, 500);
+      }
+    });
+  });
+}
+
+// Export the new function for global access
+window.showFinalLoadoutChoiceModal = showFinalLoadoutChoiceModal;
+
+// =====================================
 // SLOT MACHINE INTEGRATION
 // ====================================="
 
 function startSlotMachine(selectedClass, spinCount) {
+  console.log("🎰 startSlotMachine called with:", { selectedClass, spinCount });
+
   // Update global state for slot machine
   if (window.state) {
     window.state.selectedClass = selectedClass;
     window.state.totalSpins = spinCount;
     window.state.currentSpin = spinCount;
     window.state.spinsLeft = spinCount;
+    console.log("🎰 Updated window.state:", window.state);
   }
 
   // Clear any existing output
@@ -1849,24 +2108,36 @@ function startSlotMachine(selectedClass, spinCount) {
       output.style.opacity = "1";
     }
 
-    // Call the actual slot machine function
-    if (typeof window.displayLoadout === "function") {
+    // Call the actual slot machine function - USE MULTI-SPIN SEQUENCE
+    console.log("🎰 Available functions:", {
+      startSlotMachine: typeof window.startSlotMachine,
+      displayLoadout: typeof window.displayLoadout,
+      executeSpinSequence: typeof window.executeSpinSequence,
+    });
+
+    if (typeof window.executeSpinSequence === "function") {
       console.log(
-        "🎰 Starting slot machine with displayLoadout:",
-        selectedClass
-      );
-      window.displayLoadout(selectedClass);
-    } else if (typeof window.startSlotMachineSequence === "function") {
-      console.log(
-        "🎰 Starting slot machine sequence with:",
+        "🎰 Starting slot machine sequence with executeSpinSequence:",
         selectedClass,
         spinCount
       );
-      window.startSlotMachineSequence(selectedClass, spinCount);
-    } else {
-      console.error(
-        "❌ Neither displayLoadout nor startSlotMachineSequence function found!"
+      window.executeSpinSequence(selectedClass, spinCount);
+    } else if (spinCount > 1 && typeof window.displayLoadout === "function") {
+      console.log(
+        "🎰 Multi-spin sequence: Starting manual sequence with displayLoadout:",
+        selectedClass,
+        spinCount
       );
+      // Manual multi-spin sequence
+      window.executeManualSpinSequence(selectedClass, spinCount);
+    } else if (typeof window.displayLoadout === "function") {
+      console.log(
+        "🎰 Single spin: Starting slot machine with displayLoadout:",
+        selectedClass
+      );
+      window.displayLoadout(selectedClass);
+    } else {
+      console.error("❌ No suitable slot machine function found!");
     }
   }, 500); // Give time for overlay to clear
 }
@@ -1901,9 +2172,418 @@ window.updateSpinCount = function (spinsRemaining) {
   }
 };
 
+// Manual multi-spin sequence handler (fallback)
+// Generate loadout data for respin (same format as main slot machine)
+function generateLoadoutForRespin(classType) {
+  // Get the filtered loadouts
+  const filteredLoadouts = window.getFilteredLoadouts();
+  const loadout = filteredLoadouts[classType];
+
+  if (!loadout) {
+    console.error("No loadout data for class:", classType);
+    return null;
+  }
+
+  // Select random items with error checking
+  let selectedWeapon, selectedSpec;
+
+  if (loadout.weapons && loadout.weapons.length > 0) {
+    selectedWeapon = window.getRandomUniqueItems(loadout.weapons, 1)[0];
+  } else {
+    console.error("No weapons available for", classType);
+    selectedWeapon = { name: "Default Weapon" };
+  }
+
+  if (loadout.specializations && loadout.specializations.length > 0) {
+    selectedSpec = window.getRandomUniqueItems(loadout.specializations, 1)[0];
+  } else {
+    console.error("No specializations available for", classType);
+    selectedSpec = { name: "Default Spec" };
+  }
+
+  const selectedGadgets = window.getUniqueGadgets(classType, loadout);
+
+  // Create loadout object (same format as executeSpinSequence)
+  const loadoutData = {
+    classType: classType,
+    weapons: selectedWeapon.name || selectedWeapon,
+    specializations: selectedSpec.name || selectedSpec,
+    gadgets: selectedGadgets.map((g) =>
+      typeof g === "string" ? g : g.name || g
+    ),
+    spinsRemaining: 0, // This is a respin, so 0 remaining
+    allItems: {
+      weapons: loadout.weapons
+        ? loadout.weapons.map((w) => (typeof w === "string" ? w : w.name || w))
+        : [],
+      specializations: loadout.specializations
+        ? loadout.specializations.map((s) =>
+            typeof s === "string" ? s : s.name || s
+          )
+        : [],
+      gadgets: loadout.gadgets
+        ? loadout.gadgets.map((g) => (typeof g === "string" ? g : g.name || g))
+        : [],
+    },
+    // Store original objects for finalizeSpin
+    weaponObject: selectedWeapon,
+    specObject: selectedSpec,
+    gadgetObjects: selectedGadgets,
+  };
+
+  console.log("Generated respin loadout:", loadoutData);
+  return loadoutData;
+}
+
+window.executeManualSpinSequence = async function (selectedClass, totalSpins) {
+  console.log(
+    `🎰 Starting manual spin sequence: ${totalSpins} spins for ${selectedClass}`
+  );
+
+  for (let spinNum = 1; spinNum <= totalSpins; spinNum++) {
+    console.log(`🎰 Manual sequence - spin ${spinNum} of ${totalSpins}`);
+
+    // Update state
+    if (window.state) {
+      window.state.currentSpin = totalSpins - spinNum + 1;
+      window.state.spinsLeft = totalSpins - spinNum + 1;
+    }
+
+    // Update spin counter display
+    const spinsRemaining = totalSpins - spinNum + 1;
+    window.updateSpinCount && window.updateSpinCount(spinsRemaining);
+
+    // Execute the spin
+    await new Promise((resolve) => {
+      // Store original finalizeSpin
+      const originalFinalizeSpin = window.finalizeSpin;
+
+      // Create temporary finalizeSpin for this spin
+      window.finalizeSpin = function (columns) {
+        console.log(`🎰 Manual sequence - spin ${spinNum} completed`);
+
+        if (spinNum < totalSpins) {
+          // Not the final spin - continue sequence
+          console.log(`🎰 Manual sequence - continuing to spin ${spinNum + 1}`);
+          resolve();
+        } else {
+          // Final spin - restore original and handle completion
+          console.log(`🎰 Manual sequence - final spin completed`);
+          window.finalizeSpin = originalFinalizeSpin;
+          if (originalFinalizeSpin) {
+            originalFinalizeSpin.call(this, columns);
+          }
+          resolve();
+        }
+      };
+
+      // Start the spin
+      if (typeof window.displayLoadout === "function") {
+        window.displayLoadout(selectedClass);
+      }
+    });
+
+    // Wait between spins (except after final spin)
+    if (spinNum < totalSpins) {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+    }
+  }
+
+  console.log(`🎰 Manual spin sequence completed for ${selectedClass}`);
+};
+
 // =====================================
 // INITIALIZATION
 // =====================================
+
+// Alternative to modal - show buttons inline below slot machine
+function showFinalLoadoutChoiceButtons(loadout) {
+  console.log("🎰 showFinalLoadoutChoiceButtons called");
+  window.debugRespin &&
+    window.debugRespin("Showing final loadout choice buttons", { loadout });
+
+  return new Promise((resolve) => {
+    // Check if respin feature is enabled
+    if (!window.FEATURE_FLAGS?.JACKPOT_RESPIN) {
+      window.debugRespin &&
+        window.debugRespin("Respin feature disabled, auto-keeping loadout");
+      resolve("keep");
+      return;
+    }
+
+    // Check if respin is available
+    const respinAvailable = window.isRespinAvailable
+      ? window.isRespinAvailable()
+      : false;
+    window.debugRespin &&
+      window.debugRespin(
+        `Showing final loadout choice buttons. Respin available: ${respinAvailable}`
+      );
+
+    // Track analytics
+    window.trackRespinEvent &&
+      window.trackRespinEvent(
+        window.ANALYTICS_EVENTS?.RESPIN_CHOICE_SHOWN || "respin_choice_shown"
+      );
+
+    // Find the slot machine output container and slot items
+    const outputContainer = document.getElementById("output");
+    const slotMachineItems = outputContainer?.querySelector(
+      ".slot-machine-items"
+    );
+
+    if (!outputContainer || !slotMachineItems) {
+      window.debugRespin &&
+        window.debugRespin(
+          "No slot machine structure found, auto-keeping loadout"
+        );
+      resolve("keep");
+      return;
+    }
+
+    // CRITICAL FIX: Ensure output container and slot machine are visible
+    outputContainer.style.display = "block";
+    outputContainer.style.opacity = "1";
+    outputContainer.style.visibility = "visible";
+
+    // Ensure slot machine items remain visible
+    slotMachineItems.style.display = "block";
+    slotMachineItems.style.opacity = "1";
+    slotMachineItems.style.visibility = "visible";
+
+    console.log("🎰 Slot machine loadout kept visible for choice buttons");
+
+    // Create choice buttons container
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.className = "final-choice-buttons";
+
+    // Add defensive styling to ensure visibility
+    buttonsContainer.style.cssText = `
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      position: relative !important;
+      z-index: 10000 !important;
+      margin: 20px auto !important;
+      padding: 20px !important;
+      background: rgba(0, 0, 0, 0.8) !important;
+      border-radius: 12px !important;
+      border: 2px solid rgba(123, 47, 227, 0.5) !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+      text-align: center !important;
+      max-width: 400px !important;
+    `;
+
+    buttonsContainer.innerHTML = `
+      <div class="choice-message" style="margin-bottom: 16px;">
+        <h3 style="color: #fff; margin: 0 0 8px 0; font-size: 1.2rem;">🎊 Final Loadout Ready!</h3>
+        <p style="color: #ccc; margin: 0; font-size: 0.9rem;">Keep this loadout or spin again?</p>
+      </div>
+
+      <div class="choice-buttons-row" style="display: flex; gap: 12px; justify-content: center;">
+        <button class="choice-button keep-button" data-choice="keep" style="
+          flex: 1;
+          padding: 12px 20px;
+          border: none;
+          border-radius: 8px;
+          background: linear-gradient(135deg, #4CAF50, #45a049);
+          color: white;
+          font-weight: bold;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        ">
+          <span class="button-icon">✓</span>
+          <span class="button-text">KEEP LOADOUT</span>
+        </button>
+
+        <button class="choice-button respin-button ${
+          respinAvailable ? "" : "disabled"
+        }" data-choice="respin" ${respinAvailable ? "" : "disabled"} style="
+          flex: 1;
+          padding: 12px 20px;
+          border: none;
+          border-radius: 8px;
+          background: ${
+            respinAvailable
+              ? "linear-gradient(135deg, #7b2fe3, #6a28d9)"
+              : "rgba(100, 100, 100, 0.5)"
+          };
+          color: ${respinAvailable ? "white" : "#888"};
+          font-weight: bold;
+          font-size: 0.9rem;
+          cursor: ${respinAvailable ? "pointer" : "not-allowed"};
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        ">
+          <span class="button-icon">🎯</span>
+          <span class="button-text">RESPIN</span>
+          ${
+            respinAvailable
+              ? ""
+              : '<span class="button-subtitle" style="display: block; font-size: 0.7rem; opacity: 0.7;">No respins available</span>'
+          }
+        </button>
+      </div>
+    `;
+
+    // Insert buttons AFTER the slot machine items but still within output container
+    // This positions them below the 5 loadout boxes
+    if (slotMachineItems.nextSibling) {
+      outputContainer.insertBefore(
+        buttonsContainer,
+        slotMachineItems.nextSibling
+      );
+    } else {
+      outputContainer.appendChild(buttonsContainer);
+    }
+
+    console.log("🎰 Choice buttons positioned below slot machine boxes");
+
+    // Handle choice buttons
+    const handleChoice = (choice) => {
+      window.debugRespin && window.debugRespin(`User chose: ${choice}`);
+
+      // Track analytics
+      if (choice === "keep") {
+        window.trackRespinEvent &&
+          window.trackRespinEvent(
+            window.ANALYTICS_EVENTS?.LOADOUT_KEPT || "loadout_kept"
+          );
+      } else if (choice === "respin") {
+        window.trackRespinEvent &&
+          window.trackRespinEvent(
+            window.ANALYTICS_EVENTS?.RESPIN_CHOSEN || "respin_chosen"
+          );
+
+        // FIXED: Restart the same slot machine instead of creating new format
+        if (choice === "respin" && window.slotMachineInstance) {
+          console.log("🎰 Starting respin with same slot machine format");
+
+          // Get the current class from the loadout or use saved class
+          const currentClass =
+            loadout?.classType || window.state?.selectedClass || "Light";
+
+          // Generate new loadout for respin using the same method as the main flow
+          const newLoadoutData = generateLoadoutForRespin(currentClass);
+
+          if (newLoadoutData) {
+            // Remove buttons first
+            if (buttonsContainer.parentNode) {
+              buttonsContainer.parentNode.removeChild(buttonsContainer);
+            }
+
+            // Display the new loadout structure
+            window.slotMachineInstance.displayLoadout(newLoadoutData);
+
+            // Start animation with callback to handle completion
+            setTimeout(() => {
+              window.slotMachineInstance.animateSlots(newLoadoutData, () => {
+                console.log("🎰 Respin animation complete");
+
+                // Call finalizeSpin with the new items if available
+                if (typeof window.finalizeSpin === "function") {
+                  const items = [
+                    newLoadoutData.weaponObject,
+                    newLoadoutData.specObject,
+                    ...newLoadoutData.gadgetObjects,
+                  ];
+                  window.finalizeSpin(items);
+                }
+              });
+            }, 200);
+
+            return; // Exit early - don't resolve the promise yet
+          }
+        }
+      }
+
+      // Remove buttons
+      if (buttonsContainer.parentNode) {
+        buttonsContainer.parentNode.removeChild(buttonsContainer);
+      }
+
+      resolve(choice);
+    };
+
+    // Add event listeners with visual feedback
+    const buttons = buttonsContainer.querySelectorAll(".choice-button");
+    buttons.forEach((button) => {
+      // Add hover effects
+      button.addEventListener("mouseenter", (e) => {
+        if (!e.target.disabled) {
+          e.target.style.transform = "translateY(-2px) scale(1.05)";
+          e.target.style.boxShadow = "0 6px 20px rgba(0, 0, 0, 0.4)";
+        }
+      });
+
+      button.addEventListener("mouseleave", (e) => {
+        if (!e.target.disabled) {
+          e.target.style.transform = "translateY(0) scale(1)";
+          e.target.style.boxShadow = "none";
+        }
+      });
+
+      // Add click handler
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        const choice = e.currentTarget.dataset.choice;
+
+        if (choice === "respin" && !respinAvailable) {
+          window.debugRespin &&
+            window.debugRespin("Respin not available, ignoring click");
+          return;
+        }
+
+        console.log(`🎰 User clicked: ${choice.toUpperCase()}`);
+
+        // Add click animation
+        e.target.style.transform = "translateY(0) scale(0.95)";
+        setTimeout(() => {
+          e.target.style.transform = "translateY(0) scale(1)";
+        }, 150);
+
+        handleChoice(choice);
+      });
+    });
+
+    // Auto-timeout after 30 seconds
+    const timeout = setTimeout(() => {
+      window.debugRespin &&
+        window.debugRespin("Choice timeout, auto-keeping loadout");
+      handleChoice("keep");
+    }, window.RESPIN_CONFIG?.CHOICE_TIMEOUT || 30000);
+
+    // Clear timeout on choice
+    const originalResolve = resolve;
+    resolve = (choice) => {
+      clearTimeout(timeout);
+      originalResolve(choice);
+    };
+
+    // Animate buttons in and scroll into view
+    requestAnimationFrame(() => {
+      buttonsContainer.classList.add("active");
+
+      // Scroll into view to ensure visibility
+      setTimeout(() => {
+        buttonsContainer.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "center",
+        });
+        console.log("🎰 Choice buttons scrolled into view");
+      }, 100);
+    });
+  });
+}
 
 // Export for global access
 window.overlayManager = {
@@ -1913,8 +2593,41 @@ window.overlayManager = {
   showClassRouletteOverlay,
   showClassPickerOverlay,
   showSlotMachineOverlay,
+  showFinalLoadoutChoiceModal,
+  showFinalLoadoutChoiceButtons,
   overlayState,
   overlayAudio,
+};
+
+// Also expose directly on window for finalizeSpin function
+window.showFinalLoadoutChoiceButtons = showFinalLoadoutChoiceButtons;
+
+// Test function for debugging - can be called from console
+window.testRespinButtons = function () {
+  console.log("🧪 Testing respin buttons with dummy loadout");
+  window.earnFreeRespin(); // First earn a free respin
+  const testLoadout = {
+    class: "Light",
+    weapon: { name: "Test Weapon" },
+    specialization: { name: "Test Spec" },
+    gadgets: [
+      { name: "Test Gadget 1" },
+      { name: "Test Gadget 2" },
+      { name: "Test Gadget 3" },
+    ],
+  };
+  return showFinalLoadoutChoiceButtons(testLoadout);
+};
+
+// Test the entire flow
+window.testRespinFlow = function () {
+  console.log("🧪 Testing complete respin flow");
+  console.log("Step 1: Earn free respin");
+  window.earnFreeRespin();
+  console.log("Step 2: Check if respin is available");
+  console.log("Respin available:", window.isRespinAvailable());
+  console.log("Step 3: Try to show buttons");
+  window.testRespinButtons();
 };
 
 console.log("✅ Overlay Manager loaded");
