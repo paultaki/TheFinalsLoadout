@@ -60,11 +60,6 @@ class SlotMachine {
     this.columns = [];
     this.isAnimating = false;
     this.currentLoadout = null;
-    // Respin state management
-    this.hasJackpotRespin = false;
-    this.respinUsed = false;
-    this.isRespin = false;
-    this.respinButtonContainer = null;
   }
 
   // =====================================================
@@ -229,13 +224,12 @@ class SlotMachine {
   // =====================================================
 
   // Animate slot machine
-  async animateSlots(loadout, onComplete, hasJackpotRespin = false) {
+  async animateSlots(loadout, onComplete) {
     if (this.isAnimating) return;
 
     this.isAnimating = true;
     this.currentLoadout = loadout;
     this.isFinalSpin = loadout.spinsRemaining === 0;
-    this.hasJackpotRespin = hasJackpotRespin && !this.respinUsed;
 
     // Update status
     this.updateStatus(loadout.classType, loadout.spinsRemaining);
@@ -283,10 +277,8 @@ class SlotMachine {
       await this.addPreSpinEffects();
     }
 
-    // Start spinning sound if available (skip for respins as transition sound already played)
-    if (!this.isRespin) {
-      this.playSound("spinningSound");
-    }
+    // Start spinning sound if available
+    this.playSound("spinningSound");
 
     // Animate each column
     try {
@@ -323,24 +315,15 @@ class SlotMachine {
         this.applyWinnerEffects();
       }
 
-      console.log("Animation finished, checking for respin option");
-      
-      // Check if we should show respin buttons
-      if (this.isFinalSpin && this.hasJackpotRespin && !this.respinUsed && !this.isRespin) {
-        console.log("Showing respin buttons for jackpot");
-        this.showRespinButtons(onComplete);
-      } else {
-        console.log("No respin available, calling onComplete callback");
-        // Normal callback
-        if (onComplete) {
-          onComplete();
-        }
+      console.log("Animation finished, calling onComplete callback");
+      // Callback
+      if (onComplete) {
+        onComplete();
       }
     } catch (error) {
       console.error("Animation error:", error);
     } finally {
       this.isAnimating = false;
-      this.isRespin = false; // Reset respin flag
       this.removeSpotlightOverlay();
 
       // Re-enable UI
@@ -731,10 +714,7 @@ class SlotMachine {
             !column.parentElement.classList.contains("landing-flash")
           ) {
             column.parentElement.classList.add("landing-flash");
-            // Skip tick sound during respin to avoid duplication
-            if (!this.isRespin) {
-              this.playSound("tickSound");
-            }
+            this.playSound("tickSound");
           }
         }
 
@@ -1130,10 +1110,7 @@ class SlotMachine {
       this.addLandingEffects(column, index);
     } else {
       slotItem.classList.add("landing-flash");
-      // Skip tick sound during respin to avoid duplication
-      if (!this.isRespin) {
-        this.playSound("tickSound");
-      }
+      this.playSound("tickSound");
       // Remove landing flash after animation completes
       setTimeout(() => {
         slotItem.classList.remove("landing-flash");
@@ -1900,199 +1877,6 @@ class SlotMachine {
         scrollContainer.style.filter = "";
       }
     });
-  }
-
-  // =====================================================
-  // RESPIN FEATURE METHODS
-  // =====================================================
-
-  // Show respin buttons after jackpot final spin
-  showRespinButtons(originalCallback) {
-    console.log("Creating respin button UI");
-    
-    // Create button container with header
-    this.respinButtonContainer = document.createElement("div");
-    this.respinButtonContainer.className = "respin-button-container";
-    this.respinButtonContainer.innerHTML = `
-      <div class="respin-header">
-        <h3 style="color: #FFD700; margin: 0 0 15px 0; text-align: center; font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px;">
-          JACKPOT BONUS - CHOOSE YOUR REWARD
-        </h3>
-      </div>
-      <div class="respin-buttons" style="display: flex; gap: 20px; justify-content: center;">
-        <button id="free-respin-btn" class="casino-button respin-btn">
-          <span class="btn-glow"></span>
-          <span class="btn-text">🎰 FREE RESPIN</span>
-        </button>
-        <button id="keep-loadout-btn" class="casino-button keep-btn">
-          <span class="btn-text">✓ KEEP LOADOUT</span>
-        </button>
-      </div>
-    `;
-    
-    // Add to the appropriate container - overlay on top of slot machine
-    const slotOverlayWrapper = document.querySelector(".slot-overlay-wrapper");
-    const slotMachineOverlay = document.querySelector(".slot-machine-overlay");
-    const overlaySlotOutput = document.getElementById("overlay-slot-output");
-    
-    if (slotOverlayWrapper) {
-      // If we're in the slot overlay, append to the wrapper so it overlays
-      slotOverlayWrapper.appendChild(this.respinButtonContainer);
-    } else if (slotMachineOverlay) {
-      // Alternative slot overlay structure
-      slotMachineOverlay.appendChild(this.respinButtonContainer);
-    } else if (overlaySlotOutput) {
-      // Append directly to the slot output container's parent
-      overlaySlotOutput.parentElement.appendChild(this.respinButtonContainer);
-    } else {
-      // Fallback to the main container
-      if (this.container && this.container.parentElement) {
-        this.container.parentElement.appendChild(this.respinButtonContainer);
-      }
-    }
-    
-    // Add button event listeners
-    document.getElementById("free-respin-btn").addEventListener("click", () => {
-      this.handleFreeRespin(originalCallback);
-    });
-    
-    document.getElementById("keep-loadout-btn").addEventListener("click", () => {
-      this.handleKeepLoadout(originalCallback);
-    });
-    
-    // Play sound effect for button appearance
-    this.playSound("ding");
-  }
-
-  // Handle free respin choice
-  async handleFreeRespin(originalCallback) {
-    console.log("Free respin selected");
-    
-    // Mark respin as used
-    this.respinUsed = true;
-    this.isRespin = true;
-    
-    // Hide buttons
-    if (this.respinButtonContainer) {
-      this.respinButtonContainer.style.display = "none";
-    }
-    
-    // Reset slot reels without destroying DOM
-    await this.resetSlotReels();
-    
-    // Play respin sound
-    this.playSound("transition");
-    
-    // Wait a moment for visual effect
-    await this.delay(500);
-    
-    // Start new spin animation with same class
-    const respinLoadout = {
-      ...this.currentLoadout,
-      spinsRemaining: 0, // Still final spin
-    };
-    
-    // Generate new random items for the respin
-    const newLoadout = this.generateRespinLoadout(respinLoadout);
-    
-    // Animate the respin
-    await this.animateSlots(newLoadout, () => {
-      console.log("Respin complete");
-      // Remove button container
-      if (this.respinButtonContainer) {
-        this.respinButtonContainer.remove();
-        this.respinButtonContainer = null;
-      }
-      // Call original callback
-      if (originalCallback) {
-        originalCallback();
-      }
-    }, false); // No more respins after this
-  }
-
-  // Handle keep loadout choice
-  handleKeepLoadout(originalCallback) {
-    console.log("Keep loadout selected");
-    
-    // Remove button container
-    if (this.respinButtonContainer) {
-      this.respinButtonContainer.remove();
-      this.respinButtonContainer = null;
-    }
-    
-    // Play confirmation sound
-    this.playSound("ding");
-    
-    // Call original callback
-    if (originalCallback) {
-      originalCallback();
-    }
-  }
-
-  // Reset slot reels to starting position without destroying DOM
-  async resetSlotReels() {
-    console.log("Resetting slot reels for respin");
-    
-    // Get all slot scroll containers
-    const scrollContainers = this.itemsContainer.querySelectorAll(".slot-scroll");
-    
-    scrollContainers.forEach((container, index) => {
-      // Reset transform to starting position
-      const startPosition = -900; // Match the initial spin start position
-      container.style.transition = "transform 0.5s ease-out";
-      container.style.transform = `translateY(${startPosition}px)`;
-      
-      // Remove any animation classes
-      const slotItem = container.parentElement;
-      slotItem.classList.remove(
-        "landing-flash",
-        "high-speed-blur",
-        "extreme-blur",
-        "winner-pulsate",
-        "winner-dramatic",
-        "animating"
-      );
-      
-      // Clear inline filter styles
-      container.style.filter = "";
-    });
-    
-    // Wait for reset animation to complete
-    await this.delay(500);
-    
-    // Remove transitions for next animation
-    scrollContainers.forEach((container) => {
-      container.style.transition = "";
-    });
-  }
-
-  // Generate new loadout for respin
-  generateRespinLoadout(baseLoadout) {
-    console.log("Generating new loadout for respin");
-    
-    // Get the loadout generation function from the global scope
-    if (typeof window.generateLoadoutForSpin === "function") {
-      return window.generateLoadoutForSpin(baseLoadout.classType, 0);
-    }
-    
-    // Fallback: shuffle existing items
-    const allItems = baseLoadout.allItems;
-    const newWeapon = allItems.weapons[Math.floor(Math.random() * allItems.weapons.length)];
-    const newSpec = allItems.specializations[Math.floor(Math.random() * allItems.specializations.length)];
-    
-    // Get 3 unique gadgets
-    const shuffledGadgets = [...allItems.gadgets].sort(() => Math.random() - 0.5);
-    const newGadgets = shuffledGadgets.slice(0, 3);
-    
-    return {
-      ...baseLoadout,
-      weapons: newWeapon,
-      specializations: newSpec,
-      gadgets: newGadgets,
-      weaponObject: { name: newWeapon },
-      specObject: { name: newSpec },
-      gadgetObjects: newGadgets.map(g => ({ name: g })),
-    };
   }
 }
 

@@ -13,14 +13,13 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Start slot machine with loadout data - handles multiple spins
-window.startSlotMachine = async function (classType, spinCount, hasJackpotRespin = false) {
+window.startSlotMachine = async function (classType, spinCount) {
   console.log(
     "🎰 Starting slot machine sequence:",
     classType,
     "with",
     spinCount,
-    "spins",
-    hasJackpotRespin ? "(with jackpot respin)" : ""
+    "spins"
   );
 
   // Add class to body to hide duplicate text on desktop
@@ -32,7 +31,6 @@ window.startSlotMachine = async function (classType, spinCount, hasJackpotRespin
   window.state.totalSpins = spinCount;
   window.state.currentSpin = spinCount;
   window.state.spinsLeft = spinCount;
-  window.state.hasJackpotRespin = hasJackpotRespin;
 
   // Update initial status display
   if (window.slotMachineInstance && window.slotMachineInstance.statusBar) {
@@ -48,11 +46,11 @@ window.startSlotMachine = async function (classType, spinCount, hasJackpotRespin
   }
 
   // Execute all spins
-  await executeSpinSequence(classType, spinCount, hasJackpotRespin);
+  await executeSpinSequence(classType, spinCount);
 };
 
 // Execute the full spin sequence
-async function executeSpinSequence(classType, totalSpins, hasJackpotRespin = false) {
+async function executeSpinSequence(classType, totalSpins) {
   for (let spinNum = 1; spinNum <= totalSpins; spinNum++) {
     console.log(`🎰 Executing spin ${spinNum} of ${totalSpins}`);
 
@@ -116,8 +114,7 @@ async function executeSpinSequence(classType, totalSpins, hasJackpotRespin = fal
     await new Promise((resolve) => setTimeout(resolve, 300));
 
     try {
-      // Animate with callback - pass hasJackpotRespin only on final spin
-      const shouldShowRespin = isLastSpin && hasJackpotRespin;
+      // Animate with callback
       await new Promise((resolve) => {
         window.slotMachineInstance.animateSlots(loadoutData, () => {
           console.log(`Spin ${spinNum} animation complete`);
@@ -137,7 +134,7 @@ async function executeSpinSequence(classType, totalSpins, hasJackpotRespin = fal
           }
 
           resolve();
-        }, shouldShowRespin);
+        });
       });
 
       // Pause between spins (except after last spin)

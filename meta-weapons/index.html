@@ -526,6 +526,33 @@
         border: 1px solid rgba(255, 183, 0, 0.3);
       }
 
+      /* Methodology Card Styles */
+      .methodology-card {
+        background: rgba(24, 28, 39, 0.4);
+        border: 1px solid rgba(0, 240, 192, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .methodology-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, 
+          transparent, 
+          var(--quantum-cyan), 
+          transparent);
+        animation: shimmer 3s infinite;
+      }
+
+      @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+      }
+
       /* Responsive */
       @media (max-width: 768px) {
         .quantum-nav {
@@ -548,6 +575,10 @@
         .filter-pill {
           font-size: 0.625rem;
           padding: 0.375rem 0.75rem;
+        }
+
+        .methodology-content {
+          font-size: 0.875rem;
         }
       }
 
@@ -863,6 +894,7 @@
             <a href="../ragequit/index.html">RAGE QUIT</a>
             <a href="../patch-notes/index.html">PATCH NOTES</a>
             <a href="#" class="active">META WEAPONS</a>
+            <a href="../wt-progress/index.html">WT TRACKER</a>
           </div>
           <input
             type="text"
@@ -1700,6 +1732,30 @@
                     <p class="font-bold">Mesh Shield</p>
                   </div>
                 </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Methodology Section -->
+          <section class="mb-12">
+            <div class="weapon-card methodology-card">
+              <h2 class="text-2xl font-bold mb-4 flex items-center gap-2" style="color: var(--quantum-cyan)">
+                <span class="text-xl">📊</span>
+                How These Rankings Are Built
+              </h2>
+              <div class="methodology-content">
+                <p class="text-sm text-quantum-secondary mb-3">
+                  Our weapon meta is crafted from a blend of <strong class="text-quantum-text">raw performance stats</strong>, 
+                  <strong class="text-quantum-text">real player data</strong>, and 
+                  <strong class="text-quantum-text">community sentiment</strong>. We pull from multiple sources—including 
+                  pick/win rates from TheFinals.gg, TTK/DPS calculations from spreadsheets, and our own gameplay analysis. 
+                  Our tier system also reflects how weapons synergize with specs and gadgets in real-world chaos, not just in spreadsheets.
+                </p>
+                <p class="text-sm text-quantum-secondary">
+                  We also factor in <em class="text-quantum-yellow">community frustration</em> and 
+                  <em class="text-quantum-yellow">usage patterns</em> to help surface weapons that are strong, tricky, 
+                  or just plain troll-worthy. The result: a tier list that balances theorycrafting, meta sweats, and actual in-game madness.
+                </p>
               </div>
             </div>
           </section>

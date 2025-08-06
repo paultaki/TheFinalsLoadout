@@ -61,28 +61,6 @@ function createOverlayStructure() {
 }
 
 function clearOverlay() {
-  // Stop any running animations first
-  if (spinWheelState.animationId) {
-    cancelAnimationFrame(spinWheelState.animationId);
-    spinWheelState.animationId = null;
-  }
-  if (spinWheelState.idleAnimationId) {
-    cancelAnimationFrame(spinWheelState.idleAnimationId);
-    spinWheelState.idleAnimationId = null;
-  }
-  
-  // Reset spin wheel state completely
-  spinWheelState.isSpinning = false;
-  spinWheelState.currentDistance = 0;
-  spinWheelState.currentVelocity = 0;
-  spinWheelState.lastTickIndex = -1;
-  
-  // Stop all overlay sounds
-  Object.values(overlayAudio).forEach(audio => {
-    audio.pause();
-    audio.currentTime = 0;
-  });
-  
   const root = getOverlayRoot();
   root.innerHTML = "";
   root.style.pointerEvents = "none";
@@ -506,7 +484,7 @@ async function showSpinWheelOverlay() {
 
         if (Math.abs(cardCenter - frameCenter) < rect.height / 2) {
           winningCard = card;
-          const baseCardCount = SPIN_CARDS.length; // Actual number of unique cards (8)
+          const baseCardCount = 7; // Number of unique cards
           const dataIndex =
             parseInt(card.getAttribute("data-index")) % baseCardCount;
           result = SPIN_CARDS[dataIndex];
@@ -622,14 +600,6 @@ async function showSpinWheelOverlay() {
     // Physics update
     const updatePhysics = (timestamp) => {
       if (!spinWheelState.isSpinning) return;
-      
-      // Safety check: Stop if wheel element no longer exists
-      if (!wheelList || !document.contains(wheelList)) {
-        cancelAnimationFrame(spinWheelState.animationId);
-        spinWheelState.animationId = null;
-        spinWheelState.isSpinning = false;
-        return;
-      }
 
       if (spinWheelState.lastTime === 0) {
         spinWheelState.lastTime = timestamp;
@@ -720,13 +690,6 @@ async function showSpinWheelOverlay() {
     // Start idle animation
     const startIdleAnimation = () => {
       const idleAnimate = () => {
-        // Safety check: Stop if wheel element no longer exists
-        if (!wheelList || !document.contains(wheelList)) {
-          cancelAnimationFrame(spinWheelState.idleAnimationId);
-          spinWheelState.idleAnimationId = null;
-          return;
-        }
-        
         if (!spinWheelState.isSpinning) {
           spinWheelState.currentDistance += SPIN_PHYSICS.idleSpeed;
           applyInfiniteScroll(spinWheelState.currentDistance);
@@ -1658,7 +1621,13 @@ async function startLoadoutGeneration() {
     // Step 2: Handle class selection - both jackpot and normal go through roulette
     if (spinResult.isJackpot) {
       console.log("🎰 Jackpot detected, proceeding to class roulette");
-      // Jackpot was already announced in showJackpotModal, skip duplicate reveal
+      // Show jackpot reveal first
+      await showRevealCard({
+        title: "JACKPOT!",
+        subtitle: `${spinResult.spins} SPINS + FREE RESPIN`,
+        duration: 2000,
+        isJackpot: true,
+      });
     } else {
       // Normal path - show spin count reveal first
       await showRevealCard({
@@ -1691,14 +1660,12 @@ async function startLoadoutGeneration() {
     console.log("🎰 Starting slot machine overlay with:", {
       class: overlayState.selectedClass,
       spins: overlayState.spinCount,
-      hasJackpotRespin: overlayState.isJackpot,
     });
 
     // Show slot machine in overlay
     await showSlotMachineOverlay(
       overlayState.selectedClass,
-      overlayState.spinCount,
-      overlayState.isJackpot
+      overlayState.spinCount
     );
   } catch (error) {
     console.error("❌ Error in loadout generation flow:", error);
@@ -1717,8 +1684,8 @@ async function startLoadoutGeneration() {
 // SLOT MACHINE OVERLAY
 // =====================================
 
-async function showSlotMachineOverlay(selectedClass, spinCount, hasJackpotRespin = false) {
-  console.log("🎰 Showing slot machine overlay...", { hasJackpotRespin });
+async function showSlotMachineOverlay(selectedClass, spinCount) {
+  console.log("🎰 Showing slot machine overlay...");
 
   // Add class to body to hide duplicate text on desktop
   document.body.classList.add("overlay-active");
@@ -1778,7 +1745,7 @@ async function showSlotMachineOverlay(selectedClass, spinCount, hasJackpotRespin
 
         // Start the slot machine
         if (typeof window.startSlotMachine === "function") {
-          window.startSlotMachine(selectedClass, spinCount, hasJackpotRespin);
+          window.startSlotMachine(selectedClass, spinCount);
 
           // Function to update overlay countdown
           const updateOverlayCountdown = (spinsLeft, selectedClass) => {
