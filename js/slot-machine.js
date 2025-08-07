@@ -731,8 +731,8 @@ class SlotMachine {
             !column.parentElement.classList.contains("landing-flash")
           ) {
             column.parentElement.classList.add("landing-flash");
-            // Skip tick sound during respin to avoid duplication
-            if (!this.isRespin) {
+            // Skip tick sound during respin or transition to avoid duplication
+            if (!this.isRespin && !window.isTransitioningToSlotMachine) {
               this.playSound("tickSound");
             }
           }
@@ -1130,8 +1130,8 @@ class SlotMachine {
       this.addLandingEffects(column, index);
     } else {
       slotItem.classList.add("landing-flash");
-      // Skip tick sound during respin to avoid duplication
-      if (!this.isRespin) {
+      // Skip tick sound during respin or transition to avoid duplication
+      if (!this.isRespin && !window.isTransitioningToSlotMachine) {
         this.playSound("tickSound");
       }
       // Remove landing flash after animation completes
@@ -1193,8 +1193,10 @@ class SlotMachine {
         }
       );
 
-      // Coin sound effect
-      this.playSound("tickSound");
+      // Coin sound effect (unless transitioning)
+      if (!window.isTransitioningToSlotMachine) {
+        this.playSound("tickSound");
+      }
       await this.delay(50);
     }
 
@@ -1256,6 +1258,9 @@ class SlotMachine {
 
   // Sound management
   playSound(soundId) {
+    // Don't play sounds during transition from roulette
+    if (window.isTransitioningToSlotMachine) return;
+    
     const sound = document.getElementById(soundId);
     if (sound && window.state?.soundEnabled) {
       // Use safePlay if available, otherwise fall back to direct play
@@ -1701,7 +1706,11 @@ class SlotMachine {
       // Regular columns with building intensity
       const intensity = Math.min(index + 1, 3);
       for (let i = 0; i < intensity; i++) {
-        setTimeout(() => this.playSound("tickSound"), i * 80);
+        setTimeout(() => {
+          if (!window.isTransitioningToSlotMachine) {
+            this.playSound("tickSound");
+          }
+        }, i * 80);
       }
       setTimeout(() => this.playSound("columnStop"), intensity * 80 + 100);
     } else {

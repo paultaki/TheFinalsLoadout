@@ -1451,6 +1451,16 @@ async function showClassRouletteOverlay() {
     const handleSpinComplete = () => {
       console.log("🎲 [DEBUG] handleSpinComplete called");
       rouletteState.isSpinning = false;
+      
+      // CRITICAL: Stop all roulette sounds immediately
+      if (overlayAudio.beep) {
+        overlayAudio.beep.pause();
+        overlayAudio.beep.currentTime = 0;
+      }
+      if (overlayAudio.roulette) {
+        overlayAudio.roulette.pause();
+        overlayAudio.roulette.currentTime = 0;
+      }
 
       // Calculate winner based on where ball landed
       const winner = calculateWinner();
@@ -1483,11 +1493,20 @@ async function showClassRouletteOverlay() {
         backdrop.classList.remove("active");
 
         setTimeout(() => {
+          // Set transition flag to prevent slot machine sounds from playing early
+          window.isTransitioningToSlotMachine = true;
+          
           clearOverlay();
           console.log(
             "🎲 [DEBUG] Resolving roulette overlay with winner:",
             winner
           );
+          
+          // Clear transition flag after a brief delay
+          setTimeout(() => {
+            window.isTransitioningToSlotMachine = false;
+          }, 500);
+          
           resolve(winner);
         }, 300);
       }, 2000); // Extra 0.5 seconds pause to show winning class
@@ -1719,6 +1738,12 @@ async function startLoadoutGeneration() {
 
 async function showSlotMachineOverlay(selectedClass, spinCount, hasJackpotRespin = false) {
   console.log("🎰 Showing slot machine overlay...", { hasJackpotRespin });
+  
+  // Add a small delay to ensure clean transition from roulette
+  await new Promise(resolve => setTimeout(resolve, 200));
+  
+  // Clear the transition flag as slot machine is starting
+  window.isTransitioningToSlotMachine = false;
 
   // Add class to body to hide duplicate text on desktop
   document.body.classList.add("overlay-active");
