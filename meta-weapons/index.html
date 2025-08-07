@@ -846,10 +846,6 @@
             <div class="header-content">
                 <a href="/" class="logo" data-clicks="0">THE FINALS META</a>
                 
-                <div class="live-meta-badge">
-                    <span class="pulse-dot"></span>
-                    <span>Live from <span id="matchCount">2,847</span> matches today</span>
-                </div>
                 
                 <button id="compareBtn" style="padding: 0.5rem 1.25rem; background: rgba(0, 240, 192, 0.2); border: 2px solid var(--cyan); border-radius: 8px; color: var(--cyan); cursor: pointer; font-weight: 700;">
                     Compare (0/3)
@@ -1533,12 +1529,8 @@
             observer.observe(card);
         });
 
-        // Live update simulation
+        // Live update simulation for time only
         setInterval(() => {
-            const matchCount = document.getElementById('matchCount');
-            const current = parseInt(matchCount.textContent);
-            matchCount.textContent = current + Math.floor(Math.random() * 5);
-            
             const updateTime = document.getElementById('updateTime');
             const minutes = Math.floor(Math.random() * 10) + 1;
             updateTime.textContent = `${minutes} minutes ago`;

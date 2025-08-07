@@ -35,7 +35,8 @@
       "Bash(env)",
       "Bash(git push:*)",
       "Bash(cursor:*)",
-      "Bash(code:*)"
+      "Bash(code:*)",
+      "Bash(diff:*)"
     ]
   },
   "enableAllProjectMcpServers": false
