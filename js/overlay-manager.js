@@ -1404,6 +1404,9 @@ async function showClassRouletteOverlay() {
       rouletteState.totalBallRotation = rouletteState.ballAngularPosition;
 
       // Dynamic sound effects based on physics phase
+      // DISABLED: beep.mp3 tick sounds per user request
+      // Keeping only roulette.mp3, transition.mp3, and ding.mp3
+      /*
       if (physics.speed > 0.1 && window.state && window.state.soundEnabled) {
         // Calculate tick interval based on ball speed (faster = more frequent)
         const tickInterval = Math.max(50, 200 * (1 - physics.speed));
@@ -1419,6 +1422,7 @@ async function showClassRouletteOverlay() {
           }
         }
       }
+      */
 
       // Special sound when ball drops to inner track
       if (
@@ -1452,11 +1456,7 @@ async function showClassRouletteOverlay() {
       console.log("🎲 [DEBUG] handleSpinComplete called");
       rouletteState.isSpinning = false;
       
-      // CRITICAL: Stop all roulette sounds immediately
-      if (overlayAudio.beep) {
-        overlayAudio.beep.pause();
-        overlayAudio.beep.currentTime = 0;
-      }
+      // Stop roulette spinning sound
       if (overlayAudio.roulette) {
         overlayAudio.roulette.pause();
         overlayAudio.roulette.currentTime = 0;
