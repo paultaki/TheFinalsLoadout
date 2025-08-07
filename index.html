@@ -115,8 +115,28 @@
       gtag("config", "G-GVGKYFGZ1Z");
     </script>
 
+    <!-- Console noise control for production -->
+    <script>
+      window.DEBUG = false;
+      if (!window.DEBUG) {
+        console.log = function() {};
+        console.debug = function() {};
+      }
+    </script>
+
     <!-- Critical CSS -->
     <style>
+      /* Metric guards to reduce text jump on font fallback */
+      html {
+        text-rendering: optimizeLegibility;
+      }
+      body {
+        font-size-adjust: 0.5;
+      }
+      h1, h2, .impact-text {
+        font-size-adjust: 0.6;
+      }
+
       :root {
         --neon-purple: #7b2fe3;
         --neon-blue: #1e90ff;
@@ -1124,6 +1144,9 @@
       }
     </style>
 
+    <!-- Preload critical above-the-fold CSS -->
+    <link rel="preload" href="css/quantum-design-system.css" as="style" />
+    
     <!-- Quantum Design System -->
     <link rel="stylesheet" href="css/quantum-design-system.css" />
 
@@ -2334,5 +2357,16 @@
     <!-- New Slot Machine Implementation -->
     <script src="js/slot-machine.js"></script>
     <script src="js/slot-integration.js"></script>
+
+    <!-- rel noopener noreferrer safeguard for external links -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('a[target="_blank"]').forEach(function(a){
+          const rel = (a.getAttribute('rel') || '').toLowerCase();
+          if (!rel.includes('noopener')) a.setAttribute('rel', (rel + ' noopener').trim());
+          if (!rel.includes('noreferrer')) a.setAttribute('rel', (a.getAttribute('rel') + ' noreferrer').trim());
+        });
+      });
+    </script>
   </body>
 </html>
