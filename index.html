@@ -170,10 +170,10 @@
         text-transform: uppercase;
       }
 
-      /* Sticky Navigation with Casino Mode styling */
+      /* Navigation - matching patch-notes and meta-weapons style */
       .main-nav {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         padding: 1rem 2rem;
         background: linear-gradient(
@@ -184,12 +184,11 @@
         );
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        position: -webkit-sticky;
+        border-bottom: 1px solid rgba(30, 144, 255, 0.3);
         position: sticky;
         top: 0;
-        z-index: 9999;
-        border-bottom: 1px solid rgba(123, 47, 227, 0.3);
-        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         width: 100%;
         box-sizing: border-box;
       }
@@ -199,10 +198,11 @@
         display: flex;
         gap: 2rem;
         align-items: center;
+        justify-content: center;
       }
 
       /* Nav links styling */
-      .main-nav a {
+      .nav-link {
         color: #fff;
         text-decoration: none;
         padding: 0.5rem 1rem;
@@ -216,40 +216,26 @@
         overflow: hidden;
       }
 
-      /* Casino Mode hover effect */
-      .main-nav a::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(30, 144, 255, 0.4),
-          transparent
-        );
-        transition: left 0.5s ease;
-      }
-
-      .main-nav a:hover::before {
-        left: 100%;
-      }
-
-      .main-nav a:hover,
-      .main-nav a.active {
-        background-color: var(--neon-blue);
+      /* Nav link hover and active states */
+      .nav-link:hover,
+      .nav-link.active {
+        background-color: rgba(30, 144, 255, 0.2);
         transform: translateY(-2px);
         box-shadow: 0 4px 15px rgba(30, 144, 255, 0.4);
       }
 
-      /* Nav controls container */
+      .nav-link.active {
+        background-color: #00f0c0;
+        color: #0a0a0f;
+      }
+
+      /* Nav controls container - position absolute to not affect centering */
       .nav-controls {
+        position: absolute;
+        right: 2rem;
         display: flex;
         gap: 1rem;
         align-items: center;
-        margin-left: auto;
       }
 
       /* Nav button styling */
@@ -328,34 +314,60 @@
         border-color: rgba(255, 68, 68, 0.4);
       }
 
-      /* Mobile Navigation (≤640px) */
+      /* Mobile Navigation Optimizations - matching other pages */
       @media (max-width: 640px) {
         .main-nav {
-          flex-direction: column;
-          padding: 0.75rem 1rem;
-          gap: 0.75rem;
+          flex-direction: row;
+          padding: 0.5rem 0.75rem;
+          gap: 0;
+          justify-content: center;
+          background: rgba(24, 28, 39, 0.95);
         }
-
+        
         .nav-links {
           width: 100%;
-          justify-content: center;
-          gap: 1rem;
-          flex-wrap: wrap;
+          justify-content: space-between;
+          gap: 0.25rem;
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
         }
-
-        .main-nav a {
-          font-size: 0.8rem;
-          padding: 0.4rem 0.8rem;
+        
+        .nav-links::-webkit-scrollbar {
+          display: none;
+        }
+        
+        .nav-link {
+          font-size: 0.65rem;
+          padding: 0.35rem 0.5rem;
+          white-space: nowrap;
+          flex-shrink: 0;
+          letter-spacing: 0.05em;
+          min-width: fit-content;
+        }
+        
+        .nav-link.active {
+          font-size: 0.7rem;
+          font-weight: 700;
         }
 
         .nav-controls {
-          width: 100%;
-          justify-content: center;
+          position: static;
+          display: none; /* Hide controls on mobile for cleaner look */
         }
 
         .nav-button {
-          width: 36px;
-          height: 36px;
+          width: 35px;
+          height: 35px;
+        }
+      }
+
+      /* For very small screens */
+      @media (max-width: 380px) {
+        .nav-link {
+          font-size: 0.6rem;
+          padding: 0.3rem 0.4rem;
         }
       }
 
@@ -1178,11 +1190,11 @@
     <nav class="main-nav">
       <div class="scroll-progress-bar" id="scrollProgressBar"></div>
       <div class="nav-links">
-        <a href="#" class="nav-link active">LOADOUT GENERATOR</a>
-        <a href="ragequit/index.html" class="nav-link">RAGE QUIT</a>
-        <a href="patch-notes/index.html" class="nav-link">PATCH NOTES</a>
-        <a href="meta-weapons/index.html" class="nav-link">META WEAPONS</a>
-        <a href="wt-progress/index.html" class="nav-link">WT TRACKER (BETA)</a>
+        <a href="/" class="nav-link active">LOADOUT GENERATOR</a>
+        <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
+        <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
+        <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
+        <a href="/wt-progress/" class="nav-link">WT TRACKER (BETA)</a>
       </div>
       <div class="nav-controls">
         <!-- Filter Toggle Button -->
@@ -1712,27 +1724,16 @@
       </section>
     </main>
 
-    <footer class="footerSection" style="text-align: center">
-      <div class="container" style="text-align: center">
-        <div
-          class="footerRow"
-          style="justify-content: center; text-align: center"
-        >
-          <p style="text-align: center; width: 100%; margin: 0 auto">
-            © 2025 TheFinalsLoadout.com | Created by
-            <strong
-              ><a
-                href="https://www.paultakisaki.com/"
-                rel="author"
-                style="color: #ffb700"
-                >Paul Takisaki</a
-              ></strong
-            >
-            |
-            <a href="legal/legal.html" style="color: #ffb700"
-              >Legal Disclaimer</a
-            >
-          </p>
+    <!-- Footer -->
+    <footer style="text-align:center;padding:3rem 1rem;color:#888;margin-top:4rem;border-top:1px solid rgba(255,255,255,0.1);background:rgba(10,10,15,0.9);">
+      <div class="container">
+        <p style="font-size: 0.875rem; margin-bottom: 1.5rem;">
+          © 2025 TheFinalsLoadout.com | Created by 
+          <a href="https://www.paultakisaki.com/" rel="author" style="color: #00f0c0; text-decoration: none;">Paul Takisaki</a>
+        </p>
+        <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; font-size: 0.875rem;">
+          <a href="/legal/legal.html" style="color: #00f0c0; text-decoration: none; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">Legal Disclaimer</a>
+          <a href="https://thefinalsloadout.com/feedback" style="color: #ffd700; text-decoration: none; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">📝 Submit Feedback</a>
         </div>
       </div>
     </footer>
