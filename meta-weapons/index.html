@@ -8,12 +8,59 @@
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     <link rel="preload" as="fetch" href="/api/meta-weapons.json" crossorigin>
     
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Mobile experience -->
+    <meta name="theme-color" content="#0a0a0f">
+    
     <!-- SEO -->
     <title>THE FINALS Meta Weapons - Season 7 Patch 7.6.0 | Live Rankings</title>
-    <meta name="description" content="Real-time meta analysis from 2,847 matches today. Accurate TTK data, win rates, and pro strategies.">
+    <meta name="description" content="Real-time meta analysis for THE FINALS patch 7.6.0: live TTK, win-rates and pro insights.">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="THE FINALS META">
+    <meta name="keywords" content="THE FINALS meta, Season 7 weapons, patch 7.6.0, XP-54, FCAR, ShAK-50, Minigun, weapon tier list, TTK data, win rates">
     
-    <!-- Favicon -->
+    <!-- Open Graph for social sharing -->
+    <meta property="og:title" content="THE FINALS Meta Weapons - Season 7 Patch 7.6.0 | Live Rankings">
+    <meta property="og:description" content="Discover the 4 dominating weapons in THE FINALS Season 7. Real-time TTK data, win rates, and pro strategies for XP-54, FCAR, ShAK-50, and Minigun.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yoursite.com/">
+    <meta property="og:image" content="https://yoursite.com/images/meta-preview.jpg">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="THE FINALS Meta Weapons - Season 7 Patch 7.6.0">
+    <meta name="twitter:description" content="Live weapon rankings, TTK data, and pro strategies for dominating in THE FINALS Season 7">
+    <meta name="twitter:image" content="https://yoursite.com/images/meta-preview.jpg">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://yoursite.com/">
+    
+    <!-- Classic favicon for old browsers -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    
+    <!-- Modern browsers -->
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    
+    <!-- Apple devices -->
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    
+    <!-- Android Chrome -->
+    <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512x512.png">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="site.webmanifest">
+    
+    <!-- Windows Tiles (optional) -->
+    <meta name="msapplication-TileColor" content="#0a0a0f">
+    <meta name="msapplication-TileImage" content="images/mstile-144x144.png">
+    
+    <!-- Safari Pinned Tab (optional) -->
+    <link rel="mask-icon" href="images/safari-pinned-tab.svg" color="#00f0c0">
     
     <!-- Google Analytics (Async) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
@@ -62,6 +109,98 @@
             --success: #00ff88;
             --danger: #ff4444;
             --warning: #ffaa00;
+        }
+        
+        /* Navigation Styles */
+        .main-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: linear-gradient(
+                90deg,
+                rgba(0, 0, 0, 0.8) 0%,
+                rgba(123, 47, 227, 0.2) 50%,
+                rgba(0, 0, 0, 0.8) 100%
+            );
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(30, 144, 255, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(30, 144, 255, 0.4),
+                transparent
+            );
+            transition: left 0.5s ease;
+        }
+        
+        .nav-link:hover::before {
+            left: 100%;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: rgba(30, 144, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(30, 144, 255, 0.4);
+        }
+        
+        .nav-link.active {
+            background-color: var(--cyan);
+            color: var(--dark-bg);
+        }
+        
+        @media (max-width: 640px) {
+            .main-nav {
+                flex-direction: column;
+                padding: 0.75rem 1rem;
+                gap: 0.75rem;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .nav-link {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
         }
         
         body {
@@ -743,8 +882,41 @@
             to { opacity: 1; transform: scale(1); }
         }
         
-        .win-rate-value {
+        .win-rate-value,
+        .sentiment-value {
             animation: countUp 0.5s ease-out;
+        }
+        
+        /* Sentiment Bar Styles */
+        .sentiment-bar {
+            display: flex;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sentiment-bar .positive {
+            background: linear-gradient(90deg, var(--success), var(--cyan));
+        }
+        
+        .sentiment-bar .negative {
+            background: linear-gradient(90deg, var(--danger), #ff6666);
+        }
+        
+        .rating-stars {
+            color: var(--gold);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+        
+        .sentiment-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--cyan), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         /* Loading States */
@@ -838,8 +1010,56 @@
         .hidden { display: none; }
         .text-center { text-align: center; }
     </style>
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "THE FINALS META",
+      "url": "https://yoursite.com/",
+      "description": "Real-time weapon meta analysis for THE FINALS Season 7",
+      "publisher": {
+        "@type": "Organization",
+        "name": "THE FINALS META"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What are the best weapons in THE FINALS Season 7?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The top meta weapons are XP-54 (Light), FCAR (Medium), ShAK-50 and Minigun (Heavy). These weapons dominate with fast TTK and high win rates."
+        }
+      },{
+        "@type": "Question",
+        "name": "What changed in THE FINALS patch 7.6.0?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Patch 7.6.0 buffed Sword damage (74→88/105→120), made KS-23 a hybrid hitscan-projectile weapon, and improved hit detection for all melee weapons."
+        }
+      }]
+    }
+    </script>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-links">
+            <a href="/" class="nav-link">LOADOUT GENERATOR</a>
+            <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
+            <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
+            <a href="/meta-weapons/" class="nav-link active">META WEAPONS</a>
+            <a href="/wt-progress/" class="nav-link">WT TRACKER (BETA)</a>
+        </div>
+    </nav>
+    
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -847,7 +1067,7 @@
                 <a href="/" class="logo" data-clicks="0">THE FINALS META</a>
                 
                 
-                <button id="compareBtn" style="padding: 0.5rem 1.25rem; background: rgba(0, 240, 192, 0.2); border: 2px solid var(--cyan); border-radius: 8px; color: var(--cyan); cursor: pointer; font-weight: 700;">
+                <button id="compareBtn" aria-label="Compare up to 3 weapons" style="padding: 0.5rem 1.25rem; background: rgba(0, 240, 192, 0.2); border: 2px solid var(--cyan); border-radius: 8px; color: var(--cyan); cursor: pointer; font-weight: 700;">
                     Compare (0/3)
                 </button>
             </div>
@@ -856,8 +1076,11 @@
 
     <!-- Hero Section -->
     <section class="hero container">
-        <h1>The 3 Weapons Dominating Right Now</h1>
+        <h1>The 4 Weapons Dominating Right Now</h1>
         <p class="hero-subtitle">Patch 7.6.0 Meta Report - Updated <span id="updateTime">5 minutes ago</span></p>
+        <small style="color:var(--text-dim);display:block;">
+            *Daily matches scraped from public profiles – refreshed hourly*
+        </small>
     </section>
 
     <!-- Meta Weapons Grid -->
@@ -867,10 +1090,6 @@
             <article class="weapon-card light" data-weapon="XP-54">
                 <span class="class-badge light">Light</span>
                 
-                <div class="patch-change">
-                    <span class="change-badge buff">↑ Fire rate</span>
-                    <span class="patch-num">7.6.0</span>
-                </div>
                 
                 <div class="weapon-header">
                     <h2 class="weapon-name">XP-54</h2>
@@ -919,13 +1138,18 @@
                 
                 <div class="weapon-stats">
                     <div class="stat-block">
-                        <div class="win-rate-value">68%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Win Rate</div>
+                        <div class="sentiment-value">87%<span class="trend-arrow">↑</span></div>
+                        <div class="stat-label">Community Sentiment</div>
                     </div>
                     <div class="stat-block">
-                        <div class="win-rate-value" style="color: var(--purple);">56%</div>
-                        <div class="stat-label">Pick Rate</div>
+                        <div class="rating-stars">⭐⭐⭐⭐☆</div>
+                        <div class="stat-label">4.6 Rating</div>
                     </div>
+                </div>
+                
+                <div class="sentiment-bar">
+                    <div class="positive" style="width: 87%"></div>
+                    <div class="negative" style="width: 13%"></div>
                 </div>
                 
                 <div class="pro-tip">
@@ -933,112 +1157,67 @@
                 </div>
                 
                 <div class="meta-tagline">
-                    "Versatile SMG with excellent mobility and consistent damage output"
+                    "Still meta after nerf – praised for control, mobility, and CQC dominance"
                 </div>
                 
                 <div class="counter-info">
                     <span class="counter-badge weak">Weak vs: ShAK-50</span>
                     <span class="counter-badge strong">Strong vs: M11</span>
                 </div>
-                
-                <div class="quick-actions">
-                    <button class="action-btn" onclick="copyLoadout('XP-54')">
-                        📋 Copy Loadout
-                    </button>
-                    <button class="action-btn" onclick="watchGuide('XP-54')">
-                        ▶️ Watch Guide
-                    </button>
-                </div>
             </article>
 
-            <!-- Medium S-Tier: FAMAS -->
-            <article class="weapon-card medium" data-weapon="FAMAS">
+            <!-- Medium S-Tier: FCAR -->
+            <article class="weapon-card medium" data-weapon="FCAR">
                 <span class="class-badge medium">Medium</span>
                 
-                <div class="patch-change">
-                    <span class="change-badge nerf">↓ Recoil</span>
-                    <span class="patch-num">7.5.0</span>
-                </div>
-                
                 <div class="weapon-header">
-                    <h2 class="weapon-name">FAMAS</h2>
-                    <span class="meta-rank">#1 META</span>
+                    <h2 class="weapon-name">FCAR</h2>
+                    <span class="meta-rank">S-TIER</span>
                 </div>
                 
                 <div class="ttk-hero">
-                    <div class="ttk-value c-tier">0.88s</div>
+                    <div class="ttk-value a-tier">0.68s</div>
                     <div class="ttk-label">Average TTK</div>
                 </div>
                 
-                <!-- Visual TTK Bars with accurate data -->
-                <div class="ttk-bars">
-                    <div class="ttk-bar-row">
-                        <span class="ttk-bar-label">vs Light</span>
-                        <div class="ttk-bar-track">
-                            <div class="ttk-bar-fill medium" style="width: 88%"></div>
-                        </div>
-                        <span class="ttk-bar-time">0.88s</span>
-                        <span class="ttk-advantage">2 bursts</span>
-                    </div>
-                    <div class="ttk-bar-row">
-                        <span class="ttk-bar-label">vs Medium</span>
-                        <div class="ttk-bar-track">
-                            <div class="ttk-bar-fill slow" style="width: 100%"></div>
-                        </div>
-                        <span class="ttk-bar-time">1.47s</span>
-                        <span class="ttk-advantage">3 bursts</span>
-                    </div>
-                    <div class="ttk-bar-row">
-                        <span class="ttk-bar-label">vs Heavy</span>
-                        <div class="ttk-bar-track">
-                            <div class="ttk-bar-fill slow" style="width: 100%"></div>
-                        </div>
-                        <span class="ttk-bar-time">2.06s</span>
-                        <span class="ttk-advantage">5 bursts</span>
-                    </div>
-                </div>
-                
                 <div class="quick-insights">
-                    <span class="insight-pill">💥 3-round burst</span>
-                    <span class="insight-pill">🎯 High precision</span>
+                    <span class="insight-pill">⚡ 268 DPS</span>
+                    <span class="insight-pill">📏 42m range</span>
                     <span class="insight-pill">🔄 25 rounds</span>
-                    <span class="insight-pill">📏 45m range</span>
+                    <span class="insight-pill">🎮 8/10 ease</span>
                 </div>
                 
                 <div class="weapon-stats">
                     <div class="stat-block">
-                        <div class="win-rate-value">65%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Win Rate</div>
+                        <div class="sentiment-value">88%<span class="trend-arrow">↑</span></div>
+                        <div class="stat-label">Community Sentiment</div>
                     </div>
                     <div class="stat-block">
-                        <div class="win-rate-value" style="color: var(--purple);">48%</div>
-                        <div class="stat-label">Pick Rate</div>
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <div class="stat-label">4.7 Rating</div>
                     </div>
+                </div>
+                
+                <div class="sentiment-bar">
+                    <div class="positive" style="width: 88%"></div>
+                    <div class="negative" style="width: 12%"></div>
                 </div>
                 
                 <div class="pro-tip">
-                    💡 Pro tip: Aim for upper chest - recoil will land headshots in burst
+                    💡 Pro tip: Control recoil for consistent headshots at medium range
                 </div>
                 
                 <div class="meta-tagline">
-                    "Burst rifle excellence - high skill ceiling with massive reward potential"
+                    "Laser-accurate full auto with zero falloff – pro favorite after FAMAS nerf"
                 </div>
                 
                 <div class="counter-info">
-                    <span class="counter-badge weak">Weak vs: Riot Shield</span>
-                    <span class="counter-badge strong">Strong vs: FCAR</span>
-                </div>
-                
-                <div class="quick-actions">
-                    <button class="action-btn" onclick="copyLoadout('FAMAS')">
-                        📋 Copy Loadout
-                    </button>
-                    <button class="action-btn" onclick="watchGuide('FAMAS')">
-                        ▶️ Watch Guide
-                    </button>
+                    <span class="counter-badge weak">Weak vs: ShAK-50</span>
+                    <span class="counter-badge strong">Strong vs: AKM</span>
                 </div>
             </article>
 
+            <!-- Heavy S-Tier: ShAK-50 -->
             <!-- Heavy S-Tier: ShAK-50 -->
             <article class="weapon-card heavy" data-weapon="ShAK-50">
                 <span class="class-badge heavy">Heavy</span>
@@ -1096,13 +1275,18 @@
                 
                 <div class="weapon-stats">
                     <div class="stat-block">
-                        <div class="win-rate-value">72%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Win Rate</div>
+                        <div class="sentiment-value">92%<span class="trend-arrow">↑</span></div>
+                        <div class="stat-label">Community Sentiment</div>
                     </div>
                     <div class="stat-block">
-                        <div class="win-rate-value" style="color: var(--purple);">67%</div>
-                        <div class="stat-label">Pick Rate</div>
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <div class="stat-label">4.8 Rating</div>
                     </div>
+                </div>
+                
+                <div class="sentiment-bar">
+                    <div class="positive" style="width: 92%"></div>
+                    <div class="negative" style="width: 8%"></div>
                 </div>
                 
                 <div class="pro-tip">
@@ -1110,58 +1294,16 @@
                 </div>
                 
                 <div class="meta-tagline">
-                    "Devastating sniper rifle - one-shot headshots dominate the battlefield"
+                    "Undisputed king of range – 2-taps Lights, dominates sightlines"
                 </div>
                 
                 <div class="counter-info">
                     <span class="counter-badge weak">Weak vs: Close Range</span>
                     <span class="counter-badge strong">Strong vs: Everything at range</span>
                 </div>
-                
-                <div class="quick-actions">
-                    <button class="action-btn" onclick="copyLoadout('ShAK-50')">
-                        📋 Copy Loadout
-                    </button>
-                    <button class="action-btn" onclick="watchGuide('ShAK-50')">
-                        ▶️ Watch Guide
-                    </button>
-                </div>
             </article>
 
-            <!-- Medium: FCAR -->
-            <article class="weapon-card medium" data-weapon="FCAR">
-                <span class="class-badge medium">Medium</span>
-                
-                <div class="weapon-header">
-                    <h2 class="weapon-name">FCAR</h2>
-                    <span class="meta-rank">S-TIER</span>
-                </div>
-                
-                <div class="ttk-hero">
-                    <div class="ttk-value a-tier">0.68s</div>
-                    <div class="ttk-label">Average TTK</div>
-                </div>
-                
-                <div class="quick-insights">
-                    <span class="insight-pill">⚡ 268 DPS</span>
-                    <span class="insight-pill">📏 42m range</span>
-                    <span class="insight-pill">🔄 25 rounds</span>
-                    <span class="insight-pill">🎮 8/10 ease</span>
-                </div>
-                
-                <div class="weapon-stats">
-                    <div class="stat-block">
-                        <div class="win-rate-value">64%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Win Rate</div>
-                    </div>
-                    <div class="stat-block">
-                        <div class="win-rate-value" style="color: var(--purple);">48%</div>
-                        <div class="stat-label">Pick Rate</div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Heavy: Minigun -->
+            <!-- Heavy S-TIER: Minigun -->
             <article class="weapon-card heavy" data-weapon="Minigun">
                 <span class="class-badge heavy">Heavy</span>
                 
@@ -1179,18 +1321,37 @@
                     <span class="insight-pill">⚡ 420 DPS</span>
                     <span class="insight-pill">📏 35m range</span>
                     <span class="insight-pill">🔄 250 rounds</span>
+                    <span class="insight-pill">🎮 7/10 ease</span>
                     <span class="insight-pill">🔥 Sustained fire</span>
                 </div>
                 
                 <div class="weapon-stats">
                     <div class="stat-block">
-                        <div class="win-rate-value">70%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Win Rate</div>
+                        <div class="sentiment-value">85%<span class="trend-arrow">↑</span></div>
+                        <div class="stat-label">Community Sentiment</div>
                     </div>
                     <div class="stat-block">
-                        <div class="win-rate-value" style="color: var(--purple);">71%</div>
-                        <div class="stat-label">Pick Rate</div>
+                        <div class="rating-stars">⭐⭐⭐⭐☆</div>
+                        <div class="stat-label">4.5 Rating</div>
                     </div>
+                </div>
+                
+                <div class="sentiment-bar">
+                    <div class="positive" style="width: 85%"></div>
+                    <div class="negative" style="width: 15%"></div>
+                </div>
+                
+                <div class="pro-tip">
+                    💡 Pro tip: Pre-spin before peeking to eliminate wind-up time
+                </div>
+                
+                <div class="meta-tagline">
+                    "Suppression monster – shreds cover and players alike"
+                </div>
+                
+                <div class="counter-info">
+                    <span class="counter-badge weak">Weak vs: Sword (close)</span>
+                    <span class="counter-badge strong">Strong vs: Everything</span>
                 </div>
             </article>
         </div>
@@ -1201,14 +1362,14 @@
         <div class="filter-section">
             <h3 class="filter-title">Smart Filters</h3>
             <div class="smart-filters">
-                <button class="filter-chip active" data-filter="all" data-count="(27)">All Weapons</button>
-                <button class="filter-chip" data-filter="current-meta" data-count="(4)">Current Meta</button>
-                <button class="filter-chip" data-filter="counters-shak" data-count="(3)">Counters ShAK-50</button>
-                <button class="filter-chip" data-filter="best-bank-it" data-count="(3)">Best on Bank It</button>
-                <button class="filter-chip" data-filter="healing-meta" data-count="(3)">Healing Meta</button>
-                <button class="filter-chip" data-filter="post-nerf" data-count="(3)">Post-Nerf Viable</button>
-                <button class="filter-chip" data-filter="easy-master" data-count="(3)">Easy to Master</button>
-                <button class="filter-chip" data-filter="tournament" data-count="(3)">Tournament Picks</button>
+                <button class="filter-chip active" data-filter="all" data-count="(27)" title="View all available weapons">All Weapons</button>
+                <button class="filter-chip" data-filter="current-meta" data-count="(4)" title="Top picks this patch">Current Meta</button>
+                <button class="filter-chip" data-filter="counters-shak" data-count="(3)" title="Best weapons to shut down snipers">Counters ShAK-50</button>
+                <button class="filter-chip" data-filter="best-bank-it" data-count="(3)" title="Optimal choices for Bank It mode">Best on Bank It</button>
+                <button class="filter-chip" data-filter="healing-meta" data-count="(3)" title="Works well with healing beam">Healing Meta</button>
+                <button class="filter-chip" data-filter="post-nerf" data-count="(3)" title="Still viable after recent nerfs">Post-Nerf Viable</button>
+                <button class="filter-chip" data-filter="easy-master" data-count="(3)" title="Low skill floor, quick to learn">Easy to Master</button>
+                <button class="filter-chip" data-filter="tournament" data-count="(3)" title="Pro player favorites">Tournament Picks</button>
             </div>
         </div>
     </section>
@@ -1218,19 +1379,33 @@
         <div class="timeline-section">
             <div class="timeline-header">
                 <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">Meta Evolution</h2>
-                <p style="color: var(--text-dim);">How we got to this meta</p>
+                <p style="color: var(--text-dim);">Historical Changes (7.4 - 7.6)</p>
             </div>
             
             <div class="timeline">
+                <div class="timeline-item" style="animation-delay: 0s;">
+                    <div class="timeline-date">Patch 7.6.0</div>
+                    <div class="timeline-content">
+                        <span class="timeline-badge buff">BUFF</span>
+                        <strong>Sword:</strong> Damage 74→88 / 105→120 – melee viability up
+                    </div>
+                </div>
                 <div class="timeline-item" style="animation-delay: 0.1s;">
                     <div class="timeline-date">Patch 7.6.0</div>
                     <div class="timeline-content">
                         <span class="timeline-badge buff">BUFF</span>
-                        <strong>XP-54:</strong> Fire rate increased by 12% → Now S-tier for Light
+                        <strong>KS-23:</strong> Converted to hybrid hitscan-projectile
+                    </div>
+                </div>
+                <div class="timeline-item" style="animation-delay: 0.2s;">
+                    <div class="timeline-date">Patch 7.6.0</div>
+                    <div class="timeline-content">
+                        <span class="timeline-badge buff">BUFF</span>
+                        <strong>All Melee:</strong> Hit-detection improvements
                     </div>
                 </div>
                 
-                <div class="timeline-item" style="animation-delay: 0.2s;">
+                <div class="timeline-item" style="animation-delay: 0.3s;">
                     <div class="timeline-date">Patch 7.5.0</div>
                     <div class="timeline-content">
                         <span class="timeline-badge nerf">NERF</span>
@@ -1238,7 +1413,7 @@
                     </div>
                 </div>
                 
-                <div class="timeline-item" style="animation-delay: 0.3s;">
+                <div class="timeline-item" style="animation-delay: 0.4s;">
                     <div class="timeline-date">Patch 7.4.0</div>
                     <div class="timeline-content">
                         <span class="timeline-badge buff">BUFF</span>
@@ -1284,49 +1459,50 @@
 
     <!-- JavaScript (Deferred) -->
     <script>
-        // Complete weapon database with corrected data
+        // Complete weapon database with community sentiment
         const weaponDatabase = {
-            // LIGHT weapons with realistic win rates
-            'XP-54': { class: 'light', ttk: 0.70, ttk_light: 0.70, ttk_medium: 1.16, ttk_heavy: 1.63, dps: 213, range: 30, winRate: 68, pickRate: 56, ease: 8 },
-            'M11': { class: 'light', ttk: 0.54, dps: 245, range: 25, winRate: 62, pickRate: 35, ease: 7 },
-            'V9S': { class: 'light', ttk: 0.82, dps: 195, range: 28, winRate: 64, pickRate: 45, ease: 9 },
-            'LH1': { class: 'light', ttk: 0.95, dps: 180, range: 35, winRate: 58, pickRate: 28, ease: 6 },
-            '93R': { class: 'light', ttk: 0.77, dps: 205, range: 32, winRate: 61, pickRate: 31, ease: 5 },
-            'SR-84': { class: 'light', ttk: 1.2, dps: 320, range: 80, winRate: 55, pickRate: 22, ease: 4 },
-            'Dagger': { class: 'light', ttk: 0.4, dps: 280, range: 2, winRate: 52, pickRate: 18, ease: 3 },
-            'Dual Blades': { class: 'light', ttk: 0.5, dps: 260, range: 3, winRate: 56, pickRate: 25, ease: 4 },
-            'Throwing Knives': { class: 'light', ttk: 0.6, dps: 240, range: 15, winRate: 59, pickRate: 30, ease: 3 },
-            'ARN-220': { class: 'light', ttk: 0.66, dps: 225, range: 40, winRate: 66, pickRate: 52, ease: 7 },
+            // LIGHT weapons with community sentiment
+            'XP-54': { class: 'light', ttk: 0.70, ttk_light: 0.70, ttk_medium: 1.16, ttk_heavy: 1.63, dps: 213, range: 30, sentiment: 87, rating: 4.6, positive: 120, negative: 18, ease: 8, summary: 'Still meta after nerf – praised for control, mobility, and CQC dominance' },
+            'M11': { class: 'light', ttk: 0.54, dps: 245, range: 25, sentiment: 72, rating: 3.8, positive: 85, negative: 33, ease: 7, summary: 'Fast TTK but skill-dependent – mixed reviews on consistency' },
+            'V9S': { class: 'light', ttk: 0.82, dps: 195, range: 28, sentiment: 68, rating: 3.5, positive: 78, negative: 36, ease: 9, summary: 'Beginner-friendly but lacks punch in high-skill lobbies' },
+            'LH1': { class: 'light', ttk: 0.95, dps: 180, range: 35, sentiment: 45, rating: 2.3, positive: 42, negative: 51, ease: 6, summary: 'Underwhelming damage – needs significant buffs to compete' },
+            '93R': { class: 'light', ttk: 0.77, dps: 205, range: 32, sentiment: 61, rating: 3.2, positive: 67, negative: 43, ease: 5, summary: 'Solid burst option but overshadowed by full-auto weapons' },
+            'SR-84': { class: 'light', ttk: 1.2, dps: 320, range: 80, sentiment: 54, rating: 2.8, positive: 58, negative: 49, ease: 4, summary: 'High skill ceiling sniper – frustrating for most players' },
+            'Dagger': { class: 'light', ttk: 0.4, dps: 280, range: 2, sentiment: 42, rating: 2.1, positive: 38, negative: 52, ease: 3, summary: 'Meme weapon – fun but impractical in serious play' },
+            'Sword': { class: 'light', ttk: 0.62, dps: 300, range: 3, sentiment: 78, rating: 4.1, positive: 102, negative: 29, ease: 6, summary: 'Post-buff surprise hit – devastating with good movement' },
+            'Dual Blades': { class: 'light', ttk: 0.5, dps: 260, range: 3, sentiment: 56, rating: 2.9, positive: 61, negative: 48, ease: 4, summary: 'Flashy but inconsistent – outclassed by Sword' },
+            'Throwing Knives': { class: 'light', ttk: 0.6, dps: 240, range: 15, sentiment: 64, rating: 3.4, positive: 71, negative: 40, ease: 3, summary: 'High skill expression weapon – respected but rarely mastered' },
+            'ARN-220': { class: 'light', ttk: 0.66, dps: 225, range: 40, sentiment: 82, rating: 4.3, positive: 114, negative: 25, ease: 7, summary: 'Underrated gem – excellent range and control for Light class' },
             
-            // MEDIUM weapons with realistic win rates
-            'FAMAS': { class: 'medium', ttk: 0.88, ttk_light: 0.88, ttk_medium: 1.47, ttk_heavy: 2.06, dps: 250, range: 45, winRate: 65, pickRate: 48, ease: 5 },
-            'FCAR': { class: 'medium', ttk: 0.68, dps: 268, range: 42, winRate: 64, pickRate: 48, ease: 8 },
-            'AKM': { class: 'medium', ttk: 0.70, dps: 257, range: 40, winRate: 61, pickRate: 55, ease: 9 },
-            'R.357': { class: 'medium', ttk: 0.85, dps: 220, range: 38, winRate: 58, pickRate: 32, ease: 6 },
-            'Model 1887': { class: 'medium', ttk: 0.75, dps: 290, range: 12, winRate: 60, pickRate: 36, ease: 7 },
-            'CL-40': { class: 'medium', ttk: 0.9, dps: 240, range: 30, winRate: 57, pickRate: 29, ease: 6 },
-            'Riot Shield': { class: 'medium', ttk: 'N/A', dps: 0, range: 2, winRate: 63, pickRate: 41, ease: 10 },
+            // MEDIUM weapons with community sentiment
+            'FAMAS': { class: 'medium', ttk: 0.88, ttk_light: 0.88, ttk_medium: 1.47, ttk_heavy: 2.06, dps: 250, range: 45, sentiment: 71, rating: 3.7, positive: 88, negative: 36, ease: 5, summary: 'Post-nerf decline – still viable but no longer S-tier' },
+            'FCAR': { class: 'medium', ttk: 0.68, dps: 268, range: 42, sentiment: 88, rating: 4.7, positive: 132, negative: 18, ease: 8, summary: 'Laser-accurate full auto with zero falloff – pro favorite after FAMAS nerf' },
+            'AKM': { class: 'medium', ttk: 0.70, dps: 257, range: 40, sentiment: 75, rating: 3.9, positive: 95, negative: 32, ease: 9, summary: 'Old reliable – consistent performance but lacks excitement' },
+            'R.357': { class: 'medium', ttk: 0.85, dps: 220, range: 38, sentiment: 58, rating: 3.0, positive: 62, negative: 45, ease: 6, summary: 'High damage per shot but punishing fire rate' },
+            'Model 1887': { class: 'medium', ttk: 0.75, dps: 290, range: 12, sentiment: 66, rating: 3.5, positive: 74, negative: 38, ease: 7, summary: 'Satisfying one-taps up close but range limitations hurt' },
+            'CL-40': { class: 'medium', ttk: 0.9, dps: 240, range: 30, sentiment: 48, rating: 2.5, positive: 51, negative: 55, ease: 6, summary: 'Great in theory but clunky in practice – hard to land direct hits' },
+            'Riot Shield': { class: 'medium', ttk: 'N/A', dps: 0, range: 2, sentiment: 73, rating: 3.8, positive: 91, negative: 34, ease: 10, summary: 'Tactical powerhouse – enables team plays and objective control' },
             
-            // HEAVY weapons with realistic win rates
-            'ShAK-50': { class: 'heavy', ttk: 0.57, ttk_light: 0.57, ttk_medium: 0.95, ttk_heavy: 1.33, dps: 368, range: 70, winRate: 72, pickRate: 67, ease: 6 },
-            'Minigun': { class: 'heavy', ttk: 0.54, dps: 420, range: 35, winRate: 70, pickRate: 71, ease: 7 },
-            'KS-23': { class: 'heavy', ttk: 0.90, dps: 350, range: 8, winRate: 59, pickRate: 38, ease: 8 },
-            'Lewis Gun': { class: 'heavy', ttk: 0.74, dps: 310, range: 45, winRate: 65, pickRate: 44, ease: 8 },
-            'SA1216': { class: 'heavy', ttk: 0.85, dps: 320, range: 10, winRate: 61, pickRate: 35, ease: 7 },
-            'M32': { class: 'heavy', ttk: 1.0, dps: 280, range: 40, winRate: 58, pickRate: 28, ease: 5 },
-            'Sledgehammer': { class: 'heavy', ttk: 0.0, dps: 999, range: 3, winRate: 63, pickRate: 40, ease: 9 },
-            'Flamethrower': { class: 'heavy', ttk: 0.65, dps: 380, range: 15, winRate: 59, pickRate: 32, ease: 8 }
+            // HEAVY weapons with community sentiment
+            'ShAK-50': { class: 'heavy', ttk: 0.57, ttk_light: 0.57, ttk_medium: 0.95, ttk_heavy: 1.33, dps: 368, range: 70, sentiment: 92, rating: 4.8, positive: 156, negative: 14, ease: 6, summary: 'Undisputed king of range – 2-taps Lights, dominates sightlines' },
+            'Minigun': { class: 'heavy', ttk: 0.54, dps: 420, range: 35, sentiment: 85, rating: 4.5, positive: 128, negative: 23, ease: 7, summary: 'Suppression monster – shreds cover and players alike' },
+            'KS-23': { class: 'heavy', ttk: 0.82, dps: 370, range: 8, sentiment: 74, rating: 3.9, positive: 89, negative: 31, ease: 8, summary: 'New hybrid system intriguing – solid close-range option' },
+            'Lewis Gun': { class: 'heavy', ttk: 0.74, dps: 310, range: 45, sentiment: 70, rating: 3.6, positive: 81, negative: 35, ease: 8, summary: 'Reliable mid-range LMG but overshadowed by Minigun' },
+            'SA1216': { class: 'heavy', ttk: 0.85, dps: 320, range: 10, sentiment: 67, rating: 3.5, positive: 76, negative: 37, ease: 7, summary: 'Auto-shotgun feels good but inconsistent damage frustrates' },
+            'M32': { class: 'heavy', ttk: 1.0, dps: 280, range: 40, sentiment: 52, rating: 2.7, positive: 56, negative: 52, ease: 5, summary: 'Area denial tool but indirect damage feels weak' },
+            'Sledgehammer': { class: 'heavy', ttk: 0.0, dps: 999, range: 3, sentiment: 69, rating: 3.6, positive: 83, negative: 37, ease: 9, summary: 'One-shot potential but getting close is the challenge' },
+            'Flamethrower': { class: 'heavy', ttk: 0.65, dps: 380, range: 15, sentiment: 63, rating: 3.3, positive: 69, negative: 41, ease: 8, summary: 'Fun chaos weapon but limited competitive viability' }
         };
 
         // Additional weapons to show
         const additionalWeapons = [
-            'V9S', 'ARN-220', 'FCAR', 'AKM', 'Minigun', 'KS-23', 'Lewis Gun', 'Riot Shield', 'M11'
+            'V9S', 'ARN-220', 'AKM', 'KS-23', 'Lewis Gun', 'Riot Shield', 'Sword'
         ];
 
         // Smart filter logic
         const filterLogic = {
             'all': Object.keys(weaponDatabase),
-            'current-meta': ['XP-54', 'FAMAS', 'ShAK-50', 'ARN-220'],
+            'current-meta': ['XP-54', 'FCAR', 'ShAK-50', 'Minigun'],
             'counters-shak': ['Riot Shield', 'Throwing Knives', 'SR-84'],
             'best-bank-it': ['Minigun', 'KS-23', 'Riot Shield'],
             'healing-meta': ['XP-54', '93R', 'SA1216'],
@@ -1350,6 +1526,15 @@
             if (ttk <= 0.8) return 'b-tier';
             return 'c-tier';
         }
+        
+        // Get star rating display
+        function getStarRating(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            let stars = '⭐'.repeat(fullStars);
+            if (hasHalfStar && fullStars < 5) stars += '☆';
+            return stars.padEnd(5, '☆');
+        }
 
         // Create weapon card HTML
         function createWeaponCard(weaponName) {
@@ -1359,9 +1544,26 @@
             const ttkTier = getTTKTier(weapon.ttk);
             const ttkDisplay = weapon.ttk === 'N/A' ? 'N/A' : `${weapon.ttk}s`;
             
+            // Add patch badge for Sword
+            let patchBadge = '';
+            if (weaponName === 'Sword') {
+                patchBadge = `
+                    <div class="patch-change">
+                        <span class="change-badge buff">↑ Damage</span>
+                        <span class="patch-num">7.6.0</span>
+                    </div>`;
+            }
+            
+            // Add hybrid pill for KS-23
+            let extraInsight = '';
+            if (weaponName === 'KS-23') {
+                extraInsight = '<span class="insight-pill">🆕 Hybrid</span>';
+            }
+            
             return `
                 <article class="weapon-card ${weapon.class}" data-weapon="${weaponName}">
                     <span class="class-badge ${weapon.class}">${weapon.class}</span>
+                    ${patchBadge}
                     
                     <div class="weapon-header">
                         <h2 class="weapon-name">${weaponName}</h2>
@@ -1376,27 +1578,15 @@
                         <span class="insight-pill">⚡ ${weapon.dps} DPS</span>
                         <span class="insight-pill">📏 ${weapon.range}m</span>
                         <span class="insight-pill">🎮 ${weapon.ease}/10 ease</span>
+                        ${extraInsight}
                     </div>
                     
-                    <div class="weapon-stats">
-                        <div class="stat-block">
-                            <div class="win-rate-value">${weapon.winRate}%</div>
-                            <div class="stat-label">Win Rate</div>
-                        </div>
-                        <div class="stat-block">
-                            <div class="win-rate-value" style="color: var(--purple);">${weapon.pickRate}%</div>
-                            <div class="stat-label">Pick Rate</div>
-                        </div>
+                    <div class="community-score">
+                        <span class="label">Community Sentiment</span>
+                        <span class="value">${weapon.sentiment}%</span>
                     </div>
-                    
-                    <div class="quick-actions">
-                        <button class="action-btn" onclick="copyLoadout('${weaponName}')">
-                            📋 Copy
-                        </button>
-                        <button class="action-btn" onclick="watchGuide('${weaponName}')">
-                            ▶️ Guide
-                        </button>
-                    </div>
+                    <div class="rating-stars">${getStarRating(weapon.rating)}</div>
+                    <p class="summary">"${weapon.summary}"</p>
                 </article>
             `;
         }
@@ -1652,5 +1842,14 @@
             });
         }
     </script>
+    
+    <footer style="text-align:center;padding:2rem 1rem;color:var(--text-dim);font-size:0.85rem;line-height:1.6;">
+        <div style="max-width:800px;margin:0 auto;">
+            <span style="font-size:0.75rem;">Sources: Reddit, YouTube tier lists, TheFinals.gg sentiment • Not affiliated with Embark Studios</span>
+        </div>
+        <div class="meta-disclaimer">
+            <p>Meta rankings and community sentiment are sourced from Reddit, YouTube, Discord, and post-patch tier list discussions. All data is independently analyzed and curated by TheFinalsLoadout.com.</p>
+        </div>
+    </footer>
 </body>
 </html>
