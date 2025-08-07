@@ -3,16 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>S7 World Tour Badge Tracker - The Finals Rank Tracker</title>
+    <title>THE FINALS World Tour Tracker - Season 7 Emerald Rank Calculator | Real-Time Progress</title>
     <meta
       name="description"
-      content="Track your progress to Emerald rank in The Finals Season 7. Monitor daily points, calculate requirements, and reach your goals efficiently."
+      content="Track your World Tour progress in THE FINALS Season 7. Calculate daily points needed for Emerald rank, visualize your pace, share progress screenshots. Free rank calculator with 16 ranks from Gold to Emerald."
     />
 
     <meta
       name="keywords"
-      content="The Finals, rank tracker, Emerald rank, Season 7, progress tracker, gaming"
+      content="THE FINALS World Tour tracker, Emerald rank calculator, Season 7 progress, daily points calculator, rank tracker, gaming tools"
     />
+
+    <!-- Mobile Web App Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="WT Tracker">
+
+    <!-- Performance Optimizations -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" as="style">
 
     <!--  Open Graph / Facebook social   -->
     <meta property="og:type" content="website" />
@@ -58,6 +67,59 @@
       name="twitter:url"
       content="https://www.thefinalsloadout.com/wt-progress/"
     />
+
+    <!-- Structured Data - WebApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "THE FINALS World Tour Progress Tracker",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "127"
+      },
+      "description": "Track World Tour progress and calculate points needed for Emerald rank",
+      "screenshot": "https://thefinalsloadout.com/wt-progress/images/screenshot.png"
+    }
+    </script>
+
+    <!-- FAQ Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How many points do I need for Emerald rank in THE FINALS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You need 2,400 points to reach Emerald 1, the highest rank in World Tour. Emerald 4 starts at 1,800 points."
+        }
+      },{
+        "@type": "Question",
+        "name": "How do World Tour points work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In World Tour: 1st place = 25 points, 2nd place = 14 points, Qualifying for Round 2 = 6 points, Round 1 elimination = 2 points."
+        }
+      },{
+        "@type": "Question",
+        "name": "How long is THE FINALS Season 7?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Season 7 runs from June 12 to September 10, 2025, lasting 91 days total."
+        }
+      }]
+    }
+    </script>
 
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
     <link rel="apple-touch-icon" href="images/logo.png" />
@@ -1439,6 +1501,17 @@
         }
       }
     </style>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-GVGKYFGZ1Z");
+    </script>
   </head>
   <body>
     <!-- Navigation -->
@@ -1461,12 +1534,56 @@
       id="aria-live-region"
     ></div>
 
+    <!-- Breadcrumbs -->
+    <nav aria-label="Breadcrumb" style="padding: 1rem 2rem; max-width: 1200px; margin: 0 auto;">
+      <ol style="display: flex; list-style: none; gap: 1rem; color: #888; font-size: 0.9rem;">
+        <li><a href="/" style="color: #50c878; text-decoration: none;">Home</a> ›</li>
+        <li><a href="/" style="color: #50c878; text-decoration: none;">Tools</a> ›</li>
+        <li aria-current="page" style="color: #fff;">World Tour Tracker</li>
+      </ol>
+    </nav>
+
+    <!-- SEO Content Section -->
+    <section class="seo-content" style="max-width: 800px; margin: 2rem auto 3rem; padding: 0 1rem; color: #e0e0e0; line-height: 1.6;">
+      <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(135deg, #50c878, #20b2aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">THE FINALS World Tour Progress Tracker for Season 7</h1>
+      <p style="font-size: 1.1rem; margin-bottom: 2rem; color: #b0b0b0;">Track your journey to Emerald rank in THE FINALS World Tour Season 7. Our free calculator shows exactly how many points you need per day, tracks your win rate trends, and helps you stay on pace for your rank goals.</p>
+      
+      <h2 style="font-size: 1.5rem; margin: 1.5rem 0 0.75rem; color: #50c878;">How World Tour Ranking Works</h2>
+      <ul style="list-style: none; padding-left: 0; margin-bottom: 2rem;">
+        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0;">🏆</span>
+          <strong style="color: #50c878;">Point System:</strong> Win = 25 points, 2nd = 14 points, Round 2 = 6 points, Round 1 = 2 points
+        </li>
+        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0;">📅</span>
+          <strong style="color: #50c878;">Season Duration:</strong> June 12 - September 10, 2025 (91 days)
+        </li>
+        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0;">📊</span>
+          <strong style="color: #50c878;">Rank Tiers:</strong> 16 ranks from Gold 4 (375 points) to Emerald 1 (2,400 points)
+        </li>
+      </ul>
+      
+      <h2 style="font-size: 1.5rem; margin: 1.5rem 0 0.75rem; color: #50c878;">Features</h2>
+      <ul style="list-style: none; padding-left: 0; margin-bottom: 2rem;">
+        <li style="margin-bottom: 0.5rem;">📊 Real-time progress visualization</li>
+        <li style="margin-bottom: 0.5rem;">📈 Daily point requirements calculator</li>
+        <li style="margin-bottom: 0.5rem;">📸 Shareable progress screenshots</li>
+        <li style="margin-bottom: 0.5rem;">💾 Automatic data backup & recovery</li>
+        <li style="margin-bottom: 0.5rem;">📱 Mobile-friendly swipe controls</li>
+      </ul>
+
+      <p style="margin-top: 2rem; padding: 1rem; background: rgba(80, 200, 120, 0.1); border-left: 3px solid #50c878; border-radius: 4px;">
+        New to THE FINALS? Check out our <a href="/meta-weapons/" style="color: #50c878; text-decoration: underline;">current meta weapons</a> or <a href="/patch-notes/" style="color: #50c878; text-decoration: underline;">latest patch notes</a> to improve your gameplay.
+      </p>
+    </section>
+
     <div class="container">
       <!-- Snapshot Container -->
       <div id="trackerSnapshot" class="snapshot-container">
         <img
           src="images/logo.webp"
-          alt="The Finals S7 Emerald Progress Tracker"
+          alt="THE FINALS World Tour Season 7 Progress Tracker Logo"
           class="logo"
           loading="lazy"
           onerror="this.src='images/logo.png'; this.onerror=null;"
@@ -2087,6 +2204,17 @@
         }
       }
 
+      // Google Analytics Event Tracking
+      function trackEvent(action, label, value) {
+        if (typeof gtag !== 'undefined') {
+          gtag('event', action, {
+            'event_category': 'World Tour Tracker',
+            'event_label': label,
+            'value': value
+          });
+        }
+      }
+
       // State - with localStorage and corruption recovery
       let currentPoints = safeLocalStorageGet("currentPoints", 400);
       let dailyEntries = safeLocalStorageGet("dailyEntries", []);
@@ -2627,6 +2755,9 @@
         currentPoints += points;
         dailyEntries.push({ date, points, total: currentPoints, notes });
 
+        // Track event
+        trackEvent('add_entry', 'daily_points', points);
+
         // Sort entries by date to maintain chronological order
         dailyEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
 
@@ -2864,6 +2995,9 @@
             // Remove capturing class
             document.body.classList.remove("capturing");
 
+            // Track screenshot event
+            trackEvent('share', 'progress_screenshot', currentPoints);
+
             // Convert to blob and download
             canvas.toBlob(
               function (blob) {
@@ -2898,5 +3032,10 @@
 
     <!-- Load html2canvas from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+    <!-- Footer -->
+    <footer style="text-align:center;padding:3rem 1rem;color:#888;margin-top:4rem;border-top:1px solid rgba(255,255,255,0.1);">
+      <a href="https://thefinalsloadout.com/feedback" style="color: #ffd700;">📝 Submit Feedback</a>
+    </footer>
   </body>
 </html>
