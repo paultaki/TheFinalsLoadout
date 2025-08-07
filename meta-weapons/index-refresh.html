@@ -8,19 +8,59 @@
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     <link rel="preload" as="fetch" href="/api/meta-weapons.json" crossorigin>
     
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Mobile experience -->
+    <meta name="theme-color" content="#0a0a0f">
+    
     <!-- SEO -->
     <title>THE FINALS Meta Weapons - Season 7 Patch 7.6.0 | Live Rankings</title>
     <meta name="description" content="Real-time meta analysis for THE FINALS patch 7.6.0: live TTK, win-rates and pro insights.">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="THE FINALS META">
+    <meta name="keywords" content="THE FINALS meta, Season 7 weapons, patch 7.6.0, XP-54, FCAR, ShAK-50, Minigun, weapon tier list, TTK data, win rates">
     
-    <!-- Core Favicons -->
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <!-- Open Graph for social sharing -->
+    <meta property="og:title" content="THE FINALS Meta Weapons - Season 7 Patch 7.6.0 | Live Rankings">
+    <meta property="og:description" content="Discover the 4 dominating weapons in THE FINALS Season 7. Real-time TTK data, win rates, and pro strategies for XP-54, FCAR, ShAK-50, and Minigun.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yoursite.com/">
+    <meta property="og:image" content="https://yoursite.com/images/meta-preview.jpg">
     
-    <!-- Android PWA Splash -->
-    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192x192.png">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="THE FINALS Meta Weapons - Season 7 Patch 7.6.0">
+    <meta name="twitter:description" content="Live weapon rankings, TTK data, and pro strategies for dominating in THE FINALS Season 7">
+    <meta name="twitter:image" content="https://yoursite.com/images/meta-preview.jpg">
     
-    <!-- Legacy support -->
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://yoursite.com/">
+    
+    <!-- Classic favicon for old browsers -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    
+    <!-- Modern browsers -->
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    
+    <!-- Apple devices -->
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    
+    <!-- Android Chrome -->
+    <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512x512.png">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="site.webmanifest">
+    
+    <!-- Windows Tiles (optional) -->
+    <meta name="msapplication-TileColor" content="#0a0a0f">
+    <meta name="msapplication-TileImage" content="images/mstile-144x144.png">
+    
+    <!-- Safari Pinned Tab (optional) -->
+    <link rel="mask-icon" href="images/safari-pinned-tab.svg" color="#00f0c0">
     
     <!-- Google Analytics (Async) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
@@ -845,6 +885,43 @@
         .hidden { display: none; }
         .text-center { text-align: center; }
     </style>
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "THE FINALS META",
+      "url": "https://yoursite.com/",
+      "description": "Real-time weapon meta analysis for THE FINALS Season 7",
+      "publisher": {
+        "@type": "Organization",
+        "name": "THE FINALS META"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What are the best weapons in THE FINALS Season 7?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The top meta weapons are XP-54 (Light), FCAR (Medium), ShAK-50 and Minigun (Heavy). These weapons dominate with fast TTK and high win rates."
+        }
+      },{
+        "@type": "Question",
+        "name": "What changed in THE FINALS patch 7.6.0?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Patch 7.6.0 buffed Sword damage (74→88/105→120), made KS-23 a hybrid hitscan-projectile weapon, and improved hit detection for all melee weapons."
+        }
+      }]
+    }
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -854,7 +931,7 @@
                 <a href="/" class="logo" data-clicks="0">THE FINALS META</a>
                 
                 
-                <button id="compareBtn" style="padding: 0.5rem 1.25rem; background: rgba(0, 240, 192, 0.2); border: 2px solid var(--cyan); border-radius: 8px; color: var(--cyan); cursor: pointer; font-weight: 700;">
+                <button id="compareBtn" aria-label="Compare up to 3 weapons" style="padding: 0.5rem 1.25rem; background: rgba(0, 240, 192, 0.2); border: 2px solid var(--cyan); border-radius: 8px; color: var(--cyan); cursor: pointer; font-weight: 700;">
                     Compare (0/3)
                 </button>
             </div>
@@ -946,15 +1023,6 @@
                     <span class="counter-badge weak">Weak vs: ShAK-50</span>
                     <span class="counter-badge strong">Strong vs: M11</span>
                 </div>
-                
-                <div class="quick-actions">
-                    <button class="action-btn" onclick="copyLoadout('XP-54')">
-                        📋 Copy Loadout
-                    </button>
-                    <button class="action-btn" onclick="watchGuide('XP-54')">
-                        ▶️ Watch Guide
-                    </button>
-                </div>
             </article>
 
             <!-- Medium S-Tier: FCAR -->
@@ -999,15 +1067,6 @@
                 <div class="counter-info">
                     <span class="counter-badge weak">Weak vs: ShAK-50</span>
                     <span class="counter-badge strong">Strong vs: AKM</span>
-                </div>
-                
-                <div class="quick-actions">
-                    <button class="action-btn" onclick="copyLoadout('FCAR')">
-                        📋 Copy Loadout
-                    </button>
-                    <button class="action-btn" onclick="watchGuide('FCAR')">
-                        ▶️ Watch Guide
-                    </button>
                 </div>
             </article>
 
@@ -1089,15 +1148,6 @@
                     <span class="counter-badge weak">Weak vs: Close Range</span>
                     <span class="counter-badge strong">Strong vs: Everything at range</span>
                 </div>
-                
-                <div class="quick-actions">
-                    <button class="action-btn" onclick="copyLoadout('ShAK-50')">
-                        📋 Copy Loadout
-                    </button>
-                    <button class="action-btn" onclick="watchGuide('ShAK-50')">
-                        ▶️ Watch Guide
-                    </button>
-                </div>
             </article>
 
             <!-- Heavy S-TIER: Minigun -->
@@ -1143,15 +1193,6 @@
                 <div class="counter-info">
                     <span class="counter-badge weak">Weak vs: Sword (close)</span>
                     <span class="counter-badge strong">Strong vs: Everything</span>
-                </div>
-                
-                <div class="quick-actions">
-                    <button class="action-btn" onclick="copyLoadout('Minigun')">
-                        📋 Copy Loadout
-                    </button>
-                    <button class="action-btn" onclick="watchGuide('Minigun')">
-                        ▶️ Watch Guide
-                    </button>
                 </div>
             </article>
         </div>
