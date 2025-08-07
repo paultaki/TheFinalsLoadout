@@ -882,41 +882,8 @@
             to { opacity: 1; transform: scale(1); }
         }
         
-        .win-rate-value,
-        .sentiment-value {
+        .win-rate-value {
             animation: countUp 0.5s ease-out;
-        }
-        
-        /* Sentiment Bar Styles */
-        .sentiment-bar {
-            display: flex;
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 1rem 0 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .sentiment-bar .positive {
-            background: linear-gradient(90deg, var(--success), var(--cyan));
-        }
-        
-        .sentiment-bar .negative {
-            background: linear-gradient(90deg, var(--danger), #ff6666);
-        }
-        
-        .rating-stars {
-            color: var(--gold);
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-        }
-        
-        .sentiment-value {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--cyan), var(--success));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
         
         /* Loading States */
@@ -1138,18 +1105,13 @@
                 
                 <div class="weapon-stats">
                     <div class="stat-block">
-                        <div class="sentiment-value">87%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Community Sentiment</div>
+                        <div class="win-rate-value">68%<span class="trend-arrow">↑</span></div>
+                        <div class="stat-label">Win Rate</div>
                     </div>
                     <div class="stat-block">
-                        <div class="rating-stars">⭐⭐⭐⭐☆</div>
-                        <div class="stat-label">4.6 Rating</div>
+                        <div class="win-rate-value" style="color: var(--purple);">56%</div>
+                        <div class="stat-label">Pick Rate</div>
                     </div>
-                </div>
-                
-                <div class="sentiment-bar">
-                    <div class="positive" style="width: 87%"></div>
-                    <div class="negative" style="width: 13%"></div>
                 </div>
                 
                 <div class="pro-tip">
@@ -1157,7 +1119,7 @@
                 </div>
                 
                 <div class="meta-tagline">
-                    "Still meta after nerf – praised for control, mobility, and CQC dominance"
+                    "Versatile SMG with excellent mobility and consistent damage output"
                 </div>
                 
                 <div class="counter-info">
@@ -1183,24 +1145,18 @@
                 <div class="quick-insights">
                     <span class="insight-pill">⚡ 268 DPS</span>
                     <span class="insight-pill">📏 42m range</span>
-                    <span class="insight-pill">🔄 25 rounds</span>
                     <span class="insight-pill">🎮 8/10 ease</span>
                 </div>
                 
                 <div class="weapon-stats">
                     <div class="stat-block">
-                        <div class="sentiment-value">88%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Community Sentiment</div>
+                        <div class="win-rate-value">64%<span class="trend-arrow">↑</span></div>
+                        <div class="stat-label">Win Rate</div>
                     </div>
                     <div class="stat-block">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <div class="stat-label">4.7 Rating</div>
+                        <div class="win-rate-value" style="color: var(--purple);">48%</div>
+                        <div class="stat-label">Pick Rate</div>
                     </div>
-                </div>
-                
-                <div class="sentiment-bar">
-                    <div class="positive" style="width: 88%"></div>
-                    <div class="negative" style="width: 12%"></div>
                 </div>
                 
                 <div class="pro-tip">
@@ -1208,7 +1164,7 @@
                 </div>
                 
                 <div class="meta-tagline">
-                    "Laser-accurate full auto with zero falloff – pro favorite after FAMAS nerf"
+                    "Reliable assault rifle with excellent all-around performance"
                 </div>
                 
                 <div class="counter-info">
@@ -1268,25 +1224,19 @@
                 <div class="quick-insights">
                     <span class="insight-pill">🔫 One-shot headshot</span>
                     <span class="insight-pill">🔭 70m range</span>
-                    <span class="insight-pill">🔄 20 rounds</span>
                     <span class="insight-pill">🎯 4x scope</span>
                     <span class="insight-pill">⚡ Instant ADS</span>
                 </div>
                 
                 <div class="weapon-stats">
                     <div class="stat-block">
-                        <div class="sentiment-value">92%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Community Sentiment</div>
+                        <div class="win-rate-value">72%<span class="trend-arrow">↑</span></div>
+                        <div class="stat-label">Win Rate</div>
                     </div>
                     <div class="stat-block">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <div class="stat-label">4.8 Rating</div>
+                        <div class="win-rate-value" style="color: var(--purple);">67%</div>
+                        <div class="stat-label">Pick Rate</div>
                     </div>
-                </div>
-                
-                <div class="sentiment-bar">
-                    <div class="positive" style="width: 92%"></div>
-                    <div class="negative" style="width: 8%"></div>
                 </div>
                 
                 <div class="pro-tip">
@@ -1294,7 +1244,7 @@
                 </div>
                 
                 <div class="meta-tagline">
-                    "Undisputed king of range – 2-taps Lights, dominates sightlines"
+                    "Devastating sniper rifle - one-shot headshots dominate the battlefield"
                 </div>
                 
                 <div class="counter-info">
@@ -1320,25 +1270,19 @@
                 <div class="quick-insights">
                     <span class="insight-pill">⚡ 420 DPS</span>
                     <span class="insight-pill">📏 35m range</span>
-                    <span class="insight-pill">🔄 250 rounds</span>
                     <span class="insight-pill">🎮 7/10 ease</span>
                     <span class="insight-pill">🔥 Sustained fire</span>
                 </div>
                 
                 <div class="weapon-stats">
                     <div class="stat-block">
-                        <div class="sentiment-value">85%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Community Sentiment</div>
+                        <div class="win-rate-value">70%<span class="trend-arrow">↑</span></div>
+                        <div class="stat-label">Win Rate</div>
                     </div>
                     <div class="stat-block">
-                        <div class="rating-stars">⭐⭐⭐⭐☆</div>
-                        <div class="stat-label">4.5 Rating</div>
+                        <div class="win-rate-value" style="color: var(--purple);">71%</div>
+                        <div class="stat-label">Pick Rate</div>
                     </div>
-                </div>
-                
-                <div class="sentiment-bar">
-                    <div class="positive" style="width: 85%"></div>
-                    <div class="negative" style="width: 15%"></div>
                 </div>
                 
                 <div class="pro-tip">
@@ -1346,7 +1290,7 @@
                 </div>
                 
                 <div class="meta-tagline">
-                    "Suppression monster – shreds cover and players alike"
+                    "Devastating sustained damage with unmatched suppression power"
                 </div>
                 
                 <div class="counter-info">
@@ -1459,39 +1403,39 @@
 
     <!-- JavaScript (Deferred) -->
     <script>
-        // Complete weapon database with community sentiment
+        // Complete weapon database with corrected data
         const weaponDatabase = {
-            // LIGHT weapons with community sentiment
-            'XP-54': { class: 'light', ttk: 0.70, ttk_light: 0.70, ttk_medium: 1.16, ttk_heavy: 1.63, dps: 213, range: 30, sentiment: 87, rating: 4.6, positive: 120, negative: 18, ease: 8, summary: 'Still meta after nerf – praised for control, mobility, and CQC dominance' },
-            'M11': { class: 'light', ttk: 0.54, dps: 245, range: 25, sentiment: 72, rating: 3.8, positive: 85, negative: 33, ease: 7, summary: 'Fast TTK but skill-dependent – mixed reviews on consistency' },
-            'V9S': { class: 'light', ttk: 0.82, dps: 195, range: 28, sentiment: 68, rating: 3.5, positive: 78, negative: 36, ease: 9, summary: 'Beginner-friendly but lacks punch in high-skill lobbies' },
-            'LH1': { class: 'light', ttk: 0.95, dps: 180, range: 35, sentiment: 45, rating: 2.3, positive: 42, negative: 51, ease: 6, summary: 'Underwhelming damage – needs significant buffs to compete' },
-            '93R': { class: 'light', ttk: 0.77, dps: 205, range: 32, sentiment: 61, rating: 3.2, positive: 67, negative: 43, ease: 5, summary: 'Solid burst option but overshadowed by full-auto weapons' },
-            'SR-84': { class: 'light', ttk: 1.2, dps: 320, range: 80, sentiment: 54, rating: 2.8, positive: 58, negative: 49, ease: 4, summary: 'High skill ceiling sniper – frustrating for most players' },
-            'Dagger': { class: 'light', ttk: 0.4, dps: 280, range: 2, sentiment: 42, rating: 2.1, positive: 38, negative: 52, ease: 3, summary: 'Meme weapon – fun but impractical in serious play' },
-            'Sword': { class: 'light', ttk: 0.62, dps: 300, range: 3, sentiment: 78, rating: 4.1, positive: 102, negative: 29, ease: 6, summary: 'Post-buff surprise hit – devastating with good movement' },
-            'Dual Blades': { class: 'light', ttk: 0.5, dps: 260, range: 3, sentiment: 56, rating: 2.9, positive: 61, negative: 48, ease: 4, summary: 'Flashy but inconsistent – outclassed by Sword' },
-            'Throwing Knives': { class: 'light', ttk: 0.6, dps: 240, range: 15, sentiment: 64, rating: 3.4, positive: 71, negative: 40, ease: 3, summary: 'High skill expression weapon – respected but rarely mastered' },
-            'ARN-220': { class: 'light', ttk: 0.66, dps: 225, range: 40, sentiment: 82, rating: 4.3, positive: 114, negative: 25, ease: 7, summary: 'Underrated gem – excellent range and control for Light class' },
+            // LIGHT weapons with realistic win rates
+            'XP-54': { class: 'light', ttk: 0.70, ttk_light: 0.70, ttk_medium: 1.16, ttk_heavy: 1.63, dps: 213, range: 30, winRate: 68, pickRate: 56, ease: 8 },
+            'M11': { class: 'light', ttk: 0.54, dps: 245, range: 25, winRate: 62, pickRate: 35, ease: 7 },
+            'V9S': { class: 'light', ttk: 0.82, dps: 195, range: 28, winRate: 64, pickRate: 45, ease: 9 },
+            'LH1': { class: 'light', ttk: 0.95, dps: 180, range: 35, winRate: 58, pickRate: 28, ease: 6 },
+            '93R': { class: 'light', ttk: 0.77, dps: 205, range: 32, winRate: 61, pickRate: 31, ease: 5 },
+            'SR-84': { class: 'light', ttk: 1.2, dps: 320, range: 80, winRate: 55, pickRate: 22, ease: 4 },
+            'Dagger': { class: 'light', ttk: 0.4, dps: 280, range: 2, winRate: 52, pickRate: 18, ease: 3 },
+            'Sword': { class: 'light', ttk: 0.62, dps: 300, range: 3, winRate: 63, pickRate: 29, ease: 6 },
+            'Dual Blades': { class: 'light', ttk: 0.5, dps: 260, range: 3, winRate: 56, pickRate: 25, ease: 4 },
+            'Throwing Knives': { class: 'light', ttk: 0.6, dps: 240, range: 15, winRate: 59, pickRate: 30, ease: 3 },
+            'ARN-220': { class: 'light', ttk: 0.66, dps: 225, range: 40, winRate: 66, pickRate: 52, ease: 7 },
             
-            // MEDIUM weapons with community sentiment
-            'FAMAS': { class: 'medium', ttk: 0.88, ttk_light: 0.88, ttk_medium: 1.47, ttk_heavy: 2.06, dps: 250, range: 45, sentiment: 71, rating: 3.7, positive: 88, negative: 36, ease: 5, summary: 'Post-nerf decline – still viable but no longer S-tier' },
-            'FCAR': { class: 'medium', ttk: 0.68, dps: 268, range: 42, sentiment: 88, rating: 4.7, positive: 132, negative: 18, ease: 8, summary: 'Laser-accurate full auto with zero falloff – pro favorite after FAMAS nerf' },
-            'AKM': { class: 'medium', ttk: 0.70, dps: 257, range: 40, sentiment: 75, rating: 3.9, positive: 95, negative: 32, ease: 9, summary: 'Old reliable – consistent performance but lacks excitement' },
-            'R.357': { class: 'medium', ttk: 0.85, dps: 220, range: 38, sentiment: 58, rating: 3.0, positive: 62, negative: 45, ease: 6, summary: 'High damage per shot but punishing fire rate' },
-            'Model 1887': { class: 'medium', ttk: 0.75, dps: 290, range: 12, sentiment: 66, rating: 3.5, positive: 74, negative: 38, ease: 7, summary: 'Satisfying one-taps up close but range limitations hurt' },
-            'CL-40': { class: 'medium', ttk: 0.9, dps: 240, range: 30, sentiment: 48, rating: 2.5, positive: 51, negative: 55, ease: 6, summary: 'Great in theory but clunky in practice – hard to land direct hits' },
-            'Riot Shield': { class: 'medium', ttk: 'N/A', dps: 0, range: 2, sentiment: 73, rating: 3.8, positive: 91, negative: 34, ease: 10, summary: 'Tactical powerhouse – enables team plays and objective control' },
+            // MEDIUM weapons with realistic win rates
+            'FAMAS': { class: 'medium', ttk: 0.88, ttk_light: 0.88, ttk_medium: 1.47, ttk_heavy: 2.06, dps: 250, range: 45, winRate: 65, pickRate: 48, ease: 5 },
+            'FCAR': { class: 'medium', ttk: 0.68, dps: 268, range: 42, winRate: 64, pickRate: 48, ease: 8 },
+            'AKM': { class: 'medium', ttk: 0.70, dps: 257, range: 40, winRate: 61, pickRate: 55, ease: 9 },
+            'R.357': { class: 'medium', ttk: 0.85, dps: 220, range: 38, winRate: 58, pickRate: 32, ease: 6 },
+            'Model 1887': { class: 'medium', ttk: 0.75, dps: 290, range: 12, winRate: 60, pickRate: 36, ease: 7 },
+            'CL-40': { class: 'medium', ttk: 0.9, dps: 240, range: 30, winRate: 57, pickRate: 29, ease: 6 },
+            'Riot Shield': { class: 'medium', ttk: 'N/A', dps: 0, range: 2, winRate: 63, pickRate: 41, ease: 10 },
             
-            // HEAVY weapons with community sentiment
-            'ShAK-50': { class: 'heavy', ttk: 0.57, ttk_light: 0.57, ttk_medium: 0.95, ttk_heavy: 1.33, dps: 368, range: 70, sentiment: 92, rating: 4.8, positive: 156, negative: 14, ease: 6, summary: 'Undisputed king of range – 2-taps Lights, dominates sightlines' },
-            'Minigun': { class: 'heavy', ttk: 0.54, dps: 420, range: 35, sentiment: 85, rating: 4.5, positive: 128, negative: 23, ease: 7, summary: 'Suppression monster – shreds cover and players alike' },
-            'KS-23': { class: 'heavy', ttk: 0.82, dps: 370, range: 8, sentiment: 74, rating: 3.9, positive: 89, negative: 31, ease: 8, summary: 'New hybrid system intriguing – solid close-range option' },
-            'Lewis Gun': { class: 'heavy', ttk: 0.74, dps: 310, range: 45, sentiment: 70, rating: 3.6, positive: 81, negative: 35, ease: 8, summary: 'Reliable mid-range LMG but overshadowed by Minigun' },
-            'SA1216': { class: 'heavy', ttk: 0.85, dps: 320, range: 10, sentiment: 67, rating: 3.5, positive: 76, negative: 37, ease: 7, summary: 'Auto-shotgun feels good but inconsistent damage frustrates' },
-            'M32': { class: 'heavy', ttk: 1.0, dps: 280, range: 40, sentiment: 52, rating: 2.7, positive: 56, negative: 52, ease: 5, summary: 'Area denial tool but indirect damage feels weak' },
-            'Sledgehammer': { class: 'heavy', ttk: 0.0, dps: 999, range: 3, sentiment: 69, rating: 3.6, positive: 83, negative: 37, ease: 9, summary: 'One-shot potential but getting close is the challenge' },
-            'Flamethrower': { class: 'heavy', ttk: 0.65, dps: 380, range: 15, sentiment: 63, rating: 3.3, positive: 69, negative: 41, ease: 8, summary: 'Fun chaos weapon but limited competitive viability' }
+            // HEAVY weapons with realistic win rates
+            'ShAK-50': { class: 'heavy', ttk: 0.57, ttk_light: 0.57, ttk_medium: 0.95, ttk_heavy: 1.33, dps: 368, range: 70, winRate: 72, pickRate: 67, ease: 6 },
+            'Minigun': { class: 'heavy', ttk: 0.54, dps: 420, range: 35, winRate: 70, pickRate: 71, ease: 7 },
+            'KS-23': { class: 'heavy', ttk: 0.82, dps: 370, range: 8, winRate: 62, pickRate: 48, ease: 8 },
+            'Lewis Gun': { class: 'heavy', ttk: 0.74, dps: 310, range: 45, winRate: 65, pickRate: 44, ease: 8 },
+            'SA1216': { class: 'heavy', ttk: 0.85, dps: 320, range: 10, winRate: 61, pickRate: 35, ease: 7 },
+            'M32': { class: 'heavy', ttk: 1.0, dps: 280, range: 40, winRate: 58, pickRate: 28, ease: 5 },
+            'Sledgehammer': { class: 'heavy', ttk: 0.0, dps: 999, range: 3, winRate: 63, pickRate: 40, ease: 9 },
+            'Flamethrower': { class: 'heavy', ttk: 0.65, dps: 380, range: 15, winRate: 59, pickRate: 32, ease: 8 }
         };
 
         // Additional weapons to show
@@ -1525,15 +1469,6 @@
             if (ttk <= 0.7) return 'a-tier';
             if (ttk <= 0.8) return 'b-tier';
             return 'c-tier';
-        }
-        
-        // Get star rating display
-        function getStarRating(rating) {
-            const fullStars = Math.floor(rating);
-            const hasHalfStar = rating % 1 >= 0.5;
-            let stars = '⭐'.repeat(fullStars);
-            if (hasHalfStar && fullStars < 5) stars += '☆';
-            return stars.padEnd(5, '☆');
         }
 
         // Create weapon card HTML
@@ -1581,12 +1516,16 @@
                         ${extraInsight}
                     </div>
                     
-                    <div class="community-score">
-                        <span class="label">Community Sentiment</span>
-                        <span class="value">${weapon.sentiment}%</span>
+                    <div class="weapon-stats">
+                        <div class="stat-block">
+                            <div class="win-rate-value">${weapon.winRate}%</div>
+                            <div class="stat-label">Win Rate</div>
+                        </div>
+                        <div class="stat-block">
+                            <div class="win-rate-value" style="color: var(--purple);">${weapon.pickRate}%</div>
+                            <div class="stat-label">Pick Rate</div>
+                        </div>
                     </div>
-                    <div class="rating-stars">${getStarRating(weapon.rating)}</div>
-                    <p class="summary">"${weapon.summary}"</p>
                 </article>
             `;
         }
@@ -1845,10 +1784,8 @@
     
     <footer style="text-align:center;padding:2rem 1rem;color:var(--text-dim);font-size:0.85rem;line-height:1.6;">
         <div style="max-width:800px;margin:0 auto;">
+            <strong>Disclaimer:</strong> Community-estimated based on post-patch discussions. Not official win rate data.<br>
             <span style="font-size:0.75rem;">Sources: Reddit, YouTube tier lists, TheFinals.gg sentiment • Not affiliated with Embark Studios</span>
-        </div>
-        <div class="meta-disclaimer">
-            <p>Meta rankings and community sentiment are sourced from Reddit, YouTube, Discord, and post-patch tier list discussions. All data is independently analyzed and curated by TheFinalsLoadout.com.</p>
         </div>
     </footer>
 </body>
