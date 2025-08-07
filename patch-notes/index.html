@@ -623,16 +623,51 @@
             }
         }
 
-        .weapon-card {
-            animation: fadeInUp 0.5s ease-out;
-            animation-fill-mode: both;
+        /* Scroll Animation Classes */
+        .scroll-fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
 
-        .weapon-card:nth-child(1) { animation-delay: 0.1s; }
-        .weapon-card:nth-child(2) { animation-delay: 0.2s; }
-        .weapon-card:nth-child(3) { animation-delay: 0.3s; }
-        .weapon-card:nth-child(4) { animation-delay: 0.4s; }
-        .weapon-card:nth-child(5) { animation-delay: 0.5s; }
+        .scroll-fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Cards start hidden for scroll animation */
+        .weapon-card, .comparison-item {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .weapon-card.animate-in, .comparison-item.animate-in {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        /* Staggered delays for cards in same row */
+        .meta-grid .weapon-card:nth-child(1), 
+        .comparison-grid .comparison-item:nth-child(1) { animation-delay: 0.1s; }
+        .meta-grid .weapon-card:nth-child(2),
+        .comparison-grid .comparison-item:nth-child(2) { animation-delay: 0.2s; }
+        .meta-grid .weapon-card:nth-child(3),
+        .comparison-grid .comparison-item:nth-child(3) { animation-delay: 0.3s; }
+        .meta-grid .weapon-card:nth-child(4),
+        .comparison-grid .comparison-item:nth-child(4) { animation-delay: 0.4s; }
+        .meta-grid .weapon-card:nth-child(5),
+        .comparison-grid .comparison-item:nth-child(5) { animation-delay: 0.5s; }
+        .meta-grid .weapon-card:nth-child(6),
+        .comparison-grid .comparison-item:nth-child(6) { animation-delay: 0.6s; }
+
+        /* Section headers animation */
+        .section-header {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .section-header.animate-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
 
         /* Scrollbar */
         ::-webkit-scrollbar {
@@ -1215,6 +1250,68 @@
     </footer>
 
     <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Add animation class
+                    entry.target.classList.add('animate-in');
+                    
+                    // For sections with multiple cards, stagger the children
+                    if (entry.target.classList.contains('meta-grid') || 
+                        entry.target.classList.contains('comparison-grid')) {
+                        const children = entry.target.children;
+                        Array.from(children).forEach((child, index) => {
+                            setTimeout(() => {
+                                child.classList.add('animate-in');
+                            }, index * 100);
+                        });
+                    }
+                    
+                    // Unobserve after animation to improve performance
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animatable elements
+        document.addEventListener('DOMContentLoaded', () => {
+            // Individual cards and items
+            document.querySelectorAll('.weapon-card, .comparison-item').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Section headers
+            document.querySelectorAll('.section-header').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Grid containers for staggered animations
+            document.querySelectorAll('.meta-grid, .comparison-grid').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Hero and header sections - animate immediately
+            const heroSection = document.querySelector('.hero');
+            const headerSection = document.querySelector('.header');
+            if (heroSection) {
+                setTimeout(() => {
+                    heroSection.style.opacity = '0';
+                    heroSection.style.transform = 'translateY(20px)';
+                    heroSection.style.transition = 'all 0.8s ease-out';
+                    setTimeout(() => {
+                        heroSection.style.opacity = '1';
+                        heroSection.style.transform = 'translateY(0)';
+                    }, 100);
+                }, 0);
+            }
+        });
+
         // Filter functionality
         const filterChips = document.querySelectorAll('.filter-chip');
         const weaponCards = document.querySelectorAll('.weapon-card');
@@ -1257,6 +1354,26 @@
                     return true;
             }
         }
+
+        // Smooth reveal for filter section on page load
+        window.addEventListener('load', () => {
+            const filterSection = document.querySelector('.filter-section');
+            if (filterSection) {
+                filterSection.style.opacity = '0';
+                filterSection.style.transform = 'translateY(20px)';
+                filterSection.style.transition = 'all 0.6s ease-out';
+                setTimeout(() => {
+                    filterSection.style.opacity = '1';
+                    filterSection.style.transform = 'translateY(0)';
+                }, 300);
+            }
+
+            // Animate comparison section when in view
+            const comparisonSection = document.querySelector('.comparison-section');
+            if (comparisonSection) {
+                observer.observe(comparisonSection);
+            }
+        });
     </script>
   </body>
 </html>
