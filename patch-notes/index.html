@@ -171,6 +171,10 @@
             color: var(--dark-bg);
         }
 
+        /* Mobile text abbreviations */
+        .mobile-text { display: none; }
+        .full-text { display: inline; }
+
         /* Container */
         .container {
             max-width: 1400px;
@@ -576,6 +580,56 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* Mobile Navigation Optimizations */
+        @media (max-width: 640px) {
+            .main-nav {
+                flex-direction: row;
+                padding: 0.5rem 0.75rem;
+                gap: 0;
+                justify-content: center;
+                background: rgba(24, 28, 39, 0.95);
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+                gap: 0.25rem;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .nav-link {
+                font-size: 0.65rem;
+                padding: 0.35rem 0.5rem;
+                white-space: nowrap;
+                flex-shrink: 0;
+                letter-spacing: 0.05em;
+                min-width: fit-content;
+            }
+            
+            .nav-link.active {
+                font-size: 0.7rem;
+                font-weight: 700;
+            }
+
+            .mobile-text { display: inline; }
+            .full-text { display: none; }
+        }
+
+        /* For very small screens */
+        @media (max-width: 380px) {
+            .nav-link {
+                font-size: 0.6rem;
+                padding: 0.3rem 0.4rem;
+            }
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .patch-title {
@@ -594,11 +648,6 @@
                 justify-content: flex-start;
                 overflow-x: auto;
                 padding-bottom: 0.5rem;
-            }
-
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
             }
 
             .ttk-bar-row {
@@ -692,11 +741,11 @@
     <!-- Navigation -->
     <nav class="main-nav">
         <div class="nav-links">
-            <a href="/" class="nav-link">LOADOUT GENERATOR</a>
-            <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
-            <a href="/patch-notes/" class="nav-link active">PATCH NOTES</a>
-            <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
-            <a href="/wt-progress/" class="nav-link">WT TRACKER (BETA)</a>
+            <a href="/" class="nav-link"><span class="full-text">LOADOUT GENERATOR</span><span class="mobile-text">LOADOUT</span></a>
+            <a href="/ragequit/" class="nav-link"><span class="full-text">RAGE QUIT</span><span class="mobile-text">RAGE</span></a>
+            <a href="/patch-notes/" class="nav-link active"><span class="full-text">PATCH NOTES</span><span class="mobile-text">PATCH</span></a>
+            <a href="/meta-weapons/" class="nav-link"><span class="full-text">META WEAPONS</span><span class="mobile-text">META</span></a>
+            <a href="/wt-progress/" class="nav-link"><span class="full-text">WT TRACKER (BETA)</span><span class="mobile-text">WT</span></a>
         </div>
     </nav>
 
@@ -1374,6 +1423,27 @@
                 observer.observe(comparisonSection);
             }
         });
+
+        // Mobile nav improvements
+        if (window.innerWidth <= 640) {
+            // Center active nav item on mobile
+            const activeNav = document.querySelector('.nav-link.active');
+            const navContainer = document.querySelector('.nav-links');
+            
+            if (activeNav && navContainer) {
+                setTimeout(() => {
+                    const containerWidth = navContainer.offsetWidth;
+                    const itemLeft = activeNav.offsetLeft;
+                    const itemWidth = activeNav.offsetWidth;
+                    const scrollTo = itemLeft - (containerWidth / 2) + (itemWidth / 2);
+                    
+                    navContainer.scrollTo({
+                        left: scrollTo,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+            }
+        }
     </script>
   </body>
 </html>
