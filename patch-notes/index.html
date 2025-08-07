@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com" />
 
     <!-- SEO Meta Tags -->
     <title>
@@ -77,1266 +76,1187 @@
       gtag("config", "G-GVGKYFGZ1Z");
     </script>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
-    <!-- AI Chat Widget Styles -->
-    <link rel="stylesheet" href="../css/finals-chat.css" />
-
     <style>
-      /* Quantum-inspired color palette */
-      :root {
-        --quantum-cyan: #00f0c0;
-        --quantum-purple: #7b2fe3;
-        --quantum-pink: #ff2a6d;
-        --quantum-blue: #1e90ff;
-        --quantum-yellow: #ffb700;
-        --quantum-dark: #0a0c12;
-        --quantum-component: #181c27;
-        --quantum-border: #3a3f5e;
-        --quantum-text: #e0e7ff;
-        --quantum-secondary: #a0aed0;
-        --quantum-green: #00ff88;
-        --quantum-red: #ff3366;
-        --quantum-orange: #ff6b35;
-      }
-
-      /* Base Styles */
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        background: var(--quantum-dark);
-        min-height: 100%;
-      }
-
-      body {
-        font-family: "Inter", system-ui, sans-serif;
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
-        color: var(--quantum-text);
-        background: transparent;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
-        font-family: "Orbitron", sans-serif;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-      }
-
-      /* Quantum grid background */
-      .quantum-grid {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: linear-gradient(
-            rgba(0, 240, 192, 0.03) 1px,
-            transparent 1px
-          ),
-          linear-gradient(90deg, rgba(0, 240, 192, 0.03) 1px, transparent 1px);
-        background-size: 50px 50px;
-        z-index: 0;
-      }
-
-      /* Main container */
-      .main-container {
-        position: relative;
-        z-index: 1;
-      }
-
-      /* Navigation */
-      .quantum-nav {
-        background: rgba(24, 28, 39, 0.8);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-bottom: 1px solid var(--quantum-border);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        padding: 1rem 2rem;
-      }
-
-      .quantum-nav a {
-        color: var(--quantum-secondary);
-        text-decoration: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 8px;
-        font-family: "Fira Code", monospace;
-        font-size: 0.875rem;
-        font-weight: 500;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .quantum-nav a::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          var(--quantum-cyan),
-          transparent
-        );
-        transition: left 0.5s ease;
-      }
-
-      .quantum-nav a:hover {
-        color: var(--quantum-cyan);
-        transform: translateY(-2px);
-      }
-
-      .quantum-nav a:hover::before {
-        left: 100%;
-      }
-
-      .quantum-nav a.active {
-        background: linear-gradient(
-          135deg,
-          var(--quantum-cyan),
-          var(--quantum-blue)
-        );
-        color: var(--quantum-dark);
-        font-weight: 600;
-      }
-
-      /* Header */
-      .quantum-header {
-        background: linear-gradient(
-          135deg,
-          rgba(0, 240, 192, 0.1),
-          rgba(123, 47, 227, 0.05)
-        );
-        border-bottom: 1px solid var(--quantum-border);
-        padding: 3rem 0;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .quantum-title {
-        font-family: "Orbitron", sans-serif;
-        font-weight: 900;
-        background: linear-gradient(
-          135deg,
-          var(--quantum-cyan),
-          var(--quantum-purple),
-          var(--quantum-pink)
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        line-height: 1.1;
-      }
-
-      /* Floating particles */
-      .particle {
-        position: fixed;
-        pointer-events: none;
-        opacity: 0.6;
-        background: var(--quantum-cyan);
-        width: 2px;
-        height: 2px;
-        border-radius: 50%;
-        box-shadow: 0 0 6px var(--quantum-cyan);
-      }
-
-      /* Update badges */
-      .update-badge {
-        display: inline-block;
-        padding: 0.375rem 1rem;
-        border-radius: 24px;
-        font-family: "Fira Code", monospace;
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-      }
-
-      .update-badge.live {
-        background: rgba(0, 255, 136, 0.2);
-        color: var(--quantum-green);
-        border: 1px solid rgba(0, 255, 136, 0.3);
-      }
-
-      /* Change cards */
-      .change-card {
-        background: rgba(24, 28, 39, 0.6);
-        border: 1px solid var(--quantum-border);
-        border-radius: 12px;
-        padding: 1.5rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .change-card::before {
-        content: "";
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        background: linear-gradient(
-          45deg,
-          var(--quantum-cyan),
-          var(--quantum-purple),
-          var(--quantum-pink)
-        );
-        border-radius: 12px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: -1;
-      }
-
-      .change-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
-      }
-
-      .change-card:hover::before {
-        opacity: 0.5;
-      }
-
-      /* Change type badges - simplified */
-      .change-type {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 4px;
-        font-family: "Fira Code", monospace;
-        font-size: 0.625rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--quantum-text);
-        border: none;
-      }
-
-      .change-type.nerf {
-        color: #ff6b6b;
-      }
-
-      .change-type.buff {
-        color: #51cf66;
-      }
-
-      .change-type.rework {
-        color: #a78bfa;
-      }
-
-      .change-type.new {
-        color: #ffd93d;
-      }
-
-      .change-type.fix {
-        color: #4ecdc4;
-      }
-
-      /* Stat changes */
-      .stat-change {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 0.75rem;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 8px;
-        margin: 0.5rem 0;
-      }
-
-      .stat-before {
-        color: var(--quantum-secondary);
-        text-decoration: line-through;
-      }
-
-      .stat-after {
-        font-family: "Fira Code", monospace;
-        font-weight: 600;
-      }
-
-      .stat-after.buff {
-        color: var(--quantum-green);
-      }
-
-      .stat-after.nerf {
-        color: var(--quantum-red);
-      }
-
-      /* Section headers */
-      .section-header {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 2rem;
-      }
-
-      .section-icon {
-        font-size: 2rem;
-      }
-
-      /* Quick summary */
-      .tldr-card {
-        background: linear-gradient(
-          135deg,
-          rgba(123, 47, 227, 0.1),
-          rgba(0, 240, 192, 0.05)
-        );
-        border: 1px solid var(--quantum-border);
-        border-radius: 12px;
-        padding: 2rem;
-        margin-bottom: 3rem;
-      }
-
-      .tldr-item {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 8px;
-        margin: 0.5rem 0;
-        transition: all 0.3s ease;
-      }
-
-      .tldr-item:hover {
-        transform: translateX(8px);
-        background: rgba(0, 0, 0, 0.5);
-      }
-
-      /* Impact badges */
-      .impact-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        border-radius: 24px;
-        font-size: 0.875rem;
-        font-weight: 600;
-      }
-
-      .impact-badge.high {
-        background: rgba(255, 51, 102, 0.2);
-        color: var(--quantum-red);
-        border: 1px solid rgba(255, 51, 102, 0.3);
-      }
-
-      .impact-badge.medium {
-        background: rgba(255, 183, 0, 0.2);
-        color: var(--quantum-yellow);
-        border: 1px solid rgba(255, 183, 0, 0.3);
-      }
-
-      .impact-badge.low {
-        background: rgba(0, 240, 192, 0.2);
-        color: var(--quantum-cyan);
-        border: 1px solid rgba(0, 240, 192, 0.3);
-      }
-
-      /* Weapon image */
-      .weapon-icon {
-        width: 48px;
-        height: 48px;
-        object-fit: contain;
-        border-radius: 8px;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 8px;
-      }
-
-      /* Footer */
-      footer {
-        border-top: 1px solid var(--quantum-border);
-        padding: 2rem 0;
-        margin-top: 4rem;
-      }
-
-      /* Responsive */
-      @media (max-width: 768px) {
-        .quantum-nav {
-          padding: 0.75rem 1rem;
+        /* Meta-weapons design system */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --cyan: #00f0c0;
+            --purple: #7b2fe3;
+            --pink: #ff2a6d;
+            --gold: #ffd700;
+            --dark-bg: #0a0a0f;
+            --card-bg: #1a1a2e;
+            --text: #e0e0e0;
+            --text-dim: #888;
+            --success: #00ff88;
+            --danger: #ff4444;
+            --warning: #ffaa00;
+            --bg: #0a0a0f;
         }
 
-        .quantum-nav a {
-          font-size: 0.75rem;
-          padding: 0.375rem 0.75rem;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        .change-card {
-          padding: 1rem;
+        h1, h2, h3 {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
 
-        .quantum-header {
-          padding: 2rem 0;
+        /* Navigation */
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: linear-gradient(
+                90deg,
+                rgba(0, 0, 0, 0.8) 0%,
+                rgba(123, 47, 227, 0.2) 50%,
+                rgba(0, 0, 0, 0.8) 100%
+            );
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(30, 144, 255, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
-        .quantum-title {
-          font-size: 2rem;
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
         }
-      }
 
-      /* Animations */
-      @keyframes pulse-glow {
-        0%,
-        100% {
-          box-shadow: 0 0 20px rgba(255, 183, 0, 0.5);
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        50% {
-          box-shadow: 0 0 30px rgba(255, 183, 0, 0.8);
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: rgba(30, 144, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(30, 144, 255, 0.4);
         }
-      }
 
-      .glow-effect {
-        animation: pulse-glow 2s infinite;
-      }
-
-      /* Scanline effect */
-      .scanline {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          var(--quantum-cyan),
-          transparent
-        );
-        opacity: 0.5;
-        animation: scanline 8s linear infinite;
-        pointer-events: none;
-        z-index: 999;
-      }
-
-      @keyframes scanline {
-        0% {
-          transform: translateY(-100vh);
+        .nav-link.active {
+            background-color: var(--cyan);
+            color: var(--dark-bg);
         }
-        100% {
-          transform: translateY(100vh);
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
         }
-      }
 
-      /* Event mode badge */
-      .event-badge {
-        background: linear-gradient(
-          135deg,
-          var(--quantum-purple),
-          var(--quantum-pink)
-        );
-        color: white;
-        padding: 0.5rem 1.5rem;
-        border-radius: 24px;
-        font-family: "Orbitron", sans-serif;
-        font-weight: 700;
-        font-size: 0.875rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        display: inline-block;
-        box-shadow: 0 4px 20px rgba(123, 47, 227, 0.3);
-      }
-
-      /* Class badges */
-      .class-badge {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 16px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-      }
-
-      .class-badge.light {
-        background: rgba(0, 240, 192, 0.2);
-        color: var(--quantum-cyan);
-        border: 1px solid rgba(0, 240, 192, 0.3);
-      }
-
-      .class-badge.medium {
-        background: rgba(123, 47, 227, 0.2);
-        color: var(--quantum-purple);
-        border: 1px solid rgba(123, 47, 227, 0.3);
-      }
-
-      .class-badge.heavy {
-        background: rgba(255, 183, 0, 0.2);
-        color: var(--quantum-yellow);
-        border: 1px solid rgba(255, 183, 0, 0.3);
-      }
-
-      .class-badge.all {
-        background: linear-gradient(
-          135deg,
-          rgba(0, 240, 192, 0.2),
-          rgba(123, 47, 227, 0.2),
-          rgba(255, 183, 0, 0.2)
-        );
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-      }
-
-      /* Metallic Chrome Text Effect */
-      .metallic-title {
-        position: relative;
-        font-family: "Orbitron", sans-serif;
-        font-weight: 900;
-        text-transform: uppercase;
-        background: linear-gradient(
-          to bottom,
-          #eee 0%,
-          #999 50%,
-          #777 51%,
-          #555 100%
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
-        text-shadow: 
-          0 1px 0 #ccc,
-          0 2px 0 #c9c9c9,
-          0 3px 0 #bbb,
-          0 4px 0 #b9b9b9,
-          0 5px 0 #aaa,
-          0 6px 1px rgba(0,0,0,.1),
-          0 0 5px rgba(0,0,0,.1),
-          0 1px 3px rgba(0,0,0,.3),
-          0 3px 5px rgba(0,0,0,.2),
-          0 5px 10px rgba(0,0,0,.25);
-        filter: brightness(1.2);
-        z-index: 1;
-      }
-
-      /* Shine sweep effect */
-      .metallic-title::before {
-        content: attr(data-text);
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 2;
-        background: linear-gradient(
-          105deg,
-          transparent 40%,
-          rgba(255, 255, 255, 0.7) 45%,
-          rgba(255, 255, 255, 0.9) 50%,
-          rgba(255, 255, 255, 0.7) 55%,
-          transparent 60%
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
-        animation: metallic-shine 4s ease-in-out infinite;
-        background-size: 200% 100%;
-        background-position: -100% 0;
-      }
-
-      @keyframes metallic-shine {
-        0% {
-          background-position: -100% 0;
+        /* Header */
+        .header {
+            padding: 3rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 240, 192, 0.05), rgba(123, 47, 227, 0.05));
         }
-        100% {
-          background-position: 200% 0;
+
+        .patch-title {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-      }
 
-      /* Alternative chrome style with more depth */
-      .chrome-title {
-        position: relative;
-        font-family: "Orbitron", sans-serif;
-        font-weight: 900;
-        text-transform: uppercase;
-        background: linear-gradient(
-          to bottom,
-          #d4d4d4 0%,
-          #f9f9f9 10%,
-          #e8e8e8 25%,
-          #9a9a9a 50%,
-          #787878 51%,
-          #656565 60%,
-          #4b4b4b 80%,
-          #2e2e2e 100%
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
-        text-shadow: 
-          0 1px 0 rgba(255,255,255,0.4),
-          0 -1px 0 rgba(0,0,0,0.3);
-        letter-spacing: 0.05em;
-      }
-
-      /* Enhanced metallic effect for the main title */
-      h1.quantum-title.metallic-title {
-        margin-bottom: 1rem;
-        line-height: 1.1;
-      }
-
-      /* Mobile adjustments */
-      @media (max-width: 768px) {
-        .metallic-title {
-          text-shadow: 
-            0 1px 0 #ccc,
-            0 2px 0 #bbb,
-            0 3px 0 #aaa,
-            0 4px 1px rgba(0,0,0,.1),
-            0 0 3px rgba(0,0,0,.1);
+        .patch-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
         }
-      }
+
+        .update-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .update-badge {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .live-badge {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .event-badge {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+        }
+
+        /* Smart Filters */
+        .filter-section {
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .smart-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-chip {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            color: var(--text);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .filter-chip:hover {
+            background: rgba(0, 240, 192, 0.1);
+            border-color: var(--cyan);
+            transform: translateY(-2px);
+        }
+
+        .filter-chip.active {
+            background: var(--cyan);
+            color: var(--dark-bg);
+            border-color: var(--cyan);
+        }
+
+        .filter-chip[data-count]::after {
+            content: attr(data-count);
+            margin-left: 0.5rem;
+            opacity: 0.7;
+        }
+
+        /* Comparison Section (TLDR) */
+        .comparison-section {
+            background: linear-gradient(135deg, rgba(123, 47, 227, 0.05), rgba(255, 42, 109, 0.05));
+            padding: 3rem 0;
+            margin: 2rem 0;
+        }
+
+        .comparison-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-header h2 {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .comparison-item {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 1rem;
+            align-items: start;
+            transition: all 0.3s;
+        }
+
+        .comparison-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 240, 192, 0.1);
+            border-color: var(--cyan);
+        }
+
+        .comparison-icon {
+            font-size: 2rem;
+            min-width: 40px;
+        }
+
+        .comparison-content strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
+        }
+
+        .comparison-content p {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        /* Weapon Cards Grid */
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .weapon-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .weapon-card.light {
+            border-color: var(--cyan);
+            box-shadow: 0 0 20px rgba(0, 240, 192, 0.1);
+        }
+
+        .weapon-card.medium {
+            border-color: var(--purple);
+            box-shadow: 0 0 20px rgba(123, 47, 227, 0.1);
+        }
+
+        .weapon-card.heavy {
+            border-color: var(--pink);
+            box-shadow: 0 0 20px rgba(255, 42, 109, 0.1);
+        }
+
+        .weapon-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .class-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .class-badge.light {
+            background: var(--cyan);
+            color: var(--dark-bg);
+        }
+
+        .class-badge.medium {
+            background: var(--purple);
+            color: white;
+        }
+
+        .class-badge.heavy {
+            background: var(--pink);
+            color: white;
+        }
+
+        .weapon-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .weapon-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .change-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .buff {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+        }
+
+        .nerf {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .rework {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+        }
+
+        /* TTK Hero Display */
+        .ttk-hero {
+            text-align: center;
+            padding: 1.5rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .ttk-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .ttk-value.positive {
+            color: var(--success);
+        }
+
+        .ttk-value.negative {
+            color: var(--danger);
+        }
+
+        .ttk-value.neutral {
+            color: var(--warning);
+        }
+
+        /* Tier-based gradient treatments */
+        .ttk-value.s-tier {
+            background: linear-gradient(
+                to bottom,
+                #ffd700 0%,
+                #ffed4e 45%,
+                #ffd700 50%,
+                #b8860b 100%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+        }
+        
+        .ttk-value.a-tier { 
+            color: var(--purple);
+            filter: drop-shadow(0 0 15px rgba(123, 47, 227, 0.3));
+        }
+        
+        .ttk-value.b-tier { 
+            color: #1e90ff;
+            filter: drop-shadow(0 0 10px rgba(30, 144, 255, 0.2));
+        }
+
+        .ttk-label {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+        }
+
+        /* TTK Bars */
+        .ttk-bars {
+            margin: 1.5rem 0;
+        }
+
+        .ttk-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .ttk-bar-label {
+            min-width: 100px;
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        .ttk-bar-track {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ttk-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .ttk-bar-fill.buff {
+            background: linear-gradient(90deg, var(--success), #00ff88);
+        }
+
+        .ttk-bar-fill.nerf {
+            background: linear-gradient(90deg, var(--danger), #ff6666);
+        }
+
+        .ttk-bar-fill.rework {
+            background: linear-gradient(90deg, var(--warning), #ffcc00);
+        }
+
+        .ttk-bar-value {
+            min-width: 60px;
+            text-align: right;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Change Details */
+        .change-details {
+            margin-top: 1.5rem;
+        }
+
+        .change-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .change-item:last-child {
+            border-bottom: none;
+        }
+
+        .change-item strong {
+            color: var(--cyan);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 3rem 0 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--purple);
+        }
+
+        .section-icon {
+            font-size: 2.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .patch-title {
+                font-size: 2rem;
+            }
+
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .smart-filters {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .ttk-bar-row {
+                flex-wrap: wrap;
+            }
+
+            .ttk-bar-label {
+                min-width: 100%;
+                margin-bottom: 0.25rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .weapon-card {
+            animation: fadeInUp 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .weapon-card:nth-child(1) { animation-delay: 0.1s; }
+        .weapon-card:nth-child(2) { animation-delay: 0.2s; }
+        .weapon-card:nth-child(3) { animation-delay: 0.3s; }
+        .weapon-card:nth-child(4) { animation-delay: 0.4s; }
+        .weapon-card:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--purple);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyan);
+        }
     </style>
   </head>
   <body>
-    <div class="quantum-grid"></div>
-    <div class="scanline"></div>
-
-    <div class="main-container">
-      <!-- Navigation -->
-      <nav class="quantum-nav">
-        <div class="container mx-auto flex justify-between items-center">
-          <div class="flex items-center gap-6">
-            <a href="../index.html">LOADOUT GENERATOR</a>
-            <a href="../ragequit/index.html">RAGE QUIT</a>
-            <a href="#" class="active">PATCH NOTES</a>
-            <a href="../meta-weapons/index.html">META WEAPONS</a>
-          </div>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-links">
+            <a href="/" class="nav-link">LOADOUT GENERATOR</a>
+            <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
+            <a href="/patch-notes/" class="nav-link active">PATCH NOTES</a>
+            <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
+            <a href="/wt-progress/" class="nav-link">WT TRACKER (BETA)</a>
         </div>
-      </nav>
+    </nav>
 
-      <!-- Header -->
-      <header class="quantum-header">
-        <div class="container mx-auto px-4">
-          <div class="flex items-center gap-4 mb-4">
-            <span class="update-badge live">UPDATED - 8.5.2025</span>
-            <span class="event-badge">⚽ MIDSEASON UPDATE</span>
-          </div>
-          <h1 class="quantum-title metallic-title text-5xl md:text-6xl mb-2" data-text="Update 7.6.0: Midseason Update">
-            Update 7.6.0: Midseason Update
-          </h1>
-          <p class="text-xl text-quantum-secondary">
-            SUPER CASHBALL mode • Voice customization • Critical fixes
-          </p>
-          <div class="mt-4 flex items-center gap-4">
-            <span class="text-sm text-quantum-secondary">July 24, 2025</span>
-            <span class="text-sm text-quantum-secondary">•</span>
-            <span class="text-sm text-quantum-secondary">Season 7: The Divide</span>
-          </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="update-badges">
+                <span class="update-badge live-badge">🔴 UPDATED - 8.5.2025</span>
+                <span class="update-badge event-badge">⚽ MIDSEASON UPDATE</span>
+            </div>
+            <h1 class="patch-title">Update 7.6.0: Midseason Update</h1>
+            <p class="patch-subtitle">
+                SUPER CASHBALL mode • Voice customization • Critical fixes
+            </p>
+            <div class="update-badges">
+                <span class="update-badge">July 24, 2025</span>
+                <span class="update-badge">Season 7: The Divide</span>
+            </div>
         </div>
-      </header>
+    </header>
 
-      <!-- Main Content -->
-      <main class="py-8">
-        <div class="container mx-auto px-4">
-          <!-- Quick Summary Section -->
-          <section class="mb-12">
-            <div class="tldr-card">
-              <h2 class="text-2xl font-bold mb-4" style="color: var(--quantum-yellow)">
-                🎯 TL;DR - What Changed (Why You Should Care)
-              </h2>
-              <div class="grid md:grid-cols-2 gap-4">
-                <div class="tldr-item">
-                  <span class="text-2xl">⚽</span>
-                  <div>
-                    <strong style="color: var(--quantum-cyan)">SUPER CASHBALL mode</strong>
-                    <p class="text-sm text-quantum-secondary">5v5 team-based ball scoring</p>
-                  </div>
-                </div>
-                <div class="tldr-item">
-                  <span class="text-2xl">🎭</span>
-                  <div>
-                    <strong style="color: var(--quantum-purple)">Voice customization</strong>
-                    <p class="text-sm text-quantum-secondary">Choose voice separate from face</p>
-                  </div>
-                </div>
-                <div class="tldr-item">
-                  <span class="text-2xl">💥</span>
-                  <div>
-                    <strong style="color: var(--quantum-yellow)">KS-23 hybrid weapon</strong>
-                    <p class="text-sm text-quantum-secondary">Hitscan to 25m, projectile beyond</p>
-                  </div>
-                </div>
-                <div class="tldr-item">
-                  <span class="text-2xl">⚔️</span>
-                  <div>
-                    <strong style="color: var(--quantum-green)">Sword damage buffed</strong>
-                    <p class="text-sm text-quantum-secondary">88/120 damage but less rotation</p>
-                  </div>
-                </div>
-                <div class="tldr-item">
-                  <span class="text-2xl">🛡️</span>
-                  <div>
-                    <strong style="color: var(--quantum-red)">Melee hit detection fixed</strong>
-                    <p class="text-sm text-quantum-secondary">Major improvements across all melee</p>
-                  </div>
-                </div>
-                <div class="tldr-item">
-                  <span class="text-2xl">🚨</span>
-                  <div>
-                    <strong style="color: var(--quantum-orange)">Server exploits fixed</strong>
-                    <p class="text-sm text-quantum-secondary">Exploiters permanently banned</p>
-                  </div>
-                </div>
-              </div>
+    <!-- Smart Filters -->
+    <section class="filter-section">
+        <div class="container">
+            <div class="smart-filters">
+                <button class="filter-chip active" data-filter="all" data-count="(15)">All Changes</button>
+                <button class="filter-chip" data-filter="buffs" data-count="(4)">Buffs</button>
+                <button class="filter-chip" data-filter="nerfs" data-count="(2)">Nerfs</button>
+                <button class="filter-chip" data-filter="new-content" data-count="(5)">New Content</button>
+                <button class="filter-chip" data-filter="fixes" data-count="(4)">Bug Fixes</button>
             </div>
-          </section>
-
-          <!-- SUPER CASHBALL Section -->
-          <section class="mb-12">
-            <div class="section-header">
-              <span class="section-icon">⚽</span>
-              <h2 class="text-3xl font-bold">New Game Mode: SUPER CASHBALL</h2>
-            </div>
-
-            <div class="change-card">
-              <div class="flex justify-between items-start mb-4">
-                <div>
-                  <div class="flex items-center gap-3 mb-3">
-                    <span class="event-badge">🏆 5v5 TEAM MODE</span>
-                    <span class="update-badge live">NOW LIVE</span>
-                  </div>
-                  <p class="text-quantum-secondary mb-4">
-                    Score goals with the Cashball - pass to charge it from 1→2→3 points. Two 5-minute halves with overtime rules.
-                  </p>
-                </div>
-              </div>
-
-              <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h3 class="text-lg font-bold mb-3" style="color: var(--quantum-cyan)">⚡ Game Rules</h3>
-                  <ul class="space-y-2 text-sm">
-                    <li>• Throw Cashball into opposing team's goal</li>
-                    <li>• Pass to teammates to charge point value (max 3)</li>
-                    <li>• Two 5-minute halves</li>
-                    <li>• Score in last 30s = +30s overtime</li>
-                    <li>• Penalty zones Glitch enemy players</li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h3 class="text-lg font-bold mb-3" style="color: var(--quantum-purple)">🎮 Locked Loadouts</h3>
-                  <div class="space-y-3">
-                    <div class="p-2 bg-black/30 rounded">
-                      <span class="class-badge medium">MEDIUM</span> <strong>Playmaker</strong>
-                      <p class="text-xs text-quantum-secondary mt-1">Winch, Riot Shield, Goo, Jump Pad, Zipline</p>
-                    </div>
-                    <div class="p-2 bg-black/30 rounded">
-                      <span class="class-badge light">LIGHT</span> <strong>Striker</strong>
-                      <p class="text-xs text-quantum-secondary mt-1">Dash, Dagger, Glitch, Thermal Bore, Nullifier</p>
-                    </div>
-                    <div class="p-2 bg-black/30 rounded">
-                      <span class="class-badge heavy">HEAVY</span> <strong>Enforcer</strong>
-                      <p class="text-xs text-quantum-secondary mt-1">Charge, Sledgehammer, Barricade, Dome, Lockbolt</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="mt-4 p-3 bg-black/30 rounded-lg">
-                <p class="text-sm">
-                  <strong>🏟️ Play on:</strong> CA$HBALL STADIUM - Dedicated arena designed specifically for this mode
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <!-- New Features Section -->
-          <section class="mb-12">
-            <div class="section-header">
-              <span class="section-icon">✨</span>
-              <h2 class="text-3xl font-bold">New Features</h2>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6">
-              <div class="change-card">
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="text-2xl">🎭</span>
-                  <h3 class="text-xl font-bold">Voice Customization</h3>
-                  <span class="change-type new">NEW</span>
-                </div>
-                <p class="text-quantum-secondary mb-3">
-                  Choose your contestant's voice independently from their face in the Appearance Tab.
-                </p>
-                <div class="p-3 bg-black/30 rounded-lg">
-                  <p class="text-sm">
-                    <strong style="color: var(--quantum-cyan)">Mix & Match:</strong> Any voice with any face for unique combinations
-                  </p>
-                </div>
-              </div>
-
-              <div class="change-card">
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="text-2xl">🎰</span>
-                  <h3 class="text-xl font-bold">SUPER CASHBALL WHEEL</h3>
-                  <span class="change-type new">DAILY REWARDS</span>
-                </div>
-                <p class="text-quantum-secondary mb-3">
-                  Complete daily contracts to spin for 20 total prizes during the event.
-                </p>
-                <div class="p-3 bg-black/30 rounded-lg">
-                  <p class="text-sm">
-                    <strong style="color: var(--quantum-yellow)">Limited Time:</strong> Available only during SUPER CASHBALL event
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Weapon Changes Section -->
-          <section class="mb-12">
-            <div class="section-header">
-              <span class="section-icon">⚔️</span>
-              <h2 class="text-3xl font-bold">Weapon Balance Changes</h2>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6">
-              <!-- KS-23 Hybrid -->
-              <div class="change-card">
-                <div class="flex justify-between items-start mb-4">
-                  <div class="flex items-center gap-3">
-                    <img src="../images/KS-23.webp" alt="KS-23" class="weapon-icon" />
-                    <div>
-                      <h3 class="text-xl font-bold mb-1">KS-23</h3>
-                      <div class="flex gap-2">
-                        <span class="change-type rework">HYBRID WEAPON</span>
-                        <span class="impact-badge high">HIGH IMPACT</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <p class="text-quantum-secondary mb-4">
-                  Now a hybrid weapon - hitscan up to 25m, projectile beyond. Best of both worlds.
-                </p>
-
-                <div class="space-y-2">
-                  <div class="stat-change">
-                    <span class="text-sm">0-25m range:</span>
-                    <span class="stat-after buff">Hitscan (instant)</span>
-                  </div>
-                  <div class="stat-change">
-                    <span class="text-sm">25m+ range:</span>
-                    <span class="stat-after">Projectile (travel time)</span>
-                  </div>
-                </div>
-
-                <div class="mt-4 p-3 bg-black/30 rounded-lg">
-                  <p class="text-sm">
-                    <strong>💥 Meta Impact:</strong> More reliable at close-medium range while maintaining long-range potential.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Sword Buff -->
-              <div class="change-card">
-                <div class="flex justify-between items-start mb-4">
-                  <div class="flex items-center gap-3">
-                    <img src="../images/Sword.webp" alt="Sword" class="weapon-icon" />
-                    <div>
-                      <h3 class="text-xl font-bold mb-1">Sword</h3>
-                      <div class="flex gap-2">
-                        <span class="change-type buff">DAMAGE BUFF</span>
-                        <span class="impact-badge medium">MEDIUM IMPACT</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <p class="text-quantum-secondary mb-4">
-                  Damage buffed significantly but lunge rotation clamped to prevent 180° turns.
-                </p>
-
-                <div class="space-y-2">
-                  <div class="stat-change">
-                    <span class="text-sm">Primary damage:</span>
-                    <span class="stat-before">74</span>
-                    <span>→</span>
-                    <span class="stat-after buff">88 (+19%)</span>
-                  </div>
-                  <div class="stat-change">
-                    <span class="text-sm">Secondary damage:</span>
-                    <span class="stat-before">105</span>
-                    <span>→</span>
-                    <span class="stat-after buff">120 (+14%)</span>
-                  </div>
-                  <div class="stat-change">
-                    <span class="text-sm">Lunge rotation:</span>
-                    <span class="stat-after nerf">Clamped to 40°</span>
-                  </div>
-                </div>
-
-                <div class="mt-4 p-3 bg-black/30 rounded-lg">
-                  <p class="text-sm">
-                    <strong>⚔️ Meta Impact:</strong> More lethal in direct combat but requires better positioning.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Defibrillator Nerf -->
-              <div class="change-card">
-                <div class="flex justify-between items-start mb-4">
-                  <div class="flex items-center gap-3">
-                    <img src="../images/Defibrillator.webp" alt="Defibrillator" class="weapon-icon" />
-                    <div>
-                      <h3 class="text-xl font-bold mb-1">Defibrillator</h3>
-                      <div class="flex gap-2">
-                        <span class="change-type nerf">NERF</span>
-                        <span class="impact-badge low">LOW IMPACT</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <p class="text-quantum-secondary mb-4">
-                  Slightly slower charge time for more balanced revives.
-                </p>
-
-                <div class="space-y-2">
-                  <div class="stat-change">
-                    <span class="text-sm">Charge time:</span>
-                    <span class="stat-before">0.8s</span>
-                    <span>→</span>
-                    <span class="stat-after nerf">1.0s (+25%)</span>
-                  </div>
-                </div>
-
-                <div class="mt-4 p-3 bg-black/30 rounded-lg">
-                  <p class="text-sm">
-                    <strong>💉 Meta Impact:</strong> 0.2s longer revives give enemies more counterplay opportunity.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Melee Weapon Buffs -->
-              <div class="change-card">
-                <div class="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 class="text-xl font-bold mb-1">Melee Weapon Improvements</h3>
-                    <div class="flex gap-2">
-                      <span class="change-type buff">MAJOR BUFFS</span>
-                      <span class="impact-badge high">HIGH IMPACT</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <p class="text-quantum-secondary mb-4">
-                  Significant hit detection improvements across all melee weapons.
-                </p>
-
-                <div class="space-y-3">
-                  <div class="p-3 bg-black/20 rounded">
-                    <div class="flex items-center gap-2 mb-1">
-                      <img src="../images/Dagger.webp" alt="Dagger" class="w-6 h-6" />
-                      <strong>Dagger</strong>
-                    </div>
-                    <p class="text-sm text-quantum-secondary">Hit detection improved by 40%</p>
-                  </div>
-
-                  <div class="p-3 bg-black/20 rounded">
-                    <div class="flex items-center gap-2 mb-1">
-                      <img src="../images/Dual_Blades.webp" alt="Dual Blades" class="w-6 h-6" />
-                      <strong>Dual Blades</strong>
-                    </div>
-                    <p class="text-sm text-quantum-secondary">Range increased by 40cm</p>
-                  </div>
-
-                  <div class="p-3 bg-black/20 rounded">
-                    <div class="flex items-center gap-2 mb-1">
-                      <img src="../images/Riot_Shield.webp" alt="Riot Shield" class="w-6 h-6" />
-                      <strong>Riot Shield</strong>
-                    </div>
-                    <p class="text-sm text-quantum-secondary">Attack speed +10%, range +50cm</p>
-                  </div>
-
-                  <div class="p-3 bg-black/20 rounded">
-                    <div class="flex items-center gap-2 mb-1">
-                      <img src="../images/Sledgehammer.webp" alt="Sledgehammer" class="w-6 h-6" />
-                      <strong>Sledgehammer</strong>
-                    </div>
-                    <p class="text-sm text-quantum-secondary">Hit width increased by 80%</p>
-                  </div>
-                </div>
-
-                <div class="mt-4 p-3 bg-black/30 rounded-lg">
-                  <p class="text-sm">
-                    <strong>🛡️ Meta Impact:</strong> Melee builds finally viable with consistent hit registration.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Gameplay Changes Section -->
-          <section class="mb-12">
-            <div class="section-header">
-              <span class="section-icon">🎮</span>
-              <h2 class="text-3xl font-bold">Gameplay Changes</h2>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6">
-              <div class="change-card">
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="text-2xl">👻</span>
-                  <h3 class="text-xl font-bold">Nullifier Pass-Through</h3>
-                  <span class="change-type rework">MAJOR CHANGE</span>
-                </div>
-                <p class="text-quantum-secondary mb-3">
-                  Hitscan bullets now pass through Nullified players, preventing body-blocking exploits.
-                </p>
-                <div class="p-3 bg-black/30 rounded-lg">
-                  <p class="text-sm">
-                    <strong style="color: var(--quantum-cyan)">Meta Impact:</strong> Can't use Nullified teammates as shields anymore.
-                  </p>
-                </div>
-              </div>
-
-              <div class="change-card">
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="text-2xl">💰</span>
-                  <h3 class="text-xl font-bold">Cashout Overtime Change</h3>
-                  <span class="change-type fix">BALANCE</span>
-                </div>
-                <p class="text-quantum-secondary mb-3">
-                  Cash Boxes now despawn when overtime starts, preventing infinite stalling.
-                </p>
-                <div class="p-3 bg-black/30 rounded-lg">
-                  <p class="text-sm">
-                    <strong style="color: var(--quantum-yellow)">Strategic Impact:</strong> Must deposit cash before overtime or lose it.
-                  </p>
-                </div>
-              </div>
-
-              <div class="change-card">
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="text-2xl">🏥</span>
-                  <h3 class="text-xl font-bold">Team Healing Indicators</h3>
-                  <span class="change-type new">QOL</span>
-                </div>
-                <p class="text-quantum-secondary mb-3">
-                  H+ Infuser, Healing Emitter, and Healing Beam now show team colors for clarity.
-                </p>
-                <div class="p-3 bg-black/30 rounded-lg">
-                  <p class="text-sm">
-                    <strong style="color: var(--quantum-green)">Visual Clarity:</strong> Instantly identify friendly vs enemy healing sources.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Game-Changing Fixes Section -->
-          <section class="mb-12">
-            <div class="section-header">
-              <span class="section-icon">🔧</span>
-              <h2 class="text-3xl font-bold">Critical Fixes</h2>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6">
-              <div class="change-card">
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="text-2xl">🚨</span>
-                  <h3 class="text-xl font-bold">Server Crash Exploit Fixed</h3>
-                  <span class="change-type fix">CRITICAL</span>
-                </div>
-                <p class="text-quantum-secondary mb-3">
-                  Fixed a critical exploit that allowed malicious players to crash entire servers.
-                </p>
-                <div class="p-3 bg-black/30 rounded-lg">
-                  <p class="text-sm">
-                    <strong style="color: var(--quantum-red)">Zero Tolerance:</strong> All exploiters have been permanently banned.
-                  </p>
-                </div>
-              </div>
-
-              <div class="change-card">
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="text-2xl">⚔️</span>
-                  <h3 class="text-xl font-bold">Melee Hit Detection Overhaul</h3>
-                  <span class="change-type fix">MAJOR FIX</span>
-                </div>
-                <p class="text-quantum-secondary mb-3">
-                  Major improvements to all melee weapon hit detection systems.
-                </p>
-                <div class="p-3 bg-black/30 rounded-lg">
-                  <p class="text-sm">
-                    <strong style="color: var(--quantum-green)">Finally Fixed:</strong> No more ghost swings or missed hits at point blank.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-
-          <!-- Class Impact Analysis -->
-          <section class="mb-12">
-            <div class="section-header">
-              <span class="section-icon">📊</span>
-              <h2 class="text-3xl font-bold">Who Wins, Who Loses?</h2>
-            </div>
-
-            <div class="space-y-4">
-              <div class="change-card">
-                <div class="grid md:grid-cols-3 gap-4 items-center">
-                  <div class="flex items-center gap-3">
-                    <span class="class-badge light">LIGHT</span>
-                  </div>
-                  <div class="flex gap-2 flex-wrap">
-                    <span class="text-sm"><span style="color: var(--quantum-green)">Dagger & Sword buffed</span></span>
-                    <span class="text-sm"><span style="color: var(--quantum-cyan)">Voice customization</span></span>
-                  </div>
-                  <div class="text-right">
-                    <span class="font-bold" style="color: var(--quantum-green)">Big Win</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="change-card">
-                <div class="grid md:grid-cols-3 gap-4 items-center">
-                  <div class="flex items-center gap-3">
-                    <span class="class-badge medium">MEDIUM</span>
-                  </div>
-                  <div class="flex gap-2 flex-wrap">
-                    <span class="text-sm"><span style="color: var(--quantum-purple)">SUPER CASHBALL mode</span></span>
-                    <span class="text-sm"><span style="color: var(--quantum-red)">Defibrillator slower</span></span>
-                  </div>
-                  <div class="text-right">
-                    <span class="font-bold" style="color: var(--quantum-yellow)">Neutral</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="change-card">
-                <div class="grid md:grid-cols-3 gap-4 items-center">
-                  <div class="flex items-center gap-3">
-                    <span class="class-badge heavy">HEAVY</span>
-                  </div>
-                  <div class="flex gap-2 flex-wrap">
-                    <span class="text-sm"><span style="color: var(--quantum-green)">Melee weapons buffed</span></span>
-                    <span class="text-sm"><span style="color: var(--quantum-yellow)">KS-23 hybrid</span></span>
-                  </div>
-                  <div class="text-right">
-                    <span class="font-bold" style="color: var(--quantum-green)">Melee Meta</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Try These Again Section -->
-          <section class="mb-12">
-            <div class="change-card glow-effect">
-              <h2 class="text-2xl font-bold mb-4" style="color: var(--quantum-cyan)">
-                🔄 Give These Another Shot
-              </h2>
-              <div class="grid md:grid-cols-3 gap-4">
-                <div class="text-center p-4 bg-black/30 rounded-lg">
-                  <h3 class="font-bold mb-2">Melee Builds</h3>
-                  <p class="text-sm text-quantum-secondary">Hit detection fixed</p>
-                </div>
-                <div class="text-center p-4 bg-black/30 rounded-lg">
-                  <h3 class="font-bold mb-2">KS-23</h3>
-                  <p class="text-sm text-quantum-secondary">Hybrid weapon now</p>
-                </div>
-                <div class="text-center p-4 bg-black/30 rounded-lg">
-                  <h3 class="font-bold mb-2">Sword</h3>
-                  <p class="text-sm text-quantum-secondary">Big damage buff</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Generate Loadout CTA Section -->
-          <div class="text-center">
-            <a href="../index.html" 
-               class="inline-block px-8 py-4 bg-gradient-to-r from-quantum-purple to-quantum-blue text-white font-bold rounded-xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl">
-              🎰 Generate Loadout
-            </a>
-          </div>
         </div>
-      </main>
+    </section>
 
-      <!-- Footer -->
-      <footer class="text-center text-quantum-secondary">
-        <div class="container mx-auto px-4">
-          <p class="mb-2">The Finals Update 7.6.0: Midseason Update</p>
-          <p class="text-xs text-quantum-secondary/60">
-            Last updated: July 24, 2025 | Data from official patch notes
-          </p>
-          <p class="text-xs mt-2" style="color: var(--quantum-cyan)">
-            © 2025 TheFinalsLoadout.com | By Paul Takisaki
-          </p>
+    <!-- Quick Summary (Comparison Style) -->
+    <section class="comparison-section">
+        <div class="container">
+            <div class="comparison-header">
+                <h2>🎯 TL;DR - What Changed</h2>
+                <p>Why you should care about this update</p>
+            </div>
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <span class="comparison-icon">⚽</span>
+                    <div class="comparison-content">
+                        <strong style="color: var(--cyan)">SUPER CASHBALL mode</strong>
+                        <p>5v5 team-based ball scoring mayhem</p>
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <span class="comparison-icon">🎭</span>
+                    <div class="comparison-content">
+                        <strong style="color: var(--purple)">Voice customization</strong>
+                        <p>Choose voice separate from face</p>
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <span class="comparison-icon">💥</span>
+                    <div class="comparison-content">
+                        <strong style="color: var(--warning)">KS-23 hybrid weapon</strong>
+                        <p>Hitscan to 25m, projectile beyond</p>
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <span class="comparison-icon">⚔️</span>
+                    <div class="comparison-content">
+                        <strong style="color: var(--success)">Sword damage buffed</strong>
+                        <p>88/120 damage but less rotation</p>
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <span class="comparison-icon">🛡️</span>
+                    <div class="comparison-content">
+                        <strong style="color: var(--danger)">Melee hit detection fixed</strong>
+                        <p>Major improvements across all melee</p>
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <span class="comparison-icon">🚨</span>
+                    <div class="comparison-content">
+                        <strong style="color: var(--pink)">Server exploits fixed</strong>
+                        <p>Exploiters permanently banned</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </footer>
-    </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- New Content Section -->
+        <div class="section-header">
+            <span class="section-icon">🆕</span>
+            <h2>New Content</h2>
+        </div>
+        
+        <div class="meta-grid">
+            <!-- SUPER CASHBALL Card -->
+            <article class="weapon-card medium">
+                <span class="class-badge medium">NEW MODE</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">SUPER CASHBALL</h3>
+                    <span class="change-type rework">NEW GAME MODE</span>
+                </div>
+                <div class="ttk-hero">
+                    <div class="ttk-value neutral">5v5</div>
+                    <div class="ttk-label">Team-based Mayhem</div>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>CA$HBALL STADIUM map</strong>
+                        Brand new map designed for ball gameplay
+                    </div>
+                    <div class="change-item">
+                        <strong>Score by dunking</strong>
+                        Carry the ball to enemy goal zones
+                    </div>
+                    <div class="change-item">
+                        <strong>Tackle & steal mechanics</strong>
+                        Physical ball control gameplay
+                    </div>
+                </div>
+            </article>
+
+            <!-- Voice Customization Card -->
+            <article class="weapon-card light">
+                <span class="class-badge light">FEATURE</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">Voice Customization</h3>
+                    <span class="change-type buff">NEW FEATURE</span>
+                </div>
+                <div class="ttk-hero">
+                    <div class="ttk-value positive">100%</div>
+                    <div class="ttk-label">Freedom of Choice</div>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>Separate voice from face</strong>
+                        Mix and match any combination
+                    </div>
+                    <div class="change-item">
+                        <strong>All voices available</strong>
+                        No restrictions on combinations
+                    </div>
+                </div>
+            </article>
+
+            <!-- Stadium Variants Card -->
+            <article class="weapon-card medium">
+                <span class="class-badge medium">MAPS</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">Stadium Variants</h3>
+                    <span class="change-type rework">NEW MAPS</span>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>LAS VEGAS</strong>
+                        Stadium variant added
+                    </div>
+                    <div class="change-item">
+                        <strong>MONACO</strong>
+                        Stadium variant added
+                    </div>
+                    <div class="change-item">
+                        <strong>SEOUL</strong>
+                        Stadium variant added
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Weapon Balance Section -->
+        <div class="section-header">
+            <span class="section-icon">⚔️</span>
+            <h2>Weapon Balance</h2>
+        </div>
+
+        <div class="meta-grid">
+            <!-- KS-23 Card -->
+            <article class="weapon-card heavy">
+                <span class="class-badge heavy">HEAVY</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">KS-23</h3>
+                    <span class="change-type rework">REWORK</span>
+                </div>
+                <div class="ttk-hero">
+                    <div class="ttk-value neutral">HYBRID</div>
+                    <div class="ttk-label">Hitscan + Projectile</div>
+                </div>
+                <div class="ttk-bars">
+                    <div class="ttk-bar-row">
+                        <span class="ttk-bar-label">0-25m</span>
+                        <div class="ttk-bar-track">
+                            <div class="ttk-bar-fill buff" style="width: 100%"></div>
+                        </div>
+                        <span class="ttk-bar-value">Hitscan</span>
+                    </div>
+                    <div class="ttk-bar-row">
+                        <span class="ttk-bar-label">25m+</span>
+                        <div class="ttk-bar-track">
+                            <div class="ttk-bar-fill rework" style="width: 60%"></div>
+                        </div>
+                        <span class="ttk-bar-value">Projectile</span>
+                    </div>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>Hybrid system</strong>
+                        First weapon with dual firing modes
+                    </div>
+                    <div class="change-item">
+                        <strong>Consistent close range</strong>
+                        Hitscan ensures reliability up to 25m
+                    </div>
+                </div>
+            </article>
+
+            <!-- Sword Card -->
+            <article class="weapon-card light">
+                <span class="class-badge light">LIGHT</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">Sword</h3>
+                    <span class="change-type buff">BUFF</span>
+                </div>
+                <div class="ttk-hero">
+                    <div class="ttk-value s-tier">+19%</div>
+                    <div class="ttk-label">Damage Increase</div>
+                </div>
+                <div class="ttk-bars">
+                    <div class="ttk-bar-row">
+                        <span class="ttk-bar-label">Light Attack</span>
+                        <div class="ttk-bar-track">
+                            <div class="ttk-bar-fill buff" style="width: 88%"></div>
+                        </div>
+                        <span class="ttk-bar-value">74→88</span>
+                    </div>
+                    <div class="ttk-bar-row">
+                        <span class="ttk-bar-label">Heavy Attack</span>
+                        <div class="ttk-bar-track">
+                            <div class="ttk-bar-fill buff" style="width: 100%"></div>
+                        </div>
+                        <span class="ttk-bar-value">105→120</span>
+                    </div>
+                    <div class="ttk-bar-row">
+                        <span class="ttk-bar-label">Rotation</span>
+                        <div class="ttk-bar-track">
+                            <div class="ttk-bar-fill nerf" style="width: 30%"></div>
+                        </div>
+                        <span class="ttk-bar-value">-50%</span>
+                    </div>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>Light attack buffed</strong>
+                        74 → 88 damage per swing
+                    </div>
+                    <div class="change-item">
+                        <strong>Heavy attack buffed</strong>
+                        105 → 120 damage per swing
+                    </div>
+                    <div class="change-item">
+                        <strong>Rotation reduced</strong>
+                        Less tracking during swings
+                    </div>
+                </div>
+            </article>
+
+            <!-- Melee Improvements Card -->
+            <article class="weapon-card medium">
+                <span class="class-badge medium">ALL CLASSES</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">All Melee Weapons</h3>
+                    <span class="change-type buff">FIXED</span>
+                </div>
+                <div class="ttk-hero">
+                    <div class="ttk-value positive">100%</div>
+                    <div class="ttk-label">Hit Detection Fixed</div>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>Hit detection improved</strong>
+                        Major fixes to registration issues
+                    </div>
+                    <div class="change-item">
+                        <strong>Consistency increased</strong>
+                        More reliable damage application
+                    </div>
+                    <div class="change-item">
+                        <strong>Affects all melee</strong>
+                        Sledgehammer, Sword, Dagger, Dual Blades
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Gameplay Changes Section -->
+        <div class="section-header">
+            <span class="section-icon">🎮</span>
+            <h2>Gameplay Changes</h2>
+        </div>
+
+        <div class="meta-grid">
+            <!-- Nullifier Pass-Through Card -->
+            <article class="weapon-card medium">
+                <span class="class-badge medium">GAMEPLAY</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">Nullifier Pass-Through</h3>
+                    <span class="change-type rework">MAJOR CHANGE</span>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>Hitscan bullets pass through</strong>
+                        Nullified players can't body-block anymore
+                    </div>
+                    <div class="change-item">
+                        <strong>Meta Impact</strong>
+                        Can't use Nullified teammates as shields
+                    </div>
+                </div>
+            </article>
+
+            <!-- Cashout Overtime Card -->
+            <article class="weapon-card light">
+                <span class="class-badge light">BALANCE</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">Cashout Overtime</h3>
+                    <span class="change-type buff">FIXED</span>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>Cash Boxes despawn</strong>
+                        When overtime starts, preventing stalling
+                    </div>
+                    <div class="change-item">
+                        <strong>Strategic Impact</strong>
+                        Must deposit cash before overtime or lose it
+                    </div>
+                </div>
+            </article>
+
+            <!-- Team Healing Indicators Card -->
+            <article class="weapon-card heavy">
+                <span class="class-badge heavy">QOL</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">Team Healing Indicators</h3>
+                    <span class="change-type buff">NEW</span>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>Color-coded healing</strong>
+                        H+ Infuser, Healing Emitter, Healing Beam
+                    </div>
+                    <div class="change-item">
+                        <strong>Visual Clarity</strong>
+                        Instantly identify friendly vs enemy healing
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Bug Fixes Section -->
+        <div class="section-header">
+            <span class="section-icon">🔧</span>
+            <h2>Bug Fixes & Improvements</h2>
+        </div>
+
+        <div class="meta-grid">
+            <!-- Server Exploit Fix Card -->
+            <article class="weapon-card heavy">
+                <span class="class-badge heavy">CRITICAL</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">Server Exploit</h3>
+                    <span class="change-type nerf">FIXED</span>
+                </div>
+                <div class="ttk-hero">
+                    <div class="ttk-value negative">BANNED</div>
+                    <div class="ttk-label">Exploiters Removed</div>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>Critical exploit patched</strong>
+                        Server crashing vulnerability fixed
+                    </div>
+                    <div class="change-item">
+                        <strong>Permanent bans issued</strong>
+                        All exploiters have been banned
+                    </div>
+                    <div class="change-item">
+                        <strong>Zero tolerance</strong>
+                        Future exploiters will be instantly banned
+                    </div>
+                </div>
+            </article>
+
+            <!-- General Fixes Card -->
+            <article class="weapon-card light">
+                <span class="class-badge light">FIXES</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">General Improvements</h3>
+                    <span class="change-type buff">FIXED</span>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>Contract fixes</strong>
+                        Eliminated negative contract values
+                    </div>
+                    <div class="change-item">
+                        <strong>Seasonal rewards</strong>
+                        Fixed missing S6 ranked rewards
+                    </div>
+                    <div class="change-item">
+                        <strong>UI improvements</strong>
+                        Various interface fixes and polish
+                    </div>
+                    <div class="change-item">
+                        <strong>Performance</strong>
+                        Optimization for smoother gameplay
+                    </div>
+                </div>
+            </article>
+        </div>
+        <!-- Who Wins, Who Loses? Section -->
+        <div class="section-header">
+            <span class="section-icon">📊</span>
+            <h2>Who Wins, Who Loses?</h2>
+        </div>
+
+        <div class="meta-grid">
+            <!-- Light Class Analysis -->
+            <article class="weapon-card light">
+                <span class="class-badge light">LIGHT</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">Light Class</h3>
+                    <span class="change-type buff">BIG WIN</span>
+                </div>
+                <div class="ttk-hero">
+                    <div class="ttk-value positive">WIN</div>
+                    <div class="ttk-label">Melee Meta Returns</div>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>Sword damage buffed</strong>
+                        88/120 damage makes it viable again
+                    </div>
+                    <div class="change-item">
+                        <strong>Dagger hit detection fixed</strong>
+                        40% improvement in registration
+                    </div>
+                    <div class="change-item">
+                        <strong>Voice customization</strong>
+                        More personalization options
+                    </div>
+                </div>
+            </article>
+
+            <!-- Medium Class Analysis -->
+            <article class="weapon-card medium">
+                <span class="class-badge medium">MEDIUM</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">Medium Class</h3>
+                    <span class="change-type rework">NEUTRAL</span>
+                </div>
+                <div class="ttk-hero">
+                    <div class="ttk-value neutral">EVEN</div>
+                    <div class="ttk-label">Balanced Changes</div>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>SUPER CASHBALL mode</strong>
+                        New game mode to enjoy
+                    </div>
+                    <div class="change-item">
+                        <strong>Defibrillator slower</strong>
+                        Minor nerf to revive speed
+                    </div>
+                    <div class="change-item">
+                        <strong>Riot Shield buffed</strong>
+                        +10% attack speed, +50cm range
+                    </div>
+                </div>
+            </article>
+
+            <!-- Heavy Class Analysis -->
+            <article class="weapon-card heavy">
+                <span class="class-badge heavy">HEAVY</span>
+                <div class="weapon-header">
+                    <h3 class="weapon-name">Heavy Class</h3>
+                    <span class="change-type buff">MELEE META</span>
+                </div>
+                <div class="ttk-hero">
+                    <div class="ttk-value positive">WIN</div>
+                    <div class="ttk-label">Sledgehammer Viable</div>
+                </div>
+                <div class="change-details">
+                    <div class="change-item">
+                        <strong>KS-23 hybrid system</strong>
+                        Best of both worlds weapon
+                    </div>
+                    <div class="change-item">
+                        <strong>Sledgehammer hit width +80%</strong>
+                        Much easier to land hits
+                    </div>
+                    <div class="change-item">
+                        <strong>All melee weapons buffed</strong>
+                        Hit detection finally works
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Give These Another Shot Section -->
+        <div class="comparison-section" style="margin-top: 3rem;">
+            <div class="container">
+                <div class="comparison-header">
+                    <h2>🔄 Give These Another Shot</h2>
+                    <p>Previously weak options now worth trying</p>
+                </div>
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <span class="comparison-icon">⚔️</span>
+                        <div class="comparison-content">
+                            <strong style="color: var(--cyan)">Melee Builds</strong>
+                            <p>Hit detection finally fixed - all melee weapons are viable</p>
+                        </div>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-icon">💥</span>
+                        <div class="comparison-content">
+                            <strong style="color: var(--purple)">KS-23</strong>
+                            <p>Hybrid hitscan/projectile system makes it versatile</p>
+                        </div>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-icon">🗡️</span>
+                        <div class="comparison-content">
+                            <strong style="color: var(--pink)">Sword</strong>
+                            <p>Big damage buff (88/120) makes it competitive</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer style="text-align:center;padding:3rem 1rem;color:var(--text-dim);margin-top:4rem;border-top:1px solid rgba(255,255,255,0.1);">
+        <p>The Finals Update 7.6.0: Midseason Update</p>
+        <p style="font-size: 0.875rem; margin-top: 0.5rem;">Last updated: July 24, 2025 | Data from official patch notes</p>
+        <p style="font-size: 0.875rem; margin-top: 0.5rem; color: var(--cyan);">© 2025 TheFinalsLoadout.com | By Paul Takisaki</p>
+    </footer>
 
     <script>
-      // Particle effects (matching meta-weapons page)
-      function createParticle() {
-        const particle = document.createElement("div");
-        particle.className = "particle";
-        particle.style.left = Math.random() * window.innerWidth + "px";
-        particle.style.top = Math.random() * window.innerHeight + "px";
-        particle.style.animationDuration = Math.random() * 20 + 10 + "s";
+        // Filter functionality
+        const filterChips = document.querySelectorAll('.filter-chip');
+        const weaponCards = document.querySelectorAll('.weapon-card');
 
-        const colors = [
-          "var(--quantum-cyan)",
-          "var(--quantum-purple)",
-          "var(--quantum-pink)",
-        ];
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        particle.style.background = color;
-        particle.style.boxShadow = `0 0 6px ${color}`;
-
-        document.body.appendChild(particle);
-
-        particle.addEventListener("animationend", () => {
-          particle.remove();
+        filterChips.forEach(chip => {
+            chip.addEventListener('click', function() {
+                filterChips.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                
+                if (filter === 'all') {
+                    weaponCards.forEach(card => card.style.display = 'block');
+                } else {
+                    weaponCards.forEach(card => {
+                        // Filter logic based on content
+                        const shouldShow = checkCardFilter(card, filter);
+                        card.style.display = shouldShow ? 'block' : 'none';
+                    });
+                }
+            });
         });
-      }
 
-      // Create particles periodically
-      setInterval(createParticle, 2000);
-
-      // Add some interactivity
-      document.querySelectorAll('.change-card').forEach(card => {
-        card.addEventListener('click', function() {
-          this.style.transform = 'scale(0.98)';
-          setTimeout(() => {
-            this.style.transform = '';
-          }, 100);
-        });
-      });
+        function checkCardFilter(card, filter) {
+            const changeType = card.querySelector('.change-type');
+            if (!changeType) return false;
+            
+            const typeText = changeType.textContent.toLowerCase();
+            
+            switch(filter) {
+                case 'buffs':
+                    return changeType.classList.contains('buff');
+                case 'nerfs':
+                    return changeType.classList.contains('nerf');
+                case 'new-content':
+                    return typeText.includes('new');
+                case 'fixes':
+                    return typeText.includes('fix');
+                default:
+                    return true;
+            }
+        }
     </script>
-
-    <!-- AI Chat Widget -->
-    <script src="../js/chat-widget.js" defer></script>
   </body>
 </html>
