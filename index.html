@@ -534,7 +534,7 @@
           transform: scale(1.02) !important;
         }
 
-        /* Secondary Filter Button */
+        /* Secondary Filter Button - Updated with pill shape and gradient border */
         .secondary-filter-button {
           width: auto;
           min-width: 200px;
@@ -543,8 +543,8 @@
           font-size: 0.9rem;
           font-weight: 600;
           letter-spacing: 0.05em;
-          border: 2px solid rgba(255, 183, 0, 0.4);
-          border-radius: 8px;
+          border: none !important;
+          border-radius: 100px !important; /* Pill shape */
           background: linear-gradient(
             135deg,
             rgba(123, 47, 227, 0.1),
@@ -560,17 +560,39 @@
           transition: all 0.3s ease;
           backdrop-filter: blur(10px);
           box-shadow: 0 2px 10px rgba(255, 183, 0, 0.2);
+          position: relative !important;
+          overflow: hidden !important;
+        }
+
+        /* Gradient border effect */
+        .secondary-filter-button::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          padding: 2px;
+          border-radius: 100px;
+          background: linear-gradient(135deg, rgba(0, 243, 255, 0.6), rgba(255, 20, 147, 0.6));
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          pointer-events: none;
+          transition: opacity 0.3s ease;
+          opacity: 0.5;
+          z-index: -1;
         }
 
         .secondary-filter-button:hover {
           transform: translateY(-2px);
-          border-color: rgba(255, 183, 0, 0.7);
           background: linear-gradient(
             135deg,
             rgba(123, 47, 227, 0.2),
             rgba(30, 144, 255, 0.2)
           );
           box-shadow: 0 4px 20px rgba(255, 183, 0, 0.4);
+        }
+        
+        .secondary-filter-button:hover::before {
+          opacity: 0.8;
         }
 
         .secondary-filter-button:active {
@@ -1146,20 +1168,31 @@
 
     <!-- Preload critical above-the-fold CSS -->
     <link rel="preload" href="css/quantum-design-system.css" as="style" />
+    <link rel="preload" href="style.css" as="style" />
     
-    <!-- Quantum Design System -->
+    <!-- Critical CSS - load immediately -->
     <link rel="stylesheet" href="css/quantum-design-system.css" />
-
-    <!-- Full Styles -->
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="styles/casino-styles.css" />
-    <link rel="stylesheet" href="styles/overlay-system.css" />
-    <!-- Modern Visual Update - Safe overrides only -->
-    <link rel="stylesheet" href="modern-update.css" />
-    <link rel="stylesheet" href="styles/slot-machine.css" />
-    <link rel="stylesheet" href="css/filters.css" />
-    <link rel="stylesheet" href="css/mobile-performance.css" />
-    <link rel="stylesheet" href="styles/hotfix.css" />
+
+    <!-- Non-critical CSS - load asynchronously -->
+    <link rel="preload" href="styles/casino-styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="styles/overlay-system.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="modern-update.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="styles/slot-machine.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/filters.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/mobile-performance.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="styles/hotfix.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- Fallback for browsers without JavaScript -->
+    <noscript>
+      <link rel="stylesheet" href="styles/casino-styles.css" />
+      <link rel="stylesheet" href="styles/overlay-system.css" />
+      <link rel="stylesheet" href="modern-update.css" />
+      <link rel="stylesheet" href="styles/slot-machine.css" />
+      <link rel="stylesheet" href="css/filters.css" />
+      <link rel="stylesheet" href="css/mobile-performance.css" />
+      <link rel="stylesheet" href="styles/hotfix.css" />
+    </noscript>
   </head>
 
   <body class="casino-mode">
@@ -2354,9 +2387,9 @@
     <!-- Global Overlay Container -->
     <div id="overlay-root" class="overlay-root"></div>
 
-    <!-- New Slot Machine Implementation -->
-    <script src="js/slot-machine.js"></script>
-    <script src="js/slot-integration.js"></script>
+    <!-- New Slot Machine Implementation - deferred for performance -->
+    <script src="js/slot-machine.js" defer></script>
+    <script src="js/slot-integration.js" defer></script>
 
     <!-- rel noopener noreferrer safeguard for external links -->
     <script>
