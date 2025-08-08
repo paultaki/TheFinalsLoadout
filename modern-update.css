@@ -192,34 +192,97 @@ body {
 }
 
 /* ============================================= 
-   6. CLASS BADGES UPDATE
-   Using new color system
+   6. CLASS BADGES UPDATE - IMPROVED READABILITY
+   Better contrast and visibility
    ============================================= */
+/* Base class badge styling for better readability */
+.badge,
+.class-badge,
+.history-class-badge {
+  /* Ensure text is always readable */
+  font-weight: 700 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+  letter-spacing: 0.05em !important;
+  padding: 4px 12px !important;
+  border-radius: 20px !important;
+  text-transform: uppercase !important;
+}
+
 .badge.light,
 .class-badge.light {
-  background: linear-gradient(135deg, var(--modern-cyan), #00d4ff) !important;
-  color: var(--modern-dark-bg) !important;
-  box-shadow: 0 2px 10px rgba(0, 243, 255, 0.3) !important;
+  background: linear-gradient(135deg, #4FC3F7, #29B6F6) !important; /* Brighter cyan */
+  color: #000000 !important; /* Black text on light background for contrast */
+  box-shadow: 0 2px 10px rgba(79, 195, 247, 0.4) !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) !important; /* Light shadow for black text */
 }
 
 .badge.medium,
 .class-badge.medium {
-  background: linear-gradient(135deg, var(--modern-purple), #9b59f6) !important;
-  color: white !important;
-  box-shadow: 0 2px 10px rgba(123, 47, 227, 0.3) !important;
+  background: linear-gradient(135deg, #9C27B0, #8E24AA) !important; /* Darker purple for better contrast */
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(156, 39, 176, 0.4) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important; /* Stronger shadow for readability */
+  font-weight: 700 !important;
 }
 
 .badge.heavy,
 .class-badge.heavy {
-  background: linear-gradient(135deg, var(--modern-pink), #ff3366) !important;
-  color: white !important;
-  box-shadow: 0 2px 10px rgba(255, 20, 147, 0.3) !important;
+  background: linear-gradient(135deg, #FF1744, #E91E63) !important; /* Bright red/pink */
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(255, 23, 68, 0.4) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Alternative bordered style for even better readability */
+.class-badge.alt-style {
+  background: rgba(20, 20, 30, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 2px solid !important;
+  color: #ffffff !important;
+}
+
+.class-badge.light.alt-style {
+  border-color: #4FC3F7 !important;
+  color: #4FC3F7 !important;
+  box-shadow: inset 0 0 10px rgba(79, 195, 247, 0.3), 0 0 20px rgba(79, 195, 247, 0.2) !important;
+  text-shadow: 0 0 10px rgba(79, 195, 247, 0.5) !important;
+}
+
+.class-badge.medium.alt-style {
+  border-color: #AB47BC !important;
+  color: #AB47BC !important;
+  box-shadow: inset 0 0 10px rgba(171, 71, 188, 0.3), 0 0 20px rgba(171, 71, 188, 0.2) !important;
+  text-shadow: 0 0 10px rgba(171, 71, 188, 0.5) !important;
+}
+
+.class-badge.heavy.alt-style {
+  border-color: #FF1744 !important;
+  color: #FF1744 !important;
+  box-shadow: inset 0 0 10px rgba(255, 23, 68, 0.3), 0 0 20px rgba(255, 23, 68, 0.2) !important;
+  text-shadow: 0 0 10px rgba(255, 23, 68, 0.5) !important;
 }
 
 /* ============================================= 
    7. LOADOUT HISTORY CARDS
    Glass morphism effect, preserve structure
    ============================================= */
+/* History number and timestamp styling */
+.history-number,
+.loadout-number {
+  color: #888 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  opacity: 0.9 !important;
+}
+
+.history-time,
+.time-ago {
+  color: #666 !important;
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  opacity: 0.8 !important;
+  margin-left: 0.5rem !important;
+}
 .history-item {
   /* Glass morphism effect */
   background: rgba(26, 26, 46, 0.6) !important;
