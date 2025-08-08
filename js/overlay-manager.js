@@ -144,7 +144,7 @@ function showRevealCard(options) {
       setTimeout(() => {
         clearOverlay();
         resolve();
-      }, 300);
+      }, 150); // Reduced for snappier transition
     }, duration);
   });
 }
@@ -592,9 +592,9 @@ async function showSpinWheelOverlay() {
                 isJackpot: true,
                 classWeight: null, // No class selection - will proceed to roulette
               });
-            }, 300);
+            }, 150); // Reduced for faster transition
           });
-        }, 2000); // Standard 2 second delay for jackpot
+        }, 800); // Reduced from 2000ms for snappier response
       } else {
         // Cleanup and resolve after delay for non-jackpot
         setTimeout(() => {
@@ -614,8 +614,8 @@ async function showSpinWheelOverlay() {
               spins: result.spins,
               isJackpot: false,
             });
-          }, 300);
-        }, 3000); // Extra 1 second pause to show winning card
+          }, 150); // Reduced for faster transition
+        }, 1200); // Reduced from 3000ms for faster transition
       }
     };
 
@@ -783,9 +783,9 @@ async function showSpinWheelOverlay() {
 
       // Auto-start spin after 1 second
       setTimeout(() => {
-        console.log("🎰 Auto-starting spin wheel after 1 second delay...");
+        console.log("🎰 Auto-starting spin wheel after shorter delay...");
         spin();
-      }, 1000);
+      }, 500); // Reduced from 1000ms for quicker auto-start
     });
 
     // Start idle animation
@@ -854,8 +854,8 @@ function showJackpotModal(spins) {
         setTimeout(() => {
           clearOverlay();
           resolve(null); // No class selected - will proceed to roulette
-        }, 300);
-    }, 2500); // Show jackpot message for 2.5 seconds, then auto-proceed
+        }, 150); // Reduced for faster transition
+    }, 1500); // Reduced from 2500ms for faster flow
   });
 }
 
@@ -1508,8 +1508,8 @@ async function showClassRouletteOverlay() {
           }, 500);
           
           resolve(winner);
-        }, 300);
-      }, 2000); // Extra 0.5 seconds pause to show winning class
+        }, 150); // Reduced for faster transition
+      }, 800); // Reduced from 2000ms for snappier transition
     };
 
     // Start the spin
@@ -1551,8 +1551,8 @@ async function showClassRouletteOverlay() {
       backdrop.classList.add("active");
       rouletteContainer.classList.add("active");
 
-      // Auto-start after 1 second
-      setTimeout(startSpin, 1000);
+      // Auto-start after shorter delay
+      setTimeout(startSpin, 500); // Reduced from 1000ms
     });
   });
 }
@@ -1619,7 +1619,7 @@ async function showClassPickerOverlay() {
           setTimeout(() => {
             clearOverlay();
             resolve(selectedClass);
-          }, 300);
+          }, 150); // Reduced for faster transition
         }, 500);
       });
     });
@@ -1632,6 +1632,8 @@ async function showClassPickerOverlay() {
 
 async function startLoadoutGeneration() {
   console.log("🚀 Starting loadout generation flow...");
+  console.time('total-generation-time');
+  console.time('spin-to-class');
   console.log("📍 Overlay state:", overlayState);
   console.log(
     "📍 Overlay root exists:",
@@ -1680,17 +1682,21 @@ async function startLoadoutGeneration() {
       // Jackpot was already announced in showJackpotModal, skip duplicate reveal
     } else {
       // Normal path - show spin count reveal first
+      console.time('spin-reveal-card');
       await showRevealCard({
         title: spinResult.value,
         subtitle: `${spinResult.spins} ${
           spinResult.spins === 1 ? "SPIN" : "SPINS"
         }!`,
-        duration: 2000,
+        duration: 1200, // Reduced from 2000ms
         isJackpot: false,
       });
+      console.timeEnd('spin-reveal-card');
     }
 
     // Both jackpot and normal proceed to roulette
+    console.timeEnd('spin-to-class');
+    console.time('class-to-reveal');
     overlayState.selectedClass = await showClassRouletteOverlay();
 
     // Check if roulette was cancelled (no classes available)
@@ -1700,13 +1706,17 @@ async function startLoadoutGeneration() {
     }
 
     // Show class reveal
+    console.time('class-reveal-card');
     await showRevealCard({
       title: overlayState.selectedClass.toUpperCase(),
       subtitle: "CLASS SELECTED!",
-      duration: 2000,
+      duration: 1200, // Reduced from 2000ms
     });
+    console.timeEnd('class-reveal-card');
 
     // Step 4: Show slot machine overlay
+    console.timeEnd('class-to-reveal');
+    console.time('slot-machine-display');
     console.log("🎰 Starting slot machine overlay with:", {
       class: overlayState.selectedClass,
       spins: overlayState.spinCount,
@@ -1729,6 +1739,8 @@ async function startLoadoutGeneration() {
     }
 
     overlayState.isActive = false;
+    console.timeEnd('slot-machine-display');
+    console.timeEnd('total-generation-time');
   }
 }
 
@@ -1739,8 +1751,8 @@ async function startLoadoutGeneration() {
 async function showSlotMachineOverlay(selectedClass, spinCount, hasJackpotRespin = false) {
   console.log("🎰 Showing slot machine overlay...", { hasJackpotRespin });
   
-  // Add a small delay to ensure clean transition from roulette
-  await new Promise(resolve => setTimeout(resolve, 200));
+  // Minimal delay for clean transition
+  await new Promise(resolve => setTimeout(resolve, 100)); // Reduced from 200ms
   
   // Clear the transition flag as slot machine is starting
   window.isTransitioningToSlotMachine = false;
@@ -1887,8 +1899,8 @@ async function showSlotMachineOverlay(selectedClass, spinCount, hasJackpotRespin
                 setTimeout(() => {
                   clearOverlay();
                   resolve();
-                }, 300);
-              }, 2000); // Wait 2 seconds after animation completes
+                }, 150); // Reduced for faster transition
+              }, 800); // Reduced from 2000ms for faster completion
             }
 
             // Restore the original slot machine instance after completion
@@ -2078,7 +2090,7 @@ function showFinalLoadoutChoiceModal(loadout) {
 
       setTimeout(() => {
         clearOverlay();
-      }, 300);
+      }, 150); // Reduced for snappier closing
     };
 
     // Add event listeners
@@ -2197,7 +2209,7 @@ function startSlotMachine(selectedClass, spinCount) {
     } else {
       console.error("❌ No suitable slot machine function found!");
     }
-  }, 500); // Give time for overlay to clear
+  }, 200); // Reduced from 500ms for faster transition
 }
 
 // Update the selection display above the slot machine
@@ -2343,7 +2355,7 @@ window.executeManualSpinSequence = async function (selectedClass, totalSpins) {
 
     // Wait between spins (except after final spin)
     if (spinNum < totalSpins) {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 700)); // Reduced from 1500ms for snappier multi-spin
     }
   }
 
