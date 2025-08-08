@@ -14,12 +14,14 @@
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
     <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
 
-    <!-- Preload Critical Resources -->
+    <!-- Preload Critical Resources - Logo is LCP element -->
     <link
       rel="preload"
       href="images/the-finals-logo.webp"
       as="image"
+      type="image/webp"
       fetchpriority="high"
+      importance="high"
     />
     <!-- Removed unused preloads to reduce memory usage -->
     <link rel="preload" href="style.css" as="style" />
@@ -79,7 +81,16 @@
       }
     </script>
 
-    <!-- Fonts - Optimized Loading -->
+    <!-- Fonts - Optimized Loading with font-display: swap -->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
     <link
       rel="preload"
       as="style"
@@ -134,22 +145,66 @@
       /* Minimal Critical CSS - Only essential above-the-fold styles */
       *{box-sizing:border-box}
       body{margin:0;background:#1d1a21;color:#fff;font-family:Inter,system-ui,sans-serif;text-align:center;min-height:100vh}
-      .main-nav{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.8);padding:1rem 2rem;display:flex;justify-content:center;align-items:center}
+      .main-nav{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.8);padding:1rem 2rem;display:flex;justify-content:center;align-items:center;min-height:72px}
       .nav-links{display:flex;gap:2rem;align-items:center;justify-content:center}
       .nav-link{color:#fff;text-decoration:none;padding:.5rem 1rem;font-size:.9rem;font-weight:600;text-transform:uppercase}
       .container{max-width:960px;margin:0 auto;padding:0 15px}
-      .headerSection{padding:2rem 0}
-      .finals-logo{max-width:240px;height:auto;display:block;margin:0 auto}
-      .subTitle{font-size:1.5rem;margin:1rem 0;color:#ffb700}
+      .headerSection{padding:2rem 0;min-height:320px}
+      
+      /* Fix CLS for images - explicit dimensions */
+      .finals-logo{width:240px;height:240px;aspect-ratio:1/1;display:block;margin:0 auto}
+      .finals-logo-mobile{width:144px;height:144px;aspect-ratio:1/1}
+      img{max-width:100%;height:auto}
+      
+      /* Reserve space for dynamic content */
+      .subTitle{font-size:1.5rem;margin:1rem 0;color:#ffb700;min-height:2rem}
       h1,h2{font-family:"Bebas Neue",sans-serif;text-transform:uppercase}
-      .hero-button,.spin-button{padding:1rem 2rem;font-size:1.2rem;background:#7b2fe3;color:#fff;border:none;border-radius:50px;cursor:pointer;font-weight:700;text-transform:uppercase}
+      .hero-button,.spin-button{padding:1rem 2rem;font-size:1.2rem;background:#7b2fe3;color:#fff;border:none;border-radius:50px;cursor:pointer;font-weight:700;text-transform:uppercase;min-height:60px}
+      
+      /* Reserve space for main content areas */
+      #output{min-height:400px}
+      .selection-display{min-height:60px}
+      .slot-machine{min-height:500px}
+      
+      /* Prevent icon shifts */
+      svg{display:inline-block;vertical-align:middle;width:20px;height:20px}
+      .nav-button{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center}
+      
+      /* Font optimization - force immediate display with fallbacks */
+      .subTitle-mobile{font-family:"Bebas Neue",Impact,sans-serif;font-display:swap}
+      body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;font-display:swap}
+      
+      /* Lazy load placeholder styling */
+      .lazyload{filter:blur(5px);transition:filter 0.3s}
+      .lazyload.loaded{filter:blur(0)}
     </style>
+    
+    <!-- Tiny lazy load script for LCP optimization -->
+    <script>
+      // Immediate execution for fastest LCP
+      (function(){
+        const img=document.querySelector('.lazyload');
+        if(img&&img.dataset.src){
+          const newImg=new Image();
+          newImg.onload=()=>{
+            requestAnimationFrame(()=>{
+              img.src=img.dataset.src;
+              img.classList.remove('lazyload');
+              img.classList.add('loaded');
+            });
+          };
+          newImg.src=img.dataset.src;
+        }
+      })();
+    </script>
 
     <!-- Preload critical above-the-fold CSS -->
+    <link rel="preload" href="css/cls-fixes.css" as="style" />
     <link rel="preload" href="css/quantum-design-system.css" as="style" />
     <link rel="preload" href="style.css" as="style" />
     
     <!-- Critical CSS - load immediately -->
+    <link rel="stylesheet" href="css/cls-fixes.css" />
     <link rel="stylesheet" href="css/quantum-design-system.css" />
     <link rel="stylesheet" href="style.css" />
 
@@ -690,11 +745,12 @@
     <section class="headerSection">
       <div class="container">
         <img
-          src="images/the-finals-logo.webp"
+          src="data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoCAAEAAQAcJaQAA3AA/v3hAA=="
+          data-src="images/the-finals-logo.webp"
           alt="The Finals"
-          class="finals-logo-mobile"
+          class="finals-logo-mobile lazyload"
           width="144"
-          height="auto"
+          height="144"
         />
         <h1 class="subTitle-mobile">Random Loadout Generator</h1>
         <p class="season-update-notice">SEASON 7</p>
