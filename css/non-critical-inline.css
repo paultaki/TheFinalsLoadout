@@ -1,0 +1,317 @@
+/* =============================================
+   NON-CRITICAL INLINE STYLES
+   Moved from index.html for performance
+   ============================================= */
+
+/* Animations */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes flagPulse {
+  0%, 100% {
+    transform: scale(1) rotate(-5deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(-5deg);
+  }
+}
+
+@keyframes flagFadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.8);
+  }
+}
+
+/* Navigation Hover Effects */
+.nav-link:hover,
+.nav-link.active {
+  background-color: rgba(30, 144, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(30, 144, 255, 0.4);
+}
+
+.nav-link.active {
+  background-color: #00f0c0;
+  color: #0a0a0f;
+}
+
+/* Nav button hover states */
+.nav-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+  border-color: rgba(0, 243, 255, 0.5);
+}
+
+.nav-button:active {
+  transform: scale(0.95);
+}
+
+/* Filter button animations */
+.filter-toggle-button {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.filter-toggle-button:hover {
+  background: rgba(123, 47, 227, 0.2);
+  box-shadow: 0 0 20px rgba(123, 47, 227, 0.5);
+  border-color: rgba(123, 47, 227, 0.5);
+}
+
+.filter-toggle-button.active {
+  background: rgba(123, 47, 227, 0.3);
+  border-color: #7b2fe3;
+  box-shadow: 0 0 25px rgba(123, 47, 227, 0.6);
+}
+
+/* Secondary Filter Button with gradient border */
+.secondary-filter-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, rgba(0, 243, 255, 0.6), rgba(255, 20, 147, 0.6));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  opacity: 0.5;
+  z-index: -1;
+}
+
+.secondary-filter-button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(
+    135deg,
+    rgba(123, 47, 227, 0.2),
+    rgba(30, 144, 255, 0.2)
+  );
+  box-shadow: 0 4px 20px rgba(255, 183, 0, 0.4);
+}
+
+.secondary-filter-button:hover::before {
+  opacity: 0.8;
+}
+
+.secondary-filter-button:active {
+  transform: translateY(0);
+}
+
+/* Filter UI Complex Styles */
+.filter-sidebar {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 15, 25, 0.98),
+    rgba(25, 20, 35, 0.98)
+  );
+  box-shadow: 
+    -5px 0 20px rgba(0, 0, 0, 0.5),
+    -2px 0 10px rgba(123, 47, 227, 0.2);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Promo Flag Animation */
+.promo-flag {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: linear-gradient(135deg, #ff1493, #ff7b00);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 10px rgba(255, 20, 147, 0.5);
+  animation: flagPulse 2s ease-in-out infinite;
+  z-index: 10;
+  transform: rotate(-5deg);
+  transform-origin: center;
+  white-space: nowrap;
+}
+
+.promo-flag.dismissed {
+  animation: flagFadeOut 0.5s ease-out forwards;
+}
+
+/* Complex button effects */
+.hero-button {
+  background: linear-gradient(135deg, #7b2fe3, #1e90ff);
+  box-shadow: 
+    0 4px 20px rgba(123, 47, 227, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.hero-button:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 8px 30px rgba(123, 47, 227, 0.5),
+    0 0 60px rgba(255, 20, 147, 0.3);
+}
+
+/* Scroll Progress Bar */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, #00f0c0, #ff00ff);
+  box-shadow: 0 0 10px rgba(0, 240, 192, 0.5);
+  z-index: 10000;
+  transition: width 0.1s ease-out;
+}
+
+/* Return to Top Button */
+.return-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #7b2fe3, #1e90ff);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(123, 47, 227, 0.3);
+}
+
+.return-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.return-to-top:hover {
+  transform: translateY(-5px) scale(1.1);
+  box-shadow: 0 6px 30px rgba(123, 47, 227, 0.5);
+}
+
+/* All media queries */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 20px;
+  }
+  
+  .hero h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-nav {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav-links {
+    order: 2;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    gap: 0.5rem;
+  }
+
+  .nav-controls {
+    position: relative;
+    right: auto;
+    order: 1;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav-link {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-button {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .secondary-filter-button {
+    min-width: 180px !important;
+    height: 44px !important;
+    font-size: 0.85rem !important;
+    padding: 0.6rem 1.2rem !important;
+  }
+
+  .secondary-filter-button:active {
+    transform: scale(0.95) !important;
+    box-shadow: 0 1px 5px rgba(255, 183, 0, 0.2) !important;
+  }
+
+  .promo-flag {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .main-nav {
+    padding: 0.5rem;
+  }
+
+  .nav-link {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.4rem;
+  }
+
+  .nav-button {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+/* Hide flag on mobile since filter button doesn't exist on mobile */
+@media (max-width: 768px) {
+  .promo-flag {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
