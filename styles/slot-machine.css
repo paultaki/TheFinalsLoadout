@@ -978,6 +978,11 @@
   }
 }
 
+/* Class for countdown animation without forced reflow */
+.countdown-pulse {
+  animation: countdownPulse 0.6s ease-out;
+}
+
 /* Acceleration Blur */
 .slot-scroll {
   transition: filter 0.1s ease-out;

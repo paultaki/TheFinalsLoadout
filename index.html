@@ -852,15 +852,67 @@
     <!-- Configuration and Feature Flags -->
     <script src="js/config.js" defer></script>
 
-    <!-- Phase 3 Architecture Scripts -->
-    <script src="js/device-profiler.js" defer></script>
-    <script src="js/animation-loader.js" type="module" defer></script>
+    <!-- Progressive Loading System -->
+    <script type="module">
+      import progressiveLoader from './js/progressive-loader.js';
+      
+      // Initialize progressive loader
+      progressiveLoader.init().then(profile => {
+        console.log('✅ Progressive loader initialized:', profile);
+        
+        // Only load animations when needed
+        window.loadAnimations = async (type) => {
+          if (profile.isLowEnd || profile.isMobile) {
+            // Mobile uses built-in lightweight animations
+            return;
+          }
+          
+          // Desktop loads on-demand
+          switch(type) {
+            case 'spin':
+              await window.animationLoaders?.loadSpinWheel?.();
+              break;
+            case 'slot':
+              await window.animationLoaders?.loadSlotMachine?.();
+              break;
+          }
+        };
+      });
+    </script>
 
-    <!-- Scripts -->
-    <!-- ES Modules load in order -->
+    <!-- Core Scripts - Minimal initial load -->
+    <script src="js/device-profiler.js" defer></script>
     <script src="js/volume-control.js?v=1" defer></script>
-    <script src="js/roulette-animation.js?v=2" defer></script>
-    <script src="js/overlay-manager.js?v=2" defer></script>
+    
+    <!-- Heavy animations loaded on-demand when user interacts -->
+    <script>
+      // Lazy load animations on first user interaction
+      let animationsLoaded = false;
+      const loadHeavyAnimations = () => {
+        if (animationsLoaded) return;
+        animationsLoaded = true;
+        
+        // Load roulette animation
+        const rouletteScript = document.createElement('script');
+        rouletteScript.src = 'js/roulette-animation.js?v=2';
+        rouletteScript.defer = true;
+        document.head.appendChild(rouletteScript);
+        
+        // Load overlay manager
+        const overlayScript = document.createElement('script');
+        overlayScript.src = 'js/overlay-manager.js?v=2';
+        overlayScript.defer = true;
+        document.head.appendChild(overlayScript);
+        
+        console.log('🎯 Heavy animations loaded on interaction');
+      };
+      
+      // Load on first click or after 3 seconds
+      document.addEventListener('click', loadHeavyAnimations, { once: true });
+      setTimeout(loadHeavyAnimations, 3000);
+    </script>
+    
+    <!-- Main app -->
     <script type="module" src="app.js?v=24"></script>
 
     <!-- Non-module scripts -->

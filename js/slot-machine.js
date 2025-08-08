@@ -1479,11 +1479,22 @@ class SlotMachine {
     }
   }
 
-  // Create particle explosion effect
+  // Create particle explosion effect (optimized version)
   createParticleExplosion(element) {
-    const rect = element.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    // Cache dimensions or use dataset if available
+    let centerX, centerY;
+    
+    if (element.dataset.cachedX && element.dataset.cachedY) {
+      centerX = parseFloat(element.dataset.cachedX);
+      centerY = parseFloat(element.dataset.cachedY);
+    } else {
+      const rect = element.getBoundingClientRect();
+      centerX = rect.left + rect.width / 2;
+      centerY = rect.top + rect.height / 2;
+      // Cache for next time
+      element.dataset.cachedX = centerX;
+      element.dataset.cachedY = centerY;
+    }
 
     // Create multiple particles
     for (let i = 0; i < SlotMachine.VISUAL.PARTICLE_COUNT; i++) {
@@ -1545,9 +1556,10 @@ class SlotMachine {
         document.body.appendChild(overlay);
       }
 
-      // Force reflow then add active class for transition
-      overlay.offsetHeight;
-      overlay.classList.add("active");
+      // Use requestAnimationFrame for transition instead of forced reflow
+      requestAnimationFrame(() => {
+        overlay.classList.add("active");
+      });
 
       // Disable all buttons except current action
       document.querySelectorAll("button:not(.spinning)").forEach((btn) => {
@@ -1583,9 +1595,11 @@ class SlotMachine {
         spinButton.appendChild(badge);
       }
       badge.textContent = count;
-      badge.style.animation = "none";
-      badge.offsetHeight; // Force reflow
-      badge.style.animation = "countdownPulse 0.6s ease-out";
+      // Use class toggle for animation restart instead of forced reflow
+      badge.classList.remove("countdown-pulse");
+      requestAnimationFrame(() => {
+        badge.classList.add("countdown-pulse");
+      });
     } else if (badge) {
       badge.remove();
     }
@@ -1814,11 +1828,22 @@ class SlotMachine {
     });
   }
 
-  // Create particle explosion effect
+  // Create particle explosion effect (optimized to cache dimensions)
   createParticleExplosion(element, particleCount = 12) {
-    const rect = element.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    // Cache dimensions or use dataset if available
+    let centerX, centerY;
+    
+    if (element.dataset.cachedX && element.dataset.cachedY) {
+      centerX = parseFloat(element.dataset.cachedX);
+      centerY = parseFloat(element.dataset.cachedY);
+    } else {
+      const rect = element.getBoundingClientRect();
+      centerX = rect.left + rect.width / 2;
+      centerY = rect.top + rect.height / 2;
+      // Cache for next time
+      element.dataset.cachedX = centerX;
+      element.dataset.cachedY = centerY;
+    }
 
     for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement("div");
@@ -1874,10 +1899,20 @@ class SlotMachine {
     overlay.id = "slotSpotlight";
     document.body.appendChild(overlay);
 
-    // Move spotlight to slot machine
-    const slotRect = this.container.getBoundingClientRect();
-    const x = slotRect.left + slotRect.width / 2;
-    const y = slotRect.top + slotRect.height / 2;
+    // Use cached dimensions or calculate once
+    let x, y;
+    if (this.container.dataset.spotlightX && this.container.dataset.spotlightY) {
+      x = this.container.dataset.spotlightX;
+      y = this.container.dataset.spotlightY;
+    } else {
+      // Calculate spotlight position only once
+      const slotRect = this.container.getBoundingClientRect();
+      x = slotRect.left + slotRect.width / 2;
+      y = slotRect.top + slotRect.height / 2;
+      // Cache for future use
+      this.container.dataset.spotlightX = x;
+      this.container.dataset.spotlightY = y;
+    }
 
     overlay.style.setProperty("--spotlight-x", `${x}px`);
     overlay.style.setProperty("--spotlight-y", `${y}px`);

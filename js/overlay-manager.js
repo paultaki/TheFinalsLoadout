@@ -11,6 +11,9 @@ const overlayState = {
   isJackpot: false,
 };
 
+// Cached wheel dimensions to prevent reflows
+let wheelDimensionsCache = null;
+
 // Sound manager with relative paths
 const overlayAudio = {
   beep: new Audio("sounds/beep.mp3"),
@@ -366,8 +369,33 @@ async function showSpinWheelOverlay() {
       );
     }
 
-    // Get card height
+    // Cache wheel dimensions to prevent reflows during animation
+    const cacheWheelDimensions = () => {
+      const cards = wheelList.querySelectorAll(".card");
+      const frameRect = wheelFrame.getBoundingClientRect();
+      const firstCard = cards[0];
+      const cardHeight = firstCard ? firstCard.getBoundingClientRect().height + 10 : 110;
+      
+      wheelDimensionsCache = {
+        cardHeight: cardHeight,
+        frameTop: frameRect.top,
+        frameHeight: frameRect.height,
+        frameCenter: frameRect.top + frameRect.height / 2,
+        cardData: Array.from(cards).map((card, index) => ({
+          element: card,
+          height: card.getBoundingClientRect().height,
+          dataIndex: parseInt(card.getAttribute("data-index"))
+        }))
+      };
+      
+      return wheelDimensionsCache;
+    };
+
+    // Get card height (use cache if available)
     const getCardHeight = () => {
+      if (wheelDimensionsCache && wheelDimensionsCache.cardHeight) {
+        return wheelDimensionsCache.cardHeight;
+      }
       const card = wheelList.querySelector(".card");
       return card ? card.getBoundingClientRect().height + 10 : 110;
     };
@@ -490,31 +518,31 @@ async function showSpinWheelOverlay() {
       }
     };
 
-    // Find winning card
+    // Find winning card using cached dimensions and transform tracking
     const findWinningCard = () => {
-      const frameRect = wheelFrame.getBoundingClientRect();
-      const frameCenter = frameRect.top + frameRect.height / 2;
-
-      const cards = wheelList.querySelectorAll(".card");
-      let winningCard = null;
-      let result = null;
-
-      for (let i = 0; i < cards.length; i++) {
-        const card = cards[i];
-        const rect = card.getBoundingClientRect();
-        const cardCenter = rect.top + rect.height / 2;
-
-        if (Math.abs(cardCenter - frameCenter) < rect.height / 2) {
-          winningCard = card;
-          const baseCardCount = SPIN_CARDS.length; // Actual number of unique cards (8)
-          const dataIndex =
-            parseInt(card.getAttribute("data-index")) % baseCardCount;
-          result = SPIN_CARDS[dataIndex];
-          break;
-        }
+      // Use cached dimensions if available, otherwise calculate once
+      if (!wheelDimensionsCache) {
+        cacheWheelDimensions();
       }
+      
+      const { cardHeight, frameCenter } = wheelDimensionsCache;
+      const baseCardCount = SPIN_CARDS.length;
+      
+      // Get current transform from the wheel list
+      const transform = wheelList.style.transform;
+      const translateY = transform ? parseFloat(transform.match(/translateY\(([-\d.]+)px\)/)?.[1] || 0) : 0;
+      
+      // Calculate which card is in the center based on transform position
+      const currentOffset = Math.abs(translateY);
+      const cardIndex = Math.round(currentOffset / cardHeight) % (baseCardCount * 3);
+      const dataIndex = cardIndex % baseCardCount;
+      
+      // Get the winning card element
+      const cards = wheelList.querySelectorAll(".card");
+      let winningCard = cards[cardIndex] || cards[0];
+      let result = SPIN_CARDS[dataIndex] || SPIN_CARDS[0];
 
-      return { card: winningCard, result: result || SPIN_CARDS[0] };
+      return { card: winningCard, result: result };
     };
 
     // Handle spin stop
@@ -771,6 +799,9 @@ async function showSpinWheelOverlay() {
 
       // Remove glow
       wheelFrame.classList.remove("glowing");
+
+      // Cache dimensions before starting animation to prevent reflows
+      cacheWheelDimensions();
 
       // Start physics
       spinWheelState.animationId = requestAnimationFrame(updatePhysics);
