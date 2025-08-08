@@ -17,11 +17,10 @@
     <!-- Preload Critical Resources - Logo is LCP element -->
     <link
       rel="preload"
-      href="images/the-finals-logo.webp"
+      href="/images/the-finals-logo.webp"
       as="image"
       type="image/webp"
       fetchpriority="high"
-      importance="high"
     />
     <!-- Removed unused preloads to reduce memory usage -->
     <link rel="preload" href="style.css" as="style" />
@@ -173,30 +172,7 @@
       /* Font optimization - force immediate display with fallbacks */
       .subTitle-mobile{font-family:"Bebas Neue",Impact,sans-serif;font-display:swap}
       body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;font-display:swap}
-      
-      /* Lazy load placeholder styling */
-      .lazyload{filter:blur(5px);transition:filter 0.3s}
-      .lazyload.loaded{filter:blur(0)}
     </style>
-    
-    <!-- Tiny lazy load script for LCP optimization -->
-    <script>
-      // Immediate execution for fastest LCP
-      (function(){
-        const img=document.querySelector('.lazyload');
-        if(img&&img.dataset.src){
-          const newImg=new Image();
-          newImg.onload=()=>{
-            requestAnimationFrame(()=>{
-              img.src=img.dataset.src;
-              img.classList.remove('lazyload');
-              img.classList.add('loaded');
-            });
-          };
-          newImg.src=img.dataset.src;
-        }
-      })();
-    </script>
 
     <!-- Preload critical above-the-fold CSS -->
     <link rel="preload" href="css/cls-fixes.css" as="style" />
@@ -745,12 +721,13 @@
     <section class="headerSection">
       <div class="container">
         <img
-          src="data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoCAAEAAQAcJaQAA3AA/v3hAA=="
-          data-src="images/the-finals-logo.webp"
+          src="/images/the-finals-logo.webp"
           alt="The Finals"
-          class="finals-logo-mobile lazyload"
+          class="finals-logo-mobile"
           width="144"
           height="144"
+          loading="eager"
+          fetchpriority="high"
         />
         <h1 class="subTitle-mobile">Random Loadout Generator</h1>
         <p class="season-update-notice">SEASON 7</p>
