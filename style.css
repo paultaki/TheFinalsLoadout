@@ -3527,9 +3527,16 @@ body {
   font-size: 0.9rem;
 }
 
-.timestamp {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9rem;
+/* Updated timestamp styling for better visibility */
+.timestamp,
+.history-time,
+.time-ago,
+[class*="time"] {
+  color: #888 !important;
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  opacity: 0.8 !important;
+  text-transform: none !important;
 }
 
 .action-buttons {
@@ -3537,27 +3544,46 @@ body {
   gap: 0.5rem;
 }
 
-.action-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  padding: 0.5rem 1rem;
-  border-radius: 25px;
+/* Updated action button styling for history controls */
+.action-btn,
+.history-controls button,
+.history-actions button,
+.copy-button,
+.image-button {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 6px !important;
+  padding: 6px 12px !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  transition: all 0.2s ease !important;
+  backdrop-filter: blur(5px);
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.action-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+.action-btn:hover,
+.history-controls button:hover,
+.history-actions button:hover,
+.copy-button:hover,
+.image-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(0, 243, 255, 0.4) !important;
+  color: #00f3ff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(0, 243, 255, 0.2) !important;
+}
+
+/* Active state */
+.action-btn:active,
+.history-controls button:active,
+.history-actions button:active {
+  transform: translateY(0) !important;
 }
 
 .action-btn.copy-text::before {
