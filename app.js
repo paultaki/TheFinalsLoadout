@@ -172,7 +172,7 @@ const state = {
   selectedClass: null, // Deprecated - class selection removed
   isSpinning: false,
   currentSpin: 1,
-  totalSpins: 0,
+  totalSpins: 1, // Default to 1 spin
   selectedGadgets: new Set(),
   currentGadgetPool: new Set(),
   soundEnabled:
