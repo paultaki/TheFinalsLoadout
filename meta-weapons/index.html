@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Finals Meta Weapons</title>
   
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  
   <style>
     :root {
       --bg: #0a0f14;
@@ -21,6 +26,7 @@
       --light: #06b6d4;
       --medium: #8b5cf6;
       --heavy: #f97316;
+      --nav-bg: rgba(10, 15, 20, 0.95);
     }
     
     * { box-sizing: border-box; }
@@ -28,15 +34,96 @@
     body {
       background: var(--bg);
       color: var(--txt);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       margin: 0;
       line-height: 1.6;
+      padding-top: 60px; /* Space for sticky nav */
+    }
+    
+    /* Navigation */
+    .main-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+      padding: 0.75rem 1rem;
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    
+    .nav-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+    }
+    
+    .nav-link:hover {
+      color: var(--accent);
+    }
+    
+    .nav-link.active {
+      color: var(--accent);
     }
     
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
+      min-height: calc(100vh - 200px);
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      color: #888;
+      margin-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(10, 10, 15, 0.9);
+      position: relative;
+      z-index: 10;
+      font-size: 0.75rem;
+    }
+    
+    footer a {
+      color: #00f0c0;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    
+    footer a:hover {
+      opacity: 0.8;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
     }
     
     /* Header */
@@ -335,6 +422,23 @@
       color: var(--muted);
     }
     
+    /* Mobile Navigation */
+    @media (max-width: 768px) {
+      .nav-links {
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+      }
+      
+      .nav-link {
+        font-size: 0.875rem;
+      }
+      
+      body {
+        padding-top: 80px;
+      }
+    }
+    
     /* Mobile Layout */
     @media (max-width: 768px) {
       .container {
@@ -415,6 +519,89 @@
       }
     }
     
+    /* Scroll Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .scroll-reveal {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+      animation-fill-mode: both;
+    }
+    
+    .scroll-reveal-delay-1 {
+      animation-delay: 0.1s;
+    }
+    
+    .scroll-reveal-delay-2 {
+      animation-delay: 0.2s;
+    }
+    
+    .scroll-reveal-delay-3 {
+      animation-delay: 0.3s;
+    }
+    
+    .scroll-reveal-delay-4 {
+      animation-delay: 0.4s;
+    }
+    
+    .header {
+      opacity: 1 !important;
+      animation: fadeIn 1s ease forwards;
+      animation-fill-mode: both;
+    }
+    
+    .stat-card {
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; }
+    .stat-card:nth-child(3) { animation-delay: 0.3s; }
+    .stat-card:nth-child(4) { animation-delay: 0.4s; }
+    
+    .filters {
+      opacity: 0;
+      animation: slideInLeft 0.8s ease 0.5s forwards;
+    }
+    
+    .class-section {
+      opacity: 0;
+    }
+    
+    .class-section.visible {
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    
     /* Utility */
     .hidden { display: none; }
     .text-muted { color: var(--muted); }
@@ -422,15 +609,29 @@
   </style>
 </head>
 <body>
+  <!-- Navigation -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <div class="nav-links">
+        <a href="/" class="nav-link">LOADOUT GENERATOR</a>
+        <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
+        <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
+        <a href="/meta-weapons/" class="nav-link active">META WEAPONS</a>
+        <a href="/wt-progress/" class="nav-link">WT TRACKER (BETA)</a>
+      </div>
+    </div>
+  </nav>
+  
   <div class="container">
     <!-- Header -->
     <header class="header">
       <h1>The Finals Meta <span class="badge">7.6.0</span></h1>
       <p class="subtitle">Community sentiment and meta analysis • Data from Reddit, Discord, and tournament play</p>
+      <p class="subtitle" style="font-size: 0.75rem; color: #00f0c0; margin-top: 0.5rem;">Updated 8/8/25</p>
     </header>
     
     <!-- Quick Stats -->
-    <section class="quick-stats">
+    <section class="quick-stats scroll-reveal scroll-reveal-delay-1">
       <div class="stat-card">
         <div class="stat-label">Community Favorite</div>
         <div class="stat-value">FCAR</div>
@@ -454,7 +655,7 @@
     </section>
     
     <!-- Filters -->
-    <section class="filters">
+    <section class="filters scroll-reveal scroll-reveal-delay-2">
       <div class="filter-group">
         <button class="chip active" data-filter="all">All Weapons</button>
         <button class="chip" data-filter="meta">Meta Only</button>
@@ -539,6 +740,18 @@
       </div>
     </section>
   </div>
+  
+  <!-- Footer -->
+  <footer>
+    <p style="margin: 0 0 0.5rem 0;">
+      © 2025 TheFinalsLoadout.com | Created by 
+      <a href="https://www.paultakisaki.com/" rel="author">Paul Takisaki</a>
+    </p>
+    <div class="footer-links">
+      <a href="/legal/">Legal Disclaimer</a>
+      <a href="https://thefinalsloadout.com/feedback" style="color: #ffd700;">📝 Submit Feedback</a>
+    </div>
+  </footer>
   
   <script>
 // Complete weapon data from CSV with sentiment scores
@@ -691,6 +904,40 @@ document.querySelectorAll('th').forEach(th => {
 
 // Initial render
 renderAllWeapons();
+
+// Intersection Observer for scroll animations
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+};
+
+const scrollObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      scrollObserver.unobserve(entry.target);
+    }
+  });
+}, observerOptions);
+
+// Observe class sections for animation
+document.querySelectorAll('.class-section').forEach(section => {
+  scrollObserver.observe(section);
+});
+
+// Smooth scroll behavior
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
   </script>
 </body>
 </html>
