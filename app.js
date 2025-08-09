@@ -143,6 +143,12 @@ document.addEventListener("DOMContentLoaded", loadCounter);
 
 // Helper function to map item names to image filenames
 function getImagePath(itemName) {
+  // Ensure itemName is a string
+  if (!itemName || typeof itemName !== 'string') {
+    console.error('getImagePath received invalid input:', itemName);
+    return 'images/placeholder.webp';
+  }
+  
   // Special cases for weapons with inconsistent image names
   const imageMapping = {
     ".50 Akimbo": "50_Akimbo",
@@ -869,8 +875,20 @@ const displayLoadout = (classType) => {
           console.error("Slot machine error:", error);
           return;
         }
-        // Pass columns to finalizeSpin for backwards compatibility
-        finalizeSpin(results.columns);
+        // For ES6 module, pass the actual results
+        // The results object contains: weapon, specialization, gadgets
+        if (results && results.weapon) {
+          // Create array format that finalizeSpin expects
+          const items = [
+            results.weapon,
+            results.specialization,
+            ...results.gadgets
+          ];
+          finalizeSpin(items);
+        } else {
+          // Fallback to columns for backward compatibility
+          finalizeSpin(results.columns);
+        }
       },
       onSpinStart: () => {
         console.log("Spin animation started");
@@ -1816,10 +1834,14 @@ async function finalizeSpin(columns) {
     btn.style.pointerEvents = "none";
   });
 
-  // Check if items were passed directly (from overlay slot machine)
+  // Check if items were passed directly (from overlay slot machine or ES6 module)
   let finalItems = null;
 
-  if (columns && Array.isArray(columns) && columns.length >= 5) {
+  // Check if columns contains strings (from ES6 module results)
+  if (columns && Array.isArray(columns) && columns.length >= 5 && typeof columns[0] === 'string') {
+    console.log("📦 Using passed string items from ES6 module");
+    finalItems = columns;
+  } else if (columns && Array.isArray(columns) && columns.length >= 5) {
     console.log("📦 Using passed items data from overlay slot machine");
     finalItems = columns;
   } else {
@@ -1848,10 +1870,17 @@ async function finalizeSpin(columns) {
     if (finalItems) {
       // Items were passed directly - extract the names
       selectedItems = finalItems.map((item) => {
-        if (typeof item === "object" && item.name) {
+        // If it's already a string, use it directly
+        if (typeof item === "string") {
+          return item;
+        }
+        // If it's an object with a name property, extract it
+        if (typeof item === "object" && item && item.name) {
           return item.name;
         }
-        return item;
+        // Fallback
+        console.warn("Unknown item type:", item);
+        return item || "Unknown";
       });
       console.log("📦 Extracted items from passed data:", selectedItems);
     } else {
