@@ -326,7 +326,8 @@ let outputDiv;
 
 // Physics constants now imported from Constants.js
 
-const loadouts = {
+// Original hardcoded loadouts - will be replaced with compiled data
+let loadouts = {
   Light: {
     weapons: [
       "93R",
@@ -434,6 +435,28 @@ const loadouts = {
     ],
   },
 };
+
+// Load the compiled loadouts data
+async function loadCompiledLoadouts() {
+  try {
+    const response = await fetch('data/loadouts-simple.json');
+    if (response.ok) {
+      const compiledData = await response.json();
+      // Update the loadouts object with compiled data
+      loadouts = compiledData;
+      console.log('✅ Loaded compiled weapon data');
+      // Re-initialize filters if they're already rendered
+      if (typeof initializeFilters === 'function') {
+        initializeFilters();
+      }
+    } else {
+      console.log('Using original hardcoded loadouts');
+    }
+  } catch (error) {
+    console.error('Error loading compiled loadouts:', error);
+    console.log('Using original hardcoded loadouts');
+  }
+}
 
 // Function to get filtered loadouts based on checkbox selections
 function getFilteredLoadouts() {
@@ -2560,6 +2583,29 @@ async function generateRoast(
       else analysisSection.classList.add("low-score");
     }
 
+    // Add weapon patch badge if available
+    if (data.weaponPatch) {
+      const patchBadge = document.createElement('div');
+      patchBadge.className = 'patch-badge';
+      
+      if (data.weaponPatch === 'Buffed') {
+        patchBadge.textContent = 'Buffed S7';
+        patchBadge.classList.add('buffed');
+      } else if (data.weaponPatch === 'Nerfed') {
+        patchBadge.textContent = 'Nerfed S7';
+        patchBadge.classList.add('nerfed');
+      } else if (data.weaponPatch === 'New') {
+        patchBadge.textContent = 'New S7';
+        patchBadge.classList.add('new');
+      } else {
+        patchBadge.textContent = 'Unchanged';
+        patchBadge.classList.add('unchanged');
+      }
+      
+      // Insert patch badge after score badge
+      scoreBadge.parentNode.insertBefore(patchBadge, scoreBadge.nextSibling);
+    }
+
     // Add fallback indicator if API failed
     if (data.fallback) {
       analysisSection.classList.add("fallback");
@@ -4006,6 +4052,9 @@ const slotHistoryManager = new SlotHistoryManager();
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded");
+
+  // Load compiled weapon data first
+  loadCompiledLoadouts();
 
   // Clean up old cached data to prevent memory buildup
   cleanupOldCachedData();

@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:data": "node scripts/compile-weapon-data.cjs",
     "typecheck": "tsc --noEmit",
     "test": "jest --coverage",
     "test:visual": "percy exec -- playwright test",
@@ -28,6 +29,7 @@
     "@playwright/test": "^1.44.0",
     "@testing-library/jest-dom": "^6.1.5",
     "@types/jest": "^29.5.3",
+    "csv-parse": "^6.1.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "playwright": "^1.44.0",

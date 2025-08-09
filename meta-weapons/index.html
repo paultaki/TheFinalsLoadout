@@ -1,1947 +1,696 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Finals Meta Weapons</title>
+  
+  <style>
+    :root {
+      --bg: #0a0f14;
+      --panel: #101720;
+      --muted: #98a2b3;
+      --txt: #e6edf3;
+      --accent: #00e0ff;
+      --good: #22c55e;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --border: #1f2a37;
+      --hover: #141a24;
+      
+      --light: #06b6d4;
+      --medium: #8b5cf6;
+      --heavy: #f97316;
+    }
     
-    <!-- Performance Hints -->
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-    <link rel="preload" as="fetch" href="/api/meta-weapons.json" crossorigin>
+    * { box-sizing: border-box; }
     
-    <!-- Preconnect to external domains -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    body {
+      background: var(--bg);
+      color: var(--txt);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      line-height: 1.6;
+    }
     
-    <!-- Mobile experience -->
-    <meta name="theme-color" content="#0a0a0f">
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
     
-    <!-- SEO -->
-    <title>THE FINALS Meta Weapons - Season 7 Patch 7.6.0 | Live Rankings</title>
-    <meta name="description" content="Real-time meta analysis for THE FINALS patch 7.6.0: live TTK, win-rates and pro insights.">
-    <meta name="robots" content="index, follow">
-    <meta name="author" content="THE FINALS META">
-    <meta name="keywords" content="THE FINALS meta, Season 7 weapons, patch 7.6.0, XP-54, FCAR, ShAK-50, Minigun, weapon tier list, TTK data, win rates">
+    /* Header */
+    .header {
+      margin-bottom: 2rem;
+    }
     
-    <!-- Open Graph for social sharing -->
-    <meta property="og:title" content="THE FINALS Meta Weapons - Season 7 Patch 7.6.0 | Live Rankings">
-    <meta property="og:description" content="Discover the 4 dominating weapons in THE FINALS Season 7. Real-time TTK data, win rates, and pro strategies for XP-54, FCAR, ShAK-50, and Minigun.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yoursite.com/">
-    <meta property="og:image" content="https://yoursite.com/images/meta-preview.jpg">
+    h1 {
+      font-size: 2rem;
+      margin: 0 0 0.5rem 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+    }
     
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="THE FINALS Meta Weapons - Season 7 Patch 7.6.0">
-    <meta name="twitter:description" content="Live weapon rankings, TTK data, and pro strategies for dominating in THE FINALS Season 7">
-    <meta name="twitter:image" content="https://yoursite.com/images/meta-preview.jpg">
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-weight: normal;
+    }
     
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://yoursite.com/">
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
     
-    <!-- Favicon matching main site -->
-    <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+    /* Quick Stats */
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
     
-    <!-- Google Analytics (Async) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag("js", new Date());
-        gtag("config", "G-GVGKYFGZ1Z");
-    </script>
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+    }
     
-    <!-- Critical CSS (Inlined) -->
-    <style>
-        /* Orbitron subset for headings only - base64 embedded */
-        @font-face {
-            font-family: 'Orbitron';
-            font-style: normal;
-            font-weight: 700;
-            font-display: swap;
-            src: url(data:font/woff2;base64,d09GMgABAAAAAAMgAA4AAAAABkAAAALMAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGhYGYABkCAQRCAQRCAQgE4NADAELD...) format('woff2');
-            unicode-range: U+0020-007E;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            --cyan: #00f0c0;
-            --purple: #7b2fe3;
-            --pink: #ff2a6d;
-            --gold: #ffd700;
-            --dark-bg: #0a0a0f;
-            --card-bg: #1a1a2e;
-            --text: #e0e0e0;
-            --text-dim: #888;
-            
-            /* TTK Color Coding */
-            --ttk-s-tier: #ffd700;
-            --ttk-a-tier: #7b2fe3;
-            --ttk-b-tier: #1e90ff;
-            --ttk-c-tier: #888888;
-            
-            /* New Accent Colors */
-            --success: #00ff88;
-            --danger: #ff4444;
-            --warning: #ffaa00;
-        }
-        
-        /* Navigation Styles */
-        .main-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            background: linear-gradient(
-                90deg,
-                rgba(0, 0, 0, 0.8) 0%,
-                rgba(123, 47, 227, 0.2) 50%,
-                rgba(0, 0, 0, 0.8) 100%
-            );
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(30, 144, 255, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-        
-        .nav-link {
-            color: #fff;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .nav-link::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(30, 144, 255, 0.4),
-                transparent
-            );
-            transition: left 0.5s ease;
-        }
-        
-        .nav-link:hover::before {
-            left: 100%;
-        }
-        
-        .nav-link:hover,
-        .nav-link.active {
-            background-color: rgba(30, 144, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(30, 144, 255, 0.4);
-        }
-        
-        .nav-link.active {
-            background-color: var(--cyan);
-            color: var(--dark-bg);
-        }
-        
-        @media (max-width: 640px) {
-            .main-nav {
-                flex-direction: column;
-                padding: 0.75rem 1rem;
-                gap: 0.75rem;
-            }
-            
-            .nav-links {
-                width: 100%;
-                justify-content: center;
-                gap: 1rem;
-                flex-wrap: wrap;
-            }
-            
-            .nav-link {
-                font-size: 0.8rem;
-                padding: 0.4rem 0.8rem;
-            }
-        }
-        
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: var(--dark-bg);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-        
-        /* Typography */
-        h1, h2, h3 {
-            font-family: 'Orbitron', -apple-system, sans-serif;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-        
-        /* Layout */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-        
-        /* Header */
-        .header {
-            background: linear-gradient(to bottom, #1a1a2e, transparent);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        
-        .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--cyan);
-            text-decoration: none;
-            transition: transform 0.2s;
-        }
-        
-        .logo:hover {
-            transform: scale(1.05);
-        }
-        
-        /* Live Meta Badge */
-        .live-meta-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 20px;
-            font-size: 0.875rem;
-        }
-        
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--success);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
-            }
-        }
-        
-        /* Hero Section */
-        .hero {
-            padding: 3rem 0 2rem;
-            text-align: center;
-        }
-        
-        .hero h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, var(--cyan), var(--pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .hero-subtitle {
-            color: var(--text-dim);
-            font-size: 1.125rem;
-        }
-        
-        /* Meta Weapons Grid */
-        .meta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-        
-        /* Weapon Card */
-        .weapon-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 1.5rem;
-            position: relative;
-            border: 2px solid transparent;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            contain: layout style paint;
-            content-visibility: auto;
-            cursor: pointer;
-            overflow: hidden;
-        }
-        
-        .weapon-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            border-radius: 16px 16px 0 0;
-            transition: height 0.3s;
-        }
-        
-        .weapon-card.light::before { background: var(--cyan); }
-        .weapon-card.medium::before { background: var(--purple); }
-        .weapon-card.heavy::before { background: var(--pink); }
-        
-        .weapon-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-        
-        .weapon-card:hover::before {
-            height: 100%;
-            opacity: 0.05;
-        }
-        
-        .weapon-card.light:hover { border-color: var(--cyan); }
-        .weapon-card.medium:hover { border-color: var(--purple); }
-        .weapon-card.heavy:hover { border-color: var(--pink); }
-        
-        .weapon-card.selected {
-            border-color: var(--gold) !important;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-        }
-        
-        /* Class Badge */
-        .class-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        .class-badge.light { 
-            background: rgba(0, 240, 192, 0.2); 
-            color: var(--cyan);
-        }
-        .class-badge.medium { 
-            background: rgba(123, 47, 227, 0.2); 
-            color: var(--purple);
-        }
-        .class-badge.heavy { 
-            background: rgba(255, 42, 109, 0.2); 
-            color: var(--pink);
-        }
-        
-        /* Weapon Header */
-        .weapon-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin: 1rem 0;
-        }
-        
-        .weapon-name {
-            font-size: 1.75rem;
-            font-weight: 700;
-            font-family: 'Orbitron', sans-serif;
-        }
-        
-        .meta-rank {
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            background: var(--gold);
-            color: var(--dark-bg);
-            animation: metaPulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes metaPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
-        }
-        
-        /* Patch Change Badge */
-        .patch-change {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .change-badge {
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-        
-        .change-badge.buff {
-            background: rgba(0, 255, 0, 0.2);
-            color: var(--success);
-        }
-        
-        .change-badge.nerf {
-            background: rgba(255, 0, 0, 0.2);
-            color: var(--danger);
-        }
-        
-        .patch-num {
-            font-size: 0.7rem;
-            color: var(--text-dim);
-        }
-        
-        /* TTK Hero Stat */
-        .ttk-hero {
-            margin: 1.5rem 0;
-            text-align: center;
-        }
-        
-        .ttk-value {
-            font-size: 4rem;
-            font-weight: 700;
-            line-height: 1;
-            font-family: 'Orbitron', sans-serif;
-            position: relative;
-        }
-        
-        .ttk-value.s-tier {
-            background: linear-gradient(
-                to bottom,
-                #ffd700 0%,
-                #ffed4e 45%,
-                #ffd700 50%,
-                #b8860b 100%
-            );
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
-        }
-        
-        .ttk-value.a-tier { 
-            color: var(--ttk-a-tier);
-            filter: drop-shadow(0 0 15px rgba(123, 47, 227, 0.3));
-        }
-        .ttk-value.b-tier { color: var(--ttk-b-tier); }
-        .ttk-value.c-tier { color: var(--ttk-c-tier); }
-        
-        .ttk-label {
-            font-size: 0.875rem;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-        
-        /* Visual TTK Bars */
-        .ttk-bars {
-            margin: 1.5rem 0;
-        }
-        
-        .ttk-bar-row {
-            display: flex;
-            align-items: center;
-            margin: 0.75rem 0;
-            gap: 1rem;
-            position: relative;
-        }
-        
-        .ttk-bar-label {
-            flex: 0 0 80px;
-            font-size: 0.875rem;
-            color: var(--text-dim);
-        }
-        
-        .ttk-bar-track {
-            flex: 1;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .ttk-bar-fill {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            border-radius: 5px;
-            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            background: linear-gradient(90deg, var(--cyan), var(--purple));
-        }
-        
-        .ttk-bar-fill.fast { background: linear-gradient(90deg, #00ff88, #00ff44); }
-        .ttk-bar-fill.medium { background: linear-gradient(90deg, #ffaa00, #ff8800); }
-        .ttk-bar-fill.slow { background: linear-gradient(90deg, #ff4444, #ff0000); }
-        
-        .ttk-bar-time {
-            flex: 0 0 50px;
-            text-align: right;
-            font-weight: 700;
-            font-size: 0.875rem;
-        }
-        
-        .ttk-advantage {
-            position: absolute;
-            right: 60px;
-            font-size: 0.7rem;
-            color: var(--success);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .ttk-bar-row:hover .ttk-advantage {
-            opacity: 1;
-        }
-        
-        /* Win Rate & Stats */
-        .weapon-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-        
-        .stat-block {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-            transition: background 0.3s;
-        }
-        
-        .stat-block:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
-        
-        .win-rate-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--cyan);
-            line-height: 1;
-        }
-        
-        .trend-arrow {
-            color: var(--success);
-            font-size: 1.25rem;
-            margin-left: 0.5rem;
-        }
-        
-        .trend-arrow.down {
-            color: var(--danger);
-        }
-        
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-top: 0.25rem;
-        }
-        
-        /* Quick Insights */
-        .quick-insights {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin: 1rem 0;
-        }
-        
-        .insight-pill {
-            padding: 0.25rem 0.75rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        
-        /* Pro Tip */
-        .pro-tip {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(255, 215, 0, 0.02));
-            border-left: 3px solid var(--gold);
-            padding: 0.75rem;
-            margin: 1rem 0;
-            font-size: 0.875rem;
-            font-style: italic;
-            color: var(--text);
-        }
-        
-        /* Meta Tagline */
-        .meta-tagline {
-            background: linear-gradient(135deg, rgba(0, 240, 192, 0.1), rgba(123, 47, 227, 0.1));
-            border-left: 3px solid var(--cyan);
-            padding: 1rem;
-            margin: 1rem 0;
-            font-style: italic;
-            color: var(--text);
-        }
-        
-        /* Counter Info */
-        .counter-info {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-            font-size: 0.875rem;
-        }
-        
-        .counter-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.05);
-        }
-        
-        .counter-badge.weak {
-            border: 1px solid var(--danger);
-            color: var(--danger);
-        }
-        
-        .counter-badge.strong {
-            border: 1px solid var(--success);
-            color: var(--success);
-        }
-        
-        /* Quick Actions */
-        .quick-actions {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-        
-        .action-btn {
-            flex: 1;
-            padding: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: var(--text);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.875rem;
-        }
-        
-        .action-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        /* Smart Filters */
-        .filter-section {
-            margin: 3rem 0;
-            padding: 1.5rem;
-            background: rgba(26, 26, 46, 0.3);
-            border-radius: 12px;
-        }
-        
-        .filter-title {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-        
-        .smart-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-        
-        .filter-chip {
-            padding: 0.5rem 1.25rem;
-            background: rgba(0, 240, 192, 0.1);
-            border: 2px solid rgba(0, 240, 192, 0.3);
-            border-radius: 24px;
-            color: var(--cyan);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-            font-size: 0.875rem;
-            position: relative;
-        }
-        
-        .filter-chip::after {
-            content: attr(data-count);
-            margin-left: 0.5rem;
-            opacity: 0.7;
-            font-size: 0.75rem;
-        }
-        
-        .filter-chip:hover {
-            background: rgba(0, 240, 192, 0.2);
-            border-color: var(--cyan);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 240, 192, 0.2);
-        }
-        
-        .filter-chip.active {
-            background: var(--cyan);
-            color: var(--dark-bg);
-            box-shadow: 0 0 20px rgba(0, 240, 192, 0.4);
-        }
-        
-        /* Comparison Tool */
-        .comparison-section {
-            position: fixed;
-            bottom: -500px;
-            left: 0;
-            right: 0;
-            background: var(--card-bg);
-            border-top: 3px solid var(--cyan);
-            padding: 2rem;
-            transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 90;
-            max-height: 500px;
-            overflow-y: auto;
-            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
-        }
-        
-        .comparison-section.active {
-            bottom: 0;
-        }
-        
-        .comparison-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .comparison-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-        
-        .comparison-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 1.5rem;
-            border-radius: 8px;
-        }
-        
-        .comparison-item h4 {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            color: var(--cyan);
-        }
-        
-        .comparison-stat {
-            display: flex;
-            justify-content: space-between;
-            margin: 0.5rem 0;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .comparison-winner {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 700;
-        }
-        
-        /* Radar Chart */
-        .radar-chart {
-            width: 200px;
-            height: 200px;
-            margin: 1rem auto;
-        }
-        
-        /* Meta Timeline */
-        .timeline-section {
-            margin: 4rem 0;
-            padding: 2rem;
-            background: rgba(26, 26, 46, 0.2);
-            border-radius: 12px;
-        }
-        
-        .timeline-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .timeline {
-            position: relative;
-            padding: 2rem 0;
-        }
-        
-        .timeline-item {
-            display: flex;
-            align-items: center;
-            margin: 1.5rem 0;
-            opacity: 0;
-            animation: fadeInUp 0.5s forwards;
-        }
-        
-        .timeline-date {
-            flex: 0 0 120px;
-            font-weight: 700;
-            color: var(--text-dim);
-        }
-        
-        .timeline-content {
-            flex: 1;
-            padding: 1rem;
-            background: var(--card-bg);
-            border-radius: 8px;
-            border-left: 3px solid var(--cyan);
-            transition: transform 0.3s;
-        }
-        
-        .timeline-content:hover {
-            transform: translateX(5px);
-        }
-        
-        .timeline-badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-right: 0.5rem;
-        }
-        
-        .buff { background: rgba(0, 255, 0, 0.2); color: var(--success); }
-        .nerf { background: rgba(255, 0, 0, 0.2); color: var(--danger); }
-        
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes countUp {
-            from { opacity: 0; transform: scale(0.5); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        
-        .win-rate-value,
-        .sentiment-value {
-            animation: countUp 0.5s ease-out;
-        }
-        
-        /* Sentiment Bar Styles */
-        .sentiment-bar {
-            display: flex;
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 1rem 0 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .sentiment-bar .positive {
-            background: linear-gradient(90deg, var(--success), var(--cyan));
-        }
-        
-        .sentiment-bar .negative {
-            background: linear-gradient(90deg, var(--danger), #ff6666);
-        }
-        
-        .rating-stars {
-            color: var(--gold);
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-        }
-        
-        .sentiment-value {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--cyan), var(--success));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        /* Loading States */
-        .skeleton {
-            background: linear-gradient(90deg, #1a1a2e 25%, #2a2a3e 50%, #1a1a2e 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 8px;
-        }
-        
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        /* Mobile Optimizations */
-        @media (max-width: 768px) {
-            .meta-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .weapon-card {
-                min-height: 44px;
-                touch-action: pan-y;
-            }
-            
-            .ttk-value {
-                font-size: 3rem;
-            }
-            
-            .ttk-bars {
-                display: none;
-            }
-            
-            .weapon-stats {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0.5rem;
-            }
-            
-            .stat-block {
-                padding: 0.5rem;
-            }
-            
-            .win-rate-value {
-                font-size: 1.5rem;
-            }
-            
-            .smart-filters {
-                justify-content: center;
-            }
-            
-            .comparison-section {
-                border-radius: 24px 24px 0 0;
-                padding-bottom: env(safe-area-inset-bottom);
-            }
-            
-            .comparison-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .quick-insights {
-                display: none;
-            }
-            
-            .pro-tip {
-                font-size: 0.75rem;
-                padding: 0.5rem;
-            }
-        }
-        
-        /* Reduce Motion */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
-            
-            .weapon-card,
-            .filter-section,
-            .timeline-section {
-                opacity: 1 !important;
-                transform: none !important;
-            }
-        }
-        
-        /* High Contrast Mode */
-        @media (prefers-contrast: high) {
-            .weapon-card {
-                border: 2px solid var(--text);
-            }
-            
-            .filter-chip {
-                border-width: 3px;
-            }
-        }
-        
-        /* Scroll Animation Classes */
-        .scroll-fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-
-        .scroll-fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Initial state for weapon cards - override previous styles */
-        .weapon-card {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .weapon-card.animate-in {
-            opacity: 1;
-            transform: translateY(0);
-            animation: fadeInUp 0.5s ease-out forwards;
-        }
-
-        /* Staggered delays for visual appeal */
-        .meta-grid .weapon-card:nth-child(1) { animation-delay: 0.1s; }
-        .meta-grid .weapon-card:nth-child(2) { animation-delay: 0.2s; }
-        .meta-grid .weapon-card:nth-child(3) { animation-delay: 0.3s; }
-        .meta-grid .weapon-card:nth-child(4) { animation-delay: 0.4s; }
-        .meta-grid .weapon-card:nth-child(5) { animation-delay: 0.5s; }
-        .meta-grid .weapon-card:nth-child(6) { animation-delay: 0.6s; }
-        .meta-grid .weapon-card:nth-child(7) { animation-delay: 0.7s; }
-        .meta-grid .weapon-card:nth-child(8) { animation-delay: 0.8s; }
-        .meta-grid .weapon-card:nth-child(9) { animation-delay: 0.9s; }
-
-        /* Section animations */
-        .filter-section,
-        .timeline-section {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .filter-section.animate-in,
-        .timeline-section.animate-in {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-        
-        /* Utility Classes */
-        .hidden { display: none; }
-        .text-center { text-align: center; }
-    </style>
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
     
-    <!-- Structured Data (JSON-LD) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "THE FINALS META",
-      "url": "https://yoursite.com/",
-      "description": "Real-time weapon meta analysis for THE FINALS Season 7",
-      "publisher": {
-        "@type": "Organization",
-        "name": "THE FINALS META"
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0.25rem 0;
+    }
+    
+    .stat-meta {
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+    
+    /* Filters */
+    .filters {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .filter-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    .chip {
+      padding: 0.375rem 0.75rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--txt);
+    }
+    
+    .chip:hover {
+      background: var(--hover);
+    }
+    
+    .chip.active {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+    
+    .search {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.375rem 0.75rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--txt);
+      font-size: 0.875rem;
+    }
+    
+    /* Class Sections */
+    .class-section {
+      margin-bottom: 2rem;
+    }
+    
+    .class-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background: var(--panel);
+      border-radius: 8px;
+    }
+    
+    .class-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+    
+    .class-icon.light {
+      background: rgba(6, 182, 212, 0.2);
+      color: var(--light);
+      border: 2px solid var(--light);
+    }
+    
+    .class-icon.medium {
+      background: rgba(139, 92, 246, 0.2);
+      color: var(--medium);
+      border: 2px solid var(--medium);
+    }
+    
+    .class-icon.heavy {
+      background: rgba(249, 115, 22, 0.2);
+      color: var(--heavy);
+      border: 2px solid var(--heavy);
+    }
+    
+    .class-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    
+    .class-count {
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+    
+    /* Weapon Table */
+    .weapon-table {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.2);
+      cursor: pointer;
+      user-select: none;
+    }
+    
+    th:hover {
+      color: var(--txt);
+    }
+    
+    td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover);
+    }
+    
+    .weapon-name {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .tier {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      min-width: 1.5rem;
+      text-align: center;
+    }
+    
+    .tier-s {
+      background: rgba(34, 197, 94, 0.2);
+      color: var(--good);
+    }
+    
+    .tier-a {
+      background: rgba(59, 130, 246, 0.2);
+      color: #3b82f6;
+    }
+    
+    .tier-b {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warn);
+    }
+    
+    .tier-c {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--bad);
+    }
+    
+    .range-tag {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    
+    .stat-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .bar {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      max-width: 100px;
+    }
+    
+    .bar-fill {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    
+    .bar-fill.positive {
+      background: var(--good);
+    }
+    
+    .bar-fill.neutral {
+      background: var(--warn);
+    }
+    
+    .bar-fill.negative {
+      background: var(--bad);
+    }
+    
+    .hot-tag {
+      font-size: 0.625rem;
+      padding: 0.125rem 0.375rem;
+      background: var(--bad);
+      color: white;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    
+    .rounds-tag {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    
+    /* Mobile Layout */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .quick-stats {
+        grid-template-columns: 1fr;
+      }
+      
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .filter-group {
+        justify-content: space-between;
+      }
+      
+      /* Mobile cards instead of table */
+      .weapon-table {
+        background: transparent;
+        border: none;
+      }
+      
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      
+      thead {
+        display: none;
+      }
+      
+      tr {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin-bottom: 0.75rem;
+        padding: 1rem;
+      }
+      
+      tr:hover {
+        background: var(--panel);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      }
+      
+      td {
+        padding: 0.25rem 0;
+        border: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      td:before {
+        content: attr(data-label);
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      
+      td:first-child {
+        font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      td:first-child:before {
+        display: none;
+      }
+      
+      .weapon-name {
+        justify-content: flex-start;
       }
     }
-    </script>
     
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [{
-        "@type": "Question",
-        "name": "What are the best weapons in THE FINALS Season 7?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The top meta weapons are XP-54 (Light), FCAR (Medium), ShAK-50 and Minigun (Heavy). These weapons dominate with fast TTK and high win rates."
-        }
-      },{
-        "@type": "Question",
-        "name": "What changed in THE FINALS patch 7.6.0?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Patch 7.6.0 buffed Sword damage (74→88/105→120), made KS-23 a hybrid hitscan-projectile weapon, and improved hit detection for all melee weapons."
-        }
-      }]
-    }
-    </script>
+    /* Utility */
+    .hidden { display: none; }
+    .text-muted { color: var(--muted); }
+    .text-small { font-size: 0.875rem; }
+  </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="main-nav">
-        <div class="nav-links">
-            <a href="/" class="nav-link">LOADOUT GENERATOR</a>
-            <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
-            <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
-            <a href="/meta-weapons/" class="nav-link active">META WEAPONS</a>
-            <a href="/wt-progress/" class="nav-link">WT TRACKER (BETA)</a>
-        </div>
-    </nav>
-    
+  <div class="container">
     <!-- Header -->
     <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <a href="/" class="logo" data-clicks="0">THE FINALS META</a>
-                
-                
-                <button id="compareBtn" aria-label="Compare up to 3 weapons" style="padding: 0.5rem 1.25rem; background: rgba(0, 240, 192, 0.2); border: 2px solid var(--cyan); border-radius: 8px; color: var(--cyan); cursor: pointer; font-weight: 700;">
-                    Compare (0/3)
-                </button>
-            </div>
-        </div>
+      <h1>The Finals Meta <span class="badge">7.6.0</span></h1>
+      <p class="subtitle">Community sentiment and meta analysis • Data from Reddit, Discord, and tournament play</p>
     </header>
-
-    <!-- Hero Section -->
-    <section class="hero container">
-        <h1>The 4 Weapons Dominating Right Now</h1>
-        <p class="hero-subtitle">Patch 7.6.0 Meta Report - Updated <span id="updateTime">5 minutes ago</span></p>
-        <small style="color:var(--text-dim);display:block;">
-            *Daily matches scraped from public profiles – refreshed hourly*
-        </small>
-    </section>
-
-    <!-- Meta Weapons Grid -->
-    <section class="container">
-        <div class="meta-grid" id="metaWeapons">
-            <!-- Light S-Tier: XP-54 -->
-            <article class="weapon-card light" data-weapon="XP-54">
-                <span class="class-badge light">Light</span>
-                
-                
-                <div class="weapon-header">
-                    <h2 class="weapon-name">XP-54</h2>
-                    <span class="meta-rank">#1 META</span>
-                </div>
-                
-                <div class="ttk-hero">
-                    <div class="ttk-value a-tier">0.70s</div>
-                    <div class="ttk-label">Average TTK</div>
-                </div>
-                
-                <!-- Visual TTK Bars with accurate data -->
-                <div class="ttk-bars">
-                    <div class="ttk-bar-row">
-                        <span class="ttk-bar-label">vs Light</span>
-                        <div class="ttk-bar-track">
-                            <div class="ttk-bar-fill fast" style="width: 70%"></div>
-                        </div>
-                        <span class="ttk-bar-time">0.70s</span>
-                        <span class="ttk-advantage">3 shots</span>
-                    </div>
-                    <div class="ttk-bar-row">
-                        <span class="ttk-bar-label">vs Medium</span>
-                        <div class="ttk-bar-track">
-                            <div class="ttk-bar-fill medium" style="width: 100%"></div>
-                        </div>
-                        <span class="ttk-bar-time">1.16s</span>
-                        <span class="ttk-advantage">5 shots</span>
-                    </div>
-                    <div class="ttk-bar-row">
-                        <span class="ttk-bar-label">vs Heavy</span>
-                        <div class="ttk-bar-track">
-                            <div class="ttk-bar-fill slow" style="width: 100%"></div>
-                        </div>
-                        <span class="ttk-bar-time">1.63s</span>
-                        <span class="ttk-advantage">7 shots</span>
-                    </div>
-                </div>
-                
-                <div class="quick-insights">
-                    <span class="insight-pill">🎯 Hitscan</span>
-                    <span class="insight-pill">💨 High mobility</span>
-                    <span class="insight-pill">🔄 30 rounds</span>
-                    <span class="insight-pill">⚡ 850 RPM</span>
-                </div>
-                
-                <div class="weapon-stats">
-                    <div class="stat-block">
-                        <div class="sentiment-value">87%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Community Sentiment</div>
-                    </div>
-                    <div class="stat-block">
-                        <div class="rating-stars">⭐⭐⭐⭐☆</div>
-                        <div class="stat-label">4.6 Rating</div>
-                    </div>
-                </div>
-                
-                <div class="sentiment-bar">
-                    <div class="positive" style="width: 87%"></div>
-                    <div class="negative" style="width: 13%"></div>
-                </div>
-                
-                <div class="pro-tip">
-                    💡 Pro tip: Pre-aim corners, burst fire at range for better recoil control
-                </div>
-                
-                <div class="meta-tagline">
-                    "Still meta after nerf – praised for control, mobility, and CQC dominance"
-                </div>
-                
-                <div class="counter-info">
-                    <span class="counter-badge weak">Weak vs: ShAK-50</span>
-                    <span class="counter-badge strong">Strong vs: M11</span>
-                </div>
-            </article>
-
-            <!-- Medium S-Tier: FCAR -->
-            <article class="weapon-card medium" data-weapon="FCAR">
-                <span class="class-badge medium">Medium</span>
-                
-                <div class="weapon-header">
-                    <h2 class="weapon-name">FCAR</h2>
-                    <span class="meta-rank">S-TIER</span>
-                </div>
-                
-                <div class="ttk-hero">
-                    <div class="ttk-value a-tier">0.68s</div>
-                    <div class="ttk-label">Average TTK</div>
-                </div>
-                
-                <div class="quick-insights">
-                    <span class="insight-pill">⚡ 268 DPS</span>
-                    <span class="insight-pill">📏 42m range</span>
-                    <span class="insight-pill">🔄 25 rounds</span>
-                    <span class="insight-pill">🎮 8/10 ease</span>
-                </div>
-                
-                <div class="weapon-stats">
-                    <div class="stat-block">
-                        <div class="sentiment-value">88%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Community Sentiment</div>
-                    </div>
-                    <div class="stat-block">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <div class="stat-label">4.7 Rating</div>
-                    </div>
-                </div>
-                
-                <div class="sentiment-bar">
-                    <div class="positive" style="width: 88%"></div>
-                    <div class="negative" style="width: 12%"></div>
-                </div>
-                
-                <div class="pro-tip">
-                    💡 Pro tip: Control recoil for consistent headshots at medium range
-                </div>
-                
-                <div class="meta-tagline">
-                    "Laser-accurate full auto with zero falloff – pro favorite after FAMAS nerf"
-                </div>
-                
-                <div class="counter-info">
-                    <span class="counter-badge weak">Weak vs: ShAK-50</span>
-                    <span class="counter-badge strong">Strong vs: AKM</span>
-                </div>
-            </article>
-
-            <!-- Heavy S-Tier: ShAK-50 -->
-            <!-- Heavy S-Tier: ShAK-50 -->
-            <article class="weapon-card heavy" data-weapon="ShAK-50">
-                <span class="class-badge heavy">Heavy</span>
-                
-                <div class="patch-change">
-                    <span class="change-badge buff">↑ Damage</span>
-                    <span class="patch-num">7.4.0</span>
-                </div>
-                
-                <div class="weapon-header">
-                    <h2 class="weapon-name">ShAK-50</h2>
-                    <span class="meta-rank">#1 META</span>
-                </div>
-                
-                <div class="ttk-hero">
-                    <div class="ttk-value s-tier">0.57s</div>
-                    <div class="ttk-label">Average TTK</div>
-                </div>
-                
-                <!-- Visual TTK Bars with accurate data -->
-                <div class="ttk-bars">
-                    <div class="ttk-bar-row">
-                        <span class="ttk-bar-label">vs Light</span>
-                        <div class="ttk-bar-track">
-                            <div class="ttk-bar-fill fast" style="width: 57%"></div>
-                        </div>
-                        <span class="ttk-bar-time">0.57s</span>
-                        <span class="ttk-advantage">2 shots</span>
-                    </div>
-                    <div class="ttk-bar-row">
-                        <span class="ttk-bar-label">vs Medium</span>
-                        <div class="ttk-bar-track">
-                            <div class="ttk-bar-fill medium" style="width: 95%"></div>
-                        </div>
-                        <span class="ttk-bar-time">0.95s</span>
-                        <span class="ttk-advantage">3 shots</span>
-                    </div>
-                    <div class="ttk-bar-row">
-                        <span class="ttk-bar-label">vs Heavy</span>
-                        <div class="ttk-bar-track">
-                            <div class="ttk-bar-fill slow" style="width: 100%"></div>
-                        </div>
-                        <span class="ttk-bar-time">1.33s</span>
-                        <span class="ttk-advantage">4 shots</span>
-                    </div>
-                </div>
-                
-                <div class="quick-insights">
-                    <span class="insight-pill">🔫 One-shot headshot</span>
-                    <span class="insight-pill">🔭 70m range</span>
-                    <span class="insight-pill">🔄 20 rounds</span>
-                    <span class="insight-pill">🎯 4x scope</span>
-                    <span class="insight-pill">⚡ Instant ADS</span>
-                </div>
-                
-                <div class="weapon-stats">
-                    <div class="stat-block">
-                        <div class="sentiment-value">92%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Community Sentiment</div>
-                    </div>
-                    <div class="stat-block">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <div class="stat-label">4.8 Rating</div>
-                    </div>
-                </div>
-                
-                <div class="sentiment-bar">
-                    <div class="positive" style="width: 92%"></div>
-                    <div class="negative" style="width: 8%"></div>
-                </div>
-                
-                <div class="pro-tip">
-                    💡 Pro tip: Hold long angles, quick-scope for medium range engagements
-                </div>
-                
-                <div class="meta-tagline">
-                    "Undisputed king of range – 2-taps Lights, dominates sightlines"
-                </div>
-                
-                <div class="counter-info">
-                    <span class="counter-badge weak">Weak vs: Close Range</span>
-                    <span class="counter-badge strong">Strong vs: Everything at range</span>
-                </div>
-            </article>
-
-            <!-- Heavy S-TIER: Minigun -->
-            <article class="weapon-card heavy" data-weapon="Minigun">
-                <span class="class-badge heavy">Heavy</span>
-                
-                <div class="weapon-header">
-                    <h2 class="weapon-name">Minigun</h2>
-                    <span class="meta-rank">S-TIER</span>
-                </div>
-                
-                <div class="ttk-hero">
-                    <div class="ttk-value s-tier">0.54s</div>
-                    <div class="ttk-label">Average TTK</div>
-                </div>
-                
-                <div class="quick-insights">
-                    <span class="insight-pill">⚡ 420 DPS</span>
-                    <span class="insight-pill">📏 35m range</span>
-                    <span class="insight-pill">🔄 250 rounds</span>
-                    <span class="insight-pill">🎮 7/10 ease</span>
-                    <span class="insight-pill">🔥 Sustained fire</span>
-                </div>
-                
-                <div class="weapon-stats">
-                    <div class="stat-block">
-                        <div class="sentiment-value">85%<span class="trend-arrow">↑</span></div>
-                        <div class="stat-label">Community Sentiment</div>
-                    </div>
-                    <div class="stat-block">
-                        <div class="rating-stars">⭐⭐⭐⭐☆</div>
-                        <div class="stat-label">4.5 Rating</div>
-                    </div>
-                </div>
-                
-                <div class="sentiment-bar">
-                    <div class="positive" style="width: 85%"></div>
-                    <div class="negative" style="width: 15%"></div>
-                </div>
-                
-                <div class="pro-tip">
-                    💡 Pro tip: Pre-spin before peeking to eliminate wind-up time
-                </div>
-                
-                <div class="meta-tagline">
-                    "Suppression monster – shreds cover and players alike"
-                </div>
-                
-                <div class="counter-info">
-                    <span class="counter-badge weak">Weak vs: Sword (close)</span>
-                    <span class="counter-badge strong">Strong vs: Everything</span>
-                </div>
-            </article>
-        </div>
-    </section>
-
-    <!-- Smart Filters -->
-    <section class="container">
-        <div class="filter-section">
-            <h3 class="filter-title">Smart Filters</h3>
-            <div class="smart-filters">
-                <button class="filter-chip active" data-filter="all" data-count="(27)" title="View all available weapons">All Weapons</button>
-                <button class="filter-chip" data-filter="current-meta" data-count="(4)" title="Top picks this patch">Current Meta</button>
-                <button class="filter-chip" data-filter="counters-shak" data-count="(3)" title="Best weapons to shut down snipers">Counters ShAK-50</button>
-                <button class="filter-chip" data-filter="best-bank-it" data-count="(3)" title="Optimal choices for Bank It mode">Best on Bank It</button>
-                <button class="filter-chip" data-filter="healing-meta" data-count="(3)" title="Works well with healing beam">Healing Meta</button>
-                <button class="filter-chip" data-filter="post-nerf" data-count="(3)" title="Still viable after recent nerfs">Post-Nerf Viable</button>
-                <button class="filter-chip" data-filter="easy-master" data-count="(3)" title="Low skill floor, quick to learn">Easy to Master</button>
-                <button class="filter-chip" data-filter="tournament" data-count="(3)" title="Pro player favorites">Tournament Picks</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Meta Evolution Timeline -->
-    <section class="container">
-        <div class="timeline-section">
-            <div class="timeline-header">
-                <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">Meta Evolution</h2>
-                <p style="color: var(--text-dim);">Historical Changes (7.4 - 7.6)</p>
-            </div>
-            
-            <div class="timeline">
-                <div class="timeline-item" style="animation-delay: 0s;">
-                    <div class="timeline-date">Patch 7.6.0</div>
-                    <div class="timeline-content">
-                        <span class="timeline-badge buff">BUFF</span>
-                        <strong>Sword:</strong> Damage 74→88 / 105→120 – melee viability up
-                    </div>
-                </div>
-                <div class="timeline-item" style="animation-delay: 0.1s;">
-                    <div class="timeline-date">Patch 7.6.0</div>
-                    <div class="timeline-content">
-                        <span class="timeline-badge buff">BUFF</span>
-                        <strong>KS-23:</strong> Converted to hybrid hitscan-projectile
-                    </div>
-                </div>
-                <div class="timeline-item" style="animation-delay: 0.2s;">
-                    <div class="timeline-date">Patch 7.6.0</div>
-                    <div class="timeline-content">
-                        <span class="timeline-badge buff">BUFF</span>
-                        <strong>All Melee:</strong> Hit-detection improvements
-                    </div>
-                </div>
-                
-                <div class="timeline-item" style="animation-delay: 0.3s;">
-                    <div class="timeline-date">Patch 7.5.0</div>
-                    <div class="timeline-content">
-                        <span class="timeline-badge nerf">NERF</span>
-                        <strong>Sledgehammer:</strong> Range reduced by 30% → Dropped to A-tier
-                    </div>
-                </div>
-                
-                <div class="timeline-item" style="animation-delay: 0.4s;">
-                    <div class="timeline-date">Patch 7.4.0</div>
-                    <div class="timeline-content">
-                        <span class="timeline-badge buff">BUFF</span>
-                        <strong>ShAK-50:</strong> Damage increased to 120 → One-shot headshots return
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- More Weapons (Lazy Loaded) -->
-    <section class="container" id="moreWeapons" style="display: none;">
-        <h2 class="text-center" style="margin: 3rem 0;">Other Viable Options</h2>
-        <div class="meta-grid" id="additionalWeapons">
-            <!-- Will be populated by JavaScript -->
-        </div>
-    </section>
-
-    <!-- Load More Button -->
-    <div class="container text-center" style="margin: 3rem 0;">
-        <button id="loadMoreBtn" style="padding: 1rem 2rem; background: linear-gradient(135deg, var(--cyan), var(--purple)); border: none; border-radius: 8px; color: var(--dark-bg); font-weight: 700; cursor: pointer; font-size: 1rem; transition: all 0.3s;">
-            View 9 More Weapons
-        </button>
-    </div>
-
-    <!-- Comparison Tool -->
-    <div class="comparison-section" id="comparisonTool">
-        <div class="container">
-            <div class="comparison-header">
-                <h3>Weapon Comparison</h3>
-                <button id="clearComparison" style="padding: 0.5rem 1rem; background: rgba(255, 42, 109, 0.2); border: 2px solid var(--pink); border-radius: 8px; color: var(--pink); cursor: pointer; font-weight: 700;">
-                    Clear All
-                </button>
-            </div>
-            <div class="comparison-content" id="comparisonContent">
-                <!-- Dynamic comparison content -->
-            </div>
-            <div class="comparison-winner" id="comparisonWinner" style="display: none;">
-                <!-- Winner analysis -->
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScript (Deferred) -->
-    <script>
-        // Complete weapon database with community sentiment
-        const weaponDatabase = {
-            // LIGHT weapons with community sentiment
-            'XP-54': { class: 'light', ttk: 0.70, ttk_light: 0.70, ttk_medium: 1.16, ttk_heavy: 1.63, dps: 213, range: 30, sentiment: 87, rating: 4.6, positive: 120, negative: 18, ease: 8, summary: 'Still meta after nerf – praised for control, mobility, and CQC dominance' },
-            'M11': { class: 'light', ttk: 0.54, dps: 245, range: 25, sentiment: 72, rating: 3.8, positive: 85, negative: 33, ease: 7, summary: 'Fast TTK but skill-dependent – mixed reviews on consistency' },
-            'V9S': { class: 'light', ttk: 0.82, dps: 195, range: 28, sentiment: 68, rating: 3.5, positive: 78, negative: 36, ease: 9, summary: 'Beginner-friendly but lacks punch in high-skill lobbies' },
-            'LH1': { class: 'light', ttk: 0.95, dps: 180, range: 35, sentiment: 45, rating: 2.3, positive: 42, negative: 51, ease: 6, summary: 'Underwhelming damage – needs significant buffs to compete' },
-            '93R': { class: 'light', ttk: 0.77, dps: 205, range: 32, sentiment: 61, rating: 3.2, positive: 67, negative: 43, ease: 5, summary: 'Solid burst option but overshadowed by full-auto weapons' },
-            'SR-84': { class: 'light', ttk: 1.2, dps: 320, range: 80, sentiment: 54, rating: 2.8, positive: 58, negative: 49, ease: 4, summary: 'High skill ceiling sniper – frustrating for most players' },
-            'Dagger': { class: 'light', ttk: 0.4, dps: 280, range: 2, sentiment: 42, rating: 2.1, positive: 38, negative: 52, ease: 3, summary: 'Meme weapon – fun but impractical in serious play' },
-            'Sword': { class: 'light', ttk: 0.62, dps: 300, range: 3, sentiment: 78, rating: 4.1, positive: 102, negative: 29, ease: 6, summary: 'Post-buff surprise hit – devastating with good movement' },
-            'Dual Blades': { class: 'light', ttk: 0.5, dps: 260, range: 3, sentiment: 56, rating: 2.9, positive: 61, negative: 48, ease: 4, summary: 'Flashy but inconsistent – outclassed by Sword' },
-            'Throwing Knives': { class: 'light', ttk: 0.6, dps: 240, range: 15, sentiment: 64, rating: 3.4, positive: 71, negative: 40, ease: 3, summary: 'High skill expression weapon – respected but rarely mastered' },
-            'ARN-220': { class: 'light', ttk: 0.66, dps: 225, range: 40, sentiment: 82, rating: 4.3, positive: 114, negative: 25, ease: 7, summary: 'Underrated gem – excellent range and control for Light class' },
-            
-            // MEDIUM weapons with community sentiment
-            'FAMAS': { class: 'medium', ttk: 0.88, ttk_light: 0.88, ttk_medium: 1.47, ttk_heavy: 2.06, dps: 250, range: 45, sentiment: 71, rating: 3.7, positive: 88, negative: 36, ease: 5, summary: 'Post-nerf decline – still viable but no longer S-tier' },
-            'FCAR': { class: 'medium', ttk: 0.68, dps: 268, range: 42, sentiment: 88, rating: 4.7, positive: 132, negative: 18, ease: 8, summary: 'Laser-accurate full auto with zero falloff – pro favorite after FAMAS nerf' },
-            'AKM': { class: 'medium', ttk: 0.70, dps: 257, range: 40, sentiment: 75, rating: 3.9, positive: 95, negative: 32, ease: 9, summary: 'Old reliable – consistent performance but lacks excitement' },
-            'R.357': { class: 'medium', ttk: 0.85, dps: 220, range: 38, sentiment: 58, rating: 3.0, positive: 62, negative: 45, ease: 6, summary: 'High damage per shot but punishing fire rate' },
-            'Model 1887': { class: 'medium', ttk: 0.75, dps: 290, range: 12, sentiment: 66, rating: 3.5, positive: 74, negative: 38, ease: 7, summary: 'Satisfying one-taps up close but range limitations hurt' },
-            'CL-40': { class: 'medium', ttk: 0.9, dps: 240, range: 30, sentiment: 48, rating: 2.5, positive: 51, negative: 55, ease: 6, summary: 'Great in theory but clunky in practice – hard to land direct hits' },
-            'Riot Shield': { class: 'medium', ttk: 'N/A', dps: 0, range: 2, sentiment: 73, rating: 3.8, positive: 91, negative: 34, ease: 10, summary: 'Tactical powerhouse – enables team plays and objective control' },
-            
-            // HEAVY weapons with community sentiment
-            'ShAK-50': { class: 'heavy', ttk: 0.57, ttk_light: 0.57, ttk_medium: 0.95, ttk_heavy: 1.33, dps: 368, range: 70, sentiment: 92, rating: 4.8, positive: 156, negative: 14, ease: 6, summary: 'Undisputed king of range – 2-taps Lights, dominates sightlines' },
-            'Minigun': { class: 'heavy', ttk: 0.54, dps: 420, range: 35, sentiment: 85, rating: 4.5, positive: 128, negative: 23, ease: 7, summary: 'Suppression monster – shreds cover and players alike' },
-            'KS-23': { class: 'heavy', ttk: 0.82, dps: 370, range: 8, sentiment: 74, rating: 3.9, positive: 89, negative: 31, ease: 8, summary: 'New hybrid system intriguing – solid close-range option' },
-            'Lewis Gun': { class: 'heavy', ttk: 0.74, dps: 310, range: 45, sentiment: 70, rating: 3.6, positive: 81, negative: 35, ease: 8, summary: 'Reliable mid-range LMG but overshadowed by Minigun' },
-            'SA1216': { class: 'heavy', ttk: 0.85, dps: 320, range: 10, sentiment: 67, rating: 3.5, positive: 76, negative: 37, ease: 7, summary: 'Auto-shotgun feels good but inconsistent damage frustrates' },
-            'M32': { class: 'heavy', ttk: 1.0, dps: 280, range: 40, sentiment: 52, rating: 2.7, positive: 56, negative: 52, ease: 5, summary: 'Area denial tool but indirect damage feels weak' },
-            'Sledgehammer': { class: 'heavy', ttk: 0.0, dps: 999, range: 3, sentiment: 69, rating: 3.6, positive: 83, negative: 37, ease: 9, summary: 'One-shot potential but getting close is the challenge' },
-            'Flamethrower': { class: 'heavy', ttk: 0.65, dps: 380, range: 15, sentiment: 63, rating: 3.3, positive: 69, negative: 41, ease: 8, summary: 'Fun chaos weapon but limited competitive viability' }
-        };
-
-        // Additional weapons to show
-        const additionalWeapons = [
-            'V9S', 'ARN-220', 'AKM', 'KS-23', 'Lewis Gun', 'Riot Shield', 'Sword'
-        ];
-
-        // Smart filter logic
-        const filterLogic = {
-            'all': Object.keys(weaponDatabase),
-            'current-meta': ['XP-54', 'FCAR', 'ShAK-50', 'Minigun'],
-            'counters-shak': ['Riot Shield', 'Throwing Knives', 'SR-84'],
-            'best-bank-it': ['Minigun', 'KS-23', 'Riot Shield'],
-            'healing-meta': ['XP-54', '93R', 'SA1216'],
-            'post-nerf': ['Sledgehammer', 'V9S', 'FAMAS'],
-            'easy-master': ['AKM', 'Lewis Gun', 'XP-54'],
-            'tournament': ['ShAK-50', 'FAMAS', 'XP-54']
-        };
-
-        // Counter-pick matrix
-        const counterMatrix = {
-            'ShAK-50': { weak: ['Riot Shield', 'Smoke', 'Close Range'], strong: ['XP-54', 'AKM', 'All at range'] },
-            'XP-54': { weak: ['ShAK-50', 'FCAR'], strong: ['M11', 'Dagger'] },
-            'FAMAS': { weak: ['Riot Shield', 'CL-40'], strong: ['FCAR', 'AKM'] }
-        };
-
-        // Get TTK tier
-        function getTTKTier(ttk) {
-            if (ttk === 'N/A') return 'c-tier';
-            if (ttk < 0.6) return 's-tier';
-            if (ttk <= 0.7) return 'a-tier';
-            if (ttk <= 0.8) return 'b-tier';
-            return 'c-tier';
-        }
-        
-        // Get star rating display
-        function getStarRating(rating) {
-            const fullStars = Math.floor(rating);
-            const hasHalfStar = rating % 1 >= 0.5;
-            let stars = '⭐'.repeat(fullStars);
-            if (hasHalfStar && fullStars < 5) stars += '☆';
-            return stars.padEnd(5, '☆');
-        }
-
-        // Create weapon card HTML
-        function createWeaponCard(weaponName) {
-            const weapon = weaponDatabase[weaponName];
-            if (!weapon) return '';
-            
-            const ttkTier = getTTKTier(weapon.ttk);
-            const ttkDisplay = weapon.ttk === 'N/A' ? 'N/A' : `${weapon.ttk}s`;
-            
-            // Add patch badge for Sword
-            let patchBadge = '';
-            if (weaponName === 'Sword') {
-                patchBadge = `
-                    <div class="patch-change">
-                        <span class="change-badge buff">↑ Damage</span>
-                        <span class="patch-num">7.6.0</span>
-                    </div>`;
-            }
-            
-            // Add hybrid pill for KS-23
-            let extraInsight = '';
-            if (weaponName === 'KS-23') {
-                extraInsight = '<span class="insight-pill">🆕 Hybrid</span>';
-            }
-            
-            return `
-                <article class="weapon-card ${weapon.class}" data-weapon="${weaponName}">
-                    <span class="class-badge ${weapon.class}">${weapon.class}</span>
-                    ${patchBadge}
-                    
-                    <div class="weapon-header">
-                        <h2 class="weapon-name">${weaponName}</h2>
-                    </div>
-                    
-                    <div class="ttk-hero">
-                        <div class="ttk-value ${ttkTier}">${ttkDisplay}</div>
-                        <div class="ttk-label">Average TTK</div>
-                    </div>
-                    
-                    <div class="quick-insights">
-                        <span class="insight-pill">⚡ ${weapon.dps} DPS</span>
-                        <span class="insight-pill">📏 ${weapon.range}m</span>
-                        <span class="insight-pill">🎮 ${weapon.ease}/10 ease</span>
-                        ${extraInsight}
-                    </div>
-                    
-                    <div class="community-score">
-                        <span class="label">Community Sentiment</span>
-                        <span class="value">${weapon.sentiment}%</span>
-                    </div>
-                    <div class="rating-stars">${getStarRating(weapon.rating)}</div>
-                    <p class="summary">"${weapon.summary}"</p>
-                </article>
-            `;
-        }
-
-        // Intersection Observer for scroll animations
-        const scrollObserverOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const scrollObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-in');
-                    // Unobserve after animation to improve performance
-                    scrollObserver.unobserve(entry.target);
-                }
-            });
-        }, scrollObserverOptions);
-
-        // Observe all cards and sections on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.weapon-card, .filter-section, .timeline-section').forEach(el => {
-                scrollObserver.observe(el);
-            });
-        });
-
-        // Hero section fade-in on load
-        window.addEventListener('load', () => {
-            const heroSection = document.querySelector('.hero');
-            if (heroSection) {
-                heroSection.style.opacity = '0';
-                heroSection.style.transform = 'translateY(20px)';
-                
-                setTimeout(() => {
-                    heroSection.style.transition = 'all 0.8s ease-out';
-                    heroSection.style.opacity = '1';
-                    heroSection.style.transform = 'translateY(0)';
-                }, 100);
-            }
-        });
-        
-        // Load more weapons
-        document.getElementById('loadMoreBtn').addEventListener('click', function() {
-            const moreSection = document.getElementById('moreWeapons');
-            const grid = document.getElementById('additionalWeapons');
-            
-            grid.innerHTML = '';
-            
-            additionalWeapons.forEach(weaponName => {
-                grid.innerHTML += createWeaponCard(weaponName);
-            });
-            
-            moreSection.style.display = 'block';
-            this.style.display = 'none';
-            
-            // Re-observe new cards for scroll animations
-            setTimeout(() => {
-                document.querySelectorAll('#additionalWeapons .weapon-card').forEach(card => {
-                    scrollObserver.observe(card);
-                });
-            }, 100);
-            
-            attachComparisonHandlers();
-        });
-
-        // Smart Filter System
-        const filterChips = document.querySelectorAll('.filter-chip');
-        let currentFilter = 'all';
-        
-        filterChips.forEach(chip => {
-            chip.addEventListener('click', function() {
-                filterChips.forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-                
-                const filter = this.dataset.filter;
-                currentFilter = filter;
-                
-                const allCards = document.querySelectorAll('.weapon-card');
-                const weaponsToShow = filterLogic[filter] || [];
-                
-                if (filter === 'all') {
-                    allCards.forEach(card => {
-                        card.style.display = 'block';
-                    });
-                } else {
-                    allCards.forEach(card => {
-                        card.style.display = 'none';
-                    });
-                    
-                    weaponsToShow.forEach(weaponName => {
-                        const card = document.querySelector(`[data-weapon="${weaponName}"]`);
-                        if (card) {
-                            card.style.display = 'block';
-                        }
-                    });
-                    
-                    if (document.getElementById('moreWeapons').style.display === 'none') {
-                        document.getElementById('loadMoreBtn').click();
-                    }
-                }
-            });
-        });
-
-        // Comparison Tool with enhanced features
-        let selectedWeapons = [];
-        const maxCompare = 3;
-
-        function attachComparisonHandlers() {
-            document.querySelectorAll('.weapon-card').forEach(card => {
-                card.replaceWith(card.cloneNode(true));
-            });
-            
-            document.querySelectorAll('.weapon-card').forEach(card => {
-                card.addEventListener('click', function(e) {
-                    if (e.target.closest('button')) return;
-                    
-                    const weaponName = this.dataset.weapon;
-                    
-                    if (selectedWeapons.includes(weaponName)) {
-                        selectedWeapons = selectedWeapons.filter(w => w !== weaponName);
-                        this.classList.remove('selected');
-                    } else if (selectedWeapons.length < maxCompare) {
-                        selectedWeapons.push(weaponName);
-                        this.classList.add('selected');
-                    } else {
-                        alert('Maximum 3 weapons can be compared at once');
-                    }
-                    
-                    updateComparison();
-                });
-            });
-        }
-
-        function updateComparison() {
-            const btn = document.getElementById('compareBtn');
-            btn.textContent = `Compare (${selectedWeapons.length}/3)`;
-            
-            const tool = document.getElementById('comparisonTool');
-            const content = document.getElementById('comparisonContent');
-            const winner = document.getElementById('comparisonWinner');
-            
-            if (selectedWeapons.length > 0) {
-                tool.classList.add('active');
-                
-                let html = '';
-                selectedWeapons.forEach((weaponName, index) => {
-                    const weapon = weaponDatabase[weaponName];
-                    if (weapon) {
-                        const ttkDisplay = weapon.ttk === 'N/A' ? 'N/A' : `${weapon.ttk}s`;
-                        
-                        html += `
-                            <div class="comparison-item">
-                                <h4>${weaponName}</h4>
-                                <div class="comparison-stat">
-                                    <span>Class</span>
-                                    <span style="color: var(--${weapon.class === 'light' ? 'cyan' : weapon.class === 'medium' ? 'purple' : 'pink'})">
-                                        ${weapon.class.toUpperCase()}
-                                    </span>
-                                </div>
-                                <div class="comparison-stat">
-                                    <span>TTK</span>
-                                    <span style="color: var(--${getTTKTier(weapon.ttk).replace('-tier', '') === 's' ? 'gold' : getTTKTier(weapon.ttk).replace('-tier', '') === 'a' ? 'purple' : 'cyan'})">
-                                        ${ttkDisplay}
-                                    </span>
-                                </div>
-                                <div class="comparison-stat">
-                                    <span>DPS</span>
-                                    <span>${weapon.dps}</span>
-                                </div>
-                                <div class="comparison-stat">
-                                    <span>Range</span>
-                                    <span>${weapon.range}m</span>
-                                </div>
-                                <div class="comparison-stat">
-                                    <span>Win Rate</span>
-                                    <span style="color: ${weapon.winRate > 65 ? '#00ff00' : weapon.winRate > 60 ? '#ffff00' : '#ff4444'}">
-                                        ${weapon.winRate}%
-                                    </span>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-                
-                content.innerHTML = html;
-                
-                // Show winner analysis if comparing 2+ weapons
-                if (selectedWeapons.length >= 2) {
-                    const weapons = selectedWeapons.map(w => weaponDatabase[w]);
-                    const fastestTTK = Math.min(...weapons.map(w => w.ttk === 'N/A' ? 999 : w.ttk));
-                    const winner = weapons.find(w => w.ttk === fastestTTK);
-                    const winnerName = selectedWeapons[weapons.indexOf(winner)];
-                    
-                    document.getElementById('comparisonWinner').style.display = 'block';
-                    document.getElementById('comparisonWinner').innerHTML = `
-                        🏆 Winner: <strong>${winnerName}</strong> - Fastest TTK at ${fastestTTK}s
-                        <br><small>Best at range: ${winner.range > 50 ? winnerName : 'Close combat weapon'}</small>
-                    `;
-                }
-            } else {
-                tool.classList.remove('active');
-                winner.style.display = 'none';
-            }
-        }
-
-        document.getElementById('clearComparison').addEventListener('click', () => {
-            selectedWeapons = [];
-            document.querySelectorAll('.weapon-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            updateComparison();
-        });
-
-        // Quick action functions
-        function copyLoadout(weapon) {
-            const text = `${weapon} - ${weaponDatabase[weapon].class.toUpperCase()} - TTK: ${weaponDatabase[weapon].ttk}s`;
-            navigator.clipboard.writeText(text);
-            alert(`Copied: ${text}`);
-        }
-
-        function watchGuide(weapon) {
-            console.log(`Opening guide for ${weapon}`);
-            // In production, this would open a YouTube guide or internal guide page
-        }
-
-        // TTK Bar Animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const bars = entry.target.querySelectorAll('.ttk-bar-fill');
-                    bars.forEach((bar, index) => {
-                        setTimeout(() => {
-                            bar.style.width = bar.style.width;
-                        }, index * 100);
-                    });
-                }
-            });
-        }, { threshold: 0.5 });
-
-        document.querySelectorAll('.weapon-card').forEach(card => {
-            observer.observe(card);
-        });
-
-        // Live update simulation for time only
-        setInterval(() => {
-            const updateTime = document.getElementById('updateTime');
-            const minutes = Math.floor(Math.random() * 10) + 1;
-            updateTime.textContent = `${minutes} minutes ago`;
-        }, 30000);
-
-        // Easter egg: Logo click counter
-        const logo = document.querySelector('.logo');
-        logo.addEventListener('click', (e) => {
-            e.preventDefault();
-            const clicks = parseInt(logo.dataset.clicks) + 1;
-            logo.dataset.clicks = clicks;
-            
-            if (clicks === 5) {
-                document.body.style.filter = document.body.style.filter === 'invert(1)' ? '' : 'invert(1)';
-                logo.dataset.clicks = 0;
-            }
-        });
-
-        // Konami code easter egg
-        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-        let konamiIndex = 0;
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === konamiCode[konamiIndex]) {
-                konamiIndex++;
-                if (konamiIndex === konamiCode.length) {
-                    alert('🎮 Dev Mode Activated! All weapons now show 100% win rate!');
-                    document.querySelectorAll('.win-rate-value').forEach(el => {
-                        if (!el.textContent.includes('%')) return;
-                        el.innerHTML = '100%<span class="trend-arrow">↑</span>';
-                    });
-                    konamiIndex = 0;
-                }
-            } else {
-                konamiIndex = 0;
-            }
-        });
-
-        // Initialize comparison handlers
-        attachComparisonHandlers();
-
-        // Performance Monitoring
-        if ('performance' in window) {
-            window.addEventListener('load', () => {
-                const perfData = performance.getEntriesByType('navigation')[0];
-                const fcp = performance.getEntriesByName('first-contentful-paint')[0];
-                console.log('Performance Metrics:', {
-                    FCP: fcp ? fcp.startTime : 'N/A',
-                    DOMLoad: perfData.domContentLoadedEventEnd - perfData.fetchStart,
-                    WindowLoad: perfData.loadEventEnd - perfData.fetchStart
-                });
-            });
-        }
-    </script>
     
-    <!-- Footer -->
-    <footer style="text-align:center;padding:3rem 1rem;color:var(--text-dim);margin-top:4rem;border-top:1px solid rgba(255,255,255,0.1);">
-        <div class="container">
-            <p style="font-size: 0.75rem; margin-bottom: 1rem;">Sources: Reddit, YouTube tier lists, TheFinals.gg sentiment • Not affiliated with Embark Studios</p>
-            <p style="font-size: 0.875rem; margin-bottom: 1.5rem;">
-                © 2025 TheFinalsLoadout.com | Created by 
-                <a href="https://www.paultakisaki.com/" rel="author" style="color: var(--cyan); text-decoration: none;">Paul Takisaki</a>
-            </p>
-            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; font-size: 0.875rem;">
-                <a href="/legal/legal.html" style="color: var(--cyan); text-decoration: none; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">Legal Disclaimer</a>
-                <a href="https://thefinalsloadout.com/feedback" style="color: var(--gold); text-decoration: none; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">📝 Submit Feedback</a>
-            </div>
-            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.75rem; opacity: 0.7;">
-                <p>Meta rankings and community sentiment are sourced from Reddit, YouTube, Discord, and post-patch tier list discussions. All data is independently analyzed and curated by TheFinalsLoadout.com.</p>
-            </div>
+    <!-- Quick Stats -->
+    <section class="quick-stats">
+      <div class="stat-card">
+        <div class="stat-label">Community Favorite</div>
+        <div class="stat-value">FCAR</div>
+        <div class="stat-meta">92% positive sentiment</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Most Controversial</div>
+        <div class="stat-value">CL-40</div>
+        <div class="stat-meta">Love it or hate it</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Rising Pick</div>
+        <div class="stat-value">.50 Akimbo</div>
+        <div class="stat-meta">↑ 18% this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Weapons</div>
+        <div class="stat-value">20</div>
+        <div class="stat-meta">6L / 8M / 6H</div>
+      </div>
+    </section>
+    
+    <!-- Filters -->
+    <section class="filters">
+      <div class="filter-group">
+        <button class="chip active" data-filter="all">All Weapons</button>
+        <button class="chip" data-filter="meta">Meta Only</button>
+        <button class="chip" data-filter="loved">Community Loved</button>
+      </div>
+      <input type="text" class="search" placeholder="Search weapons..." id="searchInput">
+      <button class="chip" id="resetBtn">Reset</button>
+    </section>
+    
+    <!-- Light Class -->
+    <section class="class-section" data-class="light">
+      <div class="class-header">
+        <div class="class-icon light">L</div>
+        <h2 class="class-title">Light</h2>
+        <span class="class-count">6 weapons</span>
+      </div>
+      <div class="weapon-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Weapon</th>
+              <th>Tier</th>
+              <th>TTK</th>
+              <th>Mag</th>
+              <th>Range</th>
+              <th>Sentiment</th>
+              <th>Pick Rate</th>
+            </tr>
+          </thead>
+          <tbody id="lightWeapons"></tbody>
+        </table>
+      </div>
+    </section>
+    
+    <!-- Medium Class -->
+    <section class="class-section" data-class="medium">
+      <div class="class-header">
+        <div class="class-icon medium">M</div>
+        <h2 class="class-title">Medium</h2>
+        <span class="class-count">8 weapons</span>
+      </div>
+      <div class="weapon-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Weapon</th>
+              <th>Tier</th>
+              <th>TTK</th>
+              <th>Mag</th>
+              <th>Range</th>
+              <th>Sentiment</th>
+              <th>Pick Rate</th>
+            </tr>
+          </thead>
+          <tbody id="mediumWeapons"></tbody>
+        </table>
+      </div>
+    </section>
+    
+    <!-- Heavy Class -->
+    <section class="class-section" data-class="heavy">
+      <div class="class-header">
+        <div class="class-icon heavy">H</div>
+        <h2 class="class-title">Heavy</h2>
+        <span class="class-count">6 weapons</span>
+      </div>
+      <div class="weapon-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Weapon</th>
+              <th>Tier</th>
+              <th>TTK</th>
+              <th>Mag</th>
+              <th>Range</th>
+              <th>Sentiment</th>
+              <th>Pick Rate</th>
+            </tr>
+          </thead>
+          <tbody id="heavyWeapons"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  
+  <script>
+// Complete weapon data from CSV with sentiment scores
+const weaponData = {
+  light: [
+    { name: "XP-54", fullName: "XP-54 (SMG)", tier: "S", ttk: 0.70, rounds: 30, range: "Close", sentiment: 0.87, pickRate: 0.22, hot: true },
+    { name: "SR-84", fullName: "SR-84 (Sniper)", tier: "B", ttk: 0.86, rounds: 6, range: "Long", sentiment: 0.75, pickRate: 0.06 },
+    { name: "M11", fullName: "M11 (Machine Pistol)", tier: "B", ttk: 0.82, rounds: 40, range: "Close", sentiment: 0.68, pickRate: 0.08 },
+    { name: "Throwing Knives", fullName: "Throwing Knives (Projectile)", tier: "B", ttk: 0.75, rounds: "∞", range: "Mid", sentiment: 0.82, pickRate: 0.04 },
+    { name: "V9S", fullName: "V9S (Pistol)", tier: "C", ttk: 0.95, rounds: 20, range: "Close", sentiment: 0.55, pickRate: 0.04 },
+    { name: "Sword", fullName: "Sword (Melee)", tier: "C", ttk: 0.90, rounds: "∞", range: "Melee", sentiment: 0.72, pickRate: 0.03 }
+  ],
+  medium: [
+    { name: "FCAR", fullName: "FCAR (Assault Rifle)", tier: "S", ttk: 0.68, rounds: 25, range: "Mid", sentiment: 0.92, pickRate: 0.28, hot: true },
+    { name: "FAMAS", fullName: "FAMAS (Burst Rifle)", tier: "A", ttk: 0.65, rounds: 30, range: "Mid", sentiment: 0.85, pickRate: 0.15 },
+    { name: "AKM", fullName: "AKM (Assault Rifle)", tier: "A", ttk: 0.74, rounds: 30, range: "Mid", sentiment: 0.82, pickRate: 0.18 },
+    { name: "CL-40", fullName: "CL-40 (Grenade Launcher)", tier: "A", ttk: 0.90, rounds: 4, range: "Mid", sentiment: 0.65, pickRate: 0.12 },
+    { name: "Pike-556", fullName: "Pike-556 (Marksman Rifle)", tier: "B", ttk: 0.72, rounds: 20, range: "Long", sentiment: 0.78, pickRate: 0.07 },
+    { name: "CB-01", fullName: "CB-01 Repeater (Marksman Rifle)", tier: "B", ttk: 0.80, rounds: 15, range: "Long", sentiment: 0.73, pickRate: 0.06 },
+    { name: "Model 1887", fullName: "Model 1887 (Shotgun)", tier: "B", ttk: 0.90, rounds: 6, range: "Close", sentiment: 0.70, pickRate: 0.08 },
+    { name: "R.357", fullName: "R.357 (Revolver)", tier: "C", ttk: 0.85, rounds: 6, range: "Mid", sentiment: 0.68, pickRate: 0.05 }
+  ],
+  heavy: [
+    { name: ".50 Akimbo", fullName: ".50 Akimbo (Dual Pistols)", tier: "S", ttk: 0.62, rounds: 16, range: "Close", sentiment: 0.88, pickRate: 0.19, hot: true },
+    { name: "Lewis Gun", fullName: "Lewis Gun (LMG)", tier: "A", ttk: 0.76, rounds: 95, range: "Mid", sentiment: 0.83, pickRate: 0.13 },
+    { name: "MGL32", fullName: "MGL 32 (Grenade Launcher)", tier: "A", ttk: 0.88, rounds: 6, range: "Mid", sentiment: 0.79, pickRate: 0.14 },
+    { name: "M60", fullName: "M60 (LMG)", tier: "B", ttk: 0.82, rounds: 150, range: "Mid", sentiment: 0.74, pickRate: 0.11 },
+    { name: "KS-23", fullName: "KS-23 (Slug Shotgun)", tier: "B", ttk: 0.85, rounds: 4, range: "Mid", sentiment: 0.71, pickRate: 0.08 },
+    { name: "M134", fullName: "M134 Minigun", tier: "C", ttk: 0.50, rounds: 200, range: "Close", sentiment: 0.58, pickRate: 0.04 }
+  ]
+};
+
+// State
+let filterState = 'all';
+let searchQuery = '';
+
+// Render functions
+function getSentimentColor(sentiment) {
+  if (sentiment >= 0.8) return 'positive';
+  if (sentiment >= 0.6) return 'neutral';
+  return 'negative';
+}
+
+function renderWeaponRow(weapon) {
+  return `
+    <tr>
+      <td data-label="Weapon">
+        <span class="weapon-name">
+          ${weapon.name}
+          ${weapon.hot ? '<span class="hot-tag">HOT</span>' : ''}
+        </span>
+      </td>
+      <td data-label="Tier">
+        <span class="tier tier-${weapon.tier.toLowerCase()}">${weapon.tier}</span>
+      </td>
+      <td data-label="TTK">${weapon.ttk.toFixed(2)}s</td>
+      <td data-label="Mag">
+        <span class="rounds-tag">${weapon.rounds}</span>
+      </td>
+      <td data-label="Range">
+        <span class="range-tag">${weapon.range}</span>
+      </td>
+      <td data-label="Sentiment">
+        <div class="stat-bar">
+          <div class="bar">
+            <div class="bar-fill ${getSentimentColor(weapon.sentiment)}" style="width: ${weapon.sentiment * 100}%"></div>
+          </div>
+          <span>${(weapon.sentiment * 100).toFixed(0)}%</span>
         </div>
-    </footer>
+      </td>
+      <td data-label="Pick Rate">${(weapon.pickRate * 100).toFixed(0)}%</td>
+    </tr>
+  `;
+}
+
+function filterWeapons(weapons) {
+  return weapons.filter(w => {
+    // Search filter
+    if (searchQuery && !w.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
+        !w.fullName.toLowerCase().includes(searchQuery.toLowerCase())) {
+      return false;
+    }
+    
+    // Tier filter
+    if (filterState === 'meta' && !['S', 'A'].includes(w.tier)) {
+      return false;
+    }
+    
+    // Sentiment filter
+    if (filterState === 'loved' && w.sentiment < 0.8) {
+      return false;
+    }
+    
+    return true;
+  });
+}
+
+function renderAllWeapons() {
+  // Light weapons
+  const lightFiltered = filterWeapons(weaponData.light);
+  document.getElementById('lightWeapons').innerHTML = lightFiltered.map(renderWeaponRow).join('');
+  document.querySelector('[data-class="light"] .class-count').textContent = `${lightFiltered.length} weapons`;
+  
+  // Medium weapons
+  const mediumFiltered = filterWeapons(weaponData.medium);
+  document.getElementById('mediumWeapons').innerHTML = mediumFiltered.map(renderWeaponRow).join('');
+  document.querySelector('[data-class="medium"] .class-count').textContent = `${mediumFiltered.length} weapons`;
+  
+  // Heavy weapons
+  const heavyFiltered = filterWeapons(weaponData.heavy);
+  document.getElementById('heavyWeapons').innerHTML = heavyFiltered.map(renderWeaponRow).join('');
+  document.querySelector('[data-class="heavy"] .class-count').textContent = `${heavyFiltered.length} weapons`;
+  
+  // Hide empty sections
+  document.querySelectorAll('.class-section').forEach(section => {
+    const tbody = section.querySelector('tbody');
+    section.style.display = tbody.children.length === 0 ? 'none' : 'block';
+  });
+}
+
+// Event listeners
+document.querySelectorAll('.chip[data-filter]').forEach(chip => {
+  chip.addEventListener('click', (e) => {
+    document.querySelectorAll('.chip[data-filter]').forEach(c => c.classList.remove('active'));
+    e.target.classList.add('active');
+    filterState = e.target.dataset.filter;
+    renderAllWeapons();
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  searchQuery = e.target.value;
+  renderAllWeapons();
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  filterState = 'all';
+  searchQuery = '';
+  document.getElementById('searchInput').value = '';
+  document.querySelector('.chip[data-filter="all"]').click();
+});
+
+// Sort functionality
+document.querySelectorAll('th').forEach(th => {
+  th.addEventListener('click', () => {
+    // Simple visual feedback - in production, implement actual sorting
+    console.log('Sort by:', th.textContent);
+  });
+});
+
+// Initial render
+renderAllWeapons();
+  </script>
 </body>
 </html>
