@@ -602,6 +602,40 @@
       animation: fadeInUp 0.8s ease forwards;
     }
     
+    /* Legend/Key Section */
+    .legend-section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease 0.6s forwards;
+    }
+    
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .legend-text {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    
+    @media (max-width: 768px) {
+      .legend-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
     /* Utility */
     .hidden { display: none; }
     .text-muted { color: var(--muted); }
@@ -737,6 +771,45 @@
           </thead>
           <tbody id="heavyWeapons"></tbody>
         </table>
+      </div>
+    </section>
+    
+    <!-- Legend/Key -->
+    <section class="legend-section">
+      <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;">Legend</h3>
+      <div class="legend-grid">
+        <div class="legend-item">
+          <span class="tier tier-s">S</span>
+          <span class="legend-text">Top tier - Meta defining</span>
+        </div>
+        <div class="legend-item">
+          <span class="tier tier-a">A</span>
+          <span class="legend-text">Strong - Competitive viable</span>
+        </div>
+        <div class="legend-item">
+          <span class="tier tier-b">B</span>
+          <span class="legend-text">Decent - Situational pick</span>
+        </div>
+        <div class="legend-item">
+          <span class="tier tier-c">C</span>
+          <span class="legend-text">Weak - Needs buffs</span>
+        </div>
+        <div class="legend-item">
+          <span class="hot-tag">HOT</span>
+          <span class="legend-text">Trending in current meta</span>
+        </div>
+        <div class="legend-item">
+          <strong style="font-size: 0.875rem;">TTK</strong>
+          <span class="legend-text">Time to kill (seconds)</span>
+        </div>
+        <div class="legend-item">
+          <strong style="font-size: 0.875rem;">Sentiment</strong>
+          <span class="legend-text">Community approval rating</span>
+        </div>
+        <div class="legend-item">
+          <strong style="font-size: 0.875rem;">Pick Rate</strong>
+          <span class="legend-text">Usage in ranked/tournament play</span>
+        </div>
       </div>
     </section>
   </div>
