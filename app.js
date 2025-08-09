@@ -141,6 +141,26 @@ async function loadCounter() {
 // Call it when page loads
 document.addEventListener("DOMContentLoaded", loadCounter);
 
+// Helper function to map item names to image filenames
+function getImagePath(itemName) {
+  // Special cases for weapons with inconsistent image names
+  const imageMapping = {
+    ".50 Akimbo": "50_Akimbo",
+    "SA1216": "SA_1216",
+    "MGL32": "M32GL",
+    "ShAK-50": "SHAK-50"
+  };
+  
+  // Check if this item needs special mapping
+  const mappedName = imageMapping[itemName] || itemName;
+  
+  // Replace spaces with underscores for the filename
+  return `images/${mappedName.replace(/ /g, "_")}.webp`;
+}
+
+// Make it globally accessible
+window.getImagePath = getImagePath;
+
 // Mobile detection and performance state
 const isMobile =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -402,16 +422,16 @@ let loadouts = {
   },
   Heavy: {
     weapons: [
-      "50 Akimbo",
+      ".50 Akimbo",
       "Flamethrower",
       "KS-23",
       "Lewis Gun",
       "M60",
       "M134 Minigun",
-      "M32GL",
-      "SA 1216",
+      "MGL32",
+      "SA1216",
       "Sledgehammer",
-      "SHAK-50",
+      "ShAK-50",
       "Spear",
     ],
     specializations: ["Charge N Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
@@ -1991,15 +2011,15 @@ async function finalizeSpin(columns) {
         class: savedClass,
         weapon: {
           name: weapon,
-          image: `images/${weapon.replace(/ /g, "_")}.webp`,
+          image: getImagePath(weapon),
         },
         specialization: {
           name: specialization,
-          image: `images/${specialization.replace(/ /g, "_")}.webp`,
+          image: getImagePath(specialization),
         },
         gadgets: gadgets.map((g) => ({
           name: g,
-          image: `images/${g.replace(/ /g, "_")}.webp`,
+          image: getImagePath(g),
         })),
       };
 
@@ -2724,16 +2744,16 @@ function generateLoadoutName(classType, weapon, spec) {
     "Riot Shield": "Shield",
 
     // Heavy weapons
-    "50 Akimbo": "Dual",
+    ".50 Akimbo": "Dual",
     Flamethrower: "Pyro",
     "KS-23": "Pump",
     "Lewis Gun": "Vintage",
     M60: "Support",
     "M134 Minigun": "Minigun",
-    M32GL: "Grenade",
-    "SA 1216": "Auto",
+    MGL32: "Grenade",
+    SA1216: "Auto",
     Sledgehammer: "Hammer",
-    "SHAK-50": "Shak",
+    "ShAK-50": "Shak",
     Spear: "Spear",
   };
 
@@ -4803,15 +4823,15 @@ Gadget 3: ${selectedItems[4]}`;
       class: classType,
       weapon: {
         name: selectedWeapon,
-        image: `images/${selectedWeapon.replace(/ /g, "_")}.webp`,
+        image: getImagePath(selectedWeapon),
       },
       specialization: {
         name: selectedSpec,
-        image: `images/${selectedSpec.replace(/ /g, "_")}.webp`,
+        image: getImagePath(selectedSpec),
       },
       gadgets: selectedGadgets.map((g) => ({
         name: g,
-        image: `images/${g.replace(/ /g, "_")}.webp`,
+        image: getImagePath(g),
       })),
     };
     slotHistoryManager.addToHistory(loadout);
