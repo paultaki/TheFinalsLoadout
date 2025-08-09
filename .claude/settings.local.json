@@ -37,7 +37,9 @@
       "Bash(cursor:*)",
       "Bash(code:*)",
       "Bash(diff:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(python3:*)",
+      "Bash(/dev/null)"
     ]
   },
   "enableAllProjectMcpServers": false
