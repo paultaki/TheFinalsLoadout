@@ -1835,7 +1835,9 @@ async function showSlotMachineOverlay(selectedClass, spinCount, hasJackpotRespin
 
       if (overlayOutput) {
         // Create a new slot machine instance for the overlay
-        const overlaySlotMachine = new SlotMachine("overlay-slot-output");
+        // Use the global SlotMachine class from slot-machine.js
+        const SlotMachineClass = window.SlotMachine || SlotMachine;
+        const overlaySlotMachine = new SlotMachineClass("overlay-slot-output");
         overlaySlotMachine.init();
 
         // Store the original instance temporarily

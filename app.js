@@ -696,18 +696,17 @@ const displayLoadout = (classType) => {
   }
 
   // Check if we're being called from within the overlay system
-  const overlayOutput = document.getElementById("output");
-  const isInOverlay =
-    overlayOutput &&
-    (overlayOutput.closest(".slot-machine-overlay") ||
-      (overlayOutput.id === "output" &&
-        document.getElementById("output-backup")));
-
+  const overlayOutput = document.getElementById("overlay-slot-output");
+  const regularOutput = document.getElementById("output");
+  const isInOverlay = overlayOutput !== null;
+  
+  // Allow execution if we're in overlay mode or if overlay is not active
   if (
     window.overlayManager &&
     window.overlayManager.overlayState &&
     window.overlayManager.overlayState.isActive &&
-    !isInOverlay
+    !isInOverlay &&
+    !window.startSlotMachine
   ) {
     console.log(
       "⏸️ Overlay active but not slot machine overlay, skipping displayLoadout"
@@ -858,10 +857,13 @@ const displayLoadout = (classType) => {
     createGadgetSpinSequence(gadget, index)
   );
 
+  // Determine the correct container ID based on overlay state
+  const containerId = isInOverlay ? "overlay-slot-output" : "output";
+  
   // Initialize or update slot machine
   if (!slotMachine) {
     slotMachine = new SlotMachine({
-      containerId: "output",
+      containerId: containerId,
       onComplete: (error, results) => {
         if (error) {
           console.error("Slot machine error:", error);
@@ -2229,6 +2231,29 @@ window.displayLoadout = displayLoadout;
 
 // Make finalizeSpin globally accessible for overlay manager
 window.finalizeSpin = finalizeSpin;
+
+// Create startSlotMachine function for overlay manager
+window.startSlotMachine = function(selectedClass, spinCount, hasJackpotRespin) {
+  console.log("🎰 startSlotMachine called with:", { selectedClass, spinCount, hasJackpotRespin });
+  
+  // Set up state
+  state.selectedClass = selectedClass;
+  state.totalSpins = spinCount || 1;
+  state.currentSpin = state.totalSpins;
+  state.isSpinning = false;
+  
+  // If we have a jackpot respin, set the flag
+  if (hasJackpotRespin && window.earnFreeRespin) {
+    window.earnFreeRespin();
+  }
+  
+  // Start the display
+  if (selectedClass && ["Light", "Medium", "Heavy"].includes(selectedClass)) {
+    displayLoadout(selectedClass);
+  } else {
+    displayRandomLoadout();
+  }
+};
 
 // Make other functions globally accessible for slot machine wrapper
 window.getFilteredLoadouts = getFilteredLoadouts;
