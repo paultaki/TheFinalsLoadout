@@ -371,16 +371,6 @@
       color: var(--bad);
     }
     
-    .tier-d {
-      background: rgba(156, 163, 175, 0.2);
-      color: #9ca3af;
-    }
-    
-    .tier-e {
-      background: rgba(107, 114, 128, 0.2);
-      color: #6b7280;
-    }
-    
     .range-tag {
       font-size: 0.75rem;
       color: var(--muted);
@@ -671,7 +661,7 @@
     <header class="header">
       <h1>The Finals Meta <span class="badge">7.6.0</span></h1>
       <p class="subtitle">Community sentiment and meta analysis • Data from Reddit, Discord, and tournament play</p>
-      <p class="subtitle" style="font-size: 0.75rem; color: #00f0c0; margin-top: 0.5rem;">Updated 8/9/25</p>
+      <p class="subtitle" style="font-size: 0.75rem; color: #00f0c0; margin-top: 0.5rem;">Updated 8/8/25</p>
       <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; padding: 0.75rem; margin-top: 1rem; font-size: 0.813rem; color: var(--muted);">
         <span style="color: #f59e0b;">🚧</span> This page is under active development. Stats and rankings are being calibrated based on community feedback.
       </div>
@@ -696,8 +686,8 @@
       </div>
       <div class="stat-card">
         <div class="stat-label">Total Weapons</div>
-        <div class="stat-value">37</div>
-        <div class="stat-meta">14L / 12M / 11H</div>
+        <div class="stat-value">35</div>
+        <div class="stat-meta">13L / 11M / 11H</div>
       </div>
     </section>
     
@@ -717,7 +707,7 @@
       <div class="class-header">
         <div class="class-icon light">L</div>
         <h2 class="class-title">Light</h2>
-        <span class="class-count">14 weapons</span>
+        <span class="class-count">13 weapons</span>
       </div>
       <div class="weapon-table">
         <table>
@@ -742,7 +732,7 @@
       <div class="class-header">
         <div class="class-icon medium">M</div>
         <h2 class="class-title">Medium</h2>
-        <span class="class-count">12 weapons</span>
+        <span class="class-count">11 weapons</span>
       </div>
       <div class="weapon-table">
         <table>
@@ -808,14 +798,6 @@
           <span class="legend-text">Weak - Needs buffs</span>
         </div>
         <div class="legend-item">
-          <span class="tier tier-d">D</span>
-          <span class="legend-text">Very weak - Rarely viable</span>
-        </div>
-        <div class="legend-item">
-          <span class="tier tier-e">E</span>
-          <span class="legend-text">Bottom tier - Avoid</span>
-        </div>
-        <div class="legend-item">
           <span class="hot-tag">HOT</span>
           <span class="legend-text">Trending in current meta</span>
         </div>
@@ -848,48 +830,48 @@
   </footer>
   
   <script>
-// Updated weapon data from verified JSON - accurate to Season 7 patch 7.6.0
+// Complete weapon data from cleaned JSON with community tiers
 const weaponData = {
   light: [
-    { name: "ARN-220", fullName: "ARN-220 (Assault Rifle)", tier: "S", ttk: 0.66, rounds: 30, range: "Mid", sentiment: 0.88, pickRate: 0.32, hot: true, status: "Unchanged" },
-    { name: "XP-54", fullName: "XP-54 (SMG)", tier: "A", ttk: 0.63, rounds: 34, range: "Close-Mid", sentiment: 0.85, pickRate: 0.28, hot: true, status: "Nerfed" },
-    { name: "M11", fullName: "M11 (Machine Pistol)", tier: "A", ttk: 0.54, rounds: 40, range: "Close", sentiment: 0.82, pickRate: 0.25, hot: false, status: "Nerfed" },
-    { name: "V9S", fullName: "V9S (Pistol)", tier: "B", ttk: 0.50, rounds: 20, range: "Close", sentiment: 0.90, pickRate: 0.22, hot: true, status: "Unchanged" },
-    { name: "93R", fullName: "93R (Burst Pistol)", tier: "B", ttk: 0.52, rounds: 24, range: "Close", sentiment: 0.78, pickRate: 0.18, hot: false, status: "Buffed" },
-    { name: "SR-84", fullName: "SR-84 (Sniper)", tier: "B", ttk: 0.78, rounds: 6, range: "Long", sentiment: 0.75, pickRate: 0.15, hot: false, status: "Unchanged" },
-    { name: "LH1", fullName: "LH1 (DMR)", tier: "C", ttk: 0.67, rounds: 15, range: "Mid-Long", sentiment: 0.82, pickRate: 0.14, hot: false, status: "Buffed" },
-    { name: "SH1900", fullName: "SH1900 (Double-Barrel)", tier: "C", ttk: 0.00, rounds: 2, range: "Close", sentiment: 0.75, pickRate: 0.12, hot: false, status: "Unchanged" },
-    { name: "Recurve Bow", fullName: "Recurve Bow", tier: "C", ttk: 1.25, rounds: "∞", range: "Mid", sentiment: 0.72, pickRate: 0.08, hot: false, status: "Unchanged" },
-    { name: "Throwing Knives", fullName: "Throwing Knives", tier: "C", ttk: 0.78, rounds: "∞", range: "Mid", sentiment: 0.68, pickRate: 0.06, hot: false, status: "Unchanged" },
-    { name: "Dagger", fullName: "Dagger (Melee)", tier: "D", ttk: 1.21, rounds: "∞", range: "Melee", sentiment: 0.65, pickRate: 0.04, hot: false, status: "Buffed" },
-    { name: "Sword", fullName: "Sword (Melee)", tier: "E", ttk: 1.38, rounds: "∞", range: "Melee", sentiment: 0.62, pickRate: 0.03, hot: false, status: "Buffed" },
-    { name: "M26 Matter", fullName: "M26 Matter (Shotgun)", tier: "E", ttk: 0.71, rounds: 8, range: "Close", sentiment: 0.58, pickRate: 0.02, hot: false, status: "Unchanged" }
+    { name: "M11", fullName: "M11 (Machine Pistol)", tier: "S", ttk: 0.52, rounds: 41, range: "Close", sentiment: 0.90, pickRate: 0.26, hot: true },
+    { name: "SR-84", fullName: "SR-84 (Sniper)", tier: "S", ttk: 1.00, rounds: 5, range: "Long", sentiment: 0.85, pickRate: 0.18 },
+    { name: "V9S", fullName: "V9S (Pistol)", tier: "S", ttk: 0.48, rounds: 21, range: "Close", sentiment: 0.92, pickRate: 0.28, hot: true },
+    { name: "XP-54", fullName: "XP-54 (SMG)", tier: "S", ttk: 0.64, rounds: 34, range: "Close-Mid", sentiment: 0.88, pickRate: 0.25, hot: true },
+    { name: "ARN-220", fullName: "ARN-220 (Carbine)", tier: "A", ttk: 0.85, rounds: 32, range: "Mid", sentiment: 0.82, pickRate: 0.18 },
+    { name: "LH1", fullName: "LH1 (DMR)", tier: "A", ttk: 0.84, rounds: 14, range: "Mid-Long", sentiment: 0.78, pickRate: 0.12 },
+    { name: "93R", fullName: "93R (Burst Pistol)", tier: "A", ttk: 0.60, rounds: 27, range: "Close", sentiment: 0.80, pickRate: 0.14 },
+    { name: "Sword", fullName: "Sword (Melee)", tier: "A", ttk: 0.00, rounds: "∞", range: "Melee", sentiment: 0.79, pickRate: 0.10 },
+    { name: "M26 Matter", fullName: "M26 Matter (Shotgun)", tier: "B", ttk: 0.00, rounds: 3, range: "Close", sentiment: 0.74, pickRate: 0.07 },
+    { name: "SH1900", fullName: "SH1900 (Double-Barrel)", tier: "B", ttk: 0.00, rounds: 2, range: "Close", sentiment: 0.73, pickRate: 0.08 },
+    { name: "Recurve Bow", fullName: "Recurve Bow", tier: "B", ttk: 1.00, rounds: "∞", range: "Mid", sentiment: 0.72, pickRate: 0.06 },
+    { name: "Dagger", fullName: "Dagger (Melee)", tier: "B", ttk: 0.00, rounds: "∞", range: "Melee", sentiment: 0.70, pickRate: 0.05 },
+    { name: "Throwing Knives", fullName: "Throwing Knives", tier: "C", ttk: 1.12, rounds: "∞", range: "Mid", sentiment: 0.65, pickRate: 0.04 }
   ],
   medium: [
-    { name: "AKM", fullName: "AKM (Assault Rifle)", tier: "S", ttk: 0.75, rounds: 32, range: "Mid", sentiment: 0.92, pickRate: 0.35, hot: true, status: "Unchanged" },
-    { name: "FCAR", fullName: "FCAR (Battle Rifle)", tier: "S", ttk: 0.67, rounds: 25, range: "Mid", sentiment: 0.88, pickRate: 0.30, hot: true, status: "Unchanged" },
-    { name: "Cerberus 12GA", fullName: "Cerberus 12GA (Shotgun)", tier: "S", ttk: 0.60, rounds: 3, range: "Close", sentiment: 0.85, pickRate: 0.28, hot: true, status: "Unknown" },
-    { name: "CL-40", fullName: "CL-40 (Grenade Launcher)", tier: "A", ttk: 0.80, rounds: 5, range: "Mid", sentiment: 0.70, pickRate: 0.20, hot: false, status: "Nerfed" },
-    { name: "FAMAS", fullName: "FAMAS (Burst Rifle)", tier: "B", ttk: 0.74, rounds: 27, range: "Mid", sentiment: 0.78, pickRate: 0.18, hot: false, status: "Unchanged" },
-    { name: "CB-01 Repeater", fullName: "CB-01 Repeater", tier: "Not_Ranked", ttk: 0.78, rounds: 8, range: "Long", sentiment: 0.65, pickRate: 0.08, hot: false, status: "Unchanged" },
-    { name: "R.357", fullName: "R.357 (Revolver)", tier: "C", ttk: 0.86, rounds: 6, range: "Mid", sentiment: 0.72, pickRate: 0.10, hot: false, status: "Unchanged" },
-    { name: "Pike-556", fullName: "Pike-556 (DMR)", tier: "C", ttk: 0.90, rounds: 12, range: "Long", sentiment: 0.68, pickRate: 0.08, hot: false, status: "Unchanged" },
-    { name: "Model 1887", fullName: "Model 1887 (Shotgun)", tier: "D", ttk: 0.90, rounds: 6, range: "Close", sentiment: 0.65, pickRate: 0.06, hot: false, status: "Unchanged" },
-    { name: "Dual Blades", fullName: "Dual Blades (Melee)", tier: "E", ttk: 2.50, rounds: "∞", range: "Melee", sentiment: 0.55, pickRate: 0.02, hot: false, status: "Buffed" },
-    { name: "Riot Shield", fullName: "Riot Shield (Melee)", tier: "E", ttk: "N/A", rounds: "∞", range: "Melee", sentiment: 0.50, pickRate: 0.01, hot: false, status: "Buffed" }
+    { name: "AKM", fullName: "AKM (Assault Rifle)", tier: "S", ttk: 0.60, rounds: 30, range: "Mid", sentiment: 0.92, pickRate: 0.30, hot: true },
+    { name: "Cerberus 12GA", fullName: "Cerberus 12GA (Shotgun)", tier: "S", ttk: 0.67, rounds: 3, range: "Close", sentiment: 0.88, pickRate: 0.24, hot: true },
+    { name: "FAMAS", fullName: "FAMAS (Burst Rifle)", tier: "S", ttk: 0.64, rounds: 25, range: "Mid", sentiment: 0.90, pickRate: 0.28, hot: true },
+    { name: "FCAR", fullName: "FCAR (Battle Rifle)", tier: "A", ttk: 0.60, rounds: 25, range: "Mid", sentiment: 0.83, pickRate: 0.20 },
+    { name: "CB-01 Repeater", fullName: "CB-01 Repeater", tier: "A", ttk: 0.82, rounds: 8, range: "Long", sentiment: 0.75, pickRate: 0.10 },
+    { name: "CL-40", fullName: "CL-40 (Grenade Launcher)", tier: "A", ttk: 0.72, rounds: 4, range: "Mid", sentiment: 0.70, pickRate: 0.15 },
+    { name: "Model 1887", fullName: "Model 1887 (Shotgun)", tier: "B", ttk: 0.48, rounds: 6, range: "Close", sentiment: 0.70, pickRate: 0.07 },
+    { name: "Pike-556", fullName: "Pike-556 (DMR)", tier: "B", ttk: 0.87, rounds: 12, range: "Long", sentiment: 0.68, pickRate: 0.06 },
+    { name: "R.357", fullName: "R.357 (Revolver)", tier: "B", ttk: 0.67, rounds: 6, range: "Mid", sentiment: 0.72, pickRate: 0.08 },
+    { name: "Dual Blades", fullName: "Dual Blades (Melee)", tier: "B", ttk: 0.00, rounds: "∞", range: "Melee", sentiment: 0.71, pickRate: 0.05 },
+    { name: "Riot Shield", fullName: "Riot Shield (Melee)", tier: "C", ttk: 1.00, rounds: "∞", range: "Melee", sentiment: 0.60, pickRate: 0.03 }
   ],
   heavy: [
-    { name: "ShAK-50", fullName: "ShAK-50 (Heavy AR)", tier: "S", ttk: 0.57, rounds: 20, range: "Mid", sentiment: 0.92, pickRate: 0.35, hot: true, status: "Unchanged" },
-    { name: "M134 Minigun", fullName: "M134 Minigun", tier: "A", ttk: 0.52, rounds: 250, range: "Close", sentiment: 0.88, pickRate: 0.25, hot: true, status: "Unchanged" },
-    { name: "M60", fullName: "M60 (LMG)", tier: "A", ttk: 0.72, rounds: 100, range: "Mid", sentiment: 0.85, pickRate: 0.22, hot: true, status: "Unchanged" },
-    { name: ".50 Akimbo", fullName: ".50 Akimbo (Dual Pistols)", tier: "A", ttk: 0.78, rounds: 14, range: "Close", sentiment: 0.80, pickRate: 0.18, hot: false, status: "Unchanged" },
-    { name: "Flamethrower", fullName: "Flamethrower", tier: "A", ttk: 1.41, rounds: 30, range: "Close", sentiment: 0.70, pickRate: 0.12, hot: false, status: "Unchanged" },
-    { name: "Lewis Gun", fullName: "Lewis Gun (LMG)", tier: "B", ttk: 0.72, rounds: 47, range: "Mid", sentiment: 0.78, pickRate: 0.15, hot: false, status: "Unchanged" },
-    { name: "SA1216", fullName: "SA1216 (Shotgun)", tier: "D", ttk: 0.30, rounds: 16, range: "Close", sentiment: 0.75, pickRate: 0.14, hot: false, status: "Unchanged" },
-    { name: "KS-23", fullName: "KS-23 (Slug Shotgun)", tier: "C", ttk: 0.82, rounds: 6, range: "Mid", sentiment: 0.72, pickRate: 0.10, hot: false, status: "Buffed" },
-    { name: "Sledgehammer", fullName: "Sledgehammer (Melee)", tier: "C", ttk: "Variable", rounds: "∞", range: "Melee", sentiment: 0.68, pickRate: 0.08, hot: false, status: "Mixed" },
-    { name: "Spear", fullName: "Spear (Melee)", tier: "D", ttk: "Variable", rounds: "∞", range: "Melee", sentiment: 0.60, pickRate: 0.04, hot: false, status: "Buffed" },
-    { name: "MGL32", fullName: "MGL32 (Grenade Launcher)", tier: "E", ttk: 0.67, rounds: 6, range: "Mid", sentiment: 0.55, pickRate: 0.02, hot: false, status: "Unchanged" }
+    { name: "Lewis Gun", fullName: "Lewis Gun (LMG)", tier: "S", ttk: 0.72, rounds: 47, range: "Mid", sentiment: 0.90, pickRate: 0.26, hot: true },
+    { name: "M60", fullName: "M60 (LMG)", tier: "S", ttk: 0.72, rounds: 70, range: "Mid", sentiment: 0.88, pickRate: 0.24, hot: true },
+    { name: "ShAK-50", fullName: "ShAK-50 (Heavy AR)", tier: "S", ttk: 0.67, rounds: 20, range: "Mid", sentiment: 0.92, pickRate: 0.28, hot: true },
+    { name: ".50 Akimbo", fullName: ".50 Akimbo (Dual Pistols)", tier: "A", ttk: 0.78, rounds: 14, range: "Close", sentiment: 0.80, pickRate: 0.16 },
+    { name: "M134 Minigun", fullName: "M134 Minigun", tier: "A", ttk: 0.52, rounds: 250, range: "Close", sentiment: 0.78, pickRate: 0.15 },
+    { name: "SA1216", fullName: "SA1216 (Shotgun)", tier: "A", ttk: 0.47, rounds: 16, range: "Close", sentiment: 0.82, pickRate: 0.18 },
+    { name: "Flamethrower", fullName: "Flamethrower", tier: "B", ttk: 1.41, rounds: 30, range: "Close", sentiment: 0.74, pickRate: 0.09 },
+    { name: "KS-23", fullName: "KS-23 (Slug Shotgun)", tier: "B", ttk: 0.82, rounds: 3, range: "Mid", sentiment: 0.68, pickRate: 0.06 },
+    { name: "MGL32", fullName: "MGL32 (Grenade Launcher)", tier: "B", ttk: 0.73, rounds: 6, range: "Mid", sentiment: 0.72, pickRate: 0.08 },
+    { name: "Sledgehammer", fullName: "Sledgehammer (Melee)", tier: "B", ttk: 1.13, rounds: "∞", range: "Melee", sentiment: 0.75, pickRate: 0.10 },
+    { name: "Spear", fullName: "Spear (Melee)", tier: "C", ttk: 1.20, rounds: "∞", range: "Melee", sentiment: 0.65, pickRate: 0.04 }
   ]
 };
 
@@ -905,8 +887,6 @@ function getSentimentColor(sentiment) {
 }
 
 function renderWeaponRow(weapon) {
-  const ttkDisplay = typeof weapon.ttk === 'number' ? weapon.ttk.toFixed(2) + 's' : weapon.ttk;
-  
   return `
     <tr>
       <td data-label="Weapon">
@@ -916,9 +896,9 @@ function renderWeaponRow(weapon) {
         </span>
       </td>
       <td data-label="Tier">
-        <span class="tier tier-${weapon.tier.toLowerCase().replace('_', '-')}">${weapon.tier === 'Not_Ranked' ? 'NR' : weapon.tier}</span>
+        <span class="tier tier-${weapon.tier.toLowerCase()}">${weapon.tier}</span>
       </td>
-      <td data-label="TTK">${ttkDisplay}</td>
+      <td data-label="TTK">${weapon.ttk.toFixed(2)}s</td>
       <td data-label="Mag">
         <span class="rounds-tag">${weapon.rounds}</span>
       </td>
