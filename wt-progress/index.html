@@ -1567,7 +1567,6 @@
       <h2 style="font-size: 1.5rem; margin: 1.5rem 0 0.75rem; color: #50c878;">Features</h2>
       <ul style="list-style: none; padding-left: 0; margin-bottom: 2rem;">
         <li style="margin-bottom: 0.5rem;">📊 Real-time progress visualization</li>
-        <li style="margin-bottom: 0.5rem;">📈 Daily point requirements calculator</li>
         <li style="margin-bottom: 0.5rem;">📸 Shareable progress screenshots</li>
         <li style="margin-bottom: 0.5rem;">💾 Automatic data backup & recovery</li>
         <li style="margin-bottom: 0.5rem;">📱 Mobile-friendly swipe controls</li>
@@ -1683,62 +1682,6 @@
         <div id="rankLadder"></div>
       </div>
 
-      <!-- Daily Tracker -->
-      <div class="daily-tracker">
-        <h2
-          style="
-            color: #50c878;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          "
-        >
-          <span>Daily Points Tracker</span>
-          <div style="display: flex; gap: 10px">
-            <button
-              onclick="dataIntegrity.createBackup(); showNotification('Backup created', 'success');"
-              style="font-size: 0.8em; padding: 8px 16px"
-              aria-label="Create backup"
-            >
-              Backup
-            </button>
-            <button
-              onclick="dataIntegrity.restoreFromBackup();"
-              style="
-                font-size: 0.8em;
-                padding: 8px 16px;
-                background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);
-              "
-              aria-label="Restore from backup"
-            >
-              Restore
-            </button>
-          </div>
-        </h2>
-        <div class="daily-input">
-          <input type="date" id="dateInput" value="" aria-label="Date" />
-          <input
-            type="number"
-            id="pointsInput"
-            placeholder="Points earned"
-            aria-label="Points earned"
-            min="-100"
-            max="100"
-          />
-          <button onclick="addDailyEntry()" aria-label="Add daily entry">
-            Add Entry
-          </button>
-          <input
-            type="text"
-            id="notesInput"
-            placeholder="Notes (optional)"
-            aria-label="Optional notes"
-            maxlength="100"
-          />
-        </div>
-        <div id="dailyEntries"></div>
-      </div>
     </div>
 
     <script>
@@ -3034,8 +2977,15 @@
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
     <!-- Footer -->
-    <footer style="text-align:center;padding:3rem 1rem;color:#888;margin-top:4rem;border-top:1px solid rgba(255,255,255,0.1);">
-      <a href="https://thefinalsloadout.com/feedback" style="color: #ffd700;">📝 Submit Feedback</a>
+    <footer style="text-align: center; padding: 1.5rem 1rem; color: #888; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(10, 10, 15, 0.9); position: relative; z-index: 10; font-size: 0.75rem;">
+      <p style="margin: 0 0 0.5rem 0;">
+        © 2025 TheFinalsLoadout.com | Created by 
+        <a href="https://www.paultakisaki.com/" rel="author" style="color: #00f0c0; text-decoration: none; transition: opacity 0.3s;">Paul Takisaki</a>
+      </p>
+      <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; font-size: 0.75rem; margin-top: 0.5rem;">
+        <a href="/legal/" style="color: #00f0c0; text-decoration: none; transition: opacity 0.3s;">Legal Disclaimer</a>
+        <a href="https://thefinalsloadout.com/feedback" style="color: #ffd700;">📝 Submit Feedback</a>
+      </div>
     </footer>
   </body>
 </html>
