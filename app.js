@@ -154,7 +154,16 @@ function getImagePath(itemName) {
     ".50 Akimbo": "50_Akimbo",
     "SA1216": "SA_1216",
     "MGL32": "M32GL",
-    "ShAK-50": "SHAK-50"
+    "ShAK-50": "SHAK-50",
+    "M26 Matter": "M26_Matter",
+    // Add hyphen versions for weapons that need them (for backward compatibility)
+    "ARN220": "ARN-220",
+    "SR84": "SR-84", 
+    "XP54": "XP-54",
+    // Also map the hyphenated versions in case they're already correct
+    "ARN-220": "ARN-220",
+    "SR-84": "SR-84",
+    "XP-54": "XP-54"
   };
   
   // Check if this item needs special mapping

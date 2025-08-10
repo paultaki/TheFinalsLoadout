@@ -317,9 +317,9 @@ class SlotColumn {
       // Get visual settings (mobile-optimized if applicable)
       const visualSettings = getOptimizedVisuals();
       const blurEnabled = !visualSettings || visualSettings.BLUR_ENABLED;
+      const absVelocity = Math.abs(this.velocity);
 
       if (blurEnabled) {
-        const absVelocity = Math.abs(this.velocity);
         const maxBlur = visualSettings ? visualSettings.MAX_BLUR : BLUR_THRESHOLDS.EXTREME_BLUR;
 
         if (absVelocity > BLUR_THRESHOLDS.EXTREME_VELOCITY) {
