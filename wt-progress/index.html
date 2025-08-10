@@ -1512,6 +1512,8 @@
       gtag("js", new Date());
       gtag("config", "G-GVGKYFGZ1Z");
     </script>
+    <!-- Load html2canvas from CDN before it's used -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   </head>
   <body>
     <!-- Navigation -->
@@ -2263,9 +2265,19 @@
         }
       });
 
-      updateDashboard();
-      renderRankLadder();
-      renderDailyEntries();
+      // Wrap initialization in DOMContentLoaded to ensure DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          updateDashboard();
+          renderRankLadder();
+          renderDailyEntries();
+        });
+      } else {
+        // DOM is already ready
+        updateDashboard();
+        renderRankLadder();
+        renderDailyEntries();
+      }
 
       function updateCurrentPoints(value) {
         let newPoints = parseInt(value) || 0;
@@ -2886,9 +2898,15 @@
       }
 
       // Share Progress functionality
-      document
-        .getElementById("shareProgressBtn")
-        .addEventListener("click", async function () {
+      // Wrap event listener in DOMContentLoaded to ensure elements exist
+      function initializeShareButton() {
+        const shareBtn = document.getElementById("shareProgressBtn");
+        if (!shareBtn) {
+          console.error("Share Progress button not found");
+          return;
+        }
+        
+        shareBtn.addEventListener("click", async function () {
           const button = this;
           const originalText = button.textContent;
           button.disabled = true;
@@ -2970,10 +2988,15 @@
             }, 2000);
           }
         });
+      }
+      
+      // Initialize share button when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeShareButton);
+      } else {
+        initializeShareButton();
+      }
     </script>
-
-    <!-- Load html2canvas from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
     <!-- Footer -->
     <footer style="text-align: center; padding: 1.5rem 1rem; color: #888; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(10, 10, 15, 0.9); position: relative; z-index: 10; font-size: 0.75rem;">
