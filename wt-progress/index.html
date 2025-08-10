@@ -2559,11 +2559,11 @@
                 day: "numeric",
               });
             } else {
-              projectedMessage = "Won't Complete";
+              projectedMessage = "Not on Track";
             }
           } else {
             // Player hasn't started earning points yet
-            projectedMessage = "Won't Complete";
+            projectedMessage = "Not on Track";
           }
         }
 
@@ -2605,7 +2605,7 @@
         );
         if (projectedMessage === "Complete!") {
           projectedElement.parentElement.classList.add("success");
-        } else if (projectedMessage === "Won't Complete") {
+        } else if (projectedMessage === "Not on Track") {
           projectedElement.parentElement.classList.add("error");
         } else {
           // It's a date projection - they're on track
