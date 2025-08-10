@@ -41,7 +41,8 @@
       "Bash(python3:*)",
       "Bash(/dev/null)",
       "WebFetch(domain:docs.anthropic.com)",
-      "Bash(sudo ln:*)"
+      "Bash(sudo ln:*)",
+      "Bash(node:*)"
     ]
   },
   "enableAllProjectMcpServers": false
