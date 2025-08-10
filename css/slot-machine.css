@@ -12,6 +12,21 @@
  */
 
 /* =====================================================
+   HIDE DUPLICATE INFO DURING SLOT ANIMATION
+   ===================================================== */
+
+/* Hide the selection display when slot machine is active */
+body.slot-machine-active .selection-display,
+.slot-overlay-visible .selection-display {
+  display: none !important;
+}
+
+/* Also hide during overlay animations */
+.overlay-active .selection-display {
+  display: none !important;
+}
+
+/* =====================================================
    RESPIN FEATURE STYLES
    ===================================================== */
 
