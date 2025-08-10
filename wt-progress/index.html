@@ -2290,20 +2290,27 @@
         console.warn("Season has ended or ends today");
       }
 
-      // Initialize
-      const currentDate = new Date();
-      const yyyy = currentDate.getFullYear();
-      const mm = String(currentDate.getMonth() + 1).padStart(2, "0");
-      const dd = String(currentDate.getDate()).padStart(2, "0");
-      const todayString = `${yyyy}-${mm}-${dd}`;
+      // Function to initialize form inputs (will be called after DOM is ready)
+      function initializeFormInputs() {
+        const currentDate = new Date();
+        const yyyy = currentDate.getFullYear();
+        const mm = String(currentDate.getMonth() + 1).padStart(2, "0");
+        const dd = String(currentDate.getDate()).padStart(2, "0");
+        const todayString = `${yyyy}-${mm}-${dd}`;
 
-      // Set date input with max date as today
-      const dateInput = document.getElementById("dateInput");
-      dateInput.value = todayString;
-      dateInput.max = todayString; // Prevent future dates
-      dateInput.min = SEASON_START_DATE; // Prevent dates before season start
+        // Set date input with max date as today
+        const dateInput = document.getElementById("dateInput");
+        if (dateInput) {
+          dateInput.value = todayString;
+          dateInput.max = todayString; // Prevent future dates
+          dateInput.min = SEASON_START_DATE; // Prevent dates before season start
+        }
 
-      document.getElementById("currentPointsInput").value = currentPoints;
+        const currentPointsInputEl = document.getElementById("currentPointsInput");
+        if (currentPointsInputEl) {
+          currentPointsInputEl.value = currentPoints;
+        }
+      }
 
       // Debug: Log cache stats periodically (can be removed in production)
       if (window.location.search.includes("debug")) {
@@ -2365,12 +2372,14 @@
       // Wrap initialization in DOMContentLoaded to ensure DOM is ready
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
+          initializeFormInputs();
           updateDashboard();
           renderRankLadder();
           renderDailyEntries();
         });
       } else {
         // DOM is already ready
+        initializeFormInputs();
         updateDashboard();
         renderRankLadder();
         renderDailyEntries();
@@ -2698,10 +2707,24 @@
       }
 
       function renderRankLadder() {
+        console.log("renderRankLadder called");
         const ladder = document.getElementById("rankLadder");
+        if (!ladder) {
+          console.error("rankLadder element not found!");
+          return;
+        }
+        console.log("Found rankLadder element, ranks array:", ranks);
+        console.log("Current points value:", currentPoints);
         ladder.innerHTML = "";
 
+        if (!ranks || ranks.length === 0) {
+          console.error("Ranks array is empty or undefined!");
+          ladder.innerHTML = "<div style='color: red;'>Error: No ranks data available</div>";
+          return;
+        }
+
         ranks.forEach((rank, index) => {
+          console.log(`Processing rank ${index}:`, rank);
           const prevPoints = index > 0 ? ranks[index - 1].points : 0;
           const status =
             currentPoints >= rank.points
