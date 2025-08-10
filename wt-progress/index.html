@@ -1508,7 +1508,7 @@
         <a href="../ragequit/index.html" class="nav-link">RAGE QUIT</a>
         <a href="../patch-notes/index.html" class="nav-link">PATCH NOTES</a>
         <a href="../meta-weapons/index.html" class="nav-link">META WEAPONS</a>
-        <a href="#" class="nav-link active">WT TRACKER (BETA)</a>
+        <a href="#" class="nav-link active">WT TRACKER</a>
       </div>
     </nav>
 
@@ -1572,18 +1572,6 @@
           loading="lazy"
           onerror="this.src='images/logo.png'; this.onerror=null;"
         />
-        <div
-          style="
-            text-align: center;
-            margin-bottom: 32px;
-            color: #8b949e;
-            font-size: 1.1em;
-            letter-spacing: 0.05em;
-            font-weight: 500;
-          "
-        >
-          (beta v1)
-        </div>
 
         <!-- Progress Dashboard -->
         <div class="dashboard">
@@ -1603,11 +1591,11 @@
           </div>
           <div class="stat-card warning">
             <div class="stat-label">Days Remaining</div>
-            <div class="stat-value" id="daysRemaining">60</div>
+            <div class="stat-value" id="daysRemaining" style="font-size: 3.5em;">60</div>
           </div>
           <div class="stat-card primary">
             <div class="stat-label">Points Needed Per Day</div>
-            <div class="stat-value" id="pointsPerDay">32</div>
+            <div class="stat-value" id="pointsPerDay" style="font-size: 3.5em;">32</div>
             <div class="goal-breakdown" id="goalBreakdown"></div>
           </div>
           <div class="stat-card">
@@ -2993,5 +2981,16 @@
         <a href="https://thefinalsloadout.com/feedback" style="color: #ffd700;">📝 Submit Feedback</a>
       </div>
     </footer>
+
+    <!-- Ko-fi Widget -->
+    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script>
+      kofiWidgetOverlay.draw('nextroundonme', {
+        'type': 'floating-chat',
+        'floating-chat.donateButton.text': 'Support me',
+        'floating-chat.donateButton.background-color': '#00b9fe',
+        'floating-chat.donateButton.text-color': '#fff'
+      });
+    </script>
   </body>
 </html>
