@@ -1007,6 +1007,56 @@
         box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
       }
 
+      /* Export and Restore buttons */
+      .export-btn, .restore-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 0.9em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .export-btn:hover, .restore-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .restore-btn {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .restore-btn:hover {
+        box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+      }
+
+      /* Daily Entries container */
+      .daily-entries {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 30px;
+        margin: 30px 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .daily-entries::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #50c878, #40a060);
+        opacity: 0.5;
+      }
+
       /* Daily Entries */
       .daily-entries-item {
         padding: 16px;
@@ -1681,6 +1731,53 @@
       <div class="rank-ladder">
         <h2 style="color: #50c878; margin-bottom: 20px">Rank Ladder</h2>
         <div id="rankLadder"></div>
+      </div>
+
+      <!-- Daily Progress -->
+      <div class="daily-entries">
+        <h2 style="color: #50c878; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+          Daily Progress
+          <div style="display: flex; gap: 10px;">
+            <button 
+              onclick="if(confirm('Export all data as JSON?')) { const data = { currentPoints, dailyEntries, version: '1.0', exported: new Date().toISOString() }; const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'wt-progress-export.json'; a.click(); }"
+              class="export-btn"
+              style="padding: 8px 16px; font-size: 0.9em;"
+              aria-label="Export data"
+            >
+              Export
+            </button>
+            <button 
+              onclick="dataIntegrity.restoreFromBackup()"
+              class="restore-btn"
+              style="padding: 8px 16px; font-size: 0.9em;"
+              aria-label="Restore from backup"
+            >
+              Restore
+            </button>
+          </div>
+        </h2>
+        <div class="daily-input">
+          <input type="date" id="dateInput" value="" aria-label="Date" />
+          <input
+            type="number"
+            id="pointsInput"
+            placeholder="Points earned"
+            aria-label="Points earned"
+            min="-100"
+            max="100"
+          />
+          <button onclick="addDailyEntry()" aria-label="Add daily entry">
+            Add Entry
+          </button>
+          <input
+            type="text"
+            id="notesInput"
+            placeholder="Notes (optional)"
+            aria-label="Optional notes"
+            maxlength="100"
+          />
+        </div>
+        <div id="dailyEntries"></div>
       </div>
 
     </div>
