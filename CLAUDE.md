@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The Finals Loadout Generator - A web application for generating random loadouts for The Finals game. The app features slot machine animations, class selection, and various interactive elements.
 
+**Current Working Directory**: This project has been moved to Z:\DevProjects\TheFinalsLoadout
+
 ## Development Commands
 
 ### Build & Development
@@ -105,3 +107,46 @@ The app uses a multi-layered animation approach:
 - Graceful degradation for missing assets
 - Fallback placeholders for images
 - Try-catch blocks around API calls with user-friendly messages
+
+## Recent Work (August 2024)
+
+### v3 Folder - Slot Machine Animation Fix
+**Status**: Completed - Fixed infinite upward scrolling bug
+
+#### Problem Solved:
+- Slot machine was scrolling upward infinitely instead of downward
+- Items were not centering properly on the winner
+- Animation loop had incorrect boundary conditions
+
+#### Solution Implemented:
+1. **Fixed Velocity Direction** (animation-engine.js:573-580)
+   - Force positive velocity with `Math.abs()` to ensure downward motion
+   
+2. **Fixed Loop Reset Boundary** (multiple locations)
+   - Changed from `if (position > viewportHeight)` to `if (position >= 0)`
+   - Proper seamless loop when items scroll past position 0
+   
+3. **Fixed Winner Centering** (animation-engine.js:708-715)
+   - Winner at index 20 properly centers at -1520px
+   - Correct calculation: -(20 * 80) + 80 = -1520px
+
+4. **Added Debug Features**:
+   - Real-time debug overlay showing position/velocity
+   - Console logging at key animation phases
+   - Red border on winner items for visual verification
+   - Position tracking every 500ms during chaos phase
+
+#### Key Files Modified:
+- `/v3/animation-engine.js` - Main animation fixes
+- `/v3/slot-machine.js` - Winner placement debugging
+
+#### Testing Notes:
+- Animation now scrolls downward consistently
+- Winner properly centers in middle slot (80px from viewport top)
+- No visible jumps or resets during animation
+- Debug mode enabled (`this.debugMode = true` in constructor)
+
+### Git Configuration
+- Removed Zone.Identifier files from tracking
+- Added `*Zone.Identifier` to .gitignore
+- Repository ready for GitHub Desktop integration

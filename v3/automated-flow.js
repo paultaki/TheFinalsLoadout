@@ -154,6 +154,10 @@ class AutomatedFlowManager {
       const generateBtn = document.getElementById("generate-btn");
       if (generateBtn) generateBtn.style.display = "none";
 
+      // Hide spin again section
+      const spinAgainSection = document.getElementById("spin-again-section");
+      if (spinAgainSection) spinAgainSection.style.display = "none";
+
       // Show flow container
       const container = document.getElementById("automated-flow-container");
       if (container) container.style.display = "block";
@@ -365,12 +369,22 @@ class AutomatedFlowManager {
     // Small delay to ensure DOM is ready
     await this.delay(100);
 
+    // Verify animation engine is ready
+    if (window.slotMachine && !window.slotMachine.animationEngine) {
+      console.error('❌ Animation engine not initialized! Attempting to initialize...');
+      if (typeof AnimationEngine !== 'undefined') {
+        window.slotMachine.animationEngine = new AnimationEngine();
+        console.log('✅ Animation engine manually initialized');
+      }
+    }
+
     // Trigger slot machine spin
     if (window.slotMachine) {
       console.log(
         "🎰 Starting slot machine spin for class:",
         this.selections.class
       );
+      console.log('🎮 Animation engine status:', window.slotMachine.animationEngine ? 'Ready' : 'Missing');
 
       try {
         const loadout = await window.slotMachine.spin(
@@ -396,11 +410,11 @@ class AutomatedFlowManager {
         //     }
         // }
 
-        // Show spin again button
-        const spinAgainBtn = document.getElementById("spin-again-btn");
-        if (spinAgainBtn) {
+        // Show spin again button section
+        const spinAgainSection = document.getElementById("spin-again-section");
+        if (spinAgainSection) {
           setTimeout(() => {
-            spinAgainBtn.style.display = "block";
+            spinAgainSection.style.display = "block";
           }, 1000);
         }
       } catch (error) {

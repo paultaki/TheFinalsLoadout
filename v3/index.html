@@ -285,6 +285,13 @@
         <p class="subtitle">CHALLENGE YOURSELF WITH UNIQUE BUILDS</p>
       </header>
 
+      <!-- Generate Button (moved to top) -->
+      <section class="controls top-controls">
+        <button id="generate-btn" class="generate-btn primary-btn">
+          GENERATE LOADOUT
+        </button>
+      </section>
+
       <!-- Pre-Slot Animation Container -->
       <section id="pre-slot-container" class="pre-slot-container">
         <!-- Will be populated by AutomatedFlowManager -->
@@ -356,15 +363,11 @@
         </div>
       </section>
 
-      <!-- Controls -->
-      <section class="controls">
-        <button id="generate-btn" class="generate-btn primary-btn">
-          GENERATE LOADOUT
-        </button>
+      <!-- Spin Again Button -->
+      <section class="controls bottom-controls" style="display: none" id="spin-again-section">
         <button
           id="spin-again-btn"
           class="spin-again-btn secondary-btn"
-          style="display: none"
         >
           SPIN AGAIN
         </button>

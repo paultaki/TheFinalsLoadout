@@ -322,10 +322,18 @@ function initializeComponents() {
   // Make GameData globally available
   window.GameData = GameData;
 
+  // Verify AnimationEngine is loaded
+  if (typeof AnimationEngine === 'undefined') {
+    console.error('❌ AnimationEngine not loaded!');
+  } else {
+    console.log('✅ AnimationEngine available');
+  }
+
   // Initialize slot machine
   slotMachine = new SlotMachine();
   window.slotMachine = slotMachine; // Make globally available
-  console.log("🎰 Slot machine initialized");
+  console.log("🎰 Slot machine initialized:", window.slotMachine);
+  console.log("🎮 Animation engine status:", window.slotMachine.animationEngine ? 'Ready' : 'Not initialized');
 
   // Make display function globally available
   window.displayLoadoutResult = displayLoadoutResult;

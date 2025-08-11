@@ -726,6 +726,15 @@ a:hover {
   margin-bottom: var(--spacing-2xl);
 }
 
+.top-controls {
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.bottom-controls {
+  margin-top: var(--spacing-xl);
+}
+
 .primary-btn,
 .secondary-btn {
   font-family: var(--font-display);

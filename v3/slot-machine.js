@@ -498,14 +498,26 @@ class SlotMachine {
     // Load animation engine if available
     if (typeof AnimationEngine !== "undefined") {
       this.animationEngine = new AnimationEngine();
-      console.log("🎮 Animation engine initialized");
+      console.log("🎮 Animation engine initialized:", this.animationEngine);
+      console.log("🔧 AnimationEngine methods available:", 
+        'animateSlotMachine:', typeof this.animationEngine.animateSlotMachine,
+        'animateQuickSpin:', typeof this.animationEngine.animateQuickSpin
+      );
     } else {
+      console.error('❌ AnimationEngine not available! Trying dynamic load...');
       // Try to load it dynamically
       const script = document.createElement("script");
       script.src = "animation-engine.js";
       script.onload = () => {
-        this.animationEngine = new AnimationEngine();
-        console.log("🎮 Animation engine loaded and initialized");
+        if (typeof AnimationEngine !== "undefined") {
+          this.animationEngine = new AnimationEngine();
+          console.log("🎮 Animation engine loaded and initialized");
+        } else {
+          console.error('❌ Failed to load AnimationEngine!');
+        }
+      };
+      script.onerror = () => {
+        console.error('❌ Failed to load animation-engine.js');
       };
       document.head.appendChild(script);
     }
@@ -641,30 +653,50 @@ class SlotMachine {
         this.populateScrollContainers();
 
         // Run animation with appropriate timing
+        console.log('🎮 Animation check - Engine available:', !!this.animationEngine);
+        console.log('🔍 Scroll contents generated:', this.deceptionEngine.scrollContents);
+        
         if (this.animationEngine) {
           const columnElements = Object.values(this.columns).map(
             (col) => col.element
           );
+          console.log('🎲 Column elements found:', columnElements.length);
 
           if (currentSpin === totalSpins) {
             // Final spin - full dramatic animation
-            await this.animationEngine.animateSlotMachine(
-              columnElements,
-              this.deceptionEngine.scrollContents,
-              loadout
-            );
+            console.log('🎆 Starting FINAL spin animation with loadout:', loadout);
+            try {
+              await this.animationEngine.animateSlotMachine(
+                columnElements,
+                this.deceptionEngine.scrollContents,
+                loadout
+              );
+              console.log('✅ Final animation completed');
+            } catch (error) {
+              console.error('❌ Animation failed:', error);
+              await this.basicAnimation();
+            }
           } else {
             // Quick spin - shortened animation
-            await this.animationEngine.animateQuickSpin(
-              columnElements,
-              this.deceptionEngine.scrollContents
-            );
+            console.log('⚡ Starting quick spin animation');
+            try {
+              await this.animationEngine.animateQuickSpin(
+                columnElements,
+                this.deceptionEngine.scrollContents
+              );
+              console.log('✅ Quick animation completed');
+            } catch (error) {
+              console.error('❌ Quick animation failed:', error);
+              await this.basicAnimation();
+            }
 
             // Brief pause between spins
             await new Promise((resolve) => setTimeout(resolve, 500));
           }
         } else {
-          console.warn("Animation engine not available, using basic animation");
+          console.error('"❌ Animation engine not available, using basic animation');
+          console.log('AnimationEngine type:', typeof AnimationEngine);
+          console.log('this.animationEngine:', this.animationEngine);
           await this.basicAnimation();
         }
 

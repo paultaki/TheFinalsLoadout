@@ -75,9 +75,13 @@ class AnimationEngine {
     this.fps = 60;
     this.lastFrameTime = 0;
     this.frameCount = 0;
+    this.currentPhase = 'idle';
 
     // Initialize audio
     this.initializeAudio();
+    
+    // Create debug overlay
+    this.createDebugOverlay();
 
     // Adjust for mobile if needed
     if (this.isMobile) {
@@ -422,10 +426,67 @@ class AnimationEngine {
   }
 
   /**
+   * Create debug overlay for visual debugging
+   */
+  createDebugOverlay() {
+    if (!this.debugMode) return;
+    
+    const overlay = document.createElement('div');
+    overlay.id = 'animation-debug-overlay';
+    overlay.style.cssText = `
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.9);
+      color: #00ff00;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      z-index: 10000;
+      border: 1px solid #00ff00;
+      min-width: 200px;
+    `;
+    overlay.innerHTML = `
+      <div>Phase: <span id="debug-phase">idle</span></div>
+      <div>Position: <span id="debug-position">0</span>px</div>
+      <div>Velocity: <span id="debug-velocity">0</span>px/s</div>
+      <div>FPS: <span id="debug-fps">60</span></div>
+      <div>Animating: <span id="debug-animating">false</span></div>
+    `;
+    document.body.appendChild(overlay);
+  }
+  
+  /**
+   * Update debug overlay
+   */
+  updateDebugOverlay() {
+    if (!this.debugMode) return;
+    
+    const phase = document.getElementById('debug-phase');
+    const position = document.getElementById('debug-position');
+    const velocity = document.getElementById('debug-velocity');
+    const fps = document.getElementById('debug-fps');
+    const animating = document.getElementById('debug-animating');
+    
+    if (phase) phase.textContent = this.currentPhase;
+    if (animating) animating.textContent = this.isAnimating;
+    if (fps) fps.textContent = Math.round(this.fps);
+    
+    // Get first column animation data
+    const firstColumn = this.columnAnimations.values().next().value;
+    if (firstColumn) {
+      if (position) position.textContent = firstColumn.currentPosition.toFixed(1);
+      if (velocity) velocity.textContent = firstColumn.velocity.toFixed(1);
+    }
+  }
+
+  /**
    * Phase 1: Acceleration
    */
   async runAccelerationPhase(columns) {
     console.log("🚀 Phase 1: Acceleration");
+    this.currentPhase = 'acceleration';
+    this.updateDebugOverlay();
 
     return new Promise((resolve) => {
       const startTime = performance.now();
