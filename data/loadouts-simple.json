@@ -1,0 +1,121 @@
+{
+  "Light": {
+    "weapons": [
+      "93R",
+      "ARN220",
+      "Dagger",
+      "LH1",
+      "M11",
+      "M26 Matter",
+      "Recurve Bow",
+      "SH1900",
+      "SR84",
+      "Sword",
+      "Throwing Knives",
+      "V9S",
+      "XP54"
+    ],
+    "specializations": [
+      "Cloaking Device",
+      "Evasive Dash",
+      "Grappling Hook"
+    ],
+    "gadgets": [
+      "Breach Charge",
+      "Gateway",
+      "Glitch Grenade",
+      "Gravity Vortex",
+      "Nullifier",
+      "Sonar Grenade",
+      "H+ Infuser",
+      "Thermal Bore",
+      "Gas Grenade",
+      "Thermal Vision",
+      "Tracking Dart",
+      "Vanishing Bomb",
+      "Goo Grenade",
+      "Pyro Grenade",
+      "Smoke Grenade",
+      "Frag Grenade",
+      "Flashbang"
+    ]
+  },
+  "Medium": {
+    "weapons": [
+      "AKM",
+      "CB-01 Repeater",
+      "CL40",
+      "Cerberus 12GA",
+      "Dual Blades",
+      "FAMAS",
+      "FCAR",
+      "Model 1887",
+      "Pike-556",
+      "R.357",
+      "Riot Shield"
+    ],
+    "specializations": [
+      "Dematerializer",
+      "Guardian Turret",
+      "Healing Beam"
+    ],
+    "gadgets": [
+      "APS Turret",
+      "Data Reshaper",
+      "Defibrillator",
+      "Explosive Mine",
+      "Gas Mine",
+      "Glitch Trap",
+      "Jump Pad",
+      "Zipline",
+      "Gas Grenade",
+      "Goo Grenade",
+      "Breach Drill",
+      "Pyro Grenade",
+      "Smoke Grenade",
+      "Frag Grenade",
+      "Flashbang",
+      "Proximity Sensor",
+      "Health Canister"
+    ]
+  },
+  "Heavy": {
+    "weapons": [
+      ".50 Akimbo",
+      "Flamethrower",
+      "KS23",
+      "Lewis Gun",
+      "M134 Minigun",
+      "M60",
+      "MGL32",
+      "SA1216",
+      "ShAK-50",
+      "Sledgehammer",
+      "Spear"
+    ],
+    "specializations": [
+      "Charge N Slam",
+      "Goo Gun",
+      "Mesh Shield",
+      "Winch Claw"
+    ],
+    "gadgets": [
+      "Anti-Gravity Cube",
+      "Barricade",
+      "C4",
+      "Dome Shield",
+      "Lockbolt Launcher",
+      "Pyro Mine",
+      "Proximity Sensor",
+      "RPG-7",
+      "Goo Grenade",
+      "Healing Emitter",
+      "Pyro Grenade",
+      "Smoke Grenade",
+      "Frag Grenade",
+      "Flashbang",
+      "Explosive Mine",
+      "Gas Grenade"
+    ]
+  }
+}

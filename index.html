@@ -734,6 +734,13 @@
       </div>
     </section>
 
+    <!-- Under Construction Notice -->
+    <div class="container" style="margin-top: 1rem; margin-bottom: 0;">
+      <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 0.625rem 1rem; font-size: 0.813rem; color: rgba(255, 255, 255, 0.6); text-align: center;">
+        <span style="color: #f59e0b; margin-right: 0.5rem;">🚧</span>Site under active development • New features being added daily
+      </div>
+    </div>
+
     <!-- Main Content -->
     <main class="container">
       <div class="selection-container">
@@ -1465,6 +1472,17 @@
           if (!rel.includes('noopener')) a.setAttribute('rel', (rel + ' noopener').trim());
           if (!rel.includes('noreferrer')) a.setAttribute('rel', (a.getAttribute('rel') + ' noreferrer').trim());
         });
+      });
+    </script>
+
+    <!-- Ko-fi Widget -->
+    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script>
+      kofiWidgetOverlay.draw('nextroundonme', {
+        'type': 'floating-chat',
+        'floating-chat.donateButton.text': 'Support me',
+        'floating-chat.donateButton.background-color': '#00b9fe',
+        'floating-chat.donateButton.text-color': '#fff'
       });
     </script>
   </body>

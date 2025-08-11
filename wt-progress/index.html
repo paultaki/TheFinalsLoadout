@@ -880,13 +880,6 @@
         font-size: 1.5em;
       }
 
-      .daily-input {
-        display: grid;
-        grid-template-columns: 150px 150px 150px 1fr;
-        gap: 12px;
-        margin-bottom: 20px;
-        align-items: center;
-      }
 
       input {
         background: rgba(255, 255, 255, 0.05);
@@ -1006,6 +999,7 @@
       .delete-btn:hover {
         box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
       }
+
 
       /* Daily Entries */
       .daily-entries-item {
@@ -1300,16 +1294,6 @@
           display: none;
         }
 
-        /* Daily tracker adjustments */
-        .daily-input {
-          grid-template-columns: 1fr;
-          gap: 8px;
-        }
-
-        .daily-input input,
-        .daily-input button {
-          width: 100%;
-        }
 
         /* Progress section */
         .progress-section h2 {
@@ -1512,6 +1496,8 @@
       gtag("js", new Date());
       gtag("config", "G-GVGKYFGZ1Z");
     </script>
+    <!-- Load html2canvas from CDN before it's used -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   </head>
   <body>
     <!-- Navigation -->
@@ -1522,7 +1508,7 @@
         <a href="../ragequit/index.html" class="nav-link">RAGE QUIT</a>
         <a href="../patch-notes/index.html" class="nav-link">PATCH NOTES</a>
         <a href="../meta-weapons/index.html" class="nav-link">META WEAPONS</a>
-        <a href="#" class="nav-link active">WT TRACKER (BETA)</a>
+        <a href="#" class="nav-link active">WT TRACKER</a>
       </div>
     </nav>
 
@@ -1567,9 +1553,7 @@
       <h2 style="font-size: 1.5rem; margin: 1.5rem 0 0.75rem; color: #50c878;">Features</h2>
       <ul style="list-style: none; padding-left: 0; margin-bottom: 2rem;">
         <li style="margin-bottom: 0.5rem;">📊 Real-time progress visualization</li>
-        <li style="margin-bottom: 0.5rem;">📈 Daily point requirements calculator</li>
         <li style="margin-bottom: 0.5rem;">📸 Shareable progress screenshots</li>
-        <li style="margin-bottom: 0.5rem;">💾 Automatic data backup & recovery</li>
         <li style="margin-bottom: 0.5rem;">📱 Mobile-friendly swipe controls</li>
       </ul>
 
@@ -1588,23 +1572,11 @@
           loading="lazy"
           onerror="this.src='images/logo.png'; this.onerror=null;"
         />
-        <div
-          style="
-            text-align: center;
-            margin-bottom: 32px;
-            color: #8b949e;
-            font-size: 1.1em;
-            letter-spacing: 0.05em;
-            font-weight: 500;
-          "
-        >
-          (beta v1)
-        </div>
 
         <!-- Progress Dashboard -->
         <div class="dashboard">
-          <div class="stat-card primary">
-            <div class="stat-label">Current Points (Click to edit)</div>
+          <div class="stat-card primary" style="border: 2px solid #50c878; background: linear-gradient(135deg, rgba(80, 200, 120, 0.1) 0%, rgba(80, 200, 120, 0.05) 100%); box-shadow: 0 0 20px rgba(80, 200, 120, 0.2);">
+            <div class="stat-label">Current Points<br><span style="font-size: 0.75em; color: #ffd700;">(Click to edit)</span></div>
             <div class="points-input-container">
               <input
                 type="number"
@@ -1619,11 +1591,11 @@
           </div>
           <div class="stat-card warning">
             <div class="stat-label">Days Remaining</div>
-            <div class="stat-value" id="daysRemaining">60</div>
+            <div class="stat-value" id="daysRemaining" style="font-size: 3.5em;">60</div>
           </div>
           <div class="stat-card primary">
             <div class="stat-label">Points Needed Per Day</div>
-            <div class="stat-value" id="pointsPerDay">32</div>
+            <div class="stat-value" id="pointsPerDay" style="font-size: 3.5em;">32</div>
             <div class="goal-breakdown" id="goalBreakdown"></div>
           </div>
           <div class="stat-card">
@@ -1683,62 +1655,7 @@
         <div id="rankLadder"></div>
       </div>
 
-      <!-- Daily Tracker -->
-      <div class="daily-tracker">
-        <h2
-          style="
-            color: #50c878;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          "
-        >
-          <span>Daily Points Tracker</span>
-          <div style="display: flex; gap: 10px">
-            <button
-              onclick="dataIntegrity.createBackup(); showNotification('Backup created', 'success');"
-              style="font-size: 0.8em; padding: 8px 16px"
-              aria-label="Create backup"
-            >
-              Backup
-            </button>
-            <button
-              onclick="dataIntegrity.restoreFromBackup();"
-              style="
-                font-size: 0.8em;
-                padding: 8px 16px;
-                background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);
-              "
-              aria-label="Restore from backup"
-            >
-              Restore
-            </button>
-          </div>
-        </h2>
-        <div class="daily-input">
-          <input type="date" id="dateInput" value="" aria-label="Date" />
-          <input
-            type="number"
-            id="pointsInput"
-            placeholder="Points earned"
-            aria-label="Points earned"
-            min="-100"
-            max="100"
-          />
-          <button onclick="addDailyEntry()" aria-label="Add daily entry">
-            Add Entry
-          </button>
-          <input
-            type="text"
-            id="notesInput"
-            placeholder="Notes (optional)"
-            aria-label="Optional notes"
-            maxlength="100"
-          />
-        </div>
-        <div id="dailyEntries"></div>
-      </div>
+
     </div>
 
     <script>
@@ -2009,7 +1926,7 @@
                 currentPoints;
               updateDashboard();
               renderRankLadder();
-              renderDailyEntries();
+              // renderDailyEntries(); // Removed - Daily Progress feature removed
 
               showNotification("Data restored successfully", "success");
               return true;
@@ -2063,7 +1980,7 @@
               showNotification("Data repaired successfully", "success");
               updateDashboard();
               renderRankLadder();
-              renderDailyEntries();
+              // renderDailyEntries(); // Removed - Daily Progress feature removed
             }
           }
 
@@ -2249,20 +2166,14 @@
         console.warn("Season has ended or ends today");
       }
 
-      // Initialize
-      const currentDate = new Date();
-      const yyyy = currentDate.getFullYear();
-      const mm = String(currentDate.getMonth() + 1).padStart(2, "0");
-      const dd = String(currentDate.getDate()).padStart(2, "0");
-      const todayString = `${yyyy}-${mm}-${dd}`;
-
-      // Set date input with max date as today
-      const dateInput = document.getElementById("dateInput");
-      dateInput.value = todayString;
-      dateInput.max = todayString; // Prevent future dates
-      dateInput.min = SEASON_START_DATE; // Prevent dates before season start
-
-      document.getElementById("currentPointsInput").value = currentPoints;
+      // Function to initialize form inputs (will be called after DOM is ready)
+      function initializeFormInputs() {
+        // Only initialize currentPointsInput now since Daily Progress is removed
+        const currentPointsInputEl = document.getElementById("currentPointsInput");
+        if (currentPointsInputEl) {
+          currentPointsInputEl.value = currentPoints;
+        }
+      }
 
       // Debug: Log cache stats periodically (can be removed in production)
       if (window.location.search.includes("debug")) {
@@ -2321,9 +2232,21 @@
         }
       });
 
-      updateDashboard();
-      renderRankLadder();
-      renderDailyEntries();
+      // Wrap initialization in DOMContentLoaded to ensure DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          initializeFormInputs(); // Initialize the points input
+          updateDashboard();
+          renderRankLadder();
+          // renderDailyEntries(); // Removed - Daily Progress feature removed
+        });
+      } else {
+        // DOM is already ready
+        initializeFormInputs(); // Initialize the points input
+        updateDashboard();
+        renderRankLadder();
+        // renderDailyEntries(); // Removed - Daily Progress feature removed
+      }
 
       function updateCurrentPoints(value) {
         let newPoints = parseInt(value) || 0;
@@ -2559,11 +2482,11 @@
                 day: "numeric",
               });
             } else {
-              projectedMessage = "Won't Complete";
+              projectedMessage = "Not on Track";
             }
           } else {
             // Player hasn't started earning points yet
-            projectedMessage = "Won't Complete";
+            projectedMessage = "Not on Track";
           }
         }
 
@@ -2605,7 +2528,7 @@
         );
         if (projectedMessage === "Complete!") {
           projectedElement.parentElement.classList.add("success");
-        } else if (projectedMessage === "Won't Complete") {
+        } else if (projectedMessage === "Not on Track") {
           projectedElement.parentElement.classList.add("error");
         } else {
           // It's a date projection - they're on track
@@ -2648,6 +2571,9 @@
 
       function renderRankLadder() {
         const ladder = document.getElementById("rankLadder");
+        if (!ladder) {
+          return;
+        }
         ladder.innerHTML = "";
 
         ranks.forEach((rank, index) => {
@@ -2783,7 +2709,7 @@
         // Update everything
         updateDashboard();
         renderRankLadder();
-        renderDailyEntries();
+        // renderDailyEntries(); // Removed - Daily Progress feature removed
 
         // Show success notification
         showNotification(
@@ -2939,14 +2865,20 @@
           // Update everything
           updateDashboard();
           renderRankLadder();
-          renderDailyEntries();
+          // renderDailyEntries(); // Removed - Daily Progress feature removed
         }
       }
 
       // Share Progress functionality
-      document
-        .getElementById("shareProgressBtn")
-        .addEventListener("click", async function () {
+      // Wrap event listener in DOMContentLoaded to ensure elements exist
+      function initializeShareButton() {
+        const shareBtn = document.getElementById("shareProgressBtn");
+        if (!shareBtn) {
+          console.error("Share Progress button not found");
+          return;
+        }
+        
+        shareBtn.addEventListener("click", async function () {
           const button = this;
           const originalText = button.textContent;
           button.disabled = true;
@@ -3028,14 +2960,37 @@
             }, 2000);
           }
         });
+      }
+      
+      // Initialize share button when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeShareButton);
+      } else {
+        initializeShareButton();
+      }
     </script>
 
-    <!-- Load html2canvas from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
     <!-- Footer -->
-    <footer style="text-align:center;padding:3rem 1rem;color:#888;margin-top:4rem;border-top:1px solid rgba(255,255,255,0.1);">
-      <a href="https://thefinalsloadout.com/feedback" style="color: #ffd700;">📝 Submit Feedback</a>
+    <footer style="text-align: center; padding: 1.5rem 1rem; color: #888; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(10, 10, 15, 0.9); position: relative; z-index: 10; font-size: 0.75rem;">
+      <p style="margin: 0 0 0.5rem 0;">
+        © 2025 TheFinalsLoadout.com | Created by 
+        <a href="https://www.paultakisaki.com/" rel="author" style="color: #00f0c0; text-decoration: none; transition: opacity 0.3s;">Paul Takisaki</a>
+      </p>
+      <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; font-size: 0.75rem; margin-top: 0.5rem;">
+        <a href="/legal/" style="color: #00f0c0; text-decoration: none; transition: opacity 0.3s;">Legal Disclaimer</a>
+        <a href="https://thefinalsloadout.com/feedback" style="color: #ffd700;">📝 Submit Feedback</a>
+      </div>
     </footer>
+
+    <!-- Ko-fi Widget -->
+    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script>
+      kofiWidgetOverlay.draw('nextroundonme', {
+        'type': 'floating-chat',
+        'floating-chat.donateButton.text': 'Support me',
+        'floating-chat.donateButton.background-color': '#00b9fe',
+        'floating-chat.donateButton.text-color': '#fff'
+      });
+    </script>
   </body>
 </html>

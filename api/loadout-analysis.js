@@ -22,7 +22,7 @@ function loadFinalsData() {
       const dataDir = path.join(__dirname, "..", "data");
       finalsData = {
         weapons: JSON.parse(
-          fs.readFileSync(path.join(dataDir, "AI_weapons_s7.json"), "utf8")
+          fs.readFileSync(path.join(dataDir, "compiled-weapons.json"), "utf8")
         ),
         gadgets: JSON.parse(
           fs.readFileSync(
@@ -254,126 +254,72 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Tier definitions
-    const tierMap = {
-      weapons: {
-        meta: [
-          // Light meta
-          "M11",
-          "XP-54",
-          "LH1",
-          "Throwing Knives",
-          // Medium meta
-          "FCAR",
-          "AKM",
-          "Model 1887",
-          "R.357",
-          "FAMAS",
-          // Heavy meta
-          "M60",
-          "Lewis Gun",
-          "KS-23",
-          "SA 1216",
-          "Flamethrower",
-        ],
-        offMeta: [
-          // Light off-meta
-          "SR-84",
-          "SH1900",
-          "V9S",
-          "Sword",
-          "Dagger",
-          // Medium off-meta
-          "Pike-556",
-          "CL-40",
-          "Dual Blades",
-          "Riot Shield",
-          // Heavy off-meta
-          "M32GL",
-          "SHAK-50",
-          "Sledgehammer",
-          "Spear",
-          "50 Akimbo",
-          "M134 Minigun",
-        ],
-        dumpster: [
-          // Light dumpster
-          "93R",
-          "Recurve Bow",
-          "M26 Matter",
-          "ARN-220",
-          // Medium dumpster
-          "CB-01 Repeater",
-          "Cerberus 12GA",
-          // Heavy dumpster
-          "RPG-7",
-          "Lockbolt Launcher",
-        ],
-      },
-      gadgets: {
-        meta: [
-          "C4",
-          "Pyro Mine",
-          "Defibrillator",
-          "Jump Pad",
-          "Zipline",
-          "Frag Grenade",
-          "Goo Grenade",
-          "Dome Shield",
-          "Barricade",
-          "APS Turret",
-          "Explosive Mine",
-          "Gas Mine",
-        ],
-        offMeta: [
-          "Flashbang",
-          "Vanishing Bomb",
-          "Gateway",
-          "Glitch Grenade",
-          "Smoke Grenade",
-          "Pyro Grenade",
-          "Gas Grenade",
-          "Thermal Vision",
-          "Proximity Sensor",
-          "Breach Charge",
-          "Glitch Trap",
-        ],
-        dumpster: [
-          "Tracking Dart",
-          "Data Reshaper",
-          "Anti-Gravity Cube",
-          "Nullifier",
-          "Sonar Grenade",
-          "Thermal Bore",
-          "Gravity Vortex",
-          "Health Canister",
-        ],
-      },
-      specs: {
-        meta: ["Healing Beam", "Grappling Hook", "Mesh Shield", "Winch Claw"],
-        offMeta: [
-          "Dematerializer",
-          "Cloaking Device",
-          "Guardian Turret",
-          "Charge N Slam",
-          "Goo Gun",
-          "Evasive Dash",
-        ],
-        dumpster: [],
-      },
+    // Load Finals data if not already loaded
+    loadFinalsData();
+    
+    // Get weapon data from compiled source
+    function getWeaponData(weaponName) {
+      if (!finalsData || !finalsData.weapons) return null;
+      
+      // Normalize weapon name for matching
+      const normalizedName = weaponName.replace(/[-\s]/g, '').toLowerCase();
+      
+      return finalsData.weapons.find(w => {
+        const wName = (w.name || '').replace(/[-\s]/g, '').toLowerCase();
+        return wName === normalizedName;
+      });
+    }
+    
+    // Get gadget tier (keeping existing gadget tiers for now)
+    const gadgetTierMap = {
+      meta: [
+        "C4", "Pyro Mine", "Defibrillator", "Jump Pad", "Zipline",
+        "Frag Grenade", "Goo Grenade", "Dome Shield", "Barricade",
+        "APS Turret", "Explosive Mine", "Gas Mine"
+      ],
+      offMeta: [
+        "Flashbang", "Vanishing Bomb", "Gateway", "Glitch Grenade",
+        "Smoke Grenade", "Pyro Grenade", "Gas Grenade", "Thermal Vision",
+        "Proximity Sensor", "Breach Charge", "Glitch Trap"
+      ],
+      dumpster: [
+        "Tracking Dart", "Data Reshaper", "Anti-Gravity Cube", "Nullifier",
+        "Sonar Grenade", "Thermal Bore", "Gravity Vortex", "Health Canister"
+      ]
     };
-
-    function getTier(item, type) {
-      const map = tierMap[type];
-      if (map.meta.includes(item)) return "meta";
-      if (map.offMeta.includes(item)) return "off-meta";
-      if (map.dumpster.includes(item)) return "dumpster";
+    
+    // Get spec tier (keeping existing spec tiers for now)
+    const specTierMap = {
+      meta: ["Healing Beam", "Grappling Hook", "Mesh Shield", "Winch Claw"],
+      offMeta: [
+        "Dematerializer", "Cloaking Device", "Guardian Turret",
+        "Charge N Slam", "Goo Gun", "Evasive Dash"
+      ],
+      dumpster: []
+    };
+    
+    function getGadgetTier(gadget) {
+      if (gadgetTierMap.meta.includes(gadget)) return "meta";
+      if (gadgetTierMap.offMeta.includes(gadget)) return "off-meta";
+      if (gadgetTierMap.dumpster.includes(gadget)) return "dumpster";
       return "unknown";
     }
-
-    const weaponTier = getTier(weapon, "weapons");
-    const specTier = getTier(specialization, "specs");
-    const gadgetTiers = gadgets.map((g) => getTier(g, "gadgets"));
+    
+    function getSpecTier(spec) {
+      if (specTierMap.meta.includes(spec)) return "meta";
+      if (specTierMap.offMeta.includes(spec)) return "off-meta";
+      if (specTierMap.dumpster.includes(spec)) return "dumpster";
+      return "unknown";
+    }
+    
+    // Get weapon data and tier
+    const weaponData = getWeaponData(weapon);
+    const weaponTier = weaponData?.tier ? 
+      (weaponData.tier === 'S' || weaponData.tier === 'A' ? 'meta' : 
+       weaponData.tier === 'B' || weaponData.tier === 'C' ? 'off-meta' : 
+       'dumpster') : 'unknown';
+    const specTier = getSpecTier(specialization);
+    const gadgetTiers = gadgets.map((g) => getGadgetTier(g));
 
     // Determine analysis style based on loadout
     let analysisStyle = "tactical"; // default
@@ -430,6 +376,16 @@ export default async function handler(req, res) {
       gadgetTiers,
       analysisStyle,
       persona,
+      // Add enriched weapon data
+      weaponPatch: weaponData?.s7Status || 'Unknown',
+      weaponQuote: weaponData?.communitySentiment || null,
+      weaponStats: weaponData ? {
+        bodyDmg: weaponData.bodyDmg,
+        magazine: weaponData.magazine,
+        ttkVsLight: weaponData.ttkVsLight,
+        ttkVsMedium: weaponData.ttkVsMedium,
+        ttkVsHeavy: weaponData.ttkVsHeavy
+      } : null
     };
 
     const message = await anthropic.messages.create({
@@ -460,6 +416,8 @@ export default async function handler(req, res) {
       analysis: finalAnalysis,
       roast: finalAnalysis, // Include both for compatibility
       fallback: false,
+      weaponPatch: weaponData?.s7Status || null,
+      weaponTier: weaponData?.tier || null
     });
   } catch (error) {
     console.error("Error calling Claude API:", error);

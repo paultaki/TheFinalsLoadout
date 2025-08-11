@@ -141,6 +141,22 @@ async function loadCounter() {
 // Call it when page loads
 document.addEventListener("DOMContentLoaded", loadCounter);
 
+// Helper function to map item names to image filenames
+function getImagePath(itemName) {
+  // Ensure itemName is a string
+  if (!itemName || typeof itemName !== 'string') {
+    console.error('getImagePath received invalid input:', itemName);
+    return 'images/placeholder.webp';
+  }
+  
+  // Simply replace spaces with underscores for the filename
+  // All image names now match the JSON naming convention
+  return `images/${itemName.replace(/ /g, "_")}.webp`;
+}
+
+// Make it globally accessible
+window.getImagePath = getImagePath;
+
 // Mobile detection and performance state
 const isMobile =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -152,7 +168,7 @@ const state = {
   selectedClass: null, // Deprecated - class selection removed
   isSpinning: false,
   currentSpin: 1,
-  totalSpins: 0,
+  totalSpins: 1, // Default to 1 spin
   selectedGadgets: new Set(),
   currentGadgetPool: new Set(),
   soundEnabled:
@@ -326,7 +342,8 @@ let outputDiv;
 
 // Physics constants now imported from Constants.js
 
-const loadouts = {
+// Original hardcoded loadouts - will be replaced with compiled data
+let loadouts = {
   Light: {
     weapons: [
       "93R",
@@ -401,16 +418,16 @@ const loadouts = {
   },
   Heavy: {
     weapons: [
-      "50 Akimbo",
+      ".50 Akimbo",
       "Flamethrower",
       "KS-23",
       "Lewis Gun",
       "M60",
       "M134 Minigun",
-      "M32GL",
-      "SA 1216",
+      "MGL32",
+      "SA1216",
       "Sledgehammer",
-      "SHAK-50",
+      "ShAK-50",
       "Spear",
     ],
     specializations: ["Charge N Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
@@ -434,6 +451,28 @@ const loadouts = {
     ],
   },
 };
+
+// Load the compiled loadouts data
+async function loadCompiledLoadouts() {
+  try {
+    const response = await fetch('data/loadouts-simple.json');
+    if (response.ok) {
+      const compiledData = await response.json();
+      // Update the loadouts object with compiled data
+      loadouts = compiledData;
+      console.log('✅ Loaded compiled weapon data');
+      // Re-initialize filters if they're already rendered
+      if (typeof initializeFilters === 'function') {
+        initializeFilters();
+      }
+    } else {
+      console.log('Using original hardcoded loadouts');
+    }
+  } catch (error) {
+    console.error('Error loading compiled loadouts:', error);
+    console.log('Using original hardcoded loadouts');
+  }
+}
 
 // Function to get filtered loadouts based on checkbox selections
 function getFilteredLoadouts() {
@@ -653,18 +692,17 @@ const displayLoadout = (classType) => {
   }
 
   // Check if we're being called from within the overlay system
-  const overlayOutput = document.getElementById("output");
-  const isInOverlay =
-    overlayOutput &&
-    (overlayOutput.closest(".slot-machine-overlay") ||
-      (overlayOutput.id === "output" &&
-        document.getElementById("output-backup")));
-
+  const overlayOutput = document.getElementById("overlay-slot-output");
+  const regularOutput = document.getElementById("output");
+  const isInOverlay = overlayOutput !== null;
+  
+  // Allow execution if we're in overlay mode or if overlay is not active
   if (
     window.overlayManager &&
     window.overlayManager.overlayState &&
     window.overlayManager.overlayState.isActive &&
-    !isInOverlay
+    !isInOverlay &&
+    !window.startSlotMachine
   ) {
     console.log(
       "⏸️ Overlay active but not slot machine overlay, skipping displayLoadout"
@@ -815,17 +853,32 @@ const displayLoadout = (classType) => {
     createGadgetSpinSequence(gadget, index)
   );
 
+  // Determine the correct container ID based on overlay state
+  const containerId = isInOverlay ? "overlay-slot-output" : "output";
+  
   // Initialize or update slot machine
   if (!slotMachine) {
     slotMachine = new SlotMachine({
-      containerId: "output",
+      containerId: containerId,
       onComplete: (error, results) => {
         if (error) {
           console.error("Slot machine error:", error);
           return;
         }
-        // Pass columns to finalizeSpin for backwards compatibility
-        finalizeSpin(results.columns);
+        // For ES6 module, pass the actual results
+        // The results object contains: weapon, specialization, gadgets
+        if (results && results.weapon) {
+          // Create array format that finalizeSpin expects
+          const items = [
+            results.weapon,
+            results.specialization,
+            ...results.gadgets
+          ];
+          finalizeSpin(items);
+        } else {
+          // Fallback to columns for backward compatibility
+          finalizeSpin(results.columns);
+        }
       },
       onSpinStart: () => {
         console.log("Spin animation started");
@@ -1771,10 +1824,14 @@ async function finalizeSpin(columns) {
     btn.style.pointerEvents = "none";
   });
 
-  // Check if items were passed directly (from overlay slot machine)
+  // Check if items were passed directly (from overlay slot machine or ES6 module)
   let finalItems = null;
 
-  if (columns && Array.isArray(columns) && columns.length >= 5) {
+  // Check if columns contains strings (from ES6 module results)
+  if (columns && Array.isArray(columns) && columns.length >= 5 && typeof columns[0] === 'string') {
+    console.log("📦 Using passed string items from ES6 module");
+    finalItems = columns;
+  } else if (columns && Array.isArray(columns) && columns.length >= 5) {
     console.log("📦 Using passed items data from overlay slot machine");
     finalItems = columns;
   } else {
@@ -1803,10 +1860,17 @@ async function finalizeSpin(columns) {
     if (finalItems) {
       // Items were passed directly - extract the names
       selectedItems = finalItems.map((item) => {
-        if (typeof item === "object" && item.name) {
+        // If it's already a string, use it directly
+        if (typeof item === "string") {
+          return item;
+        }
+        // If it's an object with a name property, extract it
+        if (typeof item === "object" && item && item.name) {
           return item.name;
         }
-        return item;
+        // Fallback
+        console.warn("Unknown item type:", item);
+        return item || "Unknown";
       });
       console.log("📦 Extracted items from passed data:", selectedItems);
     } else {
@@ -1968,15 +2032,15 @@ async function finalizeSpin(columns) {
         class: savedClass,
         weapon: {
           name: weapon,
-          image: `images/${weapon.replace(/ /g, "_")}.webp`,
+          image: getImagePath(weapon),
         },
         specialization: {
           name: specialization,
-          image: `images/${specialization.replace(/ /g, "_")}.webp`,
+          image: getImagePath(specialization),
         },
         gadgets: gadgets.map((g) => ({
           name: g,
-          image: `images/${g.replace(/ /g, "_")}.webp`,
+          image: getImagePath(g),
         })),
       };
 
@@ -2186,6 +2250,29 @@ window.displayLoadout = displayLoadout;
 
 // Make finalizeSpin globally accessible for overlay manager
 window.finalizeSpin = finalizeSpin;
+
+// Create startSlotMachine function for overlay manager
+window.startSlotMachine = function(selectedClass, spinCount, hasJackpotRespin) {
+  console.log("🎰 startSlotMachine called with:", { selectedClass, spinCount, hasJackpotRespin });
+  
+  // Set up state
+  state.selectedClass = selectedClass;
+  state.totalSpins = spinCount || 1;
+  state.currentSpin = state.totalSpins;
+  state.isSpinning = false;
+  
+  // If we have a jackpot respin, set the flag
+  if (hasJackpotRespin && window.earnFreeRespin) {
+    window.earnFreeRespin();
+  }
+  
+  // Start the display
+  if (selectedClass && ["Light", "Medium", "Heavy"].includes(selectedClass)) {
+    displayLoadout(selectedClass);
+  } else {
+    displayRandomLoadout();
+  }
+};
 
 // Make other functions globally accessible for slot machine wrapper
 window.getFilteredLoadouts = getFilteredLoadouts;
@@ -2560,6 +2647,29 @@ async function generateRoast(
       else analysisSection.classList.add("low-score");
     }
 
+    // Add weapon patch badge if available
+    if (data.weaponPatch) {
+      const patchBadge = document.createElement('div');
+      patchBadge.className = 'patch-badge';
+      
+      if (data.weaponPatch === 'Buffed') {
+        patchBadge.textContent = 'Buffed S7';
+        patchBadge.classList.add('buffed');
+      } else if (data.weaponPatch === 'Nerfed') {
+        patchBadge.textContent = 'Nerfed S7';
+        patchBadge.classList.add('nerfed');
+      } else if (data.weaponPatch === 'New') {
+        patchBadge.textContent = 'New S7';
+        patchBadge.classList.add('new');
+      } else {
+        patchBadge.textContent = 'Unchanged';
+        patchBadge.classList.add('unchanged');
+      }
+      
+      // Insert patch badge after score badge
+      scoreBadge.parentNode.insertBefore(patchBadge, scoreBadge.nextSibling);
+    }
+
     // Add fallback indicator if API failed
     if (data.fallback) {
       analysisSection.classList.add("fallback");
@@ -2678,16 +2788,16 @@ function generateLoadoutName(classType, weapon, spec) {
     "Riot Shield": "Shield",
 
     // Heavy weapons
-    "50 Akimbo": "Dual",
+    ".50 Akimbo": "Dual",
     Flamethrower: "Pyro",
     "KS-23": "Pump",
     "Lewis Gun": "Vintage",
     M60: "Support",
     "M134 Minigun": "Minigun",
-    M32GL: "Grenade",
-    "SA 1216": "Auto",
+    MGL32: "Grenade",
+    SA1216: "Auto",
     Sledgehammer: "Hammer",
-    "SHAK-50": "Shak",
+    "ShAK-50": "Shak",
     Spear: "Spear",
   };
 
@@ -3326,13 +3436,31 @@ class SlotHistoryManager {
       const savedHistory = localStorage.getItem("slotMachineHistory");
       const savedCounter = localStorage.getItem("slotMachineSpinCounter");
       if (savedHistory) {
-        this.history = JSON.parse(savedHistory);
+        const parsedHistory = JSON.parse(savedHistory);
+        // Filter out invalid entries and fix missing class properties
+        this.history = parsedHistory.filter(item => {
+          // Skip entries without required properties
+          if (!item || !item.weapon || !item.specialization || !item.gadgets) {
+            console.warn('Skipping invalid history entry:', item);
+            return false;
+          }
+          // Fix missing class property
+          if (!item.class) {
+            console.warn('Fixing missing class for history entry:', item);
+            // Try to determine class based on weapon/spec if possible
+            item.class = 'Unknown';
+          }
+          return true;
+        });
       }
       if (savedCounter) {
         this.spinCounter = parseInt(savedCounter, 10);
       }
     } catch (error) {
       console.error("Failed to load history from storage:", error);
+      // Clear corrupted data
+      this.history = [];
+      this.spinCounter = 0;
     }
   }
 
@@ -3474,11 +3602,13 @@ class SlotHistoryManager {
 
   createHistoryItemHTML(loadout, index) {
     const timeAgo = this.getTimeAgo(loadout.timestamp);
+    // Handle cases where class might be null or undefined
+    const classType = loadout.class || 'Unknown';
     return `
             <div class="static-slot-item" data-index="${index}">
                 <div class="item-header">
                     <div class="item-metadata">
-                        <span class="class-badge ${loadout.class.toLowerCase()}">${loadout.class.toUpperCase()} CLASS</span>
+                        <span class="class-badge ${classType.toLowerCase()}">${classType.toUpperCase()} CLASS</span>
                         <span class="spin-number">#${loadout.spinNumber}</span>
                         <span class="timestamp">${timeAgo}</span>
                     </div>
@@ -3488,14 +3618,14 @@ class SlotHistoryManager {
                     </div>
                 </div>
                 <div class="slot-display" id="slot-display-${index}">
-                    <div class="slot-box ${loadout.class.toLowerCase()}">
+                    <div class="slot-box ${classType.toLowerCase()}">
                         <div class="slot-label">WEAPON</div>
                         <img src="${loadout.weapon.image}" alt="${
       loadout.weapon.name
     }" class="slot-image" onerror="this.src='images/placeholder.webp';">
                         <div class="slot-name">${loadout.weapon.name}</div>
                     </div>
-                    <div class="slot-box ${loadout.class.toLowerCase()}">
+                    <div class="slot-box ${classType.toLowerCase()}">
                         <div class="slot-label">SPECIAL</div>
                         <img src="${loadout.specialization.image}" alt="${
       loadout.specialization.name
@@ -3507,7 +3637,7 @@ class SlotHistoryManager {
                     ${loadout.gadgets
                       .map(
                         (gadget, i) => `
-                        <div class="slot-box ${loadout.class.toLowerCase()}">
+                        <div class="slot-box ${classType.toLowerCase()}">
                             <div class="slot-label">GADGET ${i + 1}</div>
                             <img src="${gadget.image}" alt="${
                           gadget.name
@@ -3558,7 +3688,7 @@ class SlotHistoryManager {
     const loadout = this.history[index];
     if (!loadout) return;
 
-    const text = `${loadout.class.toUpperCase()} CLASS LOADOUT #${
+    const text = `${(loadout.class || 'Unknown').toUpperCase()} CLASS LOADOUT #${
       loadout.spinNumber
     }
 Weapon: ${loadout.weapon.name}
@@ -3599,15 +3729,15 @@ Generated by thefinalsloadout.com`;
             `;
 
       const classBadge = document.createElement("div");
-      classBadge.textContent = `${loadout.class.toUpperCase()} CLASS`;
+      classBadge.textContent = `${(loadout.class || 'Unknown').toUpperCase()} CLASS`;
       classBadge.style.cssText = `
                 text-align: center;
                 font-size: 18px;
                 font-weight: bold;
                 color: ${
-                  loadout.class.toLowerCase() === "light"
+                  (loadout.class || '').toLowerCase() === "light"
                     ? "#00bcd4"
-                    : loadout.class.toLowerCase() === "medium"
+                    : (loadout.class || '').toLowerCase() === "medium"
                     ? "#9c27b0"
                     : "#f44336"
                 };
@@ -4006,6 +4136,9 @@ const slotHistoryManager = new SlotHistoryManager();
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ DOM fully loaded");
+
+  // Load compiled weapon data first
+  loadCompiledLoadouts();
 
   // Clean up old cached data to prevent memory buildup
   cleanupOldCachedData();
@@ -4754,15 +4887,15 @@ Gadget 3: ${selectedItems[4]}`;
       class: classType,
       weapon: {
         name: selectedWeapon,
-        image: `images/${selectedWeapon.replace(/ /g, "_")}.webp`,
+        image: getImagePath(selectedWeapon),
       },
       specialization: {
         name: selectedSpec,
-        image: `images/${selectedSpec.replace(/ /g, "_")}.webp`,
+        image: getImagePath(selectedSpec),
       },
       gadgets: selectedGadgets.map((g) => ({
         name: g,
-        image: `images/${g.replace(/ /g, "_")}.webp`,
+        image: getImagePath(g),
       })),
     };
     slotHistoryManager.addToHistory(loadout);

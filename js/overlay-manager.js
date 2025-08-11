@@ -1835,7 +1835,9 @@ async function showSlotMachineOverlay(selectedClass, spinCount, hasJackpotRespin
 
       if (overlayOutput) {
         // Create a new slot machine instance for the overlay
-        const overlaySlotMachine = new SlotMachine("overlay-slot-output");
+        // Use the global SlotMachine class from slot-machine.js
+        const SlotMachineClass = window.SlotMachine || SlotMachine;
+        const overlaySlotMachine = new SlotMachineClass("overlay-slot-output");
         overlaySlotMachine.init();
 
         // Store the original instance temporarily
@@ -2001,24 +2003,18 @@ function showFinalLoadoutChoiceModal(loadout) {
         <div class="preview-class">${loadout.classType.toUpperCase()}</div>
         <div class="preview-items">
           <div class="preview-item">
-            <img src="images/${loadout.weapon.name.replace(
-              / /g,
-              "_"
-            )}.webp" alt="${loadout.weapon.name}" loading="lazy" />
+            <img src="${window.getImagePath ? window.getImagePath(loadout.weapon.name) : `images/${loadout.weapon.name.replace(/ /g, "_")}.webp`}" alt="${loadout.weapon.name}" loading="lazy" />
             <span>${loadout.weapon.name}</span>
           </div>
           <div class="preview-item">
-            <img src="images/${loadout.specialization.name.replace(
-              / /g,
-              "_"
-            )}.webp" alt="${loadout.specialization.name}" loading="lazy" />
+            <img src="${window.getImagePath ? window.getImagePath(loadout.specialization.name) : `images/${loadout.specialization.name.replace(/ /g, "_")}.webp`}" alt="${loadout.specialization.name}" loading="lazy" />
             <span>${loadout.specialization.name}</span>
           </div>
           ${loadout.gadgets
             .map(
               (gadget) => `
             <div class="preview-item">
-              <img src="images/${gadget.name.replace(/ /g, "_")}.webp" alt="${
+              <img src="${window.getImagePath ? window.getImagePath(gadget.name) : `images/${gadget.name.replace(/ /g, "_")}.webp`}" alt="${
                 gadget.name
               }" loading="lazy" />
               <span>${gadget.name}</span>

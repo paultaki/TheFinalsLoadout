@@ -36,7 +36,15 @@
       "Bash(git push:*)",
       "Bash(cursor:*)",
       "Bash(code:*)",
-      "Bash(diff:*)"
+      "Bash(diff:*)",
+      "Bash(tree:*)",
+      "Bash(python3:*)",
+      "Bash(/dev/null)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(sudo ln:*)",
+      "Bash(node:*)",
+      "Bash(cd:*)",
+      "Bash(cd:*)"
     ]
   },
   "enableAllProjectMcpServers": false

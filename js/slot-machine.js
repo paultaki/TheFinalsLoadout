@@ -202,7 +202,8 @@ class SlotMachine {
       );
     }
 
-    const imageName = item.replace(/ /g, "_");
+    // Use the global getImagePath function to ensure consistent naming
+    const imagePath = window.getImagePath ? window.getImagePath(item) : `images/${item.replace(/ /g, "_")}.webp`;
     
     // Add rarity indicators for psychological impact
     const rarity = this.getItemRarity(item);
@@ -212,9 +213,9 @@ class SlotMachine {
       '<div class="' +
       classes.join(" ") +
       '">' +
-      '<img src="images/' +
-      imageName +
-      '.webp" alt="' +
+      '<img src="' +
+      imagePath +
+      '" alt="' +
       item +
       "\" loading=\"eager\" onerror=\"this.style.display='none'; this.nextElementSibling.style.fontSize='14px'; this.nextElementSibling.style.fontWeight='bold';\">" +
       "<p>" +

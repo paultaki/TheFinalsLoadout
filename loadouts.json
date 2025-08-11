@@ -73,16 +73,16 @@
   },
   "Heavy": {
     "weapons": [
-      "50 Akimbo",
+      ".50 Akimbo",
       "Flamethrower",
       "KS-23",
       "Lewis Gun",
       "M60",
       "M134 Minigun",
-      "M32GL",
-      "SA 1216",
+      "MGL32",
+      "SA1216",
       "Sledgehammer",
-      "SHAK-50",
+      "ShAK-50",
       "Spear"
     ],
     "specializations": [
