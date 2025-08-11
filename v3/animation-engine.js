@@ -69,6 +69,7 @@ class AnimationEngine {
     this.isMobile = this.detectMobile();
     this.audioEnabled = true;
     this.audioElements = {};
+    this.debugMode = true; // Enable debug mode
 
     // Performance tracking
     this.fps = 60;
@@ -81,6 +82,11 @@ class AnimationEngine {
     // Adjust for mobile if needed
     if (this.isMobile) {
       this.applyMobileAdjustments();
+    }
+    
+    // Create debug overlay if in debug mode
+    if (this.debugMode) {
+      this.createDebugOverlay();
     }
   }
 
@@ -212,6 +218,11 @@ class AnimationEngine {
             const currentSpeed = 50 + (500 - 50) * progress;
             animation.currentPosition += currentSpeed * 0.016;
             itemsContainer.style.transform = `translateY(${animation.currentPosition}px)`;
+            
+            // Update debug overlay
+            if (this.debugMode && index === 0) {
+              this.updateDebugOverlay();
+            }
             itemsContainer.style.filter = `blur(${progress * 3}px)`;
           }
         });
@@ -274,11 +285,17 @@ class AnimationEngine {
             const totalHeight = itemsContainer.children.length * itemHeight;
             const viewportHeight = 240;
 
-            if (animation.currentPosition > viewportHeight) {
-              animation.currentPosition -= totalHeight / 2;
+            // Fix: Check against 0 for downward scroll reset
+            if (animation.currentPosition >= 0) {
+              animation.currentPosition -= totalHeight;
             }
 
             itemsContainer.style.transform = `translateY(${animation.currentPosition}px)`;
+            
+            // Update debug overlay
+            if (this.debugMode && index === 0) {
+              this.updateDebugOverlay();
+            }
             itemsContainer.style.filter = "blur(4px)";
           }
         });
@@ -320,11 +337,17 @@ class AnimationEngine {
             const totalHeight = itemsContainer.children.length * itemHeight;
             const viewportHeight = 240;
 
-            if (animation.currentPosition > viewportHeight) {
-              animation.currentPosition -= totalHeight / 2;
+            // Fix: Check against 0 for downward scroll reset
+            if (animation.currentPosition >= 0) {
+              animation.currentPosition -= totalHeight;
             }
 
             itemsContainer.style.transform = `translateY(${animation.currentPosition}px)`;
+            
+            // Update debug overlay
+            if (this.debugMode && index === 0) {
+              this.updateDebugOverlay();
+            }
             itemsContainer.style.filter = `blur(${(1 - progress) * 3}px)`;
           }
         });
@@ -430,18 +453,31 @@ class AnimationEngine {
               const itemCount = itemsContainer.children.length;
               const totalHeight = itemCount * itemHeight;
               // Start position: items are above viewport, ready to scroll down
+              const startPos = -(totalHeight * 0.8);
               this.columnAnimations.set(column, {
-                currentPosition: -(totalHeight * 0.8), // Start most items above
+                currentPosition: startPos, // Start most items above
                 velocity: phase.startSpeed,
                 targetPosition: 0,
               });
+              console.log(`🚀 Column ${index} acceleration start: ${startPos}px`);
             }
 
             const animation = this.columnAnimations.get(column);
 
             // Update position (moving down, toward positive)
+            animation.velocity = currentSpeed;
             animation.currentPosition += currentSpeed * 0.016;
             itemsContainer.style.transform = `translateY(${animation.currentPosition}px)`;
+            
+            // Update debug overlay
+            if (this.debugMode && index === 0) {
+              this.updateDebugOverlay();
+            }
+            
+            // Debug first column progress
+            if (index === 0 && progress > 0.9) {
+              console.log(`🚀 Acceleration ending - Position: ${animation.currentPosition.toFixed(1)}px, Speed: ${currentSpeed.toFixed(1)}px/s`);
+            }
 
             // Gradually increase blur
             const blurAmount = eased * 2; // Max 2px during acceleration
@@ -465,6 +501,10 @@ class AnimationEngine {
    */
   async runHighSpeedChaosPhase(columns, scrollContents) {
     console.log("💨 Phase 2: High-speed chaos");
+    console.log("Starting positions:", columns.map((col, i) => {
+      const anim = this.columnAnimations.get(col);
+      return `Col${i}: ${anim ? anim.currentPosition.toFixed(1) : 'N/A'}px`;
+    }).join(", "));
 
     return new Promise((resolve) => {
       const startTime = performance.now();
@@ -546,11 +586,13 @@ class AnimationEngine {
           // If not already initialized, start above viewport
           const itemHeight = 80;
           const totalHeight = itemsContainer.children.length * itemHeight;
+          const initialPosition = -(totalHeight * 0.7);
           this.columnAnimations.set(column, {
-            currentPosition: -(totalHeight * 0.7), // Start above viewport
+            currentPosition: initialPosition, // Start above viewport
             velocity: phase.baseSpeed,
             targetPosition: 0,
           });
+          console.log(`💨 Column ${columnType} chaos init: ${initialPosition}px (items above viewport)`);
         } else {
           // Continue from acceleration phase position
           animation.velocity = phase.baseSpeed;
@@ -569,12 +611,18 @@ class AnimationEngine {
           const animation = this.columnAnimations.get(column);
 
           if (itemsContainer && animation) {
-            // Apply velocity variations using sin wave
+            // Apply velocity variations using sin wave (ensure positive)
             const variation =
               Math.sin(elapsed * 0.003 + index) * phase.velocityVariation;
-            const currentVelocity = animation.velocity + variation;
+            // Force positive velocity for consistent downward motion
+            const currentVelocity = Math.abs(animation.velocity + variation);
+            
+            // Debug logging - log every 500ms for first column
+            if (index === 0 && Math.floor(elapsed / 500) !== Math.floor((elapsed - 16) / 500)) {
+              console.log(`⚡ Col0: Pos=${animation.currentPosition.toFixed(1)}px, Vel=+${currentVelocity.toFixed(1)}px/s ↓`);
+            }
 
-            // Update position
+            // Update position (positive velocity = downward motion)
             animation.currentPosition += currentVelocity * 0.016; // 60fps
 
             // Seamless loop the scroll for downward motion
@@ -582,15 +630,22 @@ class AnimationEngine {
             const totalHeight = itemsContainer.children.length * itemHeight;
             const viewportHeight = 240; // Height of visible area
 
-            // For downward scroll, reset to top when bottom items are past viewport
-            // Items flow from negative (above) through viewport to positive (below)
-            if (animation.currentPosition > viewportHeight) {
-              // Reset to above viewport for continuous flow
-              animation.currentPosition -= totalHeight / 3;
+            // For downward scroll: items start negative (above), move toward positive (below)
+            // Reset when we've scrolled too far down
+            if (animation.currentPosition >= 0) {
+              // Reset to negative position for seamless loop
+              const resetPosition = animation.currentPosition - totalHeight;
+              console.log(`♻️ Loop reset at ${animation.currentPosition.toFixed(1)}px → ${resetPosition.toFixed(1)}px`);
+              animation.currentPosition = resetPosition;
             }
 
             // Apply transform - positive for downward scroll
             itemsContainer.style.transform = `translateY(${animation.currentPosition}px)`;
+            
+            // Update debug overlay
+            if (this.debugMode && index === 0) {
+              this.updateDebugOverlay();
+            }
 
             // Apply chaos blur
             const blurAmount =
@@ -615,6 +670,10 @@ class AnimationEngine {
    */
   async runDecelerationPhase(columns) {
     console.log("🎯 Phase 3: Deceleration with sequential stops");
+    console.log("Decel start positions:", columns.map((col, i) => {
+      const anim = this.columnAnimations.get(col);
+      return `Col${i}: ${anim ? anim.currentPosition.toFixed(1) : 'N/A'}px`;
+    }).join(", "));
 
     return new Promise((resolve) => {
       const startTime = performance.now();
@@ -663,11 +722,16 @@ class AnimationEngine {
             const viewportHeight = 240;
 
             // Wrap for downward scroll - reset when too far down
-            if (animation.currentPosition > viewportHeight) {
-              animation.currentPosition -= totalHeight / 3;
+            if (animation.currentPosition >= 0) {
+              animation.currentPosition -= totalHeight;
             }
 
             itemsContainer.style.transform = `translateY(${animation.currentPosition}px)`;
+            
+            // Update debug overlay
+            if (this.debugMode && index === 0) {
+              this.updateDebugOverlay();
+            }
 
             // Reduce blur as we slow down
             const blurAmount =
@@ -710,6 +774,8 @@ class AnimationEngine {
         // To center it at 80px from viewport top, we need: -1600 + 80 = -1520px
         const targetPosition = -1520; // Centers winner at position 20
         const overshootPosition = targetPosition + itemHeight * phase.amount; // Overshoot further down
+        
+        console.log(`🎯 Column ${index} target: ${targetPosition}px, overshoot to ${overshootPosition}px`)
 
         animation.targetPosition = targetPosition;
         animation.overshootPosition = overshootPosition;
@@ -799,6 +865,8 @@ class AnimationEngine {
 
       // Play lock sound
       this.playSound("columnLock");
+      
+      console.log(`🔒 Locking column ${index} at position ${animation.targetPosition}px`);
 
       // Apply spring physics for final bounce
       const startTime = performance.now();
@@ -1074,6 +1142,67 @@ class AnimationEngine {
   }
 
   /**
+   * Create debug overlay for position tracking
+   */
+  createDebugOverlay() {
+    const overlay = document.createElement('div');
+    overlay.id = 'debug-overlay';
+    overlay.style.cssText = `
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #00ff00;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      z-index: 10000;
+      border: 1px solid #00ff00;
+      min-width: 300px;
+    `;
+    document.body.appendChild(overlay);
+    this.debugOverlay = overlay;
+  }
+  
+  /**
+   * Update debug overlay
+   */
+  updateDebugOverlay() {
+    if (!this.debugOverlay || !this.debugMode) return;
+    
+    const columns = document.querySelectorAll('.slot-column');
+    let debugInfo = '<strong>🎰 SLOT MACHINE DEBUG</strong><br>';
+    debugInfo += `FPS: ${this.fps}<br>`;
+    debugInfo += `Animation: ${this.isAnimating ? 'RUNNING' : 'IDLE'}<br>`;
+    debugInfo += '<br><strong>Column Positions:</strong><br>';
+    
+    columns.forEach((col, i) => {
+      const anim = this.columnAnimations.get(col);
+      if (anim) {
+        const direction = anim.velocity > 0 ? '↓' : anim.velocity < 0 ? '↑' : '⏸';
+        debugInfo += `Col${i}: ${anim.currentPosition.toFixed(1)}px ${direction} (${Math.abs(anim.velocity).toFixed(0)}px/s)<br>`;
+      }
+    });
+    
+    // Find winner items
+    const winners = document.querySelectorAll('.winner-item');
+    if (winners.length > 0) {
+      debugInfo += '<br><strong>Winner Positions:</strong><br>';
+      winners.forEach((winner, i) => {
+        const rect = winner.getBoundingClientRect();
+        const parent = winner.closest('.slot-window');
+        if (parent) {
+          const parentRect = parent.getBoundingClientRect();
+          const relativeTop = rect.top - parentRect.top;
+          debugInfo += `Winner${i}: ${relativeTop.toFixed(1)}px from viewport top<br>`;
+        }
+      });
+    }
+    
+    this.debugOverlay.innerHTML = debugInfo;
+  }
+
+  /**
    * Cleanup after animation
    */
   cleanup() {
@@ -1086,6 +1215,11 @@ class AnimationEngine {
 
     // Stop all looping sounds
     this.stopSound("highSpeed");
+    
+    // Clear debug overlay
+    if (this.debugOverlay) {
+      this.debugOverlay.innerHTML = '<strong>🎰 ANIMATION COMPLETE</strong>';
+    }
   }
 
   // ========================================

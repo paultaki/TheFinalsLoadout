@@ -752,7 +752,11 @@ class SlotMachine {
 
       // Position container for initial visibility
       // Start with items positioned so winner is just above viewport
-      column.itemsContainer.style.transform = "translateY(-1600px)";
+      // Winner at index 20 = 20 * 80px = 1600px from top
+      // To place winner just above viewport: -1600px
+      const initialTranslate = -1600;
+      column.itemsContainer.style.transform = `translateY(${initialTranslate}px)`;
+      console.log(`🎰 ${columnType} initial position: ${initialTranslate}px (winner at index 20 above viewport)`);
 
       // Add items to scroll container
       items.forEach((item, index) => {
@@ -762,6 +766,8 @@ class SlotMachine {
         // Mark the winner item (position 20)
         if (index === 20 && item === winner) {
           itemElement.classList.add("winner-item");
+          itemElement.style.border = "2px solid red"; // Visual debug marker
+          console.log(`🎯 Winner "${item}" placed at index 20 in ${columnType} column`);
         }
 
         // Create image element
