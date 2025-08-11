@@ -2,8 +2,7 @@
   "name": "the-finals-loadout-randomizer-v2",
   "version": "2.0.0",
   "engines": {
-    "node": "22.x",
-    "npm": "<11"
+    "node": "22.x"
   },
   "description": "Refactored loadout randomizer with visual regression testing",
   "type": "module",

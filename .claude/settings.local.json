@@ -44,7 +44,8 @@
       "Bash(sudo ln:*)",
       "Bash(node:*)",
       "Bash(cd:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(git checkout:*)"
     ]
   },
   "enableAllProjectMcpServers": false
