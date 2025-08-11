@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+            font-family: monospace;
+        }
+        #status {
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .test-btn {
+            padding: 10px 20px;
+            background: #ff3366;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        .test-btn:hover {
+            background: #ff5588;
+        }
+        #console {
+            background: #000;
+            padding: 10px;
+            border-radius: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        .error { color: #ff6666; }
+        .success { color: #66ff66; }
+        .info { color: #6666ff; }
+    </style>
+</head>
+<body>
+    <h1>Animation Engine Test</h1>
+    
+    <div id="status">Status: Initializing...</div>
+    
+    <div>
+        <button class="test-btn" onclick="testAnimationEngine()">Test Animation Engine</button>
+        <button class="test-btn" onclick="testSlotMachine()">Test Slot Machine</button>
+        <button class="test-btn" onclick="clearConsole()">Clear Console</button>
+    </div>
+    
+    <h3>Console Output:</h3>
+    <div id="console"></div>
+    
+    <script>
+        const logConsole = document.getElementById('console');
+        const statusEl = document.getElementById('status');
+        
+        function log(msg, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = type;
+            entry.textContent = `[${timestamp}] ${msg}`;
+            logConsole.appendChild(entry);
+            logConsole.scrollTop = logConsole.scrollHeight;
+        }
+        
+        function clearConsole() {
+            logConsole.innerHTML = '';
+            log('Console cleared', 'info');
+        }
+        
+        // Override console methods to capture output
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            log(args.join(' '), 'info');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            log('ERROR: ' + args.join(' '), 'error');
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            log('WARN: ' + args.join(' '), 'info');
+        };
+        
+        // Test functions
+        function testAnimationEngine() {
+            log('Testing Animation Engine...', 'info');
+            
+            try {
+                // Check if AnimationEngine exists
+                if (typeof AnimationEngine === 'undefined') {
+                    throw new Error('AnimationEngine not loaded');
+                }
+                
+                // Create instance
+                const engine = new AnimationEngine();
+                log('✓ AnimationEngine created', 'success');
+                
+                // Check methods
+                const methods = ['animateSlotMachine', 'animateQuickSpin', 'forceStopAnimation'];
+                for (const method of methods) {
+                    if (typeof engine[method] === 'function') {
+                        log(`✓ Method ${method} exists`, 'success');
+                    } else {
+                        log(`✗ Method ${method} missing`, 'error');
+                    }
+                }
+                
+                // Check state
+                log(`Animation state: isAnimating=${engine.isAnimating}`, 'info');
+                log(`Debug mode: ${engine.debugMode}`, 'info');
+                
+                statusEl.textContent = 'Status: Animation Engine OK';
+                statusEl.style.color = '#66ff66';
+                
+            } catch (error) {
+                log(`Failed: ${error.message}`, 'error');
+                statusEl.textContent = 'Status: Animation Engine Failed';
+                statusEl.style.color = '#ff6666';
+            }
+        }
+        
+        function testSlotMachine() {
+            log('Testing Slot Machine...', 'info');
+            
+            try {
+                // Check if SlotMachine exists
+                if (typeof SlotMachine === 'undefined') {
+                    throw new Error('SlotMachine not loaded');
+                }
+                
+                // Create instance
+                const slot = new SlotMachine();
+                log('✓ SlotMachine created', 'success');
+                
+                // Check animation engine integration
+                if (slot.animationEngine) {
+                    log('✓ Animation engine integrated', 'success');
+                    log(`  Engine type: ${slot.animationEngine.constructor.name}`, 'info');
+                } else {
+                    log('✗ Animation engine not integrated', 'error');
+                }
+                
+                // Check filter system
+                if (slot.filterSystem) {
+                    log('✓ Filter system integrated', 'success');
+                } else {
+                    log('✗ Filter system not integrated', 'error');
+                }
+                
+                statusEl.textContent = 'Status: Slot Machine OK';
+                statusEl.style.color = '#66ff66';
+                
+            } catch (error) {
+                log(`Failed: ${error.message}`, 'error');
+                statusEl.textContent = 'Status: Slot Machine Failed';
+                statusEl.style.color = '#ff6666';
+            }
+        }
+        
+        // Load scripts
+        log('Loading scripts...', 'info');
+        
+        const scripts = [
+            'animation-engine.js',
+            'slot-machine.js',
+            'filter-system.js'
+        ];
+        
+        let loadedCount = 0;
+        
+        scripts.forEach(src => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = () => {
+                loadedCount++;
+                log(`Loaded: ${src}`, 'success');
+                
+                if (loadedCount === scripts.length) {
+                    log('All scripts loaded!', 'success');
+                    statusEl.textContent = 'Status: Ready for testing';
+                    statusEl.style.color = '#ffff66';
+                    
+                    // Auto-test after load
+                    setTimeout(() => {
+                        testAnimationEngine();
+                        setTimeout(() => testSlotMachine(), 500);
+                    }, 500);
+                }
+            };
+            script.onerror = () => {
+                log(`Failed to load: ${src}`, 'error');
+            };
+            document.head.appendChild(script);
+        });
+    </script>
+</body>
+</html>

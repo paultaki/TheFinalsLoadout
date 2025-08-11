@@ -1,0 +1,10 @@
+/* Polish styles - placeholder */
+.slot-column {
+  overflow: hidden;
+  backface-visibility: hidden;
+  transform: translate3d(0,0,0);
+}
+
+.slot-item {
+  height: 80px;
+}

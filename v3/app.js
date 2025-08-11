@@ -338,6 +338,25 @@ function initializeComponents() {
   // Make display function globally available
   window.displayLoadoutResult = displayLoadoutResult;
   window.saveLoadoutToHistory = saveLoadoutToHistory;
+  
+  // Add global reset function
+  window.resetSlotMachine = () => {
+    console.log('🔄 Resetting slot machine...');
+    if (window.slotMachine) {
+      // Reset spinning flag
+      window.slotMachine.isSpinning = false;
+      
+      // Reset animation engine
+      if (window.slotMachine.animationEngine) {
+        window.slotMachine.animationEngine.forceStopAnimation();
+      }
+      
+      // Reinitialize animation engine
+      window.slotMachine.initializeAnimationEngine();
+      
+      console.log('✅ Slot machine reset complete');
+    }
+  };
 
   // Listen for loadout generated events from slot machine
   window.addEventListener("loadoutGenerated", (event) => {

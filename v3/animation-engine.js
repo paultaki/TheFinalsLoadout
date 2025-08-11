@@ -1,7 +1,20 @@
 /**
  * The Finals Slot Machine Animation Engine
  * Casino-level excitement with sophisticated timing and effects
+ * 
+ * FIXES APPLIED (Aug 11, 2025):
+ * 1. Fixed undefined 'eased' variable in deceleration phase
+ * 2. Fixed animation direction to be consistently downward
+ * 3. Animation now reads initial position from DOM (set at -1600px)
+ * 4. High-speed chaos continues from acceleration position (no reset)
+ * 5. Combined deceleration/lock phases for smoother transition
+ * 6. Winner properly centers at index 20
  */
+
+// Constants for precise positioning
+const ITEM_H = 80;
+const VIEWPORT_H = 240;
+const CENTER_OFFSET = (VIEWPORT_H - ITEM_H) / 2; // 80
 
 // ========================================
 // Animation Configuration
@@ -76,12 +89,24 @@ class AnimationEngine {
     this.lastFrameTime = 0;
     this.frameCount = 0;
     this.currentPhase = 'idle';
+    
+    // Animation direction control
+    this.downward = 1; // +1 => down
+    this.debug = true;
+    this.baseVelocityDirection = 1; // Positive for downward motion
 
+    // Animation recovery
+    this.animationTimeout = null;
+    this.maxAnimationDuration = 10000; // 10 seconds max
+    
     // Initialize audio
     this.initializeAudio();
     
     // Create debug overlay
     this.createDebugOverlay();
+    
+    // Add visibility change handler
+    this.setupVisibilityHandler();
 
     // Adjust for mobile if needed
     if (this.isMobile) {
@@ -165,12 +190,22 @@ class AnimationEngine {
    * @param {Object} scrollContents - Deception engine scroll contents
    */
   async animateQuickSpin(columns, scrollContents) {
+    console.log('⚡ animateQuickSpin called');
+    
+    // Force cleanup if animation is stuck
     if (this.isAnimating) {
-      console.warn("Animation already in progress");
-      return;
+      console.warn("Animation already in progress - forcing cleanup");
+      this.forceStopAnimation();
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     this.isAnimating = true;
+    
+    // Set a timeout for quick spins
+    this.animationTimeout = setTimeout(() => {
+      console.error('⏱️ Quick spin timeout - forcing stop');
+      this.forceStopAnimation();
+    }, 5000); // 5 seconds for quick spin
 
     try {
       // Play start sound
@@ -205,7 +240,7 @@ class AnimationEngine {
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
 
-        columns.forEach((column) => {
+        columns.forEach((column, index) => {
           const itemsContainer = column.querySelector(".slot-items");
           if (itemsContainer) {
             if (!this.columnAnimations.has(column)) {
@@ -278,7 +313,7 @@ class AnimationEngine {
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
 
-        columns.forEach((column) => {
+        columns.forEach((column, index) => {
           const itemsContainer = column.querySelector(".slot-items");
           const animation = this.columnAnimations.get(column);
 
@@ -329,7 +364,7 @@ class AnimationEngine {
 
         const currentSpeed = 500 - (500 - 50) * progress;
 
-        columns.forEach((column) => {
+        columns.forEach((column, index) => {
           const itemsContainer = column.querySelector(".slot-items");
           const animation = this.columnAnimations.get(column);
 
@@ -360,7 +395,7 @@ class AnimationEngine {
           this.animationFrameId = requestAnimationFrame(animate);
         } else {
           // Clear blur completely
-          columns.forEach((column) => {
+          columns.forEach((column, index) => {
             const itemsContainer = column.querySelector(".slot-items");
             if (itemsContainer) {
               itemsContainer.style.filter = "blur(0px)";
@@ -381,12 +416,23 @@ class AnimationEngine {
    * @param {Object} predeterminedResults - The actual results to land on
    */
   async animateSlotMachine(columns, scrollContents, predeterminedResults) {
+    console.log('🎰 animateSlotMachine called');
+    
+    // Force cleanup if animation is stuck
     if (this.isAnimating) {
-      console.warn("Animation already in progress");
-      return;
+      console.warn("Animation already in progress - forcing cleanup");
+      this.forceStopAnimation();
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     this.isAnimating = true;
+    this.updateDebugOverlay();
+    
+    // Set a timeout to force stop if animation takes too long
+    this.animationTimeout = setTimeout(() => {
+      console.error('⏱️ Animation timeout - forcing stop');
+      this.forceStopAnimation();
+    }, this.maxAnimationDuration);
 
     try {
       // Play start sound
@@ -399,15 +445,11 @@ class AnimationEngine {
       this.playSound("highSpeed");
       await this.runHighSpeedChaosPhase(columns, scrollContents);
 
-      // Phase 3: Deceleration
+      // Phase 3, 4, 5: Combined Deceleration and Lock
       this.stopSound("highSpeed");
-      await this.runDecelerationPhase(columns);
-
-      // Phase 4: Overshoot and snapback
-      await this.runOvershootPhase(columns, predeterminedResults);
-
-      // Phase 5: Lock-in with stagger
-      await this.runLockInPhase(columns);
+      // Extract winner indices from predetermined results
+      const winnerIndices = columns.map(() => 20); // All winners at index 20
+      await this.runDecelerationAndLock(columns, winnerIndices);
 
       // Victory!
       this.playSound("victory");
@@ -426,6 +468,25 @@ class AnimationEngine {
   }
 
   /**
+   * Setup visibility change handler to recover from tab switching
+   */
+  setupVisibilityHandler() {
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && this.isAnimating) {
+        console.warn('⚠️ Tab hidden during animation - forcing cleanup');
+        this.forceStopAnimation();
+      }
+    });
+    
+    // Also handle page unload
+    window.addEventListener('beforeunload', () => {
+      if (this.isAnimating) {
+        this.forceStopAnimation();
+      }
+    });
+  }
+  
+  /**
    * Create debug overlay for visual debugging
    */
   createDebugOverlay() {
@@ -437,47 +498,112 @@ class AnimationEngine {
       position: fixed;
       top: 10px;
       right: 10px;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.95);
       color: #00ff00;
-      padding: 10px;
-      font-family: monospace;
+      padding: 15px;
+      font-family: 'Courier New', monospace;
       font-size: 12px;
       z-index: 10000;
-      border: 1px solid #00ff00;
-      min-width: 200px;
+      border: 2px solid #00ff00;
+      min-width: 250px;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
     `;
     overlay.innerHTML = `
-      <div>Phase: <span id="debug-phase">idle</span></div>
+      <div style="color: #ffff00; font-weight: bold; margin-bottom: 10px;">🎰 SLOT MACHINE DEBUG</div>
+      <div>Phase: <span id="debug-phase" style="color: #00ffff;">idle</span></div>
       <div>Position: <span id="debug-position">0</span>px</div>
-      <div>Velocity: <span id="debug-velocity">0</span>px/s</div>
+      <div>Velocity: <span id="debug-velocity">0</span>px/s <span id="debug-direction">↓</span></div>
       <div>FPS: <span id="debug-fps">60</span></div>
       <div>Animating: <span id="debug-animating">false</span></div>
+      <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #00ff00;">
+        <div>Loops: <span id="debug-loops">0</span></div>
+        <div>Frame: <span id="debug-frame">0</span></div>
+      </div>
     `;
     document.body.appendChild(overlay);
+    
+    // Add column position indicators
+    this.createColumnDebugOverlays();
   }
   
   /**
    * Update debug overlay
    */
+  /**
+   * Create column-specific debug overlays
+   */
+  createColumnDebugOverlays() {
+    if (!this.debugMode) return;
+    
+    const columns = document.querySelectorAll('.slot-column');
+    columns.forEach((column, index) => {
+      const debugDiv = document.createElement('div');
+      debugDiv.className = 'column-debug';
+      debugDiv.style.cssText = `
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: #00ff00;
+        padding: 2px 8px;
+        font-size: 10px;
+        font-family: monospace;
+        border: 1px solid #00ff00;
+        z-index: 1000;
+        white-space: nowrap;
+      `;
+      debugDiv.innerHTML = `Col${index}: <span class="pos-val">0</span>px`;
+      column.style.position = 'relative';
+      column.appendChild(debugDiv);
+    });
+  }
+  
   updateDebugOverlay() {
     if (!this.debugMode) return;
     
     const phase = document.getElementById('debug-phase');
     const position = document.getElementById('debug-position');
     const velocity = document.getElementById('debug-velocity');
+    const direction = document.getElementById('debug-direction');
     const fps = document.getElementById('debug-fps');
     const animating = document.getElementById('debug-animating');
+    const loops = document.getElementById('debug-loops');
+    const frame = document.getElementById('debug-frame');
     
     if (phase) phase.textContent = this.currentPhase;
-    if (animating) animating.textContent = this.isAnimating;
+    if (animating) {
+      animating.textContent = this.isAnimating;
+      animating.style.color = this.isAnimating ? '#00ff00' : '#ff0000';
+    }
     if (fps) fps.textContent = Math.round(this.fps);
+    if (frame) frame.textContent = this.frameCount;
     
     // Get first column animation data
     const firstColumn = this.columnAnimations.values().next().value;
     if (firstColumn) {
       if (position) position.textContent = firstColumn.currentPosition.toFixed(1);
-      if (velocity) velocity.textContent = firstColumn.velocity.toFixed(1);
+      if (velocity) {
+        velocity.textContent = Math.abs(firstColumn.velocity).toFixed(1);
+        if (direction) {
+          direction.textContent = firstColumn.velocity > 0 ? '↓' : '↑';
+          direction.style.color = firstColumn.velocity > 0 ? '#00ff00' : '#ff0000';
+        }
+      }
+      if (loops && firstColumn.loopCount !== undefined) {
+        loops.textContent = firstColumn.loopCount || 0;
+      }
     }
+    
+    // Update column-specific debug overlays
+    const columns = document.querySelectorAll('.slot-column');
+    columns.forEach((column, index) => {
+      const anim = this.columnAnimations.get(column);
+      const posVal = column.querySelector('.pos-val');
+      if (anim && posVal) {
+        posVal.textContent = anim.currentPosition.toFixed(0);
+      }
+    });
   }
 
   /**
@@ -487,6 +613,13 @@ class AnimationEngine {
     console.log("🚀 Phase 1: Acceleration");
     this.currentPhase = 'acceleration';
     this.updateDebugOverlay();
+    
+    // Debug columns
+    console.log('🔍 Acceleration - Columns received:', columns.length);
+    columns.forEach((col, i) => {
+      const items = col.querySelector('.slot-items');
+      console.log(`Column ${i}:`, items ? `Has .slot-items (${items.children.length} items)` : 'MISSING .slot-items!', col);
+    });
 
     return new Promise((resolve) => {
       const startTime = performance.now();
@@ -506,28 +639,46 @@ class AnimationEngine {
         // Apply to each column
         columns.forEach((column, index) => {
           const itemsContainer = column.querySelector(".slot-items");
-          if (itemsContainer) {
-            // Initialize animation state if not exists
-            if (!this.columnAnimations.has(column)) {
-              // For downward scroll, start with items above viewport
+          if (!itemsContainer) {
+            console.error(`❌ Column ${index} missing .slot-items!`);
+            return;
+          }
+          
+          // Ensure no CSS transitions during animation
+          itemsContainer.style.transition = 'none';
+          itemsContainer.style.willChange = 'transform';
+          
+          // Initialize animation state if not exists
+          if (!this.columnAnimations.has(column)) {
+              // Read the current position from the transform (set in populateScrollContainers)
+              const currentTransform = itemsContainer.style.transform;
+              let startPos = -1600; // Default to winner position
+              const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
+              if (match) {
+                startPos = parseFloat(match[1]);
+              }
+              
               const itemHeight = 80;
               const itemCount = itemsContainer.children.length;
               const totalHeight = itemCount * itemHeight;
-              // Start position: items are above viewport, ready to scroll down
-              const startPos = -(totalHeight * 0.8);
+              
               this.columnAnimations.set(column, {
-                currentPosition: startPos, // Start most items above
-                velocity: phase.startSpeed,
+                currentPosition: startPos,
+                velocity: phase.startSpeed * this.baseVelocityDirection,
                 targetPosition: 0,
+                totalHeight: totalHeight,
+                itemHeight: itemHeight
               });
-              console.log(`🚀 Column ${index} acceleration start: ${startPos}px`);
+              console.log(`🚀 Column ${index} start: ${startPos}px (from transform), ${itemCount} items, height: ${totalHeight}px`);
             }
 
             const animation = this.columnAnimations.get(column);
 
-            // Update position (moving down, toward positive)
-            animation.velocity = currentSpeed;
-            animation.currentPosition += currentSpeed * 0.016;
+            // Update velocity and position (moving down, toward positive)
+            animation.velocity = currentSpeed * this.baseVelocityDirection; // Always positive for down
+            animation.currentPosition += animation.velocity * 0.016;
+            
+            // Apply transform
             itemsContainer.style.transform = `translateY(${animation.currentPosition}px)`;
             
             // Update debug overlay
@@ -543,7 +694,6 @@ class AnimationEngine {
             // Gradually increase blur
             const blurAmount = eased * 2; // Max 2px during acceleration
             itemsContainer.style.filter = `blur(${blurAmount}px)`;
-          }
         });
 
         if (progress < 1) {
@@ -558,179 +708,229 @@ class AnimationEngine {
   }
 
   /**
-   * Phase 2: High-speed chaos with velocity variations
+   * Phase 2: High-speed chaos with CORRECT downward math
    */
-  async runHighSpeedChaosPhase(columns, scrollContents) {
-    console.log("💨 Phase 2: High-speed chaos");
-    console.log("Starting positions:", columns.map((col, i) => {
-      const anim = this.columnAnimations.get(col);
-      return `Col${i}: ${anim ? anim.currentPosition.toFixed(1) : 'N/A'}px`;
-    }).join(", "));
+  async runHighSpeedChaosPhase(columns, opts) {
+    console.log("💨 Phase 2: High-speed chaos - FIXED MATH");
+    this.currentPhase = 'high-speed-chaos';
+    this.updateDebugOverlay();
+    
+    // Disable CSS transitions and prepare columns
+    for (const col of columns) {
+      const itemsContainer = col.querySelector('.slot-items');
+      if (itemsContainer) {
+        itemsContainer.style.willChange = 'transform';
+        itemsContainer.style.transition = 'none';
+        itemsContainer.dataset.anim = 'running';
+      }
+    }
+    
+    const baseSpeed = Math.max(300, Math.abs(opts?.baseSpeed || 900)); // px/s, always positive
+    const t0 = performance.now();
+    let last = t0;
+    
+    // Each column tracks position independently
+    const state = columns.map((col, i) => {
+      const itemsContainer = col.querySelector('.slot-items');
+      if (!itemsContainer) return null;
+      
+      const items = itemsContainer.children.length;
+      const cycleHeight = items * ITEM_H;
+      
+      // Continue from current position (set by acceleration phase)
+      const currentTransform = itemsContainer.style.transform;
+      let startPos = -1600; // Default
+      const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
+      if (match) {
+        startPos = parseFloat(match[1]);
+      }
+      
+      console.log(`Col${i}: items=${items}, cycleH=${cycleHeight}, continuing from pos=${startPos}`);
+      
+      // Add slight speed variation per column for more realistic effect
+      const columnSpeedVariation = 1 + (Math.random() * 0.2 - 0.1); // ±10% variation
+      
+      return { 
+        col: itemsContainer, 
+        items, 
+        cycleHeight, 
+        pos: startPos, 
+        vel: baseSpeed * columnSpeedVariation,
+        index: i,
+        speedMod: columnSpeedVariation
+      };
+    }).filter(s => s !== null);
 
     return new Promise((resolve) => {
-      const startTime = performance.now();
-      const phase = ANIMATION_PHASES.HIGH_SPEED_CHAOS;
-
-      // Set up each column with its scroll content
-      columns.forEach((column, index) => {
-        const columnType = column.dataset.type;
-        const itemsContainer = column.querySelector(".slot-items");
-        const scrollContent = scrollContents[columnType];
-
-        if (itemsContainer && scrollContent) {
-          // Only populate if empty - preserve existing items with images
-          if (itemsContainer.children.length === 0) {
-            // Duplicate items for seamless scrolling
-            const duplicatedContent = [
-              ...scrollContent,
-              ...scrollContent,
-              ...scrollContent,
-            ];
-            duplicatedContent.forEach((item) => {
-              const itemDiv = document.createElement("div");
-              itemDiv.className = "slot-item";
-
-              // Create image element (same logic as slot-machine.js)
-              const img = document.createElement("img");
-              const imageNameMap = {
-                "R.357": "R.357",
-                ".50 Akimbo": "50_Akimbo",
-                "CB-01 Repeater": "CB-01_Repeater",
-                SA1216: "SA1216",
-                "ShAK-50": "ShAK-50",
-                MGL32: "MGL32",
-                "Pike-556": "Pike-556",
-                "M26 Matter": "M26_Matter",
-                "H+ Infuser": "H+_Infuser",
-                "Recon Senses": "Recon_Senses",
-                "Stun Gun": "Stun_Gun",
-                "Motion Sensor": "Motion_Sensor",
-              };
-
-              const imageName = imageNameMap[item] || item.replace(/\s+/g, "_");
-              img.src = `../images/${imageName}.webp`;
-              img.alt = item;
-              img.onerror = function () {
-                this.style.display = "none";
-                const textSpan = document.createElement("span");
-                textSpan.textContent = item;
-                itemDiv.appendChild(textSpan);
-              };
-
-              const label = document.createElement("div");
-              label.className = "item-label";
-              label.textContent = item;
-
-              itemDiv.appendChild(img);
-              itemDiv.appendChild(label);
-              itemsContainer.appendChild(itemDiv);
-            });
-          } else {
-            // If items exist, duplicate them for seamless scrolling if needed
-            const currentItemCount = itemsContainer.children.length;
-            if (currentItemCount < 30) {
-              // Ensure enough items for smooth scrolling
-              const existingItems = Array.from(itemsContainer.children);
-              for (let i = 0; i < 2; i++) {
-                // Duplicate twice
-                existingItems.forEach((item) => {
-                  itemsContainer.appendChild(item.cloneNode(true));
-                });
+      const phase = ANIMATION_PHASES.HIGH_SPEED_CHAOS; // Define phase BEFORE tick function
+      
+      // Animation loop with correct math
+      const tick = (now) => {
+        const dt = Math.min(48, now - last) / 1000; // clamp dt to prevent huge jumps
+        last = now;
+        const elapsed = now - t0; // Calculate elapsed time at the start
+        
+        let running = false;
+        
+        for (const s of state) {
+          if (!s) continue;
+          
+          // Slight per-column variance but keep it positive (downward)
+          const jitter = (Math.random() * 0.15 - 0.075) * s.vel;
+          const vel = Math.max(150, s.vel + jitter); // never negative, always moving down
+          s.pos += vel * dt; // positive increases translateY => down
+          
+          // For seamless scrolling: wrap when we've scrolled one full cycle
+          // Since we start negative and move positive (down), wrap back to negative
+          // when we've moved far enough that looping won't be visible
+          while (s.pos > 0) {
+            // Reset to continue the infinite scroll
+            s.pos -= s.cycleHeight;
+            if (this.debug && s.index === 0) {
+              console.log(`♻️ Col${s.index} wrapped: resetting by ${s.cycleHeight}px to ${s.pos.toFixed(1)}px`);
+            }
+          }
+          
+          // Debug logging
+          if (this.debug && s.index === 0) {
+            if (!s._lastLog || now - s._lastLog > 150) {
+              console.log(`Col${s.index} pos=${s.pos.toFixed(1)} vel=${vel.toFixed(1)} wrapAt=0 cycle=${s.cycleHeight}`);
+              s._lastLog = now;
+              
+              // Update debug overlay
+              const debugEl = document.getElementById('anim-debug');
+              if (debugEl) {
+                const sum = state.map((st,i) => st ? `c${i}:${st.pos.toFixed(0)}` : '').join(' ');
+                debugEl.textContent = `CHAOS ${sum}`;
               }
             }
           }
+          
+          // Apply transform with motion blur for speed effect
+          s.col.style.transform = `translate3d(0, ${s.pos}px, 0)`;
+          
+          // Apply motion blur based on velocity
+          const blurAmount = Math.min(4, (vel / 250)); // Max 4px blur
+          s.col.style.filter = `blur(${blurAmount}px)`;
+          
+          running = true;
         }
-
-        // Initialize column animation state for downward scroll
-        const animation = this.columnAnimations.get(column);
-        if (!animation) {
-          // If not already initialized, start above viewport
-          const itemHeight = 80;
-          const totalHeight = itemsContainer.children.length * itemHeight;
-          const initialPosition = -(totalHeight * 0.7);
-          this.columnAnimations.set(column, {
-            currentPosition: initialPosition, // Start above viewport
-            velocity: phase.baseSpeed,
-            targetPosition: 0,
-          });
-          console.log(`💨 Column ${columnType} chaos init: ${initialPosition}px (items above viewport)`);
-        } else {
-          // Continue from acceleration phase position
-          animation.velocity = phase.baseSpeed;
-        }
-      });
-
-      const animate = (currentTime) => {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / phase.duration, 1);
-
-        // Track FPS
-        this.trackFPS(currentTime);
-
-        columns.forEach((column, index) => {
-          const itemsContainer = column.querySelector(".slot-items");
-          const animation = this.columnAnimations.get(column);
-
-          if (itemsContainer && animation) {
-            // Apply velocity variations using sin wave (ensure positive)
-            const variation =
-              Math.sin(elapsed * 0.003 + index) * phase.velocityVariation;
-            // Force positive velocity for consistent downward motion
-            const currentVelocity = Math.abs(animation.velocity + variation);
-            
-            // Debug logging - log every 500ms for first column
-            if (index === 0 && Math.floor(elapsed / 500) !== Math.floor((elapsed - 16) / 500)) {
-              console.log(`⚡ Col0: Pos=${animation.currentPosition.toFixed(1)}px, Vel=+${currentVelocity.toFixed(1)}px/s ↓`);
-            }
-
-            // Update position (positive velocity = downward motion)
-            animation.currentPosition += currentVelocity * 0.016; // 60fps
-
-            // Seamless loop the scroll for downward motion
-            const itemHeight = 80; // Height of each item (matches CSS)
-            const totalHeight = itemsContainer.children.length * itemHeight;
-            const viewportHeight = 240; // Height of visible area
-
-            // For downward scroll: items start negative (above), move toward positive (below)
-            // Reset when we've scrolled too far down
-            if (animation.currentPosition >= 0) {
-              // Reset to negative position for seamless loop
-              const resetPosition = animation.currentPosition - totalHeight;
-              console.log(`♻️ Loop reset at ${animation.currentPosition.toFixed(1)}px → ${resetPosition.toFixed(1)}px`);
-              animation.currentPosition = resetPosition;
-            }
-
-            // Apply transform - positive for downward scroll
-            itemsContainer.style.transform = `translateY(${animation.currentPosition}px)`;
-            
-            // Update debug overlay
-            if (this.debugMode && index === 0) {
-              this.updateDebugOverlay();
-            }
-
-            // Apply chaos blur
-            const blurAmount =
-              phase.blur * (0.8 + Math.sin(elapsed * 0.002) * 0.2);
-            itemsContainer.style.filter = `blur(${blurAmount}px)`;
-          }
-        });
-
-        if (progress < 1) {
-          this.animationFrameId = requestAnimationFrame(animate);
+        
+        // Check if we should continue
+        if (running && elapsed < phase.duration) {
+          this.animationFrameId = requestAnimationFrame(tick);
         } else {
           resolve();
         }
       };
-
-      this.animationFrameId = requestAnimationFrame(animate);
+      
+      let sId = requestAnimationFrame(tick);
+      
+      // Expose a stop method that decel phase will call
+      this._stopChaos = () => { 
+        cancelAnimationFrame(sId);
+        cancelAnimationFrame(this.animationFrameId);
+        resolve(); 
+      };
     });
   }
 
   /**
-   * Phase 3: Deceleration with staggered stopping
+   * Helper: Read current position from transform
+   */
+  _readPos(el) {
+    const m = /translate3d\(0,\s*([-\d.]+)px/.exec(el.style.transform) ||
+              /translateY\(\s*([-\d.]+)px/.exec(el.style.transform);
+    return m ? parseFloat(m[1]) : 0;
+  }
+  
+  /**
+   * Helper: Find nearest future target for smooth decel
+   */
+  _nearestFutureTarget(currentPos, targetBase, cycleHeight) {
+    // Choose the congruent target > currentPos so we keep moving DOWN toward it
+    let t = targetBase;
+    while (t <= currentPos) t += cycleHeight;
+    return t;
+  }
+  
+  /**
+   * Phase 3: Deceleration with CORRECT targeting
+   */
+  /**
+   * Combined deceleration and lock with proper math
+   */
+  async runDecelerationAndLock(columns, winnerIndicesByColumn) {
+    console.log("🎯 Phase 3+4+5: Deceleration and Lock - FIXED MATH");
+    
+    // Stop chaos
+    if (this._stopChaos) this._stopChaos();
+    
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+    
+    const anims = columns.map((col, i) => {
+      const itemsContainer = col.querySelector('.slot-items');
+      if (!itemsContainer) return null;
+      
+      const items = itemsContainer.children.length;
+      const cycleHeight = items * ITEM_H;
+      const winnerIndex = winnerIndicesByColumn?.[i] || 20;
+      const base = CENTER_OFFSET - (winnerIndex * ITEM_H); // e.g., -1520
+      const current = this._readPos(itemsContainer);
+      const target = this._nearestFutureTarget(current, base, cycleHeight);
+      
+      console.log(`Col${i}: current=${current.toFixed(1)}, targetBase=${base}, finalTarget=${target.toFixed(1)}`);
+      
+      // 900-1400ms feels right after chaos
+      const D = 1100 + i * 60;
+      const start = performance.now();
+      
+      // Ensure JS owns the transform
+      itemsContainer.style.transition = 'none';
+      
+      return new Promise(resolve => {
+        const step = (now) => {
+          const t = Math.min(1, (now - start) / D);
+          const y = current + (target - current) * easeOutCubic(t);
+          itemsContainer.style.transform = `translate3d(0, ${y}px, 0)`;
+          
+          // Reduce blur as we decelerate
+          const blurAmount = (1 - t) * 2; // Start at 2px, fade to 0
+          itemsContainer.style.filter = `blur(${blurAmount}px)`;
+          
+          if (t < 1) {
+            requestAnimationFrame(step);
+          } else {
+            // Final position with no blur
+            itemsContainer.style.filter = 'none';
+            console.log(`Col${i} locked at ${y.toFixed(1)}px`);
+            resolve();
+          }
+        };
+        requestAnimationFrame(step);
+      });
+    }).filter(a => a !== null);
+    
+    await Promise.all(anims);
+    
+    // Mark finished
+    for (const col of columns) {
+      const itemsContainer = col.querySelector('.slot-items');
+      if (itemsContainer) {
+        itemsContainer.dataset.anim = 'done';
+      }
+    }
+    
+    console.log('✅ All columns locked!');
+  }
+  
+  /**
+   * Old deceleration - kept for compatibility
    */
   async runDecelerationPhase(columns) {
-    console.log("🎯 Phase 3: Deceleration with sequential stops");
+    console.log("🎯 Phase 3: Deceleration - using new combined method");
+    const winnerIndices = columns.map(() => 20);
+    await this.runDecelerationAndLock(columns, winnerIndices);
     console.log("Decel start positions:", columns.map((col, i) => {
       const anim = this.columnAnimations.get(col);
       return `Col${i}: ${anim ? anim.currentPosition.toFixed(1) : 'N/A'}px`;
@@ -758,9 +958,12 @@ class AnimationEngine {
               1
             );
 
+            // Declare eased variable at the start
+            let eased = 0;
+            
             // Only start decelerating after column's delay
             if (columnElapsed > 0) {
-              const eased = this.cubicBezier(
+              eased = this.cubicBezier(
                 columnProgress,
                 0.55,
                 0.06,
@@ -778,13 +981,14 @@ class AnimationEngine {
             animation.currentPosition += animation.velocity * 0.016;
 
             // Keep position in bounds for seamless loop during deceleration
-            const itemHeight = 80;
-            const totalHeight = itemsContainer.children.length * itemHeight;
+            const itemHeight = animation.itemHeight || 80;
+            const totalHeight = animation.totalHeight || (itemsContainer.children.length * itemHeight);
             const viewportHeight = 240;
 
-            // Wrap for downward scroll - reset when too far down
-            if (animation.currentPosition >= 0) {
+            // Wrap for downward scroll - reset when content has scrolled past viewport
+            if (animation.currentPosition > viewportHeight) {
               animation.currentPosition -= totalHeight;
+              console.log(`🔄 Decel wrap: ${(animation.currentPosition + totalHeight).toFixed(1)}px → ${animation.currentPosition.toFixed(1)}px`);
             }
 
             itemsContainer.style.transform = `translateY(${animation.currentPosition}px)`;
@@ -1281,6 +1485,54 @@ class AnimationEngine {
     if (this.debugOverlay) {
       this.debugOverlay.innerHTML = '<strong>🎰 ANIMATION COMPLETE</strong>';
     }
+    
+    // Clear any timeouts
+    if (this.animationTimeout) {
+      clearTimeout(this.animationTimeout);
+      this.animationTimeout = null;
+    }
+  }
+  
+  /**
+   * Force stop animation and reset state
+   */
+  forceStopAnimation() {
+    console.log('🛑 Force stopping animation');
+    
+    // Cancel animation frame
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
+    
+    // Clear timeout
+    if (this.animationTimeout) {
+      clearTimeout(this.animationTimeout);
+      this.animationTimeout = null;
+    }
+    
+    // Reset state
+    this.isAnimating = false;
+    this.currentPhase = 'idle';
+    
+    // Clear animations and reset positions
+    this.columnAnimations.clear();
+    
+    // Reset all slot columns to default position
+    const columns = document.querySelectorAll('.slot-items');
+    columns.forEach(column => {
+      column.style.transform = 'translateY(0px)';
+      column.style.filter = 'blur(0px)';
+    });
+    
+    // Update debug overlay
+    this.updateDebugOverlay();
+    
+    // Stop all sounds
+    this.stopSound("highSpeed");
+    this.stopSound("spinStart");
+    
+    console.log('✅ Animation force stopped and state reset');
   }
 
   // ========================================

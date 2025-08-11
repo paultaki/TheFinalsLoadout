@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Animation Test</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #111;
+            padding: 20px;
+        }
+        
+        #test-controls {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.9);
+            padding: 15px;
+            border: 1px solid #0f0;
+            z-index: 10000;
+            color: white;
+        }
+        
+        #test-controls button {
+            display: block;
+            margin: 5px 0;
+            padding: 10px;
+            background: #333;
+            color: white;
+            border: 1px solid #666;
+            cursor: pointer;
+        }
+        
+        #test-controls button:hover {
+            background: #555;
+        }
+        
+        .test-info {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(0,255,0,0.1);
+            border: 1px solid #0f0;
+            color: #0f0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div id="test-controls">
+        <h3>Animation Test Controls</h3>
+        <button onclick="testFullAnimation()">Test Full Animation</button>
+        <button onclick="testAcceleration()">Test Acceleration Only</button>
+        <button onclick="testChaos()">Test Chaos Phase</button>
+        <button onclick="testDeceleration()">Test Deceleration</button>
+        <button onclick="resetAnimation()">Reset</button>
+        <div id="status" class="test-info">Ready</div>
+    </div>
+
+    <!-- Slot Machine Structure -->
+    <div class="slot-machine">
+        <div class="slot-column" data-type="weapon">
+            <div class="slot-window">
+                <div class="slot-items"></div>
+            </div>
+        </div>
+        <div class="slot-column" data-type="specialization">
+            <div class="slot-window">
+                <div class="slot-items"></div>
+            </div>
+        </div>
+        <div class="slot-column" data-type="gadget-1">
+            <div class="slot-window">
+                <div class="slot-items"></div>
+            </div>
+        </div>
+        <div class="slot-column" data-type="gadget-2">
+            <div class="slot-window">
+                <div class="slot-items"></div>
+            </div>
+        </div>
+        <div class="slot-column" data-type="gadget-3">
+            <div class="slot-window">
+                <div class="slot-items"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="animation-engine.js"></script>
+    <script>
+        let animationEngine = null;
+        const statusDiv = document.getElementById('status');
+        
+        // Sample items for testing
+        const testItems = {
+            weapons: ['AKM', 'FCAR', 'M60', 'Lewis Gun', 'Model 1887', 'SA1216', 'R.357', 'V9S', 'XP-54'],
+            specializations: ['Charge N Slam', 'Mesh Shield', 'Goo Gun', 'Healing Beam', 'Cloaking Device'],
+            gadgets: ['Frag Grenade', 'Smoke Grenade', 'Flashbang', 'C4', 'Breach Charge', 'Goo Grenade']
+        };
+        
+        function populateColumns() {
+            const columns = document.querySelectorAll('.slot-column');
+            
+            columns.forEach((column, index) => {
+                const itemsContainer = column.querySelector('.slot-items');
+                itemsContainer.innerHTML = '';
+                
+                // Determine which items to use
+                let items;
+                if (index === 0) items = testItems.weapons;
+                else if (index === 1) items = testItems.specializations;
+                else items = testItems.gadgets;
+                
+                // Add 60 items (for good scrolling effect)
+                for (let i = 0; i < 60; i++) {
+                    const item = items[i % items.length];
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'slot-item';
+                    
+                    // Mark winner at position 20
+                    if (i === 20) {
+                        itemDiv.classList.add('winner-item');
+                        itemDiv.style.border = '2px solid red';
+                    }
+                    
+                    itemDiv.innerHTML = `
+                        <img src="../images/placeholder.webp" alt="${item}" onerror="this.style.display='none'">
+                        <div class="item-label">${item}</div>
+                    `;
+                    
+                    itemsContainer.appendChild(itemDiv);
+                }
+                
+                // Set initial position (winner above viewport)
+                itemsContainer.style.transform = 'translateY(-1600px)';
+            });
+        }
+        
+        function updateStatus(message, type = 'info') {
+            statusDiv.textContent = message;
+            statusDiv.style.borderColor = type === 'error' ? '#f00' : '#0f0';
+            statusDiv.style.background = type === 'error' ? 'rgba(255,0,0,0.1)' : 'rgba(0,255,0,0.1)';
+        }
+        
+        async function testFullAnimation() {
+            try {
+                updateStatus('Starting full animation...');
+                populateColumns();
+                
+                if (!animationEngine) {
+                    animationEngine = new AnimationEngine();
+                }
+                
+                const columns = Array.from(document.querySelectorAll('.slot-column'));
+                const predeterminedResults = {
+                    weapon: testItems.weapons[0],
+                    specialization: testItems.specializations[0],
+                    gadgets: [testItems.gadgets[0], testItems.gadgets[1], testItems.gadgets[2]]
+                };
+                
+                await animationEngine.animateSlotMachine(columns, null, predeterminedResults);
+                updateStatus('Animation complete!');
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+        
+        async function testAcceleration() {
+            try {
+                updateStatus('Testing acceleration phase...');
+                populateColumns();
+                
+                if (!animationEngine) {
+                    animationEngine = new AnimationEngine();
+                }
+                
+                const columns = Array.from(document.querySelectorAll('.slot-column'));
+                await animationEngine.runAccelerationPhase(columns);
+                updateStatus('Acceleration complete!');
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testChaos() {
+            try {
+                updateStatus('Testing chaos phase...');
+                populateColumns();
+                
+                if (!animationEngine) {
+                    animationEngine = new AnimationEngine();
+                }
+                
+                const columns = Array.from(document.querySelectorAll('.slot-column'));
+                await animationEngine.runHighSpeedChaosPhase(columns, { baseSpeed: 900 });
+                updateStatus('Chaos phase complete!');
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testDeceleration() {
+            try {
+                updateStatus('Testing deceleration...');
+                populateColumns();
+                
+                if (!animationEngine) {
+                    animationEngine = new AnimationEngine();
+                }
+                
+                const columns = Array.from(document.querySelectorAll('.slot-column'));
+                const winnerIndices = [20, 20, 20, 20, 20];
+                await animationEngine.runDecelerationAndLock(columns, winnerIndices);
+                updateStatus('Deceleration complete!');
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function resetAnimation() {
+            populateColumns();
+            if (animationEngine) {
+                animationEngine.forceStopAnimation();
+            }
+            updateStatus('Reset complete');
+        }
+        
+        // Initialize on load
+        window.addEventListener('load', () => {
+            populateColumns();
+            updateStatus('Test environment ready');
+        });
+    </script>
+</body>
+</html>

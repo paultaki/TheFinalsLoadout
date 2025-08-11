@@ -366,8 +366,24 @@ class AutomatedFlowManager {
       classDisplay.textContent = this.selections.class;
     }
 
-    // Small delay to ensure DOM is ready
-    await this.delay(100);
+    // Longer delay to ensure DOM is ready and rendered
+    await this.delay(300);
+    
+    // Verify slot columns and items containers are in DOM
+    const slotColumns = document.querySelectorAll('.slot-column');
+    const slotItemsContainers = document.querySelectorAll('.slot-items');
+    console.log('🔍 DOM Check:');
+    console.log('  - Slot columns found:', slotColumns.length);
+    console.log('  - Slot items containers found:', slotItemsContainers.length);
+    
+    slotItemsContainers.forEach((container, i) => {
+      console.log(`  - Container ${i}: ${container.children.length} items`);
+    });
+    
+    if (slotItemsContainers.length === 0) {
+      console.error('❌ CRITICAL: No .slot-items containers found in DOM!');
+      console.log('Slot container HTML:', slotContainer?.innerHTML.substring(0, 500));
+    }
 
     // Verify animation engine is ready
     if (window.slotMachine && !window.slotMachine.animationEngine) {

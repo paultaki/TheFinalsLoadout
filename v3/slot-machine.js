@@ -495,6 +495,15 @@ class SlotMachine {
    * Initialize animation engine
    */
   initializeAnimationEngine() {
+    // Clean up any existing animation engine
+    if (this.animationEngine) {
+      console.log('🧹 Cleaning up existing animation engine');
+      if (this.animationEngine.isAnimating) {
+        this.animationEngine.forceStopAnimation();
+      }
+      this.animationEngine = null;
+    }
+    
     // Load animation engine if available
     if (typeof AnimationEngine !== "undefined") {
       this.animationEngine = new AnimationEngine();
@@ -583,8 +592,22 @@ class SlotMachine {
   async spin(classType, spinCount = 1) {
     // Spin protection
     if (this.isSpinning) {
-      console.warn("Already spinning!");
-      return null;
+      console.warn("Already spinning! Checking animation engine state...");
+      
+      // If animation engine exists and is stuck, force stop it
+      if (this.animationEngine && this.animationEngine.isAnimating) {
+        console.log('🔄 Forcing animation engine reset');
+        this.animationEngine.forceStopAnimation();
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+      
+      // Reset our spinning flag if animation is cleared
+      if (this.animationEngine && !this.animationEngine.isAnimating) {
+        console.log('✅ Animation cleared, allowing new spin');
+        this.isSpinning = false;
+      } else {
+        return null;
+      }
     }
 
     this.isSpinning = true;
@@ -602,6 +625,8 @@ class SlotMachine {
       this.showSpinCounter(totalSpins);
 
       // Perform multiple spin cycles
+      let finalLoadout = null; // Define at outer scope
+      
       for (let currentSpin = 1; currentSpin <= totalSpins; currentSpin++) {
         console.log(`🔄 Spin ${currentSpin} of ${totalSpins}`);
 
@@ -612,7 +637,6 @@ class SlotMachine {
         const filteredData = this.filterSystem.getFilteredData(classType);
 
         let loadout = null;
-        let finalLoadout = null;
 
         // Only predetermine outcome on FINAL spin
         if (currentSpin === totalSpins) {
@@ -657,10 +681,19 @@ class SlotMachine {
         console.log('🔍 Scroll contents generated:', this.deceptionEngine.scrollContents);
         
         if (this.animationEngine) {
+          // Pass the actual slot-items containers to the animation engine
           const columnElements = Object.values(this.columns).map(
             (col) => col.element
           );
           console.log('🎲 Column elements found:', columnElements.length);
+          
+          // Verify slot-items containers exist
+          const hasAllContainers = columnElements.every(col => col.querySelector('.slot-items'));
+          if (!hasAllContainers) {
+            console.error('❌ Missing slot-items containers!');
+            await this.basicAnimation();
+            return;
+          }
 
           if (currentSpin === totalSpins) {
             // Final spin - full dramatic animation
@@ -761,6 +794,10 @@ class SlotMachine {
     SlotConfig.columns.forEach((columnType) => {
       const column = this.columns[columnType];
       if (!column || !column.itemsContainer) return;
+      
+      // Disable CSS transitions during spin
+      column.itemsContainer.style.transition = 'none';
+      column.element.style.transition = 'none';
 
       const items = this.deceptionEngine.scrollContents[columnType];
       if (!items) return;
@@ -807,7 +844,7 @@ class SlotMachine {
         // Map item names to image filenames
         const imageNameMap = {
           "R.357": "R.357",
-          ".50 Akimbo": "50_Akimbo",
+          ".50 Akimbo": "placeholder",
           "CB-01 Repeater": "CB-01_Repeater",
           SA1216: "SA1216",
           "ShAK-50": "ShAK-50",
@@ -815,7 +852,7 @@ class SlotMachine {
           "Pike-556": "Pike-556",
           "M26 Matter": "M26_Matter",
           "H+ Infuser": "H+_Infuser",
-          "Recon Senses": "Recon_Senses",
+          "Recon Senses": "placeholder",
           "Stun Gun": "Stun_Gun",
           "Motion Sensor": "Motion_Sensor",
         };
