@@ -45,7 +45,8 @@
       "Bash(node:*)",
       "Bash(cd:*)",
       "Bash(cd:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(git rm:*)"
     ]
   },
   "enableAllProjectMcpServers": false

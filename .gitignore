@@ -16,3 +16,7 @@ New Folder/
 Backup/
 .claude\CLAUDE.md
 .claude/CLAUDE.md
+
+# Ignore Windows Zone.Identifier files
+*Zone.Identifier
+*:Zone.Identifier
