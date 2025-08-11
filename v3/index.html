@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <link rel="canonical" href="https://www.thefinalsloadout.com/" />
+
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Preload Critical Resources -->
+    <!-- <link rel="preload" href="../images/the-finals-logo.webp" as="image" type="image/webp" fetchpriority="high"> -->
+    <link rel="preload" href="style.css" as="style" />
+
+    <!-- Meta Tags -->
+    <title>
+      The Finals BEST Random Loadout Generator | Fun & Unique Loadouts
+    </title>
+    <meta
+      name="description"
+      content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles."
+    />
+    <meta name="author" content="Paul Takisaki" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="images/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="images/favicon-16x16.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="images/favicon-92x192.png"
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="The Finals Loadout Roulette" />
+    <meta
+      property="og:description"
+      content="Randomize your loadout and dominate The Finals with style."
+    />
+    <meta
+      property="og:image"
+      content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png"
+    />
+    <meta property="og:url" content="https://www.thefinalsloadout.com/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Finals Loadout Roulette" />
+    <meta
+      name="twitter:description"
+      content="Spin the wheel. Wreck the arena."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png"
+    />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="polish-styles.css" />
+    <link rel="stylesheet" href="bonus-styles.css" />
+    <link rel="stylesheet" href="selection-styles.css" />
+    <link rel="stylesheet" href="automated-flow-styles.css" />
+  </head>
+  <body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+
+    <!-- Return to Top Button -->
+    <button
+      class="return-to-top"
+      id="returnToTop"
+      aria-label="Return to top"
+      title="Return to top"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+      <div class="nav-links">
+        <a href="/" class="nav-link active">LOADOUT GENERATOR</a>
+        <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
+        <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
+        <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
+        <a href="/wt-progress/" class="nav-link">WT TRACKER (BETA)</a>
+      </div>
+      <div class="nav-controls">
+        <!-- Filter Toggle Button -->
+        <button
+          id="filter-toggle"
+          class="filter-toggle-button nav-button"
+          aria-label="Toggle filters"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polygon
+              points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+            ></polygon>
+          </svg>
+        </button>
+        <!-- Sound Toggle Button -->
+        <button
+          id="sound-toggle"
+          class="sound-toggle-button nav-button"
+          aria-label="Toggle sound"
+        >
+          <svg
+            class="sound-on"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path
+              d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
+            ></path>
+          </svg>
+          <svg
+            class="sound-off"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            style="display: none"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Filter Panel (Hidden by default) -->
+    <div id="filter-panel-overlay" class="filter-panel-overlay"></div>
+    <div id="filter-panel" class="filter-panel">
+      <div class="filter-header">
+        <h3 class="filter-title">FILTERS</h3>
+        <button
+          id="close-filter-panel"
+          class="filter-close"
+          aria-label="Close filters"
+        >
+          ×
+        </button>
+      </div>
+      <div class="filter-content">
+        <!-- Weapons Filter -->
+        <div class="filter-category" data-category="weapons">
+          <div class="filter-category-header">
+            <span class="filter-category-title">WEAPONS</span>
+            <span class="filter-count" id="weapons-count">0/0</span>
+          </div>
+          <div class="filter-controls">
+            <button class="filter-control-btn" data-action="select-all">
+              Select All
+            </button>
+            <button class="filter-control-btn" data-action="select-none">
+              Clear
+            </button>
+            <button class="filter-control-btn" data-action="select-meta">
+              Meta Only
+            </button>
+          </div>
+          <div class="filter-items" id="weapons-filters">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Specializations Filter -->
+        <div class="filter-category" data-category="specializations">
+          <div class="filter-category-header">
+            <span class="filter-category-title">SPECIALIZATIONS</span>
+            <span class="filter-count" id="specializations-count">0/0</span>
+          </div>
+          <div class="filter-controls">
+            <button class="filter-control-btn" data-action="select-all">
+              Select All
+            </button>
+            <button class="filter-control-btn" data-action="select-none">
+              Clear
+            </button>
+          </div>
+          <div class="filter-items" id="specializations-filters">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Gadgets Filter -->
+        <div class="filter-category" data-category="gadgets">
+          <div class="filter-category-header">
+            <span class="filter-category-title">GADGETS</span>
+            <span class="filter-count" id="gadgets-count">0/0</span>
+          </div>
+          <div class="filter-controls">
+            <button class="filter-control-btn" data-action="select-all">
+              Select All
+            </button>
+            <button class="filter-control-btn" data-action="select-none">
+              Clear
+            </button>
+            <button class="filter-control-btn" data-action="select-utility">
+              Utility Only
+            </button>
+          </div>
+          <div class="filter-items" id="gadgets-filters">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Quick Presets -->
+        <div class="filter-presets">
+          <h4 class="preset-title">QUICK PRESETS</h4>
+          <div class="preset-buttons">
+            <button class="preset-btn" data-preset="meta">META BUILD</button>
+            <button class="preset-btn" data-preset="meme">MEME BUILD</button>
+            <button class="preset-btn" data-preset="tryhard">TRYHARD</button>
+            <button class="preset-btn" data-preset="casual">CASUAL</button>
+          </div>
+        </div>
+
+        <!-- Apply/Reset -->
+        <div class="filter-actions">
+          <button id="apply-filters" class="apply-filters-btn">
+            APPLY FILTERS
+          </button>
+          <button id="reset-filters" class="reset-filters-btn">
+            RESET ALL
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+      <!-- Header -->
+      <header class="header">
+        <!-- <img src="../images/the-finals-logo.webp" alt="The Finals Logo" class="logo"> -->
+        <h1 class="title">THE FINALS<br />RANDOM LOADOUT GENERATOR</h1>
+        <p class="subtitle">CHALLENGE YOURSELF WITH UNIQUE BUILDS</p>
+      </header>
+
+      <!-- Pre-Slot Animation Container -->
+      <section id="pre-slot-container" class="pre-slot-container">
+        <!-- Will be populated by AutomatedFlowManager -->
+      </section>
+
+      <!-- Slot Machine Container -->
+      <section
+        id="slot-machine-container"
+        class="slot-machine-container"
+        style="display: none"
+      >
+        <div class="slot-machine">
+          <div class="slot-header">
+            <h2 class="slot-title">SPINNING YOUR LOADOUT...</h2>
+            <div class="class-indicator">
+              <span class="class-label">CLASS:</span>
+              <span class="class-value" id="selected-class">-</span>
+            </div>
+          </div>
+
+          <!-- Slot Columns -->
+          <div class="slot-columns">
+            <div class="slot-column" data-type="weapon">
+              <div class="column-header">WEAPON</div>
+              <div class="slot-window">
+                <div class="slot-items"></div>
+              </div>
+            </div>
+
+            <div class="slot-column" data-type="specialization">
+              <div class="column-header">SPECIALIZATION</div>
+              <div class="slot-window">
+                <div class="slot-items"></div>
+              </div>
+            </div>
+
+            <div class="slot-column" data-type="gadget-1">
+              <div class="column-header">GADGET 1</div>
+              <div class="slot-window">
+                <div class="slot-items"></div>
+              </div>
+            </div>
+
+            <div class="slot-column" data-type="gadget-2">
+              <div class="column-header">GADGET 2</div>
+              <div class="slot-window">
+                <div class="slot-items"></div>
+              </div>
+            </div>
+
+            <div class="slot-column" data-type="gadget-3">
+              <div class="column-header">GADGET 3</div>
+              <div class="slot-window">
+                <div class="slot-items"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Display -->
+        <div id="loadout-result" class="loadout-result" style="display: none">
+          <h3 class="result-title">YOUR LOADOUT</h3>
+          <div class="result-items">
+            <!-- Results will be populated here -->
+          </div>
+          <div class="result-analysis">
+            <!-- AI Analysis placeholder -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Controls -->
+      <section class="controls">
+        <button id="generate-btn" class="generate-btn primary-btn">
+          GENERATE LOADOUT
+        </button>
+        <button
+          id="spin-again-btn"
+          class="spin-again-btn secondary-btn"
+          style="display: none"
+        >
+          SPIN AGAIN
+        </button>
+      </section>
+
+      <!-- History Section -->
+      <section id="history-section" class="history-section">
+        <h2 class="section-title">LOADOUT HISTORY</h2>
+        <div id="history-container" class="history-container">
+          <p class="empty-history">
+            No loadouts generated yet. Click the button above to start!
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>About</h3>
+          <p>
+            The Finals Random Loadout Generator creates unique weapon and gadget
+            combinations for every class.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Connect</h3>
+          <p>
+            Created by
+            <a
+              href="https://www.paultakisaki.com/"
+              target="_blank"
+              rel="noopener"
+              >Paul Takisaki</a
+            >
+          </p>
+          <p>
+            <a
+              href="https://github.com/yourgithub"
+              target="_blank"
+              rel="noopener"
+              >GitHub</a
+            >
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Legal</h3>
+          <p>
+            The Finals is a trademark of Embark Studios. This is a fan-made
+            tool.
+          </p>
+          <p>&copy; 2024 The Finals Loadout Generator</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Audio Elements (Preloaded but not auto-playing) -->
+    <!-- Sounds disabled - files not in v2 directory -->
+    <!-- <audio id="clickSound" src="../sounds/click.mp3" preload="auto"></audio>
+    <audio id="spinSound" src="../sounds/spinning.mp3" preload="auto"></audio>
+    <audio id="winSound" src="../sounds/chang.mp3" preload="auto"></audio> -->
+
+    <!-- Scripts -->
+    <script src="filter-system.js" defer></script>
+    <script src="bonus-system.js" defer></script>
+    <script src="automated-flow.js" defer></script>
+    <script src="app.js" defer></script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'96d45877487830a2',t:'MTc1NDg3OTc4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>
