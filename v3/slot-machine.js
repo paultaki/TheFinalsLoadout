@@ -497,7 +497,6 @@ class SlotMachine {
   initializeAnimationEngine() {
     // Clean up any existing animation engine
     if (this.animationEngine) {
-      console.log('🧹 Cleaning up existing animation engine');
       if (this.animationEngine.isAnimating) {
         this.animationEngine.forceStopAnimation();
       }
@@ -507,36 +506,28 @@ class SlotMachine {
     // Try V2 engine first (improved physics)
     if (typeof AnimationEngineV2 !== "undefined") {
       this.animationEngine = new AnimationEngineV2();
-      console.log("🚀 Animation engine V2 initialized (delta-time physics)");
       return;
     }
     
     // Fall back to V1 engine
     if (typeof AnimationEngine !== "undefined") {
       this.animationEngine = new AnimationEngine();
-      console.log("🎮 Animation engine V1 initialized");
     } else {
-      console.log('📦 Loading animation engine...');
       // Try to load V2 first
       const script = document.createElement("script");
       script.src = "animation-engine-v2.js";
       script.onload = () => {
         if (typeof AnimationEngineV2 !== "undefined") {
           this.animationEngine = new AnimationEngineV2();
-          console.log("🚀 Animation engine V2 loaded and initialized");
-        } else {
-          console.error('❌ Failed to load AnimationEngineV2!');
         }
       };
       script.onerror = () => {
-        console.log('⚠️ V2 not found, trying V1...');
         // Fall back to V1
         const scriptV1 = document.createElement("script");
         scriptV1.src = "animation-engine.js";
         scriptV1.onload = () => {
           if (typeof AnimationEngine !== "undefined") {
             this.animationEngine = new AnimationEngine();
-            console.log("🎮 Animation engine V1 loaded");
           }
         };
         document.head.appendChild(scriptV1);
@@ -740,9 +731,7 @@ class SlotMachine {
             await new Promise((resolve) => setTimeout(resolve, 500));
           }
         } else {
-          console.error('"❌ Animation engine not available, using basic animation');
-          console.log('AnimationEngine type:', typeof AnimationEngine);
-          console.log('this.animationEngine:', this.animationEngine);
+          // Animation engine not available, use basic animation
           await this.basicAnimation();
         }
 

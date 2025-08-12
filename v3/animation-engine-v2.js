@@ -13,11 +13,11 @@
 const ITEM_H = 80;
 const VIEWPORT_H = 240;
 // The viewport shows 3 items (80px each)
-// Viewport has 20px gradients at top/bottom that obscure visibility
-// For optimal visual centering accounting for gradients:
-// Winner should appear at 60-140px (upper-middle of viewport)
-// So we need: -(20 * 80) + 60 = -1540px
-const CENTER_OFFSET = 60; // Higher positioning for better visual centering
+// Row 1: 0-80px, Row 2: 80-160px (center), Row 3: 160-240px
+// To place winner at start of Row 2 (center):
+// Winner at index 20 = 1600px from top
+// To show at 80px in viewport: translateY = -(20 * 80) + 80 = -1520px
+const CENTER_OFFSET = 80; // Position winner at row 2 (center row)
 
 // Animation Configuration
 const ANIM_CONFIG = {
@@ -49,8 +49,8 @@ const ANIM_CONFIG = {
 
 class AnimationEngineV2 {
   constructor() {
-    // Debug mode
-    this.debug = true;
+    // Debug mode (disabled for production)
+    this.debug = false;
     this.frameCount = 0;
     this.reversalDetected = false;
     
@@ -226,28 +226,23 @@ class AnimationEngineV2 {
    * Calculate future congruent target
    */
   calculateFutureTarget(currentUnwrappedY, winnerIndex, cycleHeight) {
-    // Winner positioning with gradient consideration:
+    // Winner positioning for Row 2 (center):
     // - Viewport: 240px (3 items of 80px each)
-    // - Top gradient obscures: 0-20px
-    // - Optimal visible zone: 60-140px (upper-middle)
-    // - Bottom gradient obscures: 220-240px
+    // - Row 1: 0-80px
+    // - Row 2: 80-160px (CENTER - target here)
+    // - Row 3: 160-240px
     //
-    // Winner at index 20 (20 items above it)
-    // Error compensation for subpixel accumulation:
-    // - ~0.027px error per frame over ~1200 frames = 32.5px total
-    const estimatedFrames = 1200;
-    const errorPerFrame = 0.027;
-    const errorCompensation = Math.round(errorPerFrame * estimatedFrames); // 32px
-    
-    // translateY = -(winnerIndex * ITEM_H) + CENTER_OFFSET + compensation
-    // translateY = -(20 * 80) + 60 + 32 = -1600 + 92 = -1508px
-    const targetWrappedPosition = -(winnerIndex * ITEM_H - CENTER_OFFSET) + errorCompensation; // -1508px compensated
+    // Winner at index 20 (20 items above it = 1600px from top)
+    // To place winner at row 2 start (80px in viewport):
+    // translateY = -(winnerIndex * ITEM_H) + CENTER_OFFSET
+    // translateY = -(20 * 80) + 80 = -1520px
+    const targetWrappedPosition = -(winnerIndex * ITEM_H - CENTER_OFFSET); // -1520px for center row
     
     // Now find an unwrapped position that gives us this wrapped position
     // The math: unwrapped % cycle = remainder, then remainder - cycle = wrapped (if remainder > 0)
-    // So we need: remainder = cycle + wrapped = 4800 + (-1508) = 3292
+    // So we need: remainder = cycle + wrapped = 4800 + (-1520) = 3280
     
-    const targetRemainder = cycleHeight + targetWrappedPosition; // 3292 with compensation
+    const targetRemainder = cycleHeight + targetWrappedPosition; // 3280 for center position
     
     // Find the next position ahead that has this remainder
     let cycles = Math.ceil(currentUnwrappedY / cycleHeight) + 1; // At least one cycle ahead
@@ -295,11 +290,6 @@ class AnimationEngineV2 {
         // Winner is always at index 20 for now
         const winnerIndex = 20;
         
-        // Log current state
-        console.log(`Column ${index} setup:`);
-        console.log(`  Current unwrapped: ${state.unwrappedY.toFixed(1)}`);
-        console.log(`  Cycle height: ${state.cycleHeight}`);
-        
         const futureTarget = this.calculateFutureTarget(
           state.unwrappedY,
           winnerIndex,
@@ -308,15 +298,6 @@ class AnimationEngineV2 {
         
         state.targetY = futureTarget;
         state.overshootY = futureTarget; // No actual overshoot to maintain accuracy
-        
-        // Verify what this will wrap to
-        let verifyWrapped = futureTarget % state.cycleHeight;
-        if (verifyWrapped > 0) {
-          verifyWrapped -= state.cycleHeight;
-        }
-        console.log(`  Target unwrapped: ${futureTarget.toFixed(1)}`);
-        console.log(`  Will wrap to: ${verifyWrapped.toFixed(1)}px (expected: -1508px with compensation)`);
-        console.log(`  Error: ${Math.abs(verifyWrapped + 1508).toFixed(1)}px`);
       });
       
       const animate = (currentTime) => {
@@ -357,10 +338,6 @@ class AnimationEngineV2 {
           // Round to prevent subpixel accumulation
           state.unwrappedY = Math.round((state.unwrappedY + deltaPos) * 100) / 100; // Round to 0.01px
           
-          // Detailed reversal check
-          if (state.unwrappedY < prevY - 0.001 && index === 0) { // Small tolerance for floating point
-            console.error(`❌ REVERSAL in ${phase.name}: ${prevY.toFixed(1)} -> ${state.unwrappedY.toFixed(1)}, vel=${state.velocity.toFixed(1)}, dt=${dt.toFixed(4)}`);
-          }
           
           // Apply position with modulo wrap
           const wrappedY = this.applyPosition(state.element, state.unwrappedY, state.cycleHeight);
@@ -373,19 +350,6 @@ class AnimationEngineV2 {
             allComplete = false;
           }
           
-          // Debug output with error tracking
-          if (this.debug && index === 0) {
-            if (this.frameCount % 30 === 0) {
-              console.log(`C0: phase=${phase.name}, vel=${state.velocity.toFixed(0)}, unwrapped=${state.unwrappedY.toFixed(0)}, wrapped=${wrappedY.toFixed(0)}`);
-            }
-            // Log cumulative error from target
-            if (state.targetY && this.frameCount % 100 === 0) {
-              const cumulativeError = state.unwrappedY - state.targetY;
-              if (Math.abs(cumulativeError) > 1) {
-                console.log(`Cumulative error: ${cumulativeError.toFixed(2)}px from target`);
-              }
-            }
-          }
         });
         
         // Update debug panel
@@ -404,13 +368,15 @@ class AnimationEngineV2 {
             const beforePos = state.unwrappedY;
             const distanceToTarget = state.targetY - state.unwrappedY;
             
-            // Force exact target position (small backward move ok at very end)
-            const error = Math.abs(state.unwrappedY - state.targetY);
-            if (error > 0.1) {
-              console.log(`Column ${index}: Forcing exact target from ${state.unwrappedY.toFixed(1)} to ${state.targetY.toFixed(1)}`);
+            // Ensure we're at or past target (NEVER move backward)
+            if (state.targetY > state.unwrappedY) {
+              // Still need to move forward to reach target
+              console.log(`Column ${index}: Moving to target from ${state.unwrappedY.toFixed(1)} to ${state.targetY.toFixed(1)}`);
               state.unwrappedY = state.targetY;
             } else {
-              console.log(`Column ${index}: Already at target (error: ${error.toFixed(3)}px)`);
+              // Already at or past target - stay where we are (monotonic)
+              const overshoot = state.unwrappedY - state.targetY;
+              console.log(`Column ${index}: At/past target by ${overshoot.toFixed(1)}px - maintaining position`);
             }
             
             // Apply final position
@@ -418,7 +384,7 @@ class AnimationEngineV2 {
             console.log(`🎯 Column ${index} FINAL: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${finalWrapped.toFixed(1)}px`);
             
             // Check if we got the expected position  
-            const expectedWrapped = -(20 * ITEM_H) + CENTER_OFFSET + 32; // Should be -1508px with compensation
+            const expectedWrapped = -(20 * ITEM_H) + CENTER_OFFSET; // Should be -1520px
             if (Math.abs(finalWrapped - expectedWrapped) > 1) {
               console.error(`❌ Column ${index} ERROR: Wrapped to ${finalWrapped.toFixed(1)}px instead of ${expectedWrapped}px!`);
             } else {
@@ -573,19 +539,18 @@ class AnimationEngineV2 {
         break;
         
       case 'settle':
-        // Ensure we're exactly at target
+        // Only move forward if we haven't reached target yet
         const finalRemaining = state.targetY - state.unwrappedY;
-        if (Math.abs(finalRemaining) > 0.1) {
-          // Small correction to reach exact target
+        if (finalRemaining > 0.1) {
+          // Still need to reach target - move forward
           const settleTimeLeft = ANIM_CONFIG.SETTLE_DURATION * (1 - phase.progress) / 1000;
-          if (settleTimeLeft > 0.001 && finalRemaining > 0) {
-            // Only move forward if needed
+          if (settleTimeLeft > 0.001) {
             state.velocity = Math.max(10, finalRemaining / settleTimeLeft);
           } else {
-            state.velocity = 0;
-            // Force exact position in final logic
+            state.velocity = Math.max(50, finalRemaining * 10); // Final push
           }
         } else {
+          // At or past target - stop (never move backward)
           state.velocity = 0;
         }
         break;
