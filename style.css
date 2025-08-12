@@ -161,16 +161,31 @@
   /* Keep nav visible on mobile with filter and sound buttons */
   .main-nav {
     display: flex !important;
+    flex-direction: column !important;
     position: sticky;
     top: 0;
     z-index: 9999;
+    padding: 0.75rem 1rem !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
-  /* Ensure nav controls are visible and properly styled on mobile */
+  /* Ensure nav controls are visible and properly contained on mobile */
   .nav-controls {
     display: flex !important;
     gap: 0.75rem;
     align-items: center;
+    margin-top: 0.5rem !important;
+    position: relative !important;
+    order: 1 !important;
+  }
+  
+  /* Ensure nav links are ordered properly */
+  .nav-links {
+    order: 2 !important;
+    width: 100% !important;
+    justify-content: center !important;
+    margin-top: 0.5rem !important;
   }
 
   /* Ensure nav buttons are visible on mobile */
@@ -462,6 +477,7 @@ html {
   margin-left: auto;
   display: flex;
   gap: 0.8rem;
+  position: relative;
 }
 
 /* Sound toggle button positioning in nav - Override fixed positioning */

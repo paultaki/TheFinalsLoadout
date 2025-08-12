@@ -241,11 +241,14 @@
   }
 
   .nav-controls {
-    position: relative;
-    right: auto;
+    position: relative !important;
+    right: auto !important;
+    top: auto !important;
+    left: auto !important;
     order: 1;
-    width: 100%;
+    width: auto;
     justify-content: center;
+    margin: 0 !important;
   }
 
   .nav-link {
