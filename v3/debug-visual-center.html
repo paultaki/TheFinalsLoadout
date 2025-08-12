@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Visual Centering Debug</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { 
+            background: #111; 
+            color: #0f0; 
+            font-family: monospace; 
+            padding: 20px;
+        }
+        
+        /* Override for debugging */
+        .slot-window {
+            position: relative;
+            background-image: repeating-linear-gradient(
+                to bottom, 
+                transparent 0px, 
+                rgba(255,0,0,0.1) 80px, 
+                transparent 80px, 
+                transparent 160px
+            );
+        }
+        
+        /* Visual guides */
+        .viewport-guide {
+            position: absolute;
+            left: 0;
+            right: 0;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        .gradient-zone {
+            background: rgba(255,0,0,0.3);
+            height: 20px;
+        }
+        
+        .gradient-zone.top {
+            top: 0;
+        }
+        
+        .gradient-zone.bottom {
+            bottom: 0;
+        }
+        
+        .optimal-zone {
+            position: absolute;
+            top: 60px;
+            height: 80px;
+            left: 0;
+            right: 0;
+            border: 2px dashed lime;
+            background: rgba(0,255,0,0.1);
+        }
+        
+        .optimal-zone::before {
+            content: "OPTIMAL ZONE (60-140px)";
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            font-size: 10px;
+            color: lime;
+        }
+        
+        .controls {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0,0,0,0.9);
+            border: 1px solid #0f0;
+        }
+        
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            border: 1px solid #666;
+            cursor: pointer;
+        }
+        
+        .info {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0,255,0,0.1);
+            border: 1px solid #0f0;
+        }
+    </style>
+</head>
+<body>
+    <h2>Visual Centering Debug Tool</h2>
+    
+    <div class="controls">
+        <h3>Test Different CENTER_OFFSET Values</h3>
+        <button onclick="testOffset(40)">Offset: 40 (-1560px)</button>
+        <button onclick="testOffset(60)">Offset: 60 (-1540px) - RECOMMENDED</button>
+        <button onclick="testOffset(80)">Offset: 80 (-1520px)</button>
+        <button onclick="testOffset(100)">Offset: 100 (-1500px)</button>
+        <button onclick="testOffset(120)">Offset: 120 (-1480px)</button>
+        <button onclick="runAnimation()">Run Animation</button>
+    </div>
+    
+    <div class="slot-machine" style="margin: 50px auto; max-width: 600px;">
+        <div class="slot-columns">
+            <div class="slot-column">
+                <div class="column-header">TEST COLUMN</div>
+                <div class="slot-window">
+                    <!-- Visual guides -->
+                    <div class="viewport-guide">
+                        <div class="gradient-zone top"></div>
+                        <div class="optimal-zone"></div>
+                        <div class="gradient-zone bottom"></div>
+                    </div>
+                    
+                    <div class="slot-items" id="test-items"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="info">
+        <h3>Current Position Info</h3>
+        <div>CENTER_OFFSET: <span id="offset-value">60</span></div>
+        <div>TranslateY: <span id="translate-value">-1540px</span></div>
+        <div>Winner Position: <span id="winner-pos">60-140px</span></div>
+        <div>Status: <span id="status">In optimal zone</span></div>
+    </div>
+    
+    <script src="animation-engine-v2.js"></script>
+    <script>
+        const ITEM_H = 80;
+        const WINNER_INDEX = 20;
+        const container = document.getElementById('test-items');
+        let animEngine = null;
+        
+        // Populate items
+        function populateItems() {
+            container.innerHTML = '';
+            for (let i = 0; i < 60; i++) {
+                const item = document.createElement('div');
+                item.className = 'slot-item';
+                
+                if (i === WINNER_INDEX) {
+                    item.classList.add('winner-item');
+                    item.style.background = 'linear-gradient(135deg, rgba(255,215,0,0.4), rgba(255,51,102,0.4))';
+                    item.innerHTML = `<strong>★ WINNER (Index ${i}) ★</strong>`;
+                } else {
+                    item.innerHTML = `Item ${i}`;
+                }
+                
+                container.appendChild(item);
+            }
+        }
+        
+        function testOffset(offset) {
+            const translateY = -(WINNER_INDEX * ITEM_H) + offset;
+            container.style.transform = `translateY(${translateY}px)`;
+            
+            // Calculate winner position in viewport
+            const winnerTop = (WINNER_INDEX * ITEM_H) + translateY;
+            const winnerBottom = winnerTop + ITEM_H;
+            
+            // Update info
+            document.getElementById('offset-value').textContent = offset;
+            document.getElementById('translate-value').textContent = `${translateY}px`;
+            document.getElementById('winner-pos').textContent = `${winnerTop}-${winnerBottom}px`;
+            
+            // Check status
+            let status = '';
+            if (winnerTop >= 60 && winnerBottom <= 140) {
+                status = '✅ PERFECT - In optimal zone';
+                document.getElementById('status').style.color = 'lime';
+            } else if (winnerTop >= 20 && winnerBottom <= 220) {
+                status = '✓ Visible but not optimal';
+                document.getElementById('status').style.color = 'yellow';
+            } else if (winnerTop < 0) {
+                status = '❌ Too high (above viewport)';
+                document.getElementById('status').style.color = 'red';
+            } else if (winnerBottom > 240) {
+                status = '❌ Too low (below viewport)';
+                document.getElementById('status').style.color = 'red';
+            } else {
+                status = '⚠️ Partially obscured by gradients';
+                document.getElementById('status').style.color = 'orange';
+            }
+            
+            document.getElementById('status').textContent = status;
+        }
+        
+        async function runAnimation() {
+            if (!animEngine) {
+                animEngine = new AnimationEngineV2();
+                animEngine.debug = false; // Turn off debug panel for cleaner view
+            }
+            
+            const columns = [document.querySelector('.slot-column')];
+            await animEngine.animateSlotMachine(columns, null, null);
+            
+            // After animation, check final position
+            const transform = container.style.transform;
+            const match = transform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
+            if (match) {
+                const translateY = parseFloat(match[1]);
+                const winnerTop = (WINNER_INDEX * ITEM_H) + translateY;
+                const winnerBottom = winnerTop + ITEM_H;
+                
+                console.log(`Animation complete: Winner at ${winnerTop}-${winnerBottom}px`);
+                document.getElementById('winner-pos').textContent = `${winnerTop.toFixed(1)}-${winnerBottom.toFixed(1)}px`;
+            }
+        }
+        
+        // Initialize
+        populateItems();
+        testOffset(60); // Start with recommended value
+    </script>
+</body>
+</html>

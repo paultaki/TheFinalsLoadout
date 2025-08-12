@@ -977,4 +977,6 @@ a:hover {
   will-change: transform;
   transform: translateZ(0);
   backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-font-smoothing: subpixel-antialiased;
 }

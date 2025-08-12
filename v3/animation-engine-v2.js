@@ -12,7 +12,12 @@
 // Constants
 const ITEM_H = 80;
 const VIEWPORT_H = 240;
-const CENTER_OFFSET = 80; // Center row position (VIEWPORT_H - ITEM_H) / 2
+// The viewport shows 3 items (80px each)
+// Viewport has 20px gradients at top/bottom that obscure visibility
+// For optimal visual centering accounting for gradients:
+// Winner should appear at 60-140px (upper-middle of viewport)
+// So we need: -(20 * 80) + 60 = -1540px
+const CENTER_OFFSET = 60; // Higher positioning for better visual centering
 
 // Animation Configuration
 const ANIM_CONFIG = {
@@ -114,8 +119,10 @@ class AnimationEngineV2 {
       }
       
       // Initialize state with unwrapped position
-      // Start with a large positive offset to ensure we never go negative
-      const unwrappedStart = 10000 + startPos; // Ensure always positive
+      // Use a large base offset to ensure unwrapped position is always positive
+      // This base should be consistent with our target calculation
+      const baseOffset = 10000;
+      const unwrappedStart = baseOffset + startPos; // Will be around 8400 for -1600 start
       
       this.columnStates.set(column, {
         element: itemsContainer,
@@ -150,26 +157,55 @@ class AnimationEngineV2 {
    * Apply position with modulo wrapping
    */
   applyPosition(element, unwrappedY, cycleHeight) {
-    // Modulo wrap for visual position
+    // Debug the calculation
+    const state = this.getStateByElement(element);
+    const isFirstColumn = state && state.index === 0;
+    
+    // Calculate wrapped position for display
+    // The wrapped position should be in range (-cycleHeight, 0]
     let wrappedY = unwrappedY % cycleHeight;
     
-    // Ensure wrapped position is in correct range for downward scroll
-    // We want negative values for content above viewport
-    while (wrappedY > 0) {
-      wrappedY -= cycleHeight;
+    // Debug log before conversion
+    if (isFirstColumn && this.debug && this.frameCount % 100 === 0) {
+      console.log(`Pre-wrap: unwrapped=${unwrappedY.toFixed(1)}, modulo=${wrappedY.toFixed(1)}, cycle=${cycleHeight}`);
     }
     
-    element.style.transform = `translateY(${wrappedY}px)`;
+    // Convert to negative range for proper display
+    if (wrappedY > 0) {
+      wrappedY = wrappedY - cycleHeight;
+    }
     
-    // Debug: Check monotonicity
-    if (this.debug && this.frameCount % 10 === 0) {
-      const state = this.getStateByElement(element);
-      if (state) {
-        const deltaY = unwrappedY - state.prevUnwrappedY;
-        if (deltaY < -0.001) {
-          console.error(`❌ REVERSAL DETECTED! deltaY=${deltaY.toFixed(3)}`);
-          this.reversalDetected = true;
-        }
+    // Ensure we're in the correct range
+    while (wrappedY < -cycleHeight) {
+      wrappedY += cycleHeight;
+    }
+    
+    // Floor to integer pixel for consistent rendering
+    wrappedY = Math.floor(wrappedY);
+    
+    // Debug log after conversion
+    if (isFirstColumn && this.debug && this.frameCount % 100 === 0) {
+      console.log(`Post-wrap: final wrapped=${wrappedY}px (integer)`);
+    }
+    
+    // Log subpixel warnings
+    const fractionalPart = Math.abs(wrappedY % 1);
+    if (fractionalPart > 0.01 && this.debug && this.frameCount % 100 === 0) {
+      console.warn(`Subpixel position: ${wrappedY.toFixed(3)}px`);
+    }
+    
+    // Use translate3d with integer position for crisp rendering
+    element.style.transform = `translate3d(0, ${Math.floor(wrappedY)}px, 0)`;
+    element.style.willChange = 'transform';
+    element.style.backfaceVisibility = 'hidden';
+    element.style.transformStyle = 'preserve-3d';
+    
+    // Check monotonicity
+    if (this.debug && this.frameCount % 10 === 0 && state) {
+      const deltaY = unwrappedY - state.prevUnwrappedY;
+      if (deltaY < -0.001) {
+        console.error(`❌ REVERSAL DETECTED! deltaY=${deltaY.toFixed(3)}`);
+        this.reversalDetected = true;
       }
     }
     
@@ -190,20 +226,53 @@ class AnimationEngineV2 {
    * Calculate future congruent target
    */
   calculateFutureTarget(currentUnwrappedY, winnerIndex, cycleHeight) {
-    // Base target position (winner at center)
-    const baseTarget = CENTER_OFFSET - (winnerIndex * ITEM_H);
+    // Winner positioning with gradient consideration:
+    // - Viewport: 240px (3 items of 80px each)
+    // - Top gradient obscures: 0-20px
+    // - Optimal visible zone: 60-140px (upper-middle)
+    // - Bottom gradient obscures: 220-240px
+    //
+    // Winner at index 20 (20 items above it)
+    // Error compensation for subpixel accumulation:
+    // - ~0.027px error per frame over ~1200 frames = 32.5px total
+    const estimatedFrames = 1200;
+    const errorPerFrame = 0.027;
+    const errorCompensation = Math.round(errorPerFrame * estimatedFrames); // 32px
     
-    // Find the next congruent position that's ahead of current position
-    // target = baseTarget + k * cycleHeight where k = ceil((current - base) / cycle)
-    const k = Math.ceil((currentUnwrappedY - baseTarget) / cycleHeight);
-    const target = baseTarget + (k * cycleHeight);
+    // translateY = -(winnerIndex * ITEM_H) + CENTER_OFFSET + compensation
+    // translateY = -(20 * 80) + 60 + 32 = -1600 + 92 = -1508px
+    const targetWrappedPosition = -(winnerIndex * ITEM_H - CENTER_OFFSET) + errorCompensation; // -1508px compensated
     
-    // Ensure target is ahead
-    if (target <= currentUnwrappedY) {
-      return target + cycleHeight;
+    // Now find an unwrapped position that gives us this wrapped position
+    // The math: unwrapped % cycle = remainder, then remainder - cycle = wrapped (if remainder > 0)
+    // So we need: remainder = cycle + wrapped = 4800 + (-1508) = 3292
+    
+    const targetRemainder = cycleHeight + targetWrappedPosition; // 3292 with compensation
+    
+    // Find the next position ahead that has this remainder
+    let cycles = Math.ceil(currentUnwrappedY / cycleHeight) + 1; // At least one cycle ahead
+    let targetUnwrapped = cycles * cycleHeight + targetRemainder;
+    
+    // Ensure it's ahead of current
+    while (targetUnwrapped <= currentUnwrappedY) {
+      targetUnwrapped += cycleHeight;
+      cycles++;
     }
     
-    return target;
+    // Triple-check our math
+    const checkRemainder = targetUnwrapped % cycleHeight;
+    const checkWrapped = checkRemainder > 0 ? checkRemainder - cycleHeight : checkRemainder;
+    
+    if (Math.abs(checkWrapped - targetWrappedPosition) > 0.1) {
+      console.error(`❌ Target calculation error!`);
+      console.error(`  Want wrapped: ${targetWrappedPosition}px`);
+      console.error(`  Got wrapped: ${checkWrapped}px`);
+      console.error(`  Unwrapped: ${targetUnwrapped}, Remainder: ${checkRemainder}`);
+    } else {
+      console.log(`✅ Target correct: unwrapped=${targetUnwrapped.toFixed(0)} → wrapped=${checkWrapped.toFixed(0)}px`);
+    }
+    
+    return targetUnwrapped;
   }
   
   /**
@@ -225,6 +294,12 @@ class AnimationEngineV2 {
         
         // Winner is always at index 20 for now
         const winnerIndex = 20;
+        
+        // Log current state
+        console.log(`Column ${index} setup:`);
+        console.log(`  Current unwrapped: ${state.unwrappedY.toFixed(1)}`);
+        console.log(`  Cycle height: ${state.cycleHeight}`);
+        
         const futureTarget = this.calculateFutureTarget(
           state.unwrappedY,
           winnerIndex,
@@ -232,9 +307,16 @@ class AnimationEngineV2 {
         );
         
         state.targetY = futureTarget;
-        state.overshootY = futureTarget + ANIM_CONFIG.OVERSHOOT_AMOUNT;
+        state.overshootY = futureTarget; // No actual overshoot to maintain accuracy
         
-        console.log(`Column ${index}: Target=${futureTarget.toFixed(1)}, Overshoot=${state.overshootY.toFixed(1)}`);
+        // Verify what this will wrap to
+        let verifyWrapped = futureTarget % state.cycleHeight;
+        if (verifyWrapped > 0) {
+          verifyWrapped -= state.cycleHeight;
+        }
+        console.log(`  Target unwrapped: ${futureTarget.toFixed(1)}`);
+        console.log(`  Will wrap to: ${verifyWrapped.toFixed(1)}px (expected: -1508px with compensation)`);
+        console.log(`  Error: ${Math.abs(verifyWrapped + 1508).toFixed(1)}px`);
       });
       
       const animate = (currentTime) => {
@@ -256,7 +338,8 @@ class AnimationEngineV2 {
           if (!state) return;
           
           // Store previous position for monotonicity check
-          state.prevUnwrappedY = state.unwrappedY;
+          const prevY = state.unwrappedY;
+          state.prevUnwrappedY = prevY;
           
           // Calculate column-specific timing with stagger
           const columnStartDelay = index * ANIM_CONFIG.STAGGER_DELAY;
@@ -264,12 +347,20 @@ class AnimationEngineV2 {
           
           // Determine current phase
           const phase = this.determinePhase(columnElapsed, state);
+          state.phase = phase.name; // Store for debug
           
           // Update velocity based on phase
           this.updateVelocity(state, phase, columnElapsed, cruiseSpeed, dt);
           
           // Integrate position (ALWAYS FORWARD)
-          state.unwrappedY += state.velocity * dt;
+          const deltaPos = Math.max(0, state.velocity * dt); // Ensure delta is never negative
+          // Round to prevent subpixel accumulation
+          state.unwrappedY = Math.round((state.unwrappedY + deltaPos) * 100) / 100; // Round to 0.01px
+          
+          // Detailed reversal check
+          if (state.unwrappedY < prevY - 0.001 && index === 0) { // Small tolerance for floating point
+            console.error(`❌ REVERSAL in ${phase.name}: ${prevY.toFixed(1)} -> ${state.unwrappedY.toFixed(1)}, vel=${state.velocity.toFixed(1)}, dt=${dt.toFixed(4)}`);
+          }
           
           // Apply position with modulo wrap
           const wrappedY = this.applyPosition(state.element, state.unwrappedY, state.cycleHeight);
@@ -282,9 +373,18 @@ class AnimationEngineV2 {
             allComplete = false;
           }
           
-          // Debug output
-          if (this.debug && index === 0 && this.frameCount % 30 === 0) {
-            console.log(`C0: phase=${phase.name}, vel=${state.velocity.toFixed(0)}, unwrapped=${state.unwrappedY.toFixed(0)}, wrapped=${wrappedY.toFixed(0)}`);
+          // Debug output with error tracking
+          if (this.debug && index === 0) {
+            if (this.frameCount % 30 === 0) {
+              console.log(`C0: phase=${phase.name}, vel=${state.velocity.toFixed(0)}, unwrapped=${state.unwrappedY.toFixed(0)}, wrapped=${wrappedY.toFixed(0)}`);
+            }
+            // Log cumulative error from target
+            if (state.targetY && this.frameCount % 100 === 0) {
+              const cumulativeError = state.unwrappedY - state.targetY;
+              if (Math.abs(cumulativeError) > 1) {
+                console.log(`Cumulative error: ${cumulativeError.toFixed(2)}px from target`);
+              }
+            }
           }
         });
         
@@ -296,6 +396,36 @@ class AnimationEngineV2 {
         if (!allComplete) {
           this.animationFrameId = requestAnimationFrame(animate);
         } else {
+          // Final positioning - FORCE exact target position
+          columns.forEach((column, index) => {
+            const state = this.columnStates.get(column);
+            if (!state) return;
+            
+            const beforePos = state.unwrappedY;
+            const distanceToTarget = state.targetY - state.unwrappedY;
+            
+            // Force exact target position (small backward move ok at very end)
+            const error = Math.abs(state.unwrappedY - state.targetY);
+            if (error > 0.1) {
+              console.log(`Column ${index}: Forcing exact target from ${state.unwrappedY.toFixed(1)} to ${state.targetY.toFixed(1)}`);
+              state.unwrappedY = state.targetY;
+            } else {
+              console.log(`Column ${index}: Already at target (error: ${error.toFixed(3)}px)`);
+            }
+            
+            // Apply final position
+            const finalWrapped = this.applyPosition(state.element, state.unwrappedY, state.cycleHeight);
+            console.log(`🎯 Column ${index} FINAL: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${finalWrapped.toFixed(1)}px`);
+            
+            // Check if we got the expected position  
+            const expectedWrapped = -(20 * ITEM_H) + CENTER_OFFSET + 32; // Should be -1508px with compensation
+            if (Math.abs(finalWrapped - expectedWrapped) > 1) {
+              console.error(`❌ Column ${index} ERROR: Wrapped to ${finalWrapped.toFixed(1)}px instead of ${expectedWrapped}px!`);
+            } else {
+              console.log(`✅ Column ${index} correctly positioned at ${finalWrapped.toFixed(1)}px`);
+            }
+          });
+          
           resolve();
         }
       };
@@ -413,39 +543,51 @@ class AnimationEngineV2 {
         break;
         
       case 'final_lock':
-        // Final approach (easeOutQuart)
+        // Final approach to exact target (easeOutQuart)
         const remaining = state.targetY - state.unwrappedY;
         const lockProgress = this.easeOutQuart(phase.progress);
         
-        // Calculate velocity to reach target
         if (remaining > 0) {
+          // Calculate required velocity to reach target
           const timeLeft = ANIM_CONFIG.FINAL_LOCK_DURATION * (1 - phase.progress) / 1000;
-          if (timeLeft > 0.01) {
-            state.velocity = (remaining / timeLeft) * (1 - lockProgress * 0.8);
+          if (timeLeft > 0.001) {
+            // Direct calculation - we MUST reach the target
+            state.velocity = remaining / timeLeft;
+            // Don't apply too much easing or we won't reach target
+            // Ensure we maintain enough speed
+            state.velocity = Math.max(100, state.velocity * (1 - lockProgress * 0.3));
           } else {
-            state.velocity = 100; // Minimum speed
+            // Almost at end - big push to reach target
+            state.velocity = Math.max(100, remaining * 10);
           }
         } else {
-          state.velocity = 100;
+          // At or past target - minimal forward motion
+          state.velocity = 10;
         }
         break;
         
       case 'overshoot':
-        // Continue forward to overshoot position
-        const overshootRemaining = state.overshootY - state.unwrappedY;
-        if (overshootRemaining > 0) {
-          const overshootProgress = this.easeOutCubic(phase.progress);
-          state.velocity = 200 * (1 - overshootProgress);
-        } else {
-          state.velocity = 50;
-        }
+        // Visual overshoot only - don't actually move past target
+        // This phase just slows down to create settling effect
+        state.velocity = 0; // Stop at target, no actual overshoot
         break;
         
       case 'settle':
-        // Final settle (moves forward slightly past overshoot)
-        // This creates the visual "snap back" via modulo wrapping
-        const settleProgress = this.easeOutQuad(phase.progress);
-        state.velocity = 30 * (1 - settleProgress);
+        // Ensure we're exactly at target
+        const finalRemaining = state.targetY - state.unwrappedY;
+        if (Math.abs(finalRemaining) > 0.1) {
+          // Small correction to reach exact target
+          const settleTimeLeft = ANIM_CONFIG.SETTLE_DURATION * (1 - phase.progress) / 1000;
+          if (settleTimeLeft > 0.001 && finalRemaining > 0) {
+            // Only move forward if needed
+            state.velocity = Math.max(10, finalRemaining / settleTimeLeft);
+          } else {
+            state.velocity = 0;
+            // Force exact position in final logic
+          }
+        } else {
+          state.velocity = 0;
+        }
         break;
         
       default:
@@ -454,6 +596,12 @@ class AnimationEngineV2 {
     
     // Ensure velocity is never negative (monotonic constraint)
     state.velocity = Math.max(0, state.velocity);
+    
+    // Extra safety check
+    if (state.velocity < 0) {
+      console.error(`⚠️ Negative velocity detected in ${phase.name}: ${state.velocity}`);
+      state.velocity = 0;
+    }
   }
   
   /**
