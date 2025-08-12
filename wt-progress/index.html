@@ -2009,9 +2009,9 @@
             <span>⚡ Round 1</span>
             <span class="quick-action-points">+2</span>
           </button>
-          <button class="quick-action-btn" onclick="quickAddPoints(-2)" style="border-color: #ff4757; color: #ff4757;">
+          <button id="undoButton" class="quick-action-btn" onclick="undoLastAdd()" style="border-color: #ff4757; color: #ff4757;">
             <span>↩️ Undo</span>
-            <span class="quick-action-points">-2</span>
+            <span class="quick-action-points" id="undoPoints">-0</span>
           </button>
         </div>
       </div>
@@ -2508,6 +2508,7 @@
       let currentPoints = safeLocalStorageGet("currentPoints", 400);
       let dailyEntries = safeLocalStorageGet("dailyEntries", []);
       let previousRank = null; // Track previous rank for confetti trigger
+      let lastAddedPoints = 0; // Track the last points added for undo functionality
 
       // Season dates configuration
       const SEASON_START_DATE =
@@ -2640,6 +2641,7 @@
           initializeFormInputs(); // Initialize the points input
           updateDashboard();
           renderRankLadder();
+          updateUndoButton(); // Initialize undo button state
           // renderDailyEntries(); // Removed - Daily Progress feature removed
         });
       } else {
@@ -2647,6 +2649,7 @@
         initializeFormInputs(); // Initialize the points input
         updateDashboard();
         renderRankLadder();
+        updateUndoButton(); // Initialize undo button state
         // renderDailyEntries(); // Removed - Daily Progress feature removed
       }
 
@@ -2888,10 +2891,61 @@
         }
       });
 
+      // Update undo button display
+      function updateUndoButton() {
+        const undoPointsSpan = document.getElementById("undoPoints");
+        const undoButton = document.getElementById("undoButton");
+        if (lastAddedPoints > 0) {
+          undoPointsSpan.textContent = `-${lastAddedPoints}`;
+          undoButton.disabled = false;
+          undoButton.style.opacity = "1";
+        } else {
+          undoPointsSpan.textContent = "-0";
+          undoButton.disabled = true;
+          undoButton.style.opacity = "0.5";
+        }
+      }
+
+      // Undo last added points
+      function undoLastAdd() {
+        if (lastAddedPoints > 0) {
+          const oldPoints = currentPoints;
+          currentPoints = Math.max(0, currentPoints - lastAddedPoints);
+          
+          // Update input
+          document.getElementById("currentPointsInput").value = currentPoints;
+          
+          // Save to localStorage
+          localStorage.setItem("currentPoints", currentPoints);
+          
+          // Reset last added points
+          lastAddedPoints = 0;
+          updateUndoButton();
+          
+          // Check for rank milestone (in case we go down a rank)
+          checkMilestone(oldPoints, currentPoints);
+          
+          // Update dashboard
+          updateDashboard();
+          renderRankLadder();
+          
+          // Visual feedback
+          const input = document.getElementById("currentPointsInput");
+          input.classList.add("updating");
+          setTimeout(() => input.classList.remove("updating"), 300);
+        }
+      }
+
       // Quick Add Points Function
       function quickAddPoints(points) {
         const oldPoints = currentPoints;
         currentPoints = Math.max(0, Math.min(2400, currentPoints + points));
+        
+        // Track last added points for undo (but not if this is an undo operation)
+        if (points > 0) {
+          lastAddedPoints = points;
+          updateUndoButton();
+        }
         
         // Update input
         document.getElementById("currentPointsInput").value = currentPoints;
@@ -3668,6 +3722,33 @@
 
     <!-- Footer -->
     <footer style="text-align: center; padding: 1.5rem 1rem; color: #888; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(10, 10, 15, 0.9); position: relative; z-index: 10; font-size: 0.75rem;">
+      <!-- Support Section -->
+      <div style="margin-bottom: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(80, 200, 120, 0.05) 0%, rgba(0, 255, 204, 0.05) 100%); border-radius: 12px; border: 1px solid rgba(80, 200, 120, 0.2);">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <span style="font-size: 1.5rem;">☕</span>
+          <div>
+            <p style="margin: 0; color: #50c878; font-weight: 600; font-size: 0.9rem;">Enjoying the tracker?</p>
+            <p style="margin: 0.25rem 0 0.75rem 0; color: #b8bfc6; font-size: 0.8rem;">Help keep it running with a coffee!</p>
+          </div>
+        </div>
+        <a href="https://ko-fi.com/nextroundonme" target="_blank" rel="noopener" style="
+          display: inline-block;
+          padding: 0.75rem 2rem;
+          background: linear-gradient(135deg, #50c878, #00ffcc);
+          color: #0a0a0f;
+          text-decoration: none;
+          border-radius: 8px;
+          font-weight: 700;
+          font-size: 0.9rem;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(80, 200, 120, 0.3);
+          position: relative;
+          overflow: hidden;
+        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 25px rgba(80, 200, 120, 0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(80, 200, 120, 0.3)';">
+          <span style="position: relative; z-index: 1;">💚 Support on Ko-fi</span>
+        </a>
+      </div>
+
       <p style="margin: 0 0 0.5rem 0;">
         © 2025 TheFinalsLoadout.com | Created by 
         <a href="https://www.paultakisaki.com/" rel="author" style="color: #00f0c0; text-decoration: none; transition: opacity 0.3s;">Paul Takisaki</a>
@@ -3678,15 +3759,5 @@
       </div>
     </footer>
 
-    <!-- Ko-fi Widget -->
-    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
-    <script>
-      kofiWidgetOverlay.draw('nextroundonme', {
-        'type': 'floating-chat',
-        'floating-chat.donateButton.text': 'Support me',
-        'floating-chat.donateButton.background-color': '#00b9fe',
-        'floating-chat.donateButton.text-color': '#fff'
-      });
-    </script>
   </body>
 </html>
