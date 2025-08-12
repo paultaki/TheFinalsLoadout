@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V2 Physics Test - Monotonicity & Centering</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #111;
+            padding: 20px;
+            color: white;
+            font-family: monospace;
+        }
+        
+        #test-suite {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.95);
+            padding: 15px;
+            border: 1px solid #0f0;
+            z-index: 10000;
+            max-width: 400px;
+        }
+        
+        .test-item {
+            margin: 10px 0;
+            padding: 5px;
+            border-left: 3px solid #666;
+        }
+        
+        .test-item.pass {
+            border-color: #0f0;
+            color: #0f0;
+        }
+        
+        .test-item.fail {
+            border-color: #f00;
+            color: #f00;
+        }
+        
+        .test-item.running {
+            border-color: #ff0;
+            color: #ff0;
+        }
+        
+        button {
+            margin: 5px;
+            padding: 10px;
+            background: #333;
+            color: white;
+            border: 1px solid #666;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #555;
+        }
+        
+        #fps-controls {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="test-suite">
+        <h3>Physics Test Suite</h3>
+        
+        <div id="fps-controls">
+            <label>Throttle FPS:</label>
+            <button onclick="setFPSThrottle(30)">30 FPS</button>
+            <button onclick="setFPSThrottle(60)">60 FPS</button>
+            <button onclick="setFPSThrottle(120)">120 FPS</button>
+            <button onclick="setFPSThrottle(0)">No Throttle</button>
+        </div>
+        
+        <div id="test-monotonicity" class="test-item">
+            <strong>Monotonicity Test:</strong>
+            <div>Frames: <span id="mono-frames">0</span></div>
+            <div>Reversals: <span id="mono-reversals">0</span></div>
+            <div>Max deltaY: <span id="mono-max-delta">0</span></div>
+            <div>Min deltaY: <span id="mono-min-delta">0</span></div>
+        </div>
+        
+        <div id="test-centering" class="test-item">
+            <strong>Centering Test:</strong>
+            <div>Target Index: <span id="center-index">20</span></div>
+            <div>Expected: <span id="center-expected">-1520px</span></div>
+            <div>Actual: <span id="center-actual">--</span></div>
+            <div>Error: <span id="center-error">--</span></div>
+        </div>
+        
+        <div id="test-fps" class="test-item">
+            <strong>FPS Consistency:</strong>
+            <div>Current: <span id="fps-current">60</span></div>
+            <div>Average: <span id="fps-avg">60</span></div>
+            <div>Min: <span id="fps-min">60</span></div>
+            <div>Max: <span id="fps-max">60</span></div>
+        </div>
+        
+        <button onclick="runFullTest()">Run Full Test</button>
+        <button onclick="runMonotonicityTest()">Test Monotonicity Only</button>
+        <button onclick="runCenteringTest()">Test Centering Only</button>
+        <button onclick="resetTests()">Reset</button>
+    </div>
+
+    <!-- Slot Machine Structure -->
+    <div class="slot-machine">
+        <div class="slot-column" data-type="weapon">
+            <div class="slot-window">
+                <div class="slot-items"></div>
+            </div>
+        </div>
+        <div class="slot-column" data-type="specialization">
+            <div class="slot-window">
+                <div class="slot-items"></div>
+            </div>
+        </div>
+        <div class="slot-column" data-type="gadget-1">
+            <div class="slot-window">
+                <div class="slot-items"></div>
+            </div>
+        </div>
+        <div class="slot-column" data-type="gadget-2">
+            <div class="slot-window">
+                <div class="slot-items"></div>
+            </div>
+        </div>
+        <div class="slot-column" data-type="gadget-3">
+            <div class="slot-window">
+                <div class="slot-items"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="animation-engine-v2.js"></script>
+    <script>
+        let animationEngine = null;
+        let fpsThrottle = 0;
+        let rafThrottle = null;
+        
+        // Test state
+        const testState = {
+            monotonicity: {
+                frames: 0,
+                reversals: 0,
+                maxDelta: 0,
+                minDelta: Infinity,
+                positions: []
+            },
+            centering: {
+                targetIndex: 20,
+                expectedPos: -1520, // 80 - (20 * 80)
+                actualPos: null,
+                error: null
+            },
+            fps: {
+                samples: [],
+                current: 60,
+                avg: 60,
+                min: 60,
+                max: 60
+            }
+        };
+        
+        // FPS Throttling
+        function setFPSThrottle(fps) {
+            fpsThrottle = fps;
+            console.log(`FPS throttled to: ${fps || 'unlimited'}`);
+            
+            // Override requestAnimationFrame for throttling
+            if (fps > 0) {
+                const frameTime = 1000 / fps;
+                let lastTime = 0;
+                
+                window.originalRAF = window.originalRAF || window.requestAnimationFrame;
+                window.requestAnimationFrame = function(callback) {
+                    const now = Date.now();
+                    const delta = now - lastTime;
+                    
+                    if (delta >= frameTime) {
+                        lastTime = now;
+                        return window.originalRAF(callback);
+                    } else {
+                        return setTimeout(() => {
+                            lastTime = Date.now();
+                            callback(lastTime);
+                        }, frameTime - delta);
+                    }
+                };
+            } else {
+                // Restore original
+                if (window.originalRAF) {
+                    window.requestAnimationFrame = window.originalRAF;
+                }
+            }
+        }
+        
+        // Populate test columns
+        function populateTestColumns() {
+            const columns = document.querySelectorAll('.slot-column');
+            const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
+            
+            columns.forEach((column, colIndex) => {
+                const itemsContainer = column.querySelector('.slot-items');
+                itemsContainer.innerHTML = '';
+                
+                // Add 60 items for good scrolling
+                for (let i = 0; i < 60; i++) {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'slot-item';
+                    
+                    // Mark item at index 20 as winner
+                    if (i === 20) {
+                        itemDiv.classList.add('winner-item');
+                        itemDiv.style.border = '2px solid red';
+                        itemDiv.innerHTML = `<div class="item-label">WINNER ${colIndex}</div>`;
+                    } else {
+                        itemDiv.innerHTML = `<div class="item-label">${items[i % items.length]}</div>`;
+                    }
+                    
+                    itemsContainer.appendChild(itemDiv);
+                }
+                
+                // Set initial position
+                itemsContainer.style.transform = 'translateY(-1600px)';
+            });
+        }
+        
+        // Monitor monotonicity
+        function monitorMonotonicity(engine) {
+            const originalApply = engine.applyPosition.bind(engine);
+            
+            engine.applyPosition = function(element, unwrappedY, cycleHeight) {
+                // Track position changes
+                const state = engine.getStateByElement(element);
+                if (state && state.index === 0) { // Monitor first column
+                    testState.monotonicity.frames++;
+                    
+                    if (testState.monotonicity.positions.length > 0) {
+                        const lastPos = testState.monotonicity.positions[testState.monotonicity.positions.length - 1];
+                        const deltaY = unwrappedY - lastPos;
+                        
+                        // Check for reversal
+                        if (deltaY < -0.001) {
+                            testState.monotonicity.reversals++;
+                            console.error(`❌ REVERSAL: deltaY=${deltaY.toFixed(3)} at frame ${testState.monotonicity.frames}`);
+                        }
+                        
+                        // Track min/max
+                        testState.monotonicity.maxDelta = Math.max(testState.monotonicity.maxDelta, deltaY);
+                        testState.monotonicity.minDelta = Math.min(testState.monotonicity.minDelta, deltaY);
+                    }
+                    
+                    testState.monotonicity.positions.push(unwrappedY);
+                    
+                    // Update UI
+                    updateMonotonicityDisplay();
+                }
+                
+                return originalApply(element, unwrappedY, cycleHeight);
+            };
+        }
+        
+        // Update displays
+        function updateMonotonicityDisplay() {
+            document.getElementById('mono-frames').textContent = testState.monotonicity.frames;
+            document.getElementById('mono-reversals').textContent = testState.monotonicity.reversals;
+            document.getElementById('mono-max-delta').textContent = testState.monotonicity.maxDelta.toFixed(3);
+            document.getElementById('mono-min-delta').textContent = 
+                testState.monotonicity.minDelta === Infinity ? '0' : testState.monotonicity.minDelta.toFixed(3);
+            
+            const testDiv = document.getElementById('test-monotonicity');
+            if (testState.monotonicity.reversals > 0) {
+                testDiv.className = 'test-item fail';
+            } else if (testState.monotonicity.frames > 0) {
+                testDiv.className = 'test-item pass';
+            }
+        }
+        
+        function updateCenteringDisplay() {
+            const actual = testState.centering.actualPos;
+            const expected = testState.centering.expectedPos;
+            
+            document.getElementById('center-actual').textContent = 
+                actual !== null ? `${actual.toFixed(1)}px` : '--';
+            document.getElementById('center-error').textContent = 
+                actual !== null ? `${Math.abs(actual - expected).toFixed(1)}px` : '--';
+            
+            const testDiv = document.getElementById('test-centering');
+            if (actual !== null) {
+                const error = Math.abs(actual - expected);
+                testDiv.className = error <= 1 ? 'test-item pass' : 'test-item fail';
+            }
+        }
+        
+        // Test functions
+        async function runFullTest() {
+            resetTests();
+            populateTestColumns();
+            
+            if (!animationEngine) {
+                animationEngine = new AnimationEngineV2();
+                monitorMonotonicity(animationEngine);
+            }
+            
+            const columns = Array.from(document.querySelectorAll('.slot-column'));
+            
+            // Run animation
+            await animationEngine.animateSlotMachine(columns, null, null);
+            
+            // Check final centering
+            const firstColumn = columns[0].querySelector('.slot-items');
+            const transform = firstColumn.style.transform;
+            const match = transform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
+            if (match) {
+                testState.centering.actualPos = parseFloat(match[1]);
+                updateCenteringDisplay();
+            }
+            
+            // Summary
+            console.log('Test Complete:', {
+                monotonic: testState.monotonicity.reversals === 0,
+                centeringError: Math.abs(testState.centering.actualPos - testState.centering.expectedPos),
+                totalFrames: testState.monotonicity.frames
+            });
+        }
+        
+        async function runMonotonicityTest() {
+            document.getElementById('test-monotonicity').className = 'test-item running';
+            await runFullTest();
+        }
+        
+        async function runCenteringTest() {
+            document.getElementById('test-centering').className = 'test-item running';
+            await runFullTest();
+        }
+        
+        function resetTests() {
+            testState.monotonicity = {
+                frames: 0,
+                reversals: 0,
+                maxDelta: 0,
+                minDelta: Infinity,
+                positions: []
+            };
+            testState.centering.actualPos = null;
+            testState.centering.error = null;
+            
+            document.getElementById('test-monotonicity').className = 'test-item';
+            document.getElementById('test-centering').className = 'test-item';
+            
+            updateMonotonicityDisplay();
+            updateCenteringDisplay();
+            
+            if (animationEngine) {
+                animationEngine.forceStopAnimation();
+            }
+        }
+        
+        // Initialize
+        window.addEventListener('load', () => {
+            populateTestColumns();
+            resetTests();
+        });
+    </script>
+</body>
+</html>
