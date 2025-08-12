@@ -33,8 +33,39 @@ class HistoryManager {
   initialize() {
     this.loadFromStorage();
     this.initializeAnalyzer();
+    this.setupUI();  // Setup the enhanced UI first
     this.render();
     this.setupEventListeners();
+  }
+  
+  /**
+   * Setup the enhanced UI structure
+   */
+  setupUI() {
+    if (!this.container) return;
+    
+    this.container.innerHTML = `
+      <div class="history-header">
+        <div class="history-title-row">
+          <h2 class="history-title">
+            <span class="title-icon">📜</span>
+            <span>LOADOUT HISTORY</span>
+            <span class="history-count">(${this.entries.length})</span>
+          </h2>
+          <div class="history-actions">
+            <button class="history-action-btn clear-all" title="Clear All">
+              🗑️
+            </button>
+            <button class="history-action-btn export-all" title="Export All">
+              💾
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="history-list" id="history-list">
+        ${this.entries.length === 0 ? '<p class="empty-history">No loadouts generated yet. Click "Generate Loadout" to start!</p>' : ''}
+      </div>
+    `;
   }
 
   /**
@@ -231,26 +262,35 @@ class HistoryManager {
 
     // Delegate events to container
     this.container.addEventListener("click", (e) => {
+      // Handle action buttons
       const button = e.target.closest(".card-action");
-      if (!button) return;
+      if (button) {
+        const card = button.closest(".history-card");
+        const entryId = card.dataset.id;
+        const action = button.dataset.action;
 
-      const card = button.closest(".history-card");
-      const entryId = card.dataset.id;
-      const action = button.dataset.action;
-
-      switch (action) {
-        case "favorite":
-          this.toggleFavorite(entryId);
-          break;
-        case "copy":
-          this.copyToClipboard(entryId);
-          break;
-        case "export":
-          this.showExportOptions(entryId);
-          break;
-        case "delete":
-          this.deleteEntry(entryId);
-          break;
+        switch (action) {
+          case "favorite":
+            this.toggleFavorite(entryId);
+            break;
+          case "copy":
+            this.copyToClipboard(entryId);
+            break;
+          case "export":
+            this.showExportOptions(entryId);
+            break;
+          case "delete":
+            this.deleteEntry(entryId);
+            break;
+        }
+      }
+      
+      // Handle header buttons
+      if (e.target.closest(".clear-all")) {
+        this.clearAll();
+      }
+      if (e.target.closest(".export-all")) {
+        this.exportAll();
       }
     });
   }
@@ -589,3 +629,17 @@ ${entry.analysis.text}`;
 // Export for use
 // ========================================
 window.HistoryManager = HistoryManager;
+
+// Initialize when DOM is ready
+console.log('🎮 History System: Script loaded');
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('🎮 History System: Initializing...');
+    window.historyManager = new HistoryManager('history-container');
+    console.log('✅ History System: Initialized', window.historyManager);
+  });
+} else {
+  console.log('🎮 History System: Initializing immediately...');
+  window.historyManager = new HistoryManager('history-container');
+  console.log('✅ History System: Initialized', window.historyManager);
+}
