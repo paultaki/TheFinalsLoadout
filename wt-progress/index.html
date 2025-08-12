@@ -3001,7 +3001,10 @@
           message = "📊 Start earning points to see your pace";
         } else if (avgPointsPerDay > requiredPointsPerDay * 1.2) {
           status = "ahead";
-          const daysAhead = Math.floor((avgPointsPerDay - requiredPointsPerDay) * daysRemaining / requiredPointsPerDay);
+          // Calculate how many days it will take to reach 2400 at current pace
+          const daysToComplete = Math.ceil((2400 - currentPoints) / avgPointsPerDay);
+          // Days ahead = days remaining - days needed to complete
+          const daysAhead = Math.floor(daysRemaining - daysToComplete);
           message = `🚀 ${daysAhead} days ahead of schedule!`;
         } else if (avgPointsPerDay < requiredPointsPerDay * 0.8) {
           status = "behind";
