@@ -180,25 +180,13 @@ class AnimationEngineV2 {
       wrappedY += cycleHeight;
     }
     
-    // Floor to integer pixel for consistent rendering
-    wrappedY = Math.floor(wrappedY);
+    // Keep subpixel precision for smooth animation
+    // Only round for final position
     
-    // Debug log after conversion
-    if (isFirstColumn && this.debug && this.frameCount % 100 === 0) {
-      console.log(`Post-wrap: final wrapped=${wrappedY}px (integer)`);
-    }
-    
-    // Log subpixel warnings
-    const fractionalPart = Math.abs(wrappedY % 1);
-    if (fractionalPart > 0.01 && this.debug && this.frameCount % 100 === 0) {
-      console.warn(`Subpixel position: ${wrappedY.toFixed(3)}px`);
-    }
-    
-    // Use translate3d with integer position for crisp rendering
-    element.style.transform = `translate3d(0, ${Math.floor(wrappedY)}px, 0)`;
+    // Use translate3d for hardware acceleration
+    element.style.transform = `translate3d(0, ${wrappedY}px, 0)`;
     element.style.willChange = 'transform';
     element.style.backfaceVisibility = 'hidden';
-    element.style.transformStyle = 'preserve-3d';
     
     // Check monotonicity
     if (this.debug && this.frameCount % 10 === 0 && state) {

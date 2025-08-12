@@ -1150,6 +1150,29 @@
         }
       }
 
+      /* Mobile Touch Targets */
+      @media (max-width: 768px) {
+        .quick-action-btn {
+          min-height: 48px;
+          min-width: 48px;
+          font-size: 1.1em;
+        }
+
+        .stat-card {
+          min-height: 120px;
+          cursor: pointer;
+        }
+
+        #currentPointsInput {
+          min-height: 48px;
+          font-size: 2.2em;
+        }
+
+        button {
+          min-height: 48px;
+        }
+      }
+
       /* Responsive */
       @media (max-width: 768px) {
         body {
@@ -1410,6 +1433,160 @@
         letter-spacing: 0.05em;
       }
 
+      /* Quick Action Buttons */
+      .quick-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin: 20px auto;
+        max-width: 500px;
+        flex-wrap: wrap;
+      }
+
+      .quick-action-btn {
+        padding: 12px 20px;
+        background: rgba(80, 200, 120, 0.1);
+        border: 2px solid rgba(80, 200, 120, 0.3);
+        border-radius: 10px;
+        color: #50c878;
+        font-weight: 600;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+        min-width: 80px;
+      }
+
+      .quick-action-btn:hover {
+        background: rgba(80, 200, 120, 0.2);
+        border-color: #50c878;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(80, 200, 120, 0.3);
+      }
+
+      .quick-action-btn:active {
+        transform: translateY(0);
+      }
+
+      .quick-action-btn.win {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+        border-color: #ffd700;
+        color: #ffd700;
+      }
+
+      .quick-action-btn.win:hover {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+      }
+
+      /* Milestone Celebration */
+      .milestone-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        background: linear-gradient(135deg, rgba(138, 43, 226, 0.95), rgba(80, 200, 120, 0.95));
+        padding: 30px;
+        border-radius: 20px;
+        color: white;
+        text-align: center;
+        z-index: 10000;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        animation: milestoneAppear 0.5s ease-out forwards;
+      }
+
+      @keyframes milestoneAppear {
+        to {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      .milestone-title {
+        font-size: 2em;
+        font-weight: 800;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .milestone-message {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+      }
+
+      .milestone-close {
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .milestone-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      /* Progress Ahead/Behind Indicator */
+      .progress-status {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9em;
+        display: inline-block;
+        margin: 10px auto;
+        animation: statusPulse 2s ease-in-out infinite;
+      }
+
+      .progress-status.ahead {
+        background: rgba(80, 200, 120, 0.2);
+        border: 1px solid #50c878;
+        color: #50c878;
+      }
+
+      .progress-status.behind {
+        background: rgba(255, 71, 87, 0.2);
+        border: 1px solid #ff4757;
+        color: #ff4757;
+      }
+
+      .progress-status.on-track {
+        background: rgba(255, 215, 0, 0.2);
+        border: 1px solid #ffd700;
+        color: #ffd700;
+      }
+
+      @keyframes statusPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+      }
+
+      /* Skeleton Loader */
+      .skeleton {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+      }
+
+      @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+
+      .skeleton-text {
+        height: 20px;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+
+      .skeleton-box {
+        height: 100px;
+        border-radius: 12px;
+        margin: 10px 0;
+      }
+
       /* Share Button */
       .share-progress-btn {
         display: block;
@@ -1549,18 +1726,11 @@
       </ol>
     </nav>
 
-    <!-- SEO Content Section -->
-    <section class="seo-content" style="max-width: 800px; margin: 2rem auto 3rem; padding: 0 1rem; color: #e0e0e0; line-height: 1.6;">
-      <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(135deg, #50c878, #20b2aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">THE FINALS World Tour Progress Tracker for Season 7</h1>
-      <p style="font-size: 1.1rem; margin-bottom: 2rem; color: #b0b0b0;">Track your journey to Emerald rank in THE FINALS World Tour Season 7. Our free calculator shows exactly how many points you need per day, tracks your win rate trends, and helps you stay on pace for your rank goals.</p>
-      
-      <h2 style="font-size: 1.5rem; margin: 1.5rem 0 0.75rem; color: #50c878;">Features</h2>
-      <ul style="list-style: none; padding-left: 0; margin-bottom: 2rem;">
-        <li style="margin-bottom: 0.5rem;">📊 Real-time progress visualization</li>
-        <li style="margin-bottom: 0.5rem;">📸 Shareable progress screenshots</li>
-        <li style="margin-bottom: 0.5rem;">📱 Mobile-friendly swipe controls</li>
-      </ul>
-    </section>
+    <!-- Compact Hero Section -->
+    <div style="text-align: center; max-width: 800px; margin: 1rem auto 2rem; padding: 0 1rem;">
+      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(135deg, #50c878, #20b2aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">World Tour Season 7 Tracker</h1>
+      <p style="font-size: 0.95rem; color: #b0b0b0; margin-bottom: 1rem;">Calculate your path to Emerald rank • Track daily progress</p>
+    </div>
 
     <div class="container">
       <!-- Snapshot Container -->
@@ -1572,6 +1742,32 @@
           loading="lazy"
           onerror="this.src='images/logo.png'; this.onerror=null;"
         />
+
+        <!-- Quick Action Buttons -->
+        <div class="quick-actions">
+          <button class="quick-action-btn win" onclick="quickAddPoints(25)">
+            🏆 Win<br><small>+25</small>
+          </button>
+          <button class="quick-action-btn" onclick="quickAddPoints(14)">
+            🥈 2nd<br><small>+14</small>
+          </button>
+          <button class="quick-action-btn" onclick="quickAddPoints(6)">
+            🔄 Round 2<br><small>+6</small>
+          </button>
+          <button class="quick-action-btn" onclick="quickAddPoints(2)">
+            ⚡ Round 1<br><small>+2</small>
+          </button>
+          <button class="quick-action-btn" onclick="quickAddPoints(-2)" style="border-color: #ff4757; color: #ff4757;">
+            ↩️ Undo<br><small>-2</small>
+          </button>
+        </div>
+
+        <!-- Progress Status Indicator -->
+        <div style="text-align: center; margin: 20px 0;">
+          <div id="progressStatus" class="progress-status on-track">
+            📊 Calculating your pace...
+          </div>
+        </div>
 
         <!-- Progress Dashboard -->
         <div class="dashboard">
@@ -2448,6 +2644,119 @@
         breakdownElement.innerHTML = html;
       }
 
+      // Quick Add Points Function
+      function quickAddPoints(points) {
+        const oldPoints = currentPoints;
+        currentPoints = Math.max(0, Math.min(2400, currentPoints + points));
+        
+        // Update input
+        document.getElementById("currentPointsInput").value = currentPoints;
+        
+        // Save to localStorage
+        localStorage.setItem("currentPoints", currentPoints);
+        
+        // Check for rank milestone
+        checkMilestone(oldPoints, currentPoints);
+        
+        // Update dashboard
+        updateDashboard();
+        renderRankLadder();
+        
+        // Visual feedback
+        const input = document.getElementById("currentPointsInput");
+        input.classList.add("updating");
+        setTimeout(() => input.classList.remove("updating"), 500);
+        
+        // Show notification
+        if (points > 0) {
+          showNotification(`+${points} points added! Total: ${currentPoints}`, "success");
+        } else {
+          showNotification(`${points} points removed. Total: ${currentPoints}`, "success");
+        }
+      }
+
+      // Check for Rank Milestones
+      function checkMilestone(oldPoints, newPoints) {
+        for (let rank of ranks) {
+          if (oldPoints < rank.points && newPoints >= rank.points) {
+            // Reached a new rank!
+            showMilestonePopup(rank);
+            createConfetti();
+            break;
+          }
+        }
+      }
+
+      // Show Milestone Popup
+      function showMilestonePopup(rank) {
+        const popup = document.createElement("div");
+        popup.className = "milestone-popup";
+        
+        let motivationalMessage = "";
+        if (rank.name.includes("Gold")) {
+          motivationalMessage = "You're off to a great start! Keep pushing!";
+        } else if (rank.name.includes("Platinum")) {
+          motivationalMessage = "Platinum player! You're in the top tier!";
+        } else if (rank.name.includes("Diamond")) {
+          motivationalMessage = "Diamond hands! Elite status achieved!";
+        } else if (rank.name.includes("Emerald")) {
+          motivationalMessage = "LEGENDARY! You're among the best!";
+        }
+        
+        popup.innerHTML = `
+          <div class="milestone-title">🎉 ${rank.name} Unlocked!</div>
+          <div class="milestone-message">${motivationalMessage}</div>
+          <div style="font-size: 0.9em; opacity: 0.8; margin-bottom: 15px;">
+            ${rank.points} points achieved
+          </div>
+          <button class="milestone-close" onclick="this.parentElement.remove()">Continue</button>
+        `;
+        
+        document.body.appendChild(popup);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+          if (popup.parentNode) {
+            popup.style.animation = "milestoneAppear 0.5s ease-out reverse";
+            setTimeout(() => popup.remove(), 500);
+          }
+        }, 5000);
+      }
+
+      // Update Progress Status
+      function updateProgressStatus() {
+        const statusElement = document.getElementById("progressStatus");
+        if (!statusElement) return;
+        
+        const avgPointsPerDay = calculateAveragePointsPerDay();
+        const requiredPointsPerDay = daysRemaining > 0 ? 
+          Math.ceil((2400 - currentPoints) / daysRemaining) : 0;
+        
+        let status = "on-track";
+        let message = "";
+        
+        if (currentPoints >= 2400) {
+          status = "ahead";
+          message = "🏆 Emerald 1 Achieved! Congratulations!";
+        } else if (avgPointsPerDay === 0) {
+          message = "📊 Start earning points to see your pace";
+        } else if (avgPointsPerDay > requiredPointsPerDay * 1.2) {
+          status = "ahead";
+          const daysAhead = Math.floor((avgPointsPerDay - requiredPointsPerDay) * daysRemaining / requiredPointsPerDay);
+          message = `🚀 ${daysAhead} days ahead of schedule!`;
+        } else if (avgPointsPerDay < requiredPointsPerDay * 0.8) {
+          status = "behind";
+          const extraPointsNeeded = Math.ceil(requiredPointsPerDay - avgPointsPerDay);
+          message = `⚠️ Need ${extraPointsNeeded} more points/day`;
+        } else {
+          status = "on-track";
+          message = `✅ On track! Keep up the pace!`;
+        }
+        
+        statusElement.className = `progress-status ${status}`;
+        statusElement.innerHTML = message;
+      }
+
       function updateDashboard() {
         const pointsNeeded = Math.max(0, 2400 - currentPoints);
         const pointsPerDay =
@@ -2515,6 +2824,8 @@
 
         // Render goal breakdown
         renderGoalBreakdown(pointsPerDay);
+        // Update progress status
+        updateProgressStatus();
         // Update projected completion with appropriate styling
         const projectedElement = document.getElementById("projectedDate");
         animateValue(projectedElement, projectedMessage);
@@ -2962,11 +3273,111 @@
         });
       }
       
-      // Initialize share button when DOM is ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeShareButton);
-      } else {
+      // Mobile Swipe Gestures
+      function initializeSwipeGestures() {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+        
+        const rankLadder = document.getElementById('rankLadder');
+        if (!rankLadder) return;
+        
+        // Add horizontal scroll with momentum on mobile
+        if (window.innerWidth <= 768) {
+          rankLadder.style.overflowX = 'auto';
+          rankLadder.style.webkitOverflowScrolling = 'touch';
+          rankLadder.style.scrollSnapType = 'x mandatory';
+          
+          // Add snap points to rank items
+          const rankItems = rankLadder.querySelectorAll('.rank-item');
+          rankItems.forEach(item => {
+            item.style.scrollSnapAlign = 'start';
+          });
+        }
+        
+        // Swipe to add points on dashboard
+        const dashboard = document.querySelector('.dashboard');
+        if (dashboard) {
+          dashboard.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+          });
+          
+          dashboard.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+          });
+        }
+        
+        function handleSwipe() {
+          const swipeDistanceX = touchEndX - touchStartX;
+          const swipeDistanceY = touchEndY - touchStartY;
+          
+          // Only process horizontal swipes
+          if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY)) {
+            if (swipeDistanceX > 50) {
+              // Swipe right - add points
+              quickAddPoints(2);
+              showNotification('Swipe right: +2 points', 'success');
+            } else if (swipeDistanceX < -50) {
+              // Swipe left - subtract points
+              quickAddPoints(-2);
+              showNotification('Swipe left: -2 points', 'success');
+            }
+          }
+        }
+      }
+
+      // Lazy Loading for Rank Images
+      function initializeLazyLoading() {
+        // Add IntersectionObserver for rank ladder items
+        const observerOptions = {
+          root: null,
+          rootMargin: '50px',
+          threshold: 0.01
+        };
+        
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const element = entry.target;
+              // Load any background images or data
+              element.classList.add('loaded');
+              observer.unobserve(element);
+            }
+          });
+        }, observerOptions);
+        
+        // Observe rank items
+        document.querySelectorAll('.rank-item').forEach(item => {
+          imageObserver.observe(item);
+        });
+      }
+
+      // Initialize all features when DOM is ready
+      function initializeAllFeatures() {
+        initializeFormInputs();
+        updateDashboard();
+        renderRankLadder();
         initializeShareButton();
+        initializeSwipeGestures();
+        initializeLazyLoading();
+        
+        // Add loading skeleton removal
+        setTimeout(() => {
+          document.querySelectorAll('.skeleton').forEach(el => {
+            el.classList.remove('skeleton');
+          });
+        }, 500);
+      }
+
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeAllFeatures);
+      } else {
+        initializeAllFeatures();
       }
     </script>
 
