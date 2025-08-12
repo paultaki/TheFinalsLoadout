@@ -1413,25 +1413,45 @@
       /* Share Button */
       .share-progress-btn {
         display: block;
-        margin: 30px auto;
-        padding: 16px 32px;
+        margin: 40px auto;
+        padding: 20px 48px;
         background: linear-gradient(135deg, #50c878 0%, #00ffcc 100%);
-        border: none;
-        border-radius: 12px;
+        border: 2px solid rgba(80, 200, 120, 0.5);
+        border-radius: 16px;
         color: #0a0a0a;
-        font-size: 1.1em;
-        font-weight: 700;
-        letter-spacing: 0.05em;
+        font-size: 1.3em;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 20px rgba(80, 200, 120, 0.4);
+        box-shadow: 0 8px 32px rgba(80, 200, 120, 0.5),
+                    0 0 80px rgba(80, 200, 120, 0.2),
+                    inset 0 0 20px rgba(255, 255, 255, 0.2);
         position: relative;
         overflow: hidden;
+        animation: pulseGlow 2s ease-in-out infinite;
+      }
+
+      @keyframes pulseGlow {
+        0%, 100% {
+          box-shadow: 0 8px 32px rgba(80, 200, 120, 0.5),
+                      0 0 80px rgba(80, 200, 120, 0.2),
+                      inset 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        50% {
+          box-shadow: 0 8px 40px rgba(80, 200, 120, 0.7),
+                      0 0 100px rgba(80, 200, 120, 0.4),
+                      inset 0 0 25px rgba(255, 255, 255, 0.3);
+        }
       }
 
       .share-progress-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 30px rgba(80, 200, 120, 0.6);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 12px 40px rgba(80, 200, 120, 0.8),
+                    0 0 120px rgba(80, 200, 120, 0.5),
+                    inset 0 0 30px rgba(255, 255, 255, 0.3);
+        background: linear-gradient(135deg, #5dd885 0%, #00ffdd 100%);
       }
 
       .share-progress-btn:active {
@@ -1480,8 +1500,8 @@
         }
 
         .share-progress-btn {
-          font-size: 1em;
-          padding: 14px 28px;
+          font-size: 1.1em;
+          padding: 16px 36px;
         }
       }
     </style>
@@ -1534,32 +1554,12 @@
       <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(135deg, #50c878, #20b2aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">THE FINALS World Tour Progress Tracker for Season 7</h1>
       <p style="font-size: 1.1rem; margin-bottom: 2rem; color: #b0b0b0;">Track your journey to Emerald rank in THE FINALS World Tour Season 7. Our free calculator shows exactly how many points you need per day, tracks your win rate trends, and helps you stay on pace for your rank goals.</p>
       
-      <h2 style="font-size: 1.5rem; margin: 1.5rem 0 0.75rem; color: #50c878;">How World Tour Ranking Works</h2>
-      <ul style="list-style: none; padding-left: 0; margin-bottom: 2rem;">
-        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
-          <span style="position: absolute; left: 0;">🏆</span>
-          <strong style="color: #50c878;">Point System:</strong> Win = 25 points, 2nd = 14 points, Round 2 = 6 points, Round 1 = 2 points
-        </li>
-        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
-          <span style="position: absolute; left: 0;">📅</span>
-          <strong style="color: #50c878;">Season Duration:</strong> June 12 - September 10, 2025 (91 days)
-        </li>
-        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
-          <span style="position: absolute; left: 0;">📊</span>
-          <strong style="color: #50c878;">Rank Tiers:</strong> 16 ranks from Gold 4 (375 points) to Emerald 1 (2,400 points)
-        </li>
-      </ul>
-      
       <h2 style="font-size: 1.5rem; margin: 1.5rem 0 0.75rem; color: #50c878;">Features</h2>
       <ul style="list-style: none; padding-left: 0; margin-bottom: 2rem;">
         <li style="margin-bottom: 0.5rem;">📊 Real-time progress visualization</li>
         <li style="margin-bottom: 0.5rem;">📸 Shareable progress screenshots</li>
         <li style="margin-bottom: 0.5rem;">📱 Mobile-friendly swipe controls</li>
       </ul>
-
-      <p style="margin-top: 2rem; padding: 1rem; background: rgba(80, 200, 120, 0.1); border-left: 3px solid #50c878; border-radius: 4px;">
-        New to THE FINALS? Check out our <a href="/meta-weapons/" style="color: #50c878; text-decoration: underline;">current meta weapons</a> or <a href="/patch-notes/" style="color: #50c878; text-decoration: underline;">latest patch notes</a> to improve your gameplay.
-      </p>
     </section>
 
     <div class="container">
@@ -2969,6 +2969,29 @@
         initializeShareButton();
       }
     </script>
+
+    <!-- Additional Information Section -->
+    <section class="seo-content" style="max-width: 800px; margin: 3rem auto 2rem; padding: 0 1rem; color: #e0e0e0; line-height: 1.6;">
+      <h2 style="font-size: 1.5rem; margin: 1.5rem 0 0.75rem; color: #50c878;">How World Tour Ranking Works</h2>
+      <ul style="list-style: none; padding-left: 0; margin-bottom: 2rem;">
+        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0;">🏆</span>
+          <strong style="color: #50c878;">Point System:</strong> Win = 25 points, 2nd = 14 points, Round 2 = 6 points, Round 1 = 2 points
+        </li>
+        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0;">📅</span>
+          <strong style="color: #50c878;">Season Duration:</strong> June 12 - September 10, 2025 (91 days)
+        </li>
+        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0;">📊</span>
+          <strong style="color: #50c878;">Rank Tiers:</strong> 16 ranks from Gold 4 (375 points) to Emerald 1 (2,400 points)
+        </li>
+      </ul>
+
+      <p style="margin-top: 2rem; padding: 1rem; background: rgba(80, 200, 120, 0.1); border-left: 3px solid #50c878; border-radius: 4px;">
+        New to THE FINALS? Check out our <a href="/meta-weapons/" style="color: #50c878; text-decoration: underline;">current meta weapons</a> or <a href="/patch-notes/" style="color: #50c878; text-decoration: underline;">latest patch notes</a> to improve your gameplay.
+      </p>
+    </section>
 
     <!-- Footer -->
     <footer style="text-align: center; padding: 1.5rem 1rem; color: #888; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(10, 10, 15, 0.9); position: relative; z-index: 10; font-size: 0.75rem;">
