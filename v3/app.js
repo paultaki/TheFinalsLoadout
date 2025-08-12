@@ -285,7 +285,7 @@ function initializeSlotMachine() {
   // Load required scripts
   const scriptsToLoad = [
     { name: "SlotMachine", src: "slot-machine.js" },
-    { name: "AnimationEngine", src: "animation-engine.js" },
+    // AnimationEngineV2 is loaded via index.html
   ];
 
   let scriptsLoaded = 0;
@@ -322,11 +322,9 @@ function initializeComponents() {
   // Make GameData globally available
   window.GameData = GameData;
 
-  // Verify AnimationEngine is loaded
-  if (typeof AnimationEngine === 'undefined') {
-    console.error('❌ AnimationEngine not loaded!');
-  } else {
-    console.log('✅ AnimationEngine available');
+  // Verify AnimationEngineV2 is loaded (silent check)
+  if (typeof AnimationEngineV2 === 'undefined') {
+    console.error('AnimationEngineV2 not loaded');
   }
 
   // Initialize slot machine

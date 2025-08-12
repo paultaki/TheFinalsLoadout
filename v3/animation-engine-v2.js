@@ -100,6 +100,32 @@ class AnimationEngineV2 {
   }
   
   /**
+   * Quick spin animation (shorter duration)
+   */
+  async animateQuickSpin(columns, scrollContents) {
+    // For quick spin, temporarily reduce durations
+    const originalDurations = {
+      ACCELERATION_DURATION: ANIM_CONFIG.ACCELERATION_DURATION,
+      CRUISE_DURATION: ANIM_CONFIG.CRUISE_DURATION,
+      DECEL_A_DURATION: ANIM_CONFIG.DECEL_A_DURATION,
+      DECEL_B_DURATION: ANIM_CONFIG.DECEL_B_DURATION,
+    };
+    
+    // Reduce durations for quick spin
+    ANIM_CONFIG.ACCELERATION_DURATION = 400;
+    ANIM_CONFIG.CRUISE_DURATION = 800;
+    ANIM_CONFIG.DECEL_A_DURATION = 300;
+    ANIM_CONFIG.DECEL_B_DURATION = 200;
+    
+    try {
+      await this.animateSlotMachine(columns, scrollContents, null);
+    } finally {
+      // Restore original durations
+      Object.assign(ANIM_CONFIG, originalDurations);
+    }
+  }
+  
+  /**
    * Initialize column states with unwrapped position tracking
    */
   initializeColumnStates(columns) {
