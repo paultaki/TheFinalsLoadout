@@ -1587,6 +1587,57 @@
         margin: 10px 0;
       }
 
+      /* Edit Points Callout */
+      .edit-callout {
+        position: absolute;
+        top: -45px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+        color: #000;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        animation: bounceCallout 2s ease-in-out infinite;
+        z-index: 100;
+        letter-spacing: 0.5px;
+      }
+
+      .edit-callout::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid #ffed4e;
+      }
+
+      @keyframes bounceCallout {
+        0%, 100% {
+          transform: translateX(-50%) translateY(0);
+        }
+        50% {
+          transform: translateX(-50%) translateY(-5px);
+        }
+      }
+
+      /* Hide callout after first interaction */
+      .edit-callout.hidden {
+        display: none;
+      }
+
+      /* Make the parent position relative for absolute positioning */
+      .stat-card.primary .points-input-container {
+        position: relative;
+      }
+
       /* Share Button */
       .share-progress-btn {
         display: block;

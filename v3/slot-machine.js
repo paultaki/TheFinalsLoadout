@@ -503,15 +503,10 @@ class SlotMachine {
       this.animationEngine = null;
     }
     
-    // Try V2 engine first (improved physics)
+    // Use V2 engine (improved physics)
     if (typeof AnimationEngineV2 !== "undefined") {
       this.animationEngine = new AnimationEngineV2();
       return;
-    }
-    
-    // Fall back to V1 engine
-    if (typeof AnimationEngine !== "undefined") {
-      this.animationEngine = new AnimationEngine();
     } else {
       // Try to load V2 first
       const script = document.createElement("script");
@@ -522,15 +517,8 @@ class SlotMachine {
         }
       };
       script.onerror = () => {
-        // Fall back to V1
-        const scriptV1 = document.createElement("script");
-        scriptV1.src = "animation-engine.js";
-        scriptV1.onload = () => {
-          if (typeof AnimationEngine !== "undefined") {
-            this.animationEngine = new AnimationEngine();
-          }
-        };
-        document.head.appendChild(scriptV1);
+        // No fallback - V2 is required
+        console.error('Failed to load animation engine');
       };
       document.head.appendChild(script);
     }
