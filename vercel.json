@@ -7,7 +7,8 @@
     { "source": "/", "destination": "/index.html" },
     { "source": "/meta-weapons", "destination": "/meta-weapons/index.html" },
     { "source": "/patch-notes", "destination": "/patch-notes/index.html" },
-    { "source": "/rage-quit", "destination": "/ragequit/index.html" }
+    { "source": "/rage-quit", "destination": "/ragequit/index.html" },
+    { "source": "/v3", "destination": "/v3/index.html" }
   ],
   "cleanUrls": true,
   "trailingSlash": false,
@@ -41,6 +42,24 @@
     },
     {
       "source": "/sounds/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/v3/(.*)\\.css",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/v3/(.*)\\.js",
       "headers": [
         {
           "key": "Cache-Control",

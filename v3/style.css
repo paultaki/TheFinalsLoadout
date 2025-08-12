@@ -836,8 +836,29 @@ a:hover {
    Responsive Design
    ======================================== */
 @media (max-width: 768px) {
+  /* Update navbar to match WT Tracker style */
+  .main-nav {
+    flex-direction: column;
+    padding: 0.75rem 1rem !important;
+    gap: 0.75rem;
+  }
+
   .nav-links {
-    display: none; /* Will implement mobile menu later */
+    width: 100%;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.8rem !important;
+  }
+
+  .nav-controls {
+    width: auto;
+    justify-content: center;
+    margin: 0;
   }
 
   .container {
