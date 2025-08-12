@@ -106,16 +106,19 @@ const ImagePreloader = {
       "Motion Sensor": "placeholder"
     };
     
+    // Determine base path based on protocol
+    const basePath = window.location.protocol === 'file:' ? '../images' : '/images';
+    
     // Check for specific mapping
     if (mappings[itemName]) {
       return mappings[itemName] === 'placeholder' 
-        ? '/images/placeholder.webp'
-        : `/images/${mappings[itemName]}.webp`;
+        ? `${basePath}/placeholder.webp`
+        : `${basePath}/${mappings[itemName]}.webp`;
     }
     
     // Default: replace spaces with underscores
     const fileName = itemName.replace(/\s+/g, "_").replace(/'/g, "");
-    return `/images/${fileName}.webp`;
+    return `${basePath}/${fileName}.webp`;
   },
   
   /**
@@ -124,7 +127,8 @@ const ImagePreloader = {
   getCachedImagePath(itemName) {
     if (this.imageCache.has(itemName)) {
       const cached = this.imageCache.get(itemName);
-      return cached === 'placeholder' ? '/images/placeholder.webp' : cached;
+      const basePath = window.location.protocol === 'file:' ? '../images' : '/images';
+      return cached === 'placeholder' ? `${basePath}/placeholder.webp` : cached;
     }
     return this.getImagePath(itemName);
   },
