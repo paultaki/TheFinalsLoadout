@@ -1433,40 +1433,99 @@
         letter-spacing: 0.05em;
       }
 
-      /* Quick Action Buttons */
-      .quick-actions {
+      /* Quick Action Buttons - Collapsible */
+      .quick-add-container {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        z-index: 100;
+        transition: all 0.3s ease;
+      }
+
+      .quick-add-toggle {
+        background: linear-gradient(135deg, #50c878, #00ffcc);
+        color: #0a0a0a;
+        border: none;
+        border-radius: 30px;
+        padding: 12px 24px;
+        font-weight: 700;
+        font-size: 0.9em;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(80, 200, 120, 0.4);
+        transition: all 0.3s ease;
         display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin: 20px auto;
-        max-width: 500px;
-        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+      }
+
+      .quick-add-toggle:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(80, 200, 120, 0.5);
+      }
+
+      .quick-add-toggle.active {
+        background: linear-gradient(135deg, #ff4757, #ff6348);
+        box-shadow: 0 4px 20px rgba(255, 71, 87, 0.4);
+      }
+
+      .quick-actions {
+        position: absolute;
+        bottom: 60px;
+        right: 0;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(80, 200, 120, 0.3);
+        border-radius: 16px;
+        padding: 12px;
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 180px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      }
+
+      .quick-actions.expanded {
+        display: flex;
+        animation: slideUp 0.3s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .quick-action-btn {
-        padding: 12px 20px;
+        padding: 10px 16px;
         background: rgba(80, 200, 120, 0.1);
-        border: 2px solid rgba(80, 200, 120, 0.3);
-        border-radius: 10px;
+        border: 1px solid rgba(80, 200, 120, 0.3);
+        border-radius: 8px;
         color: #50c878;
         font-weight: 600;
-        font-size: 1em;
+        font-size: 0.9em;
         cursor: pointer;
         transition: all 0.2s ease;
-        position: relative;
-        overflow: hidden;
-        min-width: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
       }
 
       .quick-action-btn:hover {
         background: rgba(80, 200, 120, 0.2);
         border-color: #50c878;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(80, 200, 120, 0.3);
+        transform: translateX(-4px);
+        box-shadow: 0 2px 10px rgba(80, 200, 120, 0.3);
       }
 
       .quick-action-btn:active {
-        transform: translateY(0);
+        transform: translateX(0);
       }
 
       .quick-action-btn.win {
@@ -1477,7 +1536,31 @@
 
       .quick-action-btn.win:hover {
         background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
-        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+      }
+
+      .quick-action-points {
+        font-weight: 800;
+        font-size: 1.1em;
+      }
+
+      /* Mobile positioning */
+      @media (max-width: 768px) {
+        .quick-add-container {
+          bottom: 70px;
+          right: 15px;
+        }
+
+        .quick-add-toggle {
+          padding: 10px 20px;
+          font-size: 0.85em;
+        }
+
+        .quick-actions {
+          right: 0;
+          left: auto;
+          min-width: 160px;
+        }
       }
 
       /* Milestone Celebration */
@@ -1625,6 +1708,15 @@
         }
         50% {
           transform: translateX(-50%) translateY(-5px);
+        }
+      }
+
+      @keyframes fadeOut {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
         }
       }
 
@@ -1794,27 +1886,8 @@
           onerror="this.src='images/logo.png'; this.onerror=null;"
         />
 
-        <!-- Quick Action Buttons -->
-        <div class="quick-actions">
-          <button class="quick-action-btn win" onclick="quickAddPoints(25)">
-            🏆 Win<br><small>+25</small>
-          </button>
-          <button class="quick-action-btn" onclick="quickAddPoints(14)">
-            🥈 2nd<br><small>+14</small>
-          </button>
-          <button class="quick-action-btn" onclick="quickAddPoints(6)">
-            🔄 Round 2<br><small>+6</small>
-          </button>
-          <button class="quick-action-btn" onclick="quickAddPoints(2)">
-            ⚡ Round 1<br><small>+2</small>
-          </button>
-          <button class="quick-action-btn" onclick="quickAddPoints(-2)" style="border-color: #ff4757; color: #ff4757;">
-            ↩️ Undo<br><small>-2</small>
-          </button>
-        </div>
-
-        <!-- Progress Status Indicator -->
-        <div style="text-align: center; margin: 20px 0;">
+        <!-- Progress Status Indicator (moved up) -->
+        <div style="text-align: center; margin: 15px 0;">
           <div id="progressStatus" class="progress-status on-track">
             📊 Calculating your pace...
           </div>
@@ -1823,8 +1896,11 @@
         <!-- Progress Dashboard -->
         <div class="dashboard">
           <div class="stat-card primary" style="border: 2px solid #50c878; background: linear-gradient(135deg, rgba(80, 200, 120, 0.1) 0%, rgba(80, 200, 120, 0.05) 100%); box-shadow: 0 0 20px rgba(80, 200, 120, 0.2);">
-            <div class="stat-label">Current Points<br><span style="font-size: 0.75em; color: #ffd700;">(Click to edit)</span></div>
+            <div class="stat-label">Current Points</div>
             <div class="points-input-container">
+              <div class="edit-callout" id="editCallout">
+                👆 Click to edit!
+              </div>
               <input
                 type="number"
                 id="currentPointsInput"
@@ -1890,6 +1966,36 @@
         </div>
       </div>
       <!-- End Snapshot Container -->
+
+      <!-- Quick Add Container (Floating) -->
+      <div class="quick-add-container">
+        <button class="quick-add-toggle" id="quickAddToggle" onclick="toggleQuickAdd()">
+          <span id="toggleIcon">⚡</span>
+          <span id="toggleText">Quick Add Points</span>
+        </button>
+        <div class="quick-actions" id="quickActions">
+          <button class="quick-action-btn win" onclick="quickAddPoints(25)">
+            <span>🏆 Win</span>
+            <span class="quick-action-points">+25</span>
+          </button>
+          <button class="quick-action-btn" onclick="quickAddPoints(14)">
+            <span>🥈 2nd Place</span>
+            <span class="quick-action-points">+14</span>
+          </button>
+          <button class="quick-action-btn" onclick="quickAddPoints(6)">
+            <span>🔄 Round 2</span>
+            <span class="quick-action-points">+6</span>
+          </button>
+          <button class="quick-action-btn" onclick="quickAddPoints(2)">
+            <span>⚡ Round 1</span>
+            <span class="quick-action-points">+2</span>
+          </button>
+          <button class="quick-action-btn" onclick="quickAddPoints(-2)" style="border-color: #ff4757; color: #ff4757;">
+            <span>↩️ Undo</span>
+            <span class="quick-action-points">-2</span>
+          </button>
+        </div>
+      </div>
 
       <!-- Share Button -->
       <button id="shareProgressBtn" class="share-progress-btn">
@@ -2417,8 +2523,38 @@
       function initializeFormInputs() {
         // Only initialize currentPointsInput now since Daily Progress is removed
         const currentPointsInputEl = document.getElementById("currentPointsInput");
+        const editCallout = document.getElementById("editCallout");
+        
         if (currentPointsInputEl) {
           currentPointsInputEl.value = currentPoints;
+          
+          // Hide callout on first interaction
+          const hideCallout = () => {
+            if (editCallout && !editCallout.classList.contains('hidden')) {
+              editCallout.classList.add('hidden');
+              localStorage.setItem('calloutHidden', 'true');
+            }
+          };
+          
+          // Check if callout was already hidden
+          if (localStorage.getItem('calloutHidden') === 'true' && editCallout) {
+            editCallout.classList.add('hidden');
+          }
+          
+          // Hide callout after 5 seconds if not interacted with
+          setTimeout(() => {
+            if (editCallout && !editCallout.classList.contains('hidden')) {
+              editCallout.style.animation = 'fadeOut 0.5s ease-out forwards';
+              setTimeout(() => {
+                editCallout.classList.add('hidden');
+              }, 500);
+            }
+          }, 5000);
+          
+          // Handle input interactions
+          currentPointsInputEl.addEventListener('click', hideCallout);
+          currentPointsInputEl.addEventListener('focus', hideCallout);
+          currentPointsInputEl.addEventListener('input', hideCallout);
         }
       }
 
@@ -2695,6 +2831,44 @@
         breakdownElement.innerHTML = html;
       }
 
+      // Toggle Quick Add Menu
+      function toggleQuickAdd() {
+        const quickActions = document.getElementById('quickActions');
+        const toggleBtn = document.getElementById('quickAddToggle');
+        const toggleText = document.getElementById('toggleText');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        if (quickActions.classList.contains('expanded')) {
+          quickActions.classList.remove('expanded');
+          toggleBtn.classList.remove('active');
+          toggleText.textContent = 'Quick Add Points';
+          toggleIcon.textContent = '⚡';
+        } else {
+          quickActions.classList.add('expanded');
+          toggleBtn.classList.add('active');
+          toggleText.textContent = 'Close';
+          toggleIcon.textContent = '✕';
+        }
+      }
+
+      // Close quick add menu when clicking outside
+      document.addEventListener('click', function(e) {
+        const container = document.querySelector('.quick-add-container');
+        if (container && !container.contains(e.target)) {
+          const quickActions = document.getElementById('quickActions');
+          const toggleBtn = document.getElementById('quickAddToggle');
+          const toggleText = document.getElementById('toggleText');
+          const toggleIcon = document.getElementById('toggleIcon');
+          
+          if (quickActions && quickActions.classList.contains('expanded')) {
+            quickActions.classList.remove('expanded');
+            toggleBtn.classList.remove('active');
+            toggleText.textContent = 'Quick Add Points';
+            toggleIcon.textContent = '⚡';
+          }
+        }
+      });
+
       // Quick Add Points Function
       function quickAddPoints(points) {
         const oldPoints = currentPoints;
@@ -2723,6 +2897,21 @@
           showNotification(`+${points} points added! Total: ${currentPoints}`, "success");
         } else {
           showNotification(`${points} points removed. Total: ${currentPoints}`, "success");
+        }
+        
+        // Close the quick add menu after use
+        const quickActions = document.getElementById('quickActions');
+        const toggleBtn = document.getElementById('quickAddToggle');
+        const toggleText = document.getElementById('toggleText');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        if (quickActions && quickActions.classList.contains('expanded')) {
+          setTimeout(() => {
+            quickActions.classList.remove('expanded');
+            toggleBtn.classList.remove('active');
+            toggleText.textContent = 'Quick Add Points';
+            toggleIcon.textContent = '⚡';
+          }, 300);
         }
       }
 

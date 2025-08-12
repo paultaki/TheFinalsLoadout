@@ -31,7 +31,7 @@ const ANIM_CONFIG = {
   SETTLE_DURATION: 150,
   
   // Speeds (px/s)
-  MIN_SPEED: 100,
+  MIN_SPEED: 300,  // Increased from 100 to avoid jerky slow motion
   MAX_SPEED: 2400,
   CRUISE_BASE_SPEED: 1800,
   SPEED_INCREMENT: 150, // Per spin number
@@ -79,12 +79,12 @@ class AnimationEngineV2 {
    */
   async animateSlotMachine(columns, scrollContents, predeterminedResults) {
     if (this.isAnimating) {
-      console.warn('Animation already in progress');
-      return;
+      return; // Animation already in progress
     }
     
     this.isAnimating = true;
-    this.spinNumber++;
+    // Start at 1 for proper speed calculation
+    this.spinNumber = 1;
     
     try {
       // Initialize column states with monotonic position tracking
@@ -266,9 +266,8 @@ class AnimationEngineV2 {
       let startTime = performance.now();
       let lastTime = startTime;
       
-      // Calculate progressive speed for this spin
-      const baseSpeed = ANIM_CONFIG.CRUISE_BASE_SPEED;
-      const cruiseSpeed = baseSpeed + (this.spinNumber - 1) * ANIM_CONFIG.SPEED_INCREMENT;
+      // Use consistent speed for all columns in this animation
+      const cruiseSpeed = ANIM_CONFIG.CRUISE_BASE_SPEED;
       
       // Set up target positions for each column
       columns.forEach((column, index) => {
