@@ -1150,6 +1150,25 @@
         }
       }
 
+      /* Ko-fi Button Sizing */
+      .floatingchat-container-wrap {
+        transform: scale(0.85) !important;
+        transform-origin: bottom left !important;
+      }
+
+      @media (max-width: 768px) {
+        .floatingchat-container-wrap {
+          transform: scale(0.7) !important;
+          bottom: 10px !important;
+          left: 10px !important;
+        }
+        
+        .floatingchat-container-wrap iframe {
+          max-width: 50px !important;
+          max-height: 50px !important;
+        }
+      }
+
       /* Mobile Touch Targets */
       @media (max-width: 768px) {
         .quick-action-btn {
