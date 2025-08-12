@@ -375,7 +375,21 @@ function initializeComponents() {
     console.log("📝 loadoutGenerated event received:", loadout);
     if (loadout && !AppState.isAddingToHistory) {
       AppState.currentLoadout = loadout;
-      saveLoadoutToHistory();
+      
+      // Use new HistoryManager if available
+      if (window.historyManager) {
+        // Format loadout for new history system
+        const formattedLoadout = {
+          class: loadout.class,
+          weapon: { name: loadout.weapon, image: null },
+          specialization: { name: loadout.specialization, image: null },
+          gadgets: loadout.gadgets.map(g => ({ name: g, image: null }))
+        };
+        window.historyManager.addEntry(formattedLoadout);
+      } else {
+        // Fallback to old system
+        saveLoadoutToHistory();
+      }
     }
   });
 
