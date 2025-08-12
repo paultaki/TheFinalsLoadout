@@ -831,25 +831,13 @@ class SlotMachine {
 
         // Create image element
         const img = document.createElement("img");
-        // Map item names to image filenames
-        const imageNameMap = {
-          "R.357": "R.357",
-          ".50 Akimbo": "placeholder",
-          "CB-01 Repeater": "CB-01_Repeater",
-          SA1216: "SA1216",
-          "ShAK-50": "ShAK-50",
-          MGL32: "MGL32",
-          "Pike-556": "Pike-556",
-          "M26 Matter": "M26_Matter",
-          "H+ Infuser": "H+_Infuser",
-          "Recon Senses": "placeholder",
-          "Stun Gun": "Stun_Gun",
-          "Motion Sensor": "Motion_Sensor",
-        };
-
-        // Use mapped name if it exists, otherwise convert spaces to underscores
-        const imageName = imageNameMap[item] || item.replace(/\s+/g, "_");
-        img.src = `../images/${imageName}.webp`;
+        
+        // Use the global getImagePath function if available, otherwise fallback
+        const imagePath = typeof getImagePath !== 'undefined' 
+          ? getImagePath(item) 
+          : `images/${item.replace(/\s+/g, "_")}.webp`;
+        
+        img.src = imagePath;
         img.alt = item;
         img.onerror = function () {
           // Fallback to text if image doesn't load

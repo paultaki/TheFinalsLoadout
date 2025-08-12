@@ -32,7 +32,7 @@ const AppState = {
 // ========================================
 // Data Structure
 // ========================================
-const GameData = {
+let GameData = {
   classes: ["Light", "Medium", "Heavy"],
 
   loadouts: {
@@ -192,7 +192,18 @@ let selectionManager = null;
 // ========================================
 // Initialization
 // ========================================
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  // Try to load data from loadouts.json
+  if (typeof loadLoadoutsData !== 'undefined') {
+    const loadoutsData = await loadLoadoutsData();
+    if (loadoutsData) {
+      GameData.loadouts = loadoutsData;
+      console.log("✅ Loaded weapon data from loadouts.json");
+    } else {
+      console.log("⚠️ Using fallback weapon data");
+    }
+  }
+  
   initializeDOMElements();
   loadSavedState();
   attachEventListeners();

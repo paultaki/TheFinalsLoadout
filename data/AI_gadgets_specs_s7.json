@@ -112,7 +112,7 @@
     "proTip": "Lowest pick rate of Medium specs for good reason"
   },
   {
-    "name": "Charge 'N' Slam",
+    "name": "Charge N Slam",
     "class": "Heavy",
     "type": "specialization",
     "s7Status": "Unchanged",
@@ -300,20 +300,6 @@
     "skillCeiling": "Medium",
     "commonPairings": ["All specializations"],
     "proTip": "Shows enemies through walls for 10 seconds"
-  },
-  {
-    "name": "Stun Gun",
-    "class": "Light",
-    "type": "gadget",
-    "s7Status": "Unchanged",
-    "metaTier": "S",
-    "communitySentiment": "The delete button - instant death sentence for anyone caught",
-    "saltFactor": 10,
-    "pickRate": "Very High",
-    "skillFloor": "Low",
-    "skillCeiling": "Medium",
-    "commonPairings": ["Cloaking Device", "XP-54"],
-    "proTip": "5-second disable = guaranteed kill, 15m range"
   },
   {
     "name": "Thermal Vision",
@@ -550,7 +536,7 @@
     "pickRate": "Low",
     "skillFloor": "Low",
     "skillCeiling": "High",
-    "commonPairings": ["Charge 'N' Slam", "Spear"],
+    "commonPairings": ["Charge N Slam", "Spear"],
     "proTip": "Situational for objective disruption, fun factor 10/10"
   },
   {
@@ -690,7 +676,7 @@
     "pickRate": "High",
     "skillFloor": "Low",
     "skillCeiling": "Medium",
-    "commonPairings": ["C4", "Charge 'N' Slam"],
+    "commonPairings": ["C4", "Charge N Slam"],
     "proTip": "175 damage direct hit, destroys all cover"
   }
 ]
