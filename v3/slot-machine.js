@@ -8,7 +8,7 @@
 // ========================================
 const SlotConfig = {
   columns: ["weapon", "specialization", "gadget-1", "gadget-2", "gadget-3"],
-  itemsPerScroll: 100, // Increased for seamless scrolling
+  itemsPerScroll: 150, // More items for smooth scrolling
   nearMissOffset: 2, // Items above/below winner for near-miss effect
   spinDuration: 3000, // Base spin duration in ms
   columnDelay: 200, // Delay between column stops
@@ -394,7 +394,7 @@ class DeceptionEngine {
 
     // Add duplicate items at the end for seamless looping
     // This ensures no gaps when the scroll loops back
-    const loopBuffer = 20; // Add extra items for smooth looping
+    const loopBuffer = 50; // Larger buffer for seamless looping
     for (let i = 0; i < loopBuffer; i++) {
       content.push(this.selectRandom(itemPool));
     }

@@ -507,6 +507,19 @@ class AutomatedFlowManager {
 
       // Add new automated flow trigger
       newSpinBtn.addEventListener("click", () => {
+        // Reset animation engine first
+        if (window.slotMachine && window.slotMachine.animationEngine) {
+          window.slotMachine.animationEngine.resetAnimation();
+        }
+        
+        // Clear slot machine state
+        if (window.slotMachine) {
+          window.slotMachine.isSpinning = false;
+          if (window.slotMachine.columnAnimations) {
+            window.slotMachine.columnAnimations.clear();
+          }
+        }
+        
         // Reset UI
         const slotContainer = document.getElementById("slot-machine-container");
         const resultDiv = document.getElementById("loadout-result");

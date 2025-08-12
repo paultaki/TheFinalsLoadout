@@ -75,9 +75,43 @@ class AnimationEngineV2 {
   }
   
   /**
+   * Reset animation state completely
+   */
+  resetAnimation() {
+    // Cancel any running animations
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
+    
+    // Clear all column states
+    this.columnStates.clear();
+    
+    // Reset flags
+    this.isAnimating = false;
+    this.spinNumber = 0;
+    this.frameCount = 0;
+    this.reversalDetected = false;
+    
+    // Clear any visual effects
+    const columns = document.querySelectorAll('.slot-column');
+    columns.forEach(col => {
+      const itemsContainer = col.querySelector('.slot-items');
+      if (itemsContainer) {
+        itemsContainer.style.transform = 'translateY(0)';
+        itemsContainer.style.filter = 'none';
+        itemsContainer.style.transition = 'none';
+      }
+    });
+  }
+  
+  /**
    * Main animation orchestrator
    */
   async animateSlotMachine(columns, scrollContents, predeterminedResults) {
+    // Reset everything first
+    this.resetAnimation();
+    
     if (this.isAnimating) {
       return; // Animation already in progress
     }
@@ -250,13 +284,12 @@ class AnimationEngineV2 {
     // To place winner at row 2 start (80px in viewport):
     // translateY = -(winnerIndex * ITEM_H) + CENTER_OFFSET
     // translateY = -(20 * 80) + 80 = -1520px
-    const targetWrappedPosition = -(winnerIndex * ITEM_H - CENTER_OFFSET); // -1520px for center row
+    const targetWrappedPosition = -(winnerIndex * ITEM_H) + CENTER_OFFSET; // -1520px for center row
     
     // Now find an unwrapped position that gives us this wrapped position
-    // The math: unwrapped % cycle = remainder, then remainder - cycle = wrapped (if remainder > 0)
-    // So we need: remainder = cycle + wrapped = 4800 + (-1520) = 3280
-    
-    const targetRemainder = cycleHeight + targetWrappedPosition; // 3280 for center position
+    // For modulo math: we need remainder that gives us -1520 when wrapped
+    // If cycleHeight = 4800, we want: X % 4800 = 3280 (because 3280 - 4800 = -1520)
+    const targetRemainder = (targetWrappedPosition % cycleHeight + cycleHeight) % cycleHeight; // 3280 for center position
     
     // Find the next position ahead that has this remainder
     let cycles = Math.ceil(currentUnwrappedY / cycleHeight) + 1; // At least one cycle ahead
@@ -373,36 +406,29 @@ class AnimationEngineV2 {
         if (!allComplete) {
           this.animationFrameId = requestAnimationFrame(animate);
         } else {
-          // Final positioning - FORCE exact target position
+          // After the animation completes, force all columns to exact positions
           columns.forEach((column, index) => {
             const state = this.columnStates.get(column);
             if (!state) return;
             
-            const beforePos = state.unwrappedY;
-            const distanceToTarget = state.targetY - state.unwrappedY;
-            
-            // Ensure we're at or past target (NEVER move backward)
-            if (state.targetY > state.unwrappedY) {
-              // Still need to move forward to reach target
-              console.log(`Column ${index}: Moving to target from ${state.unwrappedY.toFixed(1)} to ${state.targetY.toFixed(1)}`);
-              state.unwrappedY = state.targetY;
-            } else {
-              // Already at or past target - stay where we are (monotonic)
-              const overshoot = state.unwrappedY - state.targetY;
-              console.log(`Column ${index}: At/past target by ${overshoot.toFixed(1)}px - maintaining position`);
-            }
-            
-            // Apply final position
+            // Force exact target position for ALL columns
+            state.unwrappedY = state.targetY;
             const finalWrapped = this.applyPosition(state.element, state.unwrappedY, state.cycleHeight);
-            console.log(`🎯 Column ${index} FINAL: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${finalWrapped.toFixed(1)}px`);
             
-            // Check if we got the expected position  
-            const expectedWrapped = -(20 * ITEM_H) + CENTER_OFFSET; // Should be -1520px
+            // Verify position
+            const expectedWrapped = -(20 * ITEM_H) + CENTER_OFFSET; // -1520px
             if (Math.abs(finalWrapped - expectedWrapped) > 1) {
-              console.error(`❌ Column ${index} ERROR: Wrapped to ${finalWrapped.toFixed(1)}px instead of ${expectedWrapped}px!`);
-            } else {
-              console.log(`✅ Column ${index} correctly positioned at ${finalWrapped.toFixed(1)}px`);
+              // Force correction if still wrong
+              console.warn(`Column ${index}: Forcing position correction from ${finalWrapped.toFixed(1)} to ${expectedWrapped}px`);
+              // Calculate the correct unwrapped position that will give us -1520px when wrapped
+              const correctRemainder = (expectedWrapped % state.cycleHeight + state.cycleHeight) % state.cycleHeight;
+              const cycles = Math.floor(state.targetY / state.cycleHeight);
+              const correctUnwrapped = cycles * state.cycleHeight + correctRemainder;
+              state.unwrappedY = correctUnwrapped;
+              this.applyPosition(state.element, correctUnwrapped, state.cycleHeight);
             }
+            
+            console.log(`🎯 Column ${index} FINAL: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${finalWrapped.toFixed(1)}px`);
           });
           
           resolve();

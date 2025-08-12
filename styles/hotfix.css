@@ -10,8 +10,8 @@
 @media (max-width: 768px) {
   .main-nav {
     flex-direction: column !important;
-    padding: 0.6rem 0.8rem !important;
-    gap: 0.5rem !important;
+    padding: 0.75rem 1rem !important;
+    gap: 0.75rem !important;
     background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(123,47,227,0.2) 50%, rgba(0,0,0,0.8) 100%) !important;
     backdrop-filter: blur(10px) !important;
     position: sticky !important;
@@ -23,55 +23,54 @@
     display: flex !important;
     width: 100% !important;
     justify-content: center !important;
-    gap: 0.75rem !important;
+    gap: 1rem !important;
     flex-wrap: wrap !important;
-    order: 2 !important;
+    order: 1 !important; /* Links first */
     margin: 0 !important;
   }
   
   .main-nav .nav-link,
   .main-nav a {
-    font-size: 0.7rem !important;
-    padding: 0.3rem 0.5rem !important;
+    font-size: 0.8rem !important; /* Increased from 0.7rem */
+    padding: 0.4rem 0.8rem !important; /* Increased padding */
     color: #fff !important;
     text-decoration: none !important;
     font-weight: 600 !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
+    letter-spacing: 0.1em !important;
   }
   
+  /* Hide nav controls on mobile or make them smaller */
   .nav-controls {
-    order: 1 !important;
-    display: flex !important;
-    gap: 0.5rem !important;
-    margin: 0 !important;
+    order: 2 !important; /* Controls second */
+    display: none !important; /* Hide on mobile */
   }
   
   .nav-button {
-    width: 32px !important;
-    height: 32px !important;
+    width: 36px !important;
+    height: 36px !important;
   }
 }
 
 @media (max-width: 640px) {
   .main-nav {
-    padding: 0.5rem 0.75rem !important;
-    gap: 0.4rem !important;
+    padding: 0.75rem 1rem !important;
+    gap: 0.75rem !important;
   }
   
   .nav-links {
-    gap: 0.5rem !important;
+    gap: 1rem !important;
+    flex-wrap: wrap !important;
   }
   
   .main-nav .nav-link,
   .main-nav a {
-    font-size: 0.65rem !important;
-    padding: 0.25rem 0.4rem !important;
+    font-size: 0.8rem !important; /* Keep readable size */
+    padding: 0.4rem 0.8rem !important;
   }
   
-  .nav-button {
-    width: 30px !important;
-    height: 30px !important;
+  .nav-controls {
+    display: none !important; /* Hide controls on small screens */
   }
 }
 
