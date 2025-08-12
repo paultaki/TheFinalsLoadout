@@ -129,7 +129,13 @@ function getImagePath(itemName) {
  * @returns {Promise<Object>} The loadouts data
  */
 async function loadLoadoutsData() {
-  // First try to fetch from JSON file
+  // Skip fetch attempt if running from file:// protocol to avoid CORS errors
+  if (window.location.protocol === 'file:') {
+    console.log('📁 Running locally - skipping loadouts.json fetch to avoid CORS errors');
+    return null;
+  }
+  
+  // Try to fetch from JSON file when served via HTTP/HTTPS
   try {
     const response = await fetch('../loadouts.json');
     if (!response.ok) {
