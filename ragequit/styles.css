@@ -2163,24 +2163,26 @@ img {
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .main-nav {
-    padding: 10px 0;
-    gap: 15px;
+    flex-direction: column;
+    padding: 0.75rem 1rem !important;
+    gap: 0.75rem;
   }
 
   .main-nav a {
-    font-size: 16px;
-    padding: 3px 5px;
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.8rem !important;
   }
 }
 
 @media (max-width: 480px) {
   .main-nav {
-    gap: 10px;
+    padding: 0.5rem !important;
+    gap: 0.5rem;
   }
 
   .main-nav a {
-    font-size: 14px;
-  }
+    font-size: 0.75rem !important;
+    padding: 0.3rem 0.6rem !important;
 }
 
 body.flexStyle {

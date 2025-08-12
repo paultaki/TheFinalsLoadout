@@ -102,6 +102,31 @@ body {
   background: var(--new-color);
 }
 
+/* Mobile Navigation */
+@media (max-width: 768px) {
+  .main-nav {
+    flex-direction: column;
+    padding: 0.75rem 1rem !important;
+    gap: 0.75rem;
+  }
+
+  .main-nav a {
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.8rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .main-nav {
+    padding: 0.75rem 1rem !important;
+  }
+  
+  .main-nav a {
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.8rem !important;
+  }
+}
+
 /* Enhanced Hero Section */
 .patch-header {
   padding: var(--space-xl) var(--space-md);
