@@ -125,10 +125,11 @@ function getImagePath(itemName) {
 }
 
 /**
- * Load loadouts data from JSON file
+ * Load loadouts data from JSON file or fallback to embedded data
  * @returns {Promise<Object>} The loadouts data
  */
 async function loadLoadoutsData() {
+  // First try to fetch from JSON file
   try {
     const response = await fetch('../loadouts.json');
     if (!response.ok) {

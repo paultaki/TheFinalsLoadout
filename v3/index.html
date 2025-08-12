@@ -14,7 +14,7 @@
 
     <!-- Preload Critical Resources -->
     <!-- <link rel="preload" href="../images/the-finals-logo.webp" as="image" type="image/webp" fetchpriority="high"> -->
-    <link rel="preload" href="style.css" as="style" />
+    <link rel="preload" href="./style.css" as="style" />
 
     <!-- Meta Tags -->
     <title>
@@ -78,11 +78,12 @@
     />
 
     <!-- Styles -->
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="polish-styles.css" />
-    <link rel="stylesheet" href="bonus-styles.css" />
-    <link rel="stylesheet" href="selection-styles.css" />
-    <link rel="stylesheet" href="automated-flow-styles.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="../styles/hotfix.css" />
+    <link rel="stylesheet" href="./polish-styles.css" />
+    <link rel="stylesheet" href="./bonus-styles.css" />
+    <link rel="stylesheet" href="./selection-styles.css" />
+    <link rel="stylesheet" href="./automated-flow-styles.css" />
   </head>
   <body>
     <!-- Scroll Progress Bar -->
@@ -432,16 +433,19 @@
     <audio id="winSound" src="../sounds/chang.mp3" preload="auto"></audio> -->
 
     <!-- Scripts -->
+    <!-- Image Preloader -->
+    <script src="./image-preloader.js"></script>
+    
     <!-- Loadout Data Loader -->
-    <script src="loadout-loader.js"></script>
+    <script src="./loadout-loader.js"></script>
     
     <!-- Animation Engine V2 with delta-time physics -->
-    <script src="animation-engine-v2.js" defer></script>
-    <script src="slot-machine.js" defer></script>
-    <script src="filter-system.js" defer></script>
-    <script src="bonus-system.js" defer></script>
-    <script src="automated-flow.js" defer></script>
-    <script src="app.js" defer></script>
+    <script src="./animation-engine-v2.js" defer></script>
+    <script src="./slot-machine.js" defer></script>
+    <script src="./filter-system.js" defer></script>
+    <script src="./bonus-system.js" defer></script>
+    <script src="./automated-flow.js" defer></script>
+    <script src="./app.js" defer></script>
     <!-- Debug overlay for animation -->
     <div id="anim-debug" style="position:fixed;right:8px;top:8px;padding:6px 8px;background:#111a;color:#0f0;font:12px/1.3 monospace;z-index:9999;border-radius:6px;pointer-events:none;border:1px solid #0f0">IDLE</div>
   </body>

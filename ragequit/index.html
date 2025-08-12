@@ -77,6 +77,8 @@
     }
     </script>
 
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="../styles/hotfix.css" />
     <style>
       :root {
         --blood-red: #dc143c;
@@ -1902,13 +1904,14 @@
     <div class="rage-bg"></div>
 
     <!-- Navigation -->
-    <nav class="main-nav" style="display:flex;justify-content:center;align-items:center;padding:1rem 2rem;background:linear-gradient(90deg,rgba(0,0,0,0.8) 0%,rgba(123,47,227,0.2) 50%,rgba(0,0,0,0.8) 100%);backdrop-filter:blur(10px);border-bottom:1px solid rgba(30,144,255,0.3);position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,0.5);gap:2rem;">
-      <a href="../index.html" style="color:#fff;text-decoration:none;padding:0.5rem 1rem;border-radius:4px;font-size:0.9rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.3s ease;">LOADOUT GENERATOR</a>
-      <a href="../ragequit/index.html" style="color:#fff;text-decoration:none;padding:0.5rem 1rem;border-radius:4px;font-size:0.9rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.3s ease;">New Rage Quit</a>
-      <a href="../patch-notes/index.html" style="color:#fff;text-decoration:none;padding:0.5rem 1rem;border-radius:4px;font-size:0.9rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.3s ease;">Patch Notes</a>
-      <a href="../meta-weapons/" style="color:#fff;text-decoration:none;padding:0.5rem 1rem;border-radius:4px;font-size:0.9rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.3s ease;">Meta Weapons</a>
-      <a href="../wt-progress/" style="color:#fff;text-decoration:none;padding:0.5rem 1rem;border-radius:4px;font-size:0.9rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.3s ease;">WORLD TOUR TRACKER (NEW)</a>
-      <a href="../feedback/index.html" style="color:#fff;text-decoration:none;padding:0.5rem 1rem;border-radius:4px;font-size:0.9rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.3s ease;">Feedback</a>
+    <nav class="main-nav">
+      <div class="nav-links">
+        <a href="/" class="nav-link">LOADOUT GENERATOR</a>
+        <a href="/ragequit/" class="nav-link active">RAGE QUIT</a>
+        <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
+        <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
+        <a href="/wt-progress/" class="nav-link">WORLD TOUR TRACKER (NEW)</a>
+      </div>
     </nav>
 
     <!-- Hero Section -->

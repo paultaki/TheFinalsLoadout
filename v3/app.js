@@ -32,7 +32,8 @@ const AppState = {
 // ========================================
 // Data Structure
 // ========================================
-let GameData = {
+// Make GameData globally accessible for slot-machine.js
+const GameData = window.GameData = {
   classes: ["Light", "Medium", "Heavy"],
 
   loadouts: {
@@ -198,6 +199,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const loadoutsData = await loadLoadoutsData();
     if (loadoutsData) {
       GameData.loadouts = loadoutsData;
+      window.GameData.loadouts = loadoutsData; // Update global reference
       console.log("✅ Loaded weapon data from loadouts.json");
     } else {
       console.log("⚠️ Using fallback weapon data");

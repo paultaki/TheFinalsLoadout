@@ -34,9 +34,9 @@ const SlotConfig = {
 };
 
 // ========================================
-// Class Data with Complete Pools
+// Class Data - Will use GameData from app.js if available
 // ========================================
-const ClassData = {
+let ClassData = {
   Light: {
     weapons: [
       "93R",
@@ -461,6 +461,16 @@ class DeceptionEngine {
 // ========================================
 class SlotMachine {
   constructor() {
+    // Sync ClassData with GameData from app.js if available
+    if (typeof GameData !== 'undefined' && GameData.loadouts) {
+      console.log("✅ Using GameData from app.js for slot machine");
+      ClassData.Light = GameData.loadouts.Light;
+      ClassData.Medium = GameData.loadouts.Medium;
+      ClassData.Heavy = GameData.loadouts.Heavy;
+    } else {
+      console.log("⚠️ Using fallback ClassData in slot machine");
+    }
+    
     this.filterSystem = new FilterSystem();
     this.deceptionEngine = new DeceptionEngine();
     this.animationEngine = null; // Will be initialized when AnimationEngine is loaded
@@ -790,7 +800,12 @@ class SlotMachine {
       column.element.style.transition = 'none';
 
       const items = this.deceptionEngine.scrollContents[columnType];
-      if (!items) return;
+      if (!items) {
+        console.error(`No items for column ${columnType}`);
+        return;
+      }
+      
+      console.log(`📊 Column ${columnType}: ${items.length} items, first 5:`, items.slice(0, 5));
 
       // Get the predetermined winner for this column
       let winner = null;
@@ -829,23 +844,32 @@ class SlotMachine {
           console.log(`🎯 Winner "${item}" placed at index 20 in ${columnType} column`);
         }
 
-        // Create image element
-        const img = document.createElement("img");
-        
-        // Use the global getImagePath function if available, otherwise fallback
-        const imagePath = typeof getImagePath !== 'undefined' 
-          ? getImagePath(item) 
-          : `images/${item.replace(/\s+/g, "_")}.webp`;
-        
-        img.src = imagePath;
-        img.alt = item;
-        img.onerror = function () {
-          // Fallback to text if image doesn't load
-          this.style.display = "none";
-          const textSpan = document.createElement("span");
-          textSpan.textContent = item;
-          itemElement.appendChild(textSpan);
-        };
+        // Create image element using preloader if available
+        let img;
+        if (typeof ImagePreloader !== 'undefined') {
+          img = ImagePreloader.createImageElement(item);
+        } else {
+          // Fallback to basic image creation
+          img = document.createElement("img");
+          const imagePath = typeof getImagePath !== 'undefined' 
+            ? getImagePath(item) 
+            : `images/${item.replace(/\s+/g, "_")}.webp`;
+          
+          img.src = imagePath;
+          img.alt = item;
+          img.loading = "eager";
+          
+          img.onerror = function () {
+            console.warn(`❌ Failed to load image: ${imagePath} for item: ${item}`);
+            this.style.display = "none";
+            const textSpan = document.createElement("span");
+            textSpan.textContent = item;
+            textSpan.style.color = "#fff";
+            textSpan.style.fontSize = "14px";
+            textSpan.style.textAlign = "center";
+            itemElement.appendChild(textSpan);
+          };
+        }
 
         // Create label
         const label = document.createElement("div");
