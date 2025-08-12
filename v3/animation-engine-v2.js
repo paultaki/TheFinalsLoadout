@@ -406,10 +406,13 @@ class AnimationEngineV2 {
         if (!allComplete) {
           this.animationFrameId = requestAnimationFrame(animate);
         } else {
-          // After the animation completes, force all columns to exact positions
+          // After the animation completes, ensure all columns are at exact positions
           columns.forEach((column, index) => {
             const state = this.columnStates.get(column);
             if (!state) return;
+            
+            // Apply smooth transition for final positioning
+            state.element.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
             
             // Force exact target position for ALL columns
             state.unwrappedY = state.targetY;
@@ -418,15 +421,13 @@ class AnimationEngineV2 {
             // Verify position
             const expectedWrapped = -(20 * ITEM_H) + CENTER_OFFSET; // -1520px
             if (Math.abs(finalWrapped - expectedWrapped) > 1) {
-              // Force correction if still wrong
-              console.warn(`Column ${index}: Forcing position correction from ${finalWrapped.toFixed(1)} to ${expectedWrapped}px`);
-              // Calculate the correct unwrapped position that will give us -1520px when wrapped
-              const correctRemainder = (expectedWrapped % state.cycleHeight + state.cycleHeight) % state.cycleHeight;
-              const cycles = Math.floor(state.targetY / state.cycleHeight);
-              const correctUnwrapped = cycles * state.cycleHeight + correctRemainder;
-              state.unwrappedY = correctUnwrapped;
-              this.applyPosition(state.element, correctUnwrapped, state.cycleHeight);
+              console.warn(`Column ${index}: Small adjustment from ${finalWrapped.toFixed(1)} to ${expectedWrapped}px`);
             }
+            
+            // Clear transition after positioning
+            setTimeout(() => {
+              state.element.style.transition = 'none';
+            }, 350);
             
             console.log(`🎯 Column ${index} FINAL: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${finalWrapped.toFixed(1)}px`);
           });

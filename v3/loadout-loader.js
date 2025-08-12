@@ -99,7 +99,7 @@ const IMAGE_NAME_MAP = {
   "Healing Emitter": "Healing_Emitter",
   "Health Canister": "Health_Canister",
   "Breach Drill": "Breach_Drill",
-  ".50 Akimbo": "placeholder" // No image available
+  ".50 Akimbo": ".50_Akimbo" // Fixed mapping - file has leading dot
 };
 
 /**

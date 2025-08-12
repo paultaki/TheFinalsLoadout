@@ -100,7 +100,7 @@ const ImagePreloader = {
       "Charge N' Slam": "Charge_N_Slam",
       "Charge N Slam": "Charge_N_Slam",
       "H+ Infuser": "H+_Infuser",
-      ".50 Akimbo": "placeholder",
+      ".50 Akimbo": ".50_Akimbo",
       "Recon Senses": "placeholder",
       "Stun Gun": "placeholder",
       "Motion Sensor": "placeholder"

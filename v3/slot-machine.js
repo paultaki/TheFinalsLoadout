@@ -621,6 +621,14 @@ class SlotMachine {
         totalSpins > 1 ? "s" : ""
       } for ${classType} class`
     );
+    
+    // Prevent re-entry during spin
+    if (this.spinInProgress) {
+      console.warn("⚠️ Spin already in progress, ignoring duplicate call");
+      this.isSpinning = false;
+      return null;
+    }
+    this.spinInProgress = true;
 
     try {
       // Create spin counter display
@@ -772,17 +780,22 @@ class SlotMachine {
 
       // Hide spin counter
       this.hideSpinCounter();
+      
+      // Clear spin in progress flag
+      this.spinInProgress = false;
 
       // Return the final loadout after all spins
       console.log("🎯 RETURNING LOADOUT FROM SPIN:", finalLoadout);
       return finalLoadout;
     } catch (error) {
       console.error("Spin error:", error);
+      this.spinInProgress = false;
       return null;
     } finally {
       // Reset spin lock after a delay
       setTimeout(() => {
         this.isSpinning = false;
+        this.spinInProgress = false;
       }, SlotConfig.spinDuration + 1000);
     }
   }
