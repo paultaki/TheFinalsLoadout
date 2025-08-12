@@ -1,0 +1,17 @@
+{
+  "name": "thefinalsloadout",
+  "version": "1.0.0",
+  "description": "Fun & optimized loadouts for The Finals",
+  "scripts": {},
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.3",
+    "@upstash/redis": "^1.35.0",
+    "@vercel/kv": "^1.0.1"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "devDependencies": {
+    "purgecss": "^7.0.2"
+  }
+}
