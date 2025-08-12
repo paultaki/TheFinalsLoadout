@@ -853,7 +853,7 @@ class SlotMachine {
           img = document.createElement("img");
           const imagePath = typeof getImagePath !== 'undefined' 
             ? getImagePath(item) 
-            : `images/${item.replace(/\s+/g, "_")}.webp`;
+            : `./images/${item.replace(/\s+/g, "_")}.webp`;
           
           img.src = imagePath;
           img.alt = item;

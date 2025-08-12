@@ -112,15 +112,15 @@ function getImagePath(itemName) {
   const mappedName = IMAGE_NAME_MAP[itemName];
   
   if (mappedName && mappedName !== "placeholder") {
-    return `images/${mappedName}.webp`;
+    return `./images/${mappedName}.webp`;
   } else if (mappedName === "placeholder") {
     // Return a placeholder image path
-    return `images/placeholder.webp`;
+    return `./images/placeholder.webp`;
   } else {
     // Fallback: convert spaces to underscores
     const fallbackName = itemName.replace(/\s+/g, "_").replace(/'/g, "");
     console.warn(`No image mapping for "${itemName}", trying: ${fallbackName}.webp`);
-    return `images/${fallbackName}.webp`;
+    return `./images/${fallbackName}.webp`;
   }
 }
 
