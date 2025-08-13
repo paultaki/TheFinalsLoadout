@@ -234,10 +234,8 @@ class AutomatedFlowManager {
     const targetNumber = Math.floor(Math.random() * 5) + 1;
     this.selections.spins = targetNumber;
 
-    // Animate the number strip
-    const strip = phase.querySelector(".number-strip");
-    const progressBar = phase.querySelector(".progress-fill");
-
+    // Animate the number strip (strip and progressBar already declared above)
+    
     if (strip && progressBar) {
       // Start progress bar
       progressBar.style.transition = `width ${FLOW_CONFIG.timings.spinSelection}ms linear`;
@@ -338,8 +336,7 @@ class AutomatedFlowManager {
     const targetClass = classes[Math.floor(Math.random() * 3)];
     this.selections.class = targetClass;
 
-    const carousel = phase.querySelector(".class-carousel");
-    const progressBar = phase.querySelector(".progress-fill");
+    // carousel and progressBar already declared above
     const cards = phase.querySelectorAll(".class-card");
 
     if (carousel && progressBar && cards.length) {
