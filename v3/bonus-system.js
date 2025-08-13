@@ -563,22 +563,12 @@ class BonusManager {
     });
 
     document.addEventListener("slotSpinComplete", async (e) => {
-      if (this.checkBonusTrigger()) {
-        const bonus = await this.triggerBonus();
-        if (bonus && e.detail?.loadout) {
-          const enhancedLoadout = await this.applyBonusEffect(
-            e.detail.loadout,
-            e.detail.slotMachine
-          );
-
-          // Dispatch enhanced loadout event
-          document.dispatchEvent(
-            new CustomEvent("bonusLoadoutReady", {
-              detail: { loadout: enhancedLoadout, bonus: bonus },
-            })
-          );
-        }
-      }
+      // The bonus system is now handled WITHIN the slot machine spin process
+      // This listener is kept for monitoring purposes but doesn't trigger additional bonuses
+      console.log("🎁 BonusManager received slotSpinComplete event:", e.detail?.loadout);
+      
+      // Just update the indicator after spin
+      this.updateIndicator();
     });
   }
 

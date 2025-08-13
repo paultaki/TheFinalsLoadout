@@ -673,9 +673,45 @@ ${entry.analysis.text}`;
 }
 
 // ========================================
+// Fallback Analyzer (simple analysis when main analyzer is not available)
+// ========================================
+class FallbackAnalyzer {
+  static generateFallback(loadout) {
+    const weapons = {
+      // Light weapons
+      "SR-84": { score: 9, tier: "S", archetype: "Sniper" },
+      "LH1": { score: 8, tier: "A", archetype: "Assault" },
+      "V9S": { score: 8, tier: "A", archetype: "SMG" },
+      "XP-54": { score: 7, tier: "B", archetype: "SMG" },
+      
+      // Medium weapons
+      "FCAR": { score: 9, tier: "S", archetype: "Assault" },
+      "AKM": { score: 8, tier: "A", archetype: "Assault" },
+      "Model 1887": { score: 7, tier: "B", archetype: "Shotgun" },
+      
+      // Heavy weapons
+      "M134 Minigun": { score: 9, tier: "S", archetype: "LMG" },
+      "ShAK-50": { score: 8, tier: "A", archetype: "DMR" },
+      "SA1216": { score: 7, tier: "B", archetype: "Shotgun" }
+    };
+
+    const weaponData = weapons[loadout.weapon] || { score: 5, tier: "C", archetype: "Unknown" };
+    
+    return {
+      score: weaponData.score,
+      metaRating: weaponData.tier,
+      archetype: weaponData.archetype,
+      text: `${loadout.class} loadout with ${loadout.weapon}. ${weaponData.archetype} playstyle with ${loadout.specialization} support.`,
+      saltIndex: Math.random() * 10 // Random salt meter
+    };
+  }
+}
+
+// ========================================
 // Export for use
 // ========================================
 window.HistoryManager = HistoryManager;
+window.FallbackAnalyzer = FallbackAnalyzer;
 
 // Initialize when DOM is ready
 console.log('🎮 History System: Script loaded');

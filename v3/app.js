@@ -369,10 +369,10 @@ function initializeComponents() {
     }
   };
 
-  // Listen for loadout generated events from slot machine
-  window.addEventListener("loadoutGenerated", (event) => {
-    const loadout = event.detail;
-    console.log("📝 loadoutGenerated event received:", loadout);
+  // Listen for slotSpinComplete events from slot machine
+  document.addEventListener("slotSpinComplete", (event) => {
+    const { loadout, slotMachine } = event.detail;
+    console.log("🎯 slotSpinComplete event received:", loadout);
     console.log("📊 Loadout structure:", {
       class: loadout?.class,
       weapon: loadout?.weapon,
@@ -385,36 +385,52 @@ function initializeComponents() {
     if (loadout && !AppState.isAddingToHistory) {
       AppState.currentLoadout = loadout;
       
+      // Set flag to prevent duplicate recording
+      AppState.isAddingToHistory = true;
+      
       // Use new HistoryManager if available
       if (window.historyManager) {
-        console.log("✅ Using new HistoryManager");
-        // Check loadout format - it might already have the right structure
-        let formattedLoadout;
-        
-        // If weapon is already an object with name property
-        if (typeof loadout.weapon === 'object' && loadout.weapon !== null) {
-          formattedLoadout = loadout; // Already formatted correctly
-        } else {
-          // Old format - need to convert
-          formattedLoadout = {
-            class: loadout.class,
-            weapon: { name: loadout.weapon || 'Unknown', image: null },
-            specialization: { name: loadout.specialization || 'Unknown', image: null },
-            gadgets: (loadout.gadgets || []).map(g => {
-              if (typeof g === 'object') return g;
-              return { name: g || 'Unknown', image: null };
-            })
-          };
-        }
+        console.log("✅ Using new HistoryManager to record history");
+        // The history system expects simple format (strings, not objects)
+        let formattedLoadout = {
+          class: loadout.class,
+          weapon: loadout.weapon,
+          specialization: loadout.specialization,
+          gadgets: loadout.gadgets,
+          timestamp: loadout.timestamp || Date.now(),
+          // Preserve bonus properties if they exist
+          isJackpot: loadout.isJackpot,
+          isMetaBonus: loadout.isMetaBonus,
+          isWild: loadout.isWild,
+          bonusType: loadout.bonusType
+        };
         
         console.log("📤 Sending to HistoryManager:", formattedLoadout);
-        window.historyManager.addEntry(formattedLoadout);
+        window.historyManager.addEntry(formattedLoadout).then(() => {
+          console.log("✅ History entry added successfully");
+          // Reset flag after successful recording
+          setTimeout(() => {
+            AppState.isAddingToHistory = false;
+          }, 500);
+        }).catch((error) => {
+          console.error("❌ Failed to add history entry:", error);
+          AppState.isAddingToHistory = false;
+        });
       } else {
         console.log("⚠️ Fallback to old system");
         // Fallback to old system
         saveLoadoutToHistory();
+        // Reset flag after fallback
+        setTimeout(() => {
+          AppState.isAddingToHistory = false;
+        }, 500);
       }
     }
+  });
+
+  // DEPRECATED: Keep old loadoutGenerated listener for compatibility but mark it as deprecated
+  window.addEventListener("loadoutGenerated", (event) => {
+    console.log("⚠️ DEPRECATED: loadoutGenerated event received - this should now be handled by slotSpinComplete");
   });
 
   // The automated flow manager handles all selections now
@@ -513,9 +529,8 @@ async function runSlotMachineAnimation() {
     // Display results
     displayLoadoutResult(loadout);
 
-    // The history will be handled by the loadoutGenerated event listener
-    // Just trigger the event from slot machine
-    slotMachine.addToHistory(loadout);
+    // History is now handled automatically by the slotSpinComplete event listener
+    // No manual history recording needed here
   }
 }
 
@@ -820,3 +835,21 @@ window.resetApp = () => {
   localStorage.clear();
   location.reload();
 };
+
+// ========================================
+// Post-Landing Winner Highlighting System
+// ========================================
+
+// Listen for slotSpinComplete event to trigger winner highlighting
+document.addEventListener("slotSpinComplete", (event) => {
+  const { loadout, slotMachine } = event.detail;
+  
+  if (loadout && slotMachine) {
+    console.log("🎯 Slot spin completed, highlighting winners after delay...");
+    
+    // Add a brief delay to let the animation settle, then highlight winners
+    setTimeout(() => {
+      slotMachine.highlightWinners(loadout);
+    }, 500); // 500ms delay for visual effect
+  }
+});

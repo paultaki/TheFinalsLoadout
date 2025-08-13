@@ -195,6 +195,38 @@ class AutomatedFlowManager {
     const phase = document.getElementById("auto-number-phase");
     if (!phase) return;
 
+    // Clear all number strip highlights and reset transform
+    const strip = phase.querySelector(".number-strip");
+    if (strip) {
+      // Reset strip transform
+      strip.style.transform = "translateY(0px)";
+      strip.style.transition = "none";
+      
+      // Clear all highlights from number elements
+      const numbers = strip.querySelectorAll(".roulette-number");
+      numbers.forEach(num => {
+        num.classList.remove("highlight", "selected", "locked");
+        num.style.backgroundColor = "";
+        num.style.color = "";
+        num.style.transform = "";
+      });
+    }
+    
+    // Reset selection indicator
+    const indicator = phase.querySelector(".selection-indicator");
+    if (indicator) {
+      indicator.classList.remove("locked");
+      indicator.style.transform = "";
+      indicator.style.background = "";
+    }
+    
+    // Reset progress bar
+    const progressBar = phase.querySelector(".progress-fill");
+    if (progressBar) {
+      progressBar.style.width = "0%";
+      progressBar.style.transition = "none";
+    }
+
     phase.style.display = "block";
     phase.classList.add("active");
 
@@ -245,11 +277,17 @@ class AutomatedFlowManager {
         if (indicator) {
           indicator.classList.add("locked");
           this.playSound("lock");
+          
+          // Add victory glow celebration effect
+          this.createCelebrationGlow(indicator, "#ffcc00");
         }
       }, FLOW_CONFIG.timings.spinSelection - 100);
     }
 
     await this.delay(FLOW_CONFIG.timings.spinSelection);
+    
+    // Add celebration pause with victory glow (600-1000ms)
+    await this.celebrationPause(phase, 800);
 
     // Fade out
     phase.classList.add("fade-out");
@@ -266,6 +304,31 @@ class AutomatedFlowManager {
 
     const phase = document.getElementById("auto-class-phase");
     if (!phase) return;
+
+    // Remove all .selected/.highlight from class cards and reset transforms
+    const cards = phase.querySelectorAll(".class-card");
+    cards.forEach(card => {
+      card.classList.remove("selected", "highlight", "locked");
+      card.style.transform = "";
+      card.style.scale = "";
+      card.style.backgroundColor = "";
+      card.style.borderColor = "";
+      card.style.boxShadow = "";
+    });
+    
+    // Reset carousel state
+    const carousel = phase.querySelector(".class-carousel");
+    if (carousel) {
+      carousel.style.transform = "";
+      carousel.style.transition = "none";
+    }
+    
+    // Reset progress bar
+    const progressBar = phase.querySelector(".progress-fill");
+    if (progressBar) {
+      progressBar.style.width = "0%";
+      progressBar.style.transition = "none";
+    }
 
     phase.style.display = "block";
     phase.classList.add("active");
@@ -309,14 +372,20 @@ class AutomatedFlowManager {
             cards[selectedIndex].classList.add("selected");
             this.playSound("lock");
 
-            // Scale effect
+            // Scale effect and victory glow
             cards[selectedIndex].style.transform = "scale(1.2)";
+            
+            // Add victory glow celebration effect
+            this.createCelebrationGlow(cards[selectedIndex], "#ff6b9d");
           }, 200);
         }
       }, cycleInterval);
     }
 
     await this.delay(FLOW_CONFIG.timings.classSelection);
+    
+    // Add celebration pause with victory glow (600-1000ms)
+    await this.celebrationPause(phase, 750);
 
     // Fade out
     phase.classList.add("fade-out");
@@ -416,15 +485,8 @@ class AutomatedFlowManager {
           window.displayLoadoutResult(loadout);
         }
 
-        // Save to history (commented out - handled by event listener)
-        // The loadoutGenerated event will handle history saving
-        console.log("🎮 Automated flow loadout:", loadout);
-        // if (window.AppState && !window.AppState.isAddingToHistory && loadout) {
-        //     window.AppState.currentLoadout = loadout;
-        //     if (window.saveLoadoutToHistory) {
-        //         await window.saveLoadoutToHistory();
-        //     }
-        // }
+        // History saving is now handled automatically by slotSpinComplete event listener in app.js
+        console.log("🎮 Automated flow loadout generated:", loadout);
 
         // Show spin again button section
         const spinAgainSection = document.getElementById("spin-again-section");
@@ -547,6 +609,66 @@ class AutomatedFlowManager {
    */
   getSelections() {
     return this.selections;
+  }
+
+  /**
+   * Create celebration glow effect using victory glow styles
+   */
+  createCelebrationGlow(element, color = "#ffcc00") {
+    // Get element position
+    const rect = element.getBoundingClientRect();
+    const parent = element.closest('.flow-phase') || element.parentElement;
+    const parentRect = parent.getBoundingClientRect();
+    
+    // Create victory glow element
+    const glow = document.createElement('div');
+    glow.className = 'victory-glow';
+    glow.style.position = 'absolute';
+    glow.style.left = `${rect.left - parentRect.left + rect.width / 2}px`;
+    glow.style.top = `${rect.top - parentRect.top + rect.height / 2}px`;
+    glow.style.background = `radial-gradient(
+      circle,
+      ${color}80,
+      ${color}40,
+      transparent
+    )`;
+    
+    parent.style.position = 'relative';
+    parent.appendChild(glow);
+    
+    // Create victory ring
+    const ring = document.createElement('div');
+    ring.className = 'victory-ring';
+    ring.style.position = 'absolute';
+    ring.style.left = `${rect.left - parentRect.left + rect.width / 2}px`;
+    ring.style.top = `${rect.top - parentRect.top + rect.height / 2}px`;
+    ring.style.borderColor = color;
+    
+    parent.appendChild(ring);
+    
+    // Clean up after animations complete
+    setTimeout(() => {
+      if (glow.parentNode) glow.parentNode.removeChild(glow);
+      if (ring.parentNode) ring.parentNode.removeChild(ring);
+    }, 1500);
+  }
+
+  /**
+   * Add celebration pause with subtle victory glow
+   */
+  async celebrationPause(phaseElement, duration = 750) {
+    // Add subtle overall glow to the phase
+    phaseElement.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.4)';
+    phaseElement.style.borderColor = '#ffd700';
+    phaseElement.style.transition = 'all 0.3s ease';
+    
+    console.log(`🎉 Celebration pause: ${duration}ms`);
+    
+    await this.delay(duration);
+    
+    // Remove celebration styling
+    phaseElement.style.boxShadow = '';
+    phaseElement.style.borderColor = '';
   }
 }
 

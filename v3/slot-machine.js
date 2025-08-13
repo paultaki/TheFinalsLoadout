@@ -759,22 +759,18 @@ class SlotMachine {
                 },
               })
             );
-          } else {
-            // Dispatch normal spin complete event
-            document.dispatchEvent(
-              new CustomEvent("slotSpinComplete", {
-                detail: {
-                  loadout: finalLoadout,
-                  slotMachine: this,
-                },
-              })
-            );
           }
-
-          // Record in history after final spin completes
-          if (finalLoadout) {
-            await this.addToHistory(finalLoadout);
-          }
+          
+          // ALWAYS dispatch slotSpinComplete event regardless of bonus
+          console.log("🎯 Dispatching slotSpinComplete event with loadout:", finalLoadout);
+          document.dispatchEvent(
+            new CustomEvent("slotSpinComplete", {
+              detail: {
+                loadout: finalLoadout,
+                slotMachine: this,
+              },
+            })
+          );
         }
       } // End of spin loop
 
@@ -1051,31 +1047,115 @@ class SlotMachine {
   }
 
   /**
-   * Add loadout to history (with duplicate prevention)
+   * Add loadout to history (DEPRECATED - now handled by slotSpinComplete event)
    */
   async addToHistory(loadout) {
-    if (this.isAddingToHistory) {
-      console.warn("Already adding to history");
-      return;
+    // History recording is now handled by slotSpinComplete event listener in app.js
+    // This method is kept for compatibility but does nothing
+    console.log("📝 addToHistory called but history is now handled by slotSpinComplete event");
+  }
+
+  /**
+   * Post-landing highlight system: Identify center cells and add winner highlighting
+   * Called ONLY after slotSpinComplete event
+   */
+  highlightWinners(loadout) {
+    console.log("🎯 Highlighting winners:", loadout);
+    
+    SlotConfig.columns.forEach((columnType) => {
+      const column = this.columns[columnType];
+      if (!column || !column.itemsContainer) return;
+
+      // Get winner item for this column
+      let winnerName = null;
+      if (columnType === "weapon") {
+        winnerName = loadout.weapon;
+      } else if (columnType === "specialization") {
+        winnerName = loadout.specialization;
+      } else if (columnType.startsWith("gadget-")) {
+        const gadgetIndex = parseInt(columnType.split("-")[1]) - 1;
+        winnerName = loadout.gadgets[gadgetIndex];
+      }
+
+      if (!winnerName) return;
+
+      // Find the center cell in viewport (should be the visible winner)
+      // The viewport is 240px tall, showing 3 items of 80px each
+      // Center row is at 80-160px, so we look for items in that range
+      const items = column.itemsContainer.querySelectorAll('.slot-item');
+      const containerRect = column.itemsContainer.getBoundingClientRect();
+      const windowRect = column.window.getBoundingClientRect();
+      
+      let centerItem = null;
+      let bestDistance = Infinity;
+      
+      items.forEach((item) => {
+        const itemRect = item.getBoundingClientRect();
+        const itemCenter = itemRect.top + itemRect.height / 2;
+        const windowCenter = windowRect.top + windowRect.height / 2;
+        const distance = Math.abs(itemCenter - windowCenter);
+        
+        // Check if this item contains our winner and is closest to center
+        if (item.textContent.includes(winnerName) && distance < bestDistance) {
+          bestDistance = distance;
+          centerItem = item;
+        }
+      });
+
+      if (centerItem) {
+        // Add winner highlighting with orange glow and star
+        this.addWinnerHighlight(centerItem, columnType);
+        console.log(`✨ Winner "${winnerName}" highlighted in ${columnType} column`);
+      }
+    });
+  }
+
+  /**
+   * Add winner highlighting (orange + star) to a specific item
+   */
+  addWinnerHighlight(item, columnType) {
+    // Remove any existing winner highlights from this column
+    const column = this.columns[columnType];
+    if (column && column.itemsContainer) {
+      const existingWinners = column.itemsContainer.querySelectorAll('.winner-highlight');
+      existingWinners.forEach(winner => {
+        winner.classList.remove('winner-highlight');
+        const star = winner.querySelector('.winner-star');
+        if (star) star.remove();
+      });
     }
 
-    this.isAddingToHistory = true;
+    // Add winner highlight class
+    item.classList.add('winner-highlight');
 
-    try {
-      // This is where we'd add to history
-      console.log("Adding to history:", loadout);
+    // Add star indicator
+    const star = document.createElement('div');
+    star.className = 'winner-star';
+    star.innerHTML = '★';
+    star.style.cssText = `
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      color: #ff6600;
+      font-size: 1.5rem;
+      text-shadow: 0 0 8px rgba(255, 102, 0, 0.8);
+      animation: starPulse 2s ease-in-out infinite;
+      z-index: 10;
+      pointer-events: none;
+    `;
+    
+    item.style.position = 'relative';
+    item.appendChild(star);
 
-      // Trigger history event
-      window.dispatchEvent(
-        new CustomEvent("loadoutGenerated", {
-          detail: loadout,
-        })
-      );
-    } finally {
-      setTimeout(() => {
-        this.isAddingToHistory = false;
-      }, 500);
-    }
+    // Add orange glow effect
+    item.style.background = 'linear-gradient(135deg, rgba(255, 102, 0, 0.3), rgba(255, 165, 0, 0.2))';
+    item.style.borderColor = '#ff6600';
+    item.style.boxShadow = '0 0 20px rgba(255, 102, 0, 0.6), inset 0 0 10px rgba(255, 102, 0, 0.2)';
+    item.style.transform = 'scale(1.05)';
+    item.style.zIndex = '5';
+
+    // Add pulsing animation
+    item.style.animation = 'winnerPulse 3s ease-in-out infinite';
   }
 }
 

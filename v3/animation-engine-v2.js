@@ -1,11 +1,12 @@
 /**
  * The Finals Slot Machine Animation Engine v2
- * Delta-time based, monotonic position tracking, multi-stage deceleration
+ * Delta-time based, monotonic position tracking, physics-based braking
  * 
  * Core Principles:
  * - Single source of truth: unwrappedY (monotonically increasing)
  * - Visual position via modulo: wrappedY = unwrappedY % cycleHeight
- * - Forward-only motion including overshoot
+ * - Physics-based smooth braking: d = v²/(2a)
+ * - Natural completion without forced transitions
  * - Frame-rate independent via delta-time integration
  */
 
@@ -24,20 +25,19 @@ const ANIM_CONFIG = {
   // Phase durations (ms)
   ACCELERATION_DURATION: 600,
   CRUISE_DURATION: 1800,
-  DECEL_A_DURATION: 500,  // easeOutQuad
-  DECEL_B_DURATION: 400,  // easeOutCubic
-  FINAL_LOCK_DURATION: 300, // easeOutQuart
-  OVERSHOOT_DURATION: 200,
-  SETTLE_DURATION: 150,
   
   // Speeds (px/s)
-  MIN_SPEED: 300,  // Increased from 100 to avoid jerky slow motion
+  MIN_SPEED: 300,
   MAX_SPEED: 2400,
   CRUISE_BASE_SPEED: 1800,
-  SPEED_INCREMENT: 150, // Per spin number
+  SPEED_INCREMENT: 150,
+  
+  // Physics-based braking system
+  DECELERATION_RATE: 800, // px/s² - how quickly we brake
+  POSITION_EPSILON: 0.5,  // px - position tolerance for completion
+  VELOCITY_THRESHOLD: 20, // px/s - velocity threshold for completion
   
   // Effects
-  OVERSHOOT_AMOUNT: 35, // pixels
   JITTER_AMOUNT: 0.08, // ±8% during cruise
   STAGGER_DELAY: 250, // ms between columns
   
@@ -200,7 +200,10 @@ class AnimationEngineV2 {
         
         // Target position for deceleration
         targetY: null,
-        overshootY: null,
+        
+        // Physics-based braking
+        brakingDistance: 0,
+        inBrakingPhase: false,
         
         // Phase tracking
         phase: 'idle',
@@ -343,7 +346,9 @@ class AnimationEngineV2 {
         );
         
         state.targetY = futureTarget;
-        state.overshootY = futureTarget; // No actual overshoot to maintain accuracy
+        // Initialize braking distance (will be calculated dynamically)
+        state.brakingDistance = 0;
+        state.inBrakingPhase = false;
       });
       
       const animate = (currentTime) => {
@@ -372,11 +377,11 @@ class AnimationEngineV2 {
           const columnStartDelay = index * ANIM_CONFIG.STAGGER_DELAY;
           const columnElapsed = Math.max(0, totalElapsed - columnStartDelay);
           
-          // Determine current phase
+          // Determine current phase with physics-based braking
           const phase = this.determinePhase(columnElapsed, state);
           state.phase = phase.name; // Store for debug
           
-          // Update velocity based on phase
+          // Update velocity based on phase with physics-based braking
           this.updateVelocity(state, phase, columnElapsed, cruiseSpeed, dt);
           
           // Integrate position (ALWAYS FORWARD)
@@ -391,8 +396,8 @@ class AnimationEngineV2 {
           // Update blur based on velocity
           this.updateBlur(state.element, state.velocity, phase);
           
-          // Check if this column is complete
-          if (phase.name !== 'complete') {
+          // Check if this column is complete using physics-based criteria
+          if (!this.isAnimationComplete(state)) {
             allComplete = false;
           }
           
@@ -406,30 +411,21 @@ class AnimationEngineV2 {
         if (!allComplete) {
           this.animationFrameId = requestAnimationFrame(animate);
         } else {
-          // After the animation completes, ensure all columns are at exact positions
+          // Animation completed naturally - no forced transitions or snapping
           columns.forEach((column, index) => {
             const state = this.columnStates.get(column);
             if (!state) return;
             
-            // Apply smooth transition for final positioning
-            state.element.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-            
-            // Force exact target position for ALL columns
-            state.unwrappedY = state.targetY;
+            // Final position verification (no forced positioning)
             const finalWrapped = this.applyPosition(state.element, state.unwrappedY, state.cycleHeight);
-            
-            // Verify position
             const expectedWrapped = -(20 * ITEM_H) + CENTER_OFFSET; // -1520px
-            if (Math.abs(finalWrapped - expectedWrapped) > 1) {
-              console.warn(`Column ${index}: Small adjustment from ${finalWrapped.toFixed(1)} to ${expectedWrapped}px`);
+            
+            console.log(`🎯 Column ${index} SMOOTH COMPLETE: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${finalWrapped.toFixed(1)}px, velocity=${state.velocity.toFixed(1)}px/s`);
+            
+            // Verify we're within acceptable range
+            if (Math.abs(finalWrapped - expectedWrapped) > 2) {
+              console.warn(`Column ${index}: Final position ${finalWrapped.toFixed(1)}px differs from expected ${expectedWrapped}px`);
             }
-            
-            // Clear transition after positioning
-            setTimeout(() => {
-              state.element.style.transition = 'none';
-            }, 350);
-            
-            console.log(`🎯 Column ${index} FINAL: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${finalWrapped.toFixed(1)}px`);
           });
           
           resolve();
@@ -441,7 +437,7 @@ class AnimationEngineV2 {
   }
   
   /**
-   * Determine current animation phase
+   * Determine current animation phase with physics-based braking
    */
   determinePhase(elapsed, state) {
     let cumulativeTime = 0;
@@ -466,61 +462,33 @@ class AnimationEngineV2 {
       };
     }
     
-    // Deceleration A (easeOutQuad)
-    cumulativeTime += ANIM_CONFIG.DECEL_A_DURATION;
-    if (elapsed < cumulativeTime) {
+    // After cruise, enter physics-based braking phase
+    // Calculate braking distance based on current velocity
+    const distanceToTarget = state.targetY - state.unwrappedY;
+    state.brakingDistance = this.calculateBrakingDistance(state.velocity);
+    
+    // Check if we should start braking
+    if (distanceToTarget <= state.brakingDistance || state.inBrakingPhase) {
+      state.inBrakingPhase = true;
       return {
-        name: 'decel_a',
-        progress: (elapsed - cumulativeTime + ANIM_CONFIG.DECEL_A_DURATION) / ANIM_CONFIG.DECEL_A_DURATION,
-        elapsed: elapsed - cumulativeTime + ANIM_CONFIG.DECEL_A_DURATION
+        name: 'braking',
+        progress: 1 - (distanceToTarget / state.brakingDistance), // 0 = start braking, 1 = at target
+        elapsed: elapsed - cumulativeTime,
+        distanceToTarget: distanceToTarget
       };
     }
     
-    // Deceleration B (easeOutCubic)
-    cumulativeTime += ANIM_CONFIG.DECEL_B_DURATION;
-    if (elapsed < cumulativeTime) {
-      return {
-        name: 'decel_b',
-        progress: (elapsed - cumulativeTime + ANIM_CONFIG.DECEL_B_DURATION) / ANIM_CONFIG.DECEL_B_DURATION,
-        elapsed: elapsed - cumulativeTime + ANIM_CONFIG.DECEL_B_DURATION
-      };
-    }
-    
-    // Final Lock (easeOutQuart)
-    cumulativeTime += ANIM_CONFIG.FINAL_LOCK_DURATION;
-    if (elapsed < cumulativeTime) {
-      return {
-        name: 'final_lock',
-        progress: (elapsed - cumulativeTime + ANIM_CONFIG.FINAL_LOCK_DURATION) / ANIM_CONFIG.FINAL_LOCK_DURATION,
-        elapsed: elapsed - cumulativeTime + ANIM_CONFIG.FINAL_LOCK_DURATION
-      };
-    }
-    
-    // Overshoot (forward only)
-    cumulativeTime += ANIM_CONFIG.OVERSHOOT_DURATION;
-    if (elapsed < cumulativeTime) {
-      return {
-        name: 'overshoot',
-        progress: (elapsed - cumulativeTime + ANIM_CONFIG.OVERSHOOT_DURATION) / ANIM_CONFIG.OVERSHOOT_DURATION,
-        elapsed: elapsed - cumulativeTime + ANIM_CONFIG.OVERSHOOT_DURATION
-      };
-    }
-    
-    // Settle
-    cumulativeTime += ANIM_CONFIG.SETTLE_DURATION;
-    if (elapsed < cumulativeTime) {
-      return {
-        name: 'settle',
-        progress: (elapsed - cumulativeTime + ANIM_CONFIG.SETTLE_DURATION) / ANIM_CONFIG.SETTLE_DURATION,
-        elapsed: elapsed - cumulativeTime + ANIM_CONFIG.SETTLE_DURATION
-      };
-    }
-    
-    return { name: 'complete', progress: 1, elapsed: elapsed };
+    // Continue cruise until we reach braking distance
+    return {
+      name: 'cruise_extended',
+      progress: 0,
+      elapsed: elapsed - cumulativeTime,
+      distanceToTarget: distanceToTarget
+    };
   }
   
   /**
-   * Update velocity based on current phase
+   * Update velocity based on current phase with physics-based braking
    */
   updateVelocity(state, phase, elapsed, cruiseSpeed, dt) {
     switch(phase.name) {
@@ -531,82 +499,78 @@ class AnimationEngineV2 {
         break;
         
       case 'cruise':
+      case 'cruise_extended':
         // High speed with jitter
         const jitter = 1 + (Math.random() - 0.5) * ANIM_CONFIG.JITTER_AMOUNT;
         state.velocity = cruiseSpeed * jitter;
         break;
         
-      case 'decel_a':
-        // First deceleration stage (easeOutQuad)
-        const decelA = this.easeOutQuad(phase.progress);
-        state.velocity = cruiseSpeed * (1 - decelA * 0.4); // Reduce by 40%
-        break;
+      case 'braking':
+        // Physics-based deceleration: v² = u² + 2as
+        // We want to reach near-zero velocity at the target
+        const distanceToTarget = phase.distanceToTarget;
         
-      case 'decel_b':
-        // Second deceleration stage (easeOutCubic)
-        const decelB = this.easeOutCubic(phase.progress);
-        state.velocity = cruiseSpeed * 0.6 * (1 - decelB * 0.5); // Reduce by another 50%
-        break;
-        
-      case 'final_lock':
-        // Final approach to exact target (easeOutQuart)
-        const remaining = state.targetY - state.unwrappedY;
-        const lockProgress = this.easeOutQuart(phase.progress);
-        
-        if (remaining > 0) {
-          // Calculate required velocity to reach target
-          const timeLeft = ANIM_CONFIG.FINAL_LOCK_DURATION * (1 - phase.progress) / 1000;
-          if (timeLeft > 0.001) {
-            // Direct calculation - we MUST reach the target
-            state.velocity = remaining / timeLeft;
-            // Don't apply too much easing or we won't reach target
-            // Ensure we maintain enough speed
-            state.velocity = Math.max(100, state.velocity * (1 - lockProgress * 0.3));
+        if (distanceToTarget > ANIM_CONFIG.POSITION_EPSILON) {
+          // Use physics equation: v² = 2as, where a = -DECELERATION_RATE
+          // v = sqrt(2 * deceleration * distance_remaining)
+          const targetVelocity = Math.sqrt(2 * ANIM_CONFIG.DECELERATION_RATE * distanceToTarget);
+          
+          // Apply deceleration smoothly (don't instantly change velocity)
+          const maxVelocityChange = ANIM_CONFIG.DECELERATION_RATE * dt;
+          
+          if (state.velocity > targetVelocity) {
+            // Decelerate
+            state.velocity = Math.max(targetVelocity, state.velocity - maxVelocityChange);
           } else {
-            // Almost at end - big push to reach target
-            state.velocity = Math.max(100, remaining * 10);
+            // Don't accelerate if we're already slower than target
+            state.velocity = Math.min(targetVelocity, state.velocity);
           }
+          
+          // Ensure minimum forward velocity to prevent stopping too early
+          state.velocity = Math.max(ANIM_CONFIG.VELOCITY_THRESHOLD * 0.5, state.velocity);
         } else {
-          // At or past target - minimal forward motion
-          state.velocity = 10;
-        }
-        break;
-        
-      case 'overshoot':
-        // Visual overshoot only - don't actually move past target
-        // This phase just slows down to create settling effect
-        state.velocity = 0; // Stop at target, no actual overshoot
-        break;
-        
-      case 'settle':
-        // Only move forward if we haven't reached target yet
-        const finalRemaining = state.targetY - state.unwrappedY;
-        if (finalRemaining > 0.1) {
-          // Still need to reach target - move forward
-          const settleTimeLeft = ANIM_CONFIG.SETTLE_DURATION * (1 - phase.progress) / 1000;
-          if (settleTimeLeft > 0.001) {
-            state.velocity = Math.max(10, finalRemaining / settleTimeLeft);
-          } else {
-            state.velocity = Math.max(50, finalRemaining * 10); // Final push
-          }
-        } else {
-          // At or past target - stop (never move backward)
-          state.velocity = 0;
+          // Very close to target - gentle approach
+          state.velocity = Math.max(0, state.velocity - ANIM_CONFIG.DECELERATION_RATE * dt * 2);
         }
         break;
         
       default:
-        state.velocity = 0;
+        // Shouldn't reach here with new physics system
+        state.velocity = Math.max(0, state.velocity - ANIM_CONFIG.DECELERATION_RATE * dt);
     }
     
     // Ensure velocity is never negative (monotonic constraint)
     state.velocity = Math.max(0, state.velocity);
+  }
+  
+  /**
+   * Calculate braking distance using physics equation: d = v²/(2a)
+   */
+  calculateBrakingDistance(velocity) {
+    // d = v² / (2 * deceleration_rate)
+    const distance = (velocity * velocity) / (2 * ANIM_CONFIG.DECELERATION_RATE);
+    return Math.max(80, distance); // Minimum braking distance of 80px (1 item height)
+  }
+  
+  /**
+   * Check if animation is complete based on physics criteria
+   */
+  isAnimationComplete(state) {
+    const distanceToTarget = state.targetY - state.unwrappedY;
+    const withinPositionTolerance = Math.abs(distanceToTarget) <= ANIM_CONFIG.POSITION_EPSILON;
+    const belowVelocityThreshold = state.velocity <= ANIM_CONFIG.VELOCITY_THRESHOLD;
     
-    // Extra safety check
-    if (state.velocity < 0) {
-      console.error(`⚠️ Negative velocity detected in ${phase.name}: ${state.velocity}`);
-      state.velocity = 0;
+    // Animation is complete when BOTH conditions are met:
+    // 1. Close enough to target position
+    // 2. Velocity is low enough
+    const isComplete = withinPositionTolerance && belowVelocityThreshold;
+    
+    // Debug logging for first column
+    if (state.index === 0 && this.debug && this.frameCount % 30 === 0) {
+      console.log(`Completion check: distance=${distanceToTarget.toFixed(2)}px, velocity=${state.velocity.toFixed(1)}px/s, complete=${isComplete}`);
     }
+    
+    return isComplete;
   }
   
   /**
@@ -616,12 +580,12 @@ class AnimationEngineV2 {
     const maxSpeed = ANIM_CONFIG.MAX_SPEED;
     const blurAmount = Math.min(ANIM_CONFIG.BLUR_MAX, (velocity / maxSpeed) * ANIM_CONFIG.BLUR_MAX);
     
-    // Reduce blur during deceleration phases
+    // Reduce blur during braking phase
     let blurMultiplier = 1;
-    if (phase.name === 'decel_a' || phase.name === 'decel_b') {
-      blurMultiplier = 1 - phase.progress * 0.5;
-    } else if (phase.name === 'final_lock' || phase.name === 'overshoot' || phase.name === 'settle') {
-      blurMultiplier = 0.2;
+    if (phase.name === 'braking') {
+      // Gradually reduce blur as we approach target
+      const progressToTarget = Math.min(1, phase.progress);
+      blurMultiplier = 1 - progressToTarget * 0.8; // Reduce blur by up to 80%
     }
     
     element.style.filter = `blur(${blurAmount * blurMultiplier}px)`;
@@ -668,6 +632,8 @@ class AnimationEngineV2 {
       <div>C0 Unwrapped: <span id="debug-unwrapped">0</span></div>
       <div>C0 Velocity: <span id="debug-velocity">0</span></div>
       <div>C0 Phase: <span id="debug-phase">idle</span></div>
+      <div>C0 Distance: <span id="debug-distance">0</span></div>
+      <div>C0 Braking Dist: <span id="debug-braking-dist">0</span></div>
     `;
     document.body.appendChild(panel);
   }
@@ -691,9 +657,14 @@ class AnimationEngineV2 {
     // Get first column state
     const firstColumn = Array.from(this.columnStates.values())[0];
     if (firstColumn) {
+      const distanceToTarget = firstColumn.targetY ? firstColumn.targetY - firstColumn.unwrappedY : 0;
+      const brakingDist = this.calculateBrakingDistance(firstColumn.velocity);
+      
       document.getElementById('debug-unwrapped').textContent = firstColumn.unwrappedY.toFixed(0);
       document.getElementById('debug-velocity').textContent = firstColumn.velocity.toFixed(0);
       document.getElementById('debug-phase').textContent = firstColumn.phase || 'idle';
+      document.getElementById('debug-distance').textContent = distanceToTarget.toFixed(0);
+      document.getElementById('debug-braking-dist').textContent = brakingDist.toFixed(0);
     }
   }
   
@@ -729,17 +700,22 @@ class AnimationEngineV2 {
 window.AnimationEngineV2 = AnimationEngineV2;
 
 /**
- * Forward-Only Overshoot Explanation:
+ * Physics-Based Smooth Braking System:
  * 
- * Traditional overshoot: position goes A → B → A (reversal)
- * Our approach: unwrappedY goes A → B → C (always forward)
+ * Traditional time-based approach: Hard phases with forced transitions at end
+ * Our approach: Physics-based deceleration with natural completion
  * 
- * The "snap back" visual effect is achieved through modulo wrapping:
- * - Target at unwrappedY = 5000, wrappedY = -1520 (visible)
- * - Overshoot to unwrappedY = 5035, wrappedY = -1485 (slightly past)
- * - Settle to unwrappedY = 5050, wrappedY = -1470 (continues forward)
+ * Key principles:
+ * 1. Braking distance calculated using: d = v²/(2a) where a = deceleration_rate
+ * 2. Braking starts when distance_to_target ≤ braking_distance
+ * 3. Velocity controlled by: v = √(2 × deceleration × distance_remaining)
+ * 4. Completion criteria: distance ≤ 0.5px AND velocity ≤ 20px/s
+ * 5. No forced CSS transitions or position snapping
  * 
- * Since the item height is 80px and we overshoot by 35px, the visual
- * appears to "bounce back" but the actual position never decreases.
- * This preserves monotonicity while maintaining the desired effect.
+ * This ensures:
+ * - Smooth deceleration based on current velocity
+ * - Natural stopping without abrupt changes
+ * - Monotonic forward motion (no reversals)
+ * - CENTER_OFFSET=80 keeps winner centered in 240px viewport
+ * - wrappedY stays in range (-cycleHeight, 0] via modulo arithmetic
  */
