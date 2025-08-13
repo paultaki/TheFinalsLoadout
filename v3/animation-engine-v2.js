@@ -319,24 +319,17 @@ class AnimationEngineV2 {
     // translateY = -(20 * 80) + 80 = -1520px
     const targetWrappedPosition = -(winnerIndex * ITEM_H) + CENTER_OFFSET; // -1520px for center row
     
-    // CRITICAL FIX: Find the unwrapped position that gives us exactly -1520px when wrapped
-    // We need: (targetUnwrapped % cycleHeight) = targetWrappedPosition when converted to negative range
+    // SIMPLIFIED FIX: Direct calculation to land at exactly -1520px
+    // For multi-spin, add full cycles then adjust for exact position
+    const baseUnwrapped = currentUnwrappedY + (totalSpins * cycleHeight);
     
-    // For multi-spin: start with base target
-    let baseTarget = currentUnwrappedY + (totalSpins * cycleHeight);
+    // Now adjust to land at exactly -1520px when wrapped
+    // We want the final wrapped position to be -1520px
+    const currentWrapped = baseUnwrapped % cycleHeight;
+    const adjustment = -1520 - (-currentWrapped);
+    const targetUnwrapped = baseUnwrapped + adjustment;
     
-    // Calculate what wrapped position this base target would give
-    let testWrapped = baseTarget % cycleHeight;
-    if (testWrapped > 0) {
-      testWrapped = testWrapped - cycleHeight;
-    }
-    
-    // Adjust the target to hit exactly -1520px
-    const offset = targetWrappedPosition - testWrapped;
-    const targetUnwrapped = baseTarget + offset;
-    
-    console.log(`[PHYSICS] Target calculated: ${targetUnwrapped}px`);
-    console.log(`[PHYSICS] Will land at wrapped: ${targetWrappedPosition}px`);
+    console.log(`[PHYSICS] Target: ${targetUnwrapped.toFixed(0)}px will wrap to -1520px`);
     
     return targetUnwrapped;
   }
@@ -348,7 +341,7 @@ class AnimationEngineV2 {
     return new Promise((resolve) => {
       let startTime = performance.now();
       let lastTime = startTime;
-      const maxDuration = 30000; // 30 second maximum (only for safety, should complete naturally)
+      const maxDuration = 5000; // 5 second maximum for reasonable spin duration
       
       // Use consistent speed for all columns in this animation
       const cruiseSpeed = ANIM_CONFIG.CRUISE_BASE_SPEED;
@@ -603,19 +596,18 @@ class AnimationEngineV2 {
             state.velocity = Math.min(targetVelocity, state.velocity);
           }
           
-          // Enhanced exponential decay for natural velocity reduction
-          if (distanceToTarget < 40) {
-            const decayFactor = 0.85;
-            state.velocity = state.velocity * Math.pow(decayFactor, dt * 60);
+          // AGGRESSIVE exponential decay to ensure completion
+          if (distanceToTarget < 100) {
+            state.velocity *= 0.92; // Aggressive decay
           }
-          
+          if (distanceToTarget < 50) {
+            state.velocity *= 0.85; // More aggressive
+          }
           if (distanceToTarget < 10) {
-            const finalDecayFactor = 0.75;
-            state.velocity = state.velocity * Math.pow(finalDecayFactor, dt * 60);
+            state.velocity = Math.min(state.velocity, 50); // Cap at 50px/s
           }
-          
           if (distanceToTarget < 2) {
-            state.velocity = Math.max(0, state.velocity - 200 * dt);
+            state.velocity = Math.min(state.velocity, 10); // Nearly stop
           }
         } else {
           // Maintain max velocity until braking distance reached
@@ -658,8 +650,8 @@ class AnimationEngineV2 {
     
     const distanceToTarget = state.targetY - state.unwrappedY;
     
-    // End animation when |remaining| ≤ 0.5 && |velocity| ≤ 12
-    const isComplete = Math.abs(distanceToTarget) <= 0.5 && Math.abs(state.velocity) <= 12;
+    // End animation when close enough OR velocity is very low
+    const isComplete = Math.abs(distanceToTarget) <= 2 || Math.abs(state.velocity) <= 5;
     
     return isComplete;
   }

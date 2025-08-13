@@ -115,5 +115,39 @@ python3 -m http.server 8000
 - Implement progressive web app features
 - Add analytics for loadout popularity
 
+## Recent Critical Fixes (2025-08-13 - Session 2)
+
+### Spin Counter Fix
+- Fixed closure issue causing "3 of 3" to show immediately
+- Added 50ms delay for DOM update visibility
+- Counter now properly increments: 1 → 2 → 3
+
+### Animation Duration Fix  
+- Reduced timeout from 30s to 5s maximum
+- Implemented aggressive velocity decay (0.92 at 100px, 0.85 at 50px)
+- Relaxed completion criteria: distance ≤ 2px OR velocity ≤ 5px/s
+
+### Landing Position Fix
+- Simplified target calculation for exact -1520px landing
+- Fixed wrapped position calculation error (was landing at -1480px)
+- Direct calculation without complex modulo math
+
+## MCP Servers Configured
+The following Model Context Protocol servers have been added to Claude Code:
+
+1. **Sentry** - Error tracking and monitoring (connected)
+2. **Prettier** - Code formatting (`npx -y prettier-mcp`)
+3. **ESLint** - Code linting (`npx -y eslint-mcp`)
+4. **Figma** - Design integration (`npx -y figma-mcp`)
+5. **Filesystem** - Enhanced file operations (`@modelcontextprotocol/server-filesystem`)
+6. **Shell** - Shell commands (`@mako10k/mcp-shell-server`)
+7. **Git** - Git operations (`@cyanheads/git-mcp-server`)
+8. **Playwright** - Browser automation (`@playwright/mcp`)
+9. **Sequential Thinking** - Complex reasoning (`@modelcontextprotocol/server-sequential-thinking`)
+10. **Jam** - Bug reporting integration (`https://mcp.jam.dev/mcp`)
+
+## Dependencies Added
+- **Puppeteer** - Headless browser automation (installed via npm)
+
 ## Last Updated
-2025-08-13 - Fixed all critical animation issues, added Sentry monitoring, validated with comprehensive QA testing.
+2025-08-13 - Fixed critical animation regressions (counter, duration, landing position), configured 10 MCP servers, added Puppeteer for testing.

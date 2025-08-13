@@ -660,8 +660,11 @@ class SlotMachine {
         console.log(`🔄 Spin ${capturedSpin} of ${capturedTotal}`);
         console.log(`[COUNTER] Loop iteration: i=${currentSpin}, capturedSpin=${capturedSpin}, totalSpins=${capturedTotal}`);
 
-        // Update spin counter with captured values
+        // Update spin counter IMMEDIATELY before any async operations
         this.updateSpinCounter(capturedSpin, capturedTotal);
+        
+        // Small delay to ensure DOM update is visible
+        await new Promise(resolve => setTimeout(resolve, 50));
 
         // Get filtered data
         const filteredData = this.filterSystem.getFilteredData(classType);
