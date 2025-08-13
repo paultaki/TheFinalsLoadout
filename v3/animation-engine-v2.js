@@ -25,6 +25,8 @@ const ANIM_CONFIG = {
   // Phase durations (ms)
   ACCELERATION_DURATION: 600,
   CRUISE_DURATION: 1800,
+  DECEL_A_DURATION: 500,  // Added for quick spin compatibility
+  DECEL_B_DURATION: 300,  // Added for quick spin compatibility
   
   // Speeds (px/s)
   MIN_SPEED: 300,
@@ -148,8 +150,7 @@ class AnimationEngineV2 {
     // Reduce durations for quick spin
     ANIM_CONFIG.ACCELERATION_DURATION = 400;
     ANIM_CONFIG.CRUISE_DURATION = 800;
-    ANIM_CONFIG.DECEL_A_DURATION = 300;
-    ANIM_CONFIG.DECEL_B_DURATION = 200;
+    // DECEL_A_DURATION and DECEL_B_DURATION already defined in config
     
     try {
       await this.animateSlotMachine(columns, scrollContents, null);
@@ -376,6 +377,19 @@ class AnimationEngineV2 {
         // Safety timeout check to prevent infinite loop
         if (totalElapsed > maxDuration) {
           console.warn(`⚠️ Animation timeout after ${maxDuration}ms - forcing completion`);
+          // Apply final positions when timeout occurs
+          columns.forEach((column, index) => {
+            const state = this.columnStates.get(column);
+            if (!state || !state.targetY) return;
+            
+            // Snap to final target position
+            state.unwrappedY = state.targetY;
+            state.velocity = 0;
+            
+            // Apply the correct final wrapped position
+            const finalWrapped = this.applyPosition(state.element, state.unwrappedY, state.cycleHeight);
+            console.log(`🎯 Timeout snap Column ${index}: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${finalWrapped.toFixed(1)}px`);
+          });
           resolve();
           return;
         }
@@ -403,8 +417,8 @@ class AnimationEngineV2 {
           
           // Integrate position (ALWAYS FORWARD)
           const deltaPos = Math.max(0, state.velocity * dt); // Ensure delta is never negative
-          // Round to prevent subpixel accumulation
-          state.unwrappedY = Math.round((state.unwrappedY + deltaPos) * 100) / 100; // Round to 0.01px
+          // Use higher precision to prevent cumulative drift
+          state.unwrappedY = Math.round((state.unwrappedY + deltaPos) * 1000) / 1000; // Round to 0.001px for better precision
           
           
           // Apply position with modulo wrap
@@ -543,11 +557,18 @@ class AnimationEngineV2 {
             state.velocity = Math.min(targetVelocity, state.velocity);
           }
           
-          // Ensure minimum forward velocity to prevent stopping too early
-          state.velocity = Math.max(ANIM_CONFIG.VELOCITY_THRESHOLD * 0.5, state.velocity);
+          // Distance-aware minimum velocity logic
+          const minVelocity = distanceToTarget < 5 ? 0 : ANIM_CONFIG.VELOCITY_THRESHOLD * 0.5;
+          state.velocity = Math.max(minVelocity, state.velocity);
         } else {
-          // Very close to target - gentle approach
-          state.velocity = Math.max(0, state.velocity - ANIM_CONFIG.DECELERATION_RATE * dt * 2);
+          // Very close to target - exponential decay for smooth final approach
+          const decayFactor = 0.95; // Exponential decay rate
+          state.velocity = state.velocity * Math.pow(decayFactor, dt * 60); // Frame-rate independent decay
+          
+          // Allow natural stopping
+          if (state.velocity < 1) {
+            state.velocity = 0;
+          }
         }
         break;
         
@@ -574,12 +595,12 @@ class AnimationEngineV2 {
    */
   isAnimationComplete(state) {
     const distanceToTarget = state.targetY - state.unwrappedY;
-    const withinPositionTolerance = Math.abs(distanceToTarget) <= 2.0; // More forgiving: 2px instead of 0.5px
-    const belowVelocityThreshold = state.velocity <= 50; // More forgiving: 50px/s instead of 20px/s
+    const withinPositionTolerance = Math.abs(distanceToTarget) <= ANIM_CONFIG.POSITION_EPSILON; // Use consistent config value
+    const belowVelocityThreshold = state.velocity <= ANIM_CONFIG.VELOCITY_THRESHOLD; // Use consistent config value
     
     // Animation is complete when BOTH conditions are met:
-    // 1. Close enough to target position (within 2px)
-    // 2. Velocity is low enough (below 50px/s)
+    // 1. Close enough to target position (within config tolerance)
+    // 2. Velocity is low enough (below config threshold)
     const isComplete = withinPositionTolerance && belowVelocityThreshold;
     
     // Debug logging for first column
