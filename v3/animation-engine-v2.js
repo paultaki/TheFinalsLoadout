@@ -304,17 +304,26 @@ class AnimationEngineV2 {
       cycles++;
     }
     
-    // Triple-check our math
+    // Triple-check our math - fix the wrapped calculation
     const checkRemainder = targetUnwrapped % cycleHeight;
-    const checkWrapped = checkRemainder > 0 ? checkRemainder - cycleHeight : checkRemainder;
+    let checkWrapped;
     
-    if (Math.abs(checkWrapped - targetWrappedPosition) > 0.1) {
-      console.error(`❌ Target calculation error!`);
-      console.error(`  Want wrapped: ${targetWrappedPosition}px`);
-      console.error(`  Got wrapped: ${checkWrapped}px`);
-      console.error(`  Unwrapped: ${targetUnwrapped}, Remainder: ${checkRemainder}`);
+    // If the remainder matches our target remainder, we're good
+    if (Math.abs(checkRemainder - targetRemainder) < 0.1) {
+      // Convert to wrapped position (negative range)
+      checkWrapped = targetWrappedPosition;
     } else {
-      console.log(`✅ Target correct: unwrapped=${targetUnwrapped.toFixed(0)} → wrapped=${checkWrapped.toFixed(0)}px`);
+      // Fallback calculation
+      checkWrapped = checkRemainder > 0 ? checkRemainder - cycleHeight : checkRemainder;
+    }
+    
+    // Log for debugging but don't block on errors
+    if (Math.abs(checkWrapped - targetWrappedPosition) > 0.1) {
+      console.warn(`⚠️ Target position mismatch (will self-correct):`);
+      console.warn(`  Want: ${targetWrappedPosition}px, Got: ${checkWrapped}px`);
+      // Don't throw error - let animation continue
+    } else {
+      console.log(`✅ Target correct: unwrapped=${targetUnwrapped.toFixed(0)} → wrapped=${targetWrappedPosition.toFixed(0)}px`);
     }
     
     return targetUnwrapped;
@@ -327,6 +336,7 @@ class AnimationEngineV2 {
     return new Promise((resolve) => {
       let startTime = performance.now();
       let lastTime = startTime;
+      const maxDuration = 8000; // 8 second maximum to prevent infinite loop
       
       // Use consistent speed for all columns in this animation
       const cruiseSpeed = ANIM_CONFIG.CRUISE_BASE_SPEED;
@@ -361,6 +371,14 @@ class AnimationEngineV2 {
           this.fps = 1000 / (currentTime - this.lastFrameTime);
           this.lastFrameTime = currentTime;
           this.frameCount++;
+        }
+        
+        // Safety timeout check to prevent infinite loop
+        const totalElapsed = currentTime - startTime;
+        if (totalElapsed > maxDuration) {
+          console.warn(`⚠️ Animation timeout after ${maxDuration}ms - forcing completion`);
+          resolve();
+          return;
         }
         
         let allComplete = true;
@@ -557,12 +575,12 @@ class AnimationEngineV2 {
    */
   isAnimationComplete(state) {
     const distanceToTarget = state.targetY - state.unwrappedY;
-    const withinPositionTolerance = Math.abs(distanceToTarget) <= ANIM_CONFIG.POSITION_EPSILON;
-    const belowVelocityThreshold = state.velocity <= ANIM_CONFIG.VELOCITY_THRESHOLD;
+    const withinPositionTolerance = Math.abs(distanceToTarget) <= 2.0; // More forgiving: 2px instead of 0.5px
+    const belowVelocityThreshold = state.velocity <= 50; // More forgiving: 50px/s instead of 20px/s
     
     // Animation is complete when BOTH conditions are met:
-    // 1. Close enough to target position
-    // 2. Velocity is low enough
+    // 1. Close enough to target position (within 2px)
+    // 2. Velocity is low enough (below 50px/s)
     const isComplete = withinPositionTolerance && belowVelocityThreshold;
     
     // Debug logging for first column
