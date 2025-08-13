@@ -219,9 +219,6 @@ class HistoryManager {
                     <button class="card-action copy-btn" data-action="copy" title="Copy to clipboard">
                         📋
                     </button>
-                    <button class="card-action export-btn" data-action="export" title="Export">
-                        💾
-                    </button>
                     <button class="card-action delete-btn" data-action="delete" title="Delete">
                         🗑️
                     </button>
