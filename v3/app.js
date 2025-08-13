@@ -849,7 +849,7 @@ document.addEventListener("slotSpinComplete", (event) => {
     
     // Add a brief delay to let the animation settle, then highlight winners
     setTimeout(() => {
-      slotMachine.highlightWinners(loadout);
+      slotMachine.highlightWinnersAfterLanding(loadout);
     }, 500); // 500ms delay for visual effect
   }
 });
