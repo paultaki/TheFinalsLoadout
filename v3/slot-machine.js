@@ -653,17 +653,22 @@ class SlotMachine {
       let finalLoadout = null; // Define at outer scope
       
       for (let currentSpin = 1; currentSpin <= totalSpins; currentSpin++) {
-        console.log(`🔄 Spin ${currentSpin} of ${totalSpins}`);
+        // CRITICAL FIX: Capture the current spin value to prevent closure issues
+        const capturedSpin = currentSpin;
+        const capturedTotal = totalSpins;
+        
+        console.log(`🔄 Spin ${capturedSpin} of ${capturedTotal}`);
+        console.log(`[COUNTER] Loop iteration: i=${currentSpin}, capturedSpin=${capturedSpin}, totalSpins=${capturedTotal}`);
 
-        // Update spin counter
-        this.updateSpinCounter(currentSpin, totalSpins);
+        // Update spin counter with captured values
+        this.updateSpinCounter(capturedSpin, capturedTotal);
 
         // Get filtered data
         const filteredData = this.filterSystem.getFilteredData(classType);
 
         let loadout = null;
-        const isFirstSpin = currentSpin === 1;
-        const isFinalSpin = currentSpin === totalSpins;
+        const isFirstSpin = capturedSpin === 1;
+        const isFinalSpin = capturedSpin === capturedTotal;
 
         // Only predetermine outcome on FINAL spin
         if (isFinalSpin) {
@@ -731,7 +736,7 @@ class SlotMachine {
             return;
           }
 
-          if (currentSpin === totalSpins) {
+          if (capturedSpin === capturedTotal) {
             // Final spin - full dramatic animation with predetermined outcome
             console.log('🎆 Starting FINAL spin animation with loadout:', loadout);
             try {
@@ -771,7 +776,7 @@ class SlotMachine {
         }
 
         // Only process final results on the last spin
-        if (currentSpin === totalSpins) {
+        if (capturedSpin === capturedTotal) {
           // Apply bonus effect if active
           if (this.bonusManager && this.bonusManager.currentBonus) {
             finalLoadout = await this.bonusManager.applyBonusEffect(
@@ -1036,6 +1041,7 @@ class SlotMachine {
    * Show spin counter overlay
    */
   showSpinCounter(totalSpins) {
+    console.log(`[COUNTER] showSpinCounter called with totalSpins=${totalSpins}`);
     // Remove existing counter if any
     this.hideSpinCounter();
 
@@ -1077,10 +1083,12 @@ class SlotMachine {
    * Update spin counter
    */
   updateSpinCounter(current, total) {
+    console.log(`[COUNTER] updateSpinCounter called with current=${current}, total=${total}`);
     const counter = document.getElementById("spin-counter");
     if (counter) {
       const numberEl = counter.querySelector(".spin-counter-number");
       if (numberEl) {
+        console.log(`[COUNTER] Updating display from "${numberEl.textContent}" to "${current}"`);
         numberEl.textContent = current;
 
         // Add pulse animation on update
