@@ -93,6 +93,7 @@ class HistoryManager {
    */
   async addEntry(loadout) {
     console.log('📥 HistoryManager.addEntry called with:', loadout);
+    console.log('📊 Current entries count:', this.entries.length);
     
     // Validate loadout
     if (!loadout) {
@@ -147,6 +148,8 @@ class HistoryManager {
       console.error('❌ No container for rendering');
       return;
     }
+    console.log('📦 Container exists:', this.container);
+    console.log('🔍 Looking for .history-list');
 
     const card = this.createHistoryCard(entry);
     card.style.animation = `${HISTORY_CONFIG.cardAnimation.slideIn} ${HISTORY_CONFIG.cardAnimation.duration}ms ease`;
@@ -562,25 +565,34 @@ ${entry.analysis.text}`;
   render() {
     if (!this.container) return;
 
-    this.container.innerHTML = "";
+    // Find or create the entries container
+    let entriesContainer = this.container.querySelector('.history-list, #history-list');
+    if (!entriesContainer) {
+      // If UI hasn't been set up yet, just return
+      console.log('⚠️ Entries container not found, skipping render');
+      return;
+    }
+
+    // Clear only the entries container
+    entriesContainer.innerHTML = "";
 
     if (this.entries.length === 0) {
-      this.showEmptyMessage();
+      this.showEmptyMessage(entriesContainer);
       return;
     }
 
     // Render each entry
     this.entries.forEach((entry) => {
       const card = this.createHistoryCard(entry);
-      this.container.appendChild(card);
+      entriesContainer.appendChild(card);
     });
   }
 
   /**
    * Show empty message
    */
-  showEmptyMessage() {
-    this.container.innerHTML = `
+  showEmptyMessage(container = this.container) {
+    container.innerHTML = `
             <div class="empty-history">
                 <p>No loadouts generated yet</p>
                 <p class="empty-hint">Start spinning to build your history!</p>

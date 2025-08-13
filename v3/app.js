@@ -379,6 +379,8 @@ function initializeComponents() {
       specialization: loadout?.specialization,
       gadgets: loadout?.gadgets
     });
+    console.log("🔍 AppState.isAddingToHistory:", AppState.isAddingToHistory);
+    console.log("🔍 window.historyManager exists:", !!window.historyManager);
     
     if (loadout && !AppState.isAddingToHistory) {
       AppState.currentLoadout = loadout;
