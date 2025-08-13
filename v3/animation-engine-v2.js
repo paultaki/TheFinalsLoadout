@@ -95,14 +95,23 @@ class AnimationEngineV2 {
     this.frameCount = 0;
     this.reversalDetected = false;
     
-    // Clear any visual effects
+    // Clear any visual effects but preserve position
     const columns = document.querySelectorAll('.slot-column');
     columns.forEach(col => {
       const itemsContainer = col.querySelector('.slot-items');
       if (itemsContainer) {
-        itemsContainer.style.transform = 'translateY(0)';
+        // CRITICAL FIX: Don't reset to translateY(0) - preserve current position
+        // Only reset position if explicitly needed for debugging
+        // itemsContainer.style.transform = 'translateY(0)'; // REMOVED - causes blank frames
         itemsContainer.style.filter = 'none';
         itemsContainer.style.transition = 'none';
+        
+        // Keep current position to prevent blank frames
+        const currentTransform = itemsContainer.style.transform;
+        if (!currentTransform || currentTransform === 'translateY(0px)') {
+          // Only set safe position if no position is set
+          itemsContainer.style.transform = 'translateY(-1520px)'; // Safe winner position
+        }
       }
     });
   }
@@ -241,6 +250,11 @@ class AnimationEngineV2 {
       
       // Apply current position
       this.applyPosition(itemsContainer, unwrappedStart, cycleHeight);
+      
+      // CRITICAL: Check for blank frame after position application
+      if (itemsContainer.children.length === 0) {
+        console.error(`[DOM] Blank frame detected in column ${index} after position application!`);
+      }
     });
   }
   
@@ -271,6 +285,11 @@ class AnimationEngineV2 {
     element.style.willChange = 'transform';
     element.style.backfaceVisibility = 'hidden';
     
+    // CRITICAL: Check for blank frame after position change
+    if (element.children.length === 0) {
+      console.error(`[DOM] Blank frame detected after position apply! transform: ${element.style.transform}`);
+    }
+    
     return snappedY;
   }
   
@@ -300,10 +319,24 @@ class AnimationEngineV2 {
     // translateY = -(20 * 80) + 80 = -1520px
     const targetWrappedPosition = -(winnerIndex * ITEM_H) + CENTER_OFFSET; // -1520px for center row
     
-    // For multi-spin: targetY = currentUnwrappedY + (totalSpins * cycleHeight)
-    const targetUnwrapped = currentUnwrappedY + (totalSpins * cycleHeight);
+    // CRITICAL FIX: Find the unwrapped position that gives us exactly -1520px when wrapped
+    // We need: (targetUnwrapped % cycleHeight) = targetWrappedPosition when converted to negative range
     
-    console.log(`✅ Multi-spin target: unwrapped=${targetUnwrapped.toFixed(0)} (${totalSpins} spins)`);
+    // For multi-spin: start with base target
+    let baseTarget = currentUnwrappedY + (totalSpins * cycleHeight);
+    
+    // Calculate what wrapped position this base target would give
+    let testWrapped = baseTarget % cycleHeight;
+    if (testWrapped > 0) {
+      testWrapped = testWrapped - cycleHeight;
+    }
+    
+    // Adjust the target to hit exactly -1520px
+    const offset = targetWrappedPosition - testWrapped;
+    const targetUnwrapped = baseTarget + offset;
+    
+    console.log(`[PHYSICS] Target calculated: ${targetUnwrapped}px`);
+    console.log(`[PHYSICS] Will land at wrapped: ${targetWrappedPosition}px`);
     
     return targetUnwrapped;
   }
@@ -424,6 +457,13 @@ class AnimationEngineV2 {
           // Apply position with modulo wrap
           const wrappedY = this.applyPosition(state.element, state.unwrappedY, state.cycleHeight);
           
+          // CRITICAL: Detect race condition - check for blank frames during animation
+          if (state.element.children.length === 0) {
+            console.error(`[DOM] Blank frame detected during animation in column ${index}! Phase: ${phase.name}, Position: ${wrappedY.toFixed(1)}px`);
+            // Emergency stop to prevent blank frame progression
+            allComplete = true;
+          }
+          
           // Update blur based on velocity
           this.updateBlur(state.element, state.velocity, phase);
           
@@ -450,6 +490,7 @@ class AnimationEngineV2 {
             const displayWrapped = currentWrapped > 0 ? currentWrapped - state.cycleHeight : currentWrapped;
             
             console.log(`🎯 Column ${index} COMPLETE: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${displayWrapped.toFixed(1)}px, velocity=${state.velocity.toFixed(1)}px/s`);
+            console.log(`[PHYSICS] Final position: ${displayWrapped.toFixed(1)}px`);
           });
           
           resolve();

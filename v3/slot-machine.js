@@ -746,6 +746,10 @@ class SlotMachine {
                 loadout,
                 false // Don't preserve position for final spin (need winners)
               );
+              
+              // CRITICAL: Ensure final position shows winners correctly
+              this.ensureFinalWinnerPosition(loadout);
+              
               console.log('✅ Final animation completed');
             } catch (error) {
               console.error('❌ Animation failed:', error);
@@ -767,6 +771,9 @@ class SlotMachine {
               await this.basicAnimation();
             }
 
+            // CRITICAL: Ensure reel maintains position between spins
+            this.maintainReelPosition();
+            
             // No pause between spins for seamless continuity
             console.log('🔄 Seamless transition to next spin...');
           }
@@ -883,8 +890,26 @@ class SlotMachine {
       if (needsBuild) {
         console.log(`🔨 Building DOM for ${columnType} (forceBuild=${forceBuild})`);
         
+        // CRITICAL FIX: Check for blank frame before clearing DOM
+        if (column.itemsContainer.children.length === 0) {
+          console.error('[DOM] Blank frame detected before rebuild! Container already empty.');
+        }
+        
+        // Store current position to preserve it during rebuild
+        let currentPosition = -1680; // Default safe position
+        const currentTransform = column.itemsContainer.style.transform;
+        const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
+        if (match) {
+          currentPosition = parseFloat(match[1]);
+        }
+        
         // Clear existing items only when rebuilding
         column.itemsContainer.innerHTML = "";
+        
+        // CRITICAL: Immediately check for blank frame after clearing
+        if (column.itemsContainer.children.length === 0) {
+          console.error('[DOM] Blank frame detected after DOM clear!');
+        }
 
         // CRITICAL FIX: Verify we have enough items to prevent blank areas
         if (items.length < 30) {
@@ -946,16 +971,28 @@ class SlotMachine {
 
           column.itemsContainer.appendChild(itemElement);
         });
+        
+        // CRITICAL: Final check after DOM rebuild
+        if (column.itemsContainer.children.length === 0) {
+          console.error('[DOM] Blank frame detected after DOM rebuild! Items failed to append!');
+        } else {
+          console.log(`✅ DOM rebuilt successfully: ${column.itemsContainer.children.length} items in ${columnType}`);
+        }
       } else {
         console.log(`♻️ Reusing existing DOM for ${columnType} (${column.itemsContainer.children.length} items)`);
+        
+        // Check for blank frame even when reusing DOM
+        if (column.itemsContainer.children.length === 0) {
+          console.error('[DOM] Blank frame detected in existing DOM! Container is empty when it should have items!');
+        }
       }
 
       // Set position: preserve current position or use default
       if (!preservePosition) {
-        // Only reset position if not preserving (first spin or forced rebuild)
-        const initialTranslate = -1680; // 20 items above viewport + small buffer
-        column.itemsContainer.style.transform = `translateY(${initialTranslate}px)`;
-        console.log(`🎰 ${columnType} reset position: ${initialTranslate}px (winner at effective position 20)`);
+        // For DOM rebuilds, use stored position or safe default
+        const safePosition = needsBuild ? currentPosition : -1680;
+        column.itemsContainer.style.transform = `translateY(${safePosition}px)`;
+        console.log(`🎰 ${columnType} position set: ${safePosition}px (rebuild=${needsBuild})`);
       } else {
         // Keep the current position for continuity
         column.itemsContainer.style.transform = `translateY(${currentPosition}px)`;
@@ -1155,6 +1192,101 @@ class SlotMachine {
     });
 
     this.deceptionEngine.scrollContents = scrollContents;
+  }
+
+  /**
+   * CRITICAL: Ensure final position shows winners correctly
+   */
+  ensureFinalWinnerPosition(loadout) {
+    console.log('🎯 Ensuring final winner positions are correct...');
+    
+    SlotConfig.columns.forEach((columnType) => {
+      const column = this.columns[columnType];
+      if (!column || !column.itemsContainer) return;
+      
+      // Get winner for this column
+      let winnerName = null;
+      if (columnType === "weapon") {
+        winnerName = loadout.weapon;
+      } else if (columnType === "specialization") {
+        winnerName = loadout.specialization;
+      } else if (columnType.startsWith("gadget-")) {
+        const gadgetIndex = parseInt(columnType.split("-")[1]) - 1;
+        winnerName = loadout.gadgets[gadgetIndex];
+      }
+      
+      if (!winnerName) return;
+      
+      // The winner should be at index 40, which should be visible at position -1520px
+      const targetPosition = -1520; // This shows winner at center of viewport
+      const currentTransform = column.itemsContainer.style.transform;
+      let currentPosition = targetPosition;
+      
+      const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
+      if (match) {
+        currentPosition = parseFloat(match[1]);
+      }
+      
+      // Check if position is close to target (within 80px - one item height)
+      const positionDiff = Math.abs(currentPosition - targetPosition);
+      if (positionDiff > 80) {
+        console.warn(`⚠️ ${columnType} winner position off by ${positionDiff}px, adjusting...`);
+        column.itemsContainer.style.transform = `translateY(${targetPosition}px)`;
+      }
+      
+      // Final verification that winner is visible
+      const items = column.itemsContainer.querySelectorAll('.slot-item');
+      const containerRect = column.itemsContainer.getBoundingClientRect();
+      const windowRect = column.window.getBoundingClientRect();
+      
+      let winnerVisible = false;
+      items.forEach((item) => {
+        if (item.textContent.includes(winnerName)) {
+          const itemRect = item.getBoundingClientRect();
+          const isInViewport = itemRect.top < windowRect.bottom && itemRect.bottom > windowRect.top;
+          if (isInViewport) {
+            winnerVisible = true;
+          }
+        }
+      });
+      
+      if (!winnerVisible) {
+        console.error(`❌ Winner "${winnerName}" not visible in ${columnType} viewport!`);
+      } else {
+        console.log(`✅ Winner "${winnerName}" confirmed visible in ${columnType}`);
+      }
+    });
+  }
+
+  /**
+   * CRITICAL: Maintain reel position between spins to prevent blank frames
+   */
+  maintainReelPosition() {
+    SlotConfig.columns.forEach((columnType) => {
+      const column = this.columns[columnType];
+      if (!column || !column.itemsContainer) return;
+      
+      const currentTransform = column.itemsContainer.style.transform;
+      let currentPosition = -1520; // Default winner position
+      
+      const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
+      if (match) {
+        currentPosition = parseFloat(match[1]);
+      }
+      
+      // Check for unsafe positions that might cause blank frames
+      if (currentPosition > -800) {
+        console.warn(`⚠️ ${columnType} position ${currentPosition}px might cause blank frame, adjusting to -1520px`);
+        column.itemsContainer.style.transform = 'translateY(-1520px)';
+      } else {
+        console.log(`✅ ${columnType} position maintained: ${currentPosition}px`);
+      }
+      
+      // Final check for blank frames
+      if (column.itemsContainer.children.length === 0) {
+        console.error(`[DOM] Blank frame detected in ${columnType} during position maintenance!`);
+      }
+    });
   }
 
   /**
