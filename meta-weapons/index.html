@@ -662,6 +662,9 @@
   </style>
 </head>
 <body>
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+  
   <!-- Navigation -->
   <nav class="main-nav">
     <div class="nav-container">
@@ -1066,6 +1069,22 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       'floating-chat.donateButton.background-color': '#00b9fe',
       'floating-chat.donateButton.text-color': '#fff'
     });
+  </script>
+  
+  <!-- Scroll Progress Bar Script -->
+  <script>
+    function updateScrollProgress() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrollProgress = (scrollTop / scrollHeight) * 100;
+      const progressBar = document.getElementById("scrollProgressBar");
+      if (progressBar) {
+        progressBar.style.width = scrollProgress + "%";
+      }
+    }
+
+    window.addEventListener("scroll", updateScrollProgress);
+    updateScrollProgress(); // Initial call
   </script>
 </body>
 </html>
