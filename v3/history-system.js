@@ -42,7 +42,14 @@ class HistoryManager {
    * Setup the enhanced UI structure
    */
   setupUI() {
-    if (!this.container) return;
+    console.log('🎨 Setting up enhanced UI...');
+    if (!this.container) {
+      console.error('❌ No container found!');
+      return;
+    }
+    
+    console.log('📦 Container found:', this.container);
+    console.log('📝 Current content:', this.container.innerHTML.substring(0, 100));
     
     this.container.innerHTML = `
       <div class="history-header">
@@ -66,6 +73,9 @@ class HistoryManager {
         ${this.entries.length === 0 ? '<p class="empty-history">No loadouts generated yet. Click "Generate Loadout" to start!</p>' : ''}
       </div>
     `;
+    
+    console.log('✅ New UI content set!');
+    console.log('📝 New content:', this.container.innerHTML.substring(0, 100));
   }
 
   /**
@@ -82,6 +92,14 @@ class HistoryManager {
    * Add new entry to history
    */
   async addEntry(loadout) {
+    console.log('📥 HistoryManager.addEntry called with:', loadout);
+    
+    // Validate loadout
+    if (!loadout) {
+      console.error('❌ No loadout provided to addEntry');
+      return;
+    }
+    
     // Create entry object
     const entry = {
       id: this.generateId(),
@@ -90,6 +108,8 @@ class HistoryManager {
       analysis: null,
       favorite: false,
     };
+    
+    console.log('📦 Created entry:', entry);
 
     // Get AI analysis
     if (this.analyzer) {
@@ -122,24 +142,39 @@ class HistoryManager {
    * Render new entry with animation
    */
   renderNewEntry(entry) {
-    if (!this.container) return;
+    console.log('🎨 Rendering new entry:', entry);
+    if (!this.container) {
+      console.error('❌ No container for rendering');
+      return;
+    }
 
     const card = this.createHistoryCard(entry);
     card.style.animation = `${HISTORY_CONFIG.cardAnimation.slideIn} ${HISTORY_CONFIG.cardAnimation.duration}ms ease`;
 
-    // Insert at beginning
-    const firstChild = this.container.firstChild;
-    if (firstChild) {
-      this.container.insertBefore(card, firstChild);
-    } else {
-      this.container.appendChild(card);
-    }
-
+    // Find the history list container
+    const historyList = this.container.querySelector('#history-list') || this.container;
+    
     // Remove empty message if exists
-    const emptyMsg = this.container.querySelector(".empty-history");
+    const emptyMsg = historyList.querySelector(".empty-history");
     if (emptyMsg) {
       emptyMsg.remove();
     }
+    
+    // Insert at beginning of history list
+    const firstChild = historyList.firstChild;
+    if (firstChild) {
+      historyList.insertBefore(card, firstChild);
+    } else {
+      historyList.appendChild(card);
+    }
+    
+    // Update count
+    const countEl = this.container.querySelector('.history-count');
+    if (countEl) {
+      countEl.textContent = `(${this.entries.length})`;
+    }
+    
+    console.log('✅ Entry rendered to UI');
   }
 
   /**

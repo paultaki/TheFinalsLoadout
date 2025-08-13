@@ -12,13 +12,14 @@
   padding: 0 1rem;
 }
 
-#history-container {
-  background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(10, 10, 10, 0.95));
-  border: 2px solid rgba(255, 51, 102, 0.3);
-  border-radius: 12px;
-  padding: 1.5rem;
+#history-section #history-container {
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(10, 10, 10, 0.95)) !important;
+  border: 2px solid rgba(255, 51, 102, 0.3) !important;
+  border-radius: 12px !important;
+  padding: 1.5rem !important;
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  min-height: auto !important;
 }
 
 /* ========================================

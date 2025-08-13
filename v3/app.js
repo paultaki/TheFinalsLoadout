@@ -373,20 +373,42 @@ function initializeComponents() {
   window.addEventListener("loadoutGenerated", (event) => {
     const loadout = event.detail;
     console.log("📝 loadoutGenerated event received:", loadout);
+    console.log("📊 Loadout structure:", {
+      class: loadout?.class,
+      weapon: loadout?.weapon,
+      specialization: loadout?.specialization,
+      gadgets: loadout?.gadgets
+    });
+    
     if (loadout && !AppState.isAddingToHistory) {
       AppState.currentLoadout = loadout;
       
       // Use new HistoryManager if available
       if (window.historyManager) {
-        // Format loadout for new history system
-        const formattedLoadout = {
-          class: loadout.class,
-          weapon: { name: loadout.weapon, image: null },
-          specialization: { name: loadout.specialization, image: null },
-          gadgets: loadout.gadgets.map(g => ({ name: g, image: null }))
-        };
+        console.log("✅ Using new HistoryManager");
+        // Check loadout format - it might already have the right structure
+        let formattedLoadout;
+        
+        // If weapon is already an object with name property
+        if (typeof loadout.weapon === 'object' && loadout.weapon !== null) {
+          formattedLoadout = loadout; // Already formatted correctly
+        } else {
+          // Old format - need to convert
+          formattedLoadout = {
+            class: loadout.class,
+            weapon: { name: loadout.weapon || 'Unknown', image: null },
+            specialization: { name: loadout.specialization || 'Unknown', image: null },
+            gadgets: (loadout.gadgets || []).map(g => {
+              if (typeof g === 'object') return g;
+              return { name: g || 'Unknown', image: null };
+            })
+          };
+        }
+        
+        console.log("📤 Sending to HistoryManager:", formattedLoadout);
         window.historyManager.addEntry(formattedLoadout);
       } else {
+        console.log("⚠️ Fallback to old system");
         // Fallback to old system
         saveLoadoutToHistory();
       }

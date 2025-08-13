@@ -8,6 +8,12 @@
 /* Force consistent navbar styling across all pages */
 /* ============================================= */
 @media (max-width: 768px) {
+  /* Remove body padding-top on mobile since navbar is sticky not fixed */
+  body {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+  
   .main-nav {
     flex-direction: column !important;
     padding: 0.75rem 1rem !important;
