@@ -850,6 +850,6 @@ document.addEventListener("slotSpinComplete", (event) => {
     // Add a brief delay to let the animation settle, then highlight winners
     setTimeout(() => {
       slotMachine.highlightWinnersAfterLanding(loadout);
-    }, 500); // 500ms delay for visual effect
+    }, 100); // 100ms delay for all five center cells to highlight simultaneously
   }
 });

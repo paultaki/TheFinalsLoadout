@@ -1172,16 +1172,16 @@ class SlotMachine {
 
   /**
    * Post-landing highlight system with delay for better visual effect
-   * Called ONLY after slotSpinComplete event with 500ms delay
+   * Called ONLY after slotSpinComplete event with 100ms delay
    */
   async highlightWinnersAfterLanding(loadout) {
-    console.log("🎯 Starting winner highlighting with 500ms delay...");
+    console.log("🎯 Starting winner highlighting with 100ms delay...");
     
     // Remove any existing highlighting first
     this.removeAllWinnerHighlighting();
     
-    // Add 500ms delay for better visual effect
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Add 100ms delay for all five center cells to highlight simultaneously
+    await new Promise(resolve => setTimeout(resolve, 100));
     
     console.log("✨ Highlighting winners:", loadout);
     
@@ -1248,7 +1248,7 @@ class SlotMachine {
       // Remove all winner classes and highlighting
       const allItems = column.itemsContainer.querySelectorAll('.slot-item');
       allItems.forEach(item => {
-        item.classList.remove('winner-item', 'winner-highlight', 'near-miss');
+        item.classList.remove('winner-item', 'winner-highlight', 'winner-celebration', 'near-miss');
         
         // Remove any inline styles added by highlighting
         item.style.background = '';
@@ -1304,6 +1304,9 @@ class SlotMachine {
     // Add winner highlight class
     item.classList.add('winner-highlight');
 
+    // Add initial celebration animation (700ms burst)
+    item.classList.add('winner-celebration');
+
     // Add star indicator
     const star = document.createElement('div');
     star.className = 'winner-star';
@@ -1330,8 +1333,11 @@ class SlotMachine {
     item.style.transform = 'scale(1.05)';
     item.style.zIndex = '5';
 
-    // Add pulsing animation
-    item.style.animation = 'winnerPulse 3s ease-in-out infinite';
+    // After celebration animation completes (700ms), remove celebration class and start continuous pulse
+    setTimeout(() => {
+      item.classList.remove('winner-celebration');
+      item.style.animation = 'winnerPulse 3s ease-in-out infinite';
+    }, 700);
   }
 }
 
