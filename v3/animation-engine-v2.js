@@ -109,36 +109,48 @@ class AnimationEngineV2 {
   
   /**
    * Main animation orchestrator
+   * @param {Array} columns - Column elements
+   * @param {Object} scrollContents - Scroll content data
+   * @param {Object} predeterminedResults - Winner data (null for continuous spins)
+   * @param {boolean} preservePosition - Keep current position for multi-spin continuity
    */
-  async animateSlotMachine(columns, scrollContents, predeterminedResults) {
-    // Reset everything first
-    this.resetAnimation();
+  async animateSlotMachine(columns, scrollContents, predeterminedResults, preservePosition = false) {
+    // Only reset if not preserving position (for multi-spin continuity)
+    if (!preservePosition) {
+      this.resetAnimation();
+    }
     
     if (this.isAnimating) {
       return; // Animation already in progress
     }
     
     this.isAnimating = true;
-    // Start at 1 for proper speed calculation
-    this.spinNumber = 1;
+    // Increment spin number for multi-spin sequences
+    this.spinNumber = preservePosition ? this.spinNumber + 1 : 1;
     
     try {
-      // Initialize column states with monotonic position tracking
-      this.initializeColumnStates(columns);
+      // Initialize column states with position preservation option
+      this.initializeColumnStates(columns, preservePosition);
       
       // Run the animation phases
       await this.runAnimation(columns, predeterminedResults);
       
     } finally {
       this.isAnimating = false;
-      this.cleanup();
+      // Only cleanup completely if not preserving for next spin
+      if (!preservePosition || predeterminedResults) {
+        this.cleanup();
+      }
     }
   }
   
   /**
    * Quick spin animation (shorter duration)
+   * @param {Array} columns - Column elements
+   * @param {Object} scrollContents - Scroll content data
+   * @param {boolean} preservePosition - Keep current position for multi-spin continuity
    */
-  async animateQuickSpin(columns, scrollContents) {
+  async animateQuickSpin(columns, scrollContents, preservePosition = false) {
     // For quick spin, temporarily reduce durations
     const originalDurations = {
       ACCELERATION_DURATION: ANIM_CONFIG.ACCELERATION_DURATION,
@@ -147,13 +159,13 @@ class AnimationEngineV2 {
       DECEL_B_DURATION: ANIM_CONFIG.DECEL_B_DURATION,
     };
     
-    // Reduce durations for quick spin
+    // Reduce durations for quick spin but keep velocity high for intermediate spins
     ANIM_CONFIG.ACCELERATION_DURATION = 400;
-    ANIM_CONFIG.CRUISE_DURATION = 800;
-    // DECEL_A_DURATION and DECEL_B_DURATION already defined in config
+    ANIM_CONFIG.CRUISE_DURATION = 1200; // Longer cruise for seamless continuity
+    // No deceleration for intermediate spins - maintain full velocity
     
     try {
-      await this.animateSlotMachine(columns, scrollContents, null);
+      await this.animateSlotMachine(columns, scrollContents, null, preservePosition);
     } finally {
       // Restore original durations
       Object.assign(ANIM_CONFIG, originalDurations);
@@ -162,8 +174,10 @@ class AnimationEngineV2 {
   
   /**
    * Initialize column states with unwrapped position tracking
+   * @param {Array} columns - Column elements
+   * @param {boolean} preservePosition - Keep existing unwrapped position for continuity
    */
-  initializeColumnStates(columns) {
+  initializeColumnStates(columns, preservePosition = false) {
     columns.forEach((column, index) => {
       const itemsContainer = column.querySelector('.slot-items');
       if (!itemsContainer) return;
@@ -173,17 +187,30 @@ class AnimationEngineV2 {
       
       // Read initial position from DOM
       const currentTransform = itemsContainer.style.transform;
-      let startPos = -3200; // Default (winner at index 40 above viewport, adjusted for padding)
+      let startPos = -1680; // Default (winner at effective position 20 above viewport)
       const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
       if (match) {
         startPos = parseFloat(match[1]);
       }
       
-      // Initialize state with unwrapped position
-      // Use a large base offset to ensure unwrapped position is always positive
-      // This base should be consistent with our target calculation
-      const baseOffset = 10000;
-      const unwrappedStart = baseOffset + startPos; // Will be around 8400 for -1600 start
+      let unwrappedStart;
+      let startVelocity = 0;
+      
+      // Check if we should preserve position for multi-spin continuity
+      const existingState = this.columnStates.get(column);
+      if (preservePosition && existingState) {
+        // Continue from current unwrapped position
+        unwrappedStart = existingState.unwrappedY;
+        startVelocity = Math.max(ANIM_CONFIG.CRUISE_BASE_SPEED, existingState.velocity); // Maintain high velocity
+        console.log(`🔄 Preserving unwrapped position for column ${index}: ${unwrappedStart.toFixed(1)}px, velocity: ${startVelocity.toFixed(1)}px/s`);
+      } else {
+        // Initialize new position
+        // Use a large base offset to ensure unwrapped position is always positive
+        // This base should be consistent with our target calculation
+        const baseOffset = 10000;
+        unwrappedStart = baseOffset + startPos; // Will be around 8320 for -1680 start
+        console.log(`🆕 New unwrapped position for column ${index}: ${unwrappedStart.toFixed(1)}px`);
+      }
       
       this.columnStates.set(column, {
         element: itemsContainer,
@@ -195,8 +222,8 @@ class AnimationEngineV2 {
         unwrappedY: unwrappedStart,
         prevUnwrappedY: unwrappedStart,
         
-        // Velocity
-        velocity: 0,
+        // Velocity (preserve high velocity for continuity)
+        velocity: startVelocity,
         targetVelocity: 0,
         
         // Target position for deceleration
@@ -207,18 +234,18 @@ class AnimationEngineV2 {
         inBrakingPhase: false,
         
         // Phase tracking
-        phase: 'idle',
+        phase: preservePosition ? 'cruise' : 'idle', // Start in cruise if preserving
         phaseStartTime: 0,
         phaseProgress: 0
       });
       
-      // Apply initial position
+      // Apply current position
       this.applyPosition(itemsContainer, unwrappedStart, cycleHeight);
     });
   }
   
   /**
-   * Apply position with modulo wrapping
+   * Apply position with modulo wrapping and device pixel snapping
    */
   applyPosition(element, unwrappedY, cycleHeight) {
     // Debug the calculation
@@ -244,19 +271,24 @@ class AnimationEngineV2 {
       wrappedY += cycleHeight;
     }
     
-    // CRITICAL FIX: When in timeout or final positioning, ensure we land at CENTER position (-3120px)
-    // Check if this is likely a final/timeout position by seeing if we're close to the target
-    if (state && state.targetY && Math.abs(unwrappedY - state.targetY) < 1) {
-      const expectedWrapped = -(40 * ITEM_H) + CENTER_OFFSET; // -3120px for center (adjusted for padding)
-      // Force the wrapped position to be exactly -3120px for final positioning
+    // CRITICAL FIX: When in final positioning (very close to target), ensure precise center alignment
+    // Check if we're close to the target position (within 0.5px tolerance)
+    if (state && state.targetY && Math.abs(unwrappedY - state.targetY) < 0.5) {
+      const expectedWrapped = -(20 * ITEM_H) + CENTER_OFFSET; // -1520px for center position
+      // Force the wrapped position to be exactly -1520px for final positioning
       wrappedY = expectedWrapped;
+      
+      if (isFirstColumn && this.debug) {
+        console.log(`🎯 Final position snap: forced to ${expectedWrapped}px for precise center alignment`);
+      }
     }
     
-    // Keep subpixel precision for smooth animation
-    // Only round for final position
+    // Apply device pixel snapping for crisp visuals
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    const snappedY = Math.round(wrappedY * devicePixelRatio) / devicePixelRatio;
     
     // Use translate3d for hardware acceleration
-    element.style.transform = `translate3d(0, ${wrappedY}px, 0)`;
+    element.style.transform = `translate3d(0, ${snappedY}px, 0)`;
     element.style.willChange = 'transform';
     element.style.backfaceVisibility = 'hidden';
     
@@ -269,7 +301,7 @@ class AnimationEngineV2 {
       }
     }
     
-    return wrappedY;
+    return snappedY;
   }
   
   /**
@@ -292,16 +324,16 @@ class AnimationEngineV2 {
     // - Row 2: 80-160px (CENTER - target here)
     // - Row 3: 160-240px
     //
-    // Winner at index 40 (40 items above it = 3200px from top, adjusted for padding)
+    // Winner at index 20 (20 items above it = 1600px from top)
     // To place winner at row 2 start (80px in viewport):
     // translateY = -(winnerIndex * ITEM_H) + CENTER_OFFSET
-    // translateY = -(40 * 80) + 80 = -3120px
-    const targetWrappedPosition = -(winnerIndex * ITEM_H) + CENTER_OFFSET; // -3120px for center row
+    // translateY = -(20 * 80) + 80 = -1520px
+    const targetWrappedPosition = -(winnerIndex * ITEM_H) + CENTER_OFFSET; // -1520px for center row
     
     // Now find an unwrapped position that gives us this wrapped position
     // For modulo math: we need remainder that gives us -1520 when wrapped
     // If cycleHeight = 4800, we want: X % 4800 = 3280 (because 3280 - 4800 = -1520)
-    const targetRemainder = (targetWrappedPosition % cycleHeight + cycleHeight) % cycleHeight; // 3280 for center position
+    const targetRemainder = (targetWrappedPosition % cycleHeight + cycleHeight) % cycleHeight; // e.g., 3280 for -1520px position
     
     // Find the next position ahead that has this remainder
     let cycles = Math.ceil(currentUnwrappedY / cycleHeight) + 1; // At least one cycle ahead
@@ -345,30 +377,45 @@ class AnimationEngineV2 {
     return new Promise((resolve) => {
       let startTime = performance.now();
       let lastTime = startTime;
-      const maxDuration = 5000; // 5 second maximum to prevent infinite loop
+      const maxDuration = 30000; // 30 second maximum (only for safety, should complete naturally)
       
       // Use consistent speed for all columns in this animation
       const cruiseSpeed = ANIM_CONFIG.CRUISE_BASE_SPEED;
       
-      // Set up target positions for each column
-      columns.forEach((column, index) => {
-        const state = this.columnStates.get(column);
-        if (!state) return;
-        
-        // Winner is always at index 40 for now (adjusted for padding)
-        const winnerIndex = 40;
-        
-        const futureTarget = this.calculateFutureTarget(
-          state.unwrappedY,
-          winnerIndex,
-          state.cycleHeight
-        );
-        
-        state.targetY = futureTarget;
-        // Initialize braking distance (will be calculated dynamically)
-        state.brakingDistance = 0;
-        state.inBrakingPhase = false;
-      });
+      // Only set up target positions if we have predetermined results (final spin)
+      const isFinalSpin = predeterminedResults !== null;
+      
+      if (isFinalSpin) {
+        // Set up target positions for each column (final spin only)
+        columns.forEach((column, index) => {
+          const state = this.columnStates.get(column);
+          if (!state) return;
+          
+          // Winner is at index 20 to achieve -1520px center position
+          const winnerIndex = 20;
+          
+          const futureTarget = this.calculateFutureTarget(
+            state.unwrappedY,
+            winnerIndex,
+            state.cycleHeight
+          );
+          
+          state.targetY = futureTarget;
+          // Initialize braking distance (will be calculated dynamically)
+          state.brakingDistance = 0;
+          state.inBrakingPhase = false;
+        });
+      } else {
+        // For intermediate spins, don't set targets - maintain velocity
+        columns.forEach((column, index) => {
+          const state = this.columnStates.get(column);
+          if (!state) return;
+          
+          state.targetY = null; // No target for intermediate spins
+          state.brakingDistance = 0;
+          state.inBrakingPhase = false;
+        });
+      }
       
       const animate = (currentTime) => {
         const dt = Math.min(50, currentTime - lastTime) / 1000; // Delta in seconds, clamped
@@ -382,29 +429,25 @@ class AnimationEngineV2 {
           this.frameCount++;
         }
         
+        // For intermediate spins, complete after cruise duration
+        if (!isFinalSpin) {
+          const intermediateDuration = ANIM_CONFIG.ACCELERATION_DURATION + ANIM_CONFIG.CRUISE_DURATION;
+          if (totalElapsed >= intermediateDuration) {
+            console.log(`✅ Intermediate spin completed after ${totalElapsed.toFixed(0)}ms (maintaining velocity)`);
+            resolve();
+            return;
+          }
+        }
+        
         // Safety timeout check to prevent infinite loop
         if (totalElapsed > maxDuration) {
           console.warn(`⚠️ Animation timeout after ${maxDuration}ms - forcing completion`);
-          // Apply final positions when timeout occurs
+          // Timeout reached - let columns finish naturally at their current positions
+          console.warn(`⚠️ Safety timeout reached - animation should have completed naturally`);
           columns.forEach((column, index) => {
             const state = this.columnStates.get(column);
-            if (!state || !state.targetY) return;
-            
-            // CRITICAL FIX: Snap to final target position (this triggers the CENTER fix in applyPosition)
-            state.unwrappedY = state.targetY;
-            state.velocity = 0;
-            
-            // Apply the correct final wrapped position - this should now always be -3120px
-            const finalWrapped = this.applyPosition(state.element, state.unwrappedY, state.cycleHeight);
-            console.log(`🎯 Timeout snap Column ${index}: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${finalWrapped.toFixed(1)}px (should be -3120px)`);
-            
-            // Double-check that we got the right position
-            const expectedWrapped = -(40 * ITEM_H) + CENTER_OFFSET; // -3120px
-            if (Math.abs(finalWrapped - expectedWrapped) > 0.1) {
-              console.error(`❌ Column ${index} timeout snap FAILED: got ${finalWrapped.toFixed(1)}px, expected ${expectedWrapped}px`);
-            } else {
-              console.log(`✅ Column ${index} timeout snap SUCCESS: ${finalWrapped.toFixed(1)}px`);
-            }
+            if (!state) return;
+            console.log(`Column ${index} timeout state: unwrapped=${state.unwrappedY.toFixed(1)}, velocity=${state.velocity.toFixed(1)}`);
           });
           resolve();
           return;
@@ -412,25 +455,7 @@ class AnimationEngineV2 {
         
         let allComplete = true;
         
-        // Early completion check if we're taking too long (after 3.5 seconds)
-        if (totalElapsed > 3500) {
-          let shouldForceComplete = true;
-          columns.forEach((column) => {
-            const state = this.columnStates.get(column);
-            if (!state) return;
-            
-            const distanceToTarget = state.targetY - state.unwrappedY;
-            // If we're within 10px and moving slowly, consider it complete
-            if (Math.abs(distanceToTarget) > 10 || state.velocity > 25) {
-              shouldForceComplete = false;
-            }
-          });
-          
-          if (shouldForceComplete) {
-            console.log(`✅ Early completion after ${totalElapsed.toFixed(0)}ms - all columns close enough`);
-            allComplete = true;
-          }
-        }
+        // Let physics-based completion run naturally without time-based forcing
         
         columns.forEach((column, index) => {
           const state = this.columnStates.get(column);
@@ -445,7 +470,7 @@ class AnimationEngineV2 {
           const columnElapsed = Math.max(0, totalElapsed - columnStartDelay);
           
           // Determine current phase with physics-based braking
-          const phase = this.determinePhase(columnElapsed, state);
+          const phase = this.determinePhase(columnElapsed, state, isFinalSpin);
           state.phase = phase.name; // Store for debug
           
           // Update velocity based on phase with physics-based braking
@@ -463,8 +488,8 @@ class AnimationEngineV2 {
           // Update blur based on velocity
           this.updateBlur(state.element, state.velocity, phase);
           
-          // Check if this column is complete using physics-based criteria
-          if (!this.isAnimationComplete(state)) {
+          // For final spins, check physics-based completion
+          if (isFinalSpin && !this.isAnimationComplete(state, isFinalSpin)) {
             allComplete = false;
           }
           
@@ -478,27 +503,16 @@ class AnimationEngineV2 {
         if (!allComplete) {
           this.animationFrameId = requestAnimationFrame(animate);
         } else {
-          // Animation completed naturally - no forced transitions or snapping
+          // Animation completed naturally with physics-based stopping
           columns.forEach((column, index) => {
             const state = this.columnStates.get(column);
             if (!state) return;
             
-            // ENSURE FINAL POSITION: Snap to target to trigger CENTER fix in applyPosition
-            state.unwrappedY = state.targetY;
-            state.velocity = 0;
+            // Log completion without forced positioning
+            const currentWrapped = state.unwrappedY % state.cycleHeight;
+            const displayWrapped = currentWrapped > 0 ? currentWrapped - state.cycleHeight : currentWrapped;
             
-            // Final position verification (should now be exactly -3120px)
-            const finalWrapped = this.applyPosition(state.element, state.unwrappedY, state.cycleHeight);
-            const expectedWrapped = -(40 * ITEM_H) + CENTER_OFFSET; // -3120px
-            
-            console.log(`🎯 Column ${index} SMOOTH COMPLETE: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${finalWrapped.toFixed(1)}px, velocity=${state.velocity.toFixed(1)}px/s`);
-            
-            // Verify we're within acceptable range
-            if (Math.abs(finalWrapped - expectedWrapped) > 0.1) {
-              console.error(`❌ Column ${index} smooth completion FAILED: got ${finalWrapped.toFixed(1)}px, expected ${expectedWrapped}px`);
-            } else {
-              console.log(`✅ Column ${index} smooth completion SUCCESS: ${finalWrapped.toFixed(1)}px`);
-            }
+            console.log(`🎯 Column ${index} NATURAL COMPLETE: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${displayWrapped.toFixed(1)}px, velocity=${state.velocity.toFixed(1)}px/s`);
           });
           
           resolve();
@@ -511,8 +525,11 @@ class AnimationEngineV2 {
   
   /**
    * Determine current animation phase with physics-based braking
+   * @param {number} elapsed - Time elapsed for this column
+   * @param {Object} state - Column state
+   * @param {boolean} isFinalSpin - Whether this is the final spin with targets
    */
-  determinePhase(elapsed, state) {
+  determinePhase(elapsed, state, isFinalSpin = true) {
     let cumulativeTime = 0;
     
     // Acceleration
@@ -535,17 +552,29 @@ class AnimationEngineV2 {
       };
     }
     
-    // After cruise, enter physics-based braking phase
-    // Calculate braking distance based on current velocity
-    const distanceToTarget = state.targetY - state.unwrappedY;
-    state.brakingDistance = this.calculateBrakingDistance(state.velocity);
+    // For intermediate spins (not final), stay in cruise mode indefinitely
+    if (!isFinalSpin || !state.targetY) {
+      return {
+        name: 'cruise_extended',
+        progress: 0,
+        elapsed: elapsed - cumulativeTime,
+        distanceToTarget: 0 // No target for intermediate spins
+      };
+    }
     
-    // Check if we should start braking
-    if (distanceToTarget <= state.brakingDistance || state.inBrakingPhase) {
+    // After cruise, enter physics-based braking phase (final spin only)
+    // Calculate braking distance based on current velocity (dynamic calculation)
+    const distanceToTarget = state.targetY - state.unwrappedY;
+    const currentBrakingDistance = this.calculateBrakingDistance(state.velocity);
+    
+    // Check if we should start braking (or if already braking)
+    if (distanceToTarget <= currentBrakingDistance || state.inBrakingPhase) {
       state.inBrakingPhase = true;
+      // Update braking distance dynamically for more accurate progress calculation
+      state.brakingDistance = Math.max(currentBrakingDistance, state.brakingDistance || currentBrakingDistance);
       return {
         name: 'braking',
-        progress: 1 - (distanceToTarget / state.brakingDistance), // 0 = start braking, 1 = at target
+        progress: Math.min(1, Math.max(0, 1 - (distanceToTarget / state.brakingDistance))), // Clamp between 0-1
         elapsed: elapsed - cumulativeTime,
         distanceToTarget: distanceToTarget
       };
@@ -598,16 +627,21 @@ class AnimationEngineV2 {
           state.velocity = Math.min(targetVelocity, state.velocity);
         }
         
-        // Critical fix: Apply exponential decay when we're close to completion
-        // This ensures we can drop below the velocity threshold
-        if (distanceToTarget < 20) { // Start decay earlier (within 20px = 1/4 item)
-          const decayFactor = 0.90; // Stronger decay rate
+        // Enhanced exponential decay for natural velocity reduction below 12px/s
+        if (distanceToTarget < 40) { // Start decay earlier (within 40px = 1/2 item)
+          const decayFactor = 0.85; // Stronger decay rate for more aggressive slowdown
           state.velocity = state.velocity * Math.pow(decayFactor, dt * 60);
+        }
+        
+        // Additional decay when getting very close to ensure velocity drops below 12px/s
+        if (distanceToTarget < 10) {
+          const finalDecayFactor = 0.75; // Very strong decay for final approach
+          state.velocity = state.velocity * Math.pow(finalDecayFactor, dt * 60);
         }
         
         // Final threshold: allow velocity to drop to zero when very close
         if (distanceToTarget < 2) {
-          state.velocity = Math.max(0, state.velocity - 150 * dt); // Rapid final deceleration
+          state.velocity = Math.max(0, state.velocity - 200 * dt); // More rapid final deceleration
         }
         break;
         
@@ -624,23 +658,34 @@ class AnimationEngineV2 {
    * Calculate braking distance using physics equation: d = v²/(2a)
    */
   calculateBrakingDistance(velocity) {
-    // d = v² / (2 * deceleration_rate)
+    // d = v² / (2 * deceleration_rate) - physics equation for stopping distance
     const distance = (velocity * velocity) / (2 * ANIM_CONFIG.DECELERATION_RATE);
-    return Math.max(80, distance); // Minimum braking distance of 80px (1 item height)
+    // Minimum braking distance should be smaller for better precision
+    return Math.max(40, distance); // Minimum braking distance of 40px (1/2 item height) for better control
   }
   
   /**
    * Check if animation is complete based on physics criteria
+   * @param {Object} state - Column state
+   * @param {boolean} isFinalSpin - Whether this is the final spin with targets
    */
-  isAnimationComplete(state) {
+  isAnimationComplete(state, isFinalSpin = true) {
+    // For intermediate spins, complete after cruise duration (maintain velocity)
+    if (!isFinalSpin || !state.targetY) {
+      // Complete intermediate spins after cruise duration is reached
+      const totalDuration = ANIM_CONFIG.ACCELERATION_DURATION + ANIM_CONFIG.CRUISE_DURATION;
+      const elapsed = performance.now() - (state.phaseStartTime || 0);
+      return elapsed >= totalDuration;
+    }
+    
     const distanceToTarget = state.targetY - state.unwrappedY;
     
-    // More lenient completion criteria to prevent timeout
-    const withinPositionTolerance = Math.abs(distanceToTarget) <= 2.0; // Increased from 0.5px to 2px
-    const belowVelocityThreshold = state.velocity <= 15; // Reduced from 20 to 15 px/s
+    // Physics-based completion criteria for natural stopping below 12px/s
+    const withinPositionTolerance = Math.abs(distanceToTarget) <= 1.0; // Tighter position tolerance
+    const belowVelocityThreshold = state.velocity < 12; // Must be below 12 px/s as required
     
     // Alternative completion: if we're very close and moving very slowly
-    const veryCloseAndSlow = Math.abs(distanceToTarget) <= 5.0 && state.velocity <= 5;
+    const veryCloseAndSlow = Math.abs(distanceToTarget) <= 3.0 && state.velocity < 8;
     
     // Animation is complete when EITHER:
     // 1. Both position and velocity criteria are met, OR

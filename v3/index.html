@@ -479,13 +479,6 @@
         replaysOnErrorSampleRate: 1.0,
         environment: "production"
       });
-      
-      // TODO: Remove this test after confirming Sentry works
-      if (window.location.search.includes('test-sentry')) {
-        setTimeout(() => { 
-          throw new Error("Sentry Test - TheFinalsLoadout - " + new Date().toISOString()); 
-        }, 2000);
-      }
     </script>
   </body>
 </html>

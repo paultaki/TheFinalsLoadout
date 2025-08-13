@@ -628,6 +628,9 @@ class SlotMachine {
     this.currentClass = classType;
     const totalSpins = Math.min(Math.max(spinCount || 1, 1), 5); // Clamp to 1-5
 
+    // CRITICAL: Remove all winner highlighting before starting spin
+    this.removeAllWinnerHighlighting();
+
     console.log(
       `🎰 Starting ${totalSpins} spin${
         totalSpins > 1 ? "s" : ""
@@ -659,9 +662,11 @@ class SlotMachine {
         const filteredData = this.filterSystem.getFilteredData(classType);
 
         let loadout = null;
+        const isFirstSpin = currentSpin === 1;
+        const isFinalSpin = currentSpin === totalSpins;
 
         // Only predetermine outcome on FINAL spin
-        if (currentSpin === totalSpins) {
+        if (isFinalSpin) {
           // Final spin - dramatic with predetermined outcome
           loadout = this.deceptionEngine.predetermineLoadout(
             classType,
@@ -690,13 +695,22 @@ class SlotMachine {
               console.log("🎁 Bonus triggered! Type:", bonus.type);
             }
           }
-        } else {
-          // Quick spin - random items, no predetermined outcome
-          this.generateRandomScrollContents(classType, filteredData);
-        }
 
-        // Populate scroll containers
-        this.populateScrollContainers();
+          // Force rebuild DOM with winners for final spin
+          this.populateScrollContainers(true, false);
+          
+        } else {
+          // Intermediate spins - random items, no predetermined outcome
+          this.generateRandomScrollContents(classType, filteredData);
+
+          if (isFirstSpin) {
+            // First spin: build DOM with random content
+            this.populateScrollContainers(true, false);
+          } else {
+            // Intermediate spins: preserve position and DOM
+            this.populateScrollContainers(false, true);
+          }
+        }
 
         // Run animation with appropriate timing
         console.log('🎮 Animation check - Engine available:', !!this.animationEngine);
@@ -718,13 +732,14 @@ class SlotMachine {
           }
 
           if (currentSpin === totalSpins) {
-            // Final spin - full dramatic animation
+            // Final spin - full dramatic animation with predetermined outcome
             console.log('🎆 Starting FINAL spin animation with loadout:', loadout);
             try {
               await this.animationEngine.animateSlotMachine(
                 columnElements,
                 this.deceptionEngine.scrollContents,
-                loadout
+                loadout,
+                false // Don't preserve position for final spin (need winners)
               );
               console.log('✅ Final animation completed');
             } catch (error) {
@@ -732,12 +747,14 @@ class SlotMachine {
               await this.basicAnimation();
             }
           } else {
-            // Quick spin - shortened animation
-            console.log('⚡ Starting quick spin animation');
+            // Quick spin - maintain velocity and position continuity
+            const preservePosition = !isFirstSpin; // Preserve position for spins 2, 3, 4...
+            console.log(`⚡ Starting quick spin animation (preservePosition=${preservePosition})`);
             try {
               await this.animationEngine.animateQuickSpin(
                 columnElements,
-                this.deceptionEngine.scrollContents
+                this.deceptionEngine.scrollContents,
+                preservePosition
               );
               console.log('✅ Quick animation completed');
             } catch (error) {
@@ -745,8 +762,8 @@ class SlotMachine {
               await this.basicAnimation();
             }
 
-            // Brief pause between spins
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            // No pause between spins for seamless continuity
+            console.log('🔄 Seamless transition to next spin...');
           }
         } else {
           // Animation engine not available, use basic animation
@@ -810,8 +827,10 @@ class SlotMachine {
 
   /**
    * Populate the scroll containers with items
+   * @param {boolean} forceBuild - Force rebuild DOM even if already exists
+   * @param {boolean} preservePosition - Keep current position instead of resetting
    */
-  populateScrollContainers() {
+  populateScrollContainers(forceBuild = false, preservePosition = false) {
     SlotConfig.columns.forEach((columnType) => {
       const column = this.columns[columnType];
       if (!column || !column.itemsContainer) return;
@@ -842,81 +861,101 @@ class SlotMachine {
         }
       }
 
-      // Clear existing items
-      column.itemsContainer.innerHTML = "";
-
-      // CRITICAL FIX: Verify we have enough items to prevent blank areas
-      if (items.length < 30) {
-        console.error(`❌ Insufficient items for column ${columnType}: ${items.length} items. Need at least 30.`);
-        // Add fallback items to prevent blanks
-        while (items.length < 30) {
-          items.push(items[items.length % Math.max(1, items.length)] || "Fallback Item");
+      // Store current position if preserving
+      let currentPosition = -1680; // Default position
+      if (preservePosition) {
+        const currentTransform = column.itemsContainer.style.transform;
+        const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
+        if (match) {
+          currentPosition = parseFloat(match[1]);
+          console.log(`💾 Preserving position for ${columnType}: ${currentPosition}px`);
         }
-        console.log(`🔧 Added fallback items, now have ${items.length} items for ${columnType}`);
       }
 
-      // Position container for initial visibility
-      // Start with items positioned so winner is just above viewport
-      // Winner at index 40 (adjusted for padding) = 40 * 80px = 3200px from top
-      // To place winner just above viewport: -3200px
-      const initialTranslate = -3200;
-      column.itemsContainer.style.transform = `translateY(${initialTranslate}px)`;
-      console.log(`🎰 ${columnType} initial position: ${initialTranslate}px (winner at index 40 above viewport)`);
+      // Only rebuild DOM if forced or container is empty
+      const needsBuild = forceBuild || column.itemsContainer.children.length === 0;
+      
+      if (needsBuild) {
+        console.log(`🔨 Building DOM for ${columnType} (forceBuild=${forceBuild})`);
+        
+        // Clear existing items only when rebuilding
+        column.itemsContainer.innerHTML = "";
 
-      // Add items to scroll container
-      items.forEach((item, index) => {
-        const itemElement = document.createElement("div");
-        itemElement.className = "slot-item";
-
-        // Mark the winner item (position 40, adjusted for padding)
-        if (index === 40 && item === winner) {
-          itemElement.classList.add("winner-item");
-          itemElement.style.border = "2px solid red"; // Visual debug marker
-          console.log(`🎯 Winner "${item}" placed at index 40 in ${columnType} column`);
+        // CRITICAL FIX: Verify we have enough items to prevent blank areas
+        if (items.length < 30) {
+          console.error(`❌ Insufficient items for column ${columnType}: ${items.length} items. Need at least 30.`);
+          // Add fallback items to prevent blanks
+          while (items.length < 30) {
+            items.push(items[items.length % Math.max(1, items.length)] || "Fallback Item");
+          }
+          console.log(`🔧 Added fallback items, now have ${items.length} items for ${columnType}`);
         }
 
-        // Create image element using preloader if available
-        let img;
-        if (typeof ImagePreloader !== 'undefined') {
-          img = ImagePreloader.createImageElement(item);
-        } else {
-          // Fallback to basic image creation
-          img = document.createElement("img");
-          const imagePath = typeof getImagePath !== 'undefined' 
-            ? getImagePath(item) 
-            : `/images/${item.replace(/\s+/g, "_")}.webp`;
-          
-          img.src = imagePath;
-          img.alt = item;
-          img.loading = "eager";
-          
-          img.onerror = function () {
-            console.warn(`❌ Failed to load image: ${imagePath} for item: ${item}`);
-            this.style.display = "none";
-            const textSpan = document.createElement("span");
-            textSpan.textContent = item;
-            textSpan.style.color = "#fff";
-            textSpan.style.fontSize = "14px";
-            textSpan.style.textAlign = "center";
-            itemElement.appendChild(textSpan);
-          };
-        }
+        // Add items to scroll container
+        items.forEach((item, index) => {
+          const itemElement = document.createElement("div");
+          itemElement.className = "slot-item";
 
-        // Create label
-        const label = document.createElement("div");
-        label.className = "item-label";
-        label.textContent = item;
+          // Winner item will be at position 40 (no visual highlighting during spin)
+          if (index === 40 && item === winner) {
+            console.log(`🎯 Winner "${item}" placed at index 40 in ${columnType} column (no highlighting during spin)`);
+          }
 
-        itemElement.appendChild(img);
-        itemElement.appendChild(label);
+          // Create image element using preloader if available
+          let img;
+          if (typeof ImagePreloader !== 'undefined') {
+            img = ImagePreloader.createImageElement(item);
+          } else {
+            // Fallback to basic image creation
+            img = document.createElement("img");
+            const imagePath = typeof getImagePath !== 'undefined' 
+              ? getImagePath(item) 
+              : `/images/${item.replace(/\s+/g, "_")}.webp`;
+            
+            img.src = imagePath;
+            img.alt = item;
+            img.loading = "eager";
+            
+            img.onerror = function () {
+              console.warn(`❌ Failed to load image: ${imagePath} for item: ${item}`);
+              this.style.display = "none";
+              const textSpan = document.createElement("span");
+              textSpan.textContent = item;
+              textSpan.style.color = "#fff";
+              textSpan.style.fontSize = "14px";
+              textSpan.style.textAlign = "center";
+              itemElement.appendChild(textSpan);
+            };
+          }
 
-        // Mark near-miss items (around winner position)
-        if (index === 39 || index === 41) {
-          itemElement.classList.add("near-miss");
-        }
+          // Create label
+          const label = document.createElement("div");
+          label.className = "item-label";
+          label.textContent = item;
 
-        column.itemsContainer.appendChild(itemElement);
-      });
+          itemElement.appendChild(img);
+          itemElement.appendChild(label);
+
+          // Near-miss items will be marked only after landing for psychological effect
+          // No visual indicators during spin
+
+          column.itemsContainer.appendChild(itemElement);
+        });
+      } else {
+        console.log(`♻️ Reusing existing DOM for ${columnType} (${column.itemsContainer.children.length} items)`);
+      }
+
+      // Set position: preserve current position or use default
+      if (!preservePosition) {
+        // Only reset position if not preserving (first spin or forced rebuild)
+        const initialTranslate = -1680; // 20 items above viewport + small buffer
+        column.itemsContainer.style.transform = `translateY(${initialTranslate}px)`;
+        console.log(`🎰 ${columnType} reset position: ${initialTranslate}px (winner at effective position 20)`);
+      } else {
+        // Keep the current position for continuity
+        column.itemsContainer.style.transform = `translateY(${currentPosition}px)`;
+        console.log(`🔄 ${columnType} preserved position: ${currentPosition}px`);
+      }
       
       // CRITICAL FIX: Ensure viewport is always filled by checking visible items
       this.ensureViewportCoverage(column, columnType);
@@ -934,7 +973,7 @@ class SlotMachine {
     
     // Get current transform to understand positioning
     const currentTransform = itemsContainer.style.transform;
-    let translateY = -3200; // Default
+    let translateY = -1680; // Default (consistent with winner at effective position 20)
     const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
     if (match) {
       translateY = parseFloat(match[1]);
@@ -959,7 +998,7 @@ class SlotMachine {
       
       // Emergency fix: adjust position to ensure items are visible
       if (items.length > 0) {
-        const safeTranslateY = Math.max(-((items.length - 3) * 80), -3200);
+        const safeTranslateY = Math.max(-((items.length - 3) * 80), -1680);
         itemsContainer.style.transform = `translateY(${safeTranslateY}px)`;
         console.log(`🔧 Adjusted ${columnType} position to ${safeTranslateY}px for visibility`);
       }
@@ -1132,11 +1171,19 @@ class SlotMachine {
   }
 
   /**
-   * Post-landing highlight system: Identify center cells and add winner highlighting
-   * Called ONLY after slotSpinComplete event
+   * Post-landing highlight system with delay for better visual effect
+   * Called ONLY after slotSpinComplete event with 500ms delay
    */
-  highlightWinners(loadout) {
-    console.log("🎯 Highlighting winners:", loadout);
+  async highlightWinnersAfterLanding(loadout) {
+    console.log("🎯 Starting winner highlighting with 500ms delay...");
+    
+    // Remove any existing highlighting first
+    this.removeAllWinnerHighlighting();
+    
+    // Add 500ms delay for better visual effect
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    console.log("✨ Highlighting winners:", loadout);
     
     SlotConfig.columns.forEach((columnType) => {
       const column = this.columns[columnType];
@@ -1181,7 +1228,60 @@ class SlotMachine {
       if (centerItem) {
         // Add winner highlighting with orange glow and star
         this.addWinnerHighlight(centerItem, columnType);
+        
+        // Also add near-miss highlighting to adjacent items for psychological effect
+        this.addNearMissHighlighting(centerItem, column);
+        
         console.log(`✨ Winner "${winnerName}" highlighted in ${columnType} column`);
+      }
+    });
+  }
+
+  /**
+   * Remove all winner highlighting from all columns
+   */
+  removeAllWinnerHighlighting() {
+    SlotConfig.columns.forEach((columnType) => {
+      const column = this.columns[columnType];
+      if (!column || !column.itemsContainer) return;
+      
+      // Remove all winner classes and highlighting
+      const allItems = column.itemsContainer.querySelectorAll('.slot-item');
+      allItems.forEach(item => {
+        item.classList.remove('winner-item', 'winner-highlight', 'near-miss');
+        
+        // Remove any inline styles added by highlighting
+        item.style.background = '';
+        item.style.borderColor = '';
+        item.style.boxShadow = '';
+        item.style.transform = '';
+        item.style.zIndex = '';
+        item.style.animation = '';
+        
+        // Remove star elements
+        const star = item.querySelector('.winner-star');
+        if (star) star.remove();
+      });
+    });
+  }
+
+  /**
+   * Add near-miss highlighting to items adjacent to the winner
+   */
+  addNearMissHighlighting(centerItem, column) {
+    if (!centerItem || !column || !column.itemsContainer) return;
+    
+    const allItems = Array.from(column.itemsContainer.querySelectorAll('.slot-item'));
+    const centerIndex = allItems.indexOf(centerItem);
+    
+    if (centerIndex === -1) return;
+    
+    // Add near-miss class to items above and below the winner
+    const nearMissIndices = [centerIndex - 1, centerIndex + 1];
+    
+    nearMissIndices.forEach(index => {
+      if (index >= 0 && index < allItems.length) {
+        allItems[index].classList.add('near-miss');
       }
     });
   }
