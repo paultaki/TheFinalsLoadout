@@ -336,8 +336,7 @@ class AutomatedFlowManager {
     const targetClass = classes[Math.floor(Math.random() * 3)];
     this.selections.class = targetClass;
 
-    // carousel and progressBar already declared above
-    const cards = phase.querySelectorAll(".class-card");
+    // carousel, progressBar, and cards already declared above
 
     if (carousel && progressBar && cards.length) {
       // Start progress bar
