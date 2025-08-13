@@ -520,7 +520,7 @@ class SlotMachine {
     } else {
       // Try to load V2 first
       const script = document.createElement("script");
-      script.src = "animation-engine-v2.js";
+      script.src = "/v3/animation-engine-v2.js";
       script.onload = () => {
         if (typeof AnimationEngineV2 !== "undefined") {
           this.animationEngine = new AnimationEngineV2();

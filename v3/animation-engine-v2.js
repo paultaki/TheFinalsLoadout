@@ -374,7 +374,6 @@ class AnimationEngineV2 {
         }
         
         // Safety timeout check to prevent infinite loop
-        const totalElapsed = currentTime - startTime;
         if (totalElapsed > maxDuration) {
           console.warn(`⚠️ Animation timeout after ${maxDuration}ms - forcing completion`);
           resolve();
