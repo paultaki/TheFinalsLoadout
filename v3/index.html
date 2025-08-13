@@ -464,5 +464,28 @@
     <script src="/v3/app.js?v=20250813" defer></script>
     <!-- Debug overlay for animation -->
     <div id="anim-debug" style="position:fixed;right:8px;top:8px;padding:6px 8px;background:#111a;color:#0f0;font:12px/1.3 monospace;z-index:9999;border-radius:6px;pointer-events:none;border:1px solid #0f0">IDLE</div>
+
+    <!-- Sentry Error Monitoring -->
+    <script src="https://browser.sentry-cdn.com/7.118.0/bundle.min.js" crossorigin="anonymous"></script>
+    <script>
+      Sentry.init({ 
+        dsn: "https://6e4ccf13ff7d6e8aec9f31a703e13358@o4509838584905728.ingest.us.sentry.io/4509838592245760",
+        integrations: [
+          Sentry.browserTracingIntegration(),
+          Sentry.replayIntegration()
+        ],
+        tracesSampleRate: 0.1,
+        replaysSessionSampleRate: 0.1,
+        replaysOnErrorSampleRate: 1.0,
+        environment: "production"
+      });
+      
+      // TODO: Remove this test after confirming Sentry works
+      if (window.location.search.includes('test-sentry')) {
+        setTimeout(() => { 
+          throw new Error("Sentry Test - TheFinalsLoadout - " + new Date().toISOString()); 
+        }, 2000);
+      }
+    </script>
   </body>
 </html>

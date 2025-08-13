@@ -8,7 +8,7 @@
 // ========================================
 const SlotConfig = {
   columns: ["weapon", "specialization", "gadget-1", "gadget-2", "gadget-3"],
-  itemsPerScroll: 150, // More items for smooth scrolling
+  itemsPerScroll: 200, // Increased for better viewport coverage
   nearMissOffset: 2, // Items above/below winner for near-miss effect
   spinDuration: 3000, // Base spin duration in ms
   columnDelay: 200, // Delay between column stops
@@ -360,8 +360,8 @@ class DeceptionEngine {
       return Array(targetCount).fill("ERROR");
     }
 
-    // CRITICAL: Winner must be at position 20 for correct final positioning
-    const winnerPosition = 20;
+    // CRITICAL: Winner must be at position adjusted for start padding
+    const winnerPosition = 40; // Adjusted for start padding (20 + original 20)
 
     // Fill content with random items
     for (let i = 0; i < targetCount; i++) {
@@ -394,11 +394,23 @@ class DeceptionEngine {
 
     // Add duplicate items at the end for seamless looping
     // This ensures no gaps when the scroll loops back
-    const loopBuffer = 50; // Larger buffer for seamless looping
+    // Need larger buffer to ensure viewport is always filled (240px = 3 items)
+    // With animation speeds up to 2400px/s, we need extra coverage
+    const loopBuffer = 100; // Much larger buffer for seamless looping
     for (let i = 0; i < loopBuffer; i++) {
       content.push(this.selectRandom(itemPool));
     }
 
+    // CRITICAL FIX: Add additional padding at start to prevent gaps at top
+    const startPadding = [];
+    for (let i = 0; i < 20; i++) {
+      startPadding.push(this.selectRandom(itemPool));
+    }
+    // Insert padding at the beginning
+    content.unshift(...startPadding);
+    
+    console.log(`📊 Built scroll content: ${content.length} total items for seamless looping`);
+    
     return content;
   }
 
@@ -833,24 +845,34 @@ class SlotMachine {
       // Clear existing items
       column.itemsContainer.innerHTML = "";
 
+      // CRITICAL FIX: Verify we have enough items to prevent blank areas
+      if (items.length < 30) {
+        console.error(`❌ Insufficient items for column ${columnType}: ${items.length} items. Need at least 30.`);
+        // Add fallback items to prevent blanks
+        while (items.length < 30) {
+          items.push(items[items.length % Math.max(1, items.length)] || "Fallback Item");
+        }
+        console.log(`🔧 Added fallback items, now have ${items.length} items for ${columnType}`);
+      }
+
       // Position container for initial visibility
       // Start with items positioned so winner is just above viewport
-      // Winner at index 20 = 20 * 80px = 1600px from top
-      // To place winner just above viewport: -1600px
-      const initialTranslate = -1600;
+      // Winner at index 40 (adjusted for padding) = 40 * 80px = 3200px from top
+      // To place winner just above viewport: -3200px
+      const initialTranslate = -3200;
       column.itemsContainer.style.transform = `translateY(${initialTranslate}px)`;
-      console.log(`🎰 ${columnType} initial position: ${initialTranslate}px (winner at index 20 above viewport)`);
+      console.log(`🎰 ${columnType} initial position: ${initialTranslate}px (winner at index 40 above viewport)`);
 
       // Add items to scroll container
       items.forEach((item, index) => {
         const itemElement = document.createElement("div");
         itemElement.className = "slot-item";
 
-        // Mark the winner item (position 20)
-        if (index === 20 && item === winner) {
+        // Mark the winner item (position 40, adjusted for padding)
+        if (index === 40 && item === winner) {
           itemElement.classList.add("winner-item");
           itemElement.style.border = "2px solid red"; // Visual debug marker
-          console.log(`🎯 Winner "${item}" placed at index 20 in ${columnType} column`);
+          console.log(`🎯 Winner "${item}" placed at index 40 in ${columnType} column`);
         }
 
         // Create image element using preloader if available
@@ -889,13 +911,61 @@ class SlotMachine {
         itemElement.appendChild(label);
 
         // Mark near-miss items (around winner position)
-        if (index === 19 || index === 21) {
+        if (index === 39 || index === 41) {
           itemElement.classList.add("near-miss");
         }
 
         column.itemsContainer.appendChild(itemElement);
       });
+      
+      // CRITICAL FIX: Ensure viewport is always filled by checking visible items
+      this.ensureViewportCoverage(column, columnType);
     });
+  }
+
+  /**
+   * Ensure the viewport always has visible items (no blanks)
+   */
+  ensureViewportCoverage(column, columnType) {
+    if (!column || !column.itemsContainer) return;
+    
+    const itemsContainer = column.itemsContainer;
+    const items = itemsContainer.querySelectorAll('.slot-item');
+    
+    // Get current transform to understand positioning
+    const currentTransform = itemsContainer.style.transform;
+    let translateY = -3200; // Default
+    const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
+    if (match) {
+      translateY = parseFloat(match[1]);
+    }
+    
+    // Calculate which items should be visible in 240px viewport
+    // Item height is 80px, so we need items from index = Math.floor(-translateY / 80) to index + 4
+    const startIndex = Math.floor(-translateY / 80);
+    const endIndex = startIndex + 4; // Show at least 4 items (3 visible + 1 buffer)
+    
+    // Ensure we have items in the visible range
+    let hasVisibleItems = false;
+    for (let i = startIndex; i < endIndex && i < items.length; i++) {
+      if (i >= 0 && items[i]) {
+        hasVisibleItems = true;
+        break;
+      }
+    }
+    
+    if (!hasVisibleItems) {
+      console.warn(`⚠️ No visible items in viewport for ${columnType}! translateY=${translateY}, startIndex=${startIndex}, totalItems=${items.length}`);
+      
+      // Emergency fix: adjust position to ensure items are visible
+      if (items.length > 0) {
+        const safeTranslateY = Math.max(-((items.length - 3) * 80), -3200);
+        itemsContainer.style.transform = `translateY(${safeTranslateY}px)`;
+        console.log(`🔧 Adjusted ${columnType} position to ${safeTranslateY}px for visibility`);
+      }
+    } else {
+      console.log(`✅ ${columnType} viewport coverage verified: ${items.length} items, translateY=${translateY}px`);
+    }
   }
 
   /**
@@ -1022,9 +1092,15 @@ class SlotMachine {
       }
 
       // Create scrollable list with duplicates for seamless loop
+      // CRITICAL FIX: Need many more items to fill viewport properly
       const scrollItems = [];
-      for (let i = 0; i < 15; i++) {
-        // 15 items for smooth scroll
+      const minItems = 50; // Much more items for proper viewport coverage
+      for (let i = 0; i < minItems; i++) {
+        scrollItems.push(items[i % items.length]);
+      }
+      
+      // Add extra padding to prevent gaps
+      for (let i = 0; i < 20; i++) {
         scrollItems.push(items[i % items.length]);
       }
 

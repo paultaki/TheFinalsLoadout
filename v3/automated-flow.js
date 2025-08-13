@@ -150,13 +150,8 @@ class AutomatedFlowManager {
     this.selections = { spins: null, class: null, loadout: null };
 
     try {
-      // Hide main button
-      const generateBtn = document.getElementById("generate-btn");
-      if (generateBtn) generateBtn.style.display = "none";
-
-      // Hide spin again section
-      const spinAgainSection = document.getElementById("spin-again-section");
-      if (spinAgainSection) spinAgainSection.style.display = "none";
+      // Reset UI for new flow
+      this.resetForNewFlow();
 
       // Show flow container
       const container = document.getElementById("automated-flow-container");
@@ -489,6 +484,12 @@ class AutomatedFlowManager {
         if (spinAgainSection) {
           setTimeout(() => {
             spinAgainSection.style.display = "block";
+            
+            // CRITICAL FIX: Always ensure the button itself is visible
+            const spinAgainBtn = document.getElementById("spin-again-btn");
+            if (spinAgainBtn) {
+              spinAgainBtn.style.display = "block";
+            }
           }, 1000);
         }
       } catch (error) {
@@ -565,6 +566,8 @@ class AutomatedFlowManager {
 
       // Add new automated flow trigger
       newSpinBtn.addEventListener("click", () => {
+        console.log("🎰 Spin Again clicked - starting new flow");
+        
         // Reset animation engine first
         if (window.slotMachine && window.slotMachine.animationEngine) {
           window.slotMachine.animationEngine.resetAnimation();
@@ -578,16 +581,7 @@ class AutomatedFlowManager {
           }
         }
         
-        // Reset UI
-        const slotContainer = document.getElementById("slot-machine-container");
-        const resultDiv = document.getElementById("loadout-result");
-
-        if (slotContainer) slotContainer.style.display = "none";
-        if (resultDiv) resultDiv.style.display = "none";
-
-        newSpinBtn.style.display = "none";
-
-        // Start new flow
+        // Start new flow (resetForNewFlow is called within startAutomatedFlow)
         this.startAutomatedFlow();
       });
     }
@@ -605,6 +599,43 @@ class AutomatedFlowManager {
    */
   getSelections() {
     return this.selections;
+  }
+
+  /**
+   * Reset for new flow - ensures all UI elements are properly reset
+   */
+  resetForNewFlow() {
+    console.log("🔄 Resetting UI for new flow");
+    
+    // Hide current sections
+    const sections = [
+      "automated-flow-container",
+      "slot-machine-container", 
+      "loadout-result"
+    ];
+    
+    sections.forEach(sectionId => {
+      const section = document.getElementById(sectionId);
+      if (section) section.style.display = "none";
+    });
+    
+    // Always ensure spin again button is available and visible
+    const spinAgainSection = document.getElementById("spin-again-section");
+    const spinAgainBtn = document.getElementById("spin-again-btn");
+    
+    if (spinAgainSection) {
+      spinAgainSection.style.display = "none"; // Hide during flow
+    }
+    
+    if (spinAgainBtn) {
+      spinAgainBtn.style.display = "block"; // Ensure button itself is always visible when section shows
+    }
+    
+    // Reset generate button visibility
+    const generateBtn = document.getElementById("generate-btn");
+    if (generateBtn) {
+      generateBtn.style.display = "none"; // Hidden during automated flow
+    }
   }
 
   /**
