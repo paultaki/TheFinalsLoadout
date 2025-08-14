@@ -894,11 +894,12 @@ document.addEventListener("slotSpinComplete", (event) => {
   const { loadout, slotMachine } = event.detail;
   
   if (loadout && slotMachine) {
-    console.log("🎯 Slot spin completed, highlighting winners after delay...");
+    console.log("🎯 Slot spin completed, highlighting winners after 700ms delay...");
     
-    // Add a brief delay to let the animation settle, then highlight winners
+    // Add 700ms delay after landing before highlighting winners
+    // This ensures the spin has fully stopped and settled before visual feedback
     setTimeout(() => {
       slotMachine.highlightWinnersAfterLanding(loadout);
-    }, 100); // 100ms delay for all five center cells to highlight simultaneously
+    }, 700); // 700ms delay as per UI requirements - winners highlight after full stop
   }
 });

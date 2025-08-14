@@ -879,13 +879,13 @@ class SlotMachine {
         }
       }
 
-      // Store current position if preserving
+      // Store current position (used for both preserving and rebuilding)
       let currentPosition = -1680; // Default position
-      if (preservePosition) {
-        const currentTransform = column.itemsContainer.style.transform;
-        const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
-        if (match) {
-          currentPosition = parseFloat(match[1]);
+      const currentTransform = column.itemsContainer.style.transform;
+      const match = currentTransform ? currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/) : null;
+      if (match) {
+        currentPosition = parseFloat(match[1]);
+        if (preservePosition) {
           console.log(`💾 Preserving position for ${columnType}: ${currentPosition}px`);
         }
       }
@@ -893,31 +893,66 @@ class SlotMachine {
       // Only rebuild DOM if forced or container is empty
       // For final spin with winners, try to avoid rebuilding if we have items
       const hasItems = column.itemsContainer.children.length > 0;
-      const needsBuild = forceBuild && !hasItems || column.itemsContainer.children.length === 0;
+      const needsFullBuild = !hasItems || (forceBuild && items.length !== column.itemsContainer.children.length);
       
-      if (needsBuild) {
-        console.log(`🔨 Building DOM for ${columnType} (forceBuild=${forceBuild})`);
+      if (needsFullBuild) {
+        console.log(`🔨 Building DOM for ${columnType} (forceBuild=${forceBuild}, hasItems=${hasItems})`);
         
-        // CRITICAL FIX: Check for blank frame before clearing DOM
-        if (column.itemsContainer.children.length === 0) {
-          console.warn('[DOM] Container already empty before rebuild');
-        }
+        // Current position already captured above, no need to recalculate
         
-        // Store current position to preserve it during rebuild
-        let currentPosition = -1680; // Default safe position
-        const currentTransform = column.itemsContainer.style.transform;
-        const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
-        if (match) {
-          currentPosition = parseFloat(match[1]);
-        }
-        
-        // Clear existing items only when rebuilding
-        column.itemsContainer.innerHTML = "";
-        
-        // CRITICAL: Immediately check for blank frame after clearing
-        // This is expected behavior after clearing, not an error
-        if (column.itemsContainer.children.length === 0) {
-          console.log('[DOM] Container cleared, rebuilding items...');
+        // DIFFERENTIAL DOM UPDATE: Only clear if truly necessary
+        if (!hasItems) {
+          // Container is empty, we need to build from scratch
+          console.log('[DOM] Container empty, building items from scratch...');
+          column.itemsContainer.innerHTML = "";
+        } else if (forceBuild) {
+          // DIFFERENTIAL UPDATE: Update existing items instead of clearing
+          console.log('[DOM] Differential update - reusing existing DOM elements');
+          const existingItems = Array.from(column.itemsContainer.children);
+          
+          // Update existing items in place
+          for (let i = 0; i < Math.min(existingItems.length, items.length); i++) {
+            const itemElement = existingItems[i];
+            const newItem = items[i];
+            
+            // Update the item content without destroying the element
+            const img = itemElement.querySelector('img');
+            const label = itemElement.querySelector('.item-label');
+            
+            if (img && label) {
+              // Update image source
+              if (typeof ImagePreloader !== 'undefined') {
+                const newImg = ImagePreloader.createImageElement(newItem);
+                img.src = newImg.src;
+                img.alt = newImg.alt;
+              } else {
+                const imagePath = this.getImagePath(newItem);
+                img.src = imagePath;
+                img.alt = newItem;
+              }
+              
+              // Update label text
+              label.textContent = newItem;
+            }
+            
+            // Clear any winner highlighting
+            itemElement.classList.remove('winner', 'winner-item', 'winner-highlight', 'near-miss');
+          }
+          
+          // Remove excess items if new list is shorter
+          while (column.itemsContainer.children.length > items.length) {
+            column.itemsContainer.lastElementChild.remove();
+          }
+          
+          // Add new items if new list is longer
+          for (let i = existingItems.length; i < items.length; i++) {
+            const item = items[i];
+            const itemElement = this.createItemElement(item, i, winner, columnType);
+            column.itemsContainer.appendChild(itemElement);
+          }
+          
+          // Skip the full rebuild below since we handled it differentially
+          return;
         }
 
         // CRITICAL FIX: Verify we have enough items to prevent blank areas
@@ -999,9 +1034,9 @@ class SlotMachine {
       // Set position: preserve current position or use default
       if (!preservePosition) {
         // For DOM rebuilds, use stored position or safe default
-        const safePosition = needsBuild ? currentPosition : -1680;
+        const safePosition = needsFullBuild ? currentPosition : -1680;
         column.itemsContainer.style.transform = `translateY(${safePosition}px)`;
-        console.log(`🎰 ${columnType} position set: ${safePosition}px (rebuild=${needsBuild})`);
+        console.log(`🎰 ${columnType} position set: ${safePosition}px (rebuild=${needsFullBuild})`);
       } else {
         // Keep the current position for continuity
         column.itemsContainer.style.transform = `translateY(${currentPosition}px)`;
@@ -1402,6 +1437,61 @@ class SlotMachine {
         console.log(`✨ Winner "${winnerName}" highlighted in ${columnType} column`);
       }
     });
+  }
+
+  /**
+   * Helper method to get image path for an item
+   */
+  getImagePath(itemName) {
+    // Use global getImagePath if available, otherwise use default paths
+    if (typeof getImagePath !== 'undefined') {
+      return getImagePath(itemName);
+    }
+    
+    // Default fallback path
+    const imageName = itemName.toLowerCase().replace(/\s+/g, '-').replace(/\./g, '');
+    return `/images/items/${imageName}.webp`;
+  }
+
+  /**
+   * Helper method to create a DOM element for an item
+   */
+  createItemElement(item, index, winner, columnType) {
+    const itemElement = document.createElement("div");
+    itemElement.className = "slot-item";
+
+    // Winner item will be at position 20 (no visual highlighting during spin)
+    if (index === 20 && item === winner) {
+      console.log(`🎯 Winner "${item}" placed at index 20 in ${columnType} column (no highlighting during spin)`);
+    }
+
+    // Create image element using preloader if available
+    let img;
+    if (typeof ImagePreloader !== 'undefined') {
+      img = ImagePreloader.createImageElement(item);
+    } else {
+      // Fallback to basic image creation
+      img = document.createElement("img");
+      img.src = this.getImagePath(item);
+      img.alt = item;
+      img.loading = "lazy";
+    }
+    img.onerror = function() {
+      this.style.display = 'none';
+      const fallback = document.createElement("div");
+      fallback.className = "item-fallback";
+      fallback.textContent = item.substring(0, 3).toUpperCase();
+      this.parentNode.appendChild(fallback);
+    };
+
+    const label = document.createElement("div");
+    label.className = "item-label";
+    label.textContent = item;
+
+    itemElement.appendChild(img);
+    itemElement.appendChild(label);
+
+    return itemElement;
   }
 
   /**
