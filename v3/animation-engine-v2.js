@@ -475,15 +475,28 @@ class AnimationEngineV2 {
         if (!allComplete) {
           this.animationFrameId = requestAnimationFrame(animate);
         } else {
+          // CRITICAL FIX: Snap to exact target position when animation completes
           columns.forEach((column, index) => {
             const state = this.columnStates.get(column);
             if (!state) return;
             
-            const currentWrapped = state.unwrappedY % state.cycleHeight;
-            const displayWrapped = currentWrapped > 0 ? currentWrapped - state.cycleHeight : currentWrapped;
-            
-            console.log(`🎯 Column ${index} COMPLETE: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${displayWrapped.toFixed(1)}px, velocity=${state.velocity.toFixed(1)}px/s`);
-            console.log(`[PHYSICS] Final position: ${displayWrapped.toFixed(1)}px`);
+            // For final spins, snap to exact target position
+            if (isFinalSpin && state.targetY) {
+              // Calculate the exact wrapped position for -1520px
+              const targetWrapped = -1520;
+              
+              // Apply the exact final position
+              state.element.style.transform = `translateY(${targetWrapped}px)`;
+              
+              console.log(`🎯 Column ${index} SNAPPED TO TARGET: ${targetWrapped}px (was ${(state.unwrappedY % state.cycleHeight).toFixed(1)}px)`);
+              console.log(`[PHYSICS] Final position corrected to exact target: ${targetWrapped}px`);
+            } else {
+              // For non-final spins, keep current position
+              const currentWrapped = state.unwrappedY % state.cycleHeight;
+              const displayWrapped = currentWrapped > 0 ? currentWrapped - state.cycleHeight : currentWrapped;
+              
+              console.log(`🎯 Column ${index} COMPLETE: unwrapped=${state.unwrappedY.toFixed(1)}, wrapped=${displayWrapped.toFixed(1)}px, velocity=${state.velocity.toFixed(1)}px/s`);
+            }
           });
           
           resolve();
@@ -650,8 +663,10 @@ class AnimationEngineV2 {
     
     const distanceToTarget = state.targetY - state.unwrappedY;
     
-    // End animation when close enough OR velocity is very low
-    const isComplete = Math.abs(distanceToTarget) <= 2 || Math.abs(state.velocity) <= 5;
+    // TIGHTER CRITERIA: End animation only when VERY close to target AND velocity is low
+    // This ensures we get much closer to -1520px before stopping
+    const isComplete = (Math.abs(distanceToTarget) <= 1 && Math.abs(state.velocity) <= 10) || 
+                      Math.abs(state.velocity) <= 0.5;
     
     return isComplete;
   }
