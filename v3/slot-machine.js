@@ -704,8 +704,9 @@ class SlotMachine {
             }
           }
 
-          // Force rebuild DOM with winners for final spin
-          this.populateScrollContainers(true, false);
+          // Keep DOM but update with winners for final spin
+          // Use false to avoid clearing DOM and causing blank frames
+          this.populateScrollContainers(false, false);
           
         } else {
           // Intermediate spins - random items, no predetermined outcome
@@ -888,14 +889,16 @@ class SlotMachine {
       }
 
       // Only rebuild DOM if forced or container is empty
-      const needsBuild = forceBuild || column.itemsContainer.children.length === 0;
+      // For final spin with winners, try to avoid rebuilding if we have items
+      const hasItems = column.itemsContainer.children.length > 0;
+      const needsBuild = forceBuild && !hasItems || column.itemsContainer.children.length === 0;
       
       if (needsBuild) {
         console.log(`🔨 Building DOM for ${columnType} (forceBuild=${forceBuild})`);
         
         // CRITICAL FIX: Check for blank frame before clearing DOM
         if (column.itemsContainer.children.length === 0) {
-          console.error('[DOM] Blank frame detected before rebuild! Container already empty.');
+          console.warn('[DOM] Container already empty before rebuild');
         }
         
         // Store current position to preserve it during rebuild
@@ -910,8 +913,9 @@ class SlotMachine {
         column.itemsContainer.innerHTML = "";
         
         // CRITICAL: Immediately check for blank frame after clearing
+        // This is expected behavior after clearing, not an error
         if (column.itemsContainer.children.length === 0) {
-          console.error('[DOM] Blank frame detected after DOM clear!');
+          console.log('[DOM] Container cleared, rebuilding items...');
         }
 
         // CRITICAL FIX: Verify we have enough items to prevent blank areas
@@ -1239,13 +1243,21 @@ class SlotMachine {
       
       // Final verification that winner is visible
       const items = column.itemsContainer.querySelectorAll('.slot-item');
-      const containerRect = column.itemsContainer.getBoundingClientRect();
       const windowRect = column.window.getBoundingClientRect();
       
       let winnerVisible = false;
+      let winnerItem = null;
+      
       items.forEach((item) => {
-        if (item.textContent.includes(winnerName)) {
+        // Check both text content and image alt text
+        const label = item.querySelector('.item-label');
+        const img = item.querySelector('img');
+        const itemName = label ? label.textContent : (img ? img.alt : '');
+        
+        if (itemName === winnerName) {
+          winnerItem = item;
           const itemRect = item.getBoundingClientRect();
+          // Check if item is within the viewport window
           const isInViewport = itemRect.top < windowRect.bottom && itemRect.bottom > windowRect.top;
           if (isInViewport) {
             winnerVisible = true;
@@ -1254,7 +1266,9 @@ class SlotMachine {
       });
       
       if (!winnerVisible) {
-        console.error(`❌ Winner "${winnerName}" not visible in ${columnType} viewport!`);
+        console.warn(`⚠️ Winner "${winnerName}" not visible in ${columnType} viewport! Adjusting position...`);
+        // Force position to show winner
+        column.itemsContainer.style.transform = `translateY(${targetPosition}px)`;
       } else {
         console.log(`✅ Winner "${winnerName}" confirmed visible in ${columnType}`);
       }
