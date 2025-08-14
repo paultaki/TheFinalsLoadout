@@ -135,19 +135,56 @@ python3 -m http.server 8000
 ## MCP Servers Configured
 The following Model Context Protocol servers have been added to Claude Code:
 
-1. **Sentry** - Error tracking and monitoring (connected)
-2. **Prettier** - Code formatting (`npx -y prettier-mcp`)
-3. **ESLint** - Code linting (`npx -y eslint-mcp`)
-4. **Figma** - Design integration (`npx -y figma-mcp`)
-5. **Filesystem** - Enhanced file operations (`@modelcontextprotocol/server-filesystem`)
-6. **Shell** - Shell commands (`@mako10k/mcp-shell-server`)
-7. **Git** - Git operations (`@cyanheads/git-mcp-server`)
-8. **Playwright** - Browser automation (`@playwright/mcp`)
-9. **Sequential Thinking** - Complex reasoning (`@modelcontextprotocol/server-sequential-thinking`)
-10. **Jam** - Bug reporting integration (`https://mcp.jam.dev/mcp`)
+1. **Sentry** - Error tracking and monitoring
+   - Type: HTTP
+   - URL: `https://mcp.sentry.dev/mcp`
+   - Status: Connected and active
+
+2. **Prettier** (`npx`)
+   - Command: `npx -y prettier-mcp`
+   - Purpose: Code formatting
+
+3. **ESLint** (`eslint-server`)
+   - Command: `npx -y eslint-mcp`
+   - Purpose: Code linting and quality checks
+
+4. **Figma** (`figma-server`)
+   - Command: `npx -y figma-mcp`
+   - Purpose: Design integration
+
+5. **Filesystem** (`fs`)
+   - Command: `npx @modelcontextprotocol/server-filesystem@latest`
+   - Purpose: Enhanced file operations
+
+6. **Shell** (`shell`)
+   - Command: `npx @mako10k/mcp-shell-server@latest`
+   - Purpose: Shell command execution
+
+7. **Git** (`git`)
+   - Command: `npx @cyanheads/git-mcp-server@latest`
+   - Purpose: Git operations
+
+8. **Playwright** (`playwright`)
+   - Command: `npx @playwright/mcp@latest`
+   - Purpose: Browser automation and testing
+
+9. **Sequential Thinking** (`sequential-thinking`)
+   - Command: `npx @modelcontextprotocol/server-sequential-thinking@latest`
+   - Purpose: Structured reasoning for complex problems
+
+10. **Jam** - Bug reporting
+    - Type: HTTP
+    - URL: `https://mcp.jam.dev/mcp`
+    - Purpose: Bug capture and debugging
+
+11. **Memory** - Knowledge graph storage
+    - Command: `node /mnt/z/DevProjects/servers/src/memory/dist/index.js`
+    - Purpose: Persistent memory across sessions
+    - Location: Built from source at `/mnt/z/DevProjects/servers/src/memory/`
 
 ## Dependencies Added
 - **Puppeteer** - Headless browser automation (installed via npm)
+- **MCP Servers Repository** - Cloned to `/mnt/z/DevProjects/servers/` for shared access
 
 ## Last Updated
-2025-08-13 - Fixed critical animation regressions (counter, duration, landing position), configured 10 MCP servers, added Puppeteer for testing.
+2025-08-13 (Final) - Fixed critical animation regressions (counter, duration, landing position), configured 11 MCP servers including memory server, added Puppeteer for testing.
