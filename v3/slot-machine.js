@@ -360,8 +360,9 @@ class DeceptionEngine {
       return Array(targetCount).fill("ERROR");
     }
 
-    // CRITICAL: Winner must be at position adjusted for start padding
-    const winnerPosition = 40; // Adjusted for start padding (20 + original 20)
+    // CRITICAL: Winner must be at position 20 for correct center landing
+    // Animation engine expects winner at index 20 to achieve -1520px position
+    const winnerPosition = 20; // This will center the winner in viewport
 
     // Fill content with random items
     for (let i = 0; i < targetCount; i++) {
@@ -656,22 +657,22 @@ class SlotMachine {
         // CRITICAL FIX: Capture the current spin value to prevent closure issues
         const capturedSpin = currentSpin;
         const capturedTotal = totalSpins;
+        const isFirstSpin = capturedSpin === 1;
+        const isFinalSpin = capturedSpin === capturedTotal;
         
-        console.log(`🔄 Spin ${capturedSpin} of ${capturedTotal}`);
-        console.log(`[COUNTER] Loop iteration: i=${currentSpin}, capturedSpin=${capturedSpin}, totalSpins=${capturedTotal}`);
+        // INSTRUMENTATION: Log spin start
+        console.log(`[SPIN] start capturedSpin=${capturedSpin} of ${capturedTotal}, isFirst=${isFirstSpin}, isFinal=${isFinalSpin}`);
 
         // Update spin counter IMMEDIATELY before any async operations
         this.updateSpinCounter(capturedSpin, capturedTotal);
         
-        // Small delay to ensure DOM update is visible
-        await new Promise(resolve => setTimeout(resolve, 50));
+        // IMPORTANT: Ensure counter is visually updated with proper pause
+        await new Promise(resolve => setTimeout(resolve, 250));
 
         // Get filtered data
         const filteredData = this.filterSystem.getFilteredData(classType);
 
         let loadout = null;
-        const isFirstSpin = capturedSpin === 1;
-        const isFinalSpin = capturedSpin === capturedTotal;
 
         // Only predetermine outcome on FINAL spin
         if (isFinalSpin) {
@@ -754,7 +755,7 @@ class SlotMachine {
               // CRITICAL: Ensure final position shows winners correctly
               this.ensureFinalWinnerPosition(loadout);
               
-              console.log('✅ Final animation completed');
+              console.log('[SPIN] final done');
             } catch (error) {
               console.error('❌ Animation failed:', error);
               await this.basicAnimation();
@@ -769,7 +770,7 @@ class SlotMachine {
                 this.deceptionEngine.scrollContents,
                 preservePosition
               );
-              console.log('✅ Quick animation completed');
+              console.log('[SPIN] quick done');
             } catch (error) {
               console.error('❌ Quick animation failed:', error);
               await this.basicAnimation();
@@ -778,8 +779,9 @@ class SlotMachine {
             // CRITICAL: Ensure reel maintains position between spins
             this.maintainReelPosition();
             
-            // No pause between spins for seamless continuity
-            console.log('🔄 Seamless transition to next spin...');
+            // Add small pause between spins so user can see the counter update
+            console.log('🔄 Transition to next spin...');
+            await new Promise(resolve => setTimeout(resolve, 300));
           }
         } else {
           // Animation engine not available, use basic animation
@@ -807,7 +809,7 @@ class SlotMachine {
           }
           
           // ALWAYS dispatch slotSpinComplete event regardless of bonus
-          console.log("🎯 Dispatching slotSpinComplete event with loadout:", finalLoadout);
+          console.log("[EVENT] slotSpinComplete fired once");
           document.dispatchEvent(
             new CustomEvent("slotSpinComplete", {
               detail: {
@@ -933,9 +935,9 @@ class SlotMachine {
           const itemElement = document.createElement("div");
           itemElement.className = "slot-item";
 
-          // Winner item will be at position 40 (no visual highlighting during spin)
-          if (index === 40 && item === winner) {
-            console.log(`🎯 Winner "${item}" placed at index 40 in ${columnType} column (no highlighting during spin)`);
+          // Winner item will be at position 20 (no visual highlighting during spin)
+          if (index === 20 && item === winner) {
+            console.log(`🎯 Winner "${item}" placed at index 20 in ${columnType} column (no highlighting during spin)`);
           }
 
           // Create image element using preloader if available
@@ -1183,17 +1185,19 @@ class SlotMachine {
       }
 
       // Create scrollable list with duplicates for seamless loop
-      // CRITICAL FIX: Need many more items to fill viewport properly
+      // CRITICAL: Generate 200+ items to match winner content and prevent blanks
       const scrollItems = [];
-      const minItems = 50; // Much more items for proper viewport coverage
-      for (let i = 0; i < minItems; i++) {
+      const targetItems = 200; // Match SlotConfig.itemsPerScroll for consistency
+      for (let i = 0; i < targetItems; i++) {
         scrollItems.push(items[i % items.length]);
       }
       
-      // Add extra padding to prevent gaps
+      // Add extra padding at start to prevent gaps at top
+      const startPadding = [];
       for (let i = 0; i < 20; i++) {
-        scrollItems.push(items[i % items.length]);
+        startPadding.push(items[i % items.length]);
       }
+      scrollItems.unshift(...startPadding);
 
       scrollContents[columnType] = scrollItems;
     });
@@ -1224,7 +1228,7 @@ class SlotMachine {
       
       if (!winnerName) return;
       
-      // The winner should be at index 40, which should be visible at position -1520px
+      // The winner should be at index 20, which should be visible at position -1520px
       const targetPosition = -1520; // This shows winner at center of viewport
       const currentTransform = column.itemsContainer.style.transform;
       let currentPosition = targetPosition;
@@ -1234,11 +1238,17 @@ class SlotMachine {
         currentPosition = parseFloat(match[1]);
       }
       
-      // Check if position is close to target (within 80px - one item height)
+      // STRICT: Check if position is within ±2px of target
       const positionDiff = Math.abs(currentPosition - targetPosition);
-      if (positionDiff > 80) {
-        console.warn(`⚠️ ${columnType} winner position off by ${positionDiff}px, adjusting...`);
+      if (positionDiff > 2) {
+        console.warn(`⚠️ ${columnType} position off by ${positionDiff}px, force centering to -1520px`);
         column.itemsContainer.style.transform = `translateY(${targetPosition}px)`;
+      }
+      
+      // ASSERTION: Fail fast if not centered
+      const finalPosition = parseFloat(column.itemsContainer.style.transform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/)?.[1] || 0);
+      if (Math.abs(finalPosition - targetPosition) > 2) {
+        console.error(`❌ ASSERTION FAILED: ${columnType} not centered! Expected -1520px ±2px, got ${finalPosition}px`);
       }
       
       // Final verification that winner is visible

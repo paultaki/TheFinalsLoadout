@@ -106,7 +106,7 @@ python3 -m http.server 8000
 - Use device pixel snapping for all transforms to prevent drift
 - Maintain monotonic motion (unwrappedY always increases)
 - Physics formula for braking: `d = v²/(2a)`
-- Winner index 40 includes 20 padding items
+- Winner index 20 for correct center positioning
 - Event-driven architecture for clean separation of concerns
 
 ## Future Considerations
