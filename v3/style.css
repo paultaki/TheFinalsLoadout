@@ -300,6 +300,25 @@ a:hover {
   color: var(--primary-color);
 }
 
+.filter-clear-all {
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border-radius: 4px;
+  margin-right: auto;
+}
+
+.filter-clear-all:hover {
+  background: var(--primary-color);
+  color: var(--bg-primary);
+  transform: translateY(-2px);
+}
+
 /* ========================================
    Main Container
    ======================================== */

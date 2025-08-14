@@ -163,6 +163,7 @@ const DOM = {
   filterPanel: null,
   filterOverlay: null,
   filterClose: null,
+  clearAllFilters: null,
 
   // Pre-slot animations
   numberSelector: null,
@@ -225,6 +226,7 @@ function initializeDOMElements() {
   DOM.filterPanel = document.getElementById("filter-panel");
   DOM.filterOverlay = document.getElementById("filter-panel-overlay");
   DOM.filterClose = document.getElementById("close-filter-panel");
+  DOM.clearAllFilters = document.getElementById("clear-all-filters");
 
   // Pre-slot animations
   DOM.numberSelector = document.getElementById("number-selector");
@@ -284,6 +286,7 @@ function attachEventListeners() {
   DOM.filterToggle?.addEventListener("click", toggleFilterPanel);
   DOM.filterClose?.addEventListener("click", closeFilterPanel);
   DOM.filterOverlay?.addEventListener("click", closeFilterPanel);
+  DOM.clearAllFilters?.addEventListener("click", clearAllFilters);
 
   // Return to top
   DOM.returnToTop?.addEventListener("click", () => {
@@ -771,6 +774,52 @@ function closeFilterPanel() {
   AppState.filtersActive = false;
   DOM.filterPanel?.classList.remove("active");
   DOM.filterOverlay?.classList.remove("active");
+}
+
+function clearAllFilters() {
+  // Clear all filter checkboxes
+  const allCheckboxes = document.querySelectorAll('#filter-panel input[type="checkbox"]');
+  allCheckboxes.forEach(checkbox => {
+    checkbox.checked = false;
+  });
+  
+  // Clear the filter system's active filters
+  if (window.slotMachine && window.slotMachine.filterSystem) {
+    window.slotMachine.filterSystem.activeFilters.weapons.clear();
+    window.slotMachine.filterSystem.activeFilters.specializations.clear();
+    window.slotMachine.filterSystem.activeFilters.gadgets.clear();
+  }
+  
+  // Update filter counts
+  updateFilterCounts();
+  
+  console.log("✅ All filters cleared");
+}
+
+function updateFilterCounts() {
+  // Update weapon count
+  const weaponCheckboxes = document.querySelectorAll('#weapons-filters input[type="checkbox"]');
+  const weaponChecked = document.querySelectorAll('#weapons-filters input[type="checkbox"]:checked');
+  const weaponCount = document.getElementById('weapons-count');
+  if (weaponCount) {
+    weaponCount.textContent = `${weaponChecked.length}/${weaponCheckboxes.length}`;
+  }
+  
+  // Update specialization count
+  const specCheckboxes = document.querySelectorAll('#specializations-filters input[type="checkbox"]');
+  const specChecked = document.querySelectorAll('#specializations-filters input[type="checkbox"]:checked');
+  const specCount = document.getElementById('specializations-count');
+  if (specCount) {
+    specCount.textContent = `${specChecked.length}/${specCheckboxes.length}`;
+  }
+  
+  // Update gadget count
+  const gadgetCheckboxes = document.querySelectorAll('#gadgets-filters input[type="checkbox"]');
+  const gadgetChecked = document.querySelectorAll('#gadgets-filters input[type="checkbox"]:checked');
+  const gadgetCount = document.getElementById('gadgets-count');
+  if (gadgetCount) {
+    gadgetCount.textContent = `${gadgetChecked.length}/${gadgetCheckboxes.length}`;
+  }
 }
 
 // ========================================
