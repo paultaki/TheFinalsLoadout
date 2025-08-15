@@ -197,9 +197,17 @@ class AnimationEngineV2 {
       // Read initial position from DOM
       const currentTransform = itemsContainer.style.transform;
       let startPos = -1680; // Default (winner at effective position 20 above viewport)
-      const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
-      if (match) {
-        startPos = parseFloat(match[1]);
+      
+      // CRITICAL FIX: If position is 0 or not set, use safe starting position
+      if (!currentTransform || currentTransform === 'none' || currentTransform === 'translateY(0px)' || currentTransform === 'translate3d(0px, 0px, 0px)') {
+        console.warn(`[ANIMATION] Column at unsafe position, setting to -1680px for proper start`);
+        startPos = -1680;
+        itemsContainer.style.transform = `translateY(${startPos}px)`;
+      } else {
+        const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
+        if (match) {
+          startPos = parseFloat(match[1]);
+        }
       }
       
       let unwrappedStart;
@@ -460,8 +468,8 @@ class AnimationEngineV2 {
           // Update blur based on velocity
           this.updateBlur(state.element, state.velocity, phase);
           
-          // For final spins, check physics-based completion
-          if (isFinalSpin && !this.isAnimationComplete(state, isFinalSpin)) {
+          // Check for animation completion
+          if (!this.isAnimationComplete(state, isFinalSpin)) {
             allComplete = false;
           }
           
