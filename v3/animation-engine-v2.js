@@ -127,12 +127,15 @@ class AnimationEngineV2 {
    * @param {boolean} preservePosition - Keep current position for multi-spin continuity
    */
   async animateSlotMachine(columns, scrollContents, predeterminedResults, preservePosition = false) {
+    console.log(`🎬 animateSlotMachine called: isFinal=${predeterminedResults !== null}, preservePos=${preservePosition}, isAnimating=${this.isAnimating}`);
+    
     // Only reset if not preserving position (for multi-spin continuity)
     if (!preservePosition) {
       this.resetAnimation();
     }
     
     if (this.isAnimating) {
+      console.error('⚠️ Animation already in progress! Skipping this call.');
       return; // Animation already in progress
     }
     
@@ -191,9 +194,15 @@ class AnimationEngineV2 {
    * @param {boolean} preservePosition - Keep existing unwrapped position for continuity
    */
   initializeColumnStates(columns, preservePosition = false) {
+    console.log(`🔧 Initializing ${columns.length} column states...`);
     columns.forEach((column, index) => {
+      console.log(`Column ${index}:`, column);
       const itemsContainer = column.querySelector('.slot-items');
-      if (!itemsContainer) return;
+      if (!itemsContainer) {
+        console.error(`❌ No .slot-items found in column ${index}!`);
+        return;
+      }
+      console.log(`✅ Found itemsContainer for column ${index}:`, itemsContainer);
       
       const itemCount = itemsContainer.children.length;
       const cycleHeight = itemCount * ITEM_H;
@@ -330,14 +339,31 @@ class AnimationEngineV2 {
     // translateY = -(20 * 80) + 80 = -1520px
     const targetWrappedPosition = -(winnerIndex * ITEM_H) + CENTER_OFFSET; // -1520px for center row
     
-    // SIMPLIFIED FIX: Direct calculation to land at exactly -1520px
-    // For multi-spin, add full cycles then adjust for exact position
-    const baseUnwrapped = currentUnwrappedY + (totalSpins * cycleHeight);
+    // CORRECT CALCULATION:
+    // We need to land at exactly -1520px (which is index 20 with offset 80)
+    // The wrapped position calculation: wrappedY = unwrappedY % cycleHeight
+    // But if wrapped > 0, we display as wrapped - cycleHeight (negative)
     
-    // Now adjust to land at exactly -1520px when wrapped
-    // We want the final wrapped position to be -1520px
-    const currentWrapped = baseUnwrapped % cycleHeight;
-    const adjustment = -1520 - (-currentWrapped);
+    // Calculate minimum spins needed
+    const minDistance = totalSpins * cycleHeight;
+    const baseUnwrapped = currentUnwrappedY + minDistance;
+    
+    // We want final wrapped position to be -1520px
+    // This means unwrappedY % cycleHeight should give us a value that,
+    // when converted to display position, equals -1520
+    
+    // Since -1520 is negative, it means wrapped = cycleHeight - 1520
+    const targetWrappedRaw = cycleHeight + targetWrappedPosition; // cycleHeight - 1520
+    
+    // Find how much we need to add to baseUnwrapped to reach this wrapped position
+    const currentWrappedRaw = baseUnwrapped % cycleHeight;
+    let adjustment = targetWrappedRaw - currentWrappedRaw;
+    
+    // If adjustment is negative, add a full cycle
+    if (adjustment < 0) {
+      adjustment += cycleHeight;
+    }
+    
     const targetUnwrapped = baseUnwrapped + adjustment;
     
     console.log(`[PHYSICS] Target: ${targetUnwrapped.toFixed(0)}px will wrap to -1520px`);
@@ -349,6 +375,7 @@ class AnimationEngineV2 {
    * Main animation loop with delta-time integration
    */
   async runAnimation(columns, predeterminedResults) {
+    console.log(`🏃 runAnimation started: columns=${columns.length}, hasPredetermined=${predeterminedResults !== null}`);
     return new Promise((resolve) => {
       let startTime = performance.now();
       let lastTime = startTime;
@@ -361,23 +388,38 @@ class AnimationEngineV2 {
       const isFinalSpin = predeterminedResults !== null;
       
       if (isFinalSpin) {
-        // Set up target positions for each column (final spin only)
+        // CRITICAL FIX: Calculate a common target for all columns to ensure alignment
+        // First, find the average current position
+        let totalUnwrapped = 0;
+        let columnCount = 0;
+        
+        columns.forEach((column) => {
+          const state = this.columnStates.get(column);
+          if (state) {
+            totalUnwrapped += state.unwrappedY;
+            columnCount++;
+          }
+        });
+        
+        const averageUnwrapped = totalUnwrapped / columnCount;
+        
+        // Calculate ONE target position based on average
+        const winnerIndex = 20;
+        const commonTarget = this.calculateFutureTarget(
+          averageUnwrapped,
+          winnerIndex,
+          columns[0] ? this.columnStates.get(columns[0]).cycleHeight : 4000,
+          3
+        );
+        
+        // Apply the SAME target to all columns with small stagger adjustments
         columns.forEach((column, index) => {
           const state = this.columnStates.get(column);
           if (!state) return;
           
-          // Winner is at index 20 to achieve -1520px center position
-          const winnerIndex = 20;
-          
-          const futureTarget = this.calculateFutureTarget(
-            state.unwrappedY,
-            winnerIndex,
-            state.cycleHeight,
-            3
-          );
-          
-          state.targetY = futureTarget;
-          // Initialize braking distance (will be calculated dynamically)
+          // Use common target with tiny stagger offset for visual interest
+          // But ensure they all land at the same wrapped position
+          state.targetY = commonTarget + (index * 0); // No offset - perfect alignment
           state.brakingDistance = 0;
           state.inBrakingPhase = false;
         });
@@ -393,6 +435,7 @@ class AnimationEngineV2 {
         });
       }
       
+      console.log('🔄 Starting animation loop...');
       const animate = (currentTime) => {
         const dt = Math.min(50, currentTime - lastTime) / 1000; // Delta in seconds, clamped
         const totalElapsed = currentTime - startTime;
@@ -490,30 +533,39 @@ class AnimationEngineV2 {
         if (!allComplete) {
           this.animationFrameId = requestAnimationFrame(animate);
         } else {
-          // CRITICAL FIX: Snap to exact target position when animation completes
+          console.log('🏁 ANIMATION COMPLETE - Starting final positioning...');
+          // CRITICAL FIX: Snap ALL columns to EXACT same position when animation completes
+          const exactFinalPosition = -1520; // All columns must land here
+          
           columns.forEach((column, index) => {
             const state = this.columnStates.get(column);
             if (!state) return;
             
-            // For final spins, snap to exact target position
+            // For final spins, force exact alignment
+            console.log(`Column ${index}: isFinalSpin=${isFinalSpin}, targetY=${state.targetY}, element=${state.element}`);
             if (isFinalSpin && state.targetY) {
-              // Calculate the exact wrapped position for -1520px
-              const targetWrapped = -1520;
-              
+              console.log(`✅ Applying final snap to column ${index}`);
               // Apply consistent pixel snapping for final position
-              const snappedFinal = Math.round(targetWrapped * this.devicePixelRatio) / this.devicePixelRatio;
+              const snappedFinal = Math.round(exactFinalPosition * this.devicePixelRatio) / this.devicePixelRatio;
               
-              // Disable transitions before setting final position to prevent CSS interference
+              // Disable ALL animations and transitions
               state.element.style.transition = 'none';
-              // Force reflow to ensure transition is disabled
+              state.element.style.animation = 'none';
+              
+              // Force reflow to ensure styles are applied
               state.element.offsetHeight;
               
-              // Apply the exact final position
+              // Apply the EXACT SAME final position to ALL columns
               state.element.style.transform = `translateY(${snappedFinal}px)`;
+              state.element.style.willChange = 'auto'; // Release GPU memory
               
-              console.log(`🎯 Column ${index} SNAPPED TO TARGET: ${targetWrapped}px (was ${(state.unwrappedY % state.cycleHeight).toFixed(1)}px)`);
-              console.log(`[PHYSICS] Final position corrected to exact target: ${targetWrapped}px`);
+              console.log(`🎯 Column ${index} FORCED TO EXACT: ${snappedFinal}px`);
+              
+              // Double-check the position was applied
+              const verifyTransform = state.element.style.transform;
+              console.log(`Verification: Column ${index} transform is now: ${verifyTransform}`);
             } else {
+              console.log(`⚠️ Column ${index} skipped final snap: isFinalSpin=${isFinalSpin}, targetY=${state.targetY}`);
               // For non-final spins, keep current position
               const currentWrapped = state.unwrappedY % state.cycleHeight;
               const displayWrapped = currentWrapped > 0 ? currentWrapped - state.cycleHeight : currentWrapped;
@@ -522,6 +574,7 @@ class AnimationEngineV2 {
             }
           });
           
+          console.log('✅ Animation promise resolved');
           resolve();
         }
       };

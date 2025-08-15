@@ -526,24 +526,19 @@ class SlotMachine {
       this.animationEngine = null;
     }
     
-    // Use V2 engine (improved physics)
-    if (typeof AnimationEngineV2 !== "undefined") {
+    // Use SIMPLE animation that actually works!
+    if (typeof SimpleSpinAnimation !== "undefined") {
+      this.animationEngine = new SimpleSpinAnimation();
+      console.log('✅ Using SimpleSpinAnimation');
+      return;
+    } else if (typeof AnimationEngineV2 !== "undefined") {
+      // Fallback to V2 if simple not available
       this.animationEngine = new AnimationEngineV2();
+      console.log('🔄 Using AnimationEngineV2');
       return;
     } else {
-      // Try to load V2 first
-      const script = document.createElement("script");
-      script.src = "/v3/animation-engine-v2.js";
-      script.onload = () => {
-        if (typeof AnimationEngineV2 !== "undefined") {
-          this.animationEngine = new AnimationEngineV2();
-        }
-      };
-      script.onerror = () => {
-        // No fallback - V2 is required
-        console.error('Failed to load animation engine');
-      };
-      document.head.appendChild(script);
+      console.error('❌ No animation engine available!');
+      // No fallback - animation is required
     }
   }
 
@@ -741,40 +736,60 @@ class SlotMachine {
             return;
           }
 
-          if (capturedSpin === capturedTotal) {
-            // Final spin - full dramatic animation with predetermined outcome
-            console.log('🎆 Starting FINAL spin animation with loadout:', loadout);
-            try {
-              await this.animationEngine.animateSlotMachine(
-                columnElements,
-                this.deceptionEngine.scrollContents,
-                loadout,
-                false // Don't preserve position for final spin (need winners)
-              );
-              
-              // CRITICAL: Ensure final position shows winners correctly
+          // Check which animation engine we're using
+          const isSimpleAnimation = this.animationEngine instanceof SimpleSpinAnimation;
+          
+          if (isSimpleAnimation) {
+            // Use the simple animation that actually works!
+            const finalPositions = capturedSpin === capturedTotal ? 
+              [-1520, -1520, -1520, -1520, -1520] : // All columns land at -1520px
+              null; // Random positions for intermediate spins
+            
+            console.log(`🎰 Running SIMPLE animation: spin ${capturedSpin}/${capturedTotal}`);
+            await this.animationEngine.spin(
+              columnElements,
+              finalPositions,
+              capturedTotal,
+              capturedSpin
+            );
+            
+            if (capturedSpin === capturedTotal) {
+              // Ensure winners are visible
               this.ensureFinalWinnerPosition(loadout);
-              
-              console.log('[SPIN] final done');
-            } catch (error) {
-              console.error('❌ Animation failed:', error);
-              await this.basicAnimation();
             }
           } else {
-            // Quick spin - maintain velocity and position continuity
-            const preservePosition = !isFirstSpin; // Preserve position for spins 2, 3, 4...
-            console.log(`⚡ Starting quick spin animation (preservePosition=${preservePosition})`);
-            try {
-              await this.animationEngine.animateQuickSpin(
-                columnElements,
-                this.deceptionEngine.scrollContents,
-                preservePosition
-              );
-              console.log('[SPIN] quick done');
-            } catch (error) {
-              console.error('❌ Quick animation failed:', error);
-              await this.basicAnimation();
+            // Fallback to old animation engine
+            if (capturedSpin === capturedTotal) {
+              console.log('🎆 Starting FINAL spin animation with loadout:', loadout);
+              try {
+                await this.animationEngine.animateSlotMachine(
+                  columnElements,
+                  this.deceptionEngine.scrollContents,
+                  loadout,
+                  false
+                );
+                this.ensureFinalWinnerPosition(loadout);
+                console.log('[SPIN] final done');
+              } catch (error) {
+                console.error('❌ Animation failed:', error);
+                await this.basicAnimation();
+              }
+            } else {
+              const preservePosition = !isFirstSpin;
+              console.log(`⚡ Starting quick spin animation (preservePosition=${preservePosition})`);
+              try {
+                await this.animationEngine.animateQuickSpin(
+                  columnElements,
+                  this.deceptionEngine.scrollContents,
+                  preservePosition
+                );
+                console.log('[SPIN] quick done');
+              } catch (error) {
+                console.error('❌ Quick animation failed:', error);
+                await this.basicAnimation();
+              }
             }
+          }
 
             // CRITICAL: Ensure reel maintains position between spins
             this.maintainReelPosition();
