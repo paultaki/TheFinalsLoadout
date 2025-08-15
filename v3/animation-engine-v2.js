@@ -61,6 +61,9 @@ class AnimationEngineV2 {
     this.animationFrameId = null;
     this.columnStates = new Map();
     
+    // Store device pixel ratio once to ensure consistency across all columns
+    this.devicePixelRatio = window.devicePixelRatio || 1;
+    
     // Spin tracking
     this.spinNumber = 0;
     
@@ -168,10 +171,11 @@ class AnimationEngineV2 {
       DECEL_B_DURATION: ANIM_CONFIG.DECEL_B_DURATION,
     };
     
-    // Reduce durations for quick spin but keep velocity high for intermediate spins
-    ANIM_CONFIG.ACCELERATION_DURATION = 400;
-    ANIM_CONFIG.CRUISE_DURATION = 1200; // Longer cruise for seamless continuity
-    // No deceleration for intermediate spins - maintain full velocity
+    // Keep reasonable durations for intermediate spins so they're visible
+    ANIM_CONFIG.ACCELERATION_DURATION = 600;
+    ANIM_CONFIG.CRUISE_DURATION = 1800; // Full cruise for visible spinning
+    ANIM_CONFIG.DECEL_A_DURATION = 500; // Add deceleration for visual effect
+    // This gives us 2.9 seconds total for a proper visible spin
     
     try {
       await this.animateSlotMachine(columns, scrollContents, null, preservePosition);
@@ -284,9 +288,8 @@ class AnimationEngineV2 {
       wrappedY += cycleHeight;
     }
     
-    // Apply device pixel snapping for crisp visuals
-    const devicePixelRatio = window.devicePixelRatio || 1;
-    const snappedY = Math.round(wrappedY * devicePixelRatio) / devicePixelRatio;
+    // Apply device pixel snapping for crisp visuals using consistent ratio
+    const snappedY = Math.round(wrappedY * this.devicePixelRatio) / this.devicePixelRatio;
     
     // Use translate3d for hardware acceleration
     element.style.transform = `translate3d(0, ${snappedY}px, 0)`;
@@ -402,11 +405,15 @@ class AnimationEngineV2 {
           this.frameCount++;
         }
         
-        // For intermediate spins, complete after cruise duration
+        // For intermediate spins, run a full animation cycle but don't decelerate to a specific target
         if (!isFinalSpin) {
-          const intermediateDuration = ANIM_CONFIG.ACCELERATION_DURATION + ANIM_CONFIG.CRUISE_DURATION;
+          // Intermediate spins should show full spinning animation
+          // Run for acceleration + cruise + partial deceleration for visual effect
+          const intermediateDuration = ANIM_CONFIG.ACCELERATION_DURATION + 
+                                      ANIM_CONFIG.CRUISE_DURATION + 
+                                      ANIM_CONFIG.DECEL_A_DURATION;
           if (totalElapsed >= intermediateDuration) {
-            console.log(`✅ Intermediate spin completed after ${totalElapsed.toFixed(0)}ms (maintaining velocity)`);
+            console.log(`✅ Intermediate spin completed after ${totalElapsed.toFixed(0)}ms with full animation`);
             resolve();
             return;
           }
@@ -493,8 +500,16 @@ class AnimationEngineV2 {
               // Calculate the exact wrapped position for -1520px
               const targetWrapped = -1520;
               
+              // Apply consistent pixel snapping for final position
+              const snappedFinal = Math.round(targetWrapped * this.devicePixelRatio) / this.devicePixelRatio;
+              
+              // Disable transitions before setting final position to prevent CSS interference
+              state.element.style.transition = 'none';
+              // Force reflow to ensure transition is disabled
+              state.element.offsetHeight;
+              
               // Apply the exact final position
-              state.element.style.transform = `translateY(${targetWrapped}px)`;
+              state.element.style.transform = `translateY(${snappedFinal}px)`;
               
               console.log(`🎯 Column ${index} SNAPPED TO TARGET: ${targetWrapped}px (was ${(state.unwrappedY % state.cycleHeight).toFixed(1)}px)`);
               console.log(`[PHYSICS] Final position corrected to exact target: ${targetWrapped}px`);
@@ -544,13 +559,24 @@ class AnimationEngineV2 {
       };
     }
     
-    // For intermediate spins (not final), stay in cruise mode indefinitely
+    // For intermediate spins, add a deceleration phase for visual effect
     if (!isFinalSpin || !state.targetY) {
+      // Add deceleration A for intermediate spins
+      cumulativeTime += ANIM_CONFIG.DECEL_A_DURATION;
+      if (elapsed < cumulativeTime) {
+        return {
+          name: 'deceleration_intermediate',
+          progress: (elapsed - cumulativeTime + ANIM_CONFIG.DECEL_A_DURATION) / ANIM_CONFIG.DECEL_A_DURATION,
+          elapsed: elapsed - cumulativeTime + ANIM_CONFIG.DECEL_A_DURATION
+        };
+      }
+      
+      // After deceleration, maintain steady state
       return {
         name: 'cruise_extended',
         progress: 0,
         elapsed: elapsed - cumulativeTime,
-        distanceToTarget: 0 // No target for intermediate spins
+        distanceToTarget: 0
       };
     }
     
@@ -597,6 +623,13 @@ class AnimationEngineV2 {
         // High speed with jitter
         const jitter = 1 + (Math.random() - 0.5) * ANIM_CONFIG.JITTER_AMOUNT;
         state.velocity = cruiseSpeed * jitter;
+        break;
+        
+      case 'deceleration_intermediate':
+        // Gradual deceleration for intermediate spins (visual effect only)
+        const decelProgress = phase.progress;
+        const targetIntermediate = cruiseSpeed * 0.6; // Decelerate to 60% speed
+        state.velocity = cruiseSpeed - ((cruiseSpeed - targetIntermediate) * this.easeInQuad(decelProgress));
         break;
         
       case 'braking':
