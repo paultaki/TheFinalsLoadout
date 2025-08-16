@@ -625,8 +625,7 @@ a:hover {
 /* Blur effect during spin */
 .slot-column.spinning .slot-items {
   filter: blur(2px);
-  /* Removed animation that was overriding position transforms */
-  /* animation: scrollSpin 0.5s linear infinite; */
+  animation: scrollSpin 0.5s linear infinite;
 }
 
 .slot-column.spinning-fast .slot-items {
@@ -753,22 +752,6 @@ a:hover {
 
 .bottom-controls {
   margin-top: var(--spacing-xl);
-}
-
-/* Spin Again Button Container */
-.spin-again-container {
-  display: flex;
-  justify-content: center;
-  margin-top: var(--spacing-xl);
-  padding-top: var(--spacing-lg);
-}
-
-.spin-again-btn {
-  min-width: 200px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: var(--spacing-md) var(--spacing-3xl);
 }
 
 .primary-btn,
@@ -1029,16 +1012,10 @@ a:hover {
 }
 
 /* Performance Optimizations */
-.slot-window {
-  will-change: transform;
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
-  -webkit-font-smoothing: subpixel-antialiased;
-}
-
+.slot-window,
 .slot-items {
   will-change: transform;
-  /* Removed translateZ(0) as it was overriding position transforms */
+  transform: translateZ(0);
   backface-visibility: hidden;
   transform-style: preserve-3d;
   -webkit-font-smoothing: subpixel-antialiased;

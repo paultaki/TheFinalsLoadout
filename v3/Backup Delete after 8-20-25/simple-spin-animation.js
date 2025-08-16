@@ -82,12 +82,7 @@ class SimpleSpinAnimation {
    * Start all reels spinning with rapid position changes
    */
   async startSpinning(containers) {
-    containers.forEach((container, index) => {
-      // Debug: Log initial state
-      const currentTransform = container.style.transform;
-      console.log(`🔍 Container ${index} initial transform: ${currentTransform || 'none'}`);
-      console.log(`🔍 Container ${index} has ${container.children.length} children`);
-      
+    containers.forEach(container => {
       // Add spinning class for CSS animation if desired
       container.classList.add('spinning');
       
@@ -112,19 +107,9 @@ class SimpleSpinAnimation {
     const itemHeight = 80;
     const totalItems = container.children.length;
     const cycleHeight = totalItems * itemHeight;
-    
-    console.log(`🎰 Starting cycleReel: position=${position}, totalItems=${totalItems}, cycleHeight=${cycleHeight}`);
-    
-    // CRITICAL: If position is stuck at 0, force it to start spinning
-    if (position === 0 && totalItems > 0) {
-      position = -itemHeight; // Start with a small negative to trigger movement
-      console.log(`⚠️ Position was 0, forcing to ${position} to start spin`);
-    }
 
-    let iterationCount = 0;
     // Store interval ID on container so we can stop it later
     container.spinInterval = setInterval(() => {
-      iterationCount++;
       // Move container UP (negative Y) to show items below (creates downward scroll effect)
       position -= itemHeight * 2; // Negative moves container up, showing lower items
       
@@ -137,11 +122,6 @@ class SimpleSpinAnimation {
       container.style.transform = `translate3d(0, ${position}px, 0)`;
       container.style.transition = 'none'; // No transition during spin
       
-      // Debug first few iterations
-      if (iterationCount <= 3) {
-        console.log(`🔄 Iteration ${iterationCount}: position=${position}px, transform=${container.style.transform}`);
-      }
-      
       // Force browser to render
       container.offsetHeight;
     }, this.spinSpeed);
@@ -151,20 +131,11 @@ class SimpleSpinAnimation {
    * Stop reels at specific final positions
    */
   async stopReelsAtPositions(containers, finalPositions) {
-    console.log(`🛑 Stopping reels at positions:`, finalPositions);
-    
     for (let i = 0; i < containers.length; i++) {
       const container = containers[i];
       
-      // Get current position before stopping
-      const currentTransform = container.style.transform;
-      console.log(`📍 Reel ${i} current transform before stop: ${currentTransform}`);
-      
       // Stop the spinning interval
-      if (container.spinInterval) {
-        clearInterval(container.spinInterval);
-        delete container.spinInterval;
-      }
+      clearInterval(container.spinInterval);
       container.classList.remove('spinning');
       
       // Apply smooth transition for final landing
@@ -172,33 +143,13 @@ class SimpleSpinAnimation {
       
       // Set final position (should be -1520px for center alignment)
       const finalPos = finalPositions ? finalPositions[i] : -1520;
-      
-      // CRITICAL FIX: Ensure the transform is applied correctly
-      // Clear any existing transform first
-      container.style.transform = '';
-      container.offsetHeight; // Force reflow
-      
-      // Now apply the final position
       container.style.transform = `translate3d(0, ${finalPos}px, 0)`;
       
-      console.log(`🎯 Reel ${i} target position: ${finalPos}px`);
+      console.log(`Reel ${i} stopped at position: ${finalPos}px`);
       
       // VERIFY the transform was actually set
-      setTimeout(() => {
-        const verifyTransform = container.style.transform;
-        const computedStyle = window.getComputedStyle(container);
-        const computedTransform = computedStyle.transform;
-        console.log(`✅ Reel ${i} final verification:`);
-        console.log(`   - style.transform: ${verifyTransform}`);
-        console.log(`   - computed transform: ${computedTransform}`);
-        
-        // Check if position is correct
-        if (verifyTransform.includes(`${finalPos}px`)) {
-          console.log(`   ✅ Position correctly set to ${finalPos}px`);
-        } else {
-          console.error(`   ❌ Position NOT at ${finalPos}px! Current: ${verifyTransform}`);
-        }
-      }, 350); // Check after transition completes
+      const verifyTransform = container.style.transform;
+      console.log(`✅ Reel ${i} transform verified: ${verifyTransform}`);
       
       // Force browser render
       container.offsetHeight;

@@ -483,7 +483,7 @@ class AutomatedFlowManager {
         const spinAgainSection = document.getElementById("spin-again-section");
         if (spinAgainSection) {
           setTimeout(() => {
-            spinAgainSection.style.display = "flex";
+            spinAgainSection.style.display = "block";
             
             // CRITICAL FIX: Always ensure the button itself is visible
             const spinAgainBtn = document.getElementById("spin-again-btn");

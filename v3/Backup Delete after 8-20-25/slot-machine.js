@@ -1063,15 +1063,12 @@ class SlotMachine {
             img.onerror = function () {
               console.warn(`❌ Failed to load image: ${imagePath} for item: ${item}`);
               this.style.display = "none";
-              // Only append if itemElement exists
-              if (itemElement && !itemElement.querySelector('span')) {
-                const textSpan = document.createElement("span");
-                textSpan.textContent = item;
-                textSpan.style.color = "#fff";
-                textSpan.style.fontSize = "14px";
-                textSpan.style.textAlign = "center";
-                itemElement.appendChild(textSpan);
-              }
+              const textSpan = document.createElement("span");
+              textSpan.textContent = item;
+              textSpan.style.color = "#fff";
+              textSpan.style.fontSize = "14px";
+              textSpan.style.textAlign = "center";
+              itemElement.appendChild(textSpan);
             };
           }
 
@@ -1576,13 +1573,10 @@ class SlotMachine {
     }
     img.onerror = function() {
       this.style.display = 'none';
-      // Only append fallback if parent exists
-      if (this.parentNode && !this.parentNode.querySelector('.item-fallback')) {
-        const fallback = document.createElement("div");
-        fallback.className = "item-fallback";
-        fallback.textContent = item.substring(0, 3).toUpperCase();
-        this.parentNode.appendChild(fallback);
-      }
+      const fallback = document.createElement("div");
+      fallback.className = "item-fallback";
+      fallback.textContent = item.substring(0, 3).toUpperCase();
+      this.parentNode.appendChild(fallback);
     };
 
     const label = document.createElement("div");

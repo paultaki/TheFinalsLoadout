@@ -101,9 +101,9 @@ const ImagePreloader = {
       "Charge N Slam": "Charge_N_Slam",
       "H+ Infuser": "H+_Infuser",
       ".50 Akimbo": ".50_Akimbo",
-      "Recon Senses": "Recon_Senses",
-      "Stun Gun": "Stun_Gun",
-      "Motion Sensor": "Motion_Sensor"
+      "Recon Senses": "placeholder",
+      "Stun Gun": "placeholder",
+      "Motion Sensor": "placeholder"
     };
     
     // Determine base path based on protocol
@@ -148,13 +148,10 @@ const ImagePreloader = {
     // If image fails, use text fallback
     img.onerror = function() {
       this.style.display = "none";
-      // Only append text if parent exists
-      if (this.parentElement) {
-        const textSpan = document.createElement("span");
-        textSpan.textContent = itemName;
-        textSpan.style.cssText = "color: #fff; font-size: 14px; text-align: center; display: block; padding: 10px;";
-        this.parentElement.appendChild(textSpan);
-      }
+      const textSpan = document.createElement("span");
+      textSpan.textContent = itemName;
+      textSpan.style.cssText = "color: #fff; font-size: 14px; text-align: center; display: block; padding: 10px;";
+      this.parentElement.appendChild(textSpan);
     };
     
     return img;
