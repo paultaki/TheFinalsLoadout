@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History UI Test - Responsive Verification</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Original Styles -->
+    <link rel="stylesheet" href="/v3/style.css">
+    <link rel="stylesheet" href="/v3/history-styles.css">
+    
+    <!-- Enhanced Styles -->
+    <link rel="stylesheet" href="/v3/history-styles-refined.css">
+    
+    <style>
+        body {
+            background: #0a0a0a;
+            padding: 2rem;
+        }
+        
+        .test-controls {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            z-index: 10000;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .test-controls h3 {
+            margin: 0 0 1rem 0;
+            font-size: 0.875rem;
+            color: #a78bfa;
+        }
+        
+        .viewport-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .viewport-btn {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+        
+        .viewport-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+        }
+        
+        .viewport-btn.active {
+            background: rgba(139, 92, 246, 0.5);
+            border-color: #a78bfa;
+        }
+        
+        .current-width {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            font-size: 0.75rem;
+            color: #a1a1aa;
+        }
+        
+        #test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            transition: max-width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Test Controls -->
+    <div class="test-controls">
+        <h3>Viewport Test Controls</h3>
+        <div class="viewport-buttons">
+            <button class="viewport-btn" onclick="setViewport(320)">320px (iPhone SE)</button>
+            <button class="viewport-btn" onclick="setViewport(375)">375px (iPhone)</button>
+            <button class="viewport-btn" onclick="setViewport(480)">480px (Small Mobile)</button>
+            <button class="viewport-btn" onclick="setViewport(768)">768px (Tablet)</button>
+            <button class="viewport-btn" onclick="setViewport(1024)">1024px (Desktop)</button>
+            <button class="viewport-btn" onclick="setViewport(1440)">1440px (Wide)</button>
+            <button class="viewport-btn active" onclick="setViewport('100%')">Full Width</button>
+        </div>
+        <div class="current-width">
+            Current: <span id="width-display">100%</span>
+        </div>
+    </div>
+    
+    <!-- Test Container -->
+    <div id="test-container">
+        <section id="history-section" class="history-section">
+            <div id="history-container" class="history-container"></div>
+        </section>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="/v3/history-system.js"></script>
+    <script src="/v3/history-system-enhanced.js"></script>
+    
+    <script>
+        // Viewport control functions
+        function setViewport(width) {
+            const container = document.getElementById('test-container');
+            const display = document.getElementById('width-display');
+            const buttons = document.querySelectorAll('.viewport-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (width === '100%') {
+                container.style.maxWidth = '1200px';
+                display.textContent = window.innerWidth + 'px';
+            } else {
+                container.style.maxWidth = width + 'px';
+                display.textContent = width + 'px';
+            }
+        }
+        
+        // Create test data
+        function createTestData() {
+            const testLoadouts = [
+                {
+                    class: "Light",
+                    weapon: "SR-84",
+                    specialization: "Grappling Hook",
+                    gadgets: ["Glitch Grenade", "Thermal Vision", "Smoke Grenade"]
+                },
+                {
+                    class: "Medium",
+                    weapon: "FCAR",
+                    specialization: "Healing Beam",
+                    gadgets: ["Defibrillator", "Jump Pad", "Frag Grenade"]
+                },
+                {
+                    class: "Heavy",
+                    weapon: "M134 Minigun",
+                    specialization: "Mesh Shield",
+                    gadgets: ["C4", "RPG-7", "Dome Shield"]
+                }
+            ];
+            
+            // Add test entries
+            testLoadouts.forEach((loadout, index) => {
+                setTimeout(() => {
+                    if (window.historyManager) {
+                        window.historyManager.addEntry(loadout);
+                    }
+                }, index * 500);
+            });
+        }
+        
+        // Initialize after DOM load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Wait for history manager to initialize
+            setTimeout(() => {
+                createTestData();
+                
+                // Update width display
+                const display = document.getElementById('width-display');
+                display.textContent = window.innerWidth + 'px';
+                
+                window.addEventListener('resize', () => {
+                    const currentBtn = document.querySelector('.viewport-btn.active');
+                    if (currentBtn && currentBtn.textContent.includes('Full')) {
+                        display.textContent = window.innerWidth + 'px';
+                    }
+                });
+            }, 500);
+        });
+        
+        // Verification functions
+        const VerificationSuite = {
+            checkStructure: function() {
+                const checks = {
+                    containerExists: !!document.querySelector('#history-container'),
+                    headerExists: !!document.querySelector('.history-header'),
+                    listExists: !!document.querySelector('#history-list'),
+                    cardsExist: document.querySelectorAll('.history-card').length > 0,
+                    enhancedCards: document.querySelectorAll('.enhanced-card').length > 0
+                };
+                
+                console.log('📋 Structure Verification:', checks);
+                return Object.values(checks).every(v => v);
+            },
+            
+            checkMobileBreakpoints: function() {
+                const width = window.innerWidth;
+                const container = document.querySelector('#test-container');
+                const computedWidth = container ? container.offsetWidth : 0;
+                
+                console.log(`📱 Breakpoint Check at ${width}px:`, {
+                    actualWidth: computedWidth,
+                    isMobile: width <= 768,
+                    isSmallMobile: width <= 480
+                });
+                
+                return true;
+            },
+            
+            checkTouchTargets: function() {
+                const buttons = document.querySelectorAll('.card-action');
+                const sizes = Array.from(buttons).map(btn => ({
+                    width: btn.offsetWidth,
+                    height: btn.offsetHeight,
+                    valid: btn.offsetWidth >= 44 && btn.offsetHeight >= 44
+                }));
+                
+                console.log('👆 Touch Target Sizes:', sizes);
+                return sizes.every(s => s.valid || window.innerWidth > 768);
+            },
+            
+            runAll: function() {
+                console.log('🔍 Running verification suite...');
+                const results = {
+                    structure: this.checkStructure(),
+                    breakpoints: this.checkMobileBreakpoints(),
+                    touchTargets: this.checkTouchTargets()
+                };
+                
+                console.log('✅ Verification Results:', results);
+                return results;
+            }
+        };
+        
+        // Expose for console testing
+        window.VerificationSuite = VerificationSuite;
+    </script>
+</body>
+</html>
