@@ -197,6 +197,9 @@ class AutomatedFlowManager {
       strip.style.transform = "translateY(0px)";
       strip.style.transition = "none";
       
+      // CRITICAL FIX: Force browser to apply the reset before animation
+      strip.offsetHeight; // Force reflow
+      
       // Clear all highlights from number elements
       const numbers = strip.querySelectorAll(".roulette-number");
       numbers.forEach(num => {
@@ -220,14 +223,20 @@ class AutomatedFlowManager {
     if (progressBar) {
       progressBar.style.width = "0%";
       progressBar.style.transition = "none";
+      progressBar.offsetHeight; // Force reflow for progress bar too
     }
 
     phase.style.display = "block";
     phase.classList.add("active");
 
+    // Add a small delay to ensure DOM is ready for animation
+    await this.delay(50);
+
     // Randomly select 1-5
     const targetNumber = Math.floor(Math.random() * 5) + 1;
     this.selections.spins = targetNumber;
+    
+    console.log(`🎲 Number selection: ${targetNumber} spins`);
 
     // Animate the number strip (strip and progressBar already declared above)
     
@@ -314,6 +323,7 @@ class AutomatedFlowManager {
     if (carousel) {
       carousel.style.transform = "";
       carousel.style.transition = "none";
+      carousel.offsetHeight; // Force reflow
     }
     
     // Reset progress bar
@@ -321,15 +331,21 @@ class AutomatedFlowManager {
     if (progressBar) {
       progressBar.style.width = "0%";
       progressBar.style.transition = "none";
+      progressBar.offsetHeight; // Force reflow
     }
 
     phase.style.display = "block";
     phase.classList.add("active");
+    
+    // Add a small delay to ensure DOM is ready for animation
+    await this.delay(50);
 
     // Randomly select class
     const classes = ["Light", "Medium", "Heavy"];
     const targetClass = classes[Math.floor(Math.random() * 3)];
     this.selections.class = targetClass;
+    
+    console.log(`🎯 Class selection: ${targetClass}`);
 
     // carousel, progressBar, and cards already declared above
 
@@ -616,7 +632,21 @@ class AutomatedFlowManager {
     
     sections.forEach(sectionId => {
       const section = document.getElementById(sectionId);
-      if (section) section.style.display = "none";
+      if (section) {
+        section.style.display = "none";
+        console.log(`  - Hidden: ${sectionId}`);
+      }
+    });
+    
+    // Reset all phase displays within the automated flow container
+    const phases = ["auto-number-phase", "auto-class-phase", "auto-loading-phase"];
+    phases.forEach(phaseId => {
+      const phase = document.getElementById(phaseId);
+      if (phase) {
+        phase.style.display = "none";
+        phase.classList.remove("active", "fade-out");
+        console.log(`  - Reset phase: ${phaseId}`);
+      }
     });
     
     // Always ensure spin again button is available and visible
