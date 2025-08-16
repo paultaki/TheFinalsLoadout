@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Flow Test - With Slot Machine</title>
+    
+    <!-- All required styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="spin-animation.css">
+    <link rel="stylesheet" href="polish-styles.css">
+    <link rel="stylesheet" href="bonus-styles.css">
+    <link rel="stylesheet" href="selection-styles.css">
+    <link rel="stylesheet" href="automated-flow-styles.css">
+    <link rel="stylesheet" href="history-styles.css">
+    
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            padding: 20px;
+        }
+        .test-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #ff3366;
+            z-index: 10000;
+            max-width: 300px;
+        }
+        .test-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #ff3366;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .test-btn:hover {
+            background: #ff4477;
+        }
+        .status-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .pass { color: #0f0; }
+        .fail { color: #f00; }
+        .info { color: #00f; }
+    </style>
+</head>
+<body>
+    <div class="test-status">
+        <h3>Test Controls</h3>
+        <button class="test-btn" onclick="testFirstSpin()">Test First Spin</button>
+        <button class="test-btn" onclick="testRespin()">Test Respin</button>
+        <button class="test-btn" onclick="checkInitialization()">Check Initialization</button>
+        <div class="status-info" id="statusInfo">
+            Ready to test...
+        </div>
+    </div>
+
+    <!-- Main Content (same as index.html) -->
+    <main class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">FULL FLOW TEST</h1>
+            <p class="subtitle">Testing Animation + Slot Machine</p>
+        </header>
+
+        <!-- Generate Button -->
+        <section class="controls top-controls">
+            <button id="generate-btn" class="generate-btn primary-btn">
+                GENERATE LOADOUT
+            </button>
+        </section>
+
+        <!-- Pre-Slot Animation Container -->
+        <section id="pre-slot-container" class="pre-slot-container">
+            <!-- Will be populated by AutomatedFlowManager -->
+        </section>
+
+        <!-- Slot Machine Container -->
+        <section id="slot-machine-container" class="slot-machine-container" style="display: none">
+            <div class="slot-machine">
+                <div class="slot-header">
+                    <h2 class="slot-title">SPINNING YOUR LOADOUT...</h2>
+                    <div class="class-indicator">
+                        <span class="class-label">CLASS:</span>
+                        <span class="class-value" id="selected-class">-</span>
+                    </div>
+                </div>
+
+                <!-- Slot Columns -->
+                <div class="slot-columns">
+                    <div class="slot-column" data-type="weapon">
+                        <div class="column-header">WEAPON</div>
+                        <div class="slot-window">
+                            <div class="slot-items"></div>
+                        </div>
+                    </div>
+
+                    <div class="slot-column" data-type="specialization">
+                        <div class="column-header">SPECIALIZATION</div>
+                        <div class="slot-window">
+                            <div class="slot-items"></div>
+                        </div>
+                    </div>
+
+                    <div class="slot-column" data-type="gadget-1">
+                        <div class="column-header">GADGET 1</div>
+                        <div class="slot-window">
+                            <div class="slot-items"></div>
+                        </div>
+                    </div>
+
+                    <div class="slot-column" data-type="gadget-2">
+                        <div class="column-header">GADGET 2</div>
+                        <div class="slot-window">
+                            <div class="slot-items"></div>
+                        </div>
+                    </div>
+
+                    <div class="slot-column" data-type="gadget-3">
+                        <div class="column-header">GADGET 3</div>
+                        <div class="slot-window">
+                            <div class="slot-items"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Display -->
+            <div id="loadout-result" class="loadout-result" style="display: none">
+                <h3 class="result-title">YOUR LOADOUT</h3>
+                <div class="result-items">
+                    <!-- Results will be populated here -->
+                </div>
+                <div class="spin-again-container" id="spin-again-section">
+                    <button id="spin-again-btn" class="spin-again-btn primary-btn">
+                        SPIN AGAIN
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section id="history-section" class="history-section">
+            <h2 class="section-title">LOADOUT HISTORY</h2>
+            <div id="history-container" class="history-container">
+                <p class="empty-history">No loadouts generated yet.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Load all required scripts in correct order -->
+    <script src="image-preloader.js"></script>
+    <script src="loadout-loader.js"></script>
+    <script src="simple-spin-animation.js"></script>
+    <script src="animation-engine-v2.js"></script>
+    <script src="slot-machine.js"></script>
+    <script src="filter-system.js"></script>
+    <script src="bonus-system.js"></script>
+    <script src="automated-flow.js"></script>
+    <script src="history-system.js"></script>
+    <script src="app.js"></script>
+    
+    <script>
+        let spinCount = 0;
+        
+        function updateStatus(msg, type = 'info') {
+            const statusEl = document.getElementById('statusInfo');
+            const time = new Date().toLocaleTimeString();
+            statusEl.innerHTML += `<div class="${type}">[${time}] ${msg}</div>`;
+            statusEl.scrollTop = statusEl.scrollHeight;
+            
+            // Keep only last 10 messages
+            const lines = statusEl.querySelectorAll('div');
+            if (lines.length > 10) {
+                lines[0].remove();
+            }
+        }
+        
+        function checkInitialization() {
+            updateStatus('=== Checking Initialization ===', 'info');
+            
+            // Check slot machine
+            if (window.slotMachine) {
+                updateStatus('✅ Slot machine: OK', 'pass');
+                
+                // Check animation engine
+                if (window.slotMachine.animationEngine) {
+                    const engineType = window.slotMachine.animationEngine.constructor.name;
+                    updateStatus(`✅ Animation engine: ${engineType}`, 'pass');
+                } else {
+                    updateStatus('❌ Animation engine: MISSING', 'fail');
+                }
+                
+                // Check bonus manager
+                if (window.slotMachine.bonusManager) {
+                    updateStatus('✅ Bonus manager: OK', 'pass');
+                } else {
+                    updateStatus('⚠️ Bonus manager: Missing', 'info');
+                }
+            } else {
+                updateStatus('❌ Slot machine: NOT INITIALIZED', 'fail');
+            }
+            
+            // Check automated flow
+            if (window.automatedFlowManager) {
+                updateStatus('✅ Flow manager: OK', 'pass');
+            } else {
+                updateStatus('⚠️ Flow manager: Not found', 'info');
+            }
+            
+            // Check GameData
+            if (window.GameData && window.GameData.loadouts) {
+                updateStatus('✅ GameData: Loaded', 'pass');
+            } else {
+                updateStatus('⚠️ GameData: Using fallback', 'info');
+            }
+        }
+        
+        function testFirstSpin() {
+            spinCount = 0;
+            updateStatus('--- Testing First Spin ---', 'info');
+            
+            // Trigger the generate button
+            const generateBtn = document.getElementById('generate-btn');
+            if (generateBtn) {
+                generateBtn.click();
+                updateStatus('Clicked generate button', 'pass');
+            } else {
+                updateStatus('Generate button not found', 'fail');
+            }
+        }
+        
+        function testRespin() {
+            updateStatus('--- Testing Respin ---', 'info');
+            
+            // Trigger the spin again button
+            const spinAgainBtn = document.getElementById('spin-again-btn');
+            if (spinAgainBtn && spinAgainBtn.style.display !== 'none') {
+                spinAgainBtn.click();
+                updateStatus('Clicked spin again button', 'pass');
+            } else {
+                updateStatus('Spin again button not available', 'fail');
+                updateStatus('Try running first spin first', 'info');
+            }
+        }
+        
+        // Monitor key events
+        document.addEventListener('slotSpinComplete', (event) => {
+            spinCount++;
+            updateStatus(`Spin #${spinCount} complete!`, 'pass');
+            
+            if (event.detail && event.detail.loadout) {
+                updateStatus(`Class: ${event.detail.loadout.class}`, 'info');
+            }
+        });
+        
+        // Check initialization after page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                checkInitialization();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

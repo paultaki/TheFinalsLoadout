@@ -348,6 +348,14 @@ function initializeComponents() {
   window.slotMachine = slotMachine; // Make globally available
   console.log("🎰 Slot machine initialized:", window.slotMachine);
   console.log("🎮 Animation engine status:", window.slotMachine.animationEngine ? 'Ready' : 'Not initialized');
+  
+  // Initialize automated flow manager
+  if (typeof AutomatedFlowManager !== 'undefined') {
+    window.automatedFlowManager = new AutomatedFlowManager();
+    console.log("🎭 Automated flow manager initialized");
+  } else {
+    console.error("❌ AutomatedFlowManager not loaded");
+  }
 
   // Make display function globally available
   window.displayLoadoutResult = displayLoadoutResult;
