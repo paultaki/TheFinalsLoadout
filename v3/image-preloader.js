@@ -32,7 +32,7 @@ const ImagePreloader = {
       // Specializations
       "Cloaking Device", "Evasive Dash", "Grappling Hook",
       "Dematerializer", "Guardian Turret", "Healing Beam", 
-      "Recon Senses", "Mesh Shield", "Winch Claw", "Goo Gun",
+      "Mesh Shield", "Winch Claw", "Goo Gun",
       "Charge N Slam",
       
       // Gadgets
@@ -42,7 +42,7 @@ const ImagePreloader = {
       "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Frag Grenade",
       "Flashbang", "APS Turret", "Data Reshaper", "Defibrillator",
       "Explosive Mine", "Gas Mine", "Glitch Trap", "Jump Pad",
-      "Zipline", "Motion Sensor", "Stun Gun", "Anti-Gravity Cube",
+      "Zipline", "Proximity Sensor", "Anti-Gravity Cube",
       "Barricade", "C4", "Dome Shield", "Pyro Mine", "RPG-7",
       "Healing Emitter", "Health Canister", "Breach Drill"
     ];
@@ -88,35 +88,14 @@ const ImagePreloader = {
   /**
    * Get image path for an item
    */
-  getImagePath(itemName) {
-    // Image name mappings
-    const mappings = {
-      "CB-01 Repeater": "CB-01_Repeater",
-      "M26 Matter": "M26_Matter",
-      "Pike-556": "Pike-556",
-      "R.357": "R.357",
-      "ShAK-50": "SHAK-50",
-      "M134 Minigun": "M134_Minigun",
-      "Charge N' Slam": "Charge_N_Slam",
-      "Charge N Slam": "Charge_N_Slam",
-      "H+ Infuser": "H+_Infuser",
-      ".50 Akimbo": ".50_Akimbo",
-      "Recon Senses": "Recon_Senses",
-      "Stun Gun": "Stun_Gun",
-      "Motion Sensor": "Motion_Sensor"
-    };
-    
-    // Determine base path based on protocol
-    const basePath = window.location.protocol === 'file:' ? '../images' : '/images';
-    
-    // Check for specific mapping
-    if (mappings[itemName]) {
-      return mappings[itemName] === 'placeholder' 
-        ? `${basePath}/placeholder.webp`
-        : `${basePath}/${mappings[itemName]}.webp`;
+  getImagePath(itemName, category = '') {
+    // Use centralized resolver if available
+    if (window.NameToAsset && window.NameToAsset.resolveItemImage) {
+      return window.NameToAsset.resolveItemImage(itemName, category);
     }
     
-    // Default: replace spaces with underscores
+    // Fallback for compatibility
+    const basePath = '/images';
     const fileName = itemName.replace(/\s+/g, "_").replace(/'/g, "");
     return `${basePath}/${fileName}.webp`;
   },
@@ -127,7 +106,7 @@ const ImagePreloader = {
   getCachedImagePath(itemName) {
     if (this.imageCache.has(itemName)) {
       const cached = this.imageCache.get(itemName);
-      const basePath = window.location.protocol === 'file:' ? '../images' : '/images';
+      const basePath = '/images';
       return cached === 'placeholder' ? `${basePath}/placeholder.webp` : cached;
     }
     return this.getImagePath(itemName);

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resolution Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .item-card {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        .item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin: 0 auto;
+            display: block;
+            background: #333;
+            border-radius: 4px;
+        }
+        .item-name {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #ccc;
+        }
+        .status {
+            margin-top: 4px;
+            font-size: 10px;
+        }
+        .status.success { color: #4f4; }
+        .status.error { color: #f44; }
+        .status.deprecated { color: #fa0; }
+        .controls {
+            margin: 20px 0;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        button {
+            background: #ff3366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #ff4477;
+        }
+        .summary {
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        h2 { color: #ff3366; }
+    </style>
+</head>
+<body>
+    <h1>Image Resolution Test</h1>
+    
+    <div class="controls">
+        <button onclick="testAllItems()">Test All Items</button>
+        <button onclick="testProblematicItems()">Test Problematic Items</button>
+        <button onclick="clearResults()">Clear</button>
+    </div>
+    
+    <div class="summary" id="summary">
+        Click a button to start testing...
+    </div>
+    
+    <div id="results"></div>
+    
+    <!-- Load resolver and test -->
+    <script src="../js/name-to-asset.js"></script>
+    <script>
+        // Problematic items to test
+        const problematicItems = [
+            { name: "Nullifier", category: "gadget", expected: "works" },
+            { name: "The Nullifier", category: "gadget", expected: "works" },
+            { name: "Stun Gun", category: "gadget", expected: "deprecated" },
+            { name: "Recon Senses", category: "specialization", expected: "deprecated" },
+            { name: "CB-01 Repeater", category: "weapon", expected: "works" },
+            { name: "M26 Matter", category: "weapon", expected: "works" },
+            { name: "R.357", category: "weapon", expected: "works" },
+            { name: "SHAK-50", category: "weapon", expected: "works" },
+            { name: "SA1216", category: "weapon", expected: "works" },
+            { name: "Charge N Slam", category: "specialization", expected: "works" },
+            { name: "H+ Infuser", category: "gadget", expected: "works" },
+            { name: "Anti-Gravity Cube", category: "gadget", expected: "works" },
+            { name: "Proximity Sensor", category: "gadget", expected: "works" },
+            { name: "Motion Sensor", category: "gadget", expected: "deprecated" }
+        ];
+        
+        // All items from loadouts
+        const allItems = {
+            Light: {
+                weapons: ["93R", "Dagger", "SR-84", "SH1900", "LH1", "M26 Matter", 
+                         "Recurve Bow", "Sword", "M11", "ARN-220", "V9S", "XP-54", "Throwing Knives"],
+                specializations: ["Cloaking Device", "Evasive Dash", "Grappling Hook"],
+                gadgets: ["Breach Charge", "Gateway", "Glitch Grenade", "Gravity Vortex",
+                         "Nullifier", "Sonar Grenade", "H+ Infuser", "Thermal Bore"]
+            },
+            Medium: {
+                weapons: ["AKM", "Cerberus 12GA", "Dual Blades", "FAMAS", "CL-40", 
+                         "CB-01 Repeater", "FCAR", "Model 1887", "Pike-556", "R.357", "Riot Shield"],
+                specializations: ["Dematerializer", "Guardian Turret", "Healing Beam"],
+                gadgets: ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine"]
+            },
+            Heavy: {
+                weapons: ["M134 Minigun", "M60", "Sledgehammer", "Lewis Gun", "MGL32", 
+                         "SHAK-50", "Flamethrower", "KS-23", "SA1216", "Spear"],
+                specializations: ["Charge N Slam", "Mesh Shield", "Winch Claw", "Goo Gun"],
+                gadgets: ["Barricade", "C4", "Dome Shield", "Explosive Mine"]
+            }
+        };
+        
+        function testItem(name, category) {
+            const imagePath = window.NameToAsset.resolveItemImage(name, category);
+            const isDeprecated = window.NameToAsset.isDeprecated(name);
+            
+            return new Promise(resolve => {
+                if (isDeprecated) {
+                    resolve({ name, category, path: imagePath, status: 'deprecated' });
+                    return;
+                }
+                
+                const img = new Image();
+                img.onload = () => resolve({ name, category, path: imagePath, status: 'success' });
+                img.onerror = () => resolve({ name, category, path: imagePath, status: 'error' });
+                img.src = imagePath;
+            });
+        }
+        
+        async function testProblematicItems() {
+            const resultsEl = document.getElementById('results');
+            const summaryEl = document.getElementById('summary');
+            
+            resultsEl.innerHTML = '<h2>Testing Problematic Items...</h2>';
+            
+            const grid = document.createElement('div');
+            grid.className = 'test-grid';
+            
+            let successCount = 0;
+            let errorCount = 0;
+            let deprecatedCount = 0;
+            
+            for (const item of problematicItems) {
+                const result = await testItem(item.name, item.category);
+                
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                
+                const img = document.createElement('img');
+                img.className = 'item-image';
+                img.src = result.path;
+                img.alt = result.name;
+                
+                const nameEl = document.createElement('div');
+                nameEl.className = 'item-name';
+                nameEl.textContent = result.name;
+                
+                const statusEl = document.createElement('div');
+                statusEl.className = `status ${result.status}`;
+                statusEl.textContent = result.status.toUpperCase();
+                
+                const expectedEl = document.createElement('div');
+                expectedEl.className = 'status';
+                expectedEl.style.color = '#888';
+                expectedEl.textContent = `Expected: ${item.expected}`;
+                
+                card.appendChild(img);
+                card.appendChild(nameEl);
+                card.appendChild(statusEl);
+                card.appendChild(expectedEl);
+                grid.appendChild(card);
+                
+                if (result.status === 'success') successCount++;
+                else if (result.status === 'error') errorCount++;
+                else if (result.status === 'deprecated') deprecatedCount++;
+            }
+            
+            resultsEl.appendChild(grid);
+            
+            summaryEl.innerHTML = `
+                <h3>Test Results</h3>
+                <p>✅ Success: ${successCount}</p>
+                <p>❌ Errors: ${errorCount}</p>
+                <p>⚠️ Deprecated: ${deprecatedCount}</p>
+                <p>Total: ${problematicItems.length}</p>
+            `;
+        }
+        
+        async function testAllItems() {
+            const resultsEl = document.getElementById('results');
+            const summaryEl = document.getElementById('summary');
+            
+            resultsEl.innerHTML = '<h2>Testing All Items...</h2>';
+            
+            let successCount = 0;
+            let errorCount = 0;
+            let deprecatedCount = 0;
+            
+            for (const [className, classData] of Object.entries(allItems)) {
+                const section = document.createElement('div');
+                section.innerHTML = `<h3>${className} Class</h3>`;
+                
+                const grid = document.createElement('div');
+                grid.className = 'test-grid';
+                
+                // Test weapons
+                for (const weapon of classData.weapons) {
+                    const result = await testItem(weapon, 'weapon');
+                    if (result.status === 'success') successCount++;
+                    else if (result.status === 'error') errorCount++;
+                    else deprecatedCount++;
+                }
+                
+                // Test specializations
+                for (const spec of classData.specializations) {
+                    const result = await testItem(spec, 'specialization');
+                    if (result.status === 'success') successCount++;
+                    else if (result.status === 'error') errorCount++;
+                    else deprecatedCount++;
+                }
+                
+                // Test gadgets
+                for (const gadget of classData.gadgets) {
+                    const result = await testItem(gadget, 'gadget');
+                    if (result.status === 'success') successCount++;
+                    else if (result.status === 'error') errorCount++;
+                    else deprecatedCount++;
+                }
+                
+                section.appendChild(grid);
+                resultsEl.appendChild(section);
+            }
+            
+            const total = successCount + errorCount + deprecatedCount;
+            summaryEl.innerHTML = `
+                <h3>Test Results</h3>
+                <p>✅ Success: ${successCount} (${((successCount/total)*100).toFixed(1)}%)</p>
+                <p>❌ Errors: ${errorCount} (${((errorCount/total)*100).toFixed(1)}%)</p>
+                <p>⚠️ Deprecated: ${deprecatedCount} (${((deprecatedCount/total)*100).toFixed(1)}%)</p>
+                <p>Total: ${total}</p>
+            `;
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('summary').innerHTML = 'Click a button to start testing...';
+        }
+    </script>
+</body>
+</html>

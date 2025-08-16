@@ -1,11 +1,23 @@
 /**
  * Loadout Data Loader
  * Fetches weapon/gadget data from loadouts.json and provides image path mapping
+ * Now uses centralized name-to-asset resolver
  */
 
-// Comprehensive image name mapping
-// Maps display names to actual image filenames
-const IMAGE_NAME_MAP = {
+// Load the centralized resolver if available
+let resolveItemImage;
+if (typeof window !== 'undefined' && window.NameToAsset) {
+  resolveItemImage = window.NameToAsset.resolveItemImage;
+} else {
+  // Fallback for compatibility
+  resolveItemImage = (name) => {
+    const fileName = name.replace(/\s+/g, "_").replace(/'/g, "");
+    return `images/${fileName}.webp`;
+  };
+}
+
+// Legacy mapping kept for reference but not used
+const IMAGE_NAME_MAP_LEGACY = {
   // Weapons - Light
   "93R": "93R",
   "Dagger": "Dagger",
@@ -105,19 +117,23 @@ const IMAGE_NAME_MAP = {
 /**
  * Get the correct image path for an item
  * @param {string} itemName - The display name of the item
+ * @param {string} category - The category (weapon, specialization, gadget)
  * @returns {string} The correct image path
  */
-function getImagePath(itemName) {
-  // Check if we have a specific mapping
-  const mappedName = IMAGE_NAME_MAP[itemName];
+function getImagePath(itemName, category = '') {
+  // Use centralized resolver if available
+  if (typeof resolveItemImage === 'function') {
+    return resolveItemImage(itemName, category);
+  }
+  
+  // Legacy fallback
+  const mappedName = IMAGE_NAME_MAP_LEGACY[itemName];
   
   if (mappedName && mappedName !== "placeholder") {
     return `/images/${mappedName}.webp`;
   } else if (mappedName === "placeholder") {
-    // Return a placeholder image path
     return `/images/placeholder.webp`;
   } else {
-    // Fallback: convert spaces to underscores
     const fallbackName = itemName.replace(/\s+/g, "_").replace(/'/g, "");
     console.warn(`No image mapping for "${itemName}", trying: ${fallbackName}.webp`);
     return `/images/${fallbackName}.webp`;
@@ -137,7 +153,8 @@ async function loadLoadoutsData() {
   
   // Try to fetch from JSON file when served via HTTP/HTTPS
   try {
-    const response = await fetch('/loadouts.json');
+    // Use the main loadouts.json from the root directory
+    const response = await fetch('../loadouts.json');
     if (!response.ok) {
       throw new Error(`Failed to load loadouts.json: ${response.status}`);
     }
