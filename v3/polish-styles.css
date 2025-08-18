@@ -1,9 +1,9 @@
 /* Polish styles - viewport and item height constants */
 
-/* Viewport must be exactly 240px (3 items × 80px) */
+/* Viewport must be exactly 312px (3 items × 104px) */
 .slot-viewport,
 .slot-window {
-  height: 240px !important;
+  height: 312px !important;
   overflow: hidden;
   backface-visibility: hidden;
   transform: translate3d(0,0,0);
@@ -15,16 +15,16 @@
   transform: translate3d(0,0,0);
 }
 
-/* Slot items must be exactly 80px with no margin/padding affecting flow */
+/* Slot items must be exactly 104px with no margin/padding affecting flow */
 .slot-item {
-  height: 80px !important;
+  height: 104px !important;
   margin: 0 !important;
   padding: var(--spacing-sm) !important;
   box-sizing: border-box !important;
   border-bottom: 1px solid rgba(51, 51, 51, 0.3);
   /* Ensure consistent dimensions */
-  min-height: 80px !important;
-  max-height: 80px !important;
+  min-height: 104px !important;
+  max-height: 104px !important;
 }
 
 /* Winner highlighting animations */

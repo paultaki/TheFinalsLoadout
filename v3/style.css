@@ -504,7 +504,7 @@ a:hover {
   background: linear-gradient(180deg, var(--bg-darker), rgba(5, 5, 5, 0.8));
   border: 2px solid var(--border-color);
   border-radius: 8px;
-  height: 240px;
+  height: 312px;
   overflow: hidden;
   position: relative;
   flex: 1;
@@ -544,7 +544,7 @@ a:hover {
 }
 
 .slot-item {
-  height: 80px;
+  height: 104px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -928,11 +928,11 @@ a:hover {
   }
 
   .slot-window {
-    height: 120px;
+    height: 156px;
   }
 
   .slot-item {
-    height: 40px;
+    height: 52px;
     font-size: 0.7rem;
   }
 
@@ -953,7 +953,7 @@ a:hover {
   }
 
   .slot-window {
-    height: 100px;
+    height: 130px;
   }
 }
 

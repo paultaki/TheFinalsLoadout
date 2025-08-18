@@ -402,7 +402,7 @@ class DeceptionEngine {
     }
 
     // NOTE: No padding at start - winner must remain at index 20
-    // The animation expects winner at exact index 20 for -1520px landing
+    // The animation expects winner at exact index 20 for -1976px landing
     
     console.log(`📊 Built scroll content: ${content.length} total items for seamless looping`);
     
@@ -778,7 +778,7 @@ class SlotMachine {
           if (isSimpleAnimation) {
             // Use the simple animation that actually works!
             const finalPositions = capturedSpin === capturedTotal ? 
-              [-1520, -1520, -1520, -1520, -1520] : // All columns land at -1520px
+              [-1976, -1976, -1976, -1976, -1976] : // All columns land at -1976px
               null; // Random positions for intermediate spins
             
             console.log(`🎰 Running SIMPLE animation: spin ${capturedSpin}/${capturedTotal}`);
@@ -801,7 +801,7 @@ class SlotMachine {
                 if (!column || !column.itemsContainer) return;
                 
                 const items = column.itemsContainer.querySelectorAll('.slot-item');
-                // At -1520px, we should see item at index 20 in center
+                // At -1976px, we should see item at index 20 in center
                 if (items[20]) {
                   const text = items[20].textContent.trim();
                   console.log(`${columnType} center item [20]: "${text}"`);
@@ -947,7 +947,7 @@ class SlotMachine {
       }
 
       // Store current position (used for both preserving and rebuilding)
-      let currentPosition = -1680; // Default position
+      let currentPosition = -2184; // Default position (21 * 104)
       const currentTransform = column.itemsContainer.style.transform;
       const matchY = currentTransform ? currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/) : null;
       const match3d = currentTransform ? currentTransform.match(/translate3d\([^,]+,\s*(-?\d+(?:\.\d+)?)px/) : null;
@@ -1106,7 +1106,7 @@ class SlotMachine {
       // Set position: preserve current position or use default
       if (!preservePosition) {
         // For DOM rebuilds, use stored position or safe default
-        const safePosition = needsFullBuild ? currentPosition : -1680;
+        const safePosition = needsFullBuild ? currentPosition : -2184;
         column.itemsContainer.style.transform = `translateY(${safePosition}px)`;
         console.log(`🎰 ${columnType} position set: ${safePosition}px (rebuild=${needsFullBuild})`);
       } else {
@@ -1131,15 +1131,15 @@ class SlotMachine {
     
     // Get current transform to understand positioning
     const currentTransform = itemsContainer.style.transform;
-    let translateY = -1680; // Default (consistent with winner at effective position 20)
+    let translateY = -2184; // Default (consistent with winner at effective position 20)
     const match = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
     if (match) {
       translateY = parseFloat(match[1]);
     }
     
-    // Calculate which items should be visible in 240px viewport
-    // Item height is 80px, so we need items from index = Math.floor(-translateY / 80) to index + 4
-    const startIndex = Math.floor(-translateY / 80);
+    // Calculate which items should be visible in 312px viewport
+    // Item height is 104px, so we need items from index = Math.floor(-translateY / 104) to index + 4
+    const startIndex = Math.floor(-translateY / 104);
     const endIndex = startIndex + 4; // Show at least 4 items (3 visible + 1 buffer)
     
     // Ensure we have items in the visible range
@@ -1156,7 +1156,7 @@ class SlotMachine {
       
       // Emergency fix: adjust position to ensure items are visible
       if (items.length > 0) {
-        const safeTranslateY = Math.max(-((items.length - 3) * 80), -1680);
+        const safeTranslateY = Math.max(-((items.length - 3) * 104), -2184);
         itemsContainer.style.transform = `translateY(${safeTranslateY}px)`;
         console.log(`🔧 Adjusted ${columnType} position to ${safeTranslateY}px for visibility`);
       }
@@ -1335,8 +1335,8 @@ class SlotMachine {
       
       if (!winnerName) return;
       
-      // The winner should be at index 20, which should be visible at position -1520px
-      const targetPosition = -1520; // This shows winner at center of viewport
+      // The winner should be at index 20, which should be visible at position -1976px
+      const targetPosition = -1976; // This shows winner at center of viewport
       const currentTransform = column.itemsContainer.style.transform;
       let currentPosition = targetPosition;
       
@@ -1352,7 +1352,7 @@ class SlotMachine {
       // STRICT: Check if position is within ±2px of target
       const positionDiff = Math.abs(currentPosition - targetPosition);
       if (positionDiff > 2) {
-        console.warn(`⚠️ ${columnType} position off by ${positionDiff}px, force centering to -1520px`);
+        console.warn(`⚠️ ${columnType} position off by ${positionDiff}px, force centering to -1976px`);
         column.itemsContainer.style.transform = `translate3d(0, ${targetPosition}px, 0)`;
       }
       
@@ -1362,7 +1362,7 @@ class SlotMachine {
       const finalMatch3d = finalTransform.match(/translate3d\([^,]+,\s*(-?\d+(?:\.\d+)?)px/);
       const finalPosition = parseFloat(finalMatchY?.[1] || finalMatch3d?.[1] || 0);
       if (Math.abs(finalPosition - targetPosition) > 2) {
-        console.error(`❌ ASSERTION FAILED: ${columnType} not centered! Expected -1520px ±2px, got ${finalPosition}px`);
+        console.error(`❌ ASSERTION FAILED: ${columnType} not centered! Expected -1976px ±2px, got ${finalPosition}px`);
       }
       
       // Final verification that winner is visible
@@ -1408,7 +1408,7 @@ class SlotMachine {
       if (!column || !column.itemsContainer) return;
       
       const currentTransform = column.itemsContainer.style.transform;
-      let currentPosition = -1520; // Default winner position
+      let currentPosition = -1976; // Default winner position
       
       const matchY = currentTransform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/);
       const match3d = currentTransform.match(/translate3d\([^,]+,\s*(-?\d+(?:\.\d+)?)px/);
@@ -1419,8 +1419,8 @@ class SlotMachine {
       
       // Check for unsafe positions that might cause blank frames
       if (currentPosition > -800) {
-        console.warn(`⚠️ ${columnType} position ${currentPosition}px might cause blank frame, adjusting to -1520px`);
-        column.itemsContainer.style.transform = 'translateY(-1520px)';
+        console.warn(`⚠️ ${columnType} position ${currentPosition}px might cause blank frame, adjusting to -1976px`);
+        column.itemsContainer.style.transform = 'translateY(-1976px)';
       } else {
         console.log(`✅ ${columnType} position maintained: ${currentPosition}px`);
       }
@@ -1489,8 +1489,8 @@ class SlotMachine {
       }
 
       // Find the center cell in viewport (should be the visible winner)
-      // The viewport is 240px tall, showing 3 items of 80px each
-      // Center row is at 80-160px, so we look for items in that range
+      // The viewport is 312px tall, showing 3 items of 104px each
+      // Center row is at 104-208px, so we look for items in that range
       const items = column.itemsContainer.querySelectorAll('.slot-item');
       const containerRect = column.itemsContainer.getBoundingClientRect();
       const windowRect = column.window.getBoundingClientRect();

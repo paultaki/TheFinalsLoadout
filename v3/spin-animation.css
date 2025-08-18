@@ -12,7 +12,7 @@
     transform: translateY(0);
   }
   to {
-    transform: translateY(-160px); /* Move 2 items (80px each) */
+    transform: translateY(-208px); /* Move 2 items (104px each) */
   }
 }
 
