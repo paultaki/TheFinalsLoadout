@@ -334,5 +334,46 @@ If needed, remove these two lines from index.html:
 - Line 95: `<link rel="stylesheet" href="/v3/history-styles-refined.css?v=20250816" />`
 - Line 482: `<script src="/v3/history-system-enhanced.js?v=20250816" defer></script>`
 
+## Recent Updates (2025-08-18)
+
+### Filter System Temporarily Hidden
+**Status**: Complete implementation ready but hidden for launch
+**Location**: Filter button hidden via CSS in `style.css` lines 238-241
+**Implementation**: 
+- Full filter system architecture preserved in `filter-system.js`
+- Filter panel UI complete in `index.html` (lines 132-137 for button, filter panel below)
+- All event handlers and localStorage persistence functional
+- CSS styles ready in `style.css` (filter panel section)
+
+**To Re-enable Filters**:
+1. Remove or comment out lines 238-241 in `style.css`:
+   ```css
+   /* Temporarily hide filter button - remove this when ready to launch filters */
+   #filter-toggle {
+     display: none !important;
+   }
+   ```
+2. Filter system will immediately be functional with:
+   - Weapon/gadget/specialization toggles
+   - Per-class filtering
+   - Preference persistence in localStorage
+   - Smooth slide-in animation from right
+
+### Recon Senses Removal
+**Removed from game**: The specialization "Recon Senses" no longer exists in The Finals
+**Files Updated**:
+- `loadout-loader.js` line 72 - Removed from image mapping
+- `app.js` line 93 - Removed from Medium specializations array  
+- `slot-machine.js` line 93 - Removed from Medium specializations array
+- No image file existed (was using placeholder)
+
+### Spin Again Button Fix
+**Problem**: "resetAnimation is not a function" error when clicking Spin Again
+**Root Cause**: `SimpleSpinAnimation` class was missing the `resetAnimation()` method
+**Solution**: Added `resetAnimation()` method to `simple-spin-animation.js` (lines 292-302)
+- Method stops any running animations
+- Resets isSpinning flag  
+- Clears all transforms back to translateY(0)
+
 ## Last Updated
-2025-08-16 - Production-ready with all critical issues resolved. CSS paths fixed for .com domain deployment. History UI refined with modular card design while preserving responsive architecture.
+2025-08-18 - Filter system hidden for launch (easily re-enabled), Recon Senses removed, Spin Again button fixed.

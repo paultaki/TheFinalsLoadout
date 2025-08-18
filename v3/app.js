@@ -90,7 +90,6 @@ const GameData = window.GameData = {
         "Dematerializer",
         "Guardian Turret",
         "Healing Beam",
-        "Recon Senses",
       ],
       gadgets: [
         "APS Turret",

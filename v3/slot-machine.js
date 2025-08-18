@@ -90,7 +90,6 @@ let ClassData = {
       "Dematerializer",
       "Guardian Turret",
       "Healing Beam",
-      "Recon Senses",
     ],
     gadgets: [
       "APS Turret",

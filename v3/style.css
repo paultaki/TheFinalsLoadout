@@ -235,6 +235,11 @@ a:hover {
   border-color: var(--primary-color);
 }
 
+/* Temporarily hide filter button - remove this when ready to launch filters */
+#filter-toggle {
+  display: none !important;
+}
+
 /* ========================================
    Filter Panel
    ======================================== */

@@ -284,6 +284,22 @@ class SimpleSpinAnimation {
     });
     this.isSpinning = false;
   }
+
+  /**
+   * Reset animation state for new spin
+   * Added to match AnimationEngineV2 interface
+   */
+  resetAnimation() {
+    console.log('🔄 Resetting SimpleSpinAnimation');
+    this.forceStopAnimation();
+    // Reset any stored state
+    this.isSpinning = false;
+    // Clear any transforms on slot containers
+    const containers = document.querySelectorAll('.slot-items');
+    containers.forEach(container => {
+      container.style.transform = 'translateY(0)';
+    });
+  }
 }
 
 // Export for use

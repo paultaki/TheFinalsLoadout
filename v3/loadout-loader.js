@@ -69,7 +69,6 @@ const IMAGE_NAME_MAP_LEGACY = {
   "Dematerializer": "Dematerializer",
   "Guardian Turret": "Guardian_Turret",
   "Healing Beam": "Healing_Beam",
-  "Recon Senses": "placeholder", // No image available
   "Mesh Shield": "Mesh_Shield",
   "Winch Claw": "Winch_Claw",
   
