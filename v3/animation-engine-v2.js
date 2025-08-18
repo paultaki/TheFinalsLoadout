@@ -60,6 +60,7 @@ class AnimationEngineV2 {
     this.isAnimating = false;
     this.animationFrameId = null;
     this.columnStates = new Map();
+    this.completedColumns = new Set(); // Track which columns have completed
     
     // Store device pixel ratio once to ensure consistency across all columns
     this.devicePixelRatio = window.devicePixelRatio || 1;
@@ -266,7 +267,10 @@ class AnimationEngineV2 {
         // Phase tracking
         phase: preservePosition ? 'cruise' : 'idle', // Start in cruise if preserving
         phaseStartTime: 0,
-        phaseProgress: 0
+        phaseProgress: 0,
+        
+        // Sound tracking
+        hasCompleted: false
       });
       
       // Apply current position
@@ -521,6 +525,14 @@ class AnimationEngineV2 {
           // Check for animation completion
           if (!this.isAnimationComplete(state, isFinalSpin)) {
             allComplete = false;
+          } else if (!state.hasCompleted) {
+            // Mark this column as completed and trigger sound
+            state.hasCompleted = true;
+            // Trigger click sound for this column landing
+            if (window.SoundManager) {
+              window.SoundManager.onColumnLand(index);
+            }
+            console.log(`🔊 Column ${index} landed - click sound triggered`);
           }
           
         });

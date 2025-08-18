@@ -669,6 +669,11 @@ class SlotMachine {
         // Update spin counter IMMEDIATELY before any async operations
         this.updateSpinCounter(capturedSpin, capturedTotal);
         
+        // Trigger sound for spin start
+        if (window.SoundManager) {
+          window.SoundManager.onSpinStart(isFirstSpin);
+        }
+        
         // IMPORTANT: Ensure counter is visually updated with proper pause
         await new Promise(resolve => setTimeout(resolve, 250));
 
@@ -1467,6 +1472,11 @@ class SlotMachine {
     await new Promise(resolve => setTimeout(resolve, 100));
     
     console.log("✨ Highlighting winners:", loadout);
+    
+    // Trigger celebration sound
+    if (window.SoundManager) {
+      window.SoundManager.onCelebration();
+    }
     
     SlotConfig.columns.forEach((columnType) => {
       const column = this.columns[columnType];
