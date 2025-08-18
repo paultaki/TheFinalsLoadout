@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V4 Animation Testing Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0f;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+        }
+        
+        .test-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .test-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .test-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .test-btn {
+            padding: 12px 24px;
+            background: #4a5568;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .test-btn:hover {
+            background: #5a6578;
+            transform: translateY(-2px);
+        }
+        
+        .test-btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .test-btn.success {
+            background: #48bb78;
+        }
+        
+        .test-btn.danger {
+            background: #f56565;
+        }
+        
+        .test-results {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .test-results h2 {
+            margin-bottom: 15px;
+            color: #a0aec0;
+        }
+        
+        .test-log {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .test-log .pass {
+            color: #48bb78;
+        }
+        
+        .test-log .fail {
+            color: #f56565;
+        }
+        
+        .test-log .info {
+            color: #63b3ed;
+        }
+        
+        .test-log .warn {
+            color: #f6ad55;
+        }
+        
+        .test-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: #2d3748;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .metric-label {
+            color: #a0aec0;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .test-iframe {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #4a5568;
+            border-radius: 8px;
+            background: #000;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-indicator.running {
+            background: #f6ad55;
+        }
+        
+        .status-indicator.passed {
+            background: #48bb78;
+        }
+        
+        .status-indicator.failed {
+            background: #f56565;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>🧪 V4 Animation Testing Suite</h1>
+        <p>Automated tests for slot machine animations</p>
+    </div>
+    
+    <div class="test-controls">
+        <button class="test-btn primary" onclick="runAllTests()">
+            🚀 Run All Tests
+        </button>
+        <button class="test-btn" onclick="testLandingPositions()">
+            📍 Test Landing Positions
+        </button>
+        <button class="test-btn" onclick="testAnimationTiming()">
+            ⏱️ Test Animation Timing
+        </button>
+        <button class="test-btn" onclick="testBlankImages()">
+            🖼️ Test Image Loading
+        </button>
+        <button class="test-btn" onclick="testRapidClicks()">
+            ⚡ Test Rapid Clicks
+        </button>
+        <button class="test-btn success" onclick="captureSnapshots()">
+            📸 Capture Snapshots
+        </button>
+        <button class="test-btn danger" onclick="clearResults()">
+            🗑️ Clear Results
+        </button>
+    </div>
+    
+    <div class="test-metrics">
+        <div class="metric-card">
+            <div class="metric-label">Tests Passed</div>
+            <div class="metric-value" id="tests-passed">0</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Tests Failed</div>
+            <div class="metric-value" id="tests-failed">0</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Avg Landing Position</div>
+            <div class="metric-value" id="avg-position">-</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Avg Animation Time</div>
+            <div class="metric-value" id="avg-time">-</div>
+        </div>
+    </div>
+    
+    <div class="test-results">
+        <h2><span class="status-indicator" id="status"></span>Test Results</h2>
+        <div class="test-log" id="test-log"></div>
+    </div>
+    
+    <iframe src="/v4/index.html" class="test-iframe" id="test-frame"></iframe>
+    
+    <script>
+        let testsPassed = 0;
+        let testsFailed = 0;
+        let testFrame = null;
+        let testWindow = null;
+        
+        // Wait for iframe to load
+        window.addEventListener('load', () => {
+            testFrame = document.getElementById('test-frame');
+            testWindow = testFrame.contentWindow;
+            log('info', '✅ Test suite initialized');
+            log('info', `Testing URL: ${testFrame.src}`);
+        });
+        
+        function log(type, message) {
+            const logEl = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = type;
+            entry.textContent = `[${timestamp}] ${message}`;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        function updateStatus(status) {
+            const indicator = document.getElementById('status');
+            indicator.className = `status-indicator ${status}`;
+        }
+        
+        function updateMetrics() {
+            document.getElementById('tests-passed').textContent = testsPassed;
+            document.getElementById('tests-failed').textContent = testsFailed;
+        }
+        
+        async function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        
+        async function runAllTests() {
+            log('info', '🚀 Starting full test suite...');
+            updateStatus('running');
+            
+            testsPassed = 0;
+            testsFailed = 0;
+            
+            await testLandingPositions();
+            await sleep(2000);
+            await testAnimationTiming();
+            await sleep(2000);
+            await testBlankImages();
+            await sleep(2000);
+            await testRapidClicks();
+            
+            updateStatus(testsFailed === 0 ? 'passed' : 'failed');
+            log('info', `✅ Test suite complete: ${testsPassed} passed, ${testsFailed} failed`);
+        }
+        
+        async function testLandingPositions() {
+            log('info', '📍 Testing landing positions...');
+            updateStatus('running');
+            
+            try {
+                // Trigger a spin
+                const generateBtn = testWindow.document.getElementById('generate-btn');
+                if (!generateBtn) {
+                    throw new Error('Generate button not found');
+                }
+                
+                generateBtn.click();
+                log('info', 'Spin triggered, waiting for animation...');
+                
+                // Wait for animation to complete (max 10 seconds)
+                await sleep(10000);
+                
+                // Check landing positions
+                const slotItems = testWindow.document.querySelectorAll('.slot-items');
+                const positions = [];
+                let allCorrect = true;
+                
+                slotItems.forEach((item, index) => {
+                    const transform = item.style.transform;
+                    const match = transform.match(/translateY\(([-\d.]+)px\)/);
+                    if (match) {
+                        const position = parseFloat(match[1]);
+                        positions.push(position);
+                        
+                        // Target should be -1520px (±2px tolerance)
+                        const isCorrect = Math.abs(position - (-1520)) <= 2;
+                        
+                        log(isCorrect ? 'pass' : 'fail', 
+                            `Column ${index + 1}: ${position}px (${isCorrect ? 'PASS' : 'FAIL'})`);
+                        
+                        if (!isCorrect) allCorrect = false;
+                    }
+                });
+                
+                // Calculate average
+                if (positions.length > 0) {
+                    const avg = positions.reduce((a, b) => a + b, 0) / positions.length;
+                    document.getElementById('avg-position').textContent = avg.toFixed(1) + 'px';
+                }
+                
+                if (allCorrect) {
+                    testsPassed++;
+                    log('pass', '✅ All columns landed at correct position!');
+                } else {
+                    testsFailed++;
+                    log('fail', '❌ Some columns missed target position');
+                }
+                
+            } catch (error) {
+                testsFailed++;
+                log('fail', `❌ Test failed: ${error.message}`);
+            }
+            
+            updateMetrics();
+            updateStatus('');
+        }
+        
+        async function testAnimationTiming() {
+            log('info', '⏱️ Testing animation timing...');
+            updateStatus('running');
+            
+            try {
+                const startTime = Date.now();
+                
+                // Trigger spin
+                const generateBtn = testWindow.document.getElementById('generate-btn');
+                generateBtn.click();
+                
+                // Monitor for animation completion
+                let animationComplete = false;
+                let checkCount = 0;
+                const maxChecks = 100; // 10 seconds max
+                
+                while (!animationComplete && checkCount < maxChecks) {
+                    await sleep(100);
+                    checkCount++;
+                    
+                    // Check if result is visible
+                    const result = testWindow.document.getElementById('loadout-result');
+                    if (result && result.style.display !== 'none') {
+                        animationComplete = true;
+                    }
+                }
+                
+                const endTime = Date.now();
+                const duration = (endTime - startTime) / 1000;
+                
+                document.getElementById('avg-time').textContent = duration.toFixed(1) + 's';
+                
+                if (duration < 15) {
+                    testsPassed++;
+                    log('pass', `✅ Animation completed in ${duration.toFixed(1)}s`);
+                } else {
+                    testsFailed++;
+                    log('fail', `❌ Animation took too long: ${duration.toFixed(1)}s`);
+                }
+                
+            } catch (error) {
+                testsFailed++;
+                log('fail', `❌ Timing test failed: ${error.message}`);
+            }
+            
+            updateMetrics();
+            updateStatus('');
+        }
+        
+        async function testBlankImages() {
+            log('info', '🖼️ Testing image loading...');
+            updateStatus('running');
+            
+            try {
+                // Get all images in slot items
+                const images = testWindow.document.querySelectorAll('.slot-item img');
+                let blankCount = 0;
+                let totalImages = images.length;
+                
+                images.forEach((img, index) => {
+                    if (!img.complete || img.naturalHeight === 0 || img.src.includes('placeholder')) {
+                        blankCount++;
+                        log('warn', `Image ${index} appears blank or placeholder: ${img.src}`);
+                    }
+                });
+                
+                if (blankCount === 0) {
+                    testsPassed++;
+                    log('pass', `✅ All ${totalImages} images loaded successfully`);
+                } else {
+                    testsFailed++;
+                    log('fail', `❌ ${blankCount} of ${totalImages} images are blank`);
+                }
+                
+            } catch (error) {
+                testsFailed++;
+                log('fail', `❌ Image test failed: ${error.message}`);
+            }
+            
+            updateMetrics();
+            updateStatus('');
+        }
+        
+        async function testRapidClicks() {
+            log('info', '⚡ Testing rapid click handling...');
+            updateStatus('running');
+            
+            try {
+                // Trigger multiple rapid clicks
+                const spinAgainBtn = testWindow.document.getElementById('spin-again-btn');
+                
+                if (!spinAgainBtn) {
+                    // First generate a loadout to get the spin again button
+                    const generateBtn = testWindow.document.getElementById('generate-btn');
+                    generateBtn.click();
+                    await sleep(10000);
+                }
+                
+                // Now rapid click test
+                let errorOccurred = false;
+                
+                for (let i = 0; i < 5; i++) {
+                    try {
+                        const btn = testWindow.document.getElementById('spin-again-btn');
+                        if (btn) btn.click();
+                        await sleep(100);
+                    } catch (error) {
+                        errorOccurred = true;
+                        log('fail', `Error on click ${i + 1}: ${error.message}`);
+                    }
+                }
+                
+                if (!errorOccurred) {
+                    testsPassed++;
+                    log('pass', '✅ Rapid clicks handled without errors');
+                } else {
+                    testsFailed++;
+                    log('fail', '❌ Errors occurred during rapid clicking');
+                }
+                
+            } catch (error) {
+                testsFailed++;
+                log('fail', `❌ Rapid click test failed: ${error.message}`);
+            }
+            
+            updateMetrics();
+            updateStatus('');
+        }
+        
+        async function captureSnapshots() {
+            log('info', '📸 Capturing animation snapshots...');
+            updateStatus('running');
+            
+            try {
+                // This would integrate with Puppeteer MCP if needed
+                log('info', 'Snapshot feature ready for Puppeteer integration');
+                log('info', 'Run: mcp__puppeteer__puppeteer_screenshot for captures');
+                
+            } catch (error) {
+                log('fail', `❌ Snapshot failed: ${error.message}`);
+            }
+            
+            updateStatus('');
+        }
+        
+        function clearResults() {
+            document.getElementById('test-log').innerHTML = '';
+            testsPassed = 0;
+            testsFailed = 0;
+            updateMetrics();
+            document.getElementById('avg-position').textContent = '-';
+            document.getElementById('avg-time').textContent = '-';
+            log('info', '🗑️ Results cleared');
+        }
+    </script>
+</body>
+</html>

@@ -504,7 +504,7 @@ a:hover {
   background: linear-gradient(180deg, var(--bg-darker), rgba(5, 5, 5, 0.8));
   border: 2px solid var(--border-color);
   border-radius: 8px;
-  height: 240px;
+  height: 360px; /* Expanded from 240px to show 4.5 items */
   overflow: hidden;
   position: relative;
   flex: 1;
@@ -928,7 +928,7 @@ a:hover {
   }
 
   .slot-window {
-    height: 120px;
+    height: 180px; /* Mobile: 50% of desktop 360px */
   }
 
   .slot-item {
@@ -953,7 +953,7 @@ a:hover {
   }
 
   .slot-window {
-    height: 100px;
+    height: 150px; /* Small mobile: still shows ~2 items */
   }
 }
 

@@ -1,9 +1,9 @@
 /* Polish styles - viewport and item height constants */
 
-/* Viewport must be exactly 240px (3 items × 80px) */
+/* Viewport expanded to 360px (4.5 items × 80px) for more realistic slot view */
 .slot-viewport,
 .slot-window {
-  height: 240px !important;
+  height: 360px !important;
   overflow: hidden;
   backface-visibility: hidden;
   transform: translate3d(0,0,0);
