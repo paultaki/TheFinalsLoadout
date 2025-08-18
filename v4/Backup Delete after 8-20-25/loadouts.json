@@ -1,0 +1,17 @@
+{
+  "Light": {
+    "weapons": ["XP-54", "V9S", "M11", "LH1", "SR-84", "SH1900", "93R", "Throwing Knives", "Recurve Bow", "Dagger", "Sword", "Dual Blades"],
+    "specializations": ["Cloaking Device", "Grappling Hook", "Evasive Dash"],
+    "gadgets": ["Breach Charge", "Flashbang", "Glitch Grenade", "Goo Grenade", "Pyro Grenade", "Smoke Grenade", "Stun Gun", "Thermal Vision", "Tracking Dart", "Vanishing Bomb", "Gateway", "Proximity Sensor"]
+  },
+  "Medium": {
+    "weapons": ["AKM", "FCAR", "R.357", "CL-40", "Model 1887", "FAMAS", "Pike-556", "Riot Shield", "CB-01 Repeater"],
+    "specializations": ["Healing Beam", "Dematerializer", "Guardian Turret"],
+    "gadgets": ["APS Turret", "Data Reshaper", "Defibrillator", "Explosive Mine", "Frag Grenade", "Gas Grenade", "Gas Mine", "Glitch Trap", "Jump Pad", "Night Vision", "Recon Senses", "Sonar Grenade", "Tracking Dart", "Zipline", "Lockbolt Launcher"]
+  },
+  "Heavy": {
+    "weapons": ["M60", "Lewis Gun", "SA1216", "Flamethrower", "KS-23", "M134 Minigun", "Sledgehammer", "Spear"],
+    "specializations": ["Mesh Shield", "Charge N Slam", "Goo Gun", "Winch Claw"],
+    "gadgets": ["Barricade", "C4", "Dome Shield", "Explosive Mine", "Frag Grenade", "Goo Grenade", "Pyro Grenade", "Pyro Mine", "RPG-7", "Anti-Gravity Cube", "Thermal Bore", "Breach Drill"]
+  }
+}
