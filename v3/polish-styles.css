@@ -94,3 +94,30 @@
 .winner-celebration {
   animation: winnerCelebration 700ms ease-in-out;
 }
+
+/* Keep consistent heights across all screen sizes - Vegas style! */
+@media (max-width: 768px) {
+  .slot-viewport,
+  .slot-window {
+    height: 312px !important;  /* Same majestic height everywhere */
+  }
+  
+  .slot-item {
+    height: 104px !important;  /* Consistent item height */
+    min-height: 104px !important;
+    max-height: 104px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .slot-viewport,
+  .slot-window {
+    height: 312px !important;  /* No shrinking on mobile! */
+  }
+  
+  .slot-item {
+    height: 104px !important;
+    min-height: 104px !important;
+    max-height: 104px !important;
+  }
+}

@@ -407,6 +407,8 @@ a:hover {
   box-shadow: var(--shadow-lg);
   position: relative;
   overflow: hidden;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .slot-machine::before {
@@ -698,7 +700,7 @@ a:hover {
   margin-top: var(--spacing-xl);
   animation: slideUp 0.5s ease;
   /* Match slot machine container width */
-  max-width: var(--max-width);
+  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -908,21 +910,22 @@ a:hover {
   }
 
   .container {
-    padding: var(--spacing-lg) var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-sm);
   }
 
-  /* CRITICAL: Maintain horizontal slot layout on mobile */
+  /* Mobile: Full width, NO SCALING */
   .slot-machine {
-    /* Remove transform to use full width */
-    padding: var(--spacing-lg);
+    max-width: 100%;
+    padding: var(--spacing-md);
     margin: 0;
   }
   
-  /* Make slot machine and loadout result same width */
+  /* Match widths between containers */
   .slot-machine-container,
   .loadout-result {
     width: 100%;
     max-width: 100%;
+    padding: 0;
   }
 
   .slot-columns {
@@ -939,13 +942,14 @@ a:hover {
     font-size: 0.75rem;
   }
 
+  /* FIXED HEIGHT - No scaling! */
   .slot-window {
-    height: 156px;
+    height: 312px !important;  /* Same as desktop for impact */
   }
 
   .slot-item {
-    height: 52px;
-    font-size: 0.7rem;
+    height: 104px !important;  /* Consistent everywhere */
+    font-size: 0.75rem;
   }
   
   .slot-item img {
@@ -969,13 +973,27 @@ a:hover {
 }
 
 @media (max-width: 480px) {
-  /* Even smaller screens - more aggressive scaling */
+  /* NO SCALING - just adjust padding */
   .slot-machine {
-    transform: scale(0.75);
+    padding: var(--spacing-sm);
   }
 
   .slot-window {
-    height: 130px;
+    height: 312px !important;  /* Keep the height! */
+  }
+  
+  .slot-item {
+    height: 104px !important;
+  }
+  
+  /* Smaller text/images for narrow screens */
+  .slot-item img {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .column-header {
+    font-size: 0.7rem;
   }
 }
 

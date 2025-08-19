@@ -4,8 +4,8 @@
  * Now uses centralized name-to-asset resolver
  */
 
-// Load the centralized resolver if available
-const resolveItemImage = (typeof window !== 'undefined' && window.NameToAsset) 
+// Load the centralized resolver if available - use different var name to avoid conflict
+const imageResolver = (typeof window !== 'undefined' && window.NameToAsset) 
   ? window.NameToAsset.resolveItemImage
   : (name) => {
       const fileName = name.replace(/\s+/g, "_").replace(/'/g, "");
@@ -117,8 +117,8 @@ const IMAGE_NAME_MAP_LEGACY = {
  */
 function getImagePath(itemName, category = '') {
   // Use centralized resolver if available
-  if (typeof resolveItemImage === 'function') {
-    return resolveItemImage(itemName, category);
+  if (typeof imageResolver === 'function') {
+    return imageResolver(itemName, category);
   }
   
   // Legacy fallback
