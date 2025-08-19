@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Test - The Finals Loadout v3</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #0a0a0a;
+            color: #0f0;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        h1 { color: #ff3366; }
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-bottom: 1px solid #333;
+            max-width: 600px;
+        }
+        .good { color: #0f0; }
+        .warning { color: #ff0; }
+        .bad { color: #f00; }
+        .test-btn {
+            background: #ff3366;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            margin: 1rem 0;
+            font-size: 1rem;
+        }
+        pre {
+            background: #111;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Performance Test Suite</h1>
+    
+    <div id="results"></div>
+    
+    <button class="test-btn" onclick="runTests()">Run Performance Tests</button>
+    <button class="test-btn" onclick="compareVersions()">Compare Original vs Optimized</button>
+    
+    <pre id="details"></pre>
+
+    <script>
+        async function measurePageLoad(url) {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            const startTime = performance.now();
+            
+            return new Promise((resolve) => {
+                iframe.onload = () => {
+                    const loadTime = performance.now() - startTime;
+                    
+                    // Try to get performance metrics from iframe
+                    let metrics = {};
+                    try {
+                        const iframePerf = iframe.contentWindow.performance;
+                        const entries = iframePerf.getEntriesByType('navigation')[0];
+                        
+                        metrics = {
+                            loadTime: loadTime,
+                            domContentLoaded: entries ? entries.domContentLoadedEventEnd - entries.domContentLoadedEventStart : 0,
+                            domInteractive: entries ? entries.domInteractive : 0,
+                            transferSize: entries ? entries.transferSize : 0
+                        };
+                    } catch(e) {
+                        metrics = { loadTime: loadTime };
+                    }
+                    
+                    document.body.removeChild(iframe);
+                    resolve(metrics);
+                };
+                
+                iframe.src = url;
+            });
+        }
+        
+        async function runTests() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<h2>Testing Optimized Version...</h2>';
+            
+            // Test 1: Resource Timing
+            const resources = performance.getEntriesByType('resource');
+            const cssResources = resources.filter(r => r.name.includes('.css'));
+            const jsResources = resources.filter(r => r.name.includes('.js'));
+            const imgResources = resources.filter(r => r.name.includes('.webp') || r.name.includes('.png'));
+            
+            results.innerHTML += `
+                <div class="metric">
+                    <span>CSS Files Loaded:</span>
+                    <span class="${cssResources.length <= 3 ? 'good' : 'warning'}">${cssResources.length}</span>
+                </div>
+                <div class="metric">
+                    <span>JS Files Loaded:</span>
+                    <span class="${jsResources.length <= 10 ? 'good' : 'warning'}">${jsResources.length}</span>
+                </div>
+                <div class="metric">
+                    <span>Images Loaded:</span>
+                    <span>${imgResources.length}</span>
+                </div>
+            `;
+            
+            // Test 2: Critical Metrics
+            const paintEntries = performance.getEntriesByType('paint');
+            const fcp = paintEntries.find(e => e.name === 'first-contentful-paint');
+            const lcp = performance.getEntriesByType('largest-contentful-paint')[0];
+            
+            results.innerHTML += `
+                <div class="metric">
+                    <span>First Contentful Paint:</span>
+                    <span class="${fcp && fcp.startTime < 1000 ? 'good' : fcp && fcp.startTime < 2000 ? 'warning' : 'bad'}">
+                        ${fcp ? fcp.startTime.toFixed(0) + 'ms' : 'N/A'}
+                    </span>
+                </div>
+                <div class="metric">
+                    <span>Largest Contentful Paint:</span>
+                    <span class="${lcp && lcp.startTime < 2000 ? 'good' : lcp && lcp.startTime < 3000 ? 'warning' : 'bad'}">
+                        ${lcp ? lcp.startTime.toFixed(0) + 'ms' : 'N/A'}
+                    </span>
+                </div>
+            `;
+            
+            // Test 3: Memory Usage
+            if (performance.memory) {
+                const mb = 1024 * 1024;
+                results.innerHTML += `
+                    <div class="metric">
+                        <span>JS Heap Size:</span>
+                        <span class="${performance.memory.usedJSHeapSize / mb < 50 ? 'good' : 'warning'}">
+                            ${(performance.memory.usedJSHeapSize / mb).toFixed(2)} MB
+                        </span>
+                    </div>
+                `;
+            }
+            
+            // Test 4: Service Worker
+            const swRegistration = await navigator.serviceWorker.getRegistration();
+            results.innerHTML += `
+                <div class="metric">
+                    <span>Service Worker:</span>
+                    <span class="${swRegistration ? 'good' : 'warning'}">
+                        ${swRegistration ? 'Active' : 'Not Active'}
+                    </span>
+                </div>
+            `;
+            
+            // Show details
+            document.getElementById('details').textContent = JSON.stringify({
+                navigation: performance.getEntriesByType('navigation')[0],
+                resources: resources.length,
+                paint: paintEntries
+            }, null, 2);
+        }
+        
+        async function compareVersions() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<h2>Comparing Versions...</h2>';
+            
+            results.innerHTML += '<p>Loading original version...</p>';
+            const original = await measurePageLoad('/v3/index.html');
+            
+            results.innerHTML += '<p>Loading optimized version...</p>';
+            const optimized = await measurePageLoad('/v3/index-optimized.html');
+            
+            const improvement = ((original.loadTime - optimized.loadTime) / original.loadTime * 100).toFixed(1);
+            
+            results.innerHTML = `
+                <h2>Performance Comparison</h2>
+                <div class="metric">
+                    <span>Original Load Time:</span>
+                    <span>${original.loadTime.toFixed(0)}ms</span>
+                </div>
+                <div class="metric">
+                    <span>Optimized Load Time:</span>
+                    <span class="good">${optimized.loadTime.toFixed(0)}ms</span>
+                </div>
+                <div class="metric">
+                    <span>Improvement:</span>
+                    <span class="${improvement > 20 ? 'good' : improvement > 10 ? 'warning' : 'bad'}">
+                        ${improvement}% faster
+                    </span>
+                </div>
+            `;
+            
+            document.getElementById('details').textContent = JSON.stringify({
+                original,
+                optimized,
+                improvement: improvement + '%'
+            }, null, 2);
+        }
+        
+        // Auto-run basic test on load
+        window.addEventListener('load', () => {
+            setTimeout(runTests, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!-- CRITICAL CSS - Add this to index.html <head> after meta tags -->
+<style>
+/* Critical CSS for instant render - The Finals Loadout v3 */
+:root{--bg-dark:#0a0a0a;--text-primary:#fff;--font-display:"Bebas Neue",sans-serif;--font-body:"Inter",sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);background:var(--bg-dark);color:var(--text-primary);line-height:1.6;min-height:100vh;overflow-x:hidden}
+.container{max-width:1200px;margin:0 auto;padding:0 1rem}
+.slot-machine-container{width:100%;padding:1rem}
+.slot-machine{position:relative;background:#1a1a1a;border-radius:12px;overflow:hidden}
+.slot-columns{display:flex;justify-content:center;gap:1rem;padding:2rem 1rem}
+.slot-column{flex:1;max-width:150px;background:#0f0f0f;border-radius:8px;overflow:hidden}
+.slot-window{position:relative;height:240px;overflow:hidden}
+.slot-items{position:absolute;width:100%;transition:none}
+.slot-item{height:80px;display:flex;align-items:center;justify-content:center;padding:0.5rem}
+.generate-btn{background:linear-gradient(135deg,#ff3366,#ff6b9d);color:#fff;border:none;padding:1rem 2rem;font-size:1.125rem;font-weight:700;border-radius:8px;cursor:pointer;text-transform:uppercase;transition:all 0.3s}
+.header{text-align:center;padding:2rem 0}
+.title{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;text-transform:uppercase}
+/* Prevent layout shift */
+.pre-slot-container{min-height:400px}
+.history-section{margin-top:3rem}
+</style>
