@@ -1,0 +1,414 @@
+{
+  "players": [
+    {
+      "name": "1-800-FAT-MOMS",
+      "matches": 9266,
+      "wins": 3917,
+      "eliminations": 44423,
+      "deaths": 46829,
+      "damage": 15434478,
+      "cashout": 0,
+      "skillScore": {
+        "total": 47.7,
+        "kd": 0.95,
+        "winRate": 42.3,
+        "avgDamage": 1666,
+        "avgCashout": 0
+      }
+    },
+    {
+      "name": "1-800-FAT-TEDDY",
+      "matches": 4254,
+      "wins": 1782,
+      "eliminations": 21765,
+      "deaths": 26647,
+      "damage": 7677977,
+      "cashout": 0,
+      "skillScore": {
+        "total": 47.4,
+        "kd": 0.82,
+        "winRate": 41.9,
+        "avgDamage": 1805,
+        "avgCashout": 0
+      }
+    },
+    {
+      "name": "JohnRedcorn619",
+      "matches": 2413,
+      "wins": 1019,
+      "eliminations": 18008,
+      "deaths": 15488,
+      "damage": 5806381,
+      "cashout": 0,
+      "skillScore": {
+        "total": 55.1,
+        "kd": 1.16,
+        "winRate": 42.2,
+        "avgDamage": 2406,
+        "avgCashout": 0
+      }
+    },
+    {
+      "name": "1-800-FAT-NUTZ",
+      "matches": 2501,
+      "wins": 883,
+      "eliminations": 13031,
+      "deaths": 12380,
+      "damage": 4620642,
+      "cashout": 0,
+      "skillScore": {
+        "total": 49.5,
+        "kd": 1.05,
+        "winRate": 35.3,
+        "avgDamage": 1848,
+        "avgCashout": 0
+      }
+    },
+    {
+      "name": "Hobo",
+      "matches": 999,
+      "wins": 412,
+      "eliminations": 587,
+      "deaths": 6093,
+      "damage": 18435810,
+      "cashout": 0,
+      "skillScore": {
+        "total": 38.8,
+        "kd": 0.1,
+        "winRate": 41.2,
+        "avgDamage": 18454,
+        "avgCashout": 0
+      }
+    },
+    {
+      "name": "Rezzae",
+      "matches": 5016,
+      "wins": 2260,
+      "eliminations": 28932,
+      "deaths": 29641,
+      "damage": 9310154,
+      "cashout": 0,
+      "skillScore": {
+        "total": 51.4,
+        "kd": 0.98,
+        "winRate": 45.1,
+        "avgDamage": 1856,
+        "avgCashout": 0
+      }
+    },
+    {
+      "name": "Steamdonk88",
+      "matches": 306,
+      "wins": 103,
+      "eliminations": 1213,
+      "deaths": 1578,
+      "damage": 409967,
+      "cashout": 0,
+      "skillScore": {
+        "total": 38.4,
+        "kd": 0.77,
+        "winRate": 33.7,
+        "avgDamage": 1340,
+        "avgCashout": 0
+      }
+    },
+    {
+      "name": "1-800-FAT-KUSH",
+      "matches": 7664,
+      "wins": 3439,
+      "eliminations": 33325,
+      "deaths": 43830,
+      "damage": 11293946,
+      "cashout": 0,
+      "skillScore": {
+        "total": 43.3,
+        "kd": 0.76,
+        "winRate": 44.9,
+        "avgDamage": 1474,
+        "avgCashout": 0
+      }
+    },
+    {
+      "name": "SonarAtlas",
+      "matches": 2307,
+      "wins": 675,
+      "eliminations": 12075,
+      "deaths": 11557,
+      "damage": 3814965,
+      "cashout": 0,
+      "skillScore": {
+        "total": 45.1,
+        "kd": 1.04,
+        "winRate": 29.3,
+        "avgDamage": 1654,
+        "avgCashout": 0
+      }
+    },
+    {
+      "name": "itsfishy",
+      "matches": 2938,
+      "wins": 1236,
+      "eliminations": 16527,
+      "deaths": 15775,
+      "damage": 5431578,
+      "cashout": 0,
+      "skillScore": {
+        "total": 51.4,
+        "kd": 1.05,
+        "winRate": 42.1,
+        "avgDamage": 1849,
+        "avgCashout": 0
+      }
+    },
+    {
+      "name": "CJR195",
+      "matches": 1706,
+      "wins": 631,
+      "eliminations": 1075,
+      "deaths": 11243,
+      "damage": 3200420,
+      "cashout": 0,
+      "skillScore": {
+        "total": 36,
+        "kd": 0.1,
+        "winRate": 37,
+        "avgDamage": 1876,
+        "avgCashout": 0
+      }
+    },
+    {
+      "name": "Pat",
+      "matches": 1105,
+      "wins": 447,
+      "eliminations": 6019,
+      "deaths": 6690,
+      "damage": 2240541,
+      "cashout": 0,
+      "skillScore": {
+        "total": 50.6,
+        "kd": 0.9,
+        "winRate": 40.5,
+        "avgDamage": 2028,
+        "avgCashout": 0
+      }
+    }
+  ],
+  "teams": [
+    {
+      "name": "Team A",
+      "players": [
+        {
+          "name": "JohnRedcorn619",
+          "matches": 2413,
+          "wins": 1019,
+          "eliminations": 18008,
+          "deaths": 15488,
+          "damage": 5806381,
+          "cashout": 0,
+          "skillScore": {
+            "total": 55.1,
+            "kd": 1.16,
+            "winRate": 42.2,
+            "avgDamage": 2406,
+            "avgCashout": 0
+          }
+        },
+        {
+          "name": "SonarAtlas",
+          "matches": 2307,
+          "wins": 675,
+          "eliminations": 12075,
+          "deaths": 11557,
+          "damage": 3814965,
+          "cashout": 0,
+          "skillScore": {
+            "total": 45.1,
+            "kd": 1.04,
+            "winRate": 29.3,
+            "avgDamage": 1654,
+            "avgCashout": 0
+          }
+        },
+        {
+          "name": "1-800-FAT-KUSH",
+          "matches": 7664,
+          "wins": 3439,
+          "eliminations": 33325,
+          "deaths": 43830,
+          "damage": 11293946,
+          "cashout": 0,
+          "skillScore": {
+            "total": 43.3,
+            "kd": 0.76,
+            "winRate": 44.9,
+            "avgDamage": 1474,
+            "avgCashout": 0
+          }
+        }
+      ],
+      "avgSkillScore": 47.833333333333336
+    },
+    {
+      "name": "Team B",
+      "players": [
+        {
+          "name": "Rezzae",
+          "matches": 5016,
+          "wins": 2260,
+          "eliminations": 28932,
+          "deaths": 29641,
+          "damage": 9310154,
+          "cashout": 0,
+          "skillScore": {
+            "total": 51.4,
+            "kd": 0.98,
+            "winRate": 45.1,
+            "avgDamage": 1856,
+            "avgCashout": 0
+          }
+        },
+        {
+          "name": "1-800-FAT-TEDDY",
+          "matches": 4254,
+          "wins": 1782,
+          "eliminations": 21765,
+          "deaths": 26647,
+          "damage": 7677977,
+          "cashout": 0,
+          "skillScore": {
+            "total": 47.4,
+            "kd": 0.82,
+            "winRate": 41.9,
+            "avgDamage": 1805,
+            "avgCashout": 0
+          }
+        },
+        {
+          "name": "Hobo",
+          "matches": 999,
+          "wins": 412,
+          "eliminations": 587,
+          "deaths": 6093,
+          "damage": 18435810,
+          "cashout": 0,
+          "skillScore": {
+            "total": 38.8,
+            "kd": 0.1,
+            "winRate": 41.2,
+            "avgDamage": 18454,
+            "avgCashout": 0
+          }
+        }
+      ],
+      "avgSkillScore": 45.86666666666667
+    },
+    {
+      "name": "Team C",
+      "players": [
+        {
+          "name": "itsfishy",
+          "matches": 2938,
+          "wins": 1236,
+          "eliminations": 16527,
+          "deaths": 15775,
+          "damage": 5431578,
+          "cashout": 0,
+          "skillScore": {
+            "total": 51.4,
+            "kd": 1.05,
+            "winRate": 42.1,
+            "avgDamage": 1849,
+            "avgCashout": 0
+          }
+        },
+        {
+          "name": "1-800-FAT-MOMS",
+          "matches": 9266,
+          "wins": 3917,
+          "eliminations": 44423,
+          "deaths": 46829,
+          "damage": 15434478,
+          "cashout": 0,
+          "skillScore": {
+            "total": 47.7,
+            "kd": 0.95,
+            "winRate": 42.3,
+            "avgDamage": 1666,
+            "avgCashout": 0
+          }
+        },
+        {
+          "name": "Steamdonk88",
+          "matches": 306,
+          "wins": 103,
+          "eliminations": 1213,
+          "deaths": 1578,
+          "damage": 409967,
+          "cashout": 0,
+          "skillScore": {
+            "total": 38.4,
+            "kd": 0.77,
+            "winRate": 33.7,
+            "avgDamage": 1340,
+            "avgCashout": 0
+          }
+        }
+      ],
+      "avgSkillScore": 45.833333333333336
+    },
+    {
+      "name": "Team D",
+      "players": [
+        {
+          "name": "Pat",
+          "matches": 1105,
+          "wins": 447,
+          "eliminations": 6019,
+          "deaths": 6690,
+          "damage": 2240541,
+          "cashout": 0,
+          "skillScore": {
+            "total": 50.6,
+            "kd": 0.9,
+            "winRate": 40.5,
+            "avgDamage": 2028,
+            "avgCashout": 0
+          }
+        },
+        {
+          "name": "1-800-FAT-NUTZ",
+          "matches": 2501,
+          "wins": 883,
+          "eliminations": 13031,
+          "deaths": 12380,
+          "damage": 4620642,
+          "cashout": 0,
+          "skillScore": {
+            "total": 49.5,
+            "kd": 1.05,
+            "winRate": 35.3,
+            "avgDamage": 1848,
+            "avgCashout": 0
+          }
+        },
+        {
+          "name": "CJR195",
+          "matches": 1706,
+          "wins": 631,
+          "eliminations": 1075,
+          "deaths": 11243,
+          "damage": 3200420,
+          "cashout": 0,
+          "skillScore": {
+            "total": 36,
+            "kd": 0.1,
+            "winRate": 37,
+            "avgDamage": 1876,
+            "avgCashout": 0
+          }
+        }
+      ],
+      "avgSkillScore": 45.36666666666667
+    }
+  ]
+}

@@ -1,0 +1,1202 @@
+{
+  "teams": [
+    {
+      "name": "Team A",
+      "points": 5
+    },
+    {
+      "name": "Team B",
+      "points": 10
+    },
+    {
+      "name": "Team C",
+      "points": 13
+    },
+    {
+      "name": "Team D",
+      "points": 3
+    }
+  ],
+  "players": [
+    {
+      "name": "ClassicArena",
+      "score": 11.7,
+      "team": "Team A",
+      "roundsPlayed": 5,
+      "totalEliminations": 10,
+      "totalDeaths": 32
+    },
+    {
+      "name": "SonarAtlas",
+      "score": 24.5,
+      "team": "Team A",
+      "roundsPlayed": 5,
+      "totalEliminations": 32,
+      "totalDeaths": 29
+    },
+    {
+      "name": "1-800-FAT-KUSH",
+      "score": 13.8,
+      "team": "Team A",
+      "roundsPlayed": 5,
+      "totalEliminations": 15,
+      "totalDeaths": 34
+    },
+    {
+      "name": "Rezzae",
+      "score": 32.8,
+      "team": "Team B",
+      "roundsPlayed": 5,
+      "totalEliminations": 28,
+      "totalDeaths": 28
+    },
+    {
+      "name": "1-800-FAT-TEDDY",
+      "score": 26.5,
+      "team": "Team B",
+      "roundsPlayed": 5,
+      "totalEliminations": 31,
+      "totalDeaths": 29
+    },
+    {
+      "name": "Hobo",
+      "score": 20.9,
+      "team": "Team B",
+      "roundsPlayed": 5,
+      "totalEliminations": 21,
+      "totalDeaths": 27
+    },
+    {
+      "name": "itsfishy",
+      "score": 41.9,
+      "team": "Team C",
+      "roundsPlayed": 5,
+      "totalEliminations": 46,
+      "totalDeaths": 13
+    },
+    {
+      "name": "1-800-FAT-MOMS",
+      "score": 32.5,
+      "team": "Team C",
+      "roundsPlayed": 5,
+      "totalEliminations": 29,
+      "totalDeaths": 20
+    },
+    {
+      "name": "JohnRedcorn619",
+      "score": 40.3,
+      "team": "Team C",
+      "roundsPlayed": 5,
+      "totalEliminations": 37,
+      "totalDeaths": 19
+    },
+    {
+      "name": "CJR195",
+      "score": 19.9,
+      "team": "Team D",
+      "roundsPlayed": 5,
+      "totalEliminations": 25,
+      "totalDeaths": 32
+    },
+    {
+      "name": "Pat",
+      "score": 17.7,
+      "team": "Team D",
+      "roundsPlayed": 5,
+      "totalEliminations": 14,
+      "totalDeaths": 35
+    },
+    {
+      "name": "1-800-FAT-NUTZ",
+      "score": 20.9,
+      "team": "Team D",
+      "roundsPlayed": 5,
+      "totalEliminations": 26,
+      "totalDeaths": 32
+    }
+  ],
+  "matches": [
+    {
+      "round": "1 - The Big Splash",
+      "result": "Team B 3, Team D 2, Team C 1"
+    },
+    {
+      "round": "2 - The Big Splash",
+      "result": "Team C 3, Team A 2, Team B 1"
+    },
+    {
+      "round": "3 - The Big Splash",
+      "result": "Team B 3, Team C 2, Team D 1"
+    },
+    {
+      "round": "4 - The Big Splash",
+      "result": "Team C 3, Team B 2, Team A 1"
+    },
+    {
+      "round": "5 - The Big Splash",
+      "result": "Team C 3, Team A 2, Team B 1"
+    }
+  ],
+  "rounds": [
+    {
+      "roundNumber": 1,
+      "gameMode": "The Big Splash",
+      "totalCashExtracted": 110500,
+      "timestamp": "2024-01-20T22:00:00Z",
+      "playerStats": [
+        {
+          "name": "1-800-FAT-KUSH",
+          "placement": 4,
+          "team": "Team A",
+          "level": 9565,
+          "stats": {
+            "eliminations": 4,
+            "assists": 1,
+            "deaths": 7,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 2495,
+            "objectiveScore": 1950,
+            "supportScore": 1599
+          },
+          "impactScore": 18.0
+        },
+        {
+          "name": "SonarAtlas",
+          "placement": 4,
+          "team": "Team A",
+          "level": 5856,
+          "stats": {
+            "eliminations": 6,
+            "assists": 2,
+            "deaths": 6,
+            "revives": 6,
+            "objectives": 0,
+            "combatScore": 4209,
+            "objectiveScore": 1200,
+            "supportScore": 1315
+          },
+          "impactScore": 30.7
+        },
+        {
+          "name": "ClassicArena",
+          "placement": 4,
+          "team": "Team A",
+          "level": 2881,
+          "stats": {
+            "eliminations": 1,
+            "assists": 3,
+            "deaths": 7,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 1335,
+            "objectiveScore": 1450,
+            "supportScore": 1079
+          },
+          "impactScore": 9.9
+        },
+        {
+          "name": "Rezzae",
+          "placement": 1,
+          "team": "Team B",
+          "level": 8433,
+          "stats": {
+            "eliminations": 6,
+            "assists": 2,
+            "deaths": 3,
+            "revives": 4,
+            "objectives": 0,
+            "combatScore": 4601,
+            "objectiveScore": 2400,
+            "supportScore": 840
+          },
+          "impactScore": 35.8
+        },
+        {
+          "name": "1-800-FAT-TEDDY",
+          "placement": 1,
+          "team": "Team B",
+          "level": 2866,
+          "stats": {
+            "eliminations": 3,
+            "assists": 1,
+            "deaths": 7,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 1888,
+            "objectiveScore": 2150,
+            "supportScore": 606
+          },
+          "impactScore": 16.6
+        },
+        {
+          "name": "Hobo",
+          "placement": 1,
+          "team": "Team B",
+          "level": 1533,
+          "stats": {
+            "eliminations": 3,
+            "assists": 0,
+            "deaths": 6,
+            "revives": 1,
+            "objectives": 0,
+            "combatScore": 1843,
+            "objectiveScore": 1750,
+            "supportScore": 210
+          },
+          "impactScore": 10.8
+        },
+        {
+          "name": "itsfishy",
+          "placement": 3,
+          "team": "Team C",
+          "level": 1642,
+          "stats": {
+            "eliminations": 9,
+            "assists": 7,
+            "deaths": 2,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 6293,
+            "objectiveScore": 1200,
+            "supportScore": 502
+          },
+          "impactScore": 48.0
+        },
+        {
+          "name": "1-800-FAT-MOMS",
+          "placement": 3,
+          "team": "Team C",
+          "level": 3882,
+          "stats": {
+            "eliminations": 7,
+            "assists": 1,
+            "deaths": 5,
+            "revives": 2,
+            "objectives": 3,
+            "combatScore": 4265,
+            "objectiveScore": 1700,
+            "supportScore": 506
+          },
+          "impactScore": 38.5
+        },
+        {
+          "name": "JohnRedcorn619",
+          "placement": 3,
+          "team": "Team C",
+          "level": 7913,
+          "stats": {
+            "eliminations": 7,
+            "assists": 1,
+            "deaths": 4,
+            "revives": 3,
+            "objectives": 3,
+            "combatScore": 3959,
+            "objectiveScore": 1700,
+            "supportScore": 625
+          },
+          "impactScore": 41.3
+        },
+        {
+          "name": "CJR195",
+          "placement": 2,
+          "team": "Team D",
+          "level": 991,
+          "stats": {
+            "eliminations": 7,
+            "assists": 3,
+            "deaths": 3,
+            "revives": 1,
+            "objectives": 0,
+            "combatScore": 3899,
+            "objectiveScore": 3450,
+            "supportScore": 284
+          },
+          "impactScore": 30.6
+        },
+        {
+          "name": "Pat",
+          "placement": 2,
+          "team": "Team D",
+          "level": 110,
+          "stats": {
+            "eliminations": 3,
+            "assists": 5,
+            "deaths": 7,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 3367,
+            "objectiveScore": 1950,
+            "supportScore": 410
+          },
+          "impactScore": 19.7
+        },
+        {
+          "name": "1-800-FAT-NUTZ",
+          "placement": 2,
+          "team": "Team D",
+          "level": 202,
+          "stats": {
+            "eliminations": 5,
+            "assists": 2,
+            "deaths": 5,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 3253,
+            "objectiveScore": 2200,
+            "supportScore": 654
+          },
+          "impactScore": 24.1
+        }
+      ]
+    },
+    {
+      "roundNumber": 2,
+      "gameMode": "The Big Splash",
+      "totalCashExtracted": 113600,
+      "timestamp": "2024-01-20T22:30:00Z",
+      "playerStats": [
+        {
+          "name": "itsfishy",
+          "placement": 1,
+          "team": "Team C",
+          "level": 1642,
+          "stats": {
+            "eliminations": 8,
+            "assists": 1,
+            "deaths": 4,
+            "revives": 0,
+            "objectives": 0,
+            "combatScore": 6373,
+            "objectiveScore": 2000,
+            "supportScore": 359
+          },
+          "impactScore": 29.7
+        },
+        {
+          "name": "1-800-FAT-MOMS",
+          "placement": 1,
+          "team": "Team C",
+          "level": 3882,
+          "stats": {
+            "eliminations": 2,
+            "assists": 2,
+            "deaths": 4,
+            "revives": 0,
+            "objectives": 0,
+            "combatScore": 2079,
+            "objectiveScore": 2400,
+            "supportScore": 127
+          },
+          "impactScore": 6.6
+        },
+        {
+          "name": "JohnRedcorn619",
+          "placement": 1,
+          "team": "Team C",
+          "level": 7913,
+          "stats": {
+            "eliminations": 11,
+            "assists": 3,
+            "deaths": 3,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 7593,
+            "objectiveScore": 3000,
+            "supportScore": 465
+          },
+          "impactScore": 51.1
+        },
+        {
+          "name": "1-800-FAT-KUSH",
+          "placement": 2,
+          "team": "Team A",
+          "level": 9565,
+          "stats": {
+            "eliminations": 3,
+            "assists": 2,
+            "deaths": 7,
+            "revives": 0,
+            "objectives": 0,
+            "combatScore": 2686,
+            "objectiveScore": 3700,
+            "supportScore": 108
+          },
+          "impactScore": 10.5
+        },
+        {
+          "name": "SonarAtlas",
+          "placement": 2,
+          "team": "Team A",
+          "level": 5856,
+          "stats": {
+            "eliminations": 4,
+            "assists": 2,
+            "deaths": 4,
+            "revives": 0,
+            "objectives": 0,
+            "combatScore": 2780,
+            "objectiveScore": 2700,
+            "supportScore": 5
+          },
+          "impactScore": 12.5
+        },
+        {
+          "name": "ClassicArena",
+          "placement": 2,
+          "team": "Team A",
+          "level": 2881,
+          "stats": {
+            "eliminations": 4,
+            "assists": 0,
+            "deaths": 5,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 2885,
+            "objectiveScore": 2200,
+            "supportScore": 1574
+          },
+          "impactScore": 19.7
+        },
+        {
+          "name": "Rezzae",
+          "placement": 3,
+          "team": "Team B",
+          "level": 8433,
+          "stats": {
+            "eliminations": 3,
+            "assists": 3,
+            "deaths": 8,
+            "revives": 4,
+            "objectives": 0,
+            "combatScore": 2972,
+            "objectiveScore": 2950,
+            "supportScore": 825
+          },
+          "impactScore": 23.7
+        },
+        {
+          "name": "1-800-FAT-TEDDY",
+          "placement": 3,
+          "team": "Team B",
+          "level": 2866,
+          "stats": {
+            "eliminations": 9,
+            "assists": 0,
+            "deaths": 8,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 4696,
+            "objectiveScore": 2700,
+            "supportScore": 352
+          },
+          "impactScore": 35.7
+        },
+        {
+          "name": "Hobo",
+          "placement": 3,
+          "team": "Team B",
+          "level": 1533,
+          "stats": {
+            "eliminations": 1,
+            "assists": 2,
+            "deaths": 6,
+            "revives": 4,
+            "objectives": 0,
+            "combatScore": 1895,
+            "objectiveScore": 1950,
+            "supportScore": 620
+          },
+          "impactScore": 15.5
+        },
+        {
+          "name": "CJR195",
+          "placement": 4,
+          "team": "Team D",
+          "level": 991,
+          "stats": {
+            "eliminations": 3,
+            "assists": 2,
+            "deaths": 7,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 2588,
+            "objectiveScore": 1950,
+            "supportScore": 757
+          },
+          "impactScore": 15.3
+        },
+        {
+          "name": "Pat",
+          "placement": 4,
+          "team": "Team D",
+          "level": 110,
+          "stats": {
+            "eliminations": 2,
+            "assists": 3,
+            "deaths": 8,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 2140,
+            "objectiveScore": 1950,
+            "supportScore": 932
+          },
+          "impactScore": 12.0
+        },
+        {
+          "name": "1-800-FAT-NUTZ",
+          "placement": 4,
+          "team": "Team D",
+          "level": 202,
+          "stats": {
+            "eliminations": 9,
+            "assists": 0,
+            "deaths": 7,
+            "revives": 0,
+            "objectives": 0,
+            "combatScore": 4587,
+            "objectiveScore": 3700,
+            "supportScore": 1209
+          },
+          "impactScore": 29.5
+        }
+      ]
+    },
+    {
+      "roundNumber": 3,
+      "gameMode": "The Big Splash",
+      "totalCashExtracted": 135500,
+      "timestamp": "2024-01-20T23:00:00Z",
+      "playerStats": [
+        {
+          "name": "1-800-FAT-KUSH",
+          "placement": 4,
+          "team": "Team A",
+          "level": 9565,
+          "stats": {
+            "eliminations": 2,
+            "assists": 2,
+            "deaths": 9,
+            "revives": 1,
+            "objectives": 0,
+            "combatScore": 2179,
+            "objectiveScore": 500,
+            "supportScore": 527
+          },
+          "impactScore": 5.2
+        },
+        {
+          "name": "SonarAtlas",
+          "placement": 4,
+          "team": "Team A",
+          "level": 5856,
+          "stats": {
+            "eliminations": 4,
+            "assists": 1,
+            "deaths": 7,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 2923,
+            "objectiveScore": 250,
+            "supportScore": 642
+          },
+          "impactScore": 12.0
+        },
+        {
+          "name": "ClassicArena",
+          "placement": 4,
+          "team": "Team A",
+          "level": 2881,
+          "stats": {
+            "eliminations": 2,
+            "assists": 3,
+            "deaths": 7,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 1912,
+            "objectiveScore": 250,
+            "supportScore": 2065
+          },
+          "impactScore": 15.3
+        },
+        {
+          "name": "Rezzae",
+          "placement": 1,
+          "team": "Team B",
+          "level": 8433,
+          "stats": {
+            "eliminations": 5,
+            "assists": 7,
+            "deaths": 4,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 5265,
+            "objectiveScore": 3850,
+            "supportScore": 435
+          },
+          "impactScore": 37.6
+        },
+        {
+          "name": "1-800-FAT-TEDDY",
+          "placement": 1,
+          "team": "Team B",
+          "level": 2866,
+          "stats": {
+            "eliminations": 12,
+            "assists": 4,
+            "deaths": 4,
+            "revives": 1,
+            "objectives": 0,
+            "combatScore": 5592,
+            "objectiveScore": 4100,
+            "supportScore": 322
+          },
+          "impactScore": 50.0
+        },
+        {
+          "name": "Hobo",
+          "placement": 1,
+          "team": "Team B",
+          "level": 1533,
+          "stats": {
+            "eliminations": 9,
+            "assists": 4,
+            "deaths": 3,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 5395,
+            "objectiveScore": 2950,
+            "supportScore": 844
+          },
+          "impactScore": 46.9
+        },
+        {
+          "name": "itsfishy",
+          "placement": 2,
+          "team": "Team C",
+          "level": 1642,
+          "stats": {
+            "eliminations": 9,
+            "assists": 2,
+            "deaths": 2,
+            "revives": 0,
+            "objectives": 0,
+            "combatScore": 5288,
+            "objectiveScore": 3850,
+            "supportScore": 342
+          },
+          "impactScore": 38.5
+        },
+        {
+          "name": "1-800-FAT-MOMS",
+          "placement": 2,
+          "team": "Team C",
+          "level": 3882,
+          "stats": {
+            "eliminations": 8,
+            "assists": 5,
+            "deaths": 5,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 4602,
+            "objectiveScore": 3350,
+            "supportScore": 2322
+          },
+          "impactScore": 40.3
+        },
+        {
+          "name": "JohnRedcorn619",
+          "placement": 2,
+          "team": "Team C",
+          "level": 7913,
+          "stats": {
+            "eliminations": 5,
+            "assists": 6,
+            "deaths": 3,
+            "revives": 5,
+            "objectives": 0,
+            "combatScore": 4296,
+            "objectiveScore": 2600,
+            "supportScore": 1010
+          },
+          "impactScore": 39.0
+        },
+        {
+          "name": "CJR195",
+          "placement": 3,
+          "team": "Team D",
+          "level": 991,
+          "stats": {
+            "eliminations": 2,
+            "assists": 0,
+            "deaths": 9,
+            "revives": 0,
+            "objectives": 0,
+            "combatScore": 1026,
+            "objectiveScore": 1500,
+            "supportScore": 0
+          },
+          "impactScore": 2.5
+        },
+        {
+          "name": "Pat",
+          "placement": 3,
+          "team": "Team D",
+          "level": 110,
+          "stats": {
+            "eliminations": 4,
+            "assists": 1,
+            "deaths": 6,
+            "revives": 4,
+            "objectives": 0,
+            "combatScore": 3689,
+            "objectiveScore": 1500,
+            "supportScore": 1166
+          },
+          "impactScore": 22.4
+        },
+        {
+          "name": "1-800-FAT-NUTZ",
+          "placement": 3,
+          "team": "Team D",
+          "level": 202,
+          "stats": {
+            "eliminations": 4,
+            "assists": 2,
+            "deaths": 8,
+            "revives": 1,
+            "objectives": 0,
+            "combatScore": 3165,
+            "objectiveScore": 3000,
+            "supportScore": 315
+          },
+          "impactScore": 12.5
+        }
+      ]
+    },
+    {
+      "roundNumber": 4,
+      "gameMode": "The Big Splash",
+      "totalCashExtracted": 139500,
+      "timestamp": "2024-01-20T23:30:00Z",
+      "playerStats": [
+        {
+          "name": "1-800-FAT-KUSH",
+          "placement": 3,
+          "team": "Team A",
+          "level": 9565,
+          "stats": {
+            "eliminations": 1,
+            "assists": 3,
+            "deaths": 6,
+            "revives": 5,
+            "objectives": 0,
+            "combatScore": 1542,
+            "objectiveScore": 2900,
+            "supportScore": 1000
+          },
+          "impactScore": 25.4
+        },
+        {
+          "name": "SonarAtlas",
+          "placement": 3,
+          "team": "Team A",
+          "level": 5856,
+          "stats": {
+            "eliminations": 11,
+            "assists": 3,
+            "deaths": 8,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 5297,
+            "objectiveScore": 1750,
+            "supportScore": 900
+          },
+          "impactScore": 40.9
+        },
+        {
+          "name": "ClassicArena",
+          "placement": 3,
+          "team": "Team A",
+          "level": 2881,
+          "stats": {
+            "eliminations": 3,
+            "assists": 1,
+            "deaths": 7,
+            "revives": 7,
+            "objectives": 0,
+            "combatScore": 1595,
+            "objectiveScore": 1650,
+            "supportScore": 1670
+          },
+          "impactScore": 28.9
+        },
+        {
+          "name": "Rezzae",
+          "placement": 2,
+          "team": "Team B",
+          "level": 8433,
+          "stats": {
+            "eliminations": 6,
+            "assists": 4,
+            "deaths": 7,
+            "revives": 0,
+            "objectives": 0,
+            "combatScore": 4710,
+            "objectiveScore": 2500,
+            "supportScore": 230
+          },
+          "impactScore": 20.4
+        },
+        {
+          "name": "1-800-FAT-TEDDY",
+          "placement": 2,
+          "team": "Team B",
+          "level": 2866,
+          "stats": {
+            "eliminations": 5,
+            "assists": 3,
+            "deaths": 5,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 3021,
+            "objectiveScore": 2250,
+            "supportScore": 415
+          },
+          "impactScore": 24.7
+        },
+        {
+          "name": "Hobo",
+          "placement": 2,
+          "team": "Team B",
+          "level": 1533,
+          "stats": {
+            "eliminations": 6,
+            "assists": 0,
+            "deaths": 6,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 3031,
+            "objectiveScore": 2250,
+            "supportScore": 415
+          },
+          "impactScore": 23.7
+        },
+        {
+          "name": "itsfishy",
+          "placement": 1,
+          "team": "Team C",
+          "level": 1642,
+          "stats": {
+            "eliminations": 12,
+            "assists": 1,
+            "deaths": 2,
+            "revives": 4,
+            "objectives": 0,
+            "combatScore": 5811,
+            "objectiveScore": 3600,
+            "supportScore": 1280
+          },
+          "impactScore": 59.7
+        },
+        {
+          "name": "1-800-FAT-MOMS",
+          "placement": 1,
+          "team": "Team C",
+          "level": 3882,
+          "stats": {
+            "eliminations": 7,
+            "assists": 2,
+            "deaths": 2,
+            "revives": 1,
+            "objectives": 0,
+            "combatScore": 4922,
+            "objectiveScore": 2200,
+            "supportScore": 850
+          },
+          "impactScore": 32.0
+        },
+        {
+          "name": "JohnRedcorn619",
+          "placement": 1,
+          "team": "Team C",
+          "level": 7913,
+          "stats": {
+            "eliminations": 7,
+            "assists": 5,
+            "deaths": 8,
+            "revives": 0,
+            "objectives": 0,
+            "combatScore": 4890,
+            "objectiveScore": 2100,
+            "supportScore": 246
+          },
+          "impactScore": 23.2
+        },
+        {
+          "name": "CJR195",
+          "placement": 4,
+          "team": "Team D",
+          "level": 991,
+          "stats": {
+            "eliminations": 5,
+            "assists": 0,
+            "deaths": 7,
+            "revives": 1,
+            "objectives": 0,
+            "combatScore": 3354,
+            "objectiveScore": 2250,
+            "supportScore": 562
+          },
+          "impactScore": 14.2
+        },
+        {
+          "name": "Pat",
+          "placement": 4,
+          "team": "Team D",
+          "level": 110,
+          "stats": {
+            "eliminations": 4,
+            "assists": 4,
+            "deaths": 7,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 3471,
+            "objectiveScore": 2250,
+            "supportScore": 620
+          },
+          "impactScore": 23.3
+        },
+        {
+          "name": "1-800-FAT-NUTZ",
+          "placement": 4,
+          "team": "Team D",
+          "level": 202,
+          "stats": {
+            "eliminations": 5,
+            "assists": 1,
+            "deaths": 7,
+            "revives": 1,
+            "objectives": 0,
+            "combatScore": 3489,
+            "objectiveScore": 1500,
+            "supportScore": 538
+          },
+          "impactScore": 14.5
+        }
+      ]
+    },
+    {
+      "roundNumber": 5,
+      "gameMode": "The Big Splash",
+      "totalCashExtracted": 109000,
+      "timestamp": "2024-01-21T00:00:00Z",
+      "playerStats": [
+        {
+          "name": "1-800-FAT-KUSH",
+          "placement": 2,
+          "team": "Team A",
+          "level": 9565,
+          "stats": {
+            "eliminations": 5,
+            "assists": 1,
+            "deaths": 5,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 2621,
+            "objectiveScore": 3200,
+            "supportScore": 600
+          },
+          "impactScore": 23.4
+        },
+        {
+          "name": "SonarAtlas",
+          "placement": 2,
+          "team": "Team A",
+          "level": 5856,
+          "stats": {
+            "eliminations": 7,
+            "assists": 2,
+            "deaths": 4,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 4525,
+            "objectiveScore": 1700,
+            "supportScore": 1066
+          },
+          "impactScore": 28.3
+        },
+        {
+          "name": "ClassicArena",
+          "placement": 2,
+          "team": "Team A",
+          "level": 2881,
+          "stats": {
+            "eliminations": 0,
+            "assists": 2,
+            "deaths": 6,
+            "revives": 0,
+            "objectives": 0,
+            "combatScore": 1460,
+            "objectiveScore": 1700,
+            "supportScore": 1025
+          },
+          "impactScore": 0.2
+        },
+        {
+          "name": "Rezzae",
+          "placement": 3,
+          "team": "Team B",
+          "level": 8433,
+          "stats": {
+            "eliminations": 8,
+            "assists": 2,
+            "deaths": 6,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 6453,
+            "objectiveScore": 1550,
+            "supportScore": 400
+          },
+          "impactScore": 36.4
+        },
+        {
+          "name": "1-800-FAT-TEDDY",
+          "placement": 3,
+          "team": "Team B",
+          "level": 2866,
+          "stats": {
+            "eliminations": 2,
+            "assists": 1,
+            "deaths": 5,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 1593,
+            "objectiveScore": 1200,
+            "supportScore": 701
+          },
+          "impactScore": 15.5
+        },
+        {
+          "name": "Hobo",
+          "placement": 3,
+          "team": "Team B",
+          "level": 1533,
+          "stats": {
+            "eliminations": 2,
+            "assists": 0,
+            "deaths": 6,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 1404,
+            "objectiveScore": 950,
+            "supportScore": 777
+          },
+          "impactScore": 11.1
+        },
+        {
+          "name": "itsfishy",
+          "placement": 1,
+          "team": "Team C",
+          "level": 1642,
+          "stats": {
+            "eliminations": 8,
+            "assists": 2,
+            "deaths": 3,
+            "revives": 0,
+            "objectives": 0,
+            "combatScore": 3811,
+            "objectiveScore": 2400,
+            "supportScore": 372
+          },
+          "impactScore": 30.6
+        },
+        {
+          "name": "1-800-FAT-MOMS",
+          "placement": 1,
+          "team": "Team C",
+          "level": 3882,
+          "stats": {
+            "eliminations": 5,
+            "assists": 4,
+            "deaths": 3,
+            "revives": 1,
+            "objectives": 0,
+            "combatScore": 3918,
+            "objectiveScore": 2150,
+            "supportScore": 1639
+          },
+          "impactScore": 27.7
+        },
+        {
+          "name": "JohnRedcorn619",
+          "placement": 1,
+          "team": "Team C",
+          "level": 7913,
+          "stats": {
+            "eliminations": 7,
+            "assists": 2,
+            "deaths": 1,
+            "revives": 3,
+            "objectives": 0,
+            "combatScore": 4393,
+            "objectiveScore": 3650,
+            "supportScore": 529
+          },
+          "impactScore": 40.6
+        },
+        {
+          "name": "CJR195",
+          "placement": 4,
+          "team": "Team D",
+          "level": 991,
+          "stats": {
+            "eliminations": 8,
+            "assists": 1,
+            "deaths": 6,
+            "revives": 2,
+            "objectives": 0,
+            "combatScore": 4346,
+            "objectiveScore": 1350,
+            "supportScore": 1203
+          },
+          "impactScore": 30.9
+        },
+        {
+          "name": "Pat",
+          "placement": 4,
+          "team": "Team D",
+          "level": 110,
+          "stats": {
+            "eliminations": 1,
+            "assists": 2,
+            "deaths": 7,
+            "revives": 4,
+            "objectives": 0,
+            "combatScore": 1927,
+            "objectiveScore": 1000,
+            "supportScore": 1429
+          },
+          "impactScore": 13.4
+        },
+        {
+          "name": "1-800-FAT-NUTZ",
+          "placement": 4,
+          "team": "Team D",
+          "level": 202,
+          "stats": {
+            "eliminations": 3,
+            "assists": 3,
+            "deaths": 5,
+            "revives": 1,
+            "objectives": 0,
+            "combatScore": 2460,
+            "objectiveScore": 1750,
+            "supportScore": 752
+          },
+          "impactScore": 11.0
+        }
+      ]
+    }
+  ]
+}

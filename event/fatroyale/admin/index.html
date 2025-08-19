@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tournament Admin - The Finals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap");
+
+      body {
+        font-family: "Orbitron", monospace;
+      }
+
+      .neon-glow {
+        text-shadow: 0 0 10px rgba(168, 85, 247, 0.8),
+          0 0 20px rgba(168, 85, 247, 0.6);
+      }
+
+      .cyber-border {
+        border: 2px solid;
+        border-image: linear-gradient(45deg, #a855f7, #fbbf24) 1;
+      }
+
+      .glow-input:focus {
+        box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+      }
+
+      .tab-button {
+        @apply px-6 py-3 font-bold transition-all duration-300 border-b-4 border-transparent;
+      }
+
+      .tab-button.active {
+        @apply border-purple-500 text-purple-400;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Auth Check -->
+    <div
+      id="authScreen"
+      class="fixed inset-0 bg-gray-900 z-50 flex items-center justify-center"
+    >
+      <div class="bg-gray-800 p-8 rounded-lg cyber-border max-w-md w-full mx-4">
+        <h1
+          class="text-2xl font-bold text-purple-400 neon-glow mb-6 text-center"
+        >
+          ADMIN ACCESS
+        </h1>
+        <form onsubmit="checkAuth(event)">
+          <input
+            type="password"
+            id="passwordInput"
+            placeholder="Enter password"
+            class="w-full p-3 bg-gray-700 rounded border border-purple-500 focus:outline-none glow-input"
+            autofocus
+          />
+          <button
+            type="submit"
+            class="w-full mt-4 p-3 bg-purple-600 hover:bg-purple-700 rounded font-bold transition-colors"
+          >
+            ACCESS ADMIN PANEL
+          </button>
+        </form>
+        <p id="authError" class="mt-4 text-red-500 text-center hidden">
+          Invalid password
+        </p>
+      </div>
+    </div>
+
+    <!-- Admin Panel (Hidden by default) -->
+    <div id="adminPanel" class="hidden">
+      <!-- Header -->
+      <header
+        class="bg-black bg-opacity-50 backdrop-blur-sm border-b border-purple-500"
+      >
+        <div class="container mx-auto px-4 py-6">
+          <h1 class="text-3xl font-black text-center neon-glow text-purple-400">
+            TOURNAMENT ADMIN
+          </h1>
+          <div class="text-center mt-4">
+            <a
+              href="/"
+              class="text-yellow-400 hover:text-yellow-300 transition-colors"
+            >
+              ← Back to Dashboard
+            </a>
+            <span class="text-gray-500 mx-2">|</span>
+            <a
+              href="/team-builder/"
+              class="text-yellow-400 hover:text-yellow-300 transition-colors"
+            >
+              Team Builder
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <!-- Tab Navigation -->
+      <div class="container mx-auto px-4 mt-8">
+        <div
+          class="flex flex-wrap justify-center gap-2 mb-8 bg-gray-800 rounded-lg p-2"
+        >
+          <button
+            onclick="switchTab('quick')"
+            class="tab-button active"
+            data-tab="quick"
+          >
+            QUICK ACTIONS
+          </button>
+          <button
+            onclick="switchTab('round')"
+            class="tab-button"
+            data-tab="round"
+          >
+            ROUND ENTRY
+          </button>
+          <button
+            onclick="switchTab('standings')"
+            class="tab-button"
+            data-tab="standings"
+          >
+            STANDINGS
+          </button>
+          <button
+            onclick="switchTab('data')"
+            class="tab-button"
+            data-tab="data"
+          >
+            DATA MANAGEMENT
+          </button>
+          <button
+            onclick="switchTab('bracket')"
+            class="tab-button"
+            data-tab="bracket"
+          >
+            BRACKET
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <main class="container mx-auto px-4 pb-8 max-w-6xl">
+        <!-- Status Messages -->
+        <div
+          id="statusMessage"
+          class="hidden mb-6 p-4 rounded text-center font-bold"
+        ></div>
+
+        <!-- Quick Actions Tab -->
+        <div id="quick-tab" class="tab-content active">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Add Match Result -->
+            <div class="bg-gray-800 rounded-lg p-6 cyber-border">
+              <h2 class="text-xl font-bold mb-4 text-purple-400">
+                QUICK MATCH RESULT
+              </h2>
+              <form onsubmit="addMatch(event)">
+                <div class="mb-4">
+                  <label class="block mb-2 text-gray-300">Round</label>
+                  <input
+                    type="text"
+                    name="matchRound"
+                    placeholder="2 - Terminal Attack"
+                    required
+                    class="w-full p-3 bg-gray-700 rounded border border-purple-500 focus:outline-none glow-input"
+                  />
+                </div>
+                <div class="mb-4">
+                  <label class="block mb-2 text-gray-300">Result</label>
+                  <input
+                    type="text"
+                    name="matchResult"
+                    placeholder="Team Alpha 3, Team Bravo 1"
+                    required
+                    class="w-full p-3 bg-gray-700 rounded border border-purple-500 focus:outline-none glow-input"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="w-full p-3 bg-purple-600 hover:bg-purple-700 rounded font-bold transition-colors"
+                >
+                  ADD MATCH
+                </button>
+              </form>
+            </div>
+
+            <!-- Import from Claude -->
+            <div class="bg-gray-800 rounded-lg p-6 cyber-border">
+              <h2 class="text-xl font-bold mb-4 text-purple-400">
+                IMPORT FROM CLAUDE
+              </h2>
+              <p class="text-gray-300 mb-4 text-sm">
+                Upload screenshot to Claude → Copy JSON → Paste here
+              </p>
+              <textarea
+                id="jsonImport"
+                placeholder='Paste JSON data from Claude here...
+Example:
+{
+  "roundNumber": 2,
+  "gameMode": "Quick Cash",
+  "playerStats": [...]
+}'
+                class="w-full p-3 bg-gray-700 rounded border border-purple-500 focus:outline-none glow-input h-40 font-mono text-sm"
+              ></textarea>
+              <button
+                onclick="importFromJSON()"
+                class="mt-4 w-full p-3 bg-cyan-600 hover:bg-cyan-700 rounded font-bold transition-colors"
+              >
+                IMPORT JSON DATA
+              </button>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="mt-6 bg-gray-800 rounded-lg p-6 cyber-border">
+            <h3 class="text-lg font-bold mb-4 text-yellow-400">
+              RECENT ACTIVITY
+            </h3>
+            <div id="recentActivity" class="space-y-2 text-sm">
+              <p class="text-gray-400">No recent activity</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Round Entry Tab -->
+        <div id="round-tab" class="tab-content">
+          <div class="bg-gray-800 rounded-lg p-6 cyber-border">
+            <h2 class="text-xl font-bold mb-6 text-purple-400">
+              DETAILED ROUND ENTRY
+            </h2>
+            <form onsubmit="addRoundStats(event)">
+              <!-- Round Info -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div>
+                  <label class="block mb-2 text-gray-300">Round Number</label>
+                  <input
+                    type="number"
+                    name="roundNumber"
+                    placeholder="2"
+                    required
+                    min="1"
+                    class="w-full p-3 bg-gray-700 rounded border border-purple-500 focus:outline-none glow-input"
+                  />
+                </div>
+                <div>
+                  <label class="block mb-2 text-gray-300">Game Mode</label>
+                  <select
+                    name="gameMode"
+                    required
+                    class="w-full p-3 bg-gray-700 rounded border border-purple-500 focus:outline-none glow-input"
+                  >
+                    <option value="Quick Cash">Quick Cash</option>
+                    <option value="Terminal Attack">Terminal Attack</option>
+                    <option value="Power Shift">Power Shift</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block mb-2 text-gray-300"
+                    >Total Cash Extracted</label
+                  >
+                  <input
+                    type="number"
+                    name="totalCashExtracted"
+                    placeholder="48500"
+                    min="0"
+                    class="w-full p-3 bg-gray-700 rounded border border-purple-500 focus:outline-none glow-input"
+                  />
+                </div>
+              </div>
+
+              <!-- Player Stats Entry -->
+              <div id="playerStatsContainer">
+                <h3 class="text-lg font-bold mb-3 text-yellow-400">
+                  PLAYER STATS
+                </h3>
+                <!-- Player entries will be added here -->
+              </div>
+
+              <div class="flex gap-4 mb-6">
+                <button
+                  type="button"
+                  onclick="addPlayerStatEntry()"
+                  class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded font-bold transition-colors"
+                >
+                  + ADD PLAYER
+                </button>
+                <button
+                  type="button"
+                  onclick="clearPlayerStats()"
+                  class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded font-bold transition-colors"
+                >
+                  CLEAR ALL
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full p-3 bg-purple-600 hover:bg-purple-700 rounded font-bold transition-colors"
+              >
+                ADD ROUND STATS
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Standings Tab -->
+        <div id="standings-tab" class="tab-content">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Team Standings -->
+            <div class="bg-gray-800 rounded-lg p-6 cyber-border">
+              <h2 class="text-xl font-bold mb-4 text-purple-400">
+                TEAM STANDINGS
+              </h2>
+              <div id="teamStandings" class="space-y-2">
+                <!-- Team standings will be displayed here -->
+              </div>
+              <button
+                onclick="showEditTeamModal()"
+                class="mt-4 w-full p-2 bg-gray-700 hover:bg-gray-600 rounded transition-colors text-sm"
+              >
+                EDIT TEAM POINTS
+              </button>
+            </div>
+
+            <!-- Player Rankings -->
+            <div class="bg-gray-800 rounded-lg p-6 cyber-border">
+              <h2 class="text-xl font-bold mb-4 text-purple-400">
+                PLAYER RANKINGS
+              </h2>
+              <div id="playerRankings" class="space-y-2">
+                <!-- Player rankings will be displayed here -->
+              </div>
+              <button
+                onclick="showEditPlayerModal()"
+                class="mt-4 w-full p-2 bg-gray-700 hover:bg-gray-600 rounded transition-colors text-sm"
+              >
+                EDIT PLAYER SCORES
+              </button>
+            </div>
+          </div>
+
+          <!-- Match History -->
+          <div class="mt-6 bg-gray-800 rounded-lg p-6 cyber-border">
+            <h2 class="text-xl font-bold mb-4 text-purple-400">
+              MATCH HISTORY
+            </h2>
+            <div id="matchHistory" class="space-y-2">
+              <!-- Match history will be displayed here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Management Tab -->
+        <div id="data-tab" class="tab-content">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Current Data Preview -->
+            <div class="bg-gray-800 rounded-lg p-6 cyber-border">
+              <h2 class="text-xl font-bold mb-4 text-purple-400">
+                CURRENT DATA
+              </h2>
+              <pre
+                id="currentData"
+                class="text-xs text-gray-300 overflow-x-auto max-h-96 overflow-y-auto bg-gray-900 p-4 rounded"
+              ></pre>
+            </div>
+
+            <!-- Data Actions -->
+            <div class="bg-gray-800 rounded-lg p-6 cyber-border">
+              <h2 class="text-xl font-bold mb-4 text-purple-400">
+                DATA ACTIONS
+              </h2>
+              <div class="space-y-4">
+                <button
+                  onclick="downloadData()"
+                  class="w-full p-3 bg-yellow-600 hover:bg-yellow-700 rounded font-bold transition-colors"
+                >
+                  📥 DOWNLOAD data.json
+                </button>
+                <button
+                  onclick="exportCSV()"
+                  class="w-full p-3 bg-green-600 hover:bg-green-700 rounded font-bold transition-colors"
+                >
+                  📊 EXPORT TO CSV
+                </button>
+                <button
+                  onclick="recalculateAllScores()"
+                  class="w-full p-3 bg-yellow-600 hover:bg-yellow-700 rounded font-bold transition-colors"
+                >
+                  🔄 RECALCULATE ALL SCORES
+                </button>
+                <button
+                  onclick="backupData()"
+                  class="w-full p-3 bg-blue-600 hover:bg-blue-700 rounded font-bold transition-colors"
+                >
+                  💾 CREATE BACKUP
+                </button>
+                <button
+                  onclick="loadBackup()"
+                  class="w-full p-3 bg-cyan-600 hover:bg-cyan-700 rounded font-bold transition-colors"
+                >
+                  📂 LOAD BACKUP
+                </button>
+                <button
+                  onclick="repairPlayerScores()"
+                  class="w-full p-3 bg-orange-600 hover:bg-orange-700 rounded font-bold transition-colors"
+                >
+                  🔧 REPAIR INFLATED SCORES
+                </button>
+                <hr class="border-gray-700 my-4" />
+                <button
+                  onclick="clearAllData()"
+                  class="w-full p-3 bg-red-600 hover:bg-red-700 rounded font-bold transition-colors"
+                >
+                  🗑️ CLEAR ALL DATA
+                </button>
+              </div>
+
+              <div class="mt-6 p-4 bg-gray-900 rounded">
+                <h3 class="text-sm font-bold text-yellow-400 mb-2">
+                  DEPLOYMENT STEPS:
+                </h3>
+                <ol
+                  class="text-xs text-gray-400 space-y-1 list-decimal list-inside"
+                >
+                  <li>Download data.json</li>
+                  <li>Commit to GitHub repo</li>
+                  <li>Vercel auto-deploys</li>
+                  <li>Dashboard updates live</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bracket Management Tab -->
+        <div id="bracket-tab" class="tab-content">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Bracket Setup -->
+            <div class="bg-gray-800 rounded-lg p-6 cyber-border">
+              <h2 class="text-xl font-bold mb-4 text-purple-400">
+                BRACKET SETUP
+              </h2>
+              <div class="mb-4">
+                <label class="block mb-2 text-gray-300">Bracket Type</label>
+                <select
+                  id="bracketType"
+                  class="w-full p-3 bg-gray-700 rounded border border-purple-500 focus:outline-none glow-input"
+                  onchange="updateBracketDisplay()"
+                >
+                  <option value="single_elimination">Single Elimination</option>
+                  <option value="round_robin">Round Robin</option>
+                </select>
+              </div>
+              <button
+                onclick="generateBracket()"
+                class="w-full p-3 bg-purple-600 hover:bg-purple-700 rounded font-bold transition-colors"
+              >
+                GENERATE BRACKET
+              </button>
+              <p class="text-sm text-gray-400 mt-2">
+                This will create a new bracket based on current teams
+              </p>
+            </div>
+
+            <!-- Update Match Result -->
+            <div class="bg-gray-800 rounded-lg p-6 cyber-border">
+              <h2 class="text-xl font-bold mb-4 text-purple-400">
+                UPDATE MATCH RESULT
+              </h2>
+              <form onsubmit="updateMatchResult(event)">
+                <div class="mb-4">
+                  <label class="block mb-2 text-gray-300">Match ID</label>
+                  <select
+                    id="matchSelect"
+                    name="matchId"
+                    required
+                    class="w-full p-3 bg-gray-700 rounded border border-purple-500 focus:outline-none glow-input"
+                  >
+                    <option value="">Select a match</option>
+                  </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label class="block mb-2 text-gray-300">Team 1 Score</label>
+                    <input
+                      type="number"
+                      name="score1"
+                      min="0"
+                      max="5"
+                      required
+                      class="w-full p-3 bg-gray-700 rounded border border-purple-500 focus:outline-none glow-input"
+                    />
+                  </div>
+                  <div>
+                    <label class="block mb-2 text-gray-300">Team 2 Score</label>
+                    <input
+                      type="number"
+                      name="score2"
+                      min="0"
+                      max="5"
+                      required
+                      class="w-full p-3 bg-gray-700 rounded border border-purple-500 focus:outline-none glow-input"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  class="w-full p-3 bg-cyan-600 hover:bg-cyan-700 rounded font-bold transition-colors"
+                >
+                  UPDATE MATCH
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Current Bracket Display -->
+          <div class="mt-6 bg-gray-800 rounded-lg p-6 cyber-border">
+            <h2 class="text-xl font-bold mb-4 text-purple-400">
+              CURRENT BRACKET
+            </h2>
+            <div id="bracketDisplay" class="overflow-x-auto">
+              <!-- Bracket visualization will be displayed here -->
+            </div>
+            <div class="mt-4 flex gap-4">
+              <a
+                href="/bracket.html"
+                target="_blank"
+                class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded font-bold transition-colors"
+              >
+                VIEW PUBLIC BRACKET
+              </a>
+              <button
+                onclick="resetBracket()"
+                class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded font-bold transition-colors"
+              >
+                RESET BRACKET
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Tournament data
+      let tournamentData = {
+        teams: [],
+        players: [],
+        matches: [],
+        rounds: [],
+      };
+
+      // Activity log
+      let activityLog = [];
+
+      // Auth check
+      function checkAuth(event) {
+        event.preventDefault();
+        const password = document.getElementById("passwordInput").value;
+
+        if (password === "admin123") {
+          document.getElementById("authScreen").classList.add("hidden");
+          document.getElementById("adminPanel").classList.remove("hidden");
+          loadData();
+        } else {
+          document.getElementById("authError").classList.remove("hidden");
+          document.getElementById("passwordInput").value = "";
+        }
+      }
+
+      // Tab switching
+      function switchTab(tabName) {
+        // Update buttons
+        document.querySelectorAll(".tab-button").forEach((btn) => {
+          btn.classList.remove("active");
+          if (btn.getAttribute("data-tab") === tabName) {
+            btn.classList.add("active");
+          }
+        });
+
+        // Update content
+        document.querySelectorAll(".tab-content").forEach((content) => {
+          content.classList.remove("active");
+        });
+        document.getElementById(`${tabName}-tab`).classList.add("active");
+
+        // Refresh data displays when switching to standings
+        if (tabName === "standings") {
+          updateStandingsDisplay();
+        }
+        // Refresh bracket display when switching to bracket tab
+        if (tabName === "bracket") {
+          updateBracketDisplay();
+          populateMatchSelect();
+        }
+      }
+
+      // Load data from localStorage
+      function loadData() {
+        const stored = localStorage.getItem("tournamentData");
+        if (stored) {
+          tournamentData = JSON.parse(stored);
+        } else {
+          // Initialize with empty data
+          tournamentData = {
+            teams: [],
+            players: [],
+            matches: [],
+            rounds: [],
+          };
+          saveData();
+        }
+        updateDataDisplay();
+        updateStandingsDisplay();
+        updateRecentActivity();
+
+        // Initialize with one player entry
+        clearPlayerStats();
+      }
+
+      // Save data to localStorage
+      function saveData() {
+        localStorage.setItem("tournamentData", JSON.stringify(tournamentData));
+        updateDataDisplay();
+        updateStandingsDisplay();
+        showStatus("Data saved successfully!", "success");
+      }
+
+      // Update current data display
+      function updateDataDisplay() {
+        document.getElementById("currentData").textContent = JSON.stringify(
+          tournamentData,
+          null,
+          2
+        );
+      }
+
+      // Update standings display
+      function updateStandingsDisplay() {
+        // Team standings
+        const teamContainer = document.getElementById("teamStandings");
+        teamContainer.innerHTML = "";
+
+        const sortedTeams = [...tournamentData.teams].sort(
+          (a, b) => b.points - a.points
+        );
+        sortedTeams.forEach((team, index) => {
+          const teamDiv = document.createElement("div");
+          teamDiv.className =
+            "flex justify-between items-center p-3 bg-gray-700 rounded";
+          teamDiv.innerHTML = `
+                    <span class="font-bold ${
+                      index === 0 ? "text-yellow-400" : ""
+                    }">${index + 1}. ${team.name}</span>
+                    <span class="text-xl font-bold">${team.points} pts</span>
+                `;
+          teamContainer.appendChild(teamDiv);
+        });
+
+        // Player rankings
+        const playerContainer = document.getElementById("playerRankings");
+        playerContainer.innerHTML = "";
+
+        const sortedPlayers = [...tournamentData.players].sort(
+          (a, b) => b.score - a.score
+        );
+        sortedPlayers.forEach((player, index) => {
+          const playerDiv = document.createElement("div");
+          playerDiv.className =
+            "flex justify-between items-center p-3 bg-gray-700 rounded";
+          playerDiv.innerHTML = `
+                    <span class="font-bold ${
+                      index === 0 ? "text-yellow-400" : ""
+                    }">${index + 1}. ${player.name}</span>
+                    <span class="text-xl font-bold">${player.score}</span>
+                `;
+          playerContainer.appendChild(playerDiv);
+        });
+
+        // Match history
+        const matchContainer = document.getElementById("matchHistory");
+        matchContainer.innerHTML = "";
+
+        tournamentData.matches
+          .slice()
+          .reverse()
+          .forEach((match) => {
+            const matchDiv = document.createElement("div");
+            matchDiv.className = "p-3 bg-gray-700 rounded";
+            matchDiv.innerHTML = `
+                    <span class="text-sm text-gray-400">${match.round}</span>
+                    <p class="font-bold">${match.result}</p>
+                `;
+            matchContainer.appendChild(matchDiv);
+          });
+      }
+
+      // Update recent activity
+      function updateRecentActivity() {
+        const container = document.getElementById("recentActivity");
+        if (activityLog.length === 0) {
+          container.innerHTML =
+            '<p class="text-gray-400">No recent activity</p>';
+          return;
+        }
+
+        container.innerHTML = activityLog
+          .slice(-5)
+          .reverse()
+          .map(
+            (activity) => `
+                <div class="text-gray-300">
+                    <span class="text-xs text-gray-500">${activity.time}</span>
+                    - ${activity.action}
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      // Recalculate all scores from round data
+      function recalculateAllScores() {
+        if (!tournamentData.rounds || tournamentData.rounds.length === 0) {
+          showStatus("No round data to recalculate from", "error");
+          return;
+        }
+
+        // Reset player data
+        const playerStats = {};
+
+        // Process each round
+        tournamentData.rounds.forEach((round) => {
+          round.playerStats.forEach((playerStat) => {
+            // Recalculate impact score with fixed formula
+            playerStat.impactScore = calculateImpactScore(playerStat.stats);
+
+            // Update player averages
+            if (!playerStats[playerStat.name]) {
+              playerStats[playerStat.name] = {
+                name: playerStat.name,
+                team: playerStat.team,
+                totalScore: 0,
+                roundsPlayed: 0,
+                totalEliminations: 0,
+                totalDeaths: 0
+              };
+            }
+
+            const player = playerStats[playerStat.name];
+            player.roundsPlayed++;
+            player.totalScore += playerStat.impactScore;
+            player.totalEliminations += playerStat.stats.eliminations || 0;
+            player.totalDeaths += playerStat.stats.deaths || 0;
+          });
+        });
+
+        // Update player data with averages
+        tournamentData.players = Object.values(playerStats).map(player => ({
+          name: player.name,
+          score: Math.round((player.totalScore / player.roundsPlayed) * 10) / 10,
+          team: player.team,
+          roundsPlayed: player.roundsPlayed,
+          totalEliminations: player.totalEliminations,
+          totalDeaths: player.totalDeaths
+        }));
+
+        saveData();
+        updateStandingsDisplay();
+        logActivity("Recalculated all player scores");
+        showStatus("Successfully recalculated all scores!", "success");
+      }
+
+      // Add activity log entry
+      function logActivity(action) {
+        activityLog.push({
+          time: new Date().toLocaleTimeString(),
+          action: action,
+        });
+        updateRecentActivity();
+      }
+
+      // Show status message
+      function showStatus(message, type) {
+        const status = document.getElementById("statusMessage");
+        status.textContent = message;
+        status.className = `p-4 rounded text-center font-bold ${
+          type === "success" ? "bg-green-600" : "bg-red-600"
+        }`;
+        status.classList.remove("hidden");
+        setTimeout(() => status.classList.add("hidden"), 3000);
+      }
+
+      // Add match result
+      function addMatch(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const round = formData.get("matchRound");
+        const result = formData.get("matchResult");
+
+        tournamentData.matches.push({ round, result });
+
+        logActivity(`Added match: ${round}`);
+        saveData();
+        event.target.reset();
+      }
+
+      // Import from JSON
+      function importFromJSON() {
+        const jsonText = document.getElementById("jsonImport").value;
+
+        try {
+          const data = JSON.parse(jsonText);
+
+          // If it's round data, process it
+          if (data.roundNumber && data.playerStats) {
+            processRoundData(data);
+            document.getElementById("jsonImport").value = "";
+            logActivity(`Imported round ${data.roundNumber} data`);
+            showStatus("Round data imported successfully!", "success");
+          }
+          // If it's a match result
+          else if (data.round && data.result) {
+            tournamentData.matches.push(data);
+            saveData();
+            document.getElementById("jsonImport").value = "";
+            logActivity("Imported match result");
+            showStatus("Match result imported!", "success");
+          }
+          // If it's full tournament data
+          else if (data.teams || data.players || data.matches) {
+            Object.assign(tournamentData, data);
+            saveData();
+            document.getElementById("jsonImport").value = "";
+            logActivity("Imported tournament data");
+            showStatus("Tournament data imported!", "success");
+          } else {
+            throw new Error("Unrecognized data format");
+          }
+        } catch (error) {
+          showStatus("Invalid JSON format: " + error.message, "error");
+        }
+      }
+
+      // Process round data
+      function processRoundData(roundData) {
+        if (!tournamentData.rounds) {
+          tournamentData.rounds = [];
+        }
+
+        // Add timestamp
+        roundData.timestamp = new Date().toISOString();
+
+        // Process each player stat
+        roundData.playerStats.forEach((playerStat) => {
+          // Calculate impact score
+          playerStat.impactScore = calculateImpactScore(playerStat.stats);
+
+          // Update overall player stats
+          updatePlayerOverallStats(playerStat);
+        });
+
+        // Add round to data
+        tournamentData.rounds.push(roundData);
+
+        // Update team points based on placement
+        updateTeamPointsFromRound(roundData);
+
+        saveData();
+      }
+
+      // Calculate impact score from stats
+      function calculateImpactScore(stats) {
+        // Base score from primary stats (typically 0-80 range)
+        const baseScore =
+          (stats.eliminations || 0) * 3 +
+          (stats.assists || 0) * 1 +
+          (stats.deaths || 0) * -1 +
+          (stats.objectives || 0) * 5 +
+          (stats.revives || 0) * 4;
+        
+        // Bonus score from secondary stats (capped at 20 points)
+        // Combat scores can be 0-15000+, so we need smaller multipliers
+        const combatBonus = Math.min((stats.combatScore || 0) * 0.001, 10);
+        const objectiveBonus = Math.min((stats.objectiveScore || 0) * 0.001, 5);
+        const supportBonus = Math.min((stats.supportScore || 0) * 0.001, 5);
+        
+        const totalScore = baseScore + combatBonus + objectiveBonus + supportBonus;
+        
+        // Ensure score is within 0-100 range
+        const finalScore = Math.max(0, Math.min(100, totalScore));
+        
+        return Math.round(finalScore * 10) / 10;
+      }
+
+      // Update player's overall stats
+      function updatePlayerOverallStats(playerStat) {
+        let player = tournamentData.players.find(
+          (p) => p.name === playerStat.name
+        );
+
+        if (!player) {
+          // New player
+          player = {
+            name: playerStat.name,
+            score: playerStat.impactScore,
+            team: playerStat.team,
+            roundsPlayed: 1,
+            totalEliminations: playerStat.stats.eliminations || 0,
+            totalDeaths: playerStat.stats.deaths || 0
+          };
+          tournamentData.players.push(player);
+        } else {
+          // Update existing player - properly average their scores
+          const previousRounds = player.roundsPlayed || 1;
+          const previousTotal = player.score * previousRounds;
+          player.roundsPlayed = previousRounds + 1;
+          
+          // Calculate new average: (previous total + new score) / total rounds
+          player.score = Math.round(((previousTotal + playerStat.impactScore) / player.roundsPlayed) * 10) / 10;
+          
+          // Update cumulative stats
+          player.totalEliminations = (player.totalEliminations || 0) + (playerStat.stats.eliminations || 0);
+          player.totalDeaths = (player.totalDeaths || 0) + (playerStat.stats.deaths || 0);
+        }
+      }
+
+      // Update team points based on round results
+      function updateTeamPointsFromRound(roundData) {
+        // Sort players by placement
+        const sortedPlayers = roundData.playerStats.sort(
+          (a, b) => a.placement - b.placement
+        );
+
+        // Award points to teams based on their best player's placement
+        const teamPlacements = {};
+
+        sortedPlayers.forEach((player) => {
+          if (!teamPlacements[player.team]) {
+            teamPlacements[player.team] = player.placement;
+          }
+        });
+
+        // Award points: 1st = 3 points, 2nd = 2 points, 3rd = 1 point
+        Object.entries(teamPlacements).forEach(([teamName, placement]) => {
+          let points = 0;
+          if (placement === 1) points = 3;
+          else if (placement === 2) points = 2;
+          else if (placement === 3) points = 1;
+
+          if (points > 0) {
+            let team = tournamentData.teams.find((t) => t.name === teamName);
+            if (!team) {
+              team = { name: teamName, points: 0 };
+              tournamentData.teams.push(team);
+            }
+            team.points += points;
+          }
+        });
+      }
+
+      // Player stat entry management
+      function addPlayerStatEntry() {
+        const container = document.getElementById("playerStatsContainer");
+        const entryDiv = document.createElement("div");
+        entryDiv.className = "player-stat-entry bg-gray-700 rounded p-4 mb-4";
+        entryDiv.innerHTML = `
+                <button 
+                    type="button"
+                    onclick="this.parentElement.remove()"
+                    class="float-right text-red-500 hover:text-red-400 text-xl"
+                >
+                    ✕
+                </button>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <input type="text" placeholder="Player Name" name="playerName[]" required class="p-2 bg-gray-600 rounded">
+                    <input type="number" placeholder="Placement" name="placement[]" min="1" required class="p-2 bg-gray-600 rounded">
+                    <input type="text" placeholder="Team" name="playerTeam[]" required class="p-2 bg-gray-600 rounded">
+                    <input type="number" placeholder="Level" name="playerLevel[]" min="1" class="p-2 bg-gray-600 rounded">
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
+                    <input type="number" placeholder="Eliminations" name="eliminations[]" min="0" required class="p-2 bg-gray-600 rounded">
+                    <input type="number" placeholder="Deaths" name="deaths[]" min="0" required class="p-2 bg-gray-600 rounded">
+                    <input type="number" placeholder="Revives" name="revives[]" min="0" class="p-2 bg-gray-600 rounded">
+                    <input type="number" placeholder="Objectives" name="objectives[]" min="0" class="p-2 bg-gray-600 rounded">
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
+                    <input type="number" placeholder="Combat Score" name="combatScore[]" min="0" class="p-2 bg-gray-600 rounded">
+                    <input type="number" placeholder="Objective Score" name="objectiveScore[]" min="0" class="p-2 bg-gray-600 rounded">
+                    <input type="number" placeholder="Support Score" name="supportScore[]" min="0" class="p-2 bg-gray-600 rounded">
+                </div>
+            `;
+        container.appendChild(entryDiv);
+      }
+
+      function clearPlayerStats() {
+        const container = document.getElementById("playerStatsContainer");
+        container.innerHTML =
+          '<h3 class="text-lg font-bold mb-3 text-yellow-400">PLAYER STATS</h3>';
+        addPlayerStatEntry(); // Add one empty entry
+      }
+
+      // Add round stats
+      function addRoundStats(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+
+        const roundData = {
+          roundNumber: parseInt(formData.get("roundNumber")),
+          gameMode: formData.get("gameMode"),
+          totalCashExtracted: parseInt(formData.get("totalCashExtracted")) || 0,
+          playerStats: [],
+        };
+
+        // Get all player entries
+        const playerNames = formData.getAll("playerName[]");
+        const placements = formData.getAll("placement[]");
+        const teams = formData.getAll("playerTeam[]");
+        const levels = formData.getAll("playerLevel[]");
+        const eliminations = formData.getAll("eliminations[]");
+        const deaths = formData.getAll("deaths[]");
+        const revives = formData.getAll("revives[]");
+        const objectives = formData.getAll("objectives[]");
+        const combatScores = formData.getAll("combatScore[]");
+        const objectiveScores = formData.getAll("objectiveScore[]");
+        const supportScores = formData.getAll("supportScore[]");
+
+        // Build player stats
+        for (let i = 0; i < playerNames.length; i++) {
+          if (playerNames[i]) {
+            roundData.playerStats.push({
+              name: playerNames[i],
+              placement: parseInt(placements[i]),
+              team: teams[i],
+              level: parseInt(levels[i]) || null,
+              stats: {
+                eliminations: parseInt(eliminations[i]) || 0,
+                deaths: parseInt(deaths[i]) || 0,
+                revives: parseInt(revives[i]) || 0,
+                objectives: parseInt(objectives[i]) || 0,
+                combatScore: parseInt(combatScores[i]) || 0,
+                objectiveScore: parseInt(objectiveScores[i]) || 0,
+                supportScore: parseInt(supportScores[i]) || 0,
+              },
+            });
+          }
+        }
+
+        processRoundData(roundData);
+        logActivity(`Added round ${roundData.roundNumber} stats`);
+        event.target.reset();
+        clearPlayerStats();
+      }
+
+      // Data management functions
+      function downloadData() {
+        const dataStr = JSON.stringify(tournamentData, null, 2);
+        const dataBlob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "data.json";
+        link.click();
+        URL.revokeObjectURL(url);
+        logActivity("Downloaded data.json");
+      }
+
+      function exportCSV() {
+        // Export player stats as CSV
+        let csv = "Player Name,Team,Score,Rounds Played\n";
+        tournamentData.players.forEach((player) => {
+          csv += `${player.name},${player.team || "N/A"},${player.score},${
+            player.roundsPlayed || 1
+          }\n`;
+        });
+
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "tournament_stats.csv";
+        link.click();
+        URL.revokeObjectURL(url);
+        logActivity("Exported CSV");
+      }
+
+      function backupData() {
+        const backup = {
+          timestamp: new Date().toISOString(),
+          data: tournamentData,
+        };
+        const backupStr = JSON.stringify(backup, null, 2);
+        const blob = new Blob([backupStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `tournament_backup_${
+          new Date().toISOString().split("T")[0]
+        }.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+        logActivity("Created backup");
+      }
+
+      function loadBackup() {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".json";
+        input.onchange = (e) => {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            try {
+              const backup = JSON.parse(event.target.result);
+              if (backup.data) {
+                tournamentData = backup.data;
+                saveData();
+                logActivity("Loaded backup from " + backup.timestamp);
+              }
+            } catch (error) {
+              showStatus("Invalid backup file", "error");
+            }
+          };
+          reader.readAsText(file);
+        };
+        input.click();
+      }
+
+      function clearAllData() {
+        if (
+          confirm(
+            "Are you sure you want to clear ALL tournament data? This cannot be undone!"
+          )
+        ) {
+          tournamentData = { teams: [], players: [], matches: [], rounds: [] };
+          activityLog = [];
+          saveData();
+          logActivity("Cleared all data");
+        }
+      }
+
+      // Repair inflated player scores
+      function repairPlayerScores() {
+        let repairedCount = 0;
+        const repairLog = [];
+        
+        tournamentData.players.forEach(player => {
+          if (player.score > 100) {
+            const oldScore = player.score;
+            
+            // Try to fix by dividing by rounds played
+            const roundsPlayed = player.roundsPlayed || 3; // Default to 3 if not set
+            player.score = Math.round((player.score / roundsPlayed) * 10) / 10;
+            
+            // If still too high, cap at reasonable max
+            if (player.score > 100) {
+              player.score = Math.min(85, player.score / 3); // Further reduction
+              player.score = Math.round(player.score * 10) / 10;
+            }
+            
+            repairedCount++;
+            repairLog.push(`${player.name}: ${oldScore} → ${player.score}`);
+          }
+        });
+        
+        if (repairedCount > 0) {
+          saveData();
+          logActivity(`Repaired ${repairedCount} inflated scores`);
+          
+          // Show detailed repair log
+          const message = `Repaired ${repairedCount} player scores:\n\n${repairLog.join('\n')}\n\nConsider running "Recalculate All Scores" for best results.`;
+          alert(message);
+        } else {
+          alert('No inflated scores found! All player scores are within normal range (0-100).');
+        }
+      }
+
+      // Modal functions (stubs for now)
+      function showEditTeamModal() {
+        alert(
+          "Team editing coming soon! For now, use the Import JSON feature."
+        );
+      }
+
+      function showEditPlayerModal() {
+        alert(
+          "Player editing coming soon! For now, use the Import JSON feature."
+        );
+      }
+
+      // Bracket Management Functions
+      function updateBracketDisplay() {
+        const container = document.getElementById("bracketDisplay");
+        const bracketType = document.getElementById("bracketType").value;
+        
+        if (!tournamentData.bracket) {
+          container.innerHTML = '<p class="text-gray-400">No bracket data available. Generate a bracket to get started.</p>';
+          return;
+        }
+
+        let html = '<div class="space-y-4">';
+        
+        if (bracketType === "single_elimination") {
+          const bracket = tournamentData.bracket.single_elimination;
+          if (bracket && bracket.rounds) {
+            bracket.rounds.forEach(round => {
+              html += `<div class="bg-gray-700 p-4 rounded">
+                <h3 class="text-lg font-bold text-yellow-400 mb-3">${round.roundName}</h3>
+                <div class="space-y-2">`;
+              
+              round.matches.forEach(match => {
+                html += `
+                  <div class="bg-gray-600 p-3 rounded flex justify-between items-center">
+                    <div class="flex-1">
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="${match.winner === match.team1 ? 'text-yellow-400 font-bold' : ''}">${match.team1}</span>
+                        <span class="text-xl">${match.score1 !== null ? match.score1 : '-'}</span>
+                      </div>
+                      <div class="flex justify-between items-center">
+                        <span class="${match.winner === match.team2 ? 'text-yellow-400 font-bold' : ''}">${match.team2}</span>
+                        <span class="text-xl">${match.score2 !== null ? match.score2 : '-'}</span>
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <span class="text-xs text-gray-400">ID: ${match.matchId}</span>
+                    </div>
+                  </div>
+                `;
+              });
+              
+              html += '</div></div>';
+            });
+          }
+        } else if (bracketType === "round_robin") {
+          const matches = tournamentData.bracket.round_robin?.matches || [];
+          html += '<div class="grid gap-2">';
+          
+          matches.forEach(match => {
+            html += `
+              <div class="bg-gray-700 p-3 rounded flex justify-between items-center">
+                <div class="flex-1">
+                  <span class="${match.winner === match.team1 ? 'text-yellow-400 font-bold' : ''}">${match.team1}</span>
+                  <span class="mx-2">vs</span>
+                  <span class="${match.winner === match.team2 ? 'text-yellow-400 font-bold' : ''}">${match.team2}</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-xl">${match.score1 !== null ? match.score1 : '-'} - ${match.score2 !== null ? match.score2 : '-'}</span>
+                  <span class="text-xs text-gray-400 ml-2">ID: ${match.matchId}</span>
+                </div>
+              </div>
+            `;
+          });
+          
+          html += '</div>';
+        }
+        
+        html += '</div>';
+        container.innerHTML = html;
+      }
+
+      function populateMatchSelect() {
+        const select = document.getElementById("matchSelect");
+        const bracketType = document.getElementById("bracketType").value;
+        select.innerHTML = '<option value="">Select a match</option>';
+        
+        if (!tournamentData.bracket) return;
+        
+        if (bracketType === "single_elimination") {
+          const bracket = tournamentData.bracket.single_elimination;
+          if (bracket && bracket.rounds) {
+            bracket.rounds.forEach(round => {
+              round.matches.forEach(match => {
+                if (!match.completed) {
+                  select.innerHTML += `<option value="${match.matchId}">${round.roundName}: ${match.team1} vs ${match.team2}</option>`;
+                }
+              });
+            });
+          }
+        } else if (bracketType === "round_robin") {
+          const matches = tournamentData.bracket.round_robin?.matches || [];
+          matches.forEach(match => {
+            if (!match.completed) {
+              select.innerHTML += `<option value="${match.matchId}">${match.team1} vs ${match.team2}</option>`;
+            }
+          });
+        }
+      }
+
+      function generateBracket() {
+        const bracketType = document.getElementById("bracketType").value;
+        const teams = tournamentData.teams.map(t => t.name);
+        
+        if (teams.length < 2) {
+          showStatus("Need at least 2 teams to generate a bracket", "error");
+          return;
+        }
+        
+        if (!tournamentData.bracket) {
+          tournamentData.bracket = {};
+        }
+        
+        if (bracketType === "single_elimination") {
+          tournamentData.bracket.single_elimination = {
+            rounds: generateSingleElimRounds(teams)
+          };
+        } else if (bracketType === "round_robin") {
+          tournamentData.bracket.round_robin = {
+            matches: generateRoundRobinMatches(teams)
+          };
+        }
+        
+        saveData();
+        updateBracketDisplay();
+        populateMatchSelect();
+        logActivity(`Generated ${bracketType} bracket`);
+      }
+
+      function generateSingleElimRounds(teams) {
+        const rounds = [];
+        let currentTeams = [...teams];
+        let roundNum = 1;
+        
+        // Add TBD teams if not power of 2
+        while ((currentTeams.length & (currentTeams.length - 1)) !== 0) {
+          currentTeams.push("TBD");
+        }
+        
+        while (currentTeams.length > 1) {
+          const roundName = currentTeams.length === 2 ? "Finals" : 
+                           currentTeams.length === 4 ? "Semifinals" :
+                           currentTeams.length === 8 ? "Quarterfinals" :
+                           `Round ${roundNum}`;
+          
+          const matches = [];
+          for (let i = 0; i < currentTeams.length; i += 2) {
+            matches.push({
+              matchId: `${roundName.charAt(0)}${i/2 + 1}`,
+              team1: currentTeams[i],
+              team2: currentTeams[i + 1],
+              score1: null,
+              score2: null,
+              winner: null,
+              completed: false
+            });
+          }
+          
+          rounds.push({ roundName, matches });
+          currentTeams = new Array(currentTeams.length / 2).fill("TBD");
+          roundNum++;
+        }
+        
+        return rounds;
+      }
+
+      function generateRoundRobinMatches(teams) {
+        const matches = [];
+        let matchId = 1;
+        
+        for (let i = 0; i < teams.length; i++) {
+          for (let j = i + 1; j < teams.length; j++) {
+            matches.push({
+              matchId: `RR${matchId++}`,
+              team1: teams[i],
+              team2: teams[j],
+              score1: null,
+              score2: null,
+              winner: null,
+              completed: false
+            });
+          }
+        }
+        
+        return matches;
+      }
+
+      function updateMatchResult(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const matchId = formData.get("matchId");
+        const score1 = parseInt(formData.get("score1"));
+        const score2 = parseInt(formData.get("score2"));
+        const bracketType = document.getElementById("bracketType").value;
+        
+        let match = null;
+        
+        if (bracketType === "single_elimination") {
+          const bracket = tournamentData.bracket.single_elimination;
+          for (const round of bracket.rounds) {
+            match = round.matches.find(m => m.matchId === matchId);
+            if (match) break;
+          }
+        } else if (bracketType === "round_robin") {
+          match = tournamentData.bracket.round_robin.matches.find(m => m.matchId === matchId);
+        }
+        
+        if (match) {
+          match.score1 = score1;
+          match.score2 = score2;
+          match.winner = score1 > score2 ? match.team1 : match.team2;
+          match.completed = true;
+          
+          // Update next round in single elimination
+          if (bracketType === "single_elimination") {
+            updateNextRound(match.matchId, match.winner);
+          }
+          
+          saveData();
+          updateBracketDisplay();
+          populateMatchSelect();
+          logActivity(`Updated match ${matchId}: ${match.team1} ${score1} - ${score2} ${match.team2}`);
+          event.target.reset();
+        }
+      }
+
+      function updateNextRound(matchId, winner) {
+        const bracket = tournamentData.bracket.single_elimination;
+        
+        // Find which round this match is in
+        let roundIndex = -1;
+        for (let i = 0; i < bracket.rounds.length; i++) {
+          if (bracket.rounds[i].matches.some(m => m.matchId === matchId)) {
+            roundIndex = i;
+            break;
+          }
+        }
+        
+        // Update next round if exists
+        if (roundIndex !== -1 && roundIndex < bracket.rounds.length - 1) {
+          const currentRound = bracket.rounds[roundIndex];
+          const nextRound = bracket.rounds[roundIndex + 1];
+          const matchIndex = currentRound.matches.findIndex(m => m.matchId === matchId);
+          const nextMatchIndex = Math.floor(matchIndex / 2);
+          
+          if (nextRound.matches[nextMatchIndex]) {
+            if (matchIndex % 2 === 0) {
+              nextRound.matches[nextMatchIndex].team1 = winner;
+            } else {
+              nextRound.matches[nextMatchIndex].team2 = winner;
+            }
+          }
+        }
+      }
+
+      function resetBracket() {
+        if (confirm("Are you sure you want to reset the entire bracket? This cannot be undone!")) {
+          tournamentData.bracket = null;
+          saveData();
+          updateBracketDisplay();
+          populateMatchSelect();
+          logActivity("Reset tournament bracket");
+        }
+      }
+    </script>
+  </body>
+</html>
