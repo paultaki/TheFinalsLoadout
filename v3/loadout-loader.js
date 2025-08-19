@@ -5,16 +5,12 @@
  */
 
 // Load the centralized resolver if available
-let resolveItemImage;
-if (typeof window !== 'undefined' && window.NameToAsset) {
-  resolveItemImage = window.NameToAsset.resolveItemImage;
-} else {
-  // Fallback for compatibility
-  resolveItemImage = (name) => {
-    const fileName = name.replace(/\s+/g, "_").replace(/'/g, "");
-    return `images/${fileName}.webp`;
-  };
-}
+const resolveItemImage = (typeof window !== 'undefined' && window.NameToAsset) 
+  ? window.NameToAsset.resolveItemImage
+  : (name) => {
+      const fileName = name.replace(/\s+/g, "_").replace(/'/g, "");
+      return `images/${fileName}.webp`;
+    };
 
 // Legacy mapping kept for reference but not used
 const IMAGE_NAME_MAP_LEGACY = {

@@ -560,21 +560,22 @@ a:hover {
 }
 
 .slot-item img {
-  width: 40px;
-  height: 40px;
+  width: 52px;  /* 30% larger from 40px */
+  height: 52px; /* 30% larger from 40px */
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 .slot-item .item-label {
-  margin-top: 4px;
-  font-size: 0.7rem;
+  margin-top: 6px;
+  font-size: 0.85rem; /* Larger text */
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
   color: var(--text-secondary);
+  font-weight: 500; /* Slightly bolder */
 }
 
 .slot-item.winner {
@@ -696,6 +697,10 @@ a:hover {
   padding: var(--spacing-xl);
   margin-top: var(--spacing-xl);
   animation: slideUp 0.5s ease;
+  /* Match slot machine container width */
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @keyframes slideUp {
@@ -908,9 +913,16 @@ a:hover {
 
   /* CRITICAL: Maintain horizontal slot layout on mobile */
   .slot-machine {
-    transform: scale(0.85);
-    transform-origin: center;
-    margin: 0 -10px; /* Compensate for scale */
+    /* Remove transform to use full width */
+    padding: var(--spacing-lg);
+    margin: 0;
+  }
+  
+  /* Make slot machine and loadout result same width */
+  .slot-machine-container,
+  .loadout-result {
+    width: 100%;
+    max-width: 100%;
   }
 
   .slot-columns {
@@ -934,6 +946,16 @@ a:hover {
   .slot-item {
     height: 52px;
     font-size: 0.7rem;
+  }
+  
+  .slot-item img {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .slot-item .item-label {
+    font-size: 0.65rem;
+    margin-top: 2px;
   }
 
   .controls {

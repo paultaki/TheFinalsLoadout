@@ -1,0 +1,59 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m http.server:*)",
+      "Bash(npm run dev)",
+      "Bash(npm run build)",
+      "Bash(npm run test:*)",
+      "Bash(npm install:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Read(/mnt/z/DevProjects/thefinalsloadout/**)",
+      "Write(/mnt/z/DevProjects/thefinalsloadout/v3/**)",
+      "Edit(/mnt/z/DevProjects/thefinalsloadout/v3/**)",
+      "MultiEdit(/mnt/z/DevProjects/thefinalsloadout/v3/**)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(./config/credentials.json)",
+      "Write(./.env)",
+      "Write(./.env.*)",
+      "Bash(rm -rf:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(npm publish)",
+      "Bash(vercel deploy)",
+      "Write(/mnt/z/DevProjects/thefinalsloadout/loadouts.json)",
+      "Edit(/mnt/z/DevProjects/thefinalsloadout/loadouts.json)"
+    ],
+    "additionalDirectories": [
+      "/mnt/z/DevProjects/thefinalsloadout/v3",
+      "/mnt/z/DevProjects/thefinalsloadout/images",
+      "/mnt/z/DevProjects/thefinalsloadout/sounds"
+    ]
+  },
+  "env": {
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
+    "DISABLE_COST_WARNINGS": "0",
+    "BASH_DEFAULT_TIMEOUT_MS": "30000",
+    "BASH_MAX_TIMEOUT_MS": "120000"
+  },
+  "hooks": {
+    "PostToolUse": {
+      "Edit": "echo '✏️ File edited'",
+      "Write": "echo '📝 File created/written'",
+      "MultiEdit": "echo '📝 Multiple edits applied'"
+    }
+  },
+  "statusLine": {
+    "type": "token-usage"
+  }
+}
