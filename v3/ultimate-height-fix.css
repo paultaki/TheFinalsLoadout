@@ -1,0 +1,112 @@
+/**
+ * ULTIMATE Height Fix - Nuclear option to force 2.5 items visible
+ * Load this LAST after ALL other CSS
+ */
+
+/* Kill all other height rules with maximum specificity */
+html body .container .slot-machine-container .slot-machine .slot-columns .slot-column .slot-window,
+html body .slot-window,
+body .slot-window,
+.slot-window,
+.slot-viewport,
+div.slot-window,
+div.slot-viewport,
+.slot-column .slot-window,
+.slot-column > .slot-window {
+  height: 200px !important;
+  max-height: 200px !important;
+  min-height: 200px !important;
+  overflow: hidden !important;
+}
+
+/* Item heights with maximum specificity */
+html body .slot-item,
+.slot-items .slot-item,
+.slot-items > .slot-item,
+.slot-item,
+div.slot-item {
+  height: 80px !important;
+  max-height: 80px !important;
+  min-height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
+/* Kill any media query overrides */
+@media screen and (max-width: 9999px) {
+  .slot-window,
+  .slot-viewport {
+    height: 200px !important;
+    max-height: 200px !important;
+    min-height: 200px !important;
+  }
+  
+  .slot-item {
+    height: 80px !important;
+    max-height: 80px !important;
+    min-height: 80px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .slot-window,
+  .slot-viewport {
+    height: 200px !important;
+  }
+  
+  .slot-item {
+    height: 80px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .slot-window,
+  .slot-viewport {
+    height: 200px !important;
+  }
+  
+  .slot-item {
+    height: 80px !important;
+  }
+}
+
+/* Remove gap above slot machine */
+.pre-slot-container {
+  min-height: 0 !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+/* If pre-slot has content, limit it */
+.pre-slot-container:not(:empty) {
+  max-height: 200px !important;
+  overflow: hidden !important;
+}
+
+/* Ensure proper spacing */
+.top-controls {
+  margin-bottom: 2rem !important;
+}
+
+.header {
+  margin-bottom: 1rem !important;
+}
+
+/* Debug - add visible border to verify */
+.slot-window {
+  border: 2px solid rgba(0, 255, 0, 0.3) !important;
+  position: relative !important;
+}
+
+/* Add measurement guides in dev mode */
+.slot-window[data-debug]::after {
+  content: "Height: 200px (2.5 items)";
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  font-size: 10px;
+  color: #0f0;
+  z-index: 999;
+}

@@ -16,15 +16,17 @@
       .slot-machine{position:relative;background:#1a1a1a;border-radius:12px;overflow:hidden}
       .slot-columns{display:flex;justify-content:center;gap:1rem;padding:2rem 1rem}
       .slot-column{flex:1;max-width:150px;background:#0f0f0f;border-radius:8px;overflow:hidden}
-      .slot-window{position:relative;height:200px;overflow:hidden} /* Fixed: 200px to show 2.5 items */
+      /* CRITICAL: Force 200px height for 2.5 items */
+      .slot-window{position:relative;height:200px !important;overflow:hidden}
+      .slot-viewport{height:200px !important;overflow:hidden}
       .slot-items{position:absolute;width:100%;transition:none}
-      .slot-item{height:80px;display:flex;align-items:center;justify-content:center;padding:0.5rem}
+      .slot-item{height:80px !important;display:flex;align-items:center;justify-content:center;padding:0.5rem}
       .generate-btn{background:linear-gradient(135deg,#ff3366,#ff6b9d);color:#fff;border:none;padding:1rem 2rem;font-size:1.125rem;font-weight:700;border-radius:8px;cursor:pointer;text-transform:uppercase}
-      .header{text-align:center;padding:2rem 0}
+      .header{text-align:center;padding:2rem 0 1rem}
       .title{font-family:"Bebas Neue",sans-serif;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;text-transform:uppercase}
-      .pre-slot-container{min-height:0} /* Fixed: Remove unnecessary gap */
+      .pre-slot-container{min-height:0;height:auto}
       .history-section{margin-top:3rem}
-      .top-controls{margin-bottom:2rem} /* Add spacing after button */
+      .top-controls{margin-bottom:2rem}
     </style>
 
     <!-- Preconnect for faster font loading -->
@@ -34,7 +36,6 @@
     <!-- Preload critical resources -->
     <link rel="preload" href="/v3/style.css?v=20250818-vegas" as="style" />
     <link rel="preload" href="/images/placeholder.webp" as="image" type="image/webp" />
-    <link rel="preload" href="/fonts/bebas-neue-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Meta Tags -->
     <title>The Finals BEST Random Loadout Generator | Fun & Unique Loadouts</title>
@@ -63,26 +64,28 @@
     <!-- Fonts - Load with display swap -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 
-    <!-- Styles - Non-critical styles load async -->
+    <!-- Main style first -->
     <link rel="stylesheet" href="/v3/style.css?v=20250818-vegas" />
+    
+    <!-- Then async load other styles -->
     <link rel="preload" href="/v3/spin-animation.css?v=20250816" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="/v3/polish-styles-fixed.css?v=20250819" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="/v3/bonus-styles.css?v=20250816" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="/v3/selection-styles.css?v=20250816" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="/v3/automated-flow-styles.css?v=20250816" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="/v3/history-styles.css?v=20250816" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="/v3/history-styles-refined.css?v=20250816" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <!-- Override CSS - MUST load last to fix heights -->
-    <link rel="stylesheet" href="/v3/style-override-fix.css?v=20250819">
+    
+    <!-- ULTIMATE FIX V2 - Must load LAST to override everything -->
+    <link rel="stylesheet" href="/v3/ultimate-fix-v2.css?v=20250819-final2">
+    
     <noscript>
       <link rel="stylesheet" href="/v3/spin-animation.css?v=20250816">
-      <link rel="stylesheet" href="/v3/polish-styles-fixed.css?v=20250819">
       <link rel="stylesheet" href="/v3/bonus-styles.css?v=20250816">
       <link rel="stylesheet" href="/v3/selection-styles.css?v=20250816">
       <link rel="stylesheet" href="/v3/automated-flow-styles.css?v=20250816">
       <link rel="stylesheet" href="/v3/history-styles.css?v=20250816">
       <link rel="stylesheet" href="/v3/history-styles-refined.css?v=20250816">
-      <link rel="stylesheet" href="/v3/style-override-fix.css?v=20250819">
+      <link rel="stylesheet" href="/v3/ultimate-fix-v2.css?v=20250819-final2">
     </noscript>
   </head>
   <body>
@@ -136,69 +139,7 @@
         <button id="close-filter-panel" class="filter-close" aria-label="Close filters">×</button>
       </div>
       <div class="filter-content">
-        <!-- Weapons Filter -->
-        <div class="filter-category" data-category="weapons">
-          <div class="filter-category-header">
-            <span class="filter-category-title">WEAPONS</span>
-            <span class="filter-count" id="weapons-count">0/0</span>
-          </div>
-          <div class="filter-controls">
-            <button class="filter-control-btn" data-action="select-all">Select All</button>
-            <button class="filter-control-btn" data-action="select-none">Clear</button>
-            <button class="filter-control-btn" data-action="select-meta">Meta Only</button>
-          </div>
-          <div class="filter-items" id="weapons-filters">
-            <!-- Populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Specializations Filter -->
-        <div class="filter-category" data-category="specializations">
-          <div class="filter-category-header">
-            <span class="filter-category-title">SPECIALIZATIONS</span>
-            <span class="filter-count" id="specializations-count">0/0</span>
-          </div>
-          <div class="filter-controls">
-            <button class="filter-control-btn" data-action="select-all">Select All</button>
-            <button class="filter-control-btn" data-action="select-none">Clear</button>
-          </div>
-          <div class="filter-items" id="specializations-filters">
-            <!-- Populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Gadgets Filter -->
-        <div class="filter-category" data-category="gadgets">
-          <div class="filter-category-header">
-            <span class="filter-category-title">GADGETS</span>
-            <span class="filter-count" id="gadgets-count">0/0</span>
-          </div>
-          <div class="filter-controls">
-            <button class="filter-control-btn" data-action="select-all">Select All</button>
-            <button class="filter-control-btn" data-action="select-none">Clear</button>
-            <button class="filter-control-btn" data-action="select-utility">Utility Only</button>
-          </div>
-          <div class="filter-items" id="gadgets-filters">
-            <!-- Populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Quick Presets -->
-        <div class="filter-presets">
-          <h4 class="preset-title">QUICK PRESETS</h4>
-          <div class="preset-buttons">
-            <button class="preset-btn" data-preset="meta">META BUILD</button>
-            <button class="preset-btn" data-preset="meme">MEME BUILD</button>
-            <button class="preset-btn" data-preset="tryhard">TRYHARD</button>
-            <button class="preset-btn" data-preset="casual">CASUAL</button>
-          </div>
-        </div>
-
-        <!-- Apply/Reset -->
-        <div class="filter-actions">
-          <button id="apply-filters" class="apply-filters-btn">APPLY FILTERS</button>
-          <button id="reset-filters" class="reset-filters-btn">RESET ALL</button>
-        </div>
+        <!-- Filter content populated by JS -->
       </div>
     </div>
 
@@ -383,6 +324,17 @@
           });
         };
         document.head.appendChild(sentryScript);
+        
+        // HEIGHT FIX VERIFICATION
+        setTimeout(function() {
+          const windows = document.querySelectorAll('.slot-window');
+          windows.forEach(win => {
+            const height = win.offsetHeight;
+            if (height !== 200) {
+              console.warn('SLOT WINDOW HEIGHT ISSUE:', height, 'px (should be 200px)');
+            }
+          });
+        }, 2000);
       });
     </script>
 

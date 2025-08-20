@@ -5,26 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <link rel="canonical" href="https://www.thefinalsloadout.com/" />
 
-    <!-- Critical CSS for instant render - FIXED with proper heights -->
+    <!-- Critical CSS for instant render with proper heights -->
     <style>
       :root{--bg-dark:#0a0a0a;--text-primary:#fff;--font-display:"Bebas Neue",sans-serif;--font-body:"Inter",sans-serif}
       *{box-sizing:border-box;margin:0;padding:0}
       html{font-size:16px;-webkit-font-smoothing:antialiased}
       body{font-family:var(--font-body);background:#0a0a0a;color:#fff;line-height:1.6;min-height:100vh;overflow-x:hidden}
       .container{max-width:1200px;margin:0 auto;padding:0 1rem}
-      .slot-machine-container{width:100%;padding:1rem}
+      .slot-machine-container{width:100%;padding:1rem;min-height:500px}
       .slot-machine{position:relative;background:#1a1a1a;border-radius:12px;overflow:hidden}
       .slot-columns{display:flex;justify-content:center;gap:1rem;padding:2rem 1rem}
       .slot-column{flex:1;max-width:150px;background:#0f0f0f;border-radius:8px;overflow:hidden}
-      .slot-window{position:relative;height:200px;overflow:hidden} /* Fixed: 200px to show 2.5 items */
+      /* CRITICAL: 240px height for 3 items */
+      .slot-window{position:relative;height:240px !important;overflow:hidden}
+      .slot-viewport{height:240px !important;overflow:hidden}
       .slot-items{position:absolute;width:100%;transition:none}
-      .slot-item{height:80px;display:flex;align-items:center;justify-content:center;padding:0.5rem}
+      .slot-item{height:80px !important;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px}
       .generate-btn{background:linear-gradient(135deg,#ff3366,#ff6b9d);color:#fff;border:none;padding:1rem 2rem;font-size:1.125rem;font-weight:700;border-radius:8px;cursor:pointer;text-transform:uppercase}
-      .header{text-align:center;padding:2rem 0}
+      .header{text-align:center;padding:2rem 0 1rem}
       .title{font-family:"Bebas Neue",sans-serif;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;text-transform:uppercase}
-      .pre-slot-container{min-height:0} /* Fixed: Remove unnecessary gap */
+      /* Give space for pre-slot animations */
+      .pre-slot-container{min-height:400px;display:flex;flex-direction:column;justify-content:center;align-items:center}
       .history-section{margin-top:3rem}
-      .top-controls{margin-bottom:2rem} /* Add spacing after button */
+      .top-controls{margin-bottom:2rem}
+      /* Prevent container jumping */
+      #loadout-result{min-height:300px;visibility:hidden;opacity:0;transition:opacity 0.3s ease}
+      #loadout-result.visible{visibility:visible;opacity:1}
     </style>
 
     <!-- Preconnect for faster font loading -->
@@ -34,7 +40,6 @@
     <!-- Preload critical resources -->
     <link rel="preload" href="/v3/style.css?v=20250818-vegas" as="style" />
     <link rel="preload" href="/images/placeholder.webp" as="image" type="image/webp" />
-    <link rel="preload" href="/fonts/bebas-neue-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Meta Tags -->
     <title>The Finals BEST Random Loadout Generator | Fun & Unique Loadouts</title>
@@ -63,26 +68,32 @@
     <!-- Fonts - Load with display swap -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 
-    <!-- Styles - Non-critical styles load async -->
+    <!-- Main style first -->
     <link rel="stylesheet" href="/v3/style.css?v=20250818-vegas" />
+    
+    <!-- Then async load other styles -->
     <link rel="preload" href="/v3/spin-animation.css?v=20250816" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="/v3/polish-styles-fixed.css?v=20250819" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="/v3/bonus-styles.css?v=20250816" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="/v3/selection-styles.css?v=20250816" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="/v3/automated-flow-styles.css?v=20250816" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="/v3/history-styles.css?v=20250816" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="/v3/history-styles-refined.css?v=20250816" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <!-- Override CSS - MUST load last to fix heights -->
-    <link rel="stylesheet" href="/v3/style-override-fix.css?v=20250819">
+    
+    <!-- Height and label fixes -->
+    <link rel="stylesheet" href="/v3/ultimate-fix-v2.css?v=20250819-final3">
+    
+    <!-- COMPREHENSIVE FIX - Must load LAST -->
+    <link rel="stylesheet" href="/v3/comprehensive-fix.css?v=20250819-complete">
+    
     <noscript>
       <link rel="stylesheet" href="/v3/spin-animation.css?v=20250816">
-      <link rel="stylesheet" href="/v3/polish-styles-fixed.css?v=20250819">
       <link rel="stylesheet" href="/v3/bonus-styles.css?v=20250816">
       <link rel="stylesheet" href="/v3/selection-styles.css?v=20250816">
       <link rel="stylesheet" href="/v3/automated-flow-styles.css?v=20250816">
       <link rel="stylesheet" href="/v3/history-styles.css?v=20250816">
       <link rel="stylesheet" href="/v3/history-styles-refined.css?v=20250816">
-      <link rel="stylesheet" href="/v3/style-override-fix.css?v=20250819">
+      <link rel="stylesheet" href="/v3/ultimate-fix-v2.css?v=20250819-final3">
+      <link rel="stylesheet" href="/v3/comprehensive-fix.css?v=20250819-complete">
     </noscript>
   </head>
   <body>
@@ -136,69 +147,7 @@
         <button id="close-filter-panel" class="filter-close" aria-label="Close filters">×</button>
       </div>
       <div class="filter-content">
-        <!-- Weapons Filter -->
-        <div class="filter-category" data-category="weapons">
-          <div class="filter-category-header">
-            <span class="filter-category-title">WEAPONS</span>
-            <span class="filter-count" id="weapons-count">0/0</span>
-          </div>
-          <div class="filter-controls">
-            <button class="filter-control-btn" data-action="select-all">Select All</button>
-            <button class="filter-control-btn" data-action="select-none">Clear</button>
-            <button class="filter-control-btn" data-action="select-meta">Meta Only</button>
-          </div>
-          <div class="filter-items" id="weapons-filters">
-            <!-- Populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Specializations Filter -->
-        <div class="filter-category" data-category="specializations">
-          <div class="filter-category-header">
-            <span class="filter-category-title">SPECIALIZATIONS</span>
-            <span class="filter-count" id="specializations-count">0/0</span>
-          </div>
-          <div class="filter-controls">
-            <button class="filter-control-btn" data-action="select-all">Select All</button>
-            <button class="filter-control-btn" data-action="select-none">Clear</button>
-          </div>
-          <div class="filter-items" id="specializations-filters">
-            <!-- Populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Gadgets Filter -->
-        <div class="filter-category" data-category="gadgets">
-          <div class="filter-category-header">
-            <span class="filter-category-title">GADGETS</span>
-            <span class="filter-count" id="gadgets-count">0/0</span>
-          </div>
-          <div class="filter-controls">
-            <button class="filter-control-btn" data-action="select-all">Select All</button>
-            <button class="filter-control-btn" data-action="select-none">Clear</button>
-            <button class="filter-control-btn" data-action="select-utility">Utility Only</button>
-          </div>
-          <div class="filter-items" id="gadgets-filters">
-            <!-- Populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Quick Presets -->
-        <div class="filter-presets">
-          <h4 class="preset-title">QUICK PRESETS</h4>
-          <div class="preset-buttons">
-            <button class="preset-btn" data-preset="meta">META BUILD</button>
-            <button class="preset-btn" data-preset="meme">MEME BUILD</button>
-            <button class="preset-btn" data-preset="tryhard">TRYHARD</button>
-            <button class="preset-btn" data-preset="casual">CASUAL</button>
-          </div>
-        </div>
-
-        <!-- Apply/Reset -->
-        <div class="filter-actions">
-          <button id="apply-filters" class="apply-filters-btn">APPLY FILTERS</button>
-          <button id="reset-filters" class="reset-filters-btn">RESET ALL</button>
-        </div>
+        <!-- Filter content populated by JS -->
       </div>
     </div>
 
@@ -215,7 +164,7 @@
         <button id="generate-btn" class="generate-btn primary-btn">GENERATE LOADOUT</button>
       </section>
 
-      <!-- Pre-Slot Animation Container -->
+      <!-- Pre-Slot Animation Container with proper height -->
       <section id="pre-slot-container" class="pre-slot-container">
         <!-- Will be populated by AutomatedFlowManager -->
       </section>
@@ -270,8 +219,8 @@
           </div>
         </div>
 
-        <!-- Result Display -->
-        <div id="loadout-result" class="loadout-result" style="display: none">
+        <!-- Result Display with proper visibility handling -->
+        <div id="loadout-result" class="loadout-result">
           <h3 class="result-title">YOUR LOADOUT</h3>
           <div class="result-items">
             <!-- Results will be populated here -->
@@ -329,6 +278,9 @@
       </div>
     </footer>
 
+    <!-- Animation Engine Landing Position Patch - LOAD FIRST -->
+    <script src="/v3/animation-engine-patch.js?v=20250819"></script>
+    
     <!-- Scripts - Critical path optimized -->
     <!-- Core dependencies load first but async -->
     <script src="/js/name-to-asset.js?v=20250816" async></script>
@@ -349,6 +301,39 @@
 
     <!-- Debug overlay for animation -->
     <div id="anim-debug" style="position:fixed;right:8px;top:8px;padding:6px 8px;background:#111a;color:#0f0;font:12px/1.3 monospace;z-index:9999;border-radius:6px;pointer-events:none;border:1px solid #0f0">IDLE</div>
+
+    <!-- Visibility Fix Script -->
+    <script>
+      // Fix container visibility to prevent jumping
+      document.addEventListener('DOMContentLoaded', function() {
+        const resultContainer = document.getElementById('loadout-result');
+        const slotContainer = document.getElementById('slot-machine-container');
+        
+        // Override display changes with visibility
+        const observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+              const target = mutation.target;
+              if (target === resultContainer) {
+                const display = target.style.display;
+                if (display === 'none') {
+                  target.style.display = '';
+                  target.classList.remove('visible');
+                } else if (display === 'block' || display === '') {
+                  target.style.display = '';
+                  target.classList.add('visible');
+                }
+              }
+            }
+          });
+        });
+        
+        observer.observe(resultContainer, { attributes: true });
+        if (slotContainer) {
+          observer.observe(slotContainer, { attributes: true });
+        }
+      });
+    </script>
 
     <!-- Non-critical monitoring loads last -->
     <script>
@@ -383,6 +368,18 @@
           });
         };
         document.head.appendChild(sentryScript);
+        
+        // ALIGNMENT VERIFICATION
+        setTimeout(function() {
+          const columns = document.querySelectorAll('.slot-column');
+          columns.forEach(col => {
+            const items = col.querySelector('.slot-items');
+            if (items) {
+              const transform = items.style.transform;
+              console.log('Column transform:', col.dataset.type, transform);
+            }
+          });
+        }, 5000);
       });
     </script>
 
