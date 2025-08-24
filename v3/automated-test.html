@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automated Test - Slot Machine Fixes</title>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: monospace;
+      padding: 20px;
+    }
+    
+    .test-results {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    
+    .test-item {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border-left: 4px solid #444;
+    }
+    
+    .test-item.pass {
+      background: #0a2a0a;
+      border-left-color: #0f0;
+    }
+    
+    .test-item.fail {
+      background: #2a0a0a;
+      border-left-color: #f00;
+    }
+    
+    .test-item.pending {
+      background: #2a2a0a;
+      border-left-color: #ff0;
+    }
+    
+    .test-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .test-detail {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    button {
+      background: #ff3366;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px 5px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    button:hover {
+      background: #ff5577;
+    }
+    
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    
+    .status-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #000;
+      padding: 10px;
+      border-bottom: 2px solid #333;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .results-summary {
+      background: #222;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border: 1px solid #444;
+    }
+    
+    .metric {
+      display: inline-block;
+      margin: 0 15px;
+    }
+    
+    .metric-value {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .metric-label {
+      font-size: 12px;
+      color: #888;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="status-bar">
+    <h2 style="margin: 0;">🧪 Slot Machine Test Suite</h2>
+    <div>
+      <button onclick="runAllTests()">Run All Tests</button>
+      <button onclick="clearResults()">Clear Results</button>
+    </div>
+  </div>
+  
+  <div style="margin-top: 60px;">
+    <div class="test-results">
+      <h3>Test Application</h3>
+      <iframe id="testFrame" src="/v3/index-complete-fix.html"></iframe>
+      
+      <div class="results-summary">
+        <div class="metric">
+          <span class="metric-value" id="passCount">0</span>
+          <span class="metric-label">Passed</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value" id="failCount">0</span>
+          <span class="metric-label">Failed</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value" id="totalCount">0</span>
+          <span class="metric-label">Total</span>
+        </div>
+      </div>
+      
+      <div id="testResults"></div>
+    </div>
+  </div>
+  
+  <script>
+    let testResults = [];
+    const targetFrame = document.getElementById('testFrame');
+    
+    // Wait for iframe to load
+    targetFrame.onload = function() {
+      console.log('Application loaded, ready for testing');
+      // Auto-run tests after a delay
+      setTimeout(() => {
+        runAllTests();
+      }, 2000);
+    };
+    
+    function addTestResult(name, status, details = '') {
+      const result = { name, status, details, timestamp: new Date().toISOString() };
+      testResults.push(result);
+      updateDisplay();
+    }
+    
+    function updateDisplay() {
+      const container = document.getElementById('testResults');
+      const passCount = testResults.filter(r => r.status === 'pass').length;
+      const failCount = testResults.filter(r => r.status === 'fail').length;
+      
+      document.getElementById('passCount').textContent = passCount;
+      document.getElementById('failCount').textContent = failCount;
+      document.getElementById('totalCount').textContent = testResults.length;
+      
+      container.innerHTML = testResults.map(result => `
+        <div class="test-item ${result.status}">
+          <div class="test-title">
+            ${result.status === 'pass' ? '✅' : result.status === 'fail' ? '❌' : '⏳'}
+            ${result.name}
+          </div>
+          ${result.details ? `<div class="test-detail">${result.details}</div>` : ''}
+        </div>
+      `).join('');
+    }
+    
+    function clearResults() {
+      testResults = [];
+      updateDisplay();
+    }
+    
+    async function runAllTests() {
+      clearResults();
+      const win = targetFrame.contentWindow;
+      const doc = targetFrame.contentDocument;
+      
+      console.log('Starting automated tests...');
+      
+      // Test 1: Check if critical files loaded
+      addTestResult('Critical Files Loaded', 'pending');
+      try {
+        const hasAnimationFix = win.ITEM_H !== undefined;
+        const hasCorrectItemHeight = win.ITEM_H === 80 || !win.ITEM_H;
+        const hasSimpleSpinAnimation = typeof win.SimpleSpinAnimation !== 'undefined';
+        
+        if (hasAnimationFix && hasCorrectItemHeight) {
+          addTestResult('Critical Files Loaded', 'pass', 
+            `Animation fixes loaded. ITEM_H = ${win.ITEM_H || '80 (default)'}`);
+        } else {
+          addTestResult('Critical Files Loaded', 'fail', 
+            `Wrong constants: ITEM_H = ${win.ITEM_H}`);
+        }
+      } catch (e) {
+        addTestResult('Critical Files Loaded', 'fail', e.message);
+      }
+      
+      // Test 2: Check viewport dimensions
+      addTestResult('Viewport Dimensions', 'pending');
+      try {
+        const slotWindows = doc.querySelectorAll('.slot-window');
+        let allCorrect = true;
+        let heights = [];
+        
+        slotWindows.forEach(window => {
+          const height = window.offsetHeight;
+          heights.push(height);
+          if (height !== 240) allCorrect = false;
+        });
+        
+        if (allCorrect && slotWindows.length > 0) {
+          addTestResult('Viewport Dimensions', 'pass', 
+            `All ${slotWindows.length} viewports are 240px`);
+        } else {
+          addTestResult('Viewport Dimensions', 'fail', 
+            `Heights: ${heights.join(', ')}px (should be 240px)`);
+        }
+      } catch (e) {
+        addTestResult('Viewport Dimensions', 'fail', e.message);
+      }
+      
+      // Test 3: Check item heights
+      addTestResult('Item Heights', 'pending');
+      try {
+        const items = doc.querySelectorAll('.slot-item');
+        const wrongHeights = new Set();
+        let correctCount = 0;
+        
+        items.forEach(item => {
+          const height = item.offsetHeight;
+          if (height === 80) {
+            correctCount++;
+          } else {
+            wrongHeights.add(height);
+          }
+        });
+        
+        if (wrongHeights.size === 0 && items.length > 0) {
+          addTestResult('Item Heights', 'pass', 
+            `All ${items.length} items are 80px`);
+        } else {
+          addTestResult('Item Heights', 'fail', 
+            `${correctCount}/${items.length} correct. Wrong: ${Array.from(wrongHeights).join(', ')}px`);
+        }
+      } catch (e) {
+        addTestResult('Item Heights', 'fail', e.message);
+      }
+      
+      // Test 4: Check for gap between header and slots
+      addTestResult('Header Gap Check', 'pending');
+      try {
+        const slotHeader = doc.querySelector('.slot-header');
+        const slotColumns = doc.querySelector('.slot-columns');
+        
+        if (slotHeader && slotColumns) {
+          const headerRect = slotHeader.getBoundingClientRect();
+          const columnsRect = slotColumns.getBoundingClientRect();
+          const gap = columnsRect.top - headerRect.bottom;
+          
+          if (gap < 30) {
+            addTestResult('Header Gap Check', 'pass', 
+              `Gap: ${gap.toFixed(1)}px (acceptable)`);
+          } else {
+            addTestResult('Header Gap Check', 'fail', 
+              `Gap: ${gap.toFixed(1)}px (too large)`);
+          }
+        } else {
+          addTestResult('Header Gap Check', 'fail', 'Elements not found');
+        }
+      } catch (e) {
+        addTestResult('Header Gap Check', 'fail', e.message);
+      }
+      
+      // Test 5: Check initial positions
+      addTestResult('Initial Positions', 'pending');
+      try {
+        const containers = doc.querySelectorAll('.slot-items');
+        let positions = [];
+        
+        containers.forEach((container, i) => {
+          const transform = container.style.transform;
+          const match = transform ? transform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/) : null;
+          const position = match ? parseFloat(match[1]) : 0;
+          positions.push(position);
+        });
+        
+        const allZero = positions.every(p => p === 0);
+        if (allZero) {
+          addTestResult('Initial Positions', 'pass', 
+            `All columns at 0px initially`);
+        } else {
+          addTestResult('Initial Positions', 'fail', 
+            `Positions: ${positions.join(', ')}px`);
+        }
+      } catch (e) {
+        addTestResult('Initial Positions', 'fail', e.message);
+      }
+      
+      // Test 6: Trigger a spin and check final positions
+      addTestResult('Spin Animation Test', 'pending');
+      try {
+        // Click the generate button
+        const generateBtn = doc.querySelector('.generate-btn');
+        if (generateBtn) {
+          generateBtn.click();
+          
+          // Wait for animation to start
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // Check if spinning
+          const spinningColumns = doc.querySelectorAll('.slot-column.spinning');
+          if (spinningColumns.length > 0) {
+            addTestResult('Spin Animation Test', 'pass', 
+              `Animation started - ${spinningColumns.length} columns spinning`);
+          } else {
+            addTestResult('Spin Animation Test', 'fail', 'Animation did not start');
+          }
+          
+          // Wait for animation to complete
+          await new Promise(resolve => setTimeout(resolve, 8000));
+          
+          // Test 7: Check final positions
+          addTestResult('Final Positions', 'pending');
+          const finalContainers = doc.querySelectorAll('.slot-items');
+          let finalPositions = [];
+          let allCorrect = true;
+          
+          finalContainers.forEach((container, i) => {
+            const transform = container.style.transform;
+            const match = transform ? transform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/) : null;
+            const position = match ? parseFloat(match[1]) : 0;
+            finalPositions.push(position);
+            
+            // Check if position is correct (-1440px) or close to it
+            if (Math.abs(position - (-1440)) > 10 && position !== 0) {
+              allCorrect = false;
+            }
+          });
+          
+          if (allCorrect) {
+            addTestResult('Final Positions', 'pass', 
+              `All columns at correct position: ${finalPositions.map(p => p.toFixed(0)).join(', ')}px`);
+          } else {
+            addTestResult('Final Positions', 'fail', 
+              `Wrong positions: ${finalPositions.map(p => p.toFixed(0)).join(', ')}px (should be -1440px)`);
+          }
+          
+          // Test 8: Check horizontal alignment
+          addTestResult('Horizontal Alignment', 'pending');
+          const uniquePositions = new Set(finalPositions.filter(p => p !== 0).map(p => Math.round(p)));
+          
+          if (uniquePositions.size === 1) {
+            addTestResult('Horizontal Alignment', 'pass', 
+              'All columns aligned horizontally');
+          } else {
+            addTestResult('Horizontal Alignment', 'fail', 
+              `Misaligned - ${uniquePositions.size} different positions`);
+          }
+          
+          // Test 9: Check for winner highlights
+          addTestResult('Winner Highlights', 'pending');
+          const winners = doc.querySelectorAll('.slot-item.winner');
+          
+          if (winners.length === 5) {
+            addTestResult('Winner Highlights', 'pass', 
+              `${winners.length} winners highlighted correctly`);
+          } else {
+            addTestResult('Winner Highlights', 'fail', 
+              `${winners.length} winners found (expected 5)`);
+          }
+          
+        } else {
+          addTestResult('Spin Animation Test', 'fail', 'Generate button not found');
+        }
+      } catch (e) {
+        addTestResult('Spin Animation Test', 'fail', e.message);
+      }
+      
+      console.log('Tests completed:', testResults);
+    }
+  </script>
+</body>
+</html>

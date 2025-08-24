@@ -10,15 +10,15 @@
  * - Frame-rate independent via delta-time integration
  */
 
-// Constants
-const ITEM_H = 104; // 30% increase from 80px
-const VIEWPORT_H = 312; // 30% increase from 240px
-// The viewport shows 3 items (104px each)
-// Row 1: 0-104px, Row 2: 104-208px (center), Row 3: 208-312px
-// To place winner at start of Row 2 (center):
-// Winner at index 20 = 2080px from top
-// To show at 104px in viewport: translateY = -(20 * 104) + 104 = -1976px
-const CENTER_OFFSET = 104; // Position winner at row 2 (center row)
+// Constants - CORRECTED TO MATCH ACTUAL DOM
+const ITEM_H = 80; // Actual item height in DOM
+const VIEWPORT_H = 240; // Actual viewport height (3 items * 80px)
+// The viewport shows 3 items (80px each)
+// Row 1: 0-80px, Row 2: 80-160px (center), Row 3: 160-240px (bottom)
+// To place winner at bottom of viewport (row 3):
+// Winner at index 20 = 1600px from top
+// To show at 160px in viewport: translateY = -(20 * 80) + 160 = -1440px
+const CENTER_OFFSET = 160; // Position winner at row 3 (bottom row)
 
 // Animation Configuration
 const ANIM_CONFIG = {
@@ -114,7 +114,7 @@ class AnimationEngineV2 {
         const currentTransform = itemsContainer.style.transform;
         if (!currentTransform || currentTransform === 'translateY(0px)') {
           // Only set safe position if no position is set
-          itemsContainer.style.transform = 'translateY(-1976px)'; // Safe winner position
+          itemsContainer.style.transform = 'translateY(-1440px)'; // Safe winner position
         }
       }
     });
@@ -210,7 +210,7 @@ class AnimationEngineV2 {
       
       // Read initial position from DOM
       const currentTransform = itemsContainer.style.transform;
-      let startPos = -2184; // Default (winner at effective position 20 above viewport with 104px items)
+      let startPos = -1680; // Default (winner at effective position 20 above viewport with 80px items)
       
       // CRITICAL FIX: If position is 0 or not set, use safe starting position
       if (!currentTransform || currentTransform === 'none' || currentTransform === 'translateY(0px)' || currentTransform === 'translate3d(0px, 0px, 0px)') {
@@ -332,19 +332,19 @@ class AnimationEngineV2 {
    */
   calculateFutureTarget(currentUnwrappedY, winnerIndex, cycleHeight, totalSpins = 1) {
     // Winner positioning for Row 2 (center):
-    // - Viewport: 312px (3 items of 104px each)
-    // - Row 1: 0-104px
+    // - Viewport: 240px (3 items of 80px each)
+    // - Row 1: 0-80px
     // - Row 2: 104-208px (CENTER - target here)
     // - Row 3: 208-312px
     //
-    // Winner at index 20 (20 items above it = 2080px from top)
-    // To place winner at row 2 start (104px in viewport):
+    // Winner at index 20 (20 items above it = 1600px from top)
+    // To place winner at row 3 (bottom) (160px in viewport):
     // translateY = -(winnerIndex * ITEM_H) + CENTER_OFFSET
-    // translateY = -(20 * 104) + 104 = -1976px
-    const targetWrappedPosition = -(winnerIndex * ITEM_H) + CENTER_OFFSET; // -1976px for center row
+    // translateY = -(20 * 80) + 160 = -1440px
+    const targetWrappedPosition = -(winnerIndex * ITEM_H) + CENTER_OFFSET; // -1440px for bottom row
     
     // CORRECT CALCULATION:
-    // We need to land at exactly -1976px (which is index 20 with offset 104)
+    // We need to land at exactly -1440px (which is index 20 with offset 160)
     // The wrapped position calculation: wrappedY = unwrappedY % cycleHeight
     // But if wrapped > 0, we display as wrapped - cycleHeight (negative)
     
@@ -352,12 +352,12 @@ class AnimationEngineV2 {
     const minDistance = totalSpins * cycleHeight;
     const baseUnwrapped = currentUnwrappedY + minDistance;
     
-    // We want final wrapped position to be -1976px
+    // We want final wrapped position to be -1440px
     // This means unwrappedY % cycleHeight should give us a value that,
-    // when converted to display position, equals -1976
+    // when converted to display position, equals -1440
     
-    // Since -1976 is negative, it means wrapped = cycleHeight - 1976
-    const targetWrappedRaw = cycleHeight + targetWrappedPosition; // cycleHeight - 1520
+    // Since -1440 is negative, it means wrapped = cycleHeight - 1440
+    const targetWrappedRaw = cycleHeight + targetWrappedPosition; // cycleHeight - 1440
     
     // Find how much we need to add to baseUnwrapped to reach this wrapped position
     const currentWrappedRaw = baseUnwrapped % cycleHeight;
@@ -370,7 +370,7 @@ class AnimationEngineV2 {
     
     const targetUnwrapped = baseUnwrapped + adjustment;
     
-    console.log(`[PHYSICS] Target: ${targetUnwrapped.toFixed(0)}px will wrap to -1976px`);
+    console.log(`[PHYSICS] Target: ${targetUnwrapped.toFixed(0)}px will wrap to -1440px`);
     
     return targetUnwrapped;
   }
@@ -547,7 +547,7 @@ class AnimationEngineV2 {
         } else {
           console.log('🏁 ANIMATION COMPLETE - Starting final positioning...');
           // CRITICAL FIX: Snap ALL columns to EXACT same position when animation completes
-          const exactFinalPosition = -1976; // All columns must land here
+          const exactFinalPosition = -1440; // All columns must land here
           
           columns.forEach((column, index) => {
             const state = this.columnStates.get(column);
@@ -770,7 +770,7 @@ class AnimationEngineV2 {
     const distanceToTarget = state.targetY - state.unwrappedY;
     
     // TIGHTER CRITERIA: End animation only when VERY close to target AND velocity is low
-    // This ensures we get much closer to -1976px before stopping
+    // This ensures we get much closer to -1440px before stopping
     const isComplete = (Math.abs(distanceToTarget) <= 1 && Math.abs(state.velocity) <= 10) || 
                       Math.abs(state.velocity) <= 0.5;
     

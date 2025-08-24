@@ -68,7 +68,6 @@ let ClassData = {
       "Thermal Vision",
       "Tracking Dart",
       "Vanishing Bomb",
-      "Zipline",
       "Motion Sensor",
     ],
   },
@@ -522,7 +521,14 @@ class SlotMachine {
       this.animationEngine = null;
     }
     
-    // Try to use SIMPLE animation first
+    // Try to use REAL slot machine animation first (best experience)
+    if (typeof RealSlotMachineAnimation !== "undefined") {
+      this.animationEngine = new RealSlotMachineAnimation();
+      console.log('🎰 Using RealSlotMachineAnimation - AUTHENTIC SLOT MACHINE!');
+      return;
+    }
+    
+    // Fallback to simple animation
     if (typeof SimpleSpinAnimation !== "undefined") {
       this.animationEngine = new SimpleSpinAnimation();
       console.log('✅ Using SimpleSpinAnimation - VISIBLE SPINNING!');
@@ -531,11 +537,14 @@ class SlotMachine {
     
     // Try again after a short delay (in case scripts are still loading)
     setTimeout(() => {
-      if (!this.animationEngine && typeof SimpleSpinAnimation !== "undefined") {
+      if (!this.animationEngine && typeof RealSlotMachineAnimation !== "undefined") {
+        this.animationEngine = new RealSlotMachineAnimation();
+        console.log('🎰 Using RealSlotMachineAnimation (delayed load)');
+      } else if (!this.animationEngine && typeof SimpleSpinAnimation !== "undefined") {
         this.animationEngine = new SimpleSpinAnimation();
         console.log('✅ Using SimpleSpinAnimation (delayed load)');
       } else if (!this.animationEngine && typeof AnimationEngineV2 !== "undefined") {
-        // Fallback to V2 if simple not available
+        // Fallback to V2 if others not available
         this.animationEngine = new AnimationEngineV2();
         console.log('🔄 Using AnimationEngineV2 (fallback)');
       } else if (!this.animationEngine) {

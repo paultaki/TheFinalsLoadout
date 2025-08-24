@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Position Fix Test</title>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: monospace;
+      padding: 20px;
+    }
+    
+    .test-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .slot-test {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    
+    .slot-window {
+      height: 240px !important;
+      background: #0f0f0f;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #333;
+      margin: 10px 0;
+    }
+    
+    .slot-items {
+      position: absolute;
+      width: 100%;
+      transition: transform 0.5s ease;
+    }
+    
+    .slot-item {
+      height: 80px !important;
+      background: #222;
+      margin: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #444;
+    }
+    
+    .slot-item.winner {
+      background: #441111;
+      border: 2px solid #ff3366;
+    }
+    
+    /* Visual guide lines */
+    .slot-window::after {
+      content: "Bottom line (winner should be here)";
+      position: absolute;
+      bottom: 80px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(0, 255, 0, 0.5);
+      pointer-events: none;
+      font-size: 10px;
+      color: #0f0;
+      text-align: center;
+      padding-top: 4px;
+    }
+    
+    .controls {
+      margin: 20px 0;
+    }
+    
+    button {
+      background: #ff3366;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    
+    button:hover {
+      background: #ff5577;
+    }
+    
+    .status {
+      background: #111;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-size: 12px;
+    }
+    
+    .status.success { color: #0f0; }
+    .status.error { color: #f00; }
+    .status.info { color: #0ff; }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>Slot Machine Position Fix Test</h1>
+    
+    <div class="status info" id="status">
+      Testing correct positioning: Items should land at -1440px (winner at bottom of 240px viewport)
+    </div>
+    
+    <div class="slot-test">
+      <h3>Test 1: Correct Position (-1440px)</h3>
+      <div class="slot-window">
+        <div class="slot-items" id="test1">
+          <!-- Generate 30 items -->
+        </div>
+      </div>
+      <button onclick="setPosition('test1', -1440)">Set Correct Position (-1440px)</button>
+      <button onclick="setPosition('test1', -1976)">Set Wrong Position (-1976px)</button>
+      <button onclick="setPosition('test1', -1520)">Set Old Position (-1520px)</button>
+    </div>
+    
+    <div class="slot-test">
+      <h3>Test 2: Animation Test</h3>
+      <div class="slot-window">
+        <div class="slot-items" id="test2">
+          <!-- Generate 30 items -->
+        </div>
+      </div>
+      <button onclick="animateToPosition('test2', -1440)">Animate to Correct</button>
+      <button onclick="animateToPosition('test2', 0)">Reset</button>
+    </div>
+    
+    <div class="slot-test">
+      <h3>Test 3: Multiple Columns Alignment</h3>
+      <div style="display: flex; gap: 10px;">
+        <div class="slot-window" style="flex: 1;">
+          <div class="slot-items" id="test3a"></div>
+        </div>
+        <div class="slot-window" style="flex: 1;">
+          <div class="slot-items" id="test3b"></div>
+        </div>
+        <div class="slot-window" style="flex: 1;">
+          <div class="slot-items" id="test3c"></div>
+        </div>
+      </div>
+      <button onclick="alignAll()">Align All to -1440px</button>
+      <button onclick="misalignAll()">Misalign (simulate bug)</button>
+    </div>
+  </div>
+  
+  <script>
+    // Generate items for all test containers
+    function generateItems(containerId) {
+      const container = document.getElementById(containerId);
+      for (let i = 0; i < 30; i++) {
+        const item = document.createElement('div');
+        item.className = 'slot-item';
+        if (i === 20) {
+          item.className += ' winner';
+          item.textContent = `Item ${i} (WINNER)`;
+        } else {
+          item.textContent = `Item ${i}`;
+        }
+        container.appendChild(item);
+      }
+    }
+    
+    // Initialize all test containers
+    ['test1', 'test2', 'test3a', 'test3b', 'test3c'].forEach(generateItems);
+    
+    // Test functions
+    function setPosition(id, position) {
+      const container = document.getElementById(id);
+      container.style.transform = `translateY(${position}px)`;
+      updateStatus(`Set ${id} to ${position}px`, position === -1440 ? 'success' : 'error');
+    }
+    
+    function animateToPosition(id, position) {
+      const container = document.getElementById(id);
+      container.style.transition = 'transform 1s cubic-bezier(0.4, 0, 0.2, 1)';
+      container.style.transform = `translateY(${position}px)`;
+      updateStatus(`Animating ${id} to ${position}px`, 'info');
+    }
+    
+    function alignAll() {
+      ['test3a', 'test3b', 'test3c'].forEach(id => {
+        setPosition(id, -1440);
+      });
+      updateStatus('All columns aligned to correct position (-1440px)', 'success');
+    }
+    
+    function misalignAll() {
+      setPosition('test3a', -1976);
+      setPosition('test3b', -1440);
+      setPosition('test3c', -1520);
+      updateStatus('Columns misaligned (simulating bug)', 'error');
+    }
+    
+    function updateStatus(message, type = 'info') {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.className = `status ${type}`;
+    }
+    
+    // Test position calculations
+    console.log('Position Calculations:');
+    console.log('Item Height: 80px');
+    console.log('Viewport Height: 240px');
+    console.log('Winner Index: 20');
+    console.log('Winner distance from top: 20 * 80 = 1600px');
+    console.log('To show at bottom (row 3): -1600 + 160 = -1440px');
+    console.log('CORRECT POSITION: -1440px');
+    
+    // Initially set correct positions
+    setTimeout(() => {
+      setPosition('test1', -1440);
+      alignAll();
+      updateStatus('Initial setup complete. Winner (red item) should be at bottom of viewport.', 'success');
+    }, 500);
+  </script>
+</body>
+</html>

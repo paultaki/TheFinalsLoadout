@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Clean Version</title>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .dashboard {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #ff3366;
+    }
+    
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .metric-card {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+    }
+    
+    .metric-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ff3366;
+      margin: 10px 0;
+    }
+    
+    .metric-label {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    .pass { color: #0f0 !important; }
+    .fail { color: #f00 !important; }
+    
+    button {
+      background: #ff3366;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    
+    button:hover {
+      background: #ff5577;
+    }
+    
+    iframe {
+      width: 100%;
+      height: 700px;
+      border: 2px solid #333;
+      border-radius: 8px;
+    }
+    
+    .controls {
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .status {
+      text-align: center;
+      font-size: 18px;
+      margin: 20px 0;
+      padding: 20px;
+      background: #1a1a1a;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <h1>🎰 Clean Animation Test</h1>
+    
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="metric-label">Gap Size</div>
+        <div class="metric-value" id="gap">-</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Viewport Height</div>
+        <div class="metric-value" id="viewport">-</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Spin Direction</div>
+        <div class="metric-value" id="direction">-</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Final Position</div>
+        <div class="metric-value" id="position">-</div>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <button onclick="measureGap()">Measure Gap</button>
+      <button onclick="testSpin()">Test Spin</button>
+      <button onclick="checkViewport()">Check Viewport</button>
+      <button onclick="runFullTest()">Run Full Test</button>
+    </div>
+    
+    <div class="status" id="status">Ready to test...</div>
+    
+    <iframe id="app" src="/v3/index-final-clean.html"></iframe>
+  </div>
+  
+  <script>
+    const frame = document.getElementById('app');
+    const status = document.getElementById('status');
+    
+    function updateStatus(msg) {
+      status.textContent = msg;
+      console.log(msg);
+    }
+    
+    function measureGap() {
+      const doc = frame.contentDocument;
+      const header = doc.querySelector('.slot-header');
+      const columns = doc.querySelector('.slot-columns');
+      
+      if (header && columns) {
+        const headerRect = header.getBoundingClientRect();
+        const columnsRect = columns.getBoundingClientRect();
+        const gap = columnsRect.top - headerRect.bottom;
+        
+        const gapEl = document.getElementById('gap');
+        gapEl.textContent = gap.toFixed(1) + 'px';
+        gapEl.className = gap < 30 ? 'metric-value pass' : 'metric-value fail';
+        
+        updateStatus(gap < 30 ? '✅ Gap test PASSED' : '❌ Gap test FAILED');
+      }
+    }
+    
+    function checkViewport() {
+      const doc = frame.contentDocument;
+      const windows = doc.querySelectorAll('.slot-window');
+      
+      if (windows.length > 0) {
+        const height = windows[0].offsetHeight;
+        const viewportEl = document.getElementById('viewport');
+        viewportEl.textContent = height + 'px';
+        viewportEl.className = height === 240 ? 'metric-value pass' : 'metric-value fail';
+        
+        updateStatus(height === 240 ? '✅ Viewport is correct (240px)' : '❌ Viewport incorrect');
+      }
+    }
+    
+    function testSpin() {
+      const doc = frame.contentDocument;
+      const btn = doc.querySelector('.generate-btn');
+      
+      if (btn) {
+        btn.click();
+        updateStatus('Animation started, monitoring...');
+        
+        // Check direction after 500ms
+        setTimeout(() => {
+          const containers = doc.querySelectorAll('.slot-items');
+          const pos1 = [];
+          
+          containers.forEach(c => {
+            const transform = c.style.transform;
+            const match = transform ? transform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/) : null;
+            pos1.push(match ? parseFloat(match[1]) : 0);
+          });
+          
+          setTimeout(() => {
+            const pos2 = [];
+            containers.forEach(c => {
+              const transform = c.style.transform;
+              const match = transform ? transform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/) : null;
+              pos2.push(match ? parseFloat(match[1]) : 0);
+            });
+            
+            const changes = pos1.map((p, i) => pos2[i] - p);
+            const allDown = changes.every(c => c < 0 || Math.abs(c) < 1);
+            
+            const dirEl = document.getElementById('direction');
+            dirEl.textContent = allDown ? 'DOWN ✅' : 'MIXED ❌';
+            dirEl.className = allDown ? 'metric-value pass' : 'metric-value fail';
+            
+            updateStatus(allDown ? '✅ All reels spinning downward' : '❌ Mixed directions');
+          }, 200);
+        }, 500);
+        
+        // Check final position after 5s
+        setTimeout(() => {
+          const containers = doc.querySelectorAll('.slot-items');
+          const positions = [];
+          
+          containers.forEach(c => {
+            const transform = c.style.transform;
+            const match = transform ? transform.match(/translateY\((-?\d+(?:\.\d+)?)px\)/) : null;
+            positions.push(match ? parseFloat(match[1]) : 0);
+          });
+          
+          const avgPos = positions.reduce((a,b) => a+b, 0) / positions.length;
+          const aligned = positions.every(p => Math.abs(p - (-1440)) < 5);
+          
+          const posEl = document.getElementById('position');
+          posEl.textContent = avgPos.toFixed(1) + 'px';
+          posEl.className = aligned ? 'metric-value pass' : 'metric-value fail';
+          
+          updateStatus(aligned ? '✅ All reels aligned at -1440px' : '❌ Misaligned reels');
+        }, 5000);
+      }
+    }
+    
+    async function runFullTest() {
+      updateStatus('Running full test suite...');
+      
+      measureGap();
+      await new Promise(r => setTimeout(r, 500));
+      
+      checkViewport();
+      await new Promise(r => setTimeout(r, 500));
+      
+      testSpin();
+    }
+    
+    frame.onload = () => {
+      updateStatus('Application loaded. Ready to test.');
+      setTimeout(() => {
+        measureGap();
+        checkViewport();
+      }, 1000);
+    };
+  </script>
+</body>
+</html>

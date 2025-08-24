@@ -170,8 +170,8 @@ class SimpleSpinAnimation {
       // Apply smooth transition for final landing
       container.style.transition = 'transform 0.3s ease-out';
       
-      // Set final position (should be -1976px for center alignment)
-      const finalPos = finalPositions ? finalPositions[i] : -1976;
+      // Set final position (should be -1440px for bottom alignment)
+      const finalPos = finalPositions ? finalPositions[i] : -1440;
       
       // CRITICAL FIX: Ensure the transform is applied correctly
       // Clear any existing transform first
@@ -265,7 +265,7 @@ class SimpleSpinAnimation {
    */
   async animateSlotMachine(columns, scrollContents, predeterminedResults, preservePosition) {
     // Map to simple spin with final positions
-    const finalPositions = predeterminedResults ? [-1976, -1976, -1976, -1976, -1976] : null;
+    const finalPositions = predeterminedResults ? [-1440, -1440, -1440, -1440, -1440] : null;
     await this.spin(columns, finalPositions, 1, 1);
   }
   

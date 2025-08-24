@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="canonical" href="https://www.thefinalsloadout.com/" />
+
+    <!-- Meta Tags -->
+    <title>The Finals BEST Random Loadout Generator | Fun & Unique Loadouts</title>
+    <meta name="description" content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles." />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- Base styles only - NO animation CSS that could conflict -->
+    <link rel="stylesheet" href="/v3/style.css?v=20250818-vegas" />
+    <link rel="stylesheet" href="/v3/bonus-styles.css?v=20250816">
+    <link rel="stylesheet" href="/v3/selection-styles.css?v=20250816">
+    <link rel="stylesheet" href="/v3/automated-flow-styles.css?v=20250816">
+    <link rel="stylesheet" href="/v3/history-styles.css?v=20250816">
+    
+    <!-- Critical inline fixes -->
+    <style>
+      /* CRITICAL: Force viewport to show 3 items */
+      .slot-window {
+        height: 240px !important;
+        min-height: 240px !important;
+        max-height: 240px !important;
+        overflow: hidden !important;
+        position: relative !important;
+      }
+      
+      .slot-item {
+        height: 80px !important;
+        min-height: 80px !important;
+        max-height: 80px !important;
+      }
+      
+      /* Remove ALL gaps */
+      .slot-machine-container {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      
+      .slot-header {
+        margin-bottom: 0 !important;
+        padding-bottom: 1rem !important;
+      }
+      
+      .slot-columns {
+        margin-top: 0 !important;
+        padding-top: 1rem !important;
+      }
+      
+      /* Animation container setup */
+      .slot-items {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        transform: translateY(0);
+        will-change: transform;
+      }
+      
+      /* Hide pre-slot when not needed */
+      .pre-slot-container.hidden {
+        display: none !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      
+      /* Remove any conflicting animations */
+      @keyframes scrollSpin { /* empty to override */ }
+      @keyframes spin { /* empty to override */ }
+    </style>
+  </head>
+  <body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+
+    <!-- Main Container -->
+    <main class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo-container">
+          <img src="/images/the-finals-logo.webp" alt="The Finals Logo" class="logo" />
+        </div>
+        <h1 class="title gradient-text">The Finals Random Loadout Generator</h1>
+        <p class="subtitle">Spin the slots, get a random loadout, and dominate the arena!</p>
+      </header>
+
+      <!-- Top Controls -->
+      <div class="top-controls">
+        <button id="filter-toggle" class="filter-btn secondary-btn">
+          <span class="icon">🎯</span> Filters
+        </button>
+        <button id="sound-toggle" class="sound-btn secondary-btn">
+          <span class="icon">🔊</span> Sound: ON
+        </button>
+      </div>
+
+      <!-- Filter Panel -->
+      <div id="filter-panel" class="filter-panel">
+        <!-- Filter content here -->
+      </div>
+
+      <!-- Pre-Slot Container -->
+      <div id="pre-slot-container" class="pre-slot-container">
+        <!-- This will be hidden when slot machine shows -->
+      </div>
+
+      <!-- Slot Machine Section -->
+      <section id="slot-machine-container" class="slot-machine-container">
+        <div class="slot-machine">
+          <div class="slot-header">
+            <h2 class="slot-title">SPINNING YOUR LOADOUT...</h2>
+            <div class="class-indicator">
+              <span class="class-label">CLASS:</span>
+              <span class="class-value" id="current-class">RANDOM</span>
+            </div>
+            <div class="spin-counter" id="spin-counter">
+              <span class="spin-current">1</span> / <span class="spin-total">1</span>
+            </div>
+          </div>
+
+          <div class="slot-columns">
+            <div class="slot-column" data-type="weapon">
+              <div class="column-header">WEAPON</div>
+              <div class="slot-window">
+                <div class="slot-items"></div>
+              </div>
+            </div>
+
+            <div class="slot-column" data-type="specialization">
+              <div class="column-header">SPECIALIZATION</div>
+              <div class="slot-window">
+                <div class="slot-items"></div>
+              </div>
+            </div>
+
+            <div class="slot-column" data-type="gadget-1">
+              <div class="column-header">GADGET 1</div>
+              <div class="slot-window">
+                <div class="slot-items"></div>
+              </div>
+            </div>
+
+            <div class="slot-column" data-type="gadget-2">
+              <div class="column-header">GADGET 2</div>
+              <div class="slot-window">
+                <div class="slot-items"></div>
+              </div>
+            </div>
+
+            <div class="slot-column" data-type="gadget-3">
+              <div class="column-header">GADGET 3</div>
+              <div class="slot-window">
+                <div class="slot-items"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Display -->
+        <div id="loadout-result" class="loadout-result">
+          <h3 class="result-title">YOUR LOADOUT</h3>
+          <div class="result-items"></div>
+          <div class="spin-again-container">
+            <button id="spin-again-btn" class="spin-again-btn primary-btn">SPIN AGAIN</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- History Section -->
+      <section id="history-section" class="history-section">
+        <h2 class="section-title">LOADOUT HISTORY</h2>
+        <div id="history-container" class="history-container">
+          <p class="empty-history">No loadouts generated yet. Click the button above to start!</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Core Scripts -->
+    <script src="/js/name-to-asset.js?v=20250816"></script>
+    <script src="/v3/image-preloader.js?v=20250816"></script>
+    <script src="/v3/loadout-loader.js?v=20250818-fix"></script>
+    
+    <!-- Sound Manager -->
+    <script src="/v3/sound-manager-fixed.js?v=20250819"></script>
+    
+    <!-- Slot Machine Logic -->
+    <script src="/v3/slot-machine.js?v=20250816"></script>
+    
+    <!-- Systems -->
+    <script src="/v3/filter-system.js?v=20250816"></script>
+    <script src="/v3/bonus-system.js?v=20250816"></script>
+    <script src="/v3/automated-flow.js?v=20250816"></script>
+    <script src="/v3/history-system.js?v=20250816"></script>
+    
+    <!-- Main App -->
+    <script src="/v3/app.js?v=20250816"></script>
+    
+    <!-- CLEAN ANIMATION ENGINE - All-in-one fix -->
+    <script>
+    (function() {
+      'use strict';
+      
+      console.log('[CLEAN-ANIMATION] Initializing unified animation system...');
+      
+      // Constants matching actual DOM
+      const ITEM_HEIGHT = 80;
+      const VIEWPORT_HEIGHT = 240;
+      const ITEMS_PER_COLUMN = 50;
+      const TOTAL_HEIGHT = ITEM_HEIGHT * ITEMS_PER_COLUMN;
+      const WINNER_INDEX = 20;
+      const FINAL_POSITION = -(WINNER_INDEX * ITEM_HEIGHT) + VIEWPORT_HEIGHT - ITEM_HEIGHT; // -1440px
+      
+      // Animation timing
+      const SPIN_SPEED = 40; // pixels per frame  
+      const SPIN_DURATION = 3000; // ms
+      const DECEL_DURATION = 800; // ms
+      const REEL_DELAY = 150; // ms between reels
+      
+      class CleanAnimation {
+        constructor() {
+          this.isAnimating = false;
+          this.reels = [];
+          this.animationFrame = null;
+        }
+        
+        async animateSlotMachine(columns, winners) {
+          if (this.isAnimating) return;
+          
+          this.isAnimating = true;
+          console.log('[CLEAN-ANIMATION] Starting spin...');
+          
+          try {
+            // Setup reels
+            this.reels = [];
+            columns.forEach((column, index) => {
+              const itemsEl = column.querySelector('.slot-items');
+              if (itemsEl) {
+                // Force reset to start
+                itemsEl.style.transform = 'translateY(0)';
+                itemsEl.style.transition = 'none';
+                
+                this.reels.push({
+                  element: itemsEl,
+                  column: column,
+                  position: 0,
+                  velocity: SPIN_SPEED,
+                  spinning: true,
+                  index: index
+                });
+              }
+            });
+            
+            if (this.reels.length === 0) {
+              console.error('[CLEAN-ANIMATION] No reels found');
+              return;
+            }
+            
+            // Start the spin
+            this.startSpinning();
+            
+            // Let it spin for the duration
+            await this.delay(SPIN_DURATION);
+            
+            // Stop reels one by one
+            await this.stopReels();
+            
+            // Highlight winners
+            await this.delay(100);
+            this.highlightWinners();
+            
+          } finally {
+            this.isAnimating = false;
+          }
+        }
+        
+        startSpinning() {
+          console.log('[CLEAN-ANIMATION] Spinning started');
+          
+          const animate = () => {
+            let anySpinning = false;
+            
+            this.reels.forEach(reel => {
+              if (!reel.spinning) return;
+              
+              anySpinning = true;
+              
+              // Move downward (negative translateY)
+              reel.position -= reel.velocity;
+              
+              // Wrap around smoothly
+              if (reel.position <= -TOTAL_HEIGHT) {
+                reel.position += TOTAL_HEIGHT;
+              }
+              
+              // Apply the transform
+              reel.element.style.transform = `translateY(${reel.position}px)`;
+            });
+            
+            if (anySpinning) {
+              this.animationFrame = requestAnimationFrame(animate);
+            }
+          };
+          
+          this.animationFrame = requestAnimationFrame(animate);
+        }
+        
+        async stopReels() {
+          console.log('[CLEAN-ANIMATION] Stopping reels...');
+          
+          for (let i = 0; i < this.reels.length; i++) {
+            await this.stopReel(this.reels[i]);
+            if (i < this.reels.length - 1) {
+              await this.delay(REEL_DELAY);
+            }
+          }
+        }
+        
+        stopReel(reel) {
+          return new Promise(resolve => {
+            reel.spinning = false;
+            
+            const startPos = reel.position;
+            const targetPos = FINAL_POSITION;
+            
+            // Calculate distance ensuring we continue downward
+            let distance = targetPos - startPos;
+            while (distance > -TOTAL_HEIGHT) {
+              distance -= TOTAL_HEIGHT;
+            }
+            
+            const startTime = performance.now();
+            
+            const decelerate = (currentTime) => {
+              const elapsed = currentTime - startTime;
+              const progress = Math.min(elapsed / DECEL_DURATION, 1);
+              
+              // Smooth easing
+              const eased = 1 - Math.pow(1 - progress, 3);
+              
+              const currentPos = startPos + (distance * eased);
+              reel.element.style.transform = `translateY(${currentPos}px)`;
+              
+              if (progress < 1) {
+                requestAnimationFrame(decelerate);
+              } else {
+                // Snap to exact position
+                reel.element.style.transform = `translateY(${targetPos}px)`;
+                reel.position = targetPos;
+                resolve();
+              }
+            };
+            
+            requestAnimationFrame(decelerate);
+          });
+        }
+        
+        highlightWinners() {
+          console.log('[CLEAN-ANIMATION] Highlighting winners');
+          
+          this.reels.forEach(reel => {
+            // Clear old winners
+            reel.column.querySelectorAll('.slot-item.winner').forEach(item => {
+              item.classList.remove('winner');
+            });
+            
+            // Highlight the winner at index 20
+            const items = reel.column.querySelectorAll('.slot-item');
+            if (items[WINNER_INDEX]) {
+              items[WINNER_INDEX].classList.add('winner');
+            }
+          });
+        }
+        
+        delay(ms) {
+          return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        
+        cleanup() {
+          if (this.animationFrame) {
+            cancelAnimationFrame(this.animationFrame);
+            this.animationFrame = null;
+          }
+          this.isAnimating = false;
+        }
+      }
+      
+      // Create global instance
+      window.cleanAnimation = new CleanAnimation();
+      
+      // Override ALL animation systems
+      function overrideAnimations() {
+        console.log('[CLEAN-ANIMATION] Overriding all animation systems...');
+        
+        // Create a simple wrapper that always uses our clean animation
+        const animateWrapper = async function(columns, winners) {
+          return window.cleanAnimation.animateSlotMachine(columns, winners);
+        };
+        
+        // Override SimpleSpinAnimation if it exists
+        if (typeof SimpleSpinAnimation !== 'undefined') {
+          SimpleSpinAnimation.prototype.spin = animateWrapper;
+          SimpleSpinAnimation.prototype.animateSlotMachine = animateWrapper;
+          SimpleSpinAnimation.prototype.resetAnimation = function() {
+            window.cleanAnimation.cleanup();
+          };
+        }
+        
+        // Create a minimal SimpleSpinAnimation if it doesn't exist
+        if (typeof SimpleSpinAnimation === 'undefined') {
+          window.SimpleSpinAnimation = class {
+            async spin(columns, winners) {
+              return window.cleanAnimation.animateSlotMachine(columns, winners);
+            }
+            async animateSlotMachine(columns, winners) {
+              return window.cleanAnimation.animateSlotMachine(columns, winners);
+            }
+            resetAnimation() {
+              window.cleanAnimation.cleanup();
+            }
+          };
+        }
+        
+        // Override AnimationEngineV2
+        if (typeof AnimationEngineV2 !== 'undefined') {
+          window.AnimationEngineV2 = function(container, winnerIndex, onComplete) {
+            return {
+              animate: function() {
+                const columns = document.querySelectorAll('.slot-column');
+                window.cleanAnimation.animateSlotMachine(columns).then(() => {
+                  if (onComplete) onComplete();
+                });
+              },
+              cleanup: function() {
+                window.cleanAnimation.cleanup();
+              }
+            };
+          };
+        }
+      }
+      
+      // Apply overrides multiple times to catch late-loading scripts
+      overrideAnimations();
+      setTimeout(overrideAnimations, 100);
+      setTimeout(overrideAnimations, 500);
+      setTimeout(overrideAnimations, 1000);
+      
+      // Also on DOM ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', overrideAnimations);
+      }
+      
+      // Ensure pre-slot is hidden when slot machine shows
+      window.addEventListener('load', function() {
+        const preSlot = document.getElementById('pre-slot-container');
+        const slotMachine = document.getElementById('slot-machine-container');
+        
+        if (slotMachine && slotMachine.style.display !== 'none') {
+          if (preSlot) {
+            preSlot.classList.add('hidden');
+          }
+        }
+      });
+      
+      console.log('[CLEAN-ANIMATION] ✅ Clean animation system ready!');
+    })();
+    </script>
+  </body>
+</html>

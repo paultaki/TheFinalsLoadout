@@ -1,0 +1,161 @@
+/**
+ * Slot Machine Visual Fixes
+ * Addresses three specific issues:
+ * 1. Gap between header and slot machine when spinning starts
+ * 2. Item cutoff on final spin
+ * 3. Horizontal misalignment of final items
+ */
+
+/* === FIX 1: REMOVE GAP WHEN SPINNING STARTS === */
+.slot-header {
+  margin-bottom: 0 !important;
+  padding-bottom: 1rem !important;
+  transition: none !important; /* Prevent any transition effects */
+}
+
+.slot-machine {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Ensure pre-slot container doesn't create gaps */
+.pre-slot-container {
+  margin-bottom: 0 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+/* When pre-slot is hidden, ensure no gap remains */
+.pre-slot-container.hidden,
+.pre-slot-container[style*="display: none"] {
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* === FIX 2: CORRECT FINAL SPIN POSITIONING === */
+/* 
+ * With 80px items and 240px viewport:
+ * - Winner at index 20 = 20 * 80 = 1600px from top
+ * - To show at bottom of viewport (160px position): -1600 + 160 = -1440px
+ */
+
+/* Override incorrect final positions */
+.slot-items {
+  will-change: transform !important;
+}
+
+/* Force correct final position for all columns */
+.animation-complete .slot-items,
+.slot-column.complete .slot-items,
+.slot-column:not(.spinning) .slot-items[style*="translateY(-1976px)"],
+.slot-column:not(.spinning) .slot-items[style*="translate3d(0, -1976px"] {
+  transform: translateY(-1440px) !important;
+}
+
+/* === FIX 3: HORIZONTAL ALIGNMENT === */
+/* Ensure all columns have consistent viewport and alignment */
+.slot-columns {
+  display: flex !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+  gap: 1rem !important;
+}
+
+.slot-column {
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+}
+
+.slot-window {
+  height: 240px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  display: block !important; /* Changed from flex to block */
+}
+
+.slot-items {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+}
+
+/* Ensure all items are exactly 80px */
+.slot-item {
+  height: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+  padding: 4px !important;
+  position: relative !important;
+}
+
+/* === WINNER HIGHLIGHT ALIGNMENT === */
+/* Ensure highlighted items are perfectly aligned */
+.slot-item.winner {
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+/* The winner border should not affect layout */
+.slot-item.winner::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 2px !important;
+  border: 3px solid var(--primary-color, #ff3366) !important;
+  border-radius: 8px !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+/* Remove any existing winner border that might affect layout */
+.slot-item.winner {
+  border: none !important;
+  outline: none !important;
+}
+
+/* === SMOOTH ANIMATION COMPLETION === */
+/* Ensure smooth transition to final position */
+.slot-column.decelerating .slot-items {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* === MOBILE VIEWPORT ADJUSTMENTS === */
+@media (max-width: 768px) {
+  .slot-window {
+    height: 240px !important; /* Keep consistent height on mobile */
+  }
+  
+  /* Adjust final position for mobile if needed */
+  .animation-complete .slot-items,
+  .slot-column.complete .slot-items {
+    transform: translateY(-1440px) !important;
+  }
+}
+
+/* === DEBUG MODE === */
+/* Uncomment to see alignment guides */
+/*
+.slot-window::after {
+  content: "";
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(0, 255, 0, 0.5);
+  pointer-events: none;
+  z-index: 100;
+}
+
+.slot-item.winner {
+  background: rgba(255, 100, 0, 0.1) !important;
+}
+*/

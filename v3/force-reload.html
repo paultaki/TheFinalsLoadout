@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Force Reload - Slot Machine</title>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #0f0;
+      font-family: monospace;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    
+    .container {
+      text-align: center;
+      max-width: 600px;
+    }
+    
+    h1 {
+      color: #0f0;
+      margin-bottom: 20px;
+    }
+    
+    .status {
+      background: #111;
+      padding: 20px;
+      border: 1px solid #0f0;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    
+    button {
+      background: #ff3366;
+      color: #fff;
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    
+    button:hover {
+      background: #ff5577;
+    }
+    
+    .log {
+      text-align: left;
+      font-size: 12px;
+      max-height: 300px;
+      overflow-y: auto;
+      background: #000;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 20px;
+    }
+    
+    .log-entry {
+      margin: 5px 0;
+    }
+    
+    .success { color: #0f0; }
+    .error { color: #f00; }
+    .info { color: #0ff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔄 Force Reload Utility</h1>
+    
+    <div class="status">
+      <p>This utility will clear cache and force reload all resources.</p>
+      <p>Use this after making changes to ensure you're running the latest code.</p>
+    </div>
+    
+    <button onclick="clearAndReload()">Clear Cache & Reload App</button>
+    <button onclick="testAnimation()">Test Animation Constants</button>
+    
+    <div class="log" id="log"></div>
+  </div>
+  
+  <script>
+    function log(message, type = 'info') {
+      const logEl = document.getElementById('log');
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      logEl.appendChild(entry);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+    
+    async function clearAndReload() {
+      log('Starting cache clear process...', 'info');
+      
+      try {
+        // Clear service worker caches
+        if ('caches' in window) {
+          const cacheNames = await caches.keys();
+          log(`Found ${cacheNames.length} caches to clear`, 'info');
+          
+          for (const name of cacheNames) {
+            await caches.delete(name);
+            log(`Deleted cache: ${name}`, 'success');
+          }
+        }
+        
+        // Unregister service workers
+        if ('serviceWorker' in navigator) {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          log(`Found ${registrations.length} service workers`, 'info');
+          
+          for (const registration of registrations) {
+            await registration.unregister();
+            log('Unregistered service worker', 'success');
+          }
+        }
+        
+        // Clear localStorage
+        localStorage.clear();
+        log('Cleared localStorage', 'success');
+        
+        // Clear sessionStorage
+        sessionStorage.clear();
+        log('Cleared sessionStorage', 'success');
+        
+        log('Cache clear complete! Redirecting...', 'success');
+        
+        // Force reload with cache bypass
+        setTimeout(() => {
+          // Add timestamp to force fresh load
+          const timestamp = Date.now();
+          window.location.href = `/v3/index-complete-fix.html?nocache=${timestamp}`;
+        }, 1500);
+        
+      } catch (error) {
+        log(`Error: ${error.message}`, 'error');
+      }
+    }
+    
+    function testAnimation() {
+      log('Testing animation constants...', 'info');
+      
+      // Create test iframe
+      const iframe = document.createElement('iframe');
+      iframe.src = '/v3/index-complete-fix.html';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+      
+      iframe.onload = () => {
+        const win = iframe.contentWindow;
+        
+        // Check constants
+        log(`ITEM_H: ${win.ITEM_H || 'undefined'}`, win.ITEM_H === 80 ? 'success' : 'error');
+        log(`VIEWPORT_H: ${win.VIEWPORT_H || 'undefined'}`, win.VIEWPORT_H === 240 ? 'success' : 'error');
+        log(`CENTER_OFFSET: ${win.CENTER_OFFSET || 'undefined'}`, win.CENTER_OFFSET === 160 ? 'success' : 'error');
+        
+        // Check if animation engine exists
+        const hasAnimationEngine = typeof win.AnimationEngineV2 !== 'undefined';
+        log(`AnimationEngineV2: ${hasAnimationEngine ? 'Loaded' : 'Not found'}`, hasAnimationEngine ? 'success' : 'error');
+        
+        const hasSimpleAnimation = typeof win.SimpleSpinAnimation !== 'undefined';
+        log(`SimpleSpinAnimation: ${hasSimpleAnimation ? 'Loaded' : 'Not found'}`, hasSimpleAnimation ? 'success' : 'error');
+        
+        // Check DOM elements
+        const doc = iframe.contentDocument;
+        const slotWindows = doc.querySelectorAll('.slot-window');
+        const heights = Array.from(slotWindows).map(w => w.offsetHeight);
+        const allCorrect = heights.every(h => h === 240);
+        
+        log(`Viewport heights: ${heights.join(', ')}px`, allCorrect ? 'success' : 'error');
+        
+        // Check for modified files
+        const scripts = Array.from(doc.scripts);
+        const hasConstantsFix = scripts.some(s => s.src.includes('animation-constants-fix'));
+        const hasPositionFix = scripts.some(s => s.src.includes('position-fix'));
+        const hasPatch = scripts.some(s => s.src.includes('animation-engine-patch'));
+        
+        log(`animation-constants-fix.js: ${hasConstantsFix ? 'Loaded' : 'Missing'}`, hasConstantsFix ? 'success' : 'error');
+        log(`position-fix.js: ${hasPositionFix ? 'Loaded' : 'Missing'}`, hasPositionFix ? 'success' : 'error');
+        log(`animation-engine-patch.js: ${hasPatch ? 'Loaded' : 'Missing'}`, hasPatch ? 'success' : 'error');
+        
+        // Remove iframe
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+          log('Test complete!', 'success');
+        }, 1000);
+      };
+    }
+    
+    // Auto-log on load
+    log('Force Reload Utility ready', 'success');
+    log('Click "Clear Cache & Reload App" to ensure fresh resources', 'info');
+  </script>
+</body>
+</html>
