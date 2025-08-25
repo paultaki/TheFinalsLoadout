@@ -148,12 +148,13 @@ async function loadLoadoutsData() {
   
   // Try to fetch from JSON file when served via HTTP/HTTPS
   try {
-    // Use the main loadouts.json from the root directory
-    const response = await fetch('../loadouts.json');
-    if (!response.ok) {
-      throw new Error(`Failed to load loadouts.json: ${response.status}`);
-    }
-    const data = await response.json();
+    // Try to load loadouts.json - but it may not exist locally
+    // const response = await fetch('../loadouts.json');
+    // if (!response.ok) {
+    //   throw new Error(`Failed to load loadouts.json: ${response.status}`);
+    // }
+    // const data = await response.json();
+    throw new Error('Using fallback data'); // Force use of fallback
     
     // Transform the data to match the expected format
     return {

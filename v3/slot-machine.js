@@ -806,7 +806,10 @@ class SlotMachine {
             
             if (capturedSpin === capturedTotal) {
               // Ensure winners are visible
-              this.ensureFinalWinnerPosition(loadout);
+              // Skip position adjustment for RealSlotMachineAnimation
+              if (!(this.animationEngine instanceof RealSlotMachineAnimation)) {
+                this.ensureFinalWinnerPosition(loadout);
+              }
               
               // DEBUG: Check what's actually visible at center
               console.log('🔍 Checking center items after animation:');
@@ -833,7 +836,10 @@ class SlotMachine {
                   loadout,
                   false
                 );
+                // Skip position adjustment for RealSlotMachineAnimation
+              if (!(this.animationEngine instanceof RealSlotMachineAnimation)) {
                 this.ensureFinalWinnerPosition(loadout);
+              }
                 console.log('[SPIN] final done');
               } catch (error) {
                 console.error('❌ Animation failed:', error);

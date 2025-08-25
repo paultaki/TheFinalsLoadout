@@ -9,6 +9,39 @@ class RealSlotMachineAnimation {
     this.ITEM_HEIGHT = 80;
     this.SPIN_SPEED = 2000; // pixels per second
     this.animations = new Map();
+    this.spinSound = null;
+    this.initSound();
+  }
+  
+  initSound() {
+    // Try to get the sound manager if it exists
+    if (typeof window.soundManager !== 'undefined') {
+      this.soundManager = window.soundManager;
+    }
+  }
+  
+  playSpinSound() {
+    // Play the spinning sound
+    if (this.soundManager && this.soundManager.play) {
+      this.soundManager.play('spinning');
+      this.spinSound = 'spinning';
+    }
+  }
+  
+  stopSpinSound() {
+    // Stop the spinning sound
+    if (this.soundManager && this.soundManager.stop) {
+      this.soundManager.stop('spinning');
+      this.spinSound = null;
+    }
+  }
+  
+  playSlowingSound() {
+    // Play a slowing down sound effect if available
+    if (this.soundManager && this.soundManager.play) {
+      // Try to play a deceleration sound if it exists
+      this.soundManager.play('wheel-beep9');
+    }
   }
 
   async spin(columns, finalPositions, spinCount = 1, currentSpin = 1) {
@@ -19,24 +52,53 @@ class RealSlotMachineAnimation {
     
     console.log(`[REAL-SLOT] Spin ${currentSpin}/${spinCount} - ${isFinalSpin ? 'FINAL' : 'INTERMEDIATE'}`);
     
+    // Handle missing finalPositions
+    if (!finalPositions) {
+      finalPositions = Array(columns.length).fill(null);
+    }
+    
     // Get all reel containers
     const reels = [];
     columns.forEach((col, index) => {
-      const container = col.querySelector('.slot-items');
+      // col might be the element itself or an object with element property
+      const colElement = col.element || col;
+      const container = colElement.querySelector('.slot-items');
+      
       if (container) {
+        console.log(`[REAL-SLOT] Found container for column ${index}`);
         reels.push({ 
           element: container, 
           columnIndex: index,
-          targetPosition: finalPositions[index]
+          targetPosition: finalPositions ? finalPositions[index] : null
         });
+      } else {
+        console.error(`[REAL-SLOT] No .slot-items found in column ${index}`, colElement);
       }
     });
 
+    // Check if we have reels to spin
+    if (reels.length === 0) {
+      console.error('[REAL-SLOT] No reels found to spin!');
+      this.isSpinning = false;
+      return;
+    }
+    
     // Start all reels spinning simultaneously
     reels.forEach(reel => this.startSpinning(reel.element));
     
+    // Start spin sound for this cycle
+    this.playSpinSound();
+    
     // Determine spin duration
     const spinDuration = isFinalSpin ? 2000 : 600; // Quick intermediate, longer final
+    
+    // Stop sound before reels start stopping
+    setTimeout(() => {
+      this.stopSpinSound();
+      if (isFinalSpin) {
+        this.playSlowingSound(); // Play deceleration sound for final spin
+      }
+    }, spinDuration - 200);
     
     // Stop reels one by one with stagger
     for (let i = 0; i < reels.length; i++) {
@@ -97,26 +159,42 @@ class RealSlotMachineAnimation {
   }
 
   stopReel(reel, isFinalSpin) {
-    const { element, targetPosition } = reel;
+    const { element, targetPosition, columnIndex } = reel;
     
     // Stop the continuous animation
     this.stopSpinning(element);
     
     if (isFinalSpin) {
-      // Calculate final position for winner to be centered
-      // Winner at index 20, viewport shows 4 items (320px)
-      // Winner should be in position 2 (second item from top)
-      // So we need to show items 19, 20(winner), 21, 22
-      const finalY = -(19 * this.ITEM_HEIGHT); // -1520px
+      // CRITICAL FIX: All columns must stop at EXACTLY the same position
+      // Winner is at index 20, viewport shows 4 items (320px height)
+      // To show winner in 2nd position: show items [19, 20(winner), 21, 22]
+      // This means translateY must be exactly -(19 * 80) = -1520px for ALL columns
+      const WINNER_INDEX = 20;
+      const ITEMS_BEFORE_WINNER = 19; // Show item 19 at top of viewport
+      const exactFinalY = -(ITEMS_BEFORE_WINNER * this.ITEM_HEIGHT); // -1520px for ALL columns
       
-      // Smooth deceleration to final position
-      element.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-      element.style.transform = `translateY(${finalY}px)`;
+      console.log(`[REAL-SLOT] Column ${columnIndex} stopping at exactly ${exactFinalY}px`);
       
-      // Add landing effect
+      // Get current position to calculate smooth deceleration
+      const currentTransform = element.style.transform;
+      const currentY = currentTransform ? parseFloat(currentTransform.match(/translateY\(([-\d.]+)px\)/)?.[1] || 0) : 0;
+      
+      // Calculate distance and duration for natural deceleration
+      const distance = Math.abs(exactFinalY - currentY);
+      const duration = Math.min(Math.max(distance / 2000, 0.5), 1.2); // 0.5s to 1.2s based on distance
+      
+      // Apply EXACT positioning with smooth natural deceleration - SAME FOR ALL COLUMNS
+      element.style.transition = `transform ${duration}s cubic-bezier(0.3, 0, 0.2, 1)`;
+      element.style.transform = `translateY(${exactFinalY}px)`;
+      
+      // Lock position after landing to prevent any drift
       setTimeout(() => {
         element.classList.add('slot-landed');
-      }, 400);
+        // Double-check final position
+        element.style.transform = `translateY(${exactFinalY}px)`;
+        element.style.transition = 'none';
+        console.log(`[REAL-SLOT] Column ${columnIndex} locked at ${exactFinalY}px`);
+      }, duration * 1000);
     } else {
       // Quick stop for intermediate spins
       const quickStopY = -(Math.random() * 30 + 10) * this.ITEM_HEIGHT;
@@ -127,10 +205,20 @@ class RealSlotMachineAnimation {
 
   highlightWinners(columns) {
     columns.forEach(col => {
-      const items = col.querySelectorAll('.slot-item');
-      // Index 20 is the winner (middle of viewport)
-      if (items[20]) {
-        items[20].classList.add('winner');
+      // col might be the element itself or an object with element property
+      const colElement = col.element || col;
+      const container = colElement.querySelector('.slot-items');
+      
+      if (container) {
+        const items = container.querySelectorAll('.slot-item');
+        // With viewport showing 4 items starting at position -1520px (19 * 80)
+        // The winner is at index 20 (second visible item)
+        // But we need to ensure we're highlighting what's VISIBLE
+        // Items 19, 20, 21, 22 are visible
+        if (items[20]) {
+          items[20].classList.add('winner');
+          console.log('[REAL-SLOT] Highlighted winner at index 20:', items[20].textContent);
+        }
       }
     });
   }
@@ -155,6 +243,12 @@ class RealSlotMachineAnimation {
     });
     
     this.isSpinning = false;
+  }
+
+  // Alias for compatibility with existing code
+  resetAnimation() {
+    console.log('[REAL-SLOT] resetAnimation called - resetting slot machine');
+    this.reset();
   }
 }
 

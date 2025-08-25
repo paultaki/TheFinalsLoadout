@@ -150,3 +150,4 @@ const soundManager = new SoundManager();
 
 // Export for use in other modules
 window.SoundManager = soundManager;
+window.soundManager = soundManager; // Also expose as lowercase for compatibility

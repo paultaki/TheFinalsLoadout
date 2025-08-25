@@ -1,0 +1,58 @@
+/**
+ * Slot Machine Centering Fix
+ * Centers the slot machine properly on screen
+ */
+
+/* Center the slot machine container */
+#slot-machine-container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+
+/* Center the slot viewport */
+.slot-viewport {
+  margin: 0 auto !important;
+  width: 100% !important;
+  max-width: 900px !important;
+  display: flex !important;
+  justify-content: center !important;
+  gap: 10px !important;
+}
+
+/* Ensure slot window is centered */
+.slot-window {
+  margin: 0 auto !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
+/* Center the entire slot machine */
+.slot-machine {
+  margin: 0 auto !important;
+  width: 100% !important;
+  max-width: 900px !important;
+}
+
+/* Center slot header content */
+.slot-header {
+  text-align: center !important;
+}
+
+/* Center the loadout result */
+.loadout-result {
+  text-align: center !important;
+  margin: 20px auto !important;
+}
+
+/* Center the spin again button */
+#spin-again-container {
+  display: flex !important;
+  justify-content: center !important;
+  margin: 20px auto !important;
+}
