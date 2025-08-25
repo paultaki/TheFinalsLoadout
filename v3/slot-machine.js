@@ -699,6 +699,7 @@ class SlotMachine {
             filteredData
           );
           finalLoadout = loadout;
+          this.currentLoadout = loadout; // Store for position fixer
 
           // CRITICAL: Ensure no duplicate gadgets
           const uniqueGadgets = [...new Set(loadout.gadgets)];
@@ -739,9 +740,18 @@ class SlotMachine {
             }
           }
 
-          // CRITICAL: Force rebuild DOM with winners for final spin
-          // Must rebuild to ensure winners are at correct positions
+          // CRITICAL: ALWAYS rebuild DOM with winners for final spin
+          // This ensures winners are at index 20 where animation expects them
           this.populateScrollContainers(true, false);
+          
+          // Mark that DOM is finalized for animation
+          this.domFinalized = true;
+          
+          // CRITICAL: Lock winners at index 20 before animation
+          if (window.WinnerLockSystem) {
+            console.log('🔒 Locking winners at index 20...');
+            window.WinnerLockSystem.lockAllWinners(loadout);
+          }
           
           // Set initial position for final spin to show random items at top
           // Winners are at index 20, so start at position 0 or slightly negative
@@ -792,7 +802,7 @@ class SlotMachine {
           if (isSimpleAnimation) {
             // Use the simple animation that actually works!
             const finalPositions = capturedSpin === capturedTotal ? 
-              [-1976, -1976, -1976, -1976, -1976] : // All columns land at -1976px
+              [-1520, -1520, -1520, -1520, -1520] : // Winners at index 20: -(20-1)*80 = -1520px
               null; // Random positions for intermediate spins
             
             console.log(`🎰 Running SIMPLE animation: spin ${capturedSpin}/${capturedTotal}`);
@@ -805,6 +815,17 @@ class SlotMachine {
             );
             
             if (capturedSpin === capturedTotal) {
+              // Verify winners are still locked after animation
+              if (window.WinnerLockSystem) {
+                setTimeout(() => {
+                  window.WinnerLockSystem.verifyAndFix(loadout);
+                  // Unlock after verification
+                  setTimeout(() => {
+                    window.WinnerLockSystem.unlockAll();
+                  }, 500);
+                }, 100);
+              }
+              
               // Ensure winners are visible
               // Skip position adjustment for RealSlotMachineAnimation
               if (!(this.animationEngine instanceof RealSlotMachineAnimation)) {
@@ -913,6 +934,7 @@ class SlotMachine {
       
       // Clear spin in progress flag
       this.spinInProgress = false;
+      this.domFinalized = false; // Reset for next spin
 
       // Return the final loadout after all spins
       console.log("🎯 RETURNING LOADOUT FROM SPIN:", finalLoadout);
@@ -994,8 +1016,9 @@ class SlotMachine {
           // Container is empty, we need to build from scratch
           console.log('[DOM] Container empty, building items from scratch...');
           column.itemsContainer.innerHTML = "";
-        } else if (forceBuild) {
+        } else if (forceBuild && !this.domFinalized) {
           // DIFFERENTIAL UPDATE: Update existing items instead of clearing
+          // Skip if DOM is finalized for animation
           console.log('[DOM] Differential update - reusing existing DOM elements');
           const existingItems = Array.from(column.itemsContainer.children);
           
