@@ -187,7 +187,7 @@ a:hover {
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-color);
   z-index: 100;
-  padding: 0 var(--spacing-lg);
+  padding: 0 var(--spacing-md);
   height: var(--nav-height);
   display: flex;
   align-items: center;
@@ -196,20 +196,23 @@ a:hover {
 
 .nav-links {
   display: flex;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  max-width: 100%;
 }
 
 .nav-link {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
   letter-spacing: 0.05em;
-  padding: var(--spacing-sm) 0;
+  padding: var(--spacing-xs) var(--spacing-sm);
   position: relative;
   transition: color var(--transition-fast);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .nav-link::after {
@@ -415,24 +418,39 @@ a:hover {
    7. Class Selection
    ======================================== */
 .class-selection {
+  margin-bottom: var(--spacing-2xl);
+  text-align: center;
+}
+
+.section-title {
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+}
+
+.class-options {
   display: flex;
   justify-content: center;
   gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-2xl);
   flex-wrap: wrap;
 }
 
+.class-btn,
 .class-option {
   background: var(--bg-card);
   border: 2px solid var(--border-color);
   border-radius: 8px;
-  padding: var(--spacing-lg);
+  padding: var(--spacing-lg) var(--spacing-xl);
   cursor: pointer;
   transition: all var(--transition-base);
   text-align: center;
   min-width: 150px;
+  color: var(--text-primary);
+  font-family: inherit;
 }
 
+.class-btn:hover,
 .class-option:hover {
   background: var(--bg-hover);
   border-color: var(--primary-color);
@@ -440,6 +458,8 @@ a:hover {
   box-shadow: var(--shadow-lg);
 }
 
+.class-btn.active,
+.class-btn.selected,
 .class-option.selected {
   background: linear-gradient(135deg, rgba(255, 51, 102, 0.2), rgba(255, 107, 157, 0.2));
   border-color: var(--primary-color);
@@ -447,17 +467,25 @@ a:hover {
 }
 
 .class-icon {
-  font-size: 3rem;
+  font-size: 2.5rem;
   margin-bottom: var(--spacing-sm);
   display: block;
+  filter: grayscale(0.5);
+  transition: filter var(--transition-fast);
+}
+
+.class-btn:hover .class-icon,
+.class-btn.active .class-icon {
+  filter: grayscale(0);
 }
 
 .class-name {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  display: block;
 }
 
 /* ========================================
@@ -489,13 +517,19 @@ a:hover {
 /* ========================================
    9. Controls & Buttons
    ======================================== */
-.controls-container {
+.controls,
+.controls-container,
+.top-controls {
   text-align: center;
   margin: var(--spacing-2xl) 0;
 }
 
+.generate-btn,
+.primary-btn,
 .btn-generate,
-.btn-spin-again {
+.btn-spin-again,
+#generate-btn,
+#spin-again-btn {
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   color: white;
   border: none;
@@ -512,18 +546,29 @@ a:hover {
   margin: var(--spacing-sm);
 }
 
+.generate-btn:hover,
+.primary-btn:hover,
 .btn-generate:hover,
-.btn-spin-again:hover {
+.btn-spin-again:hover,
+#generate-btn:hover,
+#spin-again-btn:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-lg), var(--shadow-glow);
 }
 
+.generate-btn:active,
+.primary-btn:active,
 .btn-generate:active,
-.btn-spin-again:active {
+.btn-spin-again:active,
+#generate-btn:active,
+#spin-again-btn:active {
   transform: translateY(0);
 }
 
-.btn-generate:disabled {
+.generate-btn:disabled,
+.primary-btn:disabled,
+.btn-generate:disabled,
+#generate-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
@@ -709,7 +754,6 @@ button:focus-visible {
   :root {
     --slot-width: 100px;
     --slot-item-height: 70px;
-    --nav-height: auto;
   }
   
   .container {
@@ -717,19 +761,21 @@ button:focus-visible {
   }
   
   .main-nav {
-    flex-direction: column;
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
+    height: auto;
+    flex-wrap: wrap;
   }
   
   .nav-links {
-    flex-direction: column;
     width: 100%;
-    gap: var(--spacing-sm);
+    justify-content: flex-start;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) 0;
   }
   
   .nav-link {
-    width: 100%;
-    text-align: center;
+    font-size: 0.8rem;
+    padding: var(--spacing-xs);
   }
   
   .slot-machine {

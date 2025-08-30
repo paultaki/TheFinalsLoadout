@@ -303,16 +303,34 @@
         </button>
       </section>
 
-      <!-- Pre-Slot Animation Container -->
-      <section id="pre-slot-container" class="pre-slot-container">
-        <!-- Will be populated by AutomatedFlowManager -->
+      <!-- Class Selection -->
+      <section class="class-selection" id="class-selection">
+        <h2 class="section-title">SELECT YOUR CLASS</h2>
+        <div class="class-options">
+          <button class="class-btn" data-class="light">
+            <span class="class-icon">⚡</span>
+            <span class="class-name">LIGHT</span>
+          </button>
+          <button class="class-btn" data-class="medium">
+            <span class="class-icon">⚔️</span>
+            <span class="class-name">MEDIUM</span>
+          </button>
+          <button class="class-btn" data-class="heavy">
+            <span class="class-icon">🛡️</span>
+            <span class="class-name">HEAVY</span>
+          </button>
+        </div>
+      </section>
+      
+      <!-- Pre-Slot Animation Container (hidden for now) -->
+      <section id="pre-slot-container" class="pre-slot-container" style="display: none;">
+        <!-- Will be populated by AutomatedFlowManager if needed -->
       </section>
 
       <!-- Slot Machine Container -->
       <section
         id="slot-machine-container"
         class="slot-machine-container"
-        style="display: none"
       >
         <div class="slot-machine">
           <div class="slot-header">
