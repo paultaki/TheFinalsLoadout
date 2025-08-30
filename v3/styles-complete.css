@@ -1,6 +1,6 @@
 /* ========================================
    The Finals Loadout Generator v3
-   Consolidated Styles - Production Ready
+   Complete Consolidated Styles
    ======================================== */
 
 /* ========================================
@@ -45,7 +45,7 @@
   --max-width: 1200px;
   --nav-height: 60px;
   
-  /* Slot Machine Specific */
+  /* Slot Machine */
   --slot-item-height: 80px;
   --slot-viewport-height: 240px;
   --slot-width: 120px;
@@ -66,7 +66,7 @@ html {
 
 body {
   font-family: var(--font-body);
-  background: var(--bg-dark);
+  background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
@@ -83,7 +83,14 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.02em;
 }
 
-h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h1 { 
+  font-size: clamp(2rem, 5vw, 3.5rem); 
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
 h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
 
@@ -92,13 +99,27 @@ p {
 }
 
 a {
-  color: var(--primary-color);
+  color: var(--secondary-color);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.title {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--spacing-md);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
 }
 
 /* ========================================
@@ -107,7 +128,8 @@ a:hover {
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 var(--spacing-lg);
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  min-height: calc(100vh - var(--nav-height));
 }
 
 /* Scroll Progress Bar */
@@ -155,7 +177,9 @@ a:hover {
   transform: translateY(-2px);
 }
 
-/* Navigation */
+/* ========================================
+   4. Navigation
+   ======================================== */
 .main-nav {
   position: sticky;
   top: 0;
@@ -174,6 +198,7 @@ a:hover {
   display: flex;
   gap: var(--spacing-lg);
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .nav-link {
@@ -184,6 +209,7 @@ a:hover {
   padding: var(--spacing-sm) 0;
   position: relative;
   transition: color var(--transition-fast);
+  white-space: nowrap;
 }
 
 .nav-link::after {
@@ -213,7 +239,9 @@ a:hover {
   align-items: center;
 }
 
-.nav-button {
+.nav-button,
+.sound-toggle-button,
+.filter-toggle-button {
   background: transparent;
   border: 1px solid var(--border-color);
   padding: var(--spacing-sm);
@@ -223,116 +251,117 @@ a:hover {
   color: var(--text-secondary);
 }
 
-.nav-button:hover {
+.nav-button:hover,
+.sound-toggle-button:hover,
+.filter-toggle-button:hover {
   background: var(--bg-hover);
   border-color: var(--primary-color);
   color: var(--primary-color);
 }
 
-/* Header */
+/* ========================================
+   5. Header Section
+   ======================================== */
 .header {
-  background: linear-gradient(180deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
-  padding: var(--spacing-xl) 0;
   text-align: center;
-  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--spacing-2xl);
+  padding: var(--spacing-xl) 0;
 }
 
 .logo {
-  width: 150px;
+  width: clamp(150px, 30vw, 300px);
   height: auto;
-  margin-bottom: var(--spacing-md);
-}
-
-.main-content {
-  padding: var(--spacing-2xl) 0;
-  min-height: calc(100vh - var(--nav-height));
-}
-
-/* Filter Panel */
-.filter-panel-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  visibility: hidden;
-  transition: all var(--transition-base);
-  z-index: 998;
-}
-
-.filter-panel-overlay.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-.filter-panel {
-  position: fixed;
-  right: -400px;
-  top: 0;
-  width: 400px;
-  height: 100vh;
-  background: var(--bg-darker);
-  border-left: 1px solid var(--border-color);
-  transition: right var(--transition-slow);
-  z-index: 999;
-  overflow-y: auto;
-  padding: var(--spacing-xl);
-}
-
-.filter-panel.show {
-  right: 0;
-}
-
-/* Hide filter button as per requirements */
-#filter-toggle {
-  display: none !important;
+  margin-bottom: var(--spacing-lg);
+  filter: drop-shadow(0 0 20px rgba(255, 51, 102, 0.3));
 }
 
 /* ========================================
-   4. Slot Machine Styles
+   6. Slot Machine
    ======================================== */
 .slot-machine-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-2xl);
 }
 
 .slot-machine {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--spacing-lg);
-  margin: var(--spacing-2xl) 0;
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-darker));
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
   position: relative;
+  overflow: hidden;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.slot-machine::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 51, 102, 0.1) 0%, transparent 70%);
+  animation: pulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.1; }
+}
+
+.slot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+  z-index: 1;
+}
+
+.slot-title {
+  margin: 0;
+  color: var(--primary-color);
+}
+
+.slot-columns {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+  align-items: stretch;
+  min-height: 300px;
+  position: relative;
+  z-index: 1;
 }
 
 .slot-column {
-  width: var(--slot-width);
-  background: var(--bg-card);
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  padding: var(--spacing-sm);
-  position: relative;
+  flex: 1;
+  min-width: 0;
+  max-width: 180px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
-.slot-column-title {
+.column-header {
   font-family: var(--font-display);
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  font-size: clamp(0.875rem, 2vw, 1rem);
   color: var(--text-secondary);
-  text-align: center;
   margin-bottom: var(--spacing-sm);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .slot-window {
   height: var(--slot-viewport-height);
-  overflow: hidden;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
   position: relative;
-  border-radius: 4px;
-  background: var(--bg-darker);
+  overflow: hidden;
 }
 
 .slot-items {
@@ -374,146 +403,65 @@ a:hover {
 }
 
 @keyframes winnerGlow {
-  0% {
-    background-color: transparent;
-  }
-  50% {
+  0% { background-color: transparent; }
+  50% { 
     background-color: rgba(255, 51, 102, 0.3);
     box-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
   }
-  100% {
-    background-color: rgba(255, 51, 102, 0.1);
-  }
+  100% { background-color: rgba(255, 51, 102, 0.1); }
 }
 
 /* ========================================
-   5. Controls & Buttons
-   ======================================== */
-.controls {
-  display: flex;
-  justify-content: center;
-  gap: var(--spacing-md);
-  margin: var(--spacing-xl) 0;
-}
-
-.btn {
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  padding: var(--spacing-md) var(--spacing-xl);
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all var(--transition-base);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
-  box-shadow: var(--shadow-md);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn-secondary {
-  background: var(--bg-card);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-}
-
-.btn-secondary:hover {
-  background: var(--bg-hover);
-  border-color: var(--primary-color);
-}
-
-/* Sound Toggle */
-.sound-toggle {
-  position: fixed;
-  bottom: var(--spacing-lg);
-  right: var(--spacing-lg);
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all var(--transition-base);
-  z-index: 100;
-}
-
-.sound-toggle:hover {
-  background: var(--bg-hover);
-  border-color: var(--primary-color);
-}
-
-.sound-toggle svg {
-  width: 24px;
-  height: 24px;
-  fill: var(--text-secondary);
-}
-
-.sound-toggle.muted svg {
-  fill: var(--text-muted);
-}
-
-/* ========================================
-   6. Class Selection
+   7. Class Selection
    ======================================== */
 .class-selection {
   display: flex;
   justify-content: center;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+  flex-wrap: wrap;
 }
 
-.class-btn {
-  padding: var(--spacing-md) var(--spacing-lg);
+.class-option {
   background: var(--bg-card);
   border: 2px solid var(--border-color);
-  border-radius: 4px;
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  color: var(--text-secondary);
+  border-radius: 8px;
+  padding: var(--spacing-lg);
   cursor: pointer;
   transition: all var(--transition-base);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-align: center;
+  min-width: 150px;
 }
 
-.class-btn:hover {
+.class-option:hover {
   background: var(--bg-hover);
-  color: var(--text-primary);
   border-color: var(--primary-color);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
 }
 
-.class-btn.active {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
+.class-option.selected {
+  background: linear-gradient(135deg, rgba(255, 51, 102, 0.2), rgba(255, 107, 157, 0.2));
   border-color: var(--primary-color);
   box-shadow: var(--shadow-glow);
 }
 
+.class-icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-sm);
+  display: block;
+}
+
+.class-name {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
 /* ========================================
-   7. Spin Counter
+   8. Spin Counter
    ======================================== */
 .spin-counter {
   text-align: center;
@@ -539,8 +487,71 @@ a:hover {
 }
 
 /* ========================================
-   8. History Panel
+   9. Controls & Buttons
    ======================================== */
+.controls-container {
+  text-align: center;
+  margin: var(--spacing-2xl) 0;
+}
+
+.btn-generate,
+.btn-spin-again {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border: none;
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-md);
+  display: inline-block;
+  margin: var(--spacing-sm);
+}
+
+.btn-generate:hover,
+.btn-spin-again:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.btn-generate:active,
+.btn-spin-again:active {
+  transform: translateY(0);
+}
+
+.btn-generate:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ========================================
+   10. History Panel
+   ======================================== */
+.history-toggle {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 8px 0 0 8px;
+  padding: var(--spacing-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  z-index: 99;
+}
+
+.history-toggle:hover {
+  background: var(--bg-hover);
+  border-color: var(--primary-color);
+  padding-right: var(--spacing-lg);
+}
+
 .history-panel {
   position: fixed;
   right: -400px;
@@ -548,7 +559,7 @@ a:hover {
   width: 400px;
   height: 100vh;
   background: var(--bg-darker);
-  border-left: 1px solid var(--border-color);
+  border-left: 2px solid var(--border-color);
   transition: right var(--transition-slow);
   z-index: 1000;
   overflow-y: auto;
@@ -573,7 +584,7 @@ a:hover {
 .history-item {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: 8px;
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-md);
   transition: all var(--transition-base);
@@ -582,29 +593,56 @@ a:hover {
 .history-item:hover {
   background: var(--bg-hover);
   border-color: var(--primary-color);
-}
-
-.history-toggle {
-  position: fixed;
-  right: var(--spacing-lg);
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 4px 0 0 4px;
-  padding: var(--spacing-md);
-  cursor: pointer;
-  z-index: 999;
-  transition: all var(--transition-base);
-}
-
-.history-toggle:hover {
-  background: var(--bg-hover);
-  border-color: var(--primary-color);
+  transform: translateX(-5px);
 }
 
 /* ========================================
-   9. Animations
+   11. Filter Panel
+   ======================================== */
+.filter-panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-base);
+  z-index: 998;
+}
+
+.filter-panel-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.filter-panel {
+  position: fixed;
+  right: -400px;
+  top: var(--nav-height);
+  width: 400px;
+  max-width: 90vw;
+  height: calc(100vh - var(--nav-height));
+  background: var(--bg-card);
+  border-left: 1px solid var(--border-color);
+  transition: right var(--transition-base);
+  z-index: 999;
+  overflow-y: auto;
+  padding: var(--spacing-xl);
+}
+
+.filter-panel.active {
+  right: 0;
+}
+
+/* Hide filter button as per requirements */
+#filter-toggle {
+  display: none !important;
+}
+
+/* ========================================
+   12. Animations
    ======================================== */
 .fade-in {
   animation: fadeIn var(--transition-slow) ease-out;
@@ -624,17 +662,8 @@ a:hover {
   to { transform: translateX(0); }
 }
 
-.pulse {
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
 /* ========================================
-   10. Accessibility
+   13. Accessibility
    ======================================== */
 .sr-only {
   position: absolute;
@@ -657,13 +686,13 @@ a:hover {
   padding: var(--spacing-sm) var(--spacing-md);
   text-decoration: none;
   z-index: 10000;
+  border-radius: 4px;
 }
 
 .skip-link:focus {
   top: 0;
 }
 
-/* Focus styles */
 *:focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
@@ -674,27 +703,53 @@ button:focus-visible {
 }
 
 /* ========================================
-   11. Responsive Design
+   14. Responsive Design
    ======================================== */
 @media (max-width: 768px) {
   :root {
     --slot-width: 100px;
     --slot-item-height: 70px;
+    --nav-height: auto;
   }
   
   .container {
-    padding: 0 var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+  
+  .main-nav {
+    flex-direction: column;
+    padding: var(--spacing-md);
+  }
+  
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    gap: var(--spacing-sm);
+  }
+  
+  .nav-link {
+    width: 100%;
+    text-align: center;
   }
   
   .slot-machine {
-    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+  }
+  
+  .slot-columns {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  
+  .slot-column {
+    max-width: 100%;
   }
   
   .class-selection {
     flex-direction: column;
   }
   
-  .class-btn {
+  .class-option {
     width: 100%;
   }
   
@@ -702,44 +757,32 @@ button:focus-visible {
     width: 100%;
     right: -100%;
   }
-  
-  .controls {
-    flex-direction: column;
-  }
-  
-  .btn {
-    width: 100%;
-  }
 }
 
 @media (max-width: 480px) {
   :root {
-    --slot-width: 80px;
     --slot-item-height: 60px;
     --slot-viewport-height: 180px;
-  }
-  
-  .slot-machine {
-    flex-direction: column;
-    gap: var(--spacing-md);
-  }
-  
-  .slot-column {
-    width: 100%;
-    max-width: 200px;
-  }
-  
-  .header {
-    padding: var(--spacing-lg) 0;
   }
   
   h1 {
     font-size: 1.75rem;
   }
+  
+  .slot-header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .btn-generate,
+  .btn-spin-again {
+    width: 100%;
+    padding: var(--spacing-md);
+  }
 }
 
 /* ========================================
-   12. Print Styles
+   15. Print Styles
    ======================================== */
 @media print {
   body {
@@ -747,30 +790,16 @@ button:focus-visible {
     color: black;
   }
   
-  .controls,
+  .controls-container,
   .sound-toggle,
-  .history-toggle {
+  .history-toggle,
+  .nav-controls {
     display: none;
   }
 }
 
 /* ========================================
-   13. High Contrast Mode
-   ======================================== */
-@media (prefers-contrast: high) {
-  :root {
-    --primary-color: #ff0066;
-    --text-secondary: #ffffff;
-    --border-color: #ffffff;
-  }
-  
-  .slot-item {
-    border: 1px solid var(--border-color);
-  }
-}
-
-/* ========================================
-   14. Reduced Motion
+   16. Reduced Motion
    ======================================== */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -780,25 +809,5 @@ button:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-}
-
-/* ========================================
-   15. Dark Mode (System Preference)
-   ======================================== */
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-dark: #f5f5f5;
-    --bg-darker: #ffffff;
-    --bg-card: #ffffff;
-    --bg-hover: #f0f0f0;
-    --text-primary: #1a1a1a;
-    --text-secondary: #666666;
-    --text-muted: #999999;
-    --border-color: #e0e0e0;
-  }
-  
-  .slot-window {
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 }
