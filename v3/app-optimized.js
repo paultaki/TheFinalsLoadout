@@ -342,7 +342,7 @@
     getItemImage(itemName) {
       // Normalize the item name for image lookup
       const normalized = itemName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-      return `images/items/${normalized}.webp`;
+      return `/images/items/${normalized}.webp`;
     }
 
     async animateColumn(column, isFinalSpin) {

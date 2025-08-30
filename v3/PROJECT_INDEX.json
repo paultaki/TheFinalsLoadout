@@ -1,5 +1,5 @@
 {
-  "indexed_at": "2025-08-30T11:11:04.834264",
+  "indexed_at": "2025-08-30T14:43:05.803935",
   "root": ".",
   "project_structure": {
     "type": "tree",
@@ -17,7 +17,7 @@
       "sections": [
         "The Finals Loadout Generator v3 - Project Status",
         "Overview",
-        "Current Status (2025-08-23)",
+        "Current Status (2024-08-30)",
         "Critical Fixes Applied (2025-08-16)",
         "1. Respin Animation Fix",
         "2. Slot Machine Initialization",
@@ -584,8 +584,8 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SimpleSpinAnimation.stopReelsRandomly",
                 "SmoothSpinAnimation.stopReelsSequentially",
+                "SimpleSpinAnimation.stopReelsRandomly",
                 "runSlotMachineAnimation",
                 "runClassRouletteAnimation",
                 "runNumberSelectorAnimation"
@@ -930,8 +930,8 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SimpleSpinAnimation.stopReelsRandomly",
                 "SmoothSpinAnimation.stopReelsSequentially",
+                "SimpleSpinAnimation.stopReelsRandomly",
                 "runSlotMachineAnimation",
                 "runClassRouletteAnimation",
                 "runNumberSelectorAnimation"
@@ -1196,8 +1196,8 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SimpleSpinAnimation.stopReelsRandomly",
                 "SmoothSpinAnimation.stopReelsSequentially",
+                "SimpleSpinAnimation.stopReelsRandomly",
                 "runSlotMachineAnimation",
                 "runClassRouletteAnimation",
                 "runNumberSelectorAnimation"
@@ -1367,8 +1367,8 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SimpleSpinAnimation.stopReelsRandomly",
                 "SmoothSpinAnimation.stopReelsSequentially",
+                "SimpleSpinAnimation.stopReelsRandomly",
                 "runSlotMachineAnimation",
                 "runClassRouletteAnimation",
                 "runNumberSelectorAnimation"
@@ -2034,8 +2034,8 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SimpleSpinAnimation.stopReelsRandomly",
                 "SmoothSpinAnimation.stopReelsSequentially",
+                "SimpleSpinAnimation.stopReelsRandomly",
                 "runSlotMachineAnimation",
                 "runClassRouletteAnimation",
                 "runNumberSelectorAnimation"
@@ -2349,8 +2349,8 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SimpleSpinAnimation.stopReelsRandomly",
                 "SmoothSpinAnimation.stopReelsSequentially",
+                "SimpleSpinAnimation.stopReelsRandomly",
                 "runSlotMachineAnimation",
                 "runClassRouletteAnimation",
                 "runNumberSelectorAnimation"
@@ -2816,8 +2816,8 @@
             "updateLightPosition": {
               "signature": "(speed)",
               "called_by": [
-                "NumberSelector.runAcceleration",
-                "NumberSelector.runHighSpeed"
+                "NumberSelector.runHighSpeed",
+                "NumberSelector.runAcceleration"
               ]
             },
             "selectNumber": "(number)",
@@ -2827,8 +2827,8 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SimpleSpinAnimation.stopReelsRandomly",
                 "SmoothSpinAnimation.stopReelsSequentially",
+                "SimpleSpinAnimation.stopReelsRandomly",
                 "runSlotMachineAnimation",
                 "runClassRouletteAnimation",
                 "runNumberSelectorAnimation"
@@ -2886,8 +2886,8 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SimpleSpinAnimation.stopReelsRandomly",
                 "SmoothSpinAnimation.stopReelsSequentially",
+                "SimpleSpinAnimation.stopReelsRandomly",
                 "runSlotMachineAnimation",
                 "runClassRouletteAnimation",
                 "runNumberSelectorAnimation"
@@ -2975,8 +2975,8 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SimpleSpinAnimation.stopReelsRandomly",
                 "SmoothSpinAnimation.stopReelsSequentially",
+                "SimpleSpinAnimation.stopReelsRandomly",
                 "runSlotMachineAnimation",
                 "runClassRouletteAnimation",
                 "runNumberSelectorAnimation"
@@ -3244,5 +3244,5 @@
       "path"
     ]
   },
-  "staleness_check": 1755972680.188441
+  "staleness_check": 1755985397.003953
 }
