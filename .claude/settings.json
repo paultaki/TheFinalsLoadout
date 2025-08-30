@@ -39,21 +39,5 @@
       "/mnt/z/DevProjects/thefinalsloadout/images",
       "/mnt/z/DevProjects/thefinalsloadout/sounds"
     ]
-  },
-  "env": {
-    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
-    "DISABLE_COST_WARNINGS": "0",
-    "BASH_DEFAULT_TIMEOUT_MS": "30000",
-    "BASH_MAX_TIMEOUT_MS": "120000"
-  },
-  "hooks": {
-    "PostToolUse": {
-      "Edit": "echo '✏️ File edited'",
-      "Write": "echo '📝 File created/written'",
-      "MultiEdit": "echo '📝 Multiple edits applied'"
-    }
-  },
-  "statusLine": {
-    "type": "token-usage"
   }
 }
