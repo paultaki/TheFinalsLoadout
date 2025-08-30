@@ -740,7 +740,7 @@
     setup() {
       try {
         // Initialize slot machine
-        const slotContainer = document.getElementById('slot-machine');
+        const slotContainer = document.getElementById('slot-machine-container');
         if (!slotContainer) {
           throw new Error('Slot machine container not found');
         }
