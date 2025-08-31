@@ -256,15 +256,15 @@
     }
 
     async spin(loadout, spinCount = 1, totalSpins = 1) {
-      if (this.isSpinning) return;
-      
-      this.isSpinning = true;
+      // Allow multiple spins in sequence
       this.updateSpinCounter(spinCount, totalSpins);
       
-      // Generate items for each column
-      this.columns.forEach(column => {
-        this.populateColumn(column, loadout);
-      });
+      // Generate items for each column only on first spin
+      if (spinCount === 1) {
+        this.columns.forEach(column => {
+          this.populateColumn(column, loadout);
+        });
+      }
 
       // Animate all columns simultaneously
       const animations = this.columns.map(column => 
@@ -276,8 +276,6 @@
       if (spinCount === totalSpins) {
         this.highlightWinners();
       }
-      
-      this.isSpinning = false;
     }
 
     populateColumn(column, loadout) {
@@ -340,10 +338,54 @@
     }
 
     getItemImage(itemName) {
-      // For now, return a placeholder or use the main images directory
-      // The actual images may be in /images/ not /images/items/
-      const normalized = itemName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-      // Try the main images directory first
+      if (!itemName) return '';
+      
+      // Convert to match actual file naming convention:
+      // "Charge N Slam" -> "Charge_N_Slam.webp"
+      // "M60" -> "M60.webp"
+      // "RPG-7" -> "RPG-7.webp"
+      
+      // First, handle special cases
+      const specialCases = {
+        'SA1216': 'SA1216',
+        'RPG-7': 'RPG-7',
+        'M60': 'M60',
+        'CQC-300': 'CQC-300',
+        'MGL32': 'MGL32',
+        'KS-23': 'KS-23',
+        'MK-VI Auto': 'MK-VI_Auto',
+        'AKM': 'AKM',
+        '93R': '93R',
+        'ARN-220': 'ARN-220',
+        '.50 Akimbo': '.50_Akimbo',
+        'V9S': 'V9S',
+        'XP-54': 'XP-54',
+        'M11': 'M11',
+        'LH1': 'LH1',
+        'SH1900': 'SH1900',
+        'SR-84': 'SR-84',
+        'APS Turret': 'APS_Turret',
+        'C4': 'C4',
+        'R.357': 'R.357',
+        'FCAR': 'FCAR'
+      };
+      
+      // Check if it's a special case
+      if (specialCases[itemName]) {
+        return `/images/${specialCases[itemName]}.webp`;
+      }
+      
+      // For regular items, convert spaces to underscores and capitalize each word
+      const normalized = itemName
+        .split(' ')
+        .map(word => {
+          // Handle words like "N" in "Charge N Slam"
+          if (word.length === 1) return word.toUpperCase();
+          // Capitalize first letter, rest lowercase
+          return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        })
+        .join('_');
+      
       return `/images/${normalized}.webp`;
     }
 

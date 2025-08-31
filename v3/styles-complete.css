@@ -415,7 +415,65 @@ a:hover {
 }
 
 /* ========================================
-   7. Class Selection
+   7. Spin Selection (NEW)
+   ======================================== */
+.spin-selection {
+  margin-bottom: var(--spacing-2xl);
+  text-align: center;
+}
+
+.spin-options {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.spin-btn {
+  min-width: 60px;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--surface-color);
+  border: 2px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: var(--radius-lg);
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-display);
+}
+
+.spin-btn:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 51, 102, 0.3);
+}
+
+.spin-btn.active {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.spin-btn.random-spin {
+  min-width: 120px;
+  background: linear-gradient(135deg, #6a1b9a, #8e24aa);
+}
+
+.spin-btn.random-spin:hover {
+  transform: translateY(-2px) rotate(2deg);
+}
+
+.random-icon {
+  font-size: 1.5rem;
+  vertical-align: middle;
+  margin-right: 0.25rem;
+}
+
+/* ========================================
+   8. Class Selection
    ======================================== */
 .class-selection {
   margin-bottom: var(--spacing-2xl);

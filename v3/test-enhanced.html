@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Enhanced Loadout Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .test-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .test-btn:hover {
+            background: #45a049;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            background: #333;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        iframe {
+            width: 100%;
+            height: 800px;
+            border: 2px solid #444;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enhanced Loadout Generator Test Suite</h1>
+    
+    <div class="test-section">
+        <h2>🧪 Feature Tests</h2>
+        <button class="test-btn" onclick="testImages()">Test Image Loading</button>
+        <button class="test-btn" onclick="testSpinSelection()">Test Spin Selection</button>
+        <button class="test-btn" onclick="testClassSelection()">Test Class Selection</button>
+        <button class="test-btn" onclick="testAutoStart()">Test Auto-Start</button>
+        <button class="test-btn" onclick="testMultiSpin()">Test Multi-Spin</button>
+        <div id="test-status" class="status"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>📊 Live Application</h2>
+        <iframe id="app-frame" src="/v3/index.html"></iframe>
+    </div>
+    
+    <script>
+        const status = document.getElementById('test-status');
+        const frame = document.getElementById('app-frame');
+        
+        function log(message, type = 'info') {
+            const color = type === 'success' ? 'success' : type === 'error' ? 'error' : 'warning';
+            status.innerHTML += `<div class="${color}">[${new Date().toLocaleTimeString()}] ${message}</div>`;
+            status.scrollTop = status.scrollHeight;
+        }
+        
+        function testImages() {
+            log('Testing image paths...');
+            const testImages = [
+                'M60', 'SA1216', 'Flamethrower', 'Charge N Slam',
+                'Mesh Shield', 'Winch Claw', 'Anti-Gravity Cube'
+            ];
+            
+            testImages.forEach(name => {
+                const img = new Image();
+                const path = getImagePath(name);
+                img.onload = () => log(`✅ ${name} -> ${path}`, 'success');
+                img.onerror = () => log(`❌ ${name} -> ${path}`, 'error');
+                img.src = path;
+            });
+        }
+        
+        function getImagePath(itemName) {
+            const specialCases = {
+                'SA1216': 'SA1216',
+                'M60': 'M60',
+                'Anti-Gravity Cube': 'Anti-Gravity_Cube'
+            };
+            
+            if (specialCases[itemName]) {
+                return `/images/${specialCases[itemName]}.webp`;
+            }
+            
+            const normalized = itemName
+                .split(' ')
+                .map(word => {
+                    if (word.length === 1) return word.toUpperCase();
+                    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                })
+                .join('_');
+            
+            return `/images/${normalized}.webp`;
+        }
+        
+        function testSpinSelection() {
+            log('Testing spin selection UI...');
+            try {
+                const frameDoc = frame.contentDocument || frame.contentWindow.document;
+                const spinBtns = frameDoc.querySelectorAll('.spin-btn');
+                log(`Found ${spinBtns.length} spin buttons`, spinBtns.length > 0 ? 'success' : 'error');
+                
+                const randomBtn = frameDoc.querySelector('.spin-btn.random-spin');
+                if (randomBtn) {
+                    log('✅ Random spin button found', 'success');
+                    randomBtn.click();
+                    log('Clicked random spin button - check animation', 'warning');
+                } else {
+                    log('❌ Random spin button not found', 'error');
+                }
+            } catch (e) {
+                log(`Error: ${e.message}`, 'error');
+            }
+        }
+        
+        function testClassSelection() {
+            log('Testing class selection UI...');
+            try {
+                const frameDoc = frame.contentDocument || frame.contentWindow.document;
+                const classBtns = frameDoc.querySelectorAll('.class-btn');
+                log(`Found ${classBtns.length} class buttons`, classBtns.length > 0 ? 'success' : 'error');
+                
+                const randomBtn = frameDoc.querySelector('.class-btn.random-class');
+                if (randomBtn) {
+                    log('✅ Random class button found', 'success');
+                    randomBtn.click();
+                    log('Clicked random class button - check animation', 'warning');
+                } else {
+                    log('❌ Random class button not found', 'error');
+                }
+            } catch (e) {
+                log(`Error: ${e.message}`, 'error');
+            }
+        }
+        
+        function testAutoStart() {
+            log('Testing auto-start functionality...');
+            try {
+                const frameDoc = frame.contentDocument || frame.contentWindow.document;
+                
+                // Select spin count
+                const spin3 = frameDoc.querySelector('.spin-btn[data-spins="3"]');
+                if (spin3) spin3.click();
+                
+                // Select class
+                setTimeout(() => {
+                    const heavyBtn = frameDoc.querySelector('.class-btn[data-class="heavy"]');
+                    if (heavyBtn) heavyBtn.click();
+                    
+                    log('Selected 3 spins and Heavy class - should auto-start', 'warning');
+                }, 500);
+                
+            } catch (e) {
+                log(`Error: ${e.message}`, 'error');
+            }
+        }
+        
+        function testMultiSpin() {
+            log('Testing multi-spin sequence...');
+            log('Check if slot machine performs multiple spins', 'warning');
+            log('Watch for spin counter (e.g., "SPIN 1 OF 3")', 'warning');
+        }
+        
+        // Auto-run tests after page loads
+        frame.addEventListener('load', () => {
+            log('Application loaded', 'success');
+            log('Ready for testing', 'success');
+        });
+    </script>
+</body>
+</html>
