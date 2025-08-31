@@ -268,12 +268,13 @@
         
         itemsContainer.innerHTML = '';
         
-        // Generate 30+ items for smooth spinning
-        for (let i = 0; i < 35; i++) {
-          const item = i === 20 ? data.winner : data.items[Math.floor(Math.random() * data.items.length)];
+        // Generate 80 items for smooth spinning with no gaps on mobile
+        // Winner is at position 25 for better centering
+        for (let i = 0; i < 80; i++) {
+          const item = i === 25 ? data.winner : data.items[Math.floor(Math.random() * data.items.length)];
           const itemDiv = document.createElement('div');
           itemDiv.className = 'slot-item';
-          if (i === 20) itemDiv.dataset.winner = 'true';
+          if (i === 25) itemDiv.dataset.winner = 'true';
           
           const imagePath = this.getImagePath(item);
           itemDiv.innerHTML = `
@@ -354,7 +355,7 @@
     
     async animatePremiumSpin(isFinalSpin) {
       const duration = isFinalSpin ? 3000 : 1000;
-      const targetPosition = -1600; // Position to center item 20 (20 * 80px)
+      const targetPosition = -2000; // Position to center item 25 (25 * 80px)
       
       // Animate all columns
       const columns = document.querySelectorAll('.slot-items');

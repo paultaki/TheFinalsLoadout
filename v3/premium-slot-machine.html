@@ -297,6 +297,12 @@
                 black 90%, 
                 transparent
             );
+            -webkit-mask-image: linear-gradient(
+                transparent, 
+                black 10%, 
+                black 90%, 
+                transparent
+            );
         }
 
         .slot-items {
@@ -445,11 +451,20 @@
             
             .slot-window {
                 height: 210px; /* Exactly 3 items at 70px each */
+                mask-image: linear-gradient(
+                    black 0%, 
+                    black 100%
+                );
+                -webkit-mask-image: linear-gradient(
+                    black 0%, 
+                    black 100%
+                );
             }
             
             .slot-item {
                 height: 70px;
                 padding: 8px 5px;
+                background: linear-gradient(180deg, transparent, rgba(0,0,0,0.2), transparent);
             }
             
             .slot-item img {
@@ -499,11 +514,29 @@
             
             .slot-window {
                 height: 180px; /* Exactly 3 items at 60px each */
+                mask-image: linear-gradient(
+                    black 0%, 
+                    black 100%
+                );
+                -webkit-mask-image: linear-gradient(
+                    black 0%, 
+                    black 100%
+                );
+                /* Add subtle background for continuity */
+                background: linear-gradient(to bottom,
+                    rgba(138, 43, 226, 0.03) 0%,
+                    rgba(138, 43, 226, 0.06) 50%,
+                    rgba(138, 43, 226, 0.03) 100%);
             }
             
             .slot-item {
                 height: 60px;
                 padding: 5px 3px;
+                background: linear-gradient(135deg,
+                    rgba(30, 30, 40, 0.7) 0%,
+                    rgba(25, 25, 35, 0.9) 100%);
+                margin: 0;
+                border-bottom: 1px solid rgba(138, 43, 226, 0.1);
             }
             
             .slot-item img {
