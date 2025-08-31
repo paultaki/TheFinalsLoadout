@@ -236,26 +236,46 @@
     }
 
     init() {
-      const columnTypes = ['weapon', 'specialization', 'gadget1', 'gadget2', 'gadget3'];
+      // Check if we're using premium columns (dynamically generated)
+      const premiumColumns = this.container.querySelectorAll('.slot-column');
       
-      this.columns = columnTypes.map(type => {
-        const column = this.container.querySelector(`[data-type="${type}"]`);
-        if (!column) {
-          console.warn(`Column not found for type: ${type}`);
-          return null;
-        }
-        
-        const itemsContainer = column.querySelector('.slot-items');
-        return {
-          type,
-          element: column,
-          itemsContainer,
-          items: []
-        };
-      }).filter(Boolean);
+      if (premiumColumns.length > 0) {
+        // Premium version - use whatever columns exist
+        this.columns = Array.from(premiumColumns).map((column, index) => {
+          const itemsContainer = column.querySelector('.slot-items');
+          const type = column.dataset.type || `column${index}`;
+          return {
+            type,
+            element: column,
+            itemsContainer,
+            items: []
+          };
+        });
+        console.log(`Initialized ${this.columns.length} premium columns`);
+      } else {
+        // Original version - look for specific data-type attributes
+        const columnTypes = ['weapon', 'specialization', 'gadget1', 'gadget2', 'gadget3'];
+        this.columns = columnTypes.map(type => {
+          const column = this.container.querySelector(`[data-type="${type}"]`);
+          if (!column) {
+            console.warn(`Column not found for type: ${type}`);
+            return null;
+          }
+          
+          const itemsContainer = column.querySelector('.slot-items');
+          return {
+            type,
+            element: column,
+            itemsContainer,
+            items: []
+          };
+        }).filter(Boolean);
+      }
       
       // Populate slots with initial placeholder items to fill viewport
-      this.populateInitialItems();
+      if (this.columns.length > 0) {
+        this.populateInitialItems();
+      }
     }
     
     populateInitialItems() {
@@ -882,19 +902,27 @@
     setup() {
       try {
         // Initialize slot machine
-        const slotContainer = document.getElementById('slot-machine-container');
+        const slotContainer = document.getElementById('slot-machine-container') || 
+                            document.querySelector('.slot-machine');
         if (!slotContainer) {
           throw new Error('Slot machine container not found');
         }
         
-        this.slotMachine = new SlotMachine(slotContainer, this.animationEngine);
-        this.slotMachine.init();
+        // Expose to window early so premium-integrated can access it
+        window.FinalsLoadoutApp = this;
+        window.app = this;
         
-        // Initialize UI controller
-        this.uiController = new UIController(this.stateManager, this.slotMachine);
-        
-        // Log successful initialization
-        console.log('The Finals Loadout Generator v3 initialized successfully');
+        // Wait a bit for premium columns to be created if they exist
+        setTimeout(() => {
+          this.slotMachine = new SlotMachine(slotContainer, this.animationEngine);
+          this.slotMachine.init();
+          
+          // Initialize UI controller after slot machine is ready
+          this.uiController = new UIController(this.stateManager, this.slotMachine);
+          
+          // Log successful initialization
+          console.log('The Finals Loadout Generator v3 initialized successfully with initial items');
+        }, 150); // Increased delay to ensure premium columns are ready
         
         // Announce to screen readers
         const announcement = document.getElementById('announcements');

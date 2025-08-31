@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Mobile Fix</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 10px;
+            background: #0a0a0a;
+            color: white;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .status {
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .pass { color: #4CAF50; }
+        .fail { color: #f44336; }
+        button {
+            background: #FF1493;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="status">
+        <h3>Mobile Slot Fix Verification</h3>
+        <div id="results"></div>
+    </div>
+    
+    <button onclick="checkColumns()">Check Columns</button>
+    <button onclick="checkItems()">Check Items</button>
+    <button onclick="forcePopulate()">Force Populate</button>
+    
+    <script>
+        function checkColumns() {
+            const results = document.getElementById('results');
+            let html = '<h4>Column Check:</h4>';
+            
+            // Check for columns
+            const columns = document.querySelectorAll('.slot-column');
+            html += `<div>Found ${columns.length} columns</div>`;
+            
+            columns.forEach((col, i) => {
+                const items = col.querySelectorAll('.slot-item');
+                const type = col.dataset.type || 'unknown';
+                html += `<div>Column ${i} (${type}): ${items.length} items</div>`;
+            });
+            
+            // Check if app initialized
+            if (window.app && window.app.slotMachine) {
+                html += '<div class="pass">✓ App initialized</div>';
+                html += `<div>SlotMachine columns: ${window.app.slotMachine.columns.length}</div>`;
+            } else {
+                html += '<div class="fail">✗ App not initialized</div>';
+            }
+            
+            results.innerHTML = html;
+        }
+        
+        function checkItems() {
+            const results = document.getElementById('results');
+            let html = '<h4>Item Count Check:</h4>';
+            
+            const isMobile = window.innerWidth <= 768;
+            const expectedItems = isMobile ? 250 : 50;
+            
+            html += `<div>Device: ${isMobile ? 'Mobile' : 'Desktop'}</div>`;
+            html += `<div>Expected items: ${expectedItems}</div>`;
+            
+            const columns = document.querySelectorAll('.slot-column');
+            let allGood = true;
+            
+            columns.forEach((col, i) => {
+                const items = col.querySelectorAll('.slot-item');
+                const isGood = items.length >= expectedItems;
+                if (!isGood) allGood = false;
+                
+                html += `<div class="${isGood ? 'pass' : 'fail'}">
+                    Column ${i}: ${items.length} items ${isGood ? '✓' : '✗'}
+                </div>`;
+            });
+            
+            html += `<div style="margin-top:10px; font-weight:bold" class="${allGood ? 'pass' : 'fail'}">
+                ${allGood ? '✓ All columns filled!' : '✗ Some columns need more items'}
+            </div>`;
+            
+            results.innerHTML = html;
+        }
+        
+        function forcePopulate() {
+            if (window.app && window.app.slotMachine) {
+                console.log('Forcing populateInitialItems...');
+                window.app.slotMachine.populateInitialItems();
+                setTimeout(checkItems, 100);
+            } else {
+                alert('App not initialized yet');
+            }
+        }
+        
+        // Auto-check after page loads
+        setTimeout(() => {
+            checkColumns();
+            setTimeout(checkItems, 500);
+        }, 1000);
+    </script>
+</body>
+</html>
