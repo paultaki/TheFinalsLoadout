@@ -410,16 +410,171 @@
             box-shadow: 0 10px 30px rgba(255, 51, 102, 0.4);
         }
 
-        /* Responsive */
+        /* Responsive - Keep all 5 columns visible */
         @media (max-width: 768px) {
-            .title { font-size: 2.5rem; }
-            .slot-columns { grid-template-columns: repeat(3, 1fr); }
-            .selection-grid { grid-template-columns: 1fr; }
+            .title { 
+                font-size: 2.5rem; 
+                line-height: 1.1;
+            }
+            
+            .slot-machine-premium {
+                width: 95%;
+                padding: 20px 15px;
+            }
+            
+            .selection-grid { 
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            /* Keep all 5 columns but make them narrower */
+            .slot-columns { 
+                grid-template-columns: repeat(5, 1fr);
+                gap: 8px;
+            }
+            
+            .slot-column {
+                padding: 5px;
+            }
+            
+            .column-header {
+                font-size: 0.65rem;
+                padding: 8px 2px;
+                letter-spacing: 0;
+            }
+            
+            .slot-window {
+                height: 200px;
+            }
+            
+            .slot-item {
+                height: 70px;
+                padding: 8px 5px;
+            }
+            
+            .slot-item img {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .slot-item-name {
+                font-size: 0.6rem;
+                line-height: 1.1;
+            }
         }
 
         @media (max-width: 480px) {
-            .slot-columns { grid-template-columns: repeat(2, 1fr); }
-            .slot-machine-premium { padding: 20px; }
+            .title { 
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 0.8rem;
+            }
+            
+            .slot-machine-premium { 
+                width: 98%;
+                padding: 15px 10px;
+                border-radius: 15px;
+            }
+            
+            /* Still keep all 5 columns, just even narrower */
+            .slot-columns { 
+                grid-template-columns: repeat(5, 1fr);
+                gap: 5px;
+            }
+            
+            .slot-column {
+                padding: 3px;
+                border-radius: 8px;
+            }
+            
+            .column-header {
+                font-size: 0.55rem;
+                padding: 6px 2px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .slot-window {
+                height: 180px;
+            }
+            
+            .slot-item {
+                height: 60px;
+                padding: 5px 3px;
+            }
+            
+            .slot-item img {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .slot-item-name {
+                font-size: 0.55rem;
+                margin-top: 2px;
+            }
+            
+            .random-all-premium {
+                padding: 15px;
+                font-size: 1.2rem;
+            }
+            
+            .selection-options {
+                gap: 5px;
+            }
+            
+            .select-btn {
+                min-width: 35px;
+                padding: 8px 5px;
+                font-size: 0.9rem;
+            }
+            
+            .class-btn-premium {
+                padding: 10px 5px;
+            }
+            
+            .class-icon-premium {
+                font-size: 1.2rem;
+            }
+            
+            .generate-button {
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+            
+            .spin-counter {
+                font-size: 0.8rem;
+                padding: 4px 12px;
+                top: -12px;
+                right: 10px;
+            }
+        }
+        
+        /* Ultra small screens */
+        @media (max-width: 360px) {
+            .slot-columns {
+                gap: 3px;
+            }
+            
+            .column-header {
+                font-size: 0.5rem;
+                padding: 5px 1px;
+            }
+            
+            .slot-item {
+                height: 55px;
+            }
+            
+            .slot-item img {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .slot-item-name {
+                font-size: 0.5rem;
+            }
         }
     </style>
 </head>
