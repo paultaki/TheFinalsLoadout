@@ -1,5 +1,5 @@
 {
-  "indexed_at": "2025-08-31T10:01:46.180390",
+  "indexed_at": "2025-08-31T10:11:14.143006",
   "root": ".",
   "project_structure": {
     "type": "tree",
@@ -39,6 +39,21 @@
         "Known Working Features:",
         "Testing:",
         "Console Commands for Debugging:"
+      ],
+      "architecture_hints": []
+    },
+    "MOBILE_FIX_SUMMARY.md": {
+      "sections": [
+        "Mobile Slot Machine Fill Fix - Summary",
+        "Issue",
+        "Solution Applied",
+        "1. Dynamic Item Generation (`app-optimized.js`)",
+        "2. Dynamic Animation Positioning (`app-optimized.js`)",
+        "Technical Details",
+        "Calculation Logic",
+        "Example Values",
+        "Files Modified",
+        "Files Created"
       ],
       "architecture_hints": []
     },
@@ -139,35 +154,20 @@
         "4. NO POST-RESOLVE TRANSFORMS \u2705 PASS"
       ],
       "architecture_hints": []
-    },
-    "MOBILE_FIX_SUMMARY.md": {
-      "sections": [
-        "Mobile Slot Machine Fill Fix - Summary",
-        "Issue",
-        "Solution Applied",
-        "1. Dynamic Item Generation (`app-optimized.js`)",
-        "2. Dynamic Animation Positioning (`app-optimized.js`)",
-        "Technical Details",
-        "Calculation Logic",
-        "Example Values",
-        "Files Modified",
-        "Files Created"
-      ],
-      "architecture_hints": []
     }
   },
   "directory_purposes": {
     "test": "Test files and test utilities"
   },
   "stats": {
-    "total_files": 114,
+    "total_files": 116,
     "total_directories": 3,
     "fully_parsed": {
-      "javascript": 39
+      "javascript": 40
     },
     "listed_only": {
       "css": 25,
-      "html": 46,
+      "html": 47,
       "shell": 1,
       "json": 3
     },
@@ -302,8 +302,8 @@
             "animateSlotMachine": {
               "signature": "async (columns, scrollContents, predeterminedResults, preservePosition = false)",
               "called_by": [
-                "overrideAnimations",
-                "overrideAll"
+                "overrideAll",
+                "overrideAnimations"
               ]
             },
             "animateQuickSpin": "async (columns, scrollContents, preservePosition = false)",
@@ -463,10 +463,27 @@
               ],
               "signature": "(key, newValue, oldValue)"
             },
-            "loadHistory": "()",
+            "loadHistory": {
+              "signature": "()",
+              "called_by": [
+                "StateManager.__init__",
+                "StateManager.constructor"
+              ]
+            },
             "saveHistory": "(history)",
-            "loadSetting": "(key, defaultValue)",
-            "saveSetting": "(key, value)",
+            "loadSetting": {
+              "signature": "(key, defaultValue)",
+              "called_by": [
+                "StateManager.__init__",
+                "StateManager.constructor"
+              ]
+            },
+            "saveSetting": {
+              "signature": "(key, value)",
+              "called_by": [
+                "UIController.bindSoundToggle"
+              ]
+            },
             "__init__": {
               "calls": [
                 "loadHistory",
@@ -485,10 +502,23 @@
                 "easeOutCubic",
                 "getTransformY"
               ],
-              "signature": "(element, duration, targetPosition)"
+              "signature": "(element, duration, targetPosition)",
+              "called_by": [
+                "overrideExisting"
+              ]
             },
-            "getTransformY": "(element)",
-            "easeOutCubic": "(t)",
+            "getTransformY": {
+              "signature": "(element)",
+              "called_by": [
+                "AnimationEngine.spin"
+              ]
+            },
+            "easeOutCubic": {
+              "signature": "(t)",
+              "called_by": [
+                "AnimationEngine.spin"
+              ]
+            },
             "stop": "()",
             "__init__": "()"
           },
@@ -497,11 +527,26 @@
         "SlotMachine": {
           "methods": {
             "constructor": "(container, animationEngine)",
-            "init": "()",
-            "spin": "async (loadout, spinCount = 1, totalSpins = 1)",
+            "init": {
+              "signature": "()",
+              "called_by": [
+                "Application.setup"
+              ]
+            },
+            "spin": {
+              "signature": "async (loadout, spinCount = 1, totalSpins = 1)",
+              "called_by": [
+                "overrideExisting"
+              ]
+            },
             "populateColumn": "(column, loadout)",
             "createItem": "(type, loadout, isWinner = false)",
-            "getRandomItem": "(type, className)",
+            "getRandomItem": {
+              "signature": "(type, className)",
+              "called_by": [
+                "generateRandomLoadout"
+              ]
+            },
             "getItemImage": "(itemName)",
             "animateColumn": "async (column, isFinalSpin)",
             "highlightWinners": "()",
@@ -519,7 +564,12 @@
         "UIController": {
           "methods": {
             "constructor": "(stateManager, slotMachine)",
-            "init": "()",
+            "init": {
+              "signature": "()",
+              "called_by": [
+                "Application.setup"
+              ]
+            },
             "bindClassSelection": {
               "calls": [
                 "forEach",
@@ -528,7 +578,12 @@
               "signature": "()"
             },
             "bindGenerateButton": "()",
-            "generateLoadout": "async ()",
+            "generateLoadout": {
+              "signature": "async ()",
+              "called_by": [
+                "UIController.bindKeyboardShortcuts"
+              ]
+            },
             "createRandomLoadout": "(className)",
             "addToHistory": "(loadout)",
             "updateHistoryPanel": "()",
@@ -552,13 +607,25 @@
               "calls": [
                 "get"
               ],
-              "signature": "(isGenerating)"
+              "signature": "(isGenerating)",
+              "called_by": [
+                "startSlotMachine"
+              ]
             },
             "showSpinAgain": "()",
             "updateUI": "()",
             "showError": "(message)",
             "debounce": "(func, wait)",
-            "delay": "(ms)",
+            "delay": {
+              "signature": "(ms)",
+              "called_by": [
+                "runNumberSelectorAnimation",
+                "SimpleSpinAnimation.stopReelsRandomly",
+                "SmoothSpinAnimation.stopReelsSequentially",
+                "runSlotMachineAnimation",
+                "runClassRouletteAnimation"
+              ]
+            },
             "__init__": "(stateManager, slotMachine)"
           },
           "doc": "The Finals Loadout Generator v3 - Optimized"
@@ -574,13 +641,19 @@
               "calls": [
                 "setup"
               ],
-              "signature": "()"
+              "signature": "()",
+              "called_by": [
+                "Application.setup"
+              ]
             },
             "setup": {
               "calls": [
                 "init"
               ],
-              "signature": "()"
+              "signature": "()",
+              "called_by": [
+                "Application.init"
+              ]
             },
             "handleInitError": "(error)",
             "__init__": "()"
@@ -588,8 +661,87 @@
           "doc": "The Finals Loadout Generator v3 - Optimized"
         }
       },
-      "updated_by_hook": true,
-      "updated_at": "2025-08-31T10:08:22.201003"
+      "constants": {
+        "CONFIG": "collection"
+      },
+      "variables": [
+        "oldValue",
+        "callbacks",
+        "stored",
+        "limited",
+        "settings",
+        "startTime",
+        "startPosition",
+        "distance",
+        "animate",
+        "elapsed",
+        "progress",
+        "eased",
+        "currentPosition",
+        "transform",
+        "matrix",
+        "values",
+        "columnTypes",
+        "column",
+        "itemsContainer",
+        "animations",
+        "slotWindow",
+        "totalItems",
+        "winnerIndex",
+        "windowHeight",
+        "computedStyle",
+        "itemHeight",
+        "visibleItems",
+        "bufferItems",
+        "items",
+        "i",
+        "item",
+        "div",
+        "content",
+        "imgSrc",
+        "gadgetIndex",
+        "data",
+        "pool",
+        "specialCases",
+        "additionalCases",
+        "normalized",
+        "duration",
+        "viewportHeight",
+        "centerOffset",
+        "targetPosition",
+        "announcement",
+        "winners",
+        "counter",
+        "selectedClass",
+        "className",
+        "generateBtn",
+        "spinAgainBtn",
+        "loadout",
+        "totalSpins",
+        "weapon",
+        "specialization",
+        "gadgets",
+        "availableGadgets",
+        "index",
+        "history",
+        "historyContent",
+        "now",
+        "diff",
+        "soundToggle",
+        "enabled",
+        "historyToggle",
+        "historyPanel",
+        "closeHistory",
+        "clearHistory",
+        "isOpen",
+        "classes",
+        "classBtn",
+        "later",
+        "slotContainer",
+        "container",
+        "app"
+      ],
+      "call_graph": {}
     },
     "app.js": {
       "language": "javascript",
@@ -830,11 +982,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation",
                 "runNumberSelectorAnimation",
-                "SmoothSpinAnimation.stopReelsSequentially"
+                "SimpleSpinAnimation.stopReelsRandomly",
+                "SmoothSpinAnimation.stopReelsSequentially",
+                "runSlotMachineAnimation",
+                "runClassRouletteAnimation"
               ]
             },
             "getSelections": "()",
@@ -1228,8 +1380,8 @@
             "animateSlotMachine": {
               "signature": "async (columns, winners)",
               "called_by": [
-                "overrideAnimations",
-                "overrideAll"
+                "overrideAll",
+                "overrideAnimations"
               ]
             },
             "setupContainers": "(columns)",
@@ -1240,11 +1392,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation",
                 "runNumberSelectorAnimation",
-                "SmoothSpinAnimation.stopReelsSequentially"
+                "SimpleSpinAnimation.stopReelsRandomly",
+                "SmoothSpinAnimation.stopReelsSequentially",
+                "runSlotMachineAnimation",
+                "runClassRouletteAnimation"
               ]
             },
             "cleanup": {
@@ -1403,8 +1555,8 @@
             "animateSlotMachine": {
               "signature": "async (columns, winners)",
               "called_by": [
-                "overrideAnimations",
-                "overrideAll"
+                "overrideAll",
+                "overrideAnimations"
               ]
             },
             "startSpinning": "()",
@@ -1419,11 +1571,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation",
                 "runNumberSelectorAnimation",
-                "SmoothSpinAnimation.stopReelsSequentially"
+                "SimpleSpinAnimation.stopReelsRandomly",
+                "SmoothSpinAnimation.stopReelsSequentially",
+                "runSlotMachineAnimation",
+                "runClassRouletteAnimation"
               ]
             },
             "__init__": "()"
@@ -1502,8 +1654,8 @@
             "startSlotMachine": {
               "signature": "async ()",
               "called_by": [
-                "startSlotMachine",
-                "PremiumIntegratedSlotMachine.checkAutoStart"
+                "PremiumIntegratedSlotMachine.checkAutoStart",
+                "startSlotMachine"
               ]
             },
             "sleep": {
@@ -1662,8 +1814,8 @@
             "setupEventListeners": {
               "signature": "()",
               "called_by": [
-                "PremiumIntegratedSlotMachine.init",
-                "PremiumIntegratedSlotMachine.waitForApp"
+                "PremiumIntegratedSlotMachine.waitForApp",
+                "PremiumIntegratedSlotMachine.init"
               ]
             },
             "toggleFavorite": "(entryId)",
@@ -2010,16 +2162,16 @@
             "setupSlotMachine": {
               "signature": "()",
               "called_by": [
-                "PremiumIntegratedSlotMachine.init",
-                "PremiumIntegratedSlotMachine.waitForApp"
+                "PremiumIntegratedSlotMachine.waitForApp",
+                "PremiumIntegratedSlotMachine.init"
               ]
             },
             "setupPremiumColumns": "()",
             "setupEventListeners": {
               "signature": "()",
               "called_by": [
-                "PremiumIntegratedSlotMachine.init",
-                "PremiumIntegratedSlotMachine.waitForApp"
+                "PremiumIntegratedSlotMachine.waitForApp",
+                "PremiumIntegratedSlotMachine.init"
               ]
             },
             "selectSpins": "(count)",
@@ -2046,8 +2198,8 @@
             "startSlotMachine": {
               "signature": "async ()",
               "called_by": [
-                "startSlotMachine",
-                "PremiumIntegratedSlotMachine.checkAutoStart"
+                "PremiumIntegratedSlotMachine.checkAutoStart",
+                "startSlotMachine"
               ]
             },
             "populatePremiumColumns": {
@@ -2323,19 +2475,19 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation",
                 "runNumberSelectorAnimation",
-                "SmoothSpinAnimation.stopReelsSequentially"
+                "SimpleSpinAnimation.stopReelsRandomly",
+                "SmoothSpinAnimation.stopReelsSequentially",
+                "runSlotMachineAnimation",
+                "runClassRouletteAnimation"
               ]
             },
             "quickSpin": "async (columns)",
             "animateSlotMachine": {
               "signature": "async (columns, scrollContents, predeterminedResults, preservePosition)",
               "called_by": [
-                "overrideAnimations",
-                "overrideAll"
+                "overrideAll",
+                "overrideAnimations"
               ]
             },
             "animateQuickSpin": {
@@ -2396,6 +2548,34 @@
     "slot-machine-fixes.css": {
       "language": "css",
       "parsed": false
+    },
+    "slot-machine-mobile-fix.js": {
+      "language": "javascript",
+      "parsed": true,
+      "functions": {
+        "waitForApp": "(callback)"
+      },
+      "classes": {},
+      "variables": [
+        "checkApp",
+        "app",
+        "originalPopulateColumn",
+        "slotWindow",
+        "windowHeight",
+        "computedStyle",
+        "itemHeight",
+        "visibleItems",
+        "bufferItems",
+        "totalItems",
+        "winnerIndex",
+        "items",
+        "i",
+        "item",
+        "originalAnimateColumn",
+        "centerOffset",
+        "targetPosition"
+      ],
+      "call_graph": {}
     },
     "slot-machine.js": {
       "language": "javascript",
@@ -2616,8 +2796,8 @@
             "animateSlotMachine": {
               "signature": "async (columns, winners)",
               "called_by": [
-                "overrideAnimations",
-                "overrideAll"
+                "overrideAll",
+                "overrideAnimations"
               ]
             },
             "startSpinning": "(containers)",
@@ -2638,11 +2818,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation",
                 "runNumberSelectorAnimation",
-                "SmoothSpinAnimation.stopReelsSequentially"
+                "SimpleSpinAnimation.stopReelsRandomly",
+                "SmoothSpinAnimation.stopReelsSequentially",
+                "runSlotMachineAnimation",
+                "runClassRouletteAnimation"
               ]
             },
             "cleanup": {
@@ -2814,6 +2994,11 @@
       "purpose": "Test file"
     },
     "test-enhanced.html": {
+      "language": "html",
+      "parsed": false,
+      "purpose": "Test file"
+    },
+    "test-mobile-fill.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
@@ -3090,8 +3275,8 @@
               ],
               "signature": "()",
               "called_by": [
-                "PremiumIntegratedSlotMachine.init",
-                "PremiumIntegratedSlotMachine.waitForApp"
+                "PremiumIntegratedSlotMachine.waitForApp",
+                "PremiumIntegratedSlotMachine.init"
               ]
             },
             "startSelection": {
@@ -3118,8 +3303,8 @@
             "updateLightPosition": {
               "signature": "(speed)",
               "called_by": [
-                "NumberSelector.runHighSpeed",
-                "NumberSelector.runAcceleration"
+                "NumberSelector.runAcceleration",
+                "NumberSelector.runHighSpeed"
               ]
             },
             "selectNumber": "(number)",
@@ -3129,11 +3314,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation",
                 "runNumberSelectorAnimation",
-                "SmoothSpinAnimation.stopReelsSequentially"
+                "SimpleSpinAnimation.stopReelsRandomly",
+                "SmoothSpinAnimation.stopReelsSequentially",
+                "runSlotMachineAnimation",
+                "runClassRouletteAnimation"
               ]
             },
             "playSound": {
@@ -3172,8 +3357,8 @@
               ],
               "signature": "()",
               "called_by": [
-                "PremiumIntegratedSlotMachine.init",
-                "PremiumIntegratedSlotMachine.waitForApp"
+                "PremiumIntegratedSlotMachine.waitForApp",
+                "PremiumIntegratedSlotMachine.init"
               ]
             },
             "startRoulette": {
@@ -3192,11 +3377,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation",
                 "runNumberSelectorAnimation",
-                "SmoothSpinAnimation.stopReelsSequentially"
+                "SimpleSpinAnimation.stopReelsRandomly",
+                "SmoothSpinAnimation.stopReelsSequentially",
+                "runSlotMachineAnimation",
+                "runClassRouletteAnimation"
               ]
             },
             "playSound": {
@@ -3284,11 +3469,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation",
                 "runNumberSelectorAnimation",
-                "SmoothSpinAnimation.stopReelsSequentially"
+                "SimpleSpinAnimation.stopReelsRandomly",
+                "SmoothSpinAnimation.stopReelsSequentially",
+                "runSlotMachineAnimation",
+                "runClassRouletteAnimation"
               ]
             },
             "playSound": {
@@ -3545,16 +3730,6 @@
     "test/verify-landing-fix.html": {
       "language": "html",
       "parsed": false
-    },
-    "slot-machine-mobile-fix.js": {
-      "language": "javascript",
-      "parsed": true,
-      "functions": {
-        "waitForApp": "(callback)"
-      },
-      "classes": {},
-      "updated_by_hook": true,
-      "updated_at": "2025-08-31T10:07:26.694935"
     }
   },
   "dependency_graph": {
@@ -3563,5 +3738,5 @@
       "path"
     ]
   },
-  "staleness_check": 1756054919.802627
+  "staleness_check": 1756055493.120723
 }
