@@ -340,6 +340,38 @@ If needed, remove these two lines from index.html:
 - Line 95: `<link rel="stylesheet" href="/v3/history-styles-refined.css?v=20250816" />`
 - Line 482: `<script src="/v3/history-system-enhanced.js?v=20250816" defer></script>`
 
+## Mobile Black Space Issue Analysis (2025-08-31)
+
+### Problem
+On mobile view, the slot windows show black space below the 3 visible items, despite attempts to fix with:
+- Generating 80 items instead of 50
+- Adding background gradients to slot windows and items
+- Adjusting item heights and borders
+
+### Root Cause Analysis
+After examining the mobile screenshot, the issue is structural:
+
+1. **Window Height Mismatch**: The slot-window has `height: 180px` (for 3 items at 60px each) but the actual visible area appears taller due to CSS inheritance or viewport calculations.
+
+2. **Mask-Image Not Working**: The `mask-image` gradient is set to `black 0%, black 100%` which shows everything fully opaque. This was intentional to show all 3 items clearly, but it also reveals the empty space below.
+
+3. **Item Container Positioning**: The `.slot-items` container transforms to show winners, but the initial state shows items starting at position 0, which may not fill the entire window height initially.
+
+### Potential Solutions (Not Yet Implemented)
+1. **Overflow Hidden Approach**: Apply `overflow: hidden` directly to `.slot-window` with exact height matching 3 items
+2. **Initial Offset**: Start the `.slot-items` container at a negative offset so items fill the window from the start
+3. **Gradient Mask Restoration**: Use a gradient mask that fades the bottom edge (e.g., `black 0%, black 85%, transparent 100%`)
+4. **Dynamic Height Calculation**: Use JavaScript to calculate exact window height based on actual rendered item heights
+5. **Background Pattern**: Add a repeating pattern or gradient that matches item backgrounds to create visual continuity
+
+### User Preference
+User stated: "I like the architecture so be careful to preserve it. if it's easier to add more items spinning around, then do that instead; whatever will be more efficient and effective"
+
+This indicates preference for:
+- Preserving current HTML/CSS structure
+- Adding more items if that solves the issue
+- Focusing on efficiency over complex restructuring
+
 ## Recent Updates (2025-08-18)
 
 ### Filter System Temporarily Hidden
