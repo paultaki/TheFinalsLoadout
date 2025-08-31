@@ -340,9 +340,11 @@
     }
 
     getItemImage(itemName) {
-      // Normalize the item name for image lookup
+      // For now, return a placeholder or use the main images directory
+      // The actual images may be in /images/ not /images/items/
       const normalized = itemName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-      return `/images/items/${normalized}.webp`;
+      // Try the main images directory first
+      return `/images/${normalized}.webp`;
     }
 
     async animateColumn(column, isFinalSpin) {
