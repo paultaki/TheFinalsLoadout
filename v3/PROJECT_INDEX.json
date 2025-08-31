@@ -1,11 +1,12 @@
 {
-  "indexed_at": "2025-08-31T14:06:58.357301",
+  "indexed_at": "2025-08-31T14:12:23.701022",
   "root": ".",
   "project_structure": {
     "type": "tree",
     "root": ".",
     "tree": [
       ".",
+      "\u251c\u2500\u2500 backup-delete-after-9-05/ (88 files)",
       "\u251c\u2500\u2500 images/",
       "\u251c\u2500\u2500 sounds/",
       "\u251c\u2500\u2500 test/ (22 files)",
@@ -157,286 +158,24 @@
     }
   },
   "directory_purposes": {
+    "backup-delete-after-9-05": "Test files and test utilities",
     "test": "Test files and test utilities"
   },
   "stats": {
     "total_files": 116,
-    "total_directories": 3,
+    "total_directories": 4,
     "fully_parsed": {
       "javascript": 40
     },
     "listed_only": {
-      "css": 25,
       "html": 47,
-      "shell": 1,
-      "json": 3
+      "json": 3,
+      "css": 25,
+      "shell": 1
     },
     "markdown_files": 10
   },
   "files": {
-    "animation-constants-fix.js": {
-      "language": "javascript",
-      "parsed": true,
-      "functions": {
-        "overrideGlobalConstants": {
-          "signature": "()",
-          "called_by": [
-            "initialize"
-          ]
-        },
-        "patchAnimationEngineV2": {
-          "signature": "()",
-          "called_by": [
-            "initialize"
-          ]
-        },
-        "patchSimpleSpinAnimation": {
-          "signature": "()",
-          "called_by": [
-            "initialize",
-            "initialize"
-          ]
-        },
-        "monitorAndCorrect": {
-          "signature": "()",
-          "called_by": [
-            "initialize"
-          ]
-        },
-        "initialize": {
-          "calls": [
-            "monitorAndCorrect",
-            "overrideGlobalConstants",
-            "patchAnimationEngineV2",
-            "patchSimpleSpinAnimation"
-          ],
-          "signature": "()",
-          "called_by": [
-            "EnhancedController.waitForApp"
-          ]
-        }
-      },
-      "classes": {},
-      "constants": {
-        "CORRECT_VALUES": "collection",
-        "ITEM_H": "value"
-      },
-      "variables": [
-        "instance",
-        "targetWrappedPosition",
-        "minDistance",
-        "baseUnwrapped",
-        "correctCycleHeight",
-        "targetWrappedRaw",
-        "currentWrappedRaw",
-        "adjustment",
-        "targetUnwrapped",
-        "originalAnimate",
-        "result",
-        "originalSpin",
-        "originalStop",
-        "correctedPositions",
-        "i",
-        "container",
-        "column",
-        "observer",
-        "target",
-        "transform",
-        "match",
-        "currentY"
-      ],
-      "call_graph": {}
-    },
-    "animation-engine-patch.js": {
-      "language": "javascript",
-      "parsed": true,
-      "functions": {
-        "patchAnimationEngine": {
-          "signature": "()",
-          "called_by": [
-            "initialize"
-          ]
-        }
-      },
-      "classes": {},
-      "constants": {
-        "CORRECT_ITEM_HEIGHT": "number",
-        "CORRECT_VIEWPORT_HEIGHT": "number",
-        "CORRECT_CENTER_OFFSET": "number",
-        "CORRECT_TARGET_POSITION": "number",
-        "ITEM_H": "value"
-      },
-      "variables": [
-        "originalCalculate",
-        "targetWrappedPosition",
-        "minDistance",
-        "baseUnwrapped",
-        "targetWrappedRaw",
-        "currentWrappedRaw",
-        "adjustment",
-        "targetUnwrapped",
-        "originalAnimate",
-        "result",
-        "columns",
-        "itemsContainer",
-        "currentTransform",
-        "match",
-        "currentY"
-      ],
-      "call_graph": {}
-    },
-    "animation-engine-v2.js": {
-      "language": "javascript",
-      "parsed": true,
-      "functions": {},
-      "classes": {
-        "AnimationEngineV2": {
-          "methods": {
-            "constructor": "()",
-            "resetAnimation": {
-              "signature": "()",
-              "called_by": [
-                "overrideExisting"
-              ]
-            },
-            "animateSlotMachine": {
-              "signature": "async (columns, scrollContents, predeterminedResults, preservePosition = false)",
-              "called_by": [
-                "overrideAll",
-                "overrideAnimations"
-              ]
-            },
-            "animateQuickSpin": "async (columns, scrollContents, preservePosition = false)",
-            "initializeColumnStates": "(columns, preservePosition = false)",
-            "applyPosition": "(element, unwrappedY, cycleHeight)",
-            "getStateByElement": "(element)",
-            "calculateFutureTarget": "(currentUnwrappedY, winnerIndex, cycleHeight, totalSpins = 1)",
-            "runAnimation": "async (columns, predeterminedResults)",
-            "determinePhase": "(elapsed, state, isFinalSpin = true)",
-            "updateVelocity": {
-              "calls": [
-                "calculateBrakingDistance",
-                "easeOutQuad"
-              ],
-              "signature": "(state, phase, elapsed, cruiseSpeed, dt)"
-            },
-            "calculateBrakingDistance": {
-              "signature": "(velocity)",
-              "called_by": [
-                "AnimationEngineV2.updateVelocity"
-              ]
-            },
-            "isAnimationComplete": "(state, isFinalSpin = true)",
-            "updateBlur": "(element, velocity, phase)",
-            "easeOutQuad": {
-              "signature": "(t)",
-              "called_by": [
-                "AnimationEngineV2.updateVelocity"
-              ]
-            },
-            "easeOutCubic": {
-              "signature": "(t)",
-              "called_by": [
-                "AnimationEngine.spin"
-              ]
-            },
-            "easeOutQuart": "(t)",
-            "createDebugPanel": "()",
-            "updateDebugPanel": "()",
-            "cleanup": {
-              "signature": "()",
-              "called_by": [
-                "overrideAnimations"
-              ]
-            },
-            "forceStopAnimation": "()",
-            "__init__": "()"
-          },
-          "doc": "The Finals Slot Machine Animation Engine v2"
-        }
-      },
-      "constants": {
-        "ITEM_H": "number",
-        "VIEWPORT_H": "number",
-        "CENTER_OFFSET": "number",
-        "ANIM_CONFIG": "collection"
-      },
-      "variables": [
-        "columns",
-        "itemsContainer",
-        "currentTransform",
-        "originalDurations",
-        "itemCount",
-        "cycleHeight",
-        "startPos",
-        "match",
-        "startVelocity",
-        "existingState",
-        "baseOffset",
-        "wrappedY",
-        "snappedY",
-        "targetWrappedPosition",
-        "minDistance",
-        "baseUnwrapped",
-        "targetWrappedRaw",
-        "currentWrappedRaw",
-        "adjustment",
-        "targetUnwrapped",
-        "startTime",
-        "lastTime",
-        "maxDuration",
-        "cruiseSpeed",
-        "isFinalSpin",
-        "totalUnwrapped",
-        "columnCount",
-        "state",
-        "averageUnwrapped",
-        "winnerIndex",
-        "commonTarget",
-        "animate",
-        "dt",
-        "totalElapsed",
-        "intermediateDuration",
-        "allComplete",
-        "prevY",
-        "columnStartDelay",
-        "columnElapsed",
-        "phase",
-        "deltaPos",
-        "exactFinalPosition",
-        "snappedFinal",
-        "verifyTransform",
-        "currentWrapped",
-        "displayWrapped",
-        "cumulativeTime",
-        "distanceToTarget",
-        "currentBrakingDistance",
-        "accelProgress",
-        "jitter",
-        "decelProgress",
-        "targetIntermediate",
-        "brakingDistance",
-        "targetVelocity",
-        "maxVelocityChange",
-        "distance",
-        "totalDuration",
-        "elapsed",
-        "isComplete",
-        "maxSpeed",
-        "blurAmount",
-        "blurMultiplier",
-        "progressToTarget",
-        "panel",
-        "reversalEl",
-        "firstColumn",
-        "brakingDist"
-      ],
-      "call_graph": {}
-    },
-    "animation-friendly-fix.css": {
-      "language": "css",
-      "parsed": false
-    },
     "app-optimized.js": {
       "language": "javascript",
       "parsed": true,
@@ -620,11 +359,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runNumberSelectorAnimation",
                 "SmoothSpinAnimation.stopReelsSequentially",
-                "runSlotMachineAnimation",
+                "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation"
+                "runSlotMachineAnimation"
               ]
             },
             "__init__": "(stateManager, slotMachine)"
@@ -747,7 +486,419 @@
       ],
       "call_graph": {}
     },
-    "app.js": {
+    "index.html": {
+      "language": "html",
+      "parsed": false,
+      "purpose": "Application entry point"
+    },
+    "package-lock.json": {
+      "language": "json",
+      "parsed": false
+    },
+    "package.json": {
+      "language": "json",
+      "parsed": false
+    },
+    "premium-integrated.js": {
+      "language": "javascript",
+      "parsed": true,
+      "functions": {},
+      "classes": {
+        "PremiumIntegratedSlotMachine": {
+          "methods": {
+            "constructor": "()",
+            "init": {
+              "calls": [
+                "checkApp",
+                "setupEventListeners",
+                "setupSlotMachine"
+              ],
+              "signature": "()",
+              "called_by": [
+                "Application.setup"
+              ]
+            },
+            "waitForApp": {
+              "calls": [
+                "setupEventListeners",
+                "setupSlotMachine"
+              ],
+              "signature": "()"
+            },
+            "setupSlotMachine": {
+              "signature": "()",
+              "called_by": [
+                "PremiumIntegratedSlotMachine.init",
+                "PremiumIntegratedSlotMachine.waitForApp"
+              ]
+            },
+            "setupPremiumColumns": "()",
+            "setupEventListeners": {
+              "signature": "()",
+              "called_by": [
+                "PremiumIntegratedSlotMachine.init",
+                "PremiumIntegratedSlotMachine.waitForApp"
+              ]
+            },
+            "selectSpins": "(count)",
+            "selectClass": "(classType)",
+            "updateAppState": {
+              "signature": "()",
+              "called_by": [
+                "startSlotMachine"
+              ]
+            },
+            "randomizeEverything": "async ()",
+            "updateGenerateButton": {
+              "signature": "()",
+              "called_by": [
+                "startSlotMachine"
+              ]
+            },
+            "checkAutoStart": {
+              "calls": [
+                "startSlotMachine"
+              ],
+              "signature": "()"
+            },
+            "startSlotMachine": {
+              "signature": "async ()",
+              "called_by": [
+                "PremiumIntegratedSlotMachine.checkAutoStart",
+                "startSlotMachine"
+              ]
+            },
+            "populatePremiumColumns": {
+              "calls": [
+                "generateItemList"
+              ],
+              "signature": "(loadout)"
+            },
+            "generateItemList": {
+              "signature": "(winner, type)",
+              "called_by": [
+                "PremiumIntegratedSlotMachine.populatePremiumColumns"
+              ]
+            },
+            "getGameData": "()",
+            "getImagePath": "(itemName)",
+            "animatePremiumSpin": "async (isFinalSpin)",
+            "showWinners": "()",
+            "createSparks": "()",
+            "sleep": {
+              "signature": "(ms)",
+              "called_by": [
+                "startSlotMachine"
+              ]
+            },
+            "__init__": "()"
+          },
+          "doc": "Premium Integrated Slot Machine"
+        },
+        "selection": {
+          "methods": {},
+          "doc": "Premium Integrated Slot Machine"
+        }
+      },
+      "variables": [
+        "checkApp",
+        "app",
+        "container",
+        "columns",
+        "column",
+        "randomBtn",
+        "generateBtn",
+        "btn",
+        "className",
+        "spinBtns",
+        "i",
+        "finalSpin",
+        "classBtns",
+        "classes",
+        "finalClass",
+        "counter",
+        "columnData",
+        "itemsContainer",
+        "item",
+        "itemDiv",
+        "imagePath",
+        "data",
+        "pool",
+        "normalized",
+        "duration",
+        "targetPosition",
+        "spark"
+      ],
+      "call_graph": {}
+    },
+    "PROJECT_INDEX.json": {
+      "language": "json",
+      "parsed": false
+    },
+    "backup-delete-after-9-05/animation-constants-fix.js": {
+      "language": "javascript",
+      "parsed": true,
+      "functions": {
+        "overrideGlobalConstants": {
+          "signature": "()",
+          "called_by": [
+            "initialize"
+          ]
+        },
+        "patchAnimationEngineV2": {
+          "signature": "()",
+          "called_by": [
+            "initialize"
+          ]
+        },
+        "patchSimpleSpinAnimation": {
+          "signature": "()",
+          "called_by": [
+            "initialize",
+            "initialize"
+          ]
+        },
+        "monitorAndCorrect": {
+          "signature": "()",
+          "called_by": [
+            "initialize"
+          ]
+        },
+        "initialize": {
+          "calls": [
+            "monitorAndCorrect",
+            "overrideGlobalConstants",
+            "patchAnimationEngineV2",
+            "patchSimpleSpinAnimation"
+          ],
+          "signature": "()",
+          "called_by": [
+            "EnhancedController.waitForApp"
+          ]
+        }
+      },
+      "classes": {},
+      "constants": {
+        "CORRECT_VALUES": "collection",
+        "ITEM_H": "value"
+      },
+      "variables": [
+        "instance",
+        "targetWrappedPosition",
+        "minDistance",
+        "baseUnwrapped",
+        "correctCycleHeight",
+        "targetWrappedRaw",
+        "currentWrappedRaw",
+        "adjustment",
+        "targetUnwrapped",
+        "originalAnimate",
+        "result",
+        "originalSpin",
+        "originalStop",
+        "correctedPositions",
+        "i",
+        "container",
+        "column",
+        "observer",
+        "target",
+        "transform",
+        "match",
+        "currentY"
+      ],
+      "call_graph": {}
+    },
+    "backup-delete-after-9-05/animation-engine-patch.js": {
+      "language": "javascript",
+      "parsed": true,
+      "functions": {
+        "patchAnimationEngine": {
+          "signature": "()",
+          "called_by": [
+            "initialize"
+          ]
+        }
+      },
+      "classes": {},
+      "constants": {
+        "CORRECT_ITEM_HEIGHT": "number",
+        "CORRECT_VIEWPORT_HEIGHT": "number",
+        "CORRECT_CENTER_OFFSET": "number",
+        "CORRECT_TARGET_POSITION": "number",
+        "ITEM_H": "value"
+      },
+      "variables": [
+        "originalCalculate",
+        "targetWrappedPosition",
+        "minDistance",
+        "baseUnwrapped",
+        "targetWrappedRaw",
+        "currentWrappedRaw",
+        "adjustment",
+        "targetUnwrapped",
+        "originalAnimate",
+        "result",
+        "columns",
+        "itemsContainer",
+        "currentTransform",
+        "match",
+        "currentY"
+      ],
+      "call_graph": {}
+    },
+    "backup-delete-after-9-05/animation-engine-v2.js": {
+      "language": "javascript",
+      "parsed": true,
+      "functions": {},
+      "classes": {
+        "AnimationEngineV2": {
+          "methods": {
+            "constructor": "()",
+            "resetAnimation": {
+              "signature": "()",
+              "called_by": [
+                "overrideExisting"
+              ]
+            },
+            "animateSlotMachine": {
+              "signature": "async (columns, scrollContents, predeterminedResults, preservePosition = false)",
+              "called_by": [
+                "overrideAnimations",
+                "overrideAll"
+              ]
+            },
+            "animateQuickSpin": "async (columns, scrollContents, preservePosition = false)",
+            "initializeColumnStates": "(columns, preservePosition = false)",
+            "applyPosition": "(element, unwrappedY, cycleHeight)",
+            "getStateByElement": "(element)",
+            "calculateFutureTarget": "(currentUnwrappedY, winnerIndex, cycleHeight, totalSpins = 1)",
+            "runAnimation": "async (columns, predeterminedResults)",
+            "determinePhase": "(elapsed, state, isFinalSpin = true)",
+            "updateVelocity": {
+              "calls": [
+                "calculateBrakingDistance",
+                "easeOutQuad"
+              ],
+              "signature": "(state, phase, elapsed, cruiseSpeed, dt)"
+            },
+            "calculateBrakingDistance": {
+              "signature": "(velocity)",
+              "called_by": [
+                "AnimationEngineV2.updateVelocity"
+              ]
+            },
+            "isAnimationComplete": "(state, isFinalSpin = true)",
+            "updateBlur": "(element, velocity, phase)",
+            "easeOutQuad": {
+              "signature": "(t)",
+              "called_by": [
+                "AnimationEngineV2.updateVelocity"
+              ]
+            },
+            "easeOutCubic": {
+              "signature": "(t)",
+              "called_by": [
+                "AnimationEngine.spin"
+              ]
+            },
+            "easeOutQuart": "(t)",
+            "createDebugPanel": "()",
+            "updateDebugPanel": "()",
+            "cleanup": {
+              "signature": "()",
+              "called_by": [
+                "overrideAnimations"
+              ]
+            },
+            "forceStopAnimation": "()",
+            "__init__": "()"
+          },
+          "doc": "The Finals Slot Machine Animation Engine v2"
+        }
+      },
+      "constants": {
+        "ITEM_H": "number",
+        "VIEWPORT_H": "number",
+        "CENTER_OFFSET": "number",
+        "ANIM_CONFIG": "collection"
+      },
+      "variables": [
+        "columns",
+        "itemsContainer",
+        "currentTransform",
+        "originalDurations",
+        "itemCount",
+        "cycleHeight",
+        "startPos",
+        "match",
+        "startVelocity",
+        "existingState",
+        "baseOffset",
+        "wrappedY",
+        "snappedY",
+        "targetWrappedPosition",
+        "minDistance",
+        "baseUnwrapped",
+        "targetWrappedRaw",
+        "currentWrappedRaw",
+        "adjustment",
+        "targetUnwrapped",
+        "startTime",
+        "lastTime",
+        "maxDuration",
+        "cruiseSpeed",
+        "isFinalSpin",
+        "totalUnwrapped",
+        "columnCount",
+        "state",
+        "averageUnwrapped",
+        "winnerIndex",
+        "commonTarget",
+        "animate",
+        "dt",
+        "totalElapsed",
+        "intermediateDuration",
+        "allComplete",
+        "prevY",
+        "columnStartDelay",
+        "columnElapsed",
+        "phase",
+        "deltaPos",
+        "exactFinalPosition",
+        "snappedFinal",
+        "verifyTransform",
+        "currentWrapped",
+        "displayWrapped",
+        "cumulativeTime",
+        "distanceToTarget",
+        "currentBrakingDistance",
+        "accelProgress",
+        "jitter",
+        "decelProgress",
+        "targetIntermediate",
+        "brakingDistance",
+        "targetVelocity",
+        "maxVelocityChange",
+        "distance",
+        "totalDuration",
+        "elapsed",
+        "isComplete",
+        "maxSpeed",
+        "blurAmount",
+        "blurMultiplier",
+        "progressToTarget",
+        "panel",
+        "reversalEl",
+        "firstColumn",
+        "brakingDist"
+      ],
+      "call_graph": {}
+    },
+    "backup-delete-after-9-05/animation-friendly-fix.css": {
+      "language": "css",
+      "parsed": false
+    },
+    "backup-delete-after-9-05/app.js": {
       "language": "javascript",
       "parsed": true,
       "purpose": "Application entry point",
@@ -950,11 +1101,11 @@
       ],
       "call_graph": {}
     },
-    "automated-flow-styles.css": {
+    "backup-delete-after-9-05/automated-flow-styles.css": {
       "language": "css",
       "parsed": false
     },
-    "automated-flow.js": {
+    "backup-delete-after-9-05/automated-flow.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {},
@@ -986,11 +1137,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runNumberSelectorAnimation",
                 "SmoothSpinAnimation.stopReelsSequentially",
-                "runSlotMachineAnimation",
+                "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation"
+                "runSlotMachineAnimation"
               ]
             },
             "getSelections": "()",
@@ -1072,16 +1223,16 @@
       ],
       "call_graph": {}
     },
-    "automated-test.html": {
+    "backup-delete-after-9-05/automated-test.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
     },
-    "bonus-styles.css": {
+    "backup-delete-after-9-05/bonus-styles.css": {
       "language": "css",
       "parsed": false
     },
-    "bonus-system.js": {
+    "backup-delete-after-9-05/bonus-system.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {},
@@ -1215,7 +1366,7 @@
       ],
       "call_graph": {}
     },
-    "class-selection-fix.js": {
+    "backup-delete-after-9-05/class-selection-fix.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -1257,19 +1408,19 @@
       ],
       "call_graph": {}
     },
-    "cleanup-old-files.sh": {
+    "backup-delete-after-9-05/cleanup-old-files.sh": {
       "language": "shell",
       "parsed": false
     },
-    "column-alignment-fix.css": {
+    "backup-delete-after-9-05/column-alignment-fix.css": {
       "language": "css",
       "parsed": false
     },
-    "complete-animation-fix.css": {
+    "backup-delete-after-9-05/complete-animation-fix.css": {
       "language": "css",
       "parsed": false
     },
-    "complete-solution.js": {
+    "backup-delete-after-9-05/complete-solution.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -1312,8 +1463,8 @@
           ],
           "signature": "async ()",
           "called_by": [
-            "startSlotMachine",
-            "PremiumIntegratedSlotMachine.checkAutoStart"
+            "PremiumIntegratedSlotMachine.checkAutoStart",
+            "startSlotMachine"
           ]
         },
         "sleep": {
@@ -1361,11 +1512,11 @@
       ],
       "call_graph": {}
     },
-    "comprehensive-fix.css": {
+    "backup-delete-after-9-05/comprehensive-fix.css": {
       "language": "css",
       "parsed": false
     },
-    "consistent-spin-animation.js": {
+    "backup-delete-after-9-05/consistent-spin-animation.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -1384,8 +1535,8 @@
             "animateSlotMachine": {
               "signature": "async (columns, winners)",
               "called_by": [
-                "overrideAll",
-                "overrideAnimations"
+                "overrideAnimations",
+                "overrideAll"
               ]
             },
             "setupContainers": "(columns)",
@@ -1396,11 +1547,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runNumberSelectorAnimation",
                 "SmoothSpinAnimation.stopReelsSequentially",
-                "runSlotMachineAnimation",
+                "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation"
+                "runSlotMachineAnimation"
               ]
             },
             "cleanup": {
@@ -1455,19 +1606,19 @@
       ],
       "call_graph": {}
     },
-    "critical-css.html": {
+    "backup-delete-after-9-05/critical-css.html": {
       "language": "html",
       "parsed": false
     },
-    "debug-app.js": {
+    "backup-delete-after-9-05/debug-app.js": {
       "language": "javascript",
       "parsed": false
     },
-    "debug-button.html": {
+    "backup-delete-after-9-05/debug-button.html": {
       "language": "html",
       "parsed": false
     },
-    "diagnostic-overlay.js": {
+    "backup-delete-after-9-05/diagnostic-overlay.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -1541,7 +1692,7 @@
       ],
       "call_graph": {}
     },
-    "downward-spin-fix.js": {
+    "backup-delete-after-9-05/downward-spin-fix.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -1559,8 +1710,8 @@
             "animateSlotMachine": {
               "signature": "async (columns, winners)",
               "called_by": [
-                "overrideAll",
-                "overrideAnimations"
+                "overrideAnimations",
+                "overrideAll"
               ]
             },
             "startSpinning": "()",
@@ -1575,11 +1726,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runNumberSelectorAnimation",
                 "SmoothSpinAnimation.stopReelsSequentially",
-                "runSlotMachineAnimation",
+                "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation"
+                "runSlotMachineAnimation"
               ]
             },
             "__init__": "()"
@@ -1618,7 +1769,7 @@
       ],
       "call_graph": {}
     },
-    "enhanced-app.js": {
+    "backup-delete-after-9-05/enhanced-app.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {},
@@ -1705,11 +1856,11 @@
       ],
       "call_graph": {}
     },
-    "filter-system.js": {
+    "backup-delete-after-9-05/filter-system.js": {
       "language": "javascript",
       "parsed": false
     },
-    "final-position-fix.js": {
+    "backup-delete-after-9-05/final-position-fix.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {},
@@ -1742,24 +1893,24 @@
       ],
       "call_graph": {}
     },
-    "final-test.html": {
+    "backup-delete-after-9-05/final-test.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
     },
-    "force-reload.html": {
+    "backup-delete-after-9-05/force-reload.html": {
       "language": "html",
       "parsed": false
     },
-    "history-styles-refined.css": {
+    "backup-delete-after-9-05/history-styles-refined.css": {
       "language": "css",
       "parsed": false
     },
-    "history-styles.css": {
+    "backup-delete-after-9-05/history-styles.css": {
       "language": "css",
       "parsed": false
     },
-    "history-system-enhanced.js": {
+    "backup-delete-after-9-05/history-system-enhanced.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -1796,7 +1947,7 @@
       ],
       "call_graph": {}
     },
-    "history-system.js": {
+    "backup-delete-after-9-05/history-system.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {},
@@ -1927,68 +2078,63 @@
       ],
       "call_graph": {}
     },
-    "image-preloader.js": {
+    "backup-delete-after-9-05/image-preloader.js": {
       "language": "javascript",
       "parsed": false
     },
-    "index-backup-$(date +%Y%m%d-%H%M%S).html": {
+    "backup-delete-after-9-05/index-backup-$(date +%Y%m%d-%H%M%S).html": {
       "language": "html",
       "parsed": false
     },
-    "index-backup-20250824.html": {
+    "backup-delete-after-9-05/index-backup-20250824.html": {
       "language": "html",
       "parsed": false
     },
-    "index-backup-delete-after-9-05.html": {
+    "backup-delete-after-9-05/index-backup-delete-after-9-05.html": {
       "language": "html",
       "parsed": false
     },
-    "index-backup.html": {
+    "backup-delete-after-9-05/index-backup.html": {
       "language": "html",
       "parsed": false
     },
-    "index-complete-fix.html": {
+    "backup-delete-after-9-05/index-complete-fix.html": {
       "language": "html",
       "parsed": false
     },
-    "index-fast-spins.html": {
+    "backup-delete-after-9-05/index-fast-spins.html": {
       "language": "html",
       "parsed": false
     },
-    "index-final-clean.html": {
+    "backup-delete-after-9-05/index-final-clean.html": {
       "language": "html",
       "parsed": false
     },
-    "index-final-fix.html": {
+    "backup-delete-after-9-05/index-final-fix.html": {
       "language": "html",
       "parsed": false
     },
-    "index-optimized.html": {
+    "backup-delete-after-9-05/index-optimized.html": {
       "language": "html",
       "parsed": false
     },
-    "index-production-fix.html": {
+    "backup-delete-after-9-05/index-production-fix.html": {
       "language": "html",
       "parsed": false
     },
-    "index-smooth-spin.html": {
+    "backup-delete-after-9-05/index-smooth-spin.html": {
       "language": "html",
       "parsed": false
     },
-    "index-working.html": {
+    "backup-delete-after-9-05/index-working.html": {
       "language": "html",
       "parsed": false
     },
-    "index.html": {
-      "language": "html",
-      "parsed": false,
-      "purpose": "Application entry point"
-    },
-    "layout-fixes.css": {
+    "backup-delete-after-9-05/layout-fixes.css": {
       "language": "css",
       "parsed": false
     },
-    "lazy-images.js": {
+    "backup-delete-after-9-05/lazy-images.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -2025,7 +2171,7 @@
       ],
       "call_graph": {}
     },
-    "loadout-loader.js": {
+    "backup-delete-after-9-05/loadout-loader.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -2051,23 +2197,15 @@
       ],
       "call_graph": {}
     },
-    "package-lock.json": {
-      "language": "json",
-      "parsed": false
-    },
-    "package.json": {
-      "language": "json",
-      "parsed": false
-    },
-    "polish-styles-fixed.css": {
+    "backup-delete-after-9-05/polish-styles-fixed.css": {
       "language": "css",
       "parsed": false
     },
-    "polish-styles.css": {
+    "backup-delete-after-9-05/polish-styles.css": {
       "language": "css",
       "parsed": false
     },
-    "position-fix.js": {
+    "backup-delete-after-9-05/position-fix.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -2141,143 +2279,7 @@
       ],
       "call_graph": {}
     },
-    "premium-integrated.js": {
-      "language": "javascript",
-      "parsed": true,
-      "functions": {},
-      "classes": {
-        "PremiumIntegratedSlotMachine": {
-          "methods": {
-            "constructor": "()",
-            "init": {
-              "calls": [
-                "checkApp",
-                "setupEventListeners",
-                "setupSlotMachine"
-              ],
-              "signature": "()",
-              "called_by": [
-                "Application.setup"
-              ]
-            },
-            "waitForApp": {
-              "calls": [
-                "setupEventListeners",
-                "setupSlotMachine"
-              ],
-              "signature": "()"
-            },
-            "setupSlotMachine": {
-              "signature": "()",
-              "called_by": [
-                "PremiumIntegratedSlotMachine.init",
-                "PremiumIntegratedSlotMachine.waitForApp"
-              ]
-            },
-            "setupPremiumColumns": "()",
-            "setupEventListeners": {
-              "signature": "()",
-              "called_by": [
-                "PremiumIntegratedSlotMachine.init",
-                "PremiumIntegratedSlotMachine.waitForApp"
-              ]
-            },
-            "selectSpins": "(count)",
-            "selectClass": "(classType)",
-            "updateAppState": {
-              "signature": "()",
-              "called_by": [
-                "startSlotMachine"
-              ]
-            },
-            "randomizeEverything": "async ()",
-            "updateGenerateButton": {
-              "signature": "()",
-              "called_by": [
-                "startSlotMachine"
-              ]
-            },
-            "checkAutoStart": {
-              "calls": [
-                "startSlotMachine"
-              ],
-              "signature": "()"
-            },
-            "startSlotMachine": {
-              "signature": "async ()",
-              "called_by": [
-                "PremiumIntegratedSlotMachine.checkAutoStart",
-                "startSlotMachine"
-              ]
-            },
-            "populatePremiumColumns": {
-              "calls": [
-                "generateItemList"
-              ],
-              "signature": "(loadout)"
-            },
-            "generateItemList": {
-              "signature": "(winner, type)",
-              "called_by": [
-                "PremiumIntegratedSlotMachine.populatePremiumColumns"
-              ]
-            },
-            "getGameData": "()",
-            "getImagePath": "(itemName)",
-            "animatePremiumSpin": "async (isFinalSpin)",
-            "showWinners": "()",
-            "createSparks": "()",
-            "sleep": {
-              "signature": "(ms)",
-              "called_by": [
-                "startSlotMachine"
-              ]
-            },
-            "__init__": "()"
-          },
-          "doc": "Premium Integrated Slot Machine"
-        },
-        "selection": {
-          "methods": {},
-          "doc": "Premium Integrated Slot Machine"
-        }
-      },
-      "variables": [
-        "checkApp",
-        "app",
-        "container",
-        "columns",
-        "column",
-        "randomBtn",
-        "generateBtn",
-        "btn",
-        "className",
-        "spinBtns",
-        "i",
-        "finalSpin",
-        "classBtns",
-        "classes",
-        "finalClass",
-        "counter",
-        "columnData",
-        "itemsContainer",
-        "item",
-        "itemDiv",
-        "imagePath",
-        "data",
-        "pool",
-        "normalized",
-        "duration",
-        "targetPosition",
-        "spark"
-      ],
-      "call_graph": {}
-    },
-    "PROJECT_INDEX.json": {
-      "language": "json",
-      "parsed": false
-    },
-    "quick-spins-fix.js": {
+    "backup-delete-after-9-05/quick-spins-fix.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -2356,11 +2358,11 @@
       ],
       "call_graph": {}
     },
-    "real-slot-machine.css": {
+    "backup-delete-after-9-05/real-slot-machine.css": {
       "language": "css",
       "parsed": false
     },
-    "real-slot-machine.js": {
+    "backup-delete-after-9-05/real-slot-machine.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {},
@@ -2438,11 +2440,11 @@
       ],
       "call_graph": {}
     },
-    "selection-styles.css": {
+    "backup-delete-after-9-05/selection-styles.css": {
       "language": "css",
       "parsed": false
     },
-    "simple-spin-animation.js": {
+    "backup-delete-after-9-05/simple-spin-animation.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {},
@@ -2479,19 +2481,19 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runNumberSelectorAnimation",
                 "SmoothSpinAnimation.stopReelsSequentially",
-                "runSlotMachineAnimation",
+                "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation"
+                "runSlotMachineAnimation"
               ]
             },
             "quickSpin": "async (columns)",
             "animateSlotMachine": {
               "signature": "async (columns, scrollContents, predeterminedResults, preservePosition)",
               "called_by": [
-                "overrideAll",
-                "overrideAnimations"
+                "overrideAnimations",
+                "overrideAll"
               ]
             },
             "animateQuickSpin": {
@@ -2545,15 +2547,15 @@
       ],
       "call_graph": {}
     },
-    "slot-center-fix.css": {
+    "backup-delete-after-9-05/slot-center-fix.css": {
       "language": "css",
       "parsed": false
     },
-    "slot-machine-fixes.css": {
+    "backup-delete-after-9-05/slot-machine-fixes.css": {
       "language": "css",
       "parsed": false
     },
-    "slot-machine-mobile-fix.js": {
+    "backup-delete-after-9-05/slot-machine-mobile-fix.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -2581,7 +2583,7 @@
       ],
       "call_graph": {}
     },
-    "slot-machine.js": {
+    "backup-delete-after-9-05/slot-machine.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {},
@@ -2781,7 +2783,7 @@
       ],
       "call_graph": {}
     },
-    "smooth-animation-engine.js": {
+    "backup-delete-after-9-05/smooth-animation-engine.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -2800,8 +2802,8 @@
             "animateSlotMachine": {
               "signature": "async (columns, winners)",
               "called_by": [
-                "overrideAll",
-                "overrideAnimations"
+                "overrideAnimations",
+                "overrideAll"
               ]
             },
             "startSpinning": "(containers)",
@@ -2822,11 +2824,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runNumberSelectorAnimation",
                 "SmoothSpinAnimation.stopReelsSequentially",
-                "runSlotMachineAnimation",
+                "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation"
+                "runSlotMachineAnimation"
               ]
             },
             "cleanup": {
@@ -2877,11 +2879,11 @@
       ],
       "call_graph": {}
     },
-    "sound-integration-patch.js": {
+    "backup-delete-after-9-05/sound-integration-patch.js": {
       "language": "javascript",
       "parsed": false
     },
-    "sound-manager-fixed.js": {
+    "backup-delete-after-9-05/sound-manager-fixed.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {},
@@ -2920,7 +2922,7 @@
       ],
       "call_graph": {}
     },
-    "sound-manager.js": {
+    "backup-delete-after-9-05/sound-manager.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {},
@@ -2958,71 +2960,71 @@
       ],
       "call_graph": {}
     },
-    "spin-animation.css": {
+    "backup-delete-after-9-05/spin-animation.css": {
       "language": "css",
       "parsed": false
     },
-    "style-override-fix.css": {
+    "backup-delete-after-9-05/style-override-fix.css": {
       "language": "css",
       "parsed": false
     },
-    "style.css": {
+    "backup-delete-after-9-05/style.css": {
       "language": "css",
       "parsed": false
     },
-    "styles-complete.css": {
+    "backup-delete-after-9-05/styles-complete.css": {
       "language": "css",
       "parsed": false
     },
-    "styles-consolidated.css": {
+    "backup-delete-after-9-05/styles-consolidated.css": {
       "language": "css",
       "parsed": false
     },
-    "sw.js": {
+    "backup-delete-after-9-05/sw.js": {
       "language": "javascript",
       "parsed": false
     },
-    "test-all-fixes.html": {
+    "backup-delete-after-9-05/test-all-fixes.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
     },
-    "test-clean.html": {
+    "backup-delete-after-9-05/test-clean.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
     },
-    "test-diagnostics.html": {
+    "backup-delete-after-9-05/test-diagnostics.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
     },
-    "test-enhanced.html": {
+    "backup-delete-after-9-05/test-enhanced.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
     },
-    "test-mobile-fill.html": {
+    "backup-delete-after-9-05/test-mobile-fill.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
     },
-    "test-performance.html": {
+    "backup-delete-after-9-05/test-performance.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
     },
-    "test-position-fix.html": {
+    "backup-delete-after-9-05/test-position-fix.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
     },
-    "test-real-slot.html": {
+    "backup-delete-after-9-05/test-real-slot.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
     },
-    "test-runner.js": {
+    "backup-delete-after-9-05/test-runner.js": {
       "language": "javascript",
       "parsed": true,
       "purpose": "Test file",
@@ -3064,28 +3066,28 @@
       ],
       "call_graph": {}
     },
-    "test-viewport-height.html": {
+    "backup-delete-after-9-05/test-viewport-height.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
     },
-    "ultimate-alignment-fix.css": {
+    "backup-delete-after-9-05/ultimate-alignment-fix.css": {
       "language": "css",
       "parsed": false
     },
-    "ultimate-fix-v2.css": {
+    "backup-delete-after-9-05/ultimate-fix-v2.css": {
       "language": "css",
       "parsed": false
     },
-    "ultimate-height-fix.css": {
+    "backup-delete-after-9-05/ultimate-height-fix.css": {
       "language": "css",
       "parsed": false
     },
-    "unified-fix.css": {
+    "backup-delete-after-9-05/unified-fix.css": {
       "language": "css",
       "parsed": false
     },
-    "verify-animation.js": {
+    "backup-delete-after-9-05/verify-animation.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {
@@ -3163,20 +3165,20 @@
       ],
       "call_graph": {}
     },
-    "verify-complete-fix.html": {
+    "backup-delete-after-9-05/verify-complete-fix.html": {
       "language": "html",
       "parsed": false
     },
-    "viewport-fix.css": {
+    "backup-delete-after-9-05/viewport-fix.css": {
       "language": "css",
       "parsed": false
     },
-    "visual-test.html": {
+    "backup-delete-after-9-05/visual-test.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
     },
-    "winner-lock.js": {
+    "backup-delete-after-9-05/winner-lock.js": {
       "language": "javascript",
       "parsed": true,
       "functions": {},
@@ -3307,8 +3309,8 @@
             "updateLightPosition": {
               "signature": "(speed)",
               "called_by": [
-                "NumberSelector.runAcceleration",
-                "NumberSelector.runHighSpeed"
+                "NumberSelector.runHighSpeed",
+                "NumberSelector.runAcceleration"
               ]
             },
             "selectNumber": "(number)",
@@ -3318,11 +3320,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runNumberSelectorAnimation",
                 "SmoothSpinAnimation.stopReelsSequentially",
-                "runSlotMachineAnimation",
+                "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation"
+                "runSlotMachineAnimation"
               ]
             },
             "playSound": {
@@ -3381,11 +3383,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runNumberSelectorAnimation",
                 "SmoothSpinAnimation.stopReelsSequentially",
-                "runSlotMachineAnimation",
+                "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation"
+                "runSlotMachineAnimation"
               ]
             },
             "playSound": {
@@ -3473,11 +3475,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "runNumberSelectorAnimation",
                 "SmoothSpinAnimation.stopReelsSequentially",
-                "runSlotMachineAnimation",
+                "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runClassRouletteAnimation"
+                "runSlotMachineAnimation"
               ]
             },
             "playSound": {
@@ -3742,5 +3744,5 @@
       "path"
     ]
   },
-  "staleness_check": 1756069633.782654
+  "staleness_check": 1756069961.870974
 }
