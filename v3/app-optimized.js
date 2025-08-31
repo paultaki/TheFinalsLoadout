@@ -269,7 +269,7 @@
         
         // Simple approach: Generate LOTS of items for mobile to guarantee fill
         const isMobile = window.innerWidth <= 768;
-        const totalItems = isMobile ? 150 : 50; // 150 items on mobile, 50 on desktop
+        const totalItems = isMobile ? 250 : 50; // 250 items on mobile for complete fill, 50 on desktop
         
         console.log(`📱 Initial population - Generating ${totalItems} placeholder items (${isMobile ? 'Mobile' : 'Desktop'})`);
         
@@ -322,8 +322,8 @@
       
       // Simple, bulletproof approach: Generate LOTS of items on mobile
       const isMobile = window.innerWidth <= 768;
-      const totalItems = isMobile ? 150 : 50; // 150 items on mobile ensures full coverage
-      const winnerIndex = Math.floor(totalItems / 2); // Winner in the middle
+      const totalItems = isMobile ? 250 : 50; // 250 items on mobile for complete fill
+      const winnerIndex = Math.floor(totalItems / 2); // Winner in the middle (125 on mobile, 25 on desktop)
       
       console.log(`🎰 Populating ${type} - ${totalItems} items (${isMobile ? 'Mobile' : 'Desktop'}), winner at ${winnerIndex}`);
       
@@ -343,6 +343,12 @@
         column.itemHeight = items[0].offsetHeight || 80;
       } else {
         column.itemHeight = 80;
+      }
+      
+      // Log winner item for debugging
+      const winnerItem = items[winnerIndex];
+      if (winnerItem && winnerItem.dataset.winner === 'true') {
+        console.log(`✅ Winner item confirmed at index ${winnerIndex} for ${type}`);
       }
     }
 
@@ -458,19 +464,40 @@
       
       // Use stored values from populateColumn for accuracy
       const winnerIndex = column.winnerIndex || 20;
-      const itemHeight = column.itemHeight || 80; // Use actual measured height
+      const itemHeight = column.itemHeight || 80;
       
       // Get the actual viewport height
       const slotWindow = column.element.querySelector('.slot-window');
       const viewportHeight = slotWindow ? slotWindow.offsetHeight : 240;
       
-      // Center the winner item in the viewport
-      const centerOffset = (viewportHeight - itemHeight) / 2;
-      const targetPosition = -(winnerIndex * itemHeight - centerOffset);
+      // Mobile needs different calculation due to different viewport
+      const isMobile = window.innerWidth <= 768;
       
-      console.log(`🎯 Animation: Winner ${winnerIndex}, Item Height: ${itemHeight}px, Target: ${targetPosition}px`);
+      // Calculate where to position the winner
+      // We want the winner item to be in the center of the viewport
+      let targetPosition;
+      if (isMobile) {
+        // On mobile, account for larger viewport and more items
+        // Winner is at index 125 out of 250 items
+        const itemsAboveViewport = winnerIndex - Math.floor(viewportHeight / itemHeight / 2);
+        targetPosition = -(itemsAboveViewport * itemHeight);
+      } else {
+        // Desktop calculation (unchanged)
+        const centerOffset = (viewportHeight - itemHeight) / 2;
+        targetPosition = -(winnerIndex * itemHeight - centerOffset);
+      }
+      
+      console.log(`🎯 Animation: Winner ${winnerIndex}, Item Height: ${itemHeight}px, Viewport: ${viewportHeight}px, Target: ${targetPosition}px, Mobile: ${isMobile}`);
       
       await this.animationEngine.spin(itemsContainer, duration, targetPosition);
+      
+      // Extra log to confirm final position
+      if (isFinalSpin) {
+        setTimeout(() => {
+          const winners = column.element.querySelectorAll('[data-winner="true"]');
+          console.log(`🏆 Final check - Found ${winners.length} winner in ${column.type}`);
+        }, duration + 100);
+      }
     }
 
     highlightWinners() {
