@@ -219,13 +219,45 @@
           return;
         }
         
-        // Run spins
-        for (let i = 1; i <= selectedSpins; i++) {
-          await app.slotMachine.spin(loadout, i, selectedSpins);
-          if (i < selectedSpins) {
-            await sleep(200);
+        // Store original method
+        const originalGenerateLoadout = app.uiController.generateLoadout.bind(app.uiController);
+        
+        // Temporarily override to use our spin count
+        app.uiController.generateLoadout = async function() {
+          const selectedClass = app.stateManager.state.selectedClass;
+          if (!selectedClass || app.stateManager.state.isGenerating) return;
+          
+          app.stateManager.state.isGenerating = true;
+          app.uiController.updateGenerateButton(true);
+          
+          try {
+            const loadout = app.uiController.createRandomLoadout(selectedClass);
+            
+            // Use our selectedSpins instead of random
+            console.log(`Running ${selectedSpins} spins`);
+            for (let i = 1; i <= selectedSpins; i++) {
+              await app.slotMachine.spin(loadout, i, selectedSpins);
+              if (i < selectedSpins) {
+                await sleep(100);
+              }
+            }
+            
+            app.uiController.addToHistory(loadout);
+            app.uiController.showSpinAgain();
+          } catch (error) {
+            console.error('Failed to generate loadout:', error);
+            app.uiController.showError('Failed to generate loadout. Please try again.');
+          } finally {
+            app.stateManager.state.isGenerating = false;
+            app.uiController.updateGenerateButton(false);
           }
-        }
+        };
+        
+        // Now trigger it
+        await app.uiController.generateLoadout();
+        
+        // Restore original method
+        app.uiController.generateLoadout = originalGenerateLoadout;
         
         // Add to history
         if (app.uiController.historyManager) {

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Finals - Premium Loadout Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <style>
+        /* Premium Vegas-Style Slot Machine Design */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #ff3366, #ff6699);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(255, 51, 102, 0.5);
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        /* Premium Slot Machine Container */
+        .slot-machine-premium {
+            width: 90%;
+            max-width: 900px;
+            background: linear-gradient(180deg, #1a1a1a 0%, #111 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 
+                0 0 100px rgba(255, 51, 102, 0.2),
+                inset 0 2px 10px rgba(0, 0, 0, 0.5),
+                inset 0 -2px 10px rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Glow Effects */
+        .slot-machine-premium::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 51, 102, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Top Controls Section */
+        .controls-section {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 30px;
+        }
+
+        /* Random Everything Button */
+        .random-all-premium {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #6a1b9a, #ff3366);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 30px rgba(106, 27, 154, 0.4),
+                inset 0 2px 5px rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .random-all-premium::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+
+        .random-all-premium:hover::after {
+            animation: shine 0.5s ease-in-out;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+
+        .random-all-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 15px 40px rgba(106, 27, 154, 0.6),
+                inset 0 2px 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .dice-icon {
+            font-size: 2rem;
+            animation: roll 2s ease-in-out infinite;
+        }
+
+        @keyframes roll {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
+        }
+
+        /* Selection Grid */
+        .selection-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .selection-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 51, 102, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .selection-title {
+            color: #888;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .selection-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Selection Buttons */
+        .select-btn {
+            flex: 1;
+            min-width: 40px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #888;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .select-btn:hover {
+            border-color: rgba(255, 51, 102, 0.5);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .select-btn.active {
+            background: linear-gradient(135deg, #ff3366, #ff6699);
+            border-color: #ff3366;
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 51, 102, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(255, 51, 102, 0.6); }
+        }
+
+        /* Class Buttons Special Styling */
+        .class-btn-premium {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 10px;
+            gap: 5px;
+        }
+
+        .class-icon-premium {
+            font-size: 1.5rem;
+        }
+
+        /* Slot Display Area */
+        .slot-display {
+            background: #000;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            position: relative;
+            box-shadow: 
+                inset 0 5px 15px rgba(0, 0, 0, 0.8),
+                0 0 50px rgba(255, 51, 102, 0.1);
+        }
+
+        /* Spin Counter */
+        .spin-counter {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff3366, #ff6699);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
+            z-index: 100;
+        }
+
+        /* Slot Columns */
+        .slot-columns {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            min-height: 300px;
+        }
+
+        .slot-column {
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+            border-radius: 10px;
+            padding: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .column-header {
+            text-align: center;
+            color: #666;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 51, 102, 0.2);
+            margin-bottom: 15px;
+        }
+
+        .slot-window {
+            height: 240px;
+            overflow: hidden;
+            position: relative;
+            mask-image: linear-gradient(
+                transparent, 
+                black 10%, 
+                black 90%, 
+                transparent
+            );
+        }
+
+        .slot-items {
+            position: absolute;
+            width: 100%;
+            transition: transform 3s cubic-bezier(0.17, 0.67, 0.16, 0.99);
+        }
+
+        .slot-item {
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            position: relative;
+        }
+
+        .slot-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+        }
+
+        .slot-item-name {
+            font-size: 0.7rem;
+            color: #888;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .slot-item.winner {
+            animation: winnerFlash 1s ease-out;
+        }
+
+        @keyframes winnerFlash {
+            0% { background: transparent; }
+            50% { 
+                background: radial-gradient(circle, rgba(255, 51, 102, 0.4) 0%, transparent 70%);
+                transform: scale(1.1);
+            }
+            100% { background: rgba(255, 51, 102, 0.1); }
+        }
+
+        /* Spinning Animation */
+        @keyframes spin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-2400px); }
+        }
+
+        .spinning .slot-items {
+            animation: spin 3s cubic-bezier(0.17, 0.67, 0.16, 0.99);
+        }
+
+        /* Victory Effects */
+        .victory-sparks {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffeb3b;
+            border-radius: 50%;
+            animation: sparkle 1s ease-out forwards;
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--x), var(--y)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Generate Button */
+        .generate-button {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff3366, #ff6699);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generate-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .generate-button:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title { font-size: 2.5rem; }
+            .slot-columns { grid-template-columns: repeat(3, 1fr); }
+            .selection-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .slot-columns { grid-template-columns: repeat(2, 1fr); }
+            .slot-machine-premium { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1 class="title">THE FINALS</h1>
+        <h1 class="title">RANDOM LOADOUT GENERATOR</h1>
+        <p class="subtitle">Challenge Yourself With Unique Builds</p>
+    </header>
+
+    <!-- Premium Slot Machine Container -->
+    <div class="slot-machine-premium">
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <!-- Random Everything Button -->
+            <button class="random-all-premium" id="randomAllBtn">
+                <span class="dice-icon">🎲</span>
+                <span>RANDOM EVERYTHING</span>
+            </button>
+
+            <!-- Selection Grid -->
+            <div class="selection-grid">
+                <!-- Spin Selection -->
+                <div class="selection-panel">
+                    <div class="selection-title">Select # of Spins</div>
+                    <div class="selection-options">
+                        <button class="select-btn spin-btn" data-spins="1">1</button>
+                        <button class="select-btn spin-btn" data-spins="2">2</button>
+                        <button class="select-btn spin-btn" data-spins="3">3</button>
+                        <button class="select-btn spin-btn" data-spins="4">4</button>
+                        <button class="select-btn spin-btn" data-spins="5">5</button>
+                    </div>
+                </div>
+
+                <!-- Class Selection -->
+                <div class="selection-panel">
+                    <div class="selection-title">Select Your Class</div>
+                    <div class="selection-options">
+                        <button class="select-btn class-btn-premium" data-class="light">
+                            <span class="class-icon-premium">⚡</span>
+                            <span>LIGHT</span>
+                        </button>
+                        <button class="select-btn class-btn-premium" data-class="medium">
+                            <span class="class-icon-premium">⚔️</span>
+                            <span>MEDIUM</span>
+                        </button>
+                        <button class="select-btn class-btn-premium" data-class="heavy">
+                            <span class="class-icon-premium">🛡️</span>
+                            <span>HEAVY</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slot Display Area -->
+        <div class="slot-display" id="slotDisplay">
+            <div class="spin-counter" id="spinCounter" style="display: none;">
+                SPIN <span id="currentSpin">1</span> OF <span id="totalSpins">3</span>
+            </div>
+
+            <!-- Slot Columns -->
+            <div class="slot-columns" id="slotColumns">
+                <!-- Columns will be dynamically generated -->
+            </div>
+        </div>
+
+        <!-- Generate Button -->
+        <button class="generate-button" id="generateBtn" disabled>
+            SELECT OPTIONS ABOVE
+        </button>
+    </div>
+
+    <!-- Victory Sparks Container -->
+    <div class="victory-sparks" id="victorySparks"></div>
+
+    <script>
+        // Premium Slot Machine Controller
+        class PremiumSlotMachine {
+            constructor() {
+                this.selectedSpins = null;
+                this.selectedClass = null;
+                this.isAnimating = false;
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setupSlotColumns();
+                console.log('🎰 Premium Slot Machine Initialized');
+            }
+
+            setupSlotColumns() {
+                const container = document.getElementById('slotColumns');
+                const columns = ['WEAPON', 'SPECIALIZATION', 'GADGET 1', 'GADGET 2', 'GADGET 3'];
+                
+                columns.forEach(col => {
+                    const column = document.createElement('div');
+                    column.className = 'slot-column';
+                    column.innerHTML = `
+                        <div class="column-header">${col}</div>
+                        <div class="slot-window">
+                            <div class="slot-items"></div>
+                        </div>
+                    `;
+                    container.appendChild(column);
+                });
+            }
+
+            setupEventListeners() {
+                // Random All Button
+                document.getElementById('randomAllBtn').addEventListener('click', () => {
+                    this.randomizeEverything();
+                });
+
+                // Spin Buttons
+                document.querySelectorAll('.spin-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.selectSpins(parseInt(btn.dataset.spins));
+                    });
+                });
+
+                // Class Buttons
+                document.querySelectorAll('.class-btn-premium').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.selectClass(btn.dataset.class);
+                    });
+                });
+
+                // Generate Button
+                document.getElementById('generateBtn').addEventListener('click', () => {
+                    this.startSlotMachine();
+                });
+            }
+
+            selectSpins(count) {
+                document.querySelectorAll('.spin-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector(`.spin-btn[data-spins="${count}"]`).classList.add('active');
+                this.selectedSpins = count;
+                this.updateGenerateButton();
+            }
+
+            selectClass(classType) {
+                document.querySelectorAll('.class-btn-premium').forEach(b => b.classList.remove('active'));
+                document.querySelector(`.class-btn-premium[data-class="${classType}"]`).classList.add('active');
+                this.selectedClass = classType;
+                this.updateGenerateButton();
+            }
+
+            async randomizeEverything() {
+                if (this.isAnimating) return;
+                this.isAnimating = true;
+
+                // Animate spin selection
+                const spinBtns = document.querySelectorAll('.spin-btn');
+                for (let i = 0; i < 15; i++) {
+                    spinBtns.forEach(b => b.classList.remove('active'));
+                    spinBtns[i % spinBtns.length].classList.add('active');
+                    await this.sleep(50 + (i > 10 ? i * 10 : 0));
+                }
+                const finalSpin = Math.floor(Math.random() * 4) + 2;
+                this.selectSpins(finalSpin);
+
+                await this.sleep(300);
+
+                // Animate class selection
+                const classBtns = document.querySelectorAll('.class-btn-premium');
+                for (let i = 0; i < 12; i++) {
+                    classBtns.forEach(b => b.classList.remove('active'));
+                    classBtns[i % classBtns.length].classList.add('active');
+                    await this.sleep(60 + (i > 8 ? i * 15 : 0));
+                }
+                const classes = ['light', 'medium', 'heavy'];
+                const finalClass = classes[Math.floor(Math.random() * 3)];
+                this.selectClass(finalClass);
+
+                this.isAnimating = false;
+                
+                // Auto-start after selection
+                setTimeout(() => this.startSlotMachine(), 500);
+            }
+
+            updateGenerateButton() {
+                const btn = document.getElementById('generateBtn');
+                if (this.selectedSpins && this.selectedClass) {
+                    btn.disabled = false;
+                    btn.textContent = `GENERATE ${this.selectedSpins} SPIN${this.selectedSpins > 1 ? 'S' : ''} - ${this.selectedClass.toUpperCase()}`;
+                } else {
+                    btn.disabled = true;
+                    btn.textContent = 'SELECT OPTIONS ABOVE';
+                }
+            }
+
+            async startSlotMachine() {
+                if (!this.selectedSpins || !this.selectedClass) return;
+
+                const btn = document.getElementById('generateBtn');
+                btn.disabled = true;
+                btn.textContent = 'SPINNING...';
+
+                // Show spin counter
+                const counter = document.getElementById('spinCounter');
+                counter.style.display = 'block';
+                document.getElementById('totalSpins').textContent = this.selectedSpins;
+
+                // Simulate spins
+                for (let i = 1; i <= this.selectedSpins; i++) {
+                    document.getElementById('currentSpin').textContent = i;
+                    
+                    // Add spinning animation
+                    document.querySelectorAll('.slot-column').forEach(col => {
+                        col.classList.add('spinning');
+                    });
+
+                    await this.sleep(3000);
+
+                    // Remove spinning
+                    document.querySelectorAll('.slot-column').forEach(col => {
+                        col.classList.remove('spinning');
+                    });
+
+                    if (i === this.selectedSpins) {
+                        this.createSparks();
+                    }
+
+                    if (i < this.selectedSpins) {
+                        await this.sleep(500);
+                    }
+                }
+
+                counter.style.display = 'none';
+                btn.disabled = false;
+                this.updateGenerateButton();
+            }
+
+            createSparks() {
+                const container = document.getElementById('victorySparks');
+                container.innerHTML = '';
+                
+                for (let i = 0; i < 20; i++) {
+                    const spark = document.createElement('div');
+                    spark.className = 'spark';
+                    spark.style.setProperty('--x', `${(Math.random() - 0.5) * 200}px`);
+                    spark.style.setProperty('--y', `${(Math.random() - 0.5) * 200}px`);
+                    spark.style.animationDelay = `${Math.random() * 0.5}s`;
+                    container.appendChild(spark);
+                }
+
+                setTimeout(() => container.innerHTML = '', 1000);
+            }
+
+            sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            window.premiumSlot = new PremiumSlotMachine();
+        });
+    </script>
+</body>
+</html>

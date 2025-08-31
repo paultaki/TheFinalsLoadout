@@ -370,9 +370,18 @@
         'FCAR': 'FCAR'
       };
       
+      // Add missing items to special cases
+      const additionalCases = {
+        'Stun Gun': 'Stun_Gun',
+        'Motion Sensor': 'Motion_Sensor'
+      };
+      
       // Check if it's a special case
       if (specialCases[itemName]) {
         return `/images/${specialCases[itemName]}.webp`;
+      }
+      if (additionalCases[itemName]) {
+        return `/images/${additionalCases[itemName]}.webp`;
       }
       
       // For regular items, convert spaces to underscores and capitalize each word
