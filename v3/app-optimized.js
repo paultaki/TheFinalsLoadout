@@ -832,7 +832,8 @@
   const app = new Application();
   app.init();
 
-  // Export for debugging
+  // Export for debugging and compatibility
   window.FinalsLoadoutApp = app;
+  window.app = app; // Also expose as 'app' for easier access
 
 })();

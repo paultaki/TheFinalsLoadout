@@ -143,9 +143,15 @@
     // Monitor button state
     setInterval(updateGenerateButton, 100);
     
+    // Get app reference
+    function getApp() {
+      return window.FinalsLoadoutApp || window.app;
+    }
+    
     // Update app state
     function updateAppState() {
-      if (typeof app !== 'undefined' && app && app.stateManager && selectedClass) {
+      const app = getApp();
+      if (app && app.stateManager && selectedClass) {
         // Capitalize first letter for state (Light, Medium, Heavy)
         const className = selectedClass.charAt(0).toUpperCase() + selectedClass.slice(1);
         app.stateManager.state.selectedClass = className;
@@ -164,10 +170,12 @@
     // Start slot machine
     async function startSlotMachine() {
       const generateBtn = document.getElementById('generate-btn');
+      const app = getApp();
       
-      // Check if app is ready
-      if (typeof app === 'undefined' || !app || !app.uiController) {
-        console.error('App not ready');
+      // Check if app is ready - wait if not
+      if (!app || !app.uiController || !app.slotMachine) {
+        console.log('App not ready, waiting...');
+        setTimeout(() => startSlotMachine(), 500);
         return;
       }
       
@@ -183,6 +191,16 @@
         // Use proper capitalized class name for GameData
         const className = selectedClass.charAt(0).toUpperCase() + selectedClass.slice(1);
         
+        console.log(`Starting slot machine: ${selectedSpins} spins, ${className} class`);
+        
+        // Check if createRandomLoadout exists
+        if (!app.uiController.createRandomLoadout) {
+          console.error('createRandomLoadout method not found');
+          // Try direct generation as fallback
+          await app.uiController.generateLoadout();
+          return;
+        }
+        
         // Generate loadout
         const loadout = app.uiController.createRandomLoadout(className);
         
@@ -191,6 +209,14 @@
         if (slotContainer) {
           slotContainer.style.display = 'block';
           slotContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Check if spin method exists
+        if (!app.slotMachine || !app.slotMachine.spin) {
+          console.error('Slot machine spin method not found');
+          // Try triggering generate button directly
+          await app.uiController.generateLoadout();
+          return;
         }
         
         // Run spins
