@@ -268,13 +268,17 @@
         
         itemsContainer.innerHTML = '';
         
-        // Generate 80 items for smooth spinning with no gaps on mobile
-        // Winner is at position 25 for better centering
-        for (let i = 0; i < 80; i++) {
-          const item = i === 25 ? data.winner : data.items[Math.floor(Math.random() * data.items.length)];
+        // Generate more items on mobile to fill the taller viewport
+        const isMobile = window.innerWidth <= 768;
+        const totalItems = isMobile ? 400 : 80;
+        const winnerPosition = Math.floor(totalItems / 2); // Center position
+        
+        // Generate items for smooth spinning with no gaps on mobile
+        for (let i = 0; i < totalItems; i++) {
+          const item = i === winnerPosition ? data.winner : data.items[Math.floor(Math.random() * data.items.length)];
           const itemDiv = document.createElement('div');
           itemDiv.className = 'slot-item';
-          if (i === 25) itemDiv.dataset.winner = 'true';
+          if (i === winnerPosition) itemDiv.dataset.winner = 'true';
           
           const imagePath = this.getImagePath(item);
           itemDiv.innerHTML = `
@@ -355,7 +359,14 @@
     
     async animatePremiumSpin(isFinalSpin) {
       const duration = isFinalSpin ? 3000 : 1000;
-      const targetPosition = -2000; // Position to center item 25 (25 * 80px)
+      
+      // Calculate target position based on winner position and item height
+      const isMobile = window.innerWidth <= 768;
+      const winnerPosition = Math.floor((isMobile ? 400 : 80) / 2);
+      const itemHeight = 80; // Approximate item height
+      const viewportHeight = 240; // Slot window height
+      const centerOffset = (viewportHeight - itemHeight) / 2;
+      const targetPosition = -(winnerPosition * itemHeight - centerOffset);
       
       // Animate all columns
       const columns = document.querySelectorAll('.slot-items');

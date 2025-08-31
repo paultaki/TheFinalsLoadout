@@ -289,7 +289,7 @@
         
         // Simple approach: Generate LOTS of items for mobile to guarantee fill
         const isMobile = window.innerWidth <= 768;
-        const totalItems = isMobile ? 250 : 50; // 250 items on mobile for complete fill, 50 on desktop
+        const totalItems = isMobile ? 400 : 50; // 400 items on mobile for complete fill, 50 on desktop
         
         console.log(`📱 Initial population - Generating ${totalItems} placeholder items (${isMobile ? 'Mobile' : 'Desktop'})`);
         
@@ -342,8 +342,8 @@
       
       // Simple, bulletproof approach: Generate LOTS of items on mobile
       const isMobile = window.innerWidth <= 768;
-      const totalItems = isMobile ? 250 : 50; // 250 items on mobile for complete fill
-      const winnerIndex = Math.floor(totalItems / 2); // Winner in the middle (125 on mobile, 25 on desktop)
+      const totalItems = isMobile ? 400 : 50; // 400 items on mobile for complete fill
+      const winnerIndex = Math.floor(totalItems / 2); // Winner in the middle (200 on mobile, 25 on desktop)
       
       console.log(`🎰 Populating ${type} - ${totalItems} items (${isMobile ? 'Mobile' : 'Desktop'}), winner at ${winnerIndex}`);
       

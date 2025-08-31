@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Slot Test with Iframe</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            color: white;
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .controls {
+            background: #1a1a1a;
+            padding: 10px;
+            border-bottom: 2px solid #333;
+            flex-shrink: 0;
+        }
+        .status {
+            background: #222;
+            padding: 5px 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        button {
+            background: #FF1493;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #ff69b4;
+        }
+        .pass { color: #4CAF50; }
+        .fail { color: #f44336; }
+        iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+        .mobile-view {
+            max-width: 375px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <div class="status" id="status">Loading...</div>
+        <button onclick="checkSlots()">Check Slots</button>
+        <button onclick="toggleView()">Toggle Mobile View</button>
+        <button onclick="triggerSpin()">Trigger Random Spin</button>
+        <button onclick="location.reload()">Reload</button>
+    </div>
+    
+    <iframe id="slot-frame" src="index.html"></iframe>
+    
+    <script>
+        let isMobile = false;
+        const frame = document.getElementById('slot-frame');
+        const status = document.getElementById('status');
+        
+        function checkSlots() {
+            try {
+                const frameDoc = frame.contentDocument;
+                const frameWin = frame.contentWindow;
+                
+                // Check columns
+                const columns = frameDoc.querySelectorAll('.slot-column');
+                const isMobileView = frameWin.innerWidth <= 768;
+                const expectedItems = isMobileView ? 400 : 50;
+                
+                let statusText = `View: ${isMobileView ? 'Mobile' : 'Desktop'} | `;
+                statusText += `Columns: ${columns.length} | `;
+                
+                if (columns.length > 0) {
+                    const items = columns[0].querySelectorAll('.slot-item').length;
+                    const isGood = items >= expectedItems;
+                    statusText += `Items: ${items}/${expectedItems} `;
+                    statusText += isGood ? '✓' : '✗ (Click Check Slots again)';
+                    status.className = isGood ? 'status pass' : 'status fail';
+                } else {
+                    statusText += 'No columns found!';
+                    status.className = 'status fail';
+                }
+                
+                status.textContent = statusText;
+                
+                // Don't auto-populate - just report the status
+                // Auto-populating was causing infinite loop
+            } catch (e) {
+                status.textContent = 'Error: ' + e.message;
+                status.className = 'status fail';
+            }
+        }
+        
+        function toggleView() {
+            if (isMobile) {
+                frame.classList.remove('mobile-view');
+                isMobile = false;
+            } else {
+                frame.classList.add('mobile-view');
+                isMobile = true;
+            }
+            setTimeout(checkSlots, 500);
+        }
+        
+        function triggerSpin() {
+            try {
+                const frameDoc = frame.contentDocument;
+                const randomBtn = frameDoc.getElementById('random-all-btn');
+                if (randomBtn) {
+                    randomBtn.click();
+                    status.textContent = 'Spin triggered! Wait for animation...';
+                    setTimeout(checkSlots, 5000);
+                } else {
+                    status.textContent = 'Random button not found';
+                }
+            } catch (e) {
+                status.textContent = 'Error: ' + e.message;
+            }
+        }
+        
+        // Check after iframe loads
+        frame.onload = function() {
+            setTimeout(checkSlots, 1500); // Wait for app to initialize
+        };
+    </script>
+</body>
+</html>
