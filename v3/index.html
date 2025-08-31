@@ -1,526 +1,724 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
-    <link rel="canonical" href="https://www.thefinalsloadout.com/" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Finals - Premium Loadout Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <style>
+        /* Premium Vegas-Style Slot Machine Design */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <!-- Jam.dev Recording & Capture -->
-    <meta name="jam:team" content="89d666eb-996b-4246-949a-939265963095" />
-    <script type="module" src="https://js.jam.dev/recorder.js"></script>
-    <script type="module" src="https://js.jam.dev/capture.js"></script>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
 
-    <!-- Performance Hints -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        /* Header */
+        .header {
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-    <!-- Preload Critical Resources -->
-    <!-- <link rel="preload" href="../images/the-finals-logo.webp" as="image" type="image/webp" fetchpriority="high"> -->
-    <link rel="preload" href="style.css" as="style" />
+        .title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #ff3366, #ff6699);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(255, 51, 102, 0.5);
+        }
 
-    <!-- Meta Tags -->
-    <title>
-      The Finals BEST Random Loadout Generator | Fun & Unique Loadouts
-    </title>
-    <meta
-      name="description"
-      content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles."
-    />
-    <meta name="author" content="Paul Takisaki" />
+        .subtitle {
+            color: #888;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/images/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/images/favicon-16x16.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/images/favicon-92x192.png"
-    />
+        /* Premium Slot Machine Container */
+        .slot-machine-premium {
+            width: 90%;
+            max-width: 900px;
+            background: linear-gradient(180deg, #1a1a1a 0%, #111 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 
+                0 0 100px rgba(255, 51, 102, 0.2),
+                inset 0 2px 10px rgba(0, 0, 0, 0.5),
+                inset 0 -2px 10px rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="The Finals Loadout Roulette" />
-    <meta
-      property="og:description"
-      content="Randomize your loadout and dominate The Finals with style."
-    />
-    <meta
-      property="og:image"
-      content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png"
-    />
-    <meta property="og:url" content="https://www.thefinalsloadout.com/" />
-    <meta property="og:type" content="website" />
+        /* Glow Effects */
+        .slot-machine-premium::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 51, 102, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="The Finals Loadout Roulette" />
-    <meta
-      name="twitter:description"
-      content="Spin the wheel. Wreck the arena."
-    />
-    <meta
-      name="twitter:image"
-      content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png"
-    />
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
 
-    <!-- Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
+        /* Top Controls Section */
+        .controls-section {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 30px;
+        }
 
-    <!-- Complete Consolidated Styles - All styles in one file -->
-    <link rel="stylesheet" href="/v3/styles-complete.css?v=20250830" />
-  </head>
-  <body>
-    <!-- Skip to Main Content Link for Screen Readers -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    
-    <!-- Scroll Progress Bar -->
-    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+        /* Random Everything Button */
+        .random-all-premium {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #6a1b9a, #ff3366);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 30px rgba(106, 27, 154, 0.4),
+                inset 0 2px 5px rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
 
-    <!-- Return to Top Button -->
-    <button
-      class="return-to-top"
-      id="returnToTop"
-      aria-label="Return to top"
-      title="Return to top"
-    >
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <polyline points="18 15 12 9 6 15"></polyline>
-      </svg>
-    </button>
+        .random-all-premium::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
 
-    <!-- Navigation -->
-    <nav class="main-nav" role="navigation" aria-label="Main navigation">
-      <div class="nav-links">
-        <a href="/" class="nav-link active">LOADOUT GENERATOR</a>
-        <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
-        <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
-        <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
-        <a href="/wt-progress/" class="nav-link">WORLD TOUR TRACKER (NEW)</a>
-      </div>
-      <div class="nav-controls">
-        <!-- Filter Toggle Button -->
-        <button
-          id="filter-toggle"
-          class="filter-toggle-button nav-button"
-          aria-label="Toggle filters"
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <polygon
-              points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
-            ></polygon>
-          </svg>
+        .random-all-premium:hover::after {
+            animation: shine 0.5s ease-in-out;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+
+        .random-all-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 15px 40px rgba(106, 27, 154, 0.6),
+                inset 0 2px 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .dice-icon {
+            font-size: 2rem;
+            animation: roll 2s ease-in-out infinite;
+        }
+
+        @keyframes roll {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
+        }
+
+        /* Selection Grid */
+        .selection-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .selection-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 51, 102, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .selection-title {
+            color: #888;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .selection-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Selection Buttons */
+        .select-btn {
+            flex: 1;
+            min-width: 40px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #888;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .select-btn:hover {
+            border-color: rgba(255, 51, 102, 0.5);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .select-btn.active {
+            background: linear-gradient(135deg, #ff3366, #ff6699);
+            border-color: #ff3366;
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 51, 102, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(255, 51, 102, 0.6); }
+        }
+
+        /* Class Buttons Special Styling */
+        .class-btn-premium {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 10px;
+            gap: 5px;
+        }
+
+        .class-icon-premium {
+            font-size: 1.5rem;
+        }
+
+        /* Slot Display Area */
+        .slot-display {
+            background: #000;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            position: relative;
+            box-shadow: 
+                inset 0 5px 15px rgba(0, 0, 0, 0.8),
+                0 0 50px rgba(255, 51, 102, 0.1);
+        }
+
+        /* Spin Counter */
+        .spin-counter {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff3366, #ff6699);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
+            z-index: 100;
+        }
+
+        /* Slot Columns */
+        .slot-columns {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            min-height: 300px;
+        }
+
+        .slot-column {
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+            border-radius: 10px;
+            padding: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .column-header {
+            text-align: center;
+            color: #666;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 51, 102, 0.2);
+            margin-bottom: 15px;
+        }
+
+        .slot-window {
+            height: 240px;
+            overflow: hidden;
+            position: relative;
+            mask-image: linear-gradient(
+                transparent, 
+                black 10%, 
+                black 90%, 
+                transparent
+            );
+            -webkit-mask-image: linear-gradient(
+                transparent, 
+                black 10%, 
+                black 90%, 
+                transparent
+            );
+        }
+
+        .slot-items {
+            position: absolute;
+            width: 100%;
+            transition: transform 3s cubic-bezier(0.17, 0.67, 0.16, 0.99);
+        }
+
+        .slot-item {
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            position: relative;
+        }
+
+        .slot-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+        }
+
+        .slot-item-name {
+            font-size: 0.7rem;
+            color: #888;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .slot-item.winner {
+            animation: winnerFlash 1s ease-out;
+        }
+
+        @keyframes winnerFlash {
+            0% { background: transparent; }
+            50% { 
+                background: radial-gradient(circle, rgba(255, 51, 102, 0.4) 0%, transparent 70%);
+                transform: scale(1.1);
+            }
+            100% { background: rgba(255, 51, 102, 0.1); }
+        }
+
+        /* Spinning Animation */
+        @keyframes spin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-2400px); }
+        }
+
+        .spinning .slot-items {
+            animation: spin 3s cubic-bezier(0.17, 0.67, 0.16, 0.99);
+        }
+
+        /* Victory Effects */
+        .victory-sparks {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffeb3b;
+            border-radius: 50%;
+            animation: sparkle 1s ease-out forwards;
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--x), var(--y)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Generate Button */
+        .generate-button {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff3366, #ff6699);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generate-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .generate-button:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.4);
+        }
+
+        /* Responsive - Keep all 5 columns visible */
+        @media (max-width: 768px) {
+            .title { 
+                font-size: 2.5rem; 
+                line-height: 1.1;
+            }
+            
+            .slot-machine-premium {
+                width: 95%;
+                padding: 20px 15px;
+            }
+            
+            .selection-grid { 
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            /* Keep all 5 columns but make them narrower */
+            .slot-columns { 
+                grid-template-columns: repeat(5, 1fr);
+                gap: 8px;
+            }
+            
+            .slot-column {
+                padding: 5px;
+            }
+            
+            .column-header {
+                font-size: 0.65rem;
+                padding: 8px 2px;
+                letter-spacing: 0;
+            }
+            
+            .slot-window {
+                height: 210px; /* Exactly 3 items at 70px each */
+                mask-image: linear-gradient(
+                    black 0%, 
+                    black 100%
+                );
+                -webkit-mask-image: linear-gradient(
+                    black 0%, 
+                    black 100%
+                );
+            }
+            
+            .slot-item {
+                height: 70px;
+                padding: 8px 5px;
+                background: linear-gradient(180deg, transparent, rgba(0,0,0,0.2), transparent);
+            }
+            
+            .slot-item img {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .slot-item-name {
+                font-size: 0.6rem;
+                line-height: 1.1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title { 
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 0.8rem;
+            }
+            
+            .slot-machine-premium { 
+                width: 98%;
+                padding: 15px 10px;
+                border-radius: 15px;
+            }
+            
+            /* Still keep all 5 columns, just even narrower */
+            .slot-columns { 
+                grid-template-columns: repeat(5, 1fr);
+                gap: 5px;
+            }
+            
+            .slot-column {
+                padding: 3px;
+                border-radius: 8px;
+            }
+            
+            .column-header {
+                font-size: 0.55rem;
+                padding: 6px 2px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .slot-window {
+                height: 180px; /* Exactly 3 items at 60px each */
+                mask-image: linear-gradient(
+                    black 0%, 
+                    black 100%
+                );
+                -webkit-mask-image: linear-gradient(
+                    black 0%, 
+                    black 100%
+                );
+                /* Add subtle background for continuity */
+                background: linear-gradient(to bottom,
+                    rgba(138, 43, 226, 0.03) 0%,
+                    rgba(138, 43, 226, 0.06) 50%,
+                    rgba(138, 43, 226, 0.03) 100%);
+            }
+            
+            .slot-item {
+                height: 60px;
+                padding: 5px 3px;
+                background: linear-gradient(135deg,
+                    rgba(30, 30, 40, 0.7) 0%,
+                    rgba(25, 25, 35, 0.9) 100%);
+                margin: 0;
+                border-bottom: 1px solid rgba(138, 43, 226, 0.1);
+            }
+            
+            .slot-item img {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .slot-item-name {
+                font-size: 0.55rem;
+                margin-top: 2px;
+            }
+            
+            .random-all-premium {
+                padding: 15px;
+                font-size: 1.2rem;
+            }
+            
+            .selection-options {
+                gap: 5px;
+            }
+            
+            .select-btn {
+                min-width: 35px;
+                padding: 8px 5px;
+                font-size: 0.9rem;
+            }
+            
+            .class-btn-premium {
+                padding: 10px 5px;
+            }
+            
+            .class-icon-premium {
+                font-size: 1.2rem;
+            }
+            
+            .generate-button {
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+            
+            .spin-counter {
+                font-size: 0.8rem;
+                padding: 4px 12px;
+                top: -12px;
+                right: 10px;
+            }
+        }
+        
+        /* Ultra small screens */
+        @media (max-width: 360px) {
+            .slot-columns {
+                gap: 3px;
+            }
+            
+            .column-header {
+                font-size: 0.5rem;
+                padding: 5px 1px;
+            }
+            
+            .slot-window {
+                height: 165px; /* Exactly 3 items at 55px each */
+            }
+            
+            .slot-item {
+                height: 55px;
+            }
+            
+            .slot-item img {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .slot-item-name {
+                font-size: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1 class="title">THE FINALS</h1>
+        <h1 class="title">RANDOM LOADOUT GENERATOR</h1>
+        <p class="subtitle">Challenge Yourself With Unique Builds</p>
+    </header>
+
+    <!-- Premium Slot Machine Container -->
+    <div class="slot-machine-premium">
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <!-- Random Everything Button -->
+            <button class="random-all-premium" id="randomAllBtn">
+                <span class="dice-icon">🎲</span>
+                <span>RANDOM EVERYTHING</span>
+            </button>
+
+            <!-- Selection Grid -->
+            <div class="selection-grid">
+                <!-- Spin Selection -->
+                <div class="selection-panel">
+                    <div class="selection-title">Select # of Spins</div>
+                    <div class="selection-options">
+                        <button class="select-btn spin-btn" data-spins="1">1</button>
+                        <button class="select-btn spin-btn" data-spins="2">2</button>
+                        <button class="select-btn spin-btn" data-spins="3">3</button>
+                        <button class="select-btn spin-btn" data-spins="4">4</button>
+                        <button class="select-btn spin-btn" data-spins="5">5</button>
+                    </div>
+                </div>
+
+                <!-- Class Selection -->
+                <div class="selection-panel">
+                    <div class="selection-title">Select Your Class</div>
+                    <div class="selection-options">
+                        <button class="select-btn class-btn-premium" data-class="light">
+                            <span class="class-icon-premium">⚡</span>
+                            <span>LIGHT</span>
+                        </button>
+                        <button class="select-btn class-btn-premium" data-class="medium">
+                            <span class="class-icon-premium">⚔️</span>
+                            <span>MEDIUM</span>
+                        </button>
+                        <button class="select-btn class-btn-premium" data-class="heavy">
+                            <span class="class-icon-premium">🛡️</span>
+                            <span>HEAVY</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slot Display Area -->
+        <div class="slot-display" id="slotDisplay">
+            <div class="spin-counter" id="spinCounter" style="display: none;">
+                SPIN <span id="currentSpin">1</span> OF <span id="totalSpins">3</span>
+            </div>
+
+            <!-- Slot Columns -->
+            <div class="slot-columns" id="premiumSlotColumns">
+                <!-- Columns will be dynamically generated -->
+            </div>
+        </div>
+
+        <!-- Generate Button -->
+        <button class="generate-button" id="generateBtn" disabled>
+            SELECT OPTIONS ABOVE
         </button>
-        <!-- Sound Toggle Button -->
-        <button
-          id="sound-toggle"
-          class="sound-toggle-button nav-button"
-          aria-label="Toggle sound"
-        >
-          <svg
-            class="sound-on"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path
-              d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
-            ></path>
-          </svg>
-          <svg
-            class="sound-off"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            style="display: none"
-          >
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <line x1="23" y1="9" x2="17" y2="15"></line>
-            <line x1="17" y1="9" x2="23" y2="15"></line>
-          </svg>
-        </button>
-      </div>
-    </nav>
-
-    <!-- Filter Panel (Hidden by default) -->
-    <div id="filter-panel-overlay" class="filter-panel-overlay"></div>
-    <div id="filter-panel" class="filter-panel">
-      <div class="filter-header">
-        <h3 class="filter-title">FILTERS</h3>
-        <button
-          id="clear-all-filters"
-          class="filter-clear-all"
-          aria-label="Clear all filters"
-        >
-          CLEAR ALL
-        </button>
-        <button
-          id="close-filter-panel"
-          class="filter-close"
-          aria-label="Close filters"
-        >
-          ×
-        </button>
-      </div>
-      <div class="filter-content">
-        <!-- Weapons Filter -->
-        <div class="filter-category" data-category="weapons">
-          <div class="filter-category-header">
-            <span class="filter-category-title">WEAPONS</span>
-            <span class="filter-count" id="weapons-count">0/0</span>
-          </div>
-          <div class="filter-controls">
-            <button class="filter-control-btn" data-action="select-all">
-              Select All
-            </button>
-            <button class="filter-control-btn" data-action="select-none">
-              Clear
-            </button>
-            <button class="filter-control-btn" data-action="select-meta">
-              Meta Only
-            </button>
-          </div>
-          <div class="filter-items" id="weapons-filters">
-            <!-- Populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Specializations Filter -->
-        <div class="filter-category" data-category="specializations">
-          <div class="filter-category-header">
-            <span class="filter-category-title">SPECIALIZATIONS</span>
-            <span class="filter-count" id="specializations-count">0/0</span>
-          </div>
-          <div class="filter-controls">
-            <button class="filter-control-btn" data-action="select-all">
-              Select All
-            </button>
-            <button class="filter-control-btn" data-action="select-none">
-              Clear
-            </button>
-          </div>
-          <div class="filter-items" id="specializations-filters">
-            <!-- Populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Gadgets Filter -->
-        <div class="filter-category" data-category="gadgets">
-          <div class="filter-category-header">
-            <span class="filter-category-title">GADGETS</span>
-            <span class="filter-count" id="gadgets-count">0/0</span>
-          </div>
-          <div class="filter-controls">
-            <button class="filter-control-btn" data-action="select-all">
-              Select All
-            </button>
-            <button class="filter-control-btn" data-action="select-none">
-              Clear
-            </button>
-            <button class="filter-control-btn" data-action="select-utility">
-              Utility Only
-            </button>
-          </div>
-          <div class="filter-items" id="gadgets-filters">
-            <!-- Populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Quick Presets -->
-        <div class="filter-presets">
-          <h4 class="preset-title">QUICK PRESETS</h4>
-          <div class="preset-buttons">
-            <button class="preset-btn" data-preset="meta">META BUILD</button>
-            <button class="preset-btn" data-preset="meme">MEME BUILD</button>
-            <button class="preset-btn" data-preset="tryhard">TRYHARD</button>
-            <button class="preset-btn" data-preset="casual">CASUAL</button>
-          </div>
-        </div>
-
-        <!-- Apply/Reset -->
-        <div class="filter-actions">
-          <button id="apply-filters" class="apply-filters-btn">
-            APPLY FILTERS
-          </button>
-          <button id="reset-filters" class="reset-filters-btn">
-            RESET ALL
-          </button>
-        </div>
-      </div>
     </div>
 
-    <!-- Main Content -->
-    <main class="container">
-      <!-- Header -->
-      <header class="header">
-        <!-- <img src="../images/the-finals-logo.webp" alt="The Finals Logo" class="logo"> -->
-        <h1 class="title">THE FINALS<br />RANDOM LOADOUT GENERATOR</h1>
-        <p class="subtitle">CHALLENGE YOURSELF WITH UNIQUE BUILDS</p>
-      </header>
+    <!-- Victory Sparks Container -->
+    <div class="victory-sparks" id="victorySparks"></div>
 
-      <!-- Random Button for All -->
-      <section class="controls top-controls">
-        <button id="random-all-btn" class="random-all-btn primary-btn">
-          <span class="random-icon">🎲</span>
-          <span>RANDOM EVERYTHING</span>
-        </button>
-      </section>
+    <!-- Hidden container for app initialization -->
+    <div id="slot-machine-container" style="display: none;">
+        <!-- The app needs this container to initialize -->
+    </div>
 
-      <!-- Spin Selection -->
-      <section class="spin-selection" id="spin-selection">
-        <h2 class="section-title">SELECT NUMBER OF SPINS</h2>
-        <div class="spin-options">
-          <button class="spin-btn" data-spins="1">1</button>
-          <button class="spin-btn" data-spins="2">2</button>
-          <button class="spin-btn" data-spins="3">3</button>
-          <button class="spin-btn" data-spins="4">4</button>
-          <button class="spin-btn" data-spins="5">5</button>
-        </div>
-      </section>
-
-      <!-- Class Selection -->
-      <section class="class-selection" id="class-selection">
-        <h2 class="section-title">SELECT YOUR CLASS</h2>
-        <div class="class-options">
-          <button class="class-btn" data-class="light">
-            <span class="class-icon">⚡</span>
-            <span class="class-name">LIGHT</span>
-          </button>
-          <button class="class-btn" data-class="medium">
-            <span class="class-icon">⚔️</span>
-            <span class="class-name">MEDIUM</span>
-          </button>
-          <button class="class-btn" data-class="heavy">
-            <span class="class-icon">🛡️</span>
-            <span class="class-name">HEAVY</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- Generate Button (moved after selections) -->
-      <section class="controls top-controls">
-        <button id="generate-btn" class="generate-btn primary-btn" disabled>
-          SELECT OPTIONS ABOVE
-        </button>
-      </section>
-      
-      <!-- Pre-Slot Animation Container (hidden for now) -->
-      <section id="pre-slot-container" class="pre-slot-container" style="display: none;">
-        <!-- Will be populated by AutomatedFlowManager if needed -->
-      </section>
-
-      <!-- Slot Machine Container -->
-      <section
-        id="slot-machine-container"
-        class="slot-machine-container"
-      >
-        <div class="slot-machine">
-          <div class="slot-header">
-            <h2 class="slot-title">SPINNING YOUR LOADOUT...</h2>
-            <div class="class-indicator">
-              <span class="class-label">CLASS:</span>
-              <span class="class-value" id="selected-class">-</span>
-            </div>
-          </div>
-
-          <!-- Slot Columns -->
-          <div class="slot-columns">
-            <div class="slot-column" data-type="weapon">
-              <div class="column-header">WEAPON</div>
-              <div class="slot-window">
-                <div class="slot-items"></div>
-              </div>
-            </div>
-
-            <div class="slot-column" data-type="specialization">
-              <div class="column-header">SPECIALIZATION</div>
-              <div class="slot-window">
-                <div class="slot-items"></div>
-              </div>
-            </div>
-
-            <div class="slot-column" data-type="gadget1">
-              <div class="column-header">GADGET 1</div>
-              <div class="slot-window">
-                <div class="slot-items"></div>
-              </div>
-            </div>
-
-            <div class="slot-column" data-type="gadget2">
-              <div class="column-header">GADGET 2</div>
-              <div class="slot-window">
-                <div class="slot-items"></div>
-              </div>
-            </div>
-
-            <div class="slot-column" data-type="gadget3">
-              <div class="column-header">GADGET 3</div>
-              <div class="slot-window">
-                <div class="slot-items"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Result Display -->
-        <div id="loadout-result" class="loadout-result" style="display: none">
-          <h3 class="result-title">YOUR LOADOUT</h3>
-          <div class="result-items">
-            <!-- Results will be populated here -->
-          </div>
-          <div class="result-analysis">
-            <!-- AI Analysis placeholder -->
-          </div>
-          <!-- Spin Again Button (moved inside result container) -->
-          <div class="spin-again-container" id="spin-again-section">
-            <button
-              id="spin-again-btn"
-              class="spin-again-btn primary-btn"
-            >
-              SPIN AGAIN
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- History Section -->
-      <section id="history-section" class="history-section">
-        <h2 class="section-title">LOADOUT HISTORY</h2>
-        <div id="history-container" class="history-container">
-          <p class="empty-history">
-            No loadouts generated yet. Click the button above to start!
-          </p>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer" style="text-align:center;padding:1.5rem 1rem;color:#888;margin-top:2rem;border-top:1px solid rgba(255,255,255,0.1);background:rgba(10,10,15,0.9);position:relative;z-index:10;font-size:0.75rem;">
-      <!-- Support Section -->
-      <div style="margin-bottom:1.5rem;padding:1.5rem;background:linear-gradient(135deg,rgba(80,200,120,0.05) 0%,rgba(0,255,204,0.05) 100%);border-radius:12px;border:1px solid rgba(80,200,120,0.2);">
-        <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;">
-          <span style="font-size:1.5rem;">☕</span>
-          <div>
-            <p style="margin:0;color:#50c878;font-weight:600;font-size:0.9rem;">Enjoying the loadout generator?</p>
-            <p style="margin:0.25rem 0 0.75rem 0;color:#b8bfc6;font-size:0.8rem;">Help keep it running with a coffee!</p>
-          </div>
-        </div>
-        <a href="https://ko-fi.com/nextroundonme" target="_blank" rel="noopener" style="display:inline-block;padding:0.75rem 2rem;background:linear-gradient(135deg,#50c878,#00ffcc);color:#0a0a0f;text-decoration:none;border-radius:8px;font-weight:700;font-size:0.9rem;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(80,200,120,0.3);position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 25px rgba(80,200,120,0.5)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 15px rgba(80,200,120,0.3)';">
-          <span style="position:relative;z-index:1;">💚 Support Me</span>
-        </a>
-      </div>
-      
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3>About</h3>
-          <p>
-            The Finals Random Loadout Generator creates unique weapon and gadget
-            combinations for every class.
-          </p>
-        </div>
-        <div class="footer-section">
-          <h3>Connect</h3>
-          <p>
-            Created by
-            <a
-              href="https://www.paultakisaki.com/"
-              target="_blank"
-              rel="noopener"
-              >Paul Takisaki</a
-            >
-          </p>
-          <p>
-            <a
-              href="https://github.com/yourgithub"
-              target="_blank"
-              rel="noopener"
-              >GitHub</a
-            >
-          </p>
-        </div>
-        <div class="footer-section">
-          <h3>Legal</h3>
-          <p>
-            The Finals is a trademark of Embark Studios. This is a fan-made
-            tool.
-          </p>
-          <p>&copy; 2024 The Finals Loadout Generator</p>
-        </div>
-      </div>
-    </footer>
-
-    <!-- Audio Elements (Preloaded but not auto-playing) -->
-    <!-- Sounds disabled - files not in v2 directory -->
-    <!-- <audio id="clickSound" src="../sounds/click.mp3" preload="auto"></audio>
-    <audio id="spinSound" src="../sounds/spinning.mp3" preload="auto"></audio>
-    <audio id="winSound" src="../sounds/chang.mp3" preload="auto"></audio> -->
-
-    <!-- Scripts -->
-    <!-- Name to Asset Resolver (must load first) -->
-    <!-- Optimized JavaScript - Reduced from 15 files to 1 -->
-    <script src="/v3/app-optimized.js?v=20250830" defer></script>
+    <!-- Load the main app scripts -->
+    <script src="/v3/app-optimized.js"></script>
     
-    <!-- Complete Solution - All features working -->
-    <script src="/v3/complete-solution.js?v=20250831" defer></script>
+    <!-- Load the premium integration -->
+    <script src="/v3/premium-integrated.js"></script>
     
-    <!-- Debug Script - Temporary for diagnostics -->
-    <script src="/v3/debug-app.js?v=20250831" defer></script>
-    
-    <!-- Debug overlay for animation -->
-    <div id="anim-debug" style="position:fixed;right:8px;top:8px;padding:6px 8px;background:#111a;color:#0f0;font:12px/1.3 monospace;z-index:9999;border-radius:6px;pointer-events:none;border:1px solid #0f0">IDLE</div>
-
-    <!-- Sentry Error Monitoring -->
-    <script src="https://browser.sentry-cdn.com/7.118.0/bundle.min.js" crossorigin="anonymous"></script>
+    <!-- Victory Sparks positioning fix -->
     <script>
-      Sentry.init({ 
-        dsn: "https://6e4ccf13ff7d6e8aec9f31a703e13358@o4509838584905728.ingest.us.sentry.io/4509838592245760",
-        integrations: [
-          Sentry.browserTracingIntegration(),
-          Sentry.replayIntegration()
-        ],
-        tracesSampleRate: 0.1,
-        replaysSessionSampleRate: 0.1,
-        replaysOnErrorSampleRate: 1.0,
-        environment: "production"
-      });
+        // Fix sparks container positioning
+        window.addEventListener('DOMContentLoaded', () => {
+            const sparksContainer = document.getElementById('victorySparks');
+            if (sparksContainer) {
+                // Move it inside the slot display area
+                const slotDisplay = document.getElementById('slotDisplay');
+                if (slotDisplay) {
+                    slotDisplay.appendChild(sparksContainer);
+                    sparksContainer.style.position = 'absolute';
+                    sparksContainer.style.top = '50%';
+                    sparksContainer.style.left = '50%';
+                    sparksContainer.style.transform = 'translate(-50%, -50%)';
+                    sparksContainer.style.pointerEvents = 'none';
+                    sparksContainer.style.zIndex = '1000';
+                }
+            }
+        });
     </script>
-  </body>
+</body>
 </html>
