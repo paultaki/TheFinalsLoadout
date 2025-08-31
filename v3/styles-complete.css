@@ -457,13 +457,12 @@ a:hover {
   color: white;
 }
 
-.spin-btn.random-spin {
-  min-width: 120px;
+.random-all-btn {
+  min-width: 200px;
   background: linear-gradient(135deg, #6a1b9a, #8e24aa);
-}
-
-.spin-btn.random-spin:hover {
-  transform: translateY(-2px) rotate(2deg);
+  font-size: 1.25rem;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
 }
 
 .random-icon {
