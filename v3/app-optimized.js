@@ -267,27 +267,11 @@
         // Clear any existing items
         itemsContainer.innerHTML = '';
         
-        // Get actual rendered dimensions
-        const slotWindow = element.querySelector('.slot-window');
-        if (!slotWindow) return;
-        
-        // Force layout calculation
-        const rect = slotWindow.getBoundingClientRect();
-        const windowHeight = rect.height || slotWindow.offsetHeight;
-        
-        // Estimate item height (will use actual once we create one)
-        let itemHeight = 80; // Default
+        // Simple approach: Generate LOTS of items for mobile to guarantee fill
         const isMobile = window.innerWidth <= 768;
-        if (isMobile) {
-          itemHeight = 60; // Mobile item height from CSS
-        }
+        const totalItems = isMobile ? 150 : 50; // 150 items on mobile, 50 on desktop
         
-        // Calculate how many items we need
-        const visibleItems = Math.ceil(windowHeight / itemHeight);
-        const bufferItems = isMobile ? 35 : 25; // Extra buffer for mobile
-        const totalItems = Math.max(isMobile ? 80 : 50, visibleItems + (bufferItems * 2));
-        
-        console.log(`📱 Initial population - Height: ${windowHeight}px, Items needed: ${totalItems}`);
+        console.log(`📱 Initial population - Generating ${totalItems} placeholder items (${isMobile ? 'Mobile' : 'Desktop'})`);
         
         // Generate placeholder items
         const items = [];
@@ -336,52 +320,12 @@
       // Clear existing items
       itemsContainer.innerHTML = '';
       
-      // Get actual rendered dimensions to handle mobile viewports
-      const slotWindow = column.element.querySelector('.slot-window');
-      let totalItems = 50; // Default minimum
-      let winnerIndex = 20; // Default winner position
+      // Simple, bulletproof approach: Generate LOTS of items on mobile
+      const isMobile = window.innerWidth <= 768;
+      const totalItems = isMobile ? 150 : 50; // 150 items on mobile ensures full coverage
+      const winnerIndex = Math.floor(totalItems / 2); // Winner in the middle
       
-      if (slotWindow) {
-        // Force a layout calculation to get accurate dimensions
-        const rect = slotWindow.getBoundingClientRect();
-        const windowHeight = rect.height || slotWindow.offsetHeight;
-        
-        // Create a temporary item to measure actual rendered height
-        const tempItem = this.createItem(type, loadout, false);
-        tempItem.style.visibility = 'hidden';
-        tempItem.style.position = 'absolute';
-        itemsContainer.appendChild(tempItem);
-        const actualItemHeight = tempItem.offsetHeight || 80;
-        itemsContainer.removeChild(tempItem);
-        
-        // Calculate items needed to fill viewport completely
-        const visibleItems = Math.ceil(windowHeight / actualItemHeight);
-        
-        // Add significant buffer for scrolling and to ensure full coverage
-        // More buffer needed on mobile due to taller viewports
-        const isMobile = window.innerWidth <= 768;
-        const bufferItems = isMobile ? 30 : 20;
-        
-        // Calculate total items needed
-        totalItems = Math.max(50, visibleItems + (bufferItems * 2));
-        
-        // For mobile, ensure we have extra items to prevent any gaps
-        if (isMobile && totalItems < 80) {
-          totalItems = 80; // Minimum 80 items on mobile
-        }
-        
-        // Position winner in the middle of generated items
-        winnerIndex = Math.floor(totalItems / 2);
-        
-        console.log(`📱 Mobile Fix Debug:
-          Window Height: ${windowHeight}px
-          Actual Item Height: ${actualItemHeight}px
-          Visible Items: ${visibleItems}
-          Buffer: ${bufferItems}x2
-          Total Items: ${totalItems}
-          Winner Index: ${winnerIndex}
-          Is Mobile: ${isMobile}`);
-      }
+      console.log(`🎰 Populating ${type} - ${totalItems} items (${isMobile ? 'Mobile' : 'Desktop'}), winner at ${winnerIndex}`);
       
       // Generate items with responsive count
       const items = [];
@@ -393,7 +337,13 @@
       
       column.items = items;
       column.winnerIndex = winnerIndex; // Store for animation reference
-      column.itemHeight = actualItemHeight || 80; // Store actual height for animation
+      
+      // Get actual item height for animation calculations
+      if (items.length > 0) {
+        column.itemHeight = items[0].offsetHeight || 80;
+      } else {
+        column.itemHeight = 80;
+      }
     }
 
     createItem(type, loadout, isWinner = false) {

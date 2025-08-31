@@ -202,27 +202,10 @@
               ],
               "signature": "(key, newValue, oldValue)"
             },
-            "loadHistory": {
-              "signature": "()",
-              "called_by": [
-                "StateManager.constructor",
-                "StateManager.__init__"
-              ]
-            },
+            "loadHistory": "()",
             "saveHistory": "(history)",
-            "loadSetting": {
-              "signature": "(key, defaultValue)",
-              "called_by": [
-                "StateManager.constructor",
-                "StateManager.__init__"
-              ]
-            },
-            "saveSetting": {
-              "signature": "(key, value)",
-              "called_by": [
-                "UIController.bindSoundToggle"
-              ]
-            },
+            "loadSetting": "(key, defaultValue)",
+            "saveSetting": "(key, value)",
             "__init__": {
               "calls": [
                 "loadHistory",
@@ -241,23 +224,10 @@
                 "easeOutCubic",
                 "getTransformY"
               ],
-              "signature": "(element, duration, targetPosition)",
-              "called_by": [
-                "overrideExisting"
-              ]
+              "signature": "(element, duration, targetPosition)"
             },
-            "getTransformY": {
-              "signature": "(element)",
-              "called_by": [
-                "AnimationEngine.spin"
-              ]
-            },
-            "easeOutCubic": {
-              "signature": "(t)",
-              "called_by": [
-                "AnimationEngine.spin"
-              ]
-            },
+            "getTransformY": "(element)",
+            "easeOutCubic": "(t)",
             "stop": "()",
             "__init__": "()"
           },
@@ -266,27 +236,12 @@
         "SlotMachine": {
           "methods": {
             "constructor": "(container, animationEngine)",
-            "init": {
-              "signature": "()",
-              "called_by": [
-                "Application.setup"
-              ]
-            },
+            "init": "()",
             "populateInitialItems": "()",
-            "spin": {
-              "signature": "async (loadout, spinCount = 1, totalSpins = 1)",
-              "called_by": [
-                "overrideExisting"
-              ]
-            },
+            "spin": "async (loadout, spinCount = 1, totalSpins = 1)",
             "populateColumn": "(column, loadout)",
             "createItem": "(type, loadout, isWinner = false)",
-            "getRandomItem": {
-              "signature": "(type, className)",
-              "called_by": [
-                "generateRandomLoadout"
-              ]
-            },
+            "getRandomItem": "(type, className)",
             "getItemImage": "(itemName)",
             "animateColumn": "async (column, isFinalSpin)",
             "highlightWinners": "()",
@@ -304,12 +259,7 @@
         "UIController": {
           "methods": {
             "constructor": "(stateManager, slotMachine)",
-            "init": {
-              "signature": "()",
-              "called_by": [
-                "Application.setup"
-              ]
-            },
+            "init": "()",
             "bindClassSelection": {
               "calls": [
                 "forEach",
@@ -318,12 +268,7 @@
               "signature": "()"
             },
             "bindGenerateButton": "()",
-            "generateLoadout": {
-              "signature": "async ()",
-              "called_by": [
-                "UIController.bindKeyboardShortcuts"
-              ]
-            },
+            "generateLoadout": "async ()",
             "createRandomLoadout": "(className)",
             "addToHistory": "(loadout)",
             "updateHistoryPanel": "()",
@@ -347,25 +292,13 @@
               "calls": [
                 "get"
               ],
-              "signature": "(isGenerating)",
-              "called_by": [
-                "startSlotMachine"
-              ]
+              "signature": "(isGenerating)"
             },
             "showSpinAgain": "()",
             "updateUI": "()",
             "showError": "(message)",
             "debounce": "(func, wait)",
-            "delay": {
-              "signature": "(ms)",
-              "called_by": [
-                "SmoothSpinAnimation.stopReelsSequentially",
-                "runClassRouletteAnimation",
-                "runNumberSelectorAnimation",
-                "SimpleSpinAnimation.stopReelsRandomly",
-                "runSlotMachineAnimation"
-              ]
-            },
+            "delay": "(ms)",
             "__init__": "(stateManager, slotMachine)"
           },
           "doc": "The Finals Loadout Generator v3 - Optimized"
@@ -381,19 +314,13 @@
               "calls": [
                 "setup"
               ],
-              "signature": "()",
-              "called_by": [
-                "Application.setup"
-              ]
+              "signature": "()"
             },
             "setup": {
               "calls": [
                 "init"
               ],
-              "signature": "()",
-              "called_by": [
-                "Application.init"
-              ]
+              "signature": "()"
             },
             "handleInitError": "(error)",
             "__init__": "()"
@@ -401,90 +328,8 @@
           "doc": "The Finals Loadout Generator v3 - Optimized"
         }
       },
-      "constants": {
-        "CONFIG": "collection"
-      },
-      "variables": [
-        "oldValue",
-        "callbacks",
-        "stored",
-        "limited",
-        "settings",
-        "startTime",
-        "startPosition",
-        "distance",
-        "animate",
-        "elapsed",
-        "progress",
-        "eased",
-        "currentPosition",
-        "transform",
-        "matrix",
-        "values",
-        "columnTypes",
-        "column",
-        "itemsContainer",
-        "slotWindow",
-        "rect",
-        "windowHeight",
-        "itemHeight",
-        "isMobile",
-        "visibleItems",
-        "bufferItems",
-        "totalItems",
-        "items",
-        "i",
-        "div",
-        "animations",
-        "winnerIndex",
-        "tempItem",
-        "actualItemHeight",
-        "item",
-        "content",
-        "imgSrc",
-        "gadgetIndex",
-        "data",
-        "pool",
-        "specialCases",
-        "additionalCases",
-        "normalized",
-        "duration",
-        "viewportHeight",
-        "centerOffset",
-        "targetPosition",
-        "announcement",
-        "winners",
-        "counter",
-        "selectedClass",
-        "className",
-        "generateBtn",
-        "spinAgainBtn",
-        "loadout",
-        "totalSpins",
-        "weapon",
-        "specialization",
-        "gadgets",
-        "availableGadgets",
-        "index",
-        "history",
-        "historyContent",
-        "now",
-        "diff",
-        "soundToggle",
-        "enabled",
-        "historyToggle",
-        "historyPanel",
-        "closeHistory",
-        "clearHistory",
-        "isOpen",
-        "classes",
-        "classBtn",
-        "later",
-        "slotContainer",
-        "container",
-        "app"
-      ],
-      "call_graph": {}
+      "updated_by_hook": true,
+      "updated_at": "2025-08-31T14:19:50.541052"
     },
     "index.html": {
       "language": "html",
