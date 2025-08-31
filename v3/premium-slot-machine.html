@@ -483,7 +483,7 @@
             </div>
 
             <!-- Slot Columns -->
-            <div class="slot-columns" id="slotColumns">
+            <div class="slot-columns" id="premiumSlotColumns">
                 <!-- Columns will be dynamically generated -->
             </div>
         </div>
@@ -497,189 +497,30 @@
     <!-- Victory Sparks Container -->
     <div class="victory-sparks" id="victorySparks"></div>
 
+    <!-- Load the main app scripts -->
+    <script src="/v3/app-optimized.js"></script>
+    
+    <!-- Load the premium integration -->
+    <script src="/v3/premium-integrated.js"></script>
+    
+    <!-- Victory Sparks positioning fix -->
     <script>
-        // Premium Slot Machine Controller
-        class PremiumSlotMachine {
-            constructor() {
-                this.selectedSpins = null;
-                this.selectedClass = null;
-                this.isAnimating = false;
-                this.init();
-            }
-
-            init() {
-                this.setupEventListeners();
-                this.setupSlotColumns();
-                console.log('🎰 Premium Slot Machine Initialized');
-            }
-
-            setupSlotColumns() {
-                const container = document.getElementById('slotColumns');
-                const columns = ['WEAPON', 'SPECIALIZATION', 'GADGET 1', 'GADGET 2', 'GADGET 3'];
-                
-                columns.forEach(col => {
-                    const column = document.createElement('div');
-                    column.className = 'slot-column';
-                    column.innerHTML = `
-                        <div class="column-header">${col}</div>
-                        <div class="slot-window">
-                            <div class="slot-items"></div>
-                        </div>
-                    `;
-                    container.appendChild(column);
-                });
-            }
-
-            setupEventListeners() {
-                // Random All Button
-                document.getElementById('randomAllBtn').addEventListener('click', () => {
-                    this.randomizeEverything();
-                });
-
-                // Spin Buttons
-                document.querySelectorAll('.spin-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        this.selectSpins(parseInt(btn.dataset.spins));
-                    });
-                });
-
-                // Class Buttons
-                document.querySelectorAll('.class-btn-premium').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        this.selectClass(btn.dataset.class);
-                    });
-                });
-
-                // Generate Button
-                document.getElementById('generateBtn').addEventListener('click', () => {
-                    this.startSlotMachine();
-                });
-            }
-
-            selectSpins(count) {
-                document.querySelectorAll('.spin-btn').forEach(b => b.classList.remove('active'));
-                document.querySelector(`.spin-btn[data-spins="${count}"]`).classList.add('active');
-                this.selectedSpins = count;
-                this.updateGenerateButton();
-            }
-
-            selectClass(classType) {
-                document.querySelectorAll('.class-btn-premium').forEach(b => b.classList.remove('active'));
-                document.querySelector(`.class-btn-premium[data-class="${classType}"]`).classList.add('active');
-                this.selectedClass = classType;
-                this.updateGenerateButton();
-            }
-
-            async randomizeEverything() {
-                if (this.isAnimating) return;
-                this.isAnimating = true;
-
-                // Animate spin selection
-                const spinBtns = document.querySelectorAll('.spin-btn');
-                for (let i = 0; i < 15; i++) {
-                    spinBtns.forEach(b => b.classList.remove('active'));
-                    spinBtns[i % spinBtns.length].classList.add('active');
-                    await this.sleep(50 + (i > 10 ? i * 10 : 0));
-                }
-                const finalSpin = Math.floor(Math.random() * 4) + 2;
-                this.selectSpins(finalSpin);
-
-                await this.sleep(300);
-
-                // Animate class selection
-                const classBtns = document.querySelectorAll('.class-btn-premium');
-                for (let i = 0; i < 12; i++) {
-                    classBtns.forEach(b => b.classList.remove('active'));
-                    classBtns[i % classBtns.length].classList.add('active');
-                    await this.sleep(60 + (i > 8 ? i * 15 : 0));
-                }
-                const classes = ['light', 'medium', 'heavy'];
-                const finalClass = classes[Math.floor(Math.random() * 3)];
-                this.selectClass(finalClass);
-
-                this.isAnimating = false;
-                
-                // Auto-start after selection
-                setTimeout(() => this.startSlotMachine(), 500);
-            }
-
-            updateGenerateButton() {
-                const btn = document.getElementById('generateBtn');
-                if (this.selectedSpins && this.selectedClass) {
-                    btn.disabled = false;
-                    btn.textContent = `GENERATE ${this.selectedSpins} SPIN${this.selectedSpins > 1 ? 'S' : ''} - ${this.selectedClass.toUpperCase()}`;
-                } else {
-                    btn.disabled = true;
-                    btn.textContent = 'SELECT OPTIONS ABOVE';
-                }
-            }
-
-            async startSlotMachine() {
-                if (!this.selectedSpins || !this.selectedClass) return;
-
-                const btn = document.getElementById('generateBtn');
-                btn.disabled = true;
-                btn.textContent = 'SPINNING...';
-
-                // Show spin counter
-                const counter = document.getElementById('spinCounter');
-                counter.style.display = 'block';
-                document.getElementById('totalSpins').textContent = this.selectedSpins;
-
-                // Simulate spins
-                for (let i = 1; i <= this.selectedSpins; i++) {
-                    document.getElementById('currentSpin').textContent = i;
-                    
-                    // Add spinning animation
-                    document.querySelectorAll('.slot-column').forEach(col => {
-                        col.classList.add('spinning');
-                    });
-
-                    await this.sleep(3000);
-
-                    // Remove spinning
-                    document.querySelectorAll('.slot-column').forEach(col => {
-                        col.classList.remove('spinning');
-                    });
-
-                    if (i === this.selectedSpins) {
-                        this.createSparks();
-                    }
-
-                    if (i < this.selectedSpins) {
-                        await this.sleep(500);
-                    }
-                }
-
-                counter.style.display = 'none';
-                btn.disabled = false;
-                this.updateGenerateButton();
-            }
-
-            createSparks() {
-                const container = document.getElementById('victorySparks');
-                container.innerHTML = '';
-                
-                for (let i = 0; i < 20; i++) {
-                    const spark = document.createElement('div');
-                    spark.className = 'spark';
-                    spark.style.setProperty('--x', `${(Math.random() - 0.5) * 200}px`);
-                    spark.style.setProperty('--y', `${(Math.random() - 0.5) * 200}px`);
-                    spark.style.animationDelay = `${Math.random() * 0.5}s`;
-                    container.appendChild(spark);
-                }
-
-                setTimeout(() => container.innerHTML = '', 1000);
-            }
-
-            sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-        }
-
-        // Initialize on load
+        // Fix sparks container positioning
         window.addEventListener('DOMContentLoaded', () => {
-            window.premiumSlot = new PremiumSlotMachine();
+            const sparksContainer = document.getElementById('victorySparks');
+            if (sparksContainer) {
+                // Move it inside the slot display area
+                const slotDisplay = document.getElementById('slotDisplay');
+                if (slotDisplay) {
+                    slotDisplay.appendChild(sparksContainer);
+                    sparksContainer.style.position = 'absolute';
+                    sparksContainer.style.top = '50%';
+                    sparksContainer.style.left = '50%';
+                    sparksContainer.style.transform = 'translate(-50%, -50%)';
+                    sparksContainer.style.pointerEvents = 'none';
+                    sparksContainer.style.zIndex = '1000';
+                }
+            }
         });
     </script>
 </body>
