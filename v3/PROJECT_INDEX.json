@@ -1,5 +1,5 @@
 {
-  "indexed_at": "2025-08-30T17:01:27.263686",
+  "indexed_at": "2025-08-31T10:01:46.180390",
   "root": ".",
   "project_structure": {
     "type": "tree",
@@ -25,6 +25,20 @@
         "4. CSS Transform Conflicts",
         "5. Production CSS Loading Issue",
         "Recent Fix Attempts (2025-08-14)"
+      ],
+      "architecture_hints": []
+    },
+    "FIXES_SUMMARY.md": {
+      "sections": [
+        "The Finals Loadout Generator v3 - Fixes Applied",
+        "Date: 2025-08-31",
+        "Issues Fixed:",
+        "Files Modified:",
+        "Files Created:",
+        "How It Works Now:",
+        "Known Working Features:",
+        "Testing:",
+        "Console Commands for Debugging:"
       ],
       "architecture_hints": []
     },
@@ -131,18 +145,18 @@
     "test": "Test files and test utilities"
   },
   "stats": {
-    "total_files": 106,
+    "total_files": 114,
     "total_directories": 3,
     "fully_parsed": {
-      "javascript": 34
+      "javascript": 39
     },
     "listed_only": {
       "css": 25,
-      "html": 43,
+      "html": 46,
       "shell": 1,
       "json": 3
     },
-    "markdown_files": 8
+    "markdown_files": 9
   },
   "files": {
     "animation-constants-fix.js": {
@@ -181,7 +195,10 @@
             "patchAnimationEngineV2",
             "patchSimpleSpinAnimation"
           ],
-          "signature": "()"
+          "signature": "()",
+          "called_by": [
+            "EnhancedController.waitForApp"
+          ]
         }
       },
       "classes": {},
@@ -431,27 +448,10 @@
               ],
               "signature": "(key, newValue, oldValue)"
             },
-            "loadHistory": {
-              "signature": "()",
-              "called_by": [
-                "StateManager.constructor",
-                "StateManager.__init__"
-              ]
-            },
+            "loadHistory": "()",
             "saveHistory": "(history)",
-            "loadSetting": {
-              "signature": "(key, defaultValue)",
-              "called_by": [
-                "StateManager.constructor",
-                "StateManager.__init__"
-              ]
-            },
-            "saveSetting": {
-              "signature": "(key, value)",
-              "called_by": [
-                "UIController.bindSoundToggle"
-              ]
-            },
+            "loadSetting": "(key, defaultValue)",
+            "saveSetting": "(key, value)",
             "__init__": {
               "calls": [
                 "loadHistory",
@@ -470,23 +470,10 @@
                 "easeOutCubic",
                 "getTransformY"
               ],
-              "signature": "(element, duration, targetPosition)",
-              "called_by": [
-                "overrideExisting"
-              ]
+              "signature": "(element, duration, targetPosition)"
             },
-            "getTransformY": {
-              "signature": "(element)",
-              "called_by": [
-                "AnimationEngine.spin"
-              ]
-            },
-            "easeOutCubic": {
-              "signature": "(t)",
-              "called_by": [
-                "AnimationEngine.spin"
-              ]
-            },
+            "getTransformY": "(element)",
+            "easeOutCubic": "(t)",
             "stop": "()",
             "__init__": "()"
           },
@@ -495,26 +482,11 @@
         "SlotMachine": {
           "methods": {
             "constructor": "(container, animationEngine)",
-            "init": {
-              "signature": "()",
-              "called_by": [
-                "Application.setup"
-              ]
-            },
-            "spin": {
-              "signature": "async (loadout, spinCount = 1, totalSpins = 1)",
-              "called_by": [
-                "overrideExisting"
-              ]
-            },
+            "init": "()",
+            "spin": "async (loadout, spinCount = 1, totalSpins = 1)",
             "populateColumn": "(column, loadout)",
             "createItem": "(type, loadout, isWinner = false)",
-            "getRandomItem": {
-              "signature": "(type, className)",
-              "called_by": [
-                "generateRandomLoadout"
-              ]
-            },
+            "getRandomItem": "(type, className)",
             "getItemImage": "(itemName)",
             "animateColumn": "async (column, isFinalSpin)",
             "highlightWinners": "()",
@@ -532,12 +504,7 @@
         "UIController": {
           "methods": {
             "constructor": "(stateManager, slotMachine)",
-            "init": {
-              "signature": "()",
-              "called_by": [
-                "Application.setup"
-              ]
-            },
+            "init": "()",
             "bindClassSelection": {
               "calls": [
                 "forEach",
@@ -546,12 +513,7 @@
               "signature": "()"
             },
             "bindGenerateButton": "()",
-            "generateLoadout": {
-              "signature": "async ()",
-              "called_by": [
-                "UIController.bindKeyboardShortcuts"
-              ]
-            },
+            "generateLoadout": "async ()",
             "createRandomLoadout": "(className)",
             "addToHistory": "(loadout)",
             "updateHistoryPanel": "()",
@@ -581,16 +543,7 @@
             "updateUI": "()",
             "showError": "(message)",
             "debounce": "(func, wait)",
-            "delay": {
-              "signature": "(ms)",
-              "called_by": [
-                "runSlotMachineAnimation",
-                "SimpleSpinAnimation.stopReelsRandomly",
-                "SmoothSpinAnimation.stopReelsSequentially",
-                "runClassRouletteAnimation",
-                "runNumberSelectorAnimation"
-              ]
-            },
+            "delay": "(ms)",
             "__init__": "(stateManager, slotMachine)"
           },
           "doc": "The Finals Loadout Generator v3 - Optimized"
@@ -606,19 +559,13 @@
               "calls": [
                 "setup"
               ],
-              "signature": "()",
-              "called_by": [
-                "Application.setup"
-              ]
+              "signature": "()"
             },
             "setup": {
               "calls": [
                 "init"
               ],
-              "signature": "()",
-              "called_by": [
-                "Application.init"
-              ]
+              "signature": "()"
             },
             "handleInitError": "(error)",
             "__init__": "()"
@@ -626,75 +573,8 @@
           "doc": "The Finals Loadout Generator v3 - Optimized"
         }
       },
-      "constants": {
-        "CONFIG": "collection"
-      },
-      "variables": [
-        "oldValue",
-        "callbacks",
-        "stored",
-        "limited",
-        "settings",
-        "startTime",
-        "startPosition",
-        "distance",
-        "animate",
-        "elapsed",
-        "progress",
-        "eased",
-        "currentPosition",
-        "transform",
-        "matrix",
-        "values",
-        "columnTypes",
-        "column",
-        "itemsContainer",
-        "animations",
-        "items",
-        "i",
-        "item",
-        "div",
-        "content",
-        "imgSrc",
-        "gadgetIndex",
-        "data",
-        "pool",
-        "normalized",
-        "duration",
-        "targetPosition",
-        "announcement",
-        "winners",
-        "counter",
-        "selectedClass",
-        "className",
-        "generateBtn",
-        "spinAgainBtn",
-        "loadout",
-        "totalSpins",
-        "weapon",
-        "specialization",
-        "gadgets",
-        "availableGadgets",
-        "index",
-        "history",
-        "historyContent",
-        "now",
-        "diff",
-        "soundToggle",
-        "enabled",
-        "historyToggle",
-        "historyPanel",
-        "closeHistory",
-        "clearHistory",
-        "isOpen",
-        "classes",
-        "classBtn",
-        "later",
-        "slotContainer",
-        "container",
-        "app"
-      ],
-      "call_graph": {}
+      "updated_by_hook": true,
+      "updated_at": "2025-08-31T10:08:22.201003"
     },
     "app.js": {
       "language": "javascript",
@@ -911,7 +791,12 @@
         "AutomatedFlowManager": {
           "methods": {
             "constructor": "()",
-            "initialize": "()",
+            "initialize": {
+              "signature": "()",
+              "called_by": [
+                "EnhancedController.waitForApp"
+              ]
+            },
             "createFlowUI": "()",
             "startAutomatedFlow": "async ()",
             "autoSelectSpins": "async ()",
@@ -932,9 +817,9 @@
               "called_by": [
                 "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "SmoothSpinAnimation.stopReelsSequentially",
                 "runClassRouletteAnimation",
-                "runNumberSelectorAnimation"
+                "runNumberSelectorAnimation",
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "getSelections": "()",
@@ -1033,7 +918,12 @@
         "for": {
           "methods": {
             "constructor": "()",
-            "initialize": "()",
+            "initialize": {
+              "signature": "()",
+              "called_by": [
+                "EnhancedController.waitForApp"
+              ]
+            },
             "createBonusUI": "()",
             "__init__": "()"
           },
@@ -1042,7 +932,12 @@
         "BonusManager": {
           "methods": {
             "constructor": "()",
-            "initialize": "()",
+            "initialize": {
+              "signature": "()",
+              "called_by": [
+                "EnhancedController.waitForApp"
+              ]
+            },
             "createBonusUI": "()",
             "checkBonusTrigger": "()",
             "triggerBonus": "async ()",
@@ -1149,6 +1044,48 @@
       ],
       "call_graph": {}
     },
+    "class-selection-fix.js": {
+      "language": "javascript",
+      "parsed": true,
+      "functions": {
+        "initClassSelection": {
+          "calls": [
+            "addEventListener",
+            "forEach"
+          ],
+          "signature": "()"
+        }
+      },
+      "classes": {
+        "buttons": {
+          "methods": {}
+        },
+        "selection": {
+          "methods": {}
+        },
+        "let": {
+          "methods": {}
+        },
+        "selectedClass": {
+          "methods": {}
+        },
+        "first": {
+          "methods": {}
+        },
+        "is": {
+          "methods": {}
+        }
+      },
+      "variables": [
+        "classButtons",
+        "generateBtn",
+        "selectedClass",
+        "thisClass",
+        "className",
+        "activeBtn"
+      ],
+      "call_graph": {}
+    },
     "cleanup-old-files.sh": {
       "language": "shell",
       "parsed": false
@@ -1160,6 +1097,98 @@
     "complete-animation-fix.css": {
       "language": "css",
       "parsed": false
+    },
+    "complete-solution.js": {
+      "language": "javascript",
+      "parsed": true,
+      "functions": {
+        "ready": {
+          "calls": [
+            "addEventListener"
+          ],
+          "signature": "(fn)"
+        },
+        "updateGenerateButton": {
+          "signature": "()",
+          "called_by": [
+            "startSlotMachine"
+          ]
+        },
+        "getApp": {
+          "signature": "()",
+          "called_by": [
+            "updateAppState",
+            "startSlotMachine"
+          ]
+        },
+        "updateAppState": {
+          "calls": [
+            "getApp"
+          ],
+          "signature": "()",
+          "called_by": [
+            "startSlotMachine"
+          ]
+        },
+        "checkAutoStart": "()",
+        "startSlotMachine": {
+          "calls": [
+            "getApp",
+            "sleep",
+            "startSlotMachine",
+            "updateAppState",
+            "updateGenerateButton"
+          ],
+          "signature": "async ()",
+          "called_by": [
+            "startSlotMachine",
+            "PremiumIntegratedSlotMachine.checkAutoStart"
+          ]
+        },
+        "sleep": {
+          "signature": "(ms)",
+          "called_by": [
+            "startSlotMachine"
+          ]
+        }
+      },
+      "classes": {
+        "selection": {
+          "methods": {},
+          "doc": "Complete Solution for The Finals Loadout Generator v3"
+        },
+        "is": {
+          "methods": {},
+          "doc": "Complete Solution for The Finals Loadout Generator v3"
+        },
+        "name": {
+          "methods": {},
+          "doc": "Complete Solution for The Finals Loadout Generator v3"
+        }
+      },
+      "variables": [
+        "selectedSpins",
+        "selectedClass",
+        "isAnimating",
+        "randomAllBtn",
+        "spinButtons",
+        "cycles",
+        "delay",
+        "i",
+        "index",
+        "finalSpinBtn",
+        "classButtons",
+        "classes",
+        "finalClassBtn",
+        "generateBtn",
+        "app",
+        "className",
+        "loadout",
+        "slotContainer",
+        "originalGenerateLoadout",
+        "spinAgainBtn"
+      ],
+      "call_graph": {}
     },
     "comprehensive-fix.css": {
       "language": "css",
@@ -1198,9 +1227,9 @@
               "called_by": [
                 "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "SmoothSpinAnimation.stopReelsSequentially",
                 "runClassRouletteAnimation",
-                "runNumberSelectorAnimation"
+                "runNumberSelectorAnimation",
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "cleanup": {
@@ -1256,6 +1285,14 @@
       "call_graph": {}
     },
     "critical-css.html": {
+      "language": "html",
+      "parsed": false
+    },
+    "debug-app.js": {
+      "language": "javascript",
+      "parsed": false
+    },
+    "debug-button.html": {
       "language": "html",
       "parsed": false
     },
@@ -1369,9 +1406,9 @@
               "called_by": [
                 "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "SmoothSpinAnimation.stopReelsSequentially",
                 "runClassRouletteAnimation",
-                "runNumberSelectorAnimation"
+                "runNumberSelectorAnimation",
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "__init__": "()"
@@ -1407,6 +1444,93 @@
         "currentPos",
         "items",
         "columns"
+      ],
+      "call_graph": {}
+    },
+    "enhanced-app.js": {
+      "language": "javascript",
+      "parsed": true,
+      "functions": {},
+      "classes": {
+        "selection": {
+          "methods": {},
+          "doc": "Enhanced App Controller for The Finals Loadout Generator v3"
+        },
+        "EnhancedController": {
+          "methods": {
+            "constructor": "()",
+            "waitForApp": {
+              "calls": [
+                "initialize"
+              ],
+              "signature": "()"
+            },
+            "initialize": {
+              "signature": "()",
+              "called_by": [
+                "EnhancedController.waitForApp"
+              ]
+            },
+            "setupSpinSelection": "()",
+            "selectSpins": "(count)",
+            "animateRandomSpinSelection": "async ()",
+            "setupClassSelection": "()",
+            "selectClass": "(classType)",
+            "animateRandomClassSelection": "async ()",
+            "updateGenerateButton": {
+              "signature": "()",
+              "called_by": [
+                "startSlotMachine"
+              ]
+            },
+            "checkAutoStart": "()",
+            "startSlotMachine": {
+              "signature": "async ()",
+              "called_by": [
+                "startSlotMachine",
+                "PremiumIntegratedSlotMachine.checkAutoStart"
+              ]
+            },
+            "sleep": {
+              "signature": "(ms)",
+              "called_by": [
+                "startSlotMachine"
+              ]
+            },
+            "__init__": "()"
+          },
+          "doc": "Enhanced App Controller for The Finals Loadout Generator v3"
+        },
+        "buttons": {
+          "methods": {},
+          "doc": "Enhanced App Controller for The Finals Loadout Generator v3"
+        },
+        "if": {
+          "methods": {},
+          "doc": "Enhanced App Controller for The Finals Loadout Generator v3"
+        }
+      },
+      "variables": [
+        "checkApp",
+        "spinButtons",
+        "spins",
+        "btn",
+        "randomBtn",
+        "cycles",
+        "delay",
+        "i",
+        "index",
+        "finalCount",
+        "classButtons",
+        "classType",
+        "className",
+        "classes",
+        "finalClass",
+        "generateBtn",
+        "updateBtn",
+        "loadout",
+        "slotContainer",
+        "spinAgainBtn"
       ],
       "call_graph": {}
     },
@@ -1509,13 +1633,24 @@
         "HistoryManager": {
           "methods": {
             "constructor": "(containerId)",
-            "initialize": "()",
+            "initialize": {
+              "signature": "()",
+              "called_by": [
+                "EnhancedController.waitForApp"
+              ]
+            },
             "setupUI": "()",
             "initializeAnalyzer": "async ()",
             "addEntry": "async (loadout)",
             "renderNewEntry": "(entry)",
             "createHistoryCard": "(entry)",
-            "setupEventListeners": "()",
+            "setupEventListeners": {
+              "signature": "()",
+              "called_by": [
+                "PremiumIntegratedSlotMachine.init",
+                "PremiumIntegratedSlotMachine.waitForApp"
+              ]
+            },
             "toggleFavorite": "(entryId)",
             "copyToClipboard": "async (entryId)",
             "showExportOptions": "(entryId)",
@@ -1793,7 +1928,10 @@
             "patchAnimationEngine",
             "patchSimpleSpinAnimation"
           ],
-          "signature": "()"
+          "signature": "()",
+          "called_by": [
+            "EnhancedController.waitForApp"
+          ]
         }
       },
       "classes": {},
@@ -1827,6 +1965,142 @@
         "itemsContainer"
       ],
       "call_graph": {}
+    },
+    "premium-integrated.js": {
+      "language": "javascript",
+      "parsed": true,
+      "functions": {},
+      "classes": {
+        "PremiumIntegratedSlotMachine": {
+          "methods": {
+            "constructor": "()",
+            "init": {
+              "calls": [
+                "checkApp",
+                "setupEventListeners",
+                "setupSlotMachine"
+              ],
+              "signature": "()",
+              "called_by": [
+                "Application.setup"
+              ]
+            },
+            "waitForApp": {
+              "calls": [
+                "setupEventListeners",
+                "setupSlotMachine"
+              ],
+              "signature": "()"
+            },
+            "setupSlotMachine": {
+              "signature": "()",
+              "called_by": [
+                "PremiumIntegratedSlotMachine.init",
+                "PremiumIntegratedSlotMachine.waitForApp"
+              ]
+            },
+            "setupPremiumColumns": "()",
+            "setupEventListeners": {
+              "signature": "()",
+              "called_by": [
+                "PremiumIntegratedSlotMachine.init",
+                "PremiumIntegratedSlotMachine.waitForApp"
+              ]
+            },
+            "selectSpins": "(count)",
+            "selectClass": "(classType)",
+            "updateAppState": {
+              "signature": "()",
+              "called_by": [
+                "startSlotMachine"
+              ]
+            },
+            "randomizeEverything": "async ()",
+            "updateGenerateButton": {
+              "signature": "()",
+              "called_by": [
+                "startSlotMachine"
+              ]
+            },
+            "checkAutoStart": {
+              "calls": [
+                "startSlotMachine"
+              ],
+              "signature": "()"
+            },
+            "startSlotMachine": {
+              "signature": "async ()",
+              "called_by": [
+                "startSlotMachine",
+                "PremiumIntegratedSlotMachine.checkAutoStart"
+              ]
+            },
+            "populatePremiumColumns": {
+              "calls": [
+                "generateItemList"
+              ],
+              "signature": "(loadout)"
+            },
+            "generateItemList": {
+              "signature": "(winner, type)",
+              "called_by": [
+                "PremiumIntegratedSlotMachine.populatePremiumColumns"
+              ]
+            },
+            "getGameData": "()",
+            "getImagePath": "(itemName)",
+            "animatePremiumSpin": "async (isFinalSpin)",
+            "showWinners": "()",
+            "createSparks": "()",
+            "sleep": {
+              "signature": "(ms)",
+              "called_by": [
+                "startSlotMachine"
+              ]
+            },
+            "__init__": "()"
+          },
+          "doc": "Premium Integrated Slot Machine"
+        },
+        "selection": {
+          "methods": {},
+          "doc": "Premium Integrated Slot Machine"
+        }
+      },
+      "variables": [
+        "checkApp",
+        "app",
+        "container",
+        "columns",
+        "column",
+        "randomBtn",
+        "generateBtn",
+        "btn",
+        "className",
+        "spinBtns",
+        "i",
+        "finalSpin",
+        "classBtns",
+        "classes",
+        "finalClass",
+        "counter",
+        "columnData",
+        "itemsContainer",
+        "item",
+        "itemDiv",
+        "imagePath",
+        "data",
+        "pool",
+        "normalized",
+        "duration",
+        "targetPosition",
+        "spark"
+      ],
+      "call_graph": {}
+    },
+    "premium-slot-machine.html": {
+      "language": "html",
+      "parsed": false
     },
     "PROJECT_INDEX.json": {
       "language": "json",
@@ -2036,9 +2310,9 @@
               "called_by": [
                 "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "SmoothSpinAnimation.stopReelsSequentially",
                 "runClassRouletteAnimation",
-                "runNumberSelectorAnimation"
+                "runNumberSelectorAnimation",
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "quickSpin": "async (columns)",
@@ -2351,9 +2625,9 @@
               "called_by": [
                 "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "SmoothSpinAnimation.stopReelsSequentially",
                 "runClassRouletteAnimation",
-                "runNumberSelectorAnimation"
+                "runNumberSelectorAnimation",
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "cleanup": {
@@ -2520,6 +2794,11 @@
       "purpose": "Test file"
     },
     "test-diagnostics.html": {
+      "language": "html",
+      "parsed": false,
+      "purpose": "Test file"
+    },
+    "test-enhanced.html": {
       "language": "html",
       "parsed": false,
       "purpose": "Test file"
@@ -2794,7 +3073,11 @@
               "calls": [
                 "startSelection"
               ],
-              "signature": "()"
+              "signature": "()",
+              "called_by": [
+                "PremiumIntegratedSlotMachine.init",
+                "PremiumIntegratedSlotMachine.waitForApp"
+              ]
             },
             "startSelection": {
               "signature": "async ()",
@@ -2820,8 +3103,8 @@
             "updateLightPosition": {
               "signature": "(speed)",
               "called_by": [
-                "NumberSelector.runAcceleration",
-                "NumberSelector.runHighSpeed"
+                "NumberSelector.runHighSpeed",
+                "NumberSelector.runAcceleration"
               ]
             },
             "selectNumber": "(number)",
@@ -2833,9 +3116,9 @@
               "called_by": [
                 "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "SmoothSpinAnimation.stopReelsSequentially",
                 "runClassRouletteAnimation",
-                "runNumberSelectorAnimation"
+                "runNumberSelectorAnimation",
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "playSound": {
@@ -2872,7 +3155,11 @@
               "calls": [
                 "startRoulette"
               ],
-              "signature": "()"
+              "signature": "()",
+              "called_by": [
+                "PremiumIntegratedSlotMachine.init",
+                "PremiumIntegratedSlotMachine.waitForApp"
+              ]
             },
             "startRoulette": {
               "signature": "async ()",
@@ -2892,9 +3179,9 @@
               "called_by": [
                 "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "SmoothSpinAnimation.stopReelsSequentially",
                 "runClassRouletteAnimation",
-                "runNumberSelectorAnimation"
+                "runNumberSelectorAnimation",
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "playSound": {
@@ -2960,7 +3247,10 @@
               "calls": [
                 "transitionToClassSelection"
               ],
-              "signature": "()"
+              "signature": "()",
+              "called_by": [
+                "EnhancedController.waitForApp"
+              ]
             },
             "startSelection": {
               "signature": "()",
@@ -2981,9 +3271,9 @@
               "called_by": [
                 "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "SmoothSpinAnimation.stopReelsSequentially",
                 "runClassRouletteAnimation",
-                "runNumberSelectorAnimation"
+                "runNumberSelectorAnimation",
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "playSound": {
@@ -3240,6 +3530,16 @@
     "test/verify-landing-fix.html": {
       "language": "html",
       "parsed": false
+    },
+    "slot-machine-mobile-fix.js": {
+      "language": "javascript",
+      "parsed": true,
+      "functions": {
+        "waitForApp": "(callback)"
+      },
+      "classes": {},
+      "updated_by_hook": true,
+      "updated_at": "2025-08-31T10:07:26.694935"
     }
   },
   "dependency_graph": {
@@ -3248,5 +3548,5 @@
       "path"
     ]
   },
-  "staleness_check": 1755993703.479147
+  "staleness_check": 1756054919.802627
 }

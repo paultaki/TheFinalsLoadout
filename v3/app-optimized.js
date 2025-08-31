@@ -284,15 +284,40 @@
       // Clear existing items
       itemsContainer.innerHTML = '';
       
-      // Generate 50 items for smooth spinning
+      // Get actual rendered dimensions to handle mobile viewports
+      const slotWindow = column.element.querySelector('.slot-window');
+      let totalItems = 50; // Default
+      let winnerIndex = 20; // Default winner position
+      
+      if (slotWindow) {
+        // Get computed styles for accurate measurements
+        const windowHeight = slotWindow.offsetHeight;
+        const computedStyle = window.getComputedStyle(document.documentElement);
+        const itemHeight = parseInt(computedStyle.getPropertyValue('--slot-item-height')) || 80;
+        
+        // Calculate items needed to fill viewport
+        const visibleItems = Math.ceil(windowHeight / itemHeight);
+        const bufferItems = 20; // Extra items for smooth scrolling above and below
+        
+        // Ensure we have enough items to fill mobile viewport plus buffer
+        totalItems = Math.max(50, visibleItems + (bufferItems * 2));
+        
+        // Position winner in the middle of generated items
+        winnerIndex = Math.floor(totalItems / 2);
+        
+        console.log(`📱 Viewport: ${windowHeight}px, Item: ${itemHeight}px, Total items: ${totalItems}`);
+      }
+      
+      // Generate items with responsive count
       const items = [];
-      for (let i = 0; i < 50; i++) {
-        const item = this.createItem(type, loadout, i === 20); // Winner at index 20
+      for (let i = 0; i < totalItems; i++) {
+        const item = this.createItem(type, loadout, i === winnerIndex);
         items.push(item);
         itemsContainer.appendChild(item);
       }
       
       column.items = items;
+      column.winnerIndex = winnerIndex; // Store for animation reference
     }
 
     createItem(type, loadout, isWinner = false) {
@@ -405,8 +430,15 @@
       // Reset position to top
       itemsContainer.style.transform = 'translateY(0)';
       
-      // Animate to winner position (index 20 centered)
-      const targetPosition = CONFIG.ANIMATION.CENTER_POSITION;
+      // Calculate target position based on dynamic winner index
+      const winnerIndex = column.winnerIndex || 20;
+      const computedStyle = window.getComputedStyle(document.documentElement);
+      const itemHeight = parseInt(computedStyle.getPropertyValue('--slot-item-height')) || 80;
+      const viewportHeight = parseInt(computedStyle.getPropertyValue('--slot-viewport-height')) || 240;
+      
+      // Center the winner item in the viewport
+      const centerOffset = (viewportHeight - itemHeight) / 2;
+      const targetPosition = -(winnerIndex * itemHeight - centerOffset);
       
       await this.animationEngine.spin(itemsContainer, duration, targetPosition);
     }
