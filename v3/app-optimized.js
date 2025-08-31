@@ -253,6 +253,58 @@
           items: []
         };
       }).filter(Boolean);
+      
+      // Populate slots with initial placeholder items to fill viewport
+      this.populateInitialItems();
+    }
+    
+    populateInitialItems() {
+      console.log('🎰 Populating initial slot items...');
+      
+      this.columns.forEach(column => {
+        const { itemsContainer, element } = column;
+        
+        // Clear any existing items
+        itemsContainer.innerHTML = '';
+        
+        // Get actual rendered dimensions
+        const slotWindow = element.querySelector('.slot-window');
+        if (!slotWindow) return;
+        
+        // Force layout calculation
+        const rect = slotWindow.getBoundingClientRect();
+        const windowHeight = rect.height || slotWindow.offsetHeight;
+        
+        // Estimate item height (will use actual once we create one)
+        let itemHeight = 80; // Default
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+          itemHeight = 60; // Mobile item height from CSS
+        }
+        
+        // Calculate how many items we need
+        const visibleItems = Math.ceil(windowHeight / itemHeight);
+        const bufferItems = isMobile ? 35 : 25; // Extra buffer for mobile
+        const totalItems = Math.max(isMobile ? 80 : 50, visibleItems + (bufferItems * 2));
+        
+        console.log(`📱 Initial population - Height: ${windowHeight}px, Items needed: ${totalItems}`);
+        
+        // Generate placeholder items
+        const items = [];
+        for (let i = 0; i < totalItems; i++) {
+          const div = document.createElement('div');
+          div.className = 'slot-item';
+          div.innerHTML = `
+            <div class="slot-item-icon" style="background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%); width: 48px; height: 48px; border-radius: 8px;"></div>
+            <div class="slot-item-name" style="color: rgba(255,255,255,0.3); font-size: 0.75rem;">-</div>
+          `;
+          items.push(div);
+          itemsContainer.appendChild(div);
+        }
+        
+        column.items = items;
+        column.initialItemCount = totalItems;
+      });
     }
 
     async spin(loadout, spinCount = 1, totalSpins = 1) {
@@ -286,26 +338,49 @@
       
       // Get actual rendered dimensions to handle mobile viewports
       const slotWindow = column.element.querySelector('.slot-window');
-      let totalItems = 50; // Default
+      let totalItems = 50; // Default minimum
       let winnerIndex = 20; // Default winner position
       
       if (slotWindow) {
-        // Get computed styles for accurate measurements
-        const windowHeight = slotWindow.offsetHeight;
-        const computedStyle = window.getComputedStyle(document.documentElement);
-        const itemHeight = parseInt(computedStyle.getPropertyValue('--slot-item-height')) || 80;
+        // Force a layout calculation to get accurate dimensions
+        const rect = slotWindow.getBoundingClientRect();
+        const windowHeight = rect.height || slotWindow.offsetHeight;
         
-        // Calculate items needed to fill viewport
-        const visibleItems = Math.ceil(windowHeight / itemHeight);
-        const bufferItems = 20; // Extra items for smooth scrolling above and below
+        // Create a temporary item to measure actual rendered height
+        const tempItem = this.createItem(type, loadout, false);
+        tempItem.style.visibility = 'hidden';
+        tempItem.style.position = 'absolute';
+        itemsContainer.appendChild(tempItem);
+        const actualItemHeight = tempItem.offsetHeight || 80;
+        itemsContainer.removeChild(tempItem);
         
-        // Ensure we have enough items to fill mobile viewport plus buffer
+        // Calculate items needed to fill viewport completely
+        const visibleItems = Math.ceil(windowHeight / actualItemHeight);
+        
+        // Add significant buffer for scrolling and to ensure full coverage
+        // More buffer needed on mobile due to taller viewports
+        const isMobile = window.innerWidth <= 768;
+        const bufferItems = isMobile ? 30 : 20;
+        
+        // Calculate total items needed
         totalItems = Math.max(50, visibleItems + (bufferItems * 2));
+        
+        // For mobile, ensure we have extra items to prevent any gaps
+        if (isMobile && totalItems < 80) {
+          totalItems = 80; // Minimum 80 items on mobile
+        }
         
         // Position winner in the middle of generated items
         winnerIndex = Math.floor(totalItems / 2);
         
-        console.log(`📱 Viewport: ${windowHeight}px, Item: ${itemHeight}px, Total items: ${totalItems}`);
+        console.log(`📱 Mobile Fix Debug:
+          Window Height: ${windowHeight}px
+          Actual Item Height: ${actualItemHeight}px
+          Visible Items: ${visibleItems}
+          Buffer: ${bufferItems}x2
+          Total Items: ${totalItems}
+          Winner Index: ${winnerIndex}
+          Is Mobile: ${isMobile}`);
       }
       
       // Generate items with responsive count
@@ -318,6 +393,7 @@
       
       column.items = items;
       column.winnerIndex = winnerIndex; // Store for animation reference
+      column.itemHeight = actualItemHeight || 80; // Store actual height for animation
     }
 
     createItem(type, loadout, isWinner = false) {
@@ -430,15 +506,19 @@
       // Reset position to top
       itemsContainer.style.transform = 'translateY(0)';
       
-      // Calculate target position based on dynamic winner index
+      // Use stored values from populateColumn for accuracy
       const winnerIndex = column.winnerIndex || 20;
-      const computedStyle = window.getComputedStyle(document.documentElement);
-      const itemHeight = parseInt(computedStyle.getPropertyValue('--slot-item-height')) || 80;
-      const viewportHeight = parseInt(computedStyle.getPropertyValue('--slot-viewport-height')) || 240;
+      const itemHeight = column.itemHeight || 80; // Use actual measured height
+      
+      // Get the actual viewport height
+      const slotWindow = column.element.querySelector('.slot-window');
+      const viewportHeight = slotWindow ? slotWindow.offsetHeight : 240;
       
       // Center the winner item in the viewport
       const centerOffset = (viewportHeight - itemHeight) / 2;
       const targetPosition = -(winnerIndex * itemHeight - centerOffset);
+      
+      console.log(`🎯 Animation: Winner ${winnerIndex}, Item Height: ${itemHeight}px, Target: ${targetPosition}px`);
       
       await this.animationEngine.spin(itemsContainer, duration, targetPosition);
     }
