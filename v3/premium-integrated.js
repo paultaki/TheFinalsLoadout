@@ -52,8 +52,12 @@
     
     setupPremiumColumns() {
       const container = document.getElementById('premiumSlotColumns');
-      if (!container) return;
+      if (!container) {
+        console.error('Premium slot columns container not found!');
+        return;
+      }
       
+      console.log('Setting up premium columns...');
       container.innerHTML = '';
       const columns = ['WEAPON', 'SPECIALIZATION', 'GADGET 1', 'GADGET 2', 'GADGET 3'];
       
@@ -69,6 +73,8 @@
         `;
         container.appendChild(column);
       });
+      
+      console.log(`Created ${columns.length} slot columns`);
     }
     
     setupEventListeners() {
@@ -352,7 +358,23 @@
       
       // Animate all columns
       const columns = document.querySelectorAll('.slot-items');
-      columns.forEach(col => {
+      
+      if (columns.length === 0) {
+        console.error('No slot columns found to animate!');
+        return;
+      }
+      
+      console.log(`Animating ${columns.length} columns to ${targetPosition}px over ${duration}ms`);
+      
+      columns.forEach((col, index) => {
+        // Reset first
+        col.style.transition = 'none';
+        col.style.transform = 'translateY(0)';
+        
+        // Force reflow
+        void col.offsetHeight;
+        
+        // Now animate
         col.style.transition = `transform ${duration}ms cubic-bezier(0.17, 0.67, 0.16, 0.99)`;
         col.style.transform = `translateY(${targetPosition}px)`;
       });
