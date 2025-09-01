@@ -432,7 +432,7 @@
         'Dagger': 'Dagger',
         'LH1': 'LH1',
         'M11': 'M11',
-        'M26 Matter': 'M26_Mattock',
+        'M26 Matter': 'M26_Matter',
         'Recurve Bow': 'Recurve_Bow',
         'SH1900': 'SH1900',
         'SR-84': 'SR-84',
@@ -449,7 +449,7 @@
         'FAMAS': 'FAMAS',
         'FCAR': 'FCAR',
         'Model 1887': 'Model_1887',
-        'PIKE-556': 'PIKE-556',
+        'PIKE-556': 'Pike-556',
         'R.357': 'R.357',
         'Riot Shield': 'Riot_Shield',
         // Heavy weapons
@@ -471,7 +471,7 @@
         'C4': 'C4',
         'RPG-7': 'RPG-7',
         // Additional mappings for special formatting
-        'Nullifier': 'Stun_Gun',
+        'Nullifier': 'Nullifier',
         'Lockbolt': 'Lockbolt_Launcher',
         'Night Vision': 'Night_Vision_Goggles'
       };

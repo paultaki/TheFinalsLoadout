@@ -469,7 +469,8 @@
       
       // Special cases for image names that don't match the item names exactly
       const specialCases = {
-        'Nullifier': 'Stun_Gun',
+        'Nullifier': 'Nullifier',
+        'Stun Gun': 'Nullifier',
         'Motion Sensor': 'Motion_Sensor',
         'Anti-Gravity Cube': 'Anti-Gravity_Cube',
         'Lockbolt': 'Lockbolt_Launcher',
@@ -489,6 +490,9 @@
         'AKM-220': 'ARN-220',
         'SR-84': 'SR-84',
         'XP-54': 'XP-54',
+        'XP54': 'XP-54',
+        'SR84': 'SR-84',
+        'ARN220': 'ARN-220',
         'M134 Minigun': 'M134_Minigun',
         '.50 Akimbo': '50_Akimbo',
         'ShAK-50': 'SHAK-50',
@@ -537,7 +541,7 @@
         'Recurve Bow': 'Recurve_Bow',
         'Grenade Launcher': 'MGL32',
         'Scorch Blaster': 'Flamethrower',
-        'M26 Matter': 'M26_Mattock',
+        'M26 Matter': 'M26_Matter',
         'Giga Barrel': 'M60',
         'Model 1887': 'Model_1887',
         'Lewis Gun': 'Lewis_Gun',
