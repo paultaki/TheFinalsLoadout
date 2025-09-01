@@ -686,17 +686,17 @@
         // Use different easing curves for each column on final spin
         let easing;
         if (isFinalSpin) {
-          // More aggressive deceleration for earlier columns, faster spinning for later ones
+          // More aggressive deceleration for earlier columns, maintain speed longer for later ones
           if (index === 0) {
             easing = 'cubic-bezier(0.23, 1, 0.32, 1)';      // Sharp deceleration for first column
           } else if (index === 1) {
-            easing = 'cubic-bezier(0.19, 1, 0.22, 1)';      // Slightly less sharp
+            easing = 'cubic-bezier(0.22, 1, 0.36, 1)';      // Slightly less sharp
           } else if (index === 2) {
-            easing = 'cubic-bezier(0.165, 0.84, 0.44, 1)';  // Medium deceleration
+            easing = 'cubic-bezier(0.215, 0.61, 0.355, 1)'; // Medium deceleration  
           } else if (index === 3) {
-            easing = 'cubic-bezier(0.15, 0.84, 0.35, 1.2)'; // Maintains speed longer
+            easing = 'cubic-bezier(0.19, 0.5, 0.32, 1)';    // Maintains speed longer then sharp stop
           } else {
-            easing = 'cubic-bezier(0.12, 0.84, 0.28, 1.3)'; // Stays fast the longest
+            easing = 'cubic-bezier(0.17, 0.4, 0.3, 1)';     // Stays fast longest, hard stop at end
           }
         } else {
           // Quick stop for intermediate spins
