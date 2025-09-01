@@ -687,6 +687,9 @@
         class: className,
         weapon,
         specialization,
+        gadget1: gadgets[0],
+        gadget2: gadgets[1],
+        gadget3: gadgets[2],
         gadgets,
         timestamp: Date.now()
       };
