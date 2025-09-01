@@ -61,8 +61,7 @@
           'APS Turret', 'Breach Drill', 'Data Reshaper', 'Defibrillator',
           'Explosive Mine', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
           'Gas Mine', 'Glitch Trap', 'Goo Grenade', 'Jump Pad',
-          'Proximity Sensor', 'Pyro Grenade', 'Zipline', 'Smoke Grenade',
-          'Night Vision'
+          'Proximity Sensor', 'Pyro Grenade', 'Zipline', 'Smoke Grenade'
         ]
       },
       Heavy: {
@@ -74,9 +73,8 @@
         gadgets: [
           'Anti-Gravity Cube', 'Barricade', 'C4', 'Dome Shield',
           'Explosive Mine', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
-          'Goo Grenade', 'Healing Emitter', 'Lockbolt', 'Night Vision',
-          'Proximity Sensor', 'Pyro Grenade', 'Pyro Mine', 'RPG-7',
-          'Smoke Grenade'
+          'Goo Grenade', 'Healing Emitter', 'Lockbolt', 'Proximity Sensor',
+          'Pyro Grenade', 'Pyro Mine', 'RPG-7', 'Smoke Grenade'
         ]
       }
     }

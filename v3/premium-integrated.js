@@ -417,8 +417,7 @@
           gadgets: ['APS Turret', 'Breach Drill', 'Data Reshaper', 'Defibrillator',
                    'Explosive Mine', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
                    'Gas Mine', 'Glitch Trap', 'Goo Grenade', 'Jump Pad',
-                   'Proximity Sensor', 'Pyro Grenade', 'Zipline', 'Smoke Grenade',
-                   'Night Vision']
+                   'Proximity Sensor', 'Pyro Grenade', 'Zipline', 'Smoke Grenade']
         },
         Heavy: {
           weapons: ['SH1 Akimbo', 'Flamethrower', 'KS-23', 'Lewis Gun', 'M134 Minigun',
@@ -426,9 +425,8 @@
           specializations: ['Charge \'N\' Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
           gadgets: ['Anti-Gravity Cube', 'Barricade', 'C4', 'Dome Shield',
                    'Explosive Mine', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
-                   'Goo Grenade', 'Healing Emitter', 'Lockbolt', 'Night Vision',
-                   'Proximity Sensor', 'Pyro Grenade', 'Pyro Mine', 'RPG-7',
-                   'Smoke Grenade']
+                   'Goo Grenade', 'Healing Emitter', 'Lockbolt', 'Proximity Sensor',
+                   'Pyro Grenade', 'Pyro Mine', 'RPG-7', 'Smoke Grenade']
         }
       };
     }
@@ -475,7 +473,6 @@
         'Motion Sensor': 'Motion_Sensor',
         'Anti-Gravity Cube': 'Anti-Gravity_Cube',
         'Lockbolt': 'Lockbolt_Launcher',
-        'Night Vision': 'Night_Vision_Goggles',
         'Charge \'N\' Slam': 'Charge_N_Slam',
         'Charge N Slam': 'Charge_N_Slam',
         'H+ Infuser': 'H+_Infuser',
