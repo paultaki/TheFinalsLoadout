@@ -453,7 +453,7 @@
         'R.357': 'R.357',
         'Riot Shield': 'Riot_Shield',
         // Heavy weapons
-        'SH1 Akimbo': '50_Akimbo',
+        'SH1 Akimbo': '.50_Akimbo',
         'Flamethrower': 'Flamethrower',
         'KS-23': 'KS-23',
         'Lewis Gun': 'Lewis_Gun',
@@ -479,7 +479,9 @@
       // Add missing items to special cases
       const additionalCases = {
         'Stun Gun': 'Stun_Gun',
-        'Motion Sensor': 'Motion_Sensor'
+        'Motion Sensor': 'Motion_Sensor',
+        '.50 Akimbo': '.50_Akimbo',
+        '50 Akimbo': '.50_Akimbo'
       };
       
       // Check if it's a special case

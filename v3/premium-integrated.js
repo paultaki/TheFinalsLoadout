@@ -494,7 +494,6 @@
         'SR84': 'SR-84',
         'ARN220': 'ARN-220',
         'M134 Minigun': 'M134_Minigun',
-        '.50 Akimbo': '50_Akimbo',
         'ShAK-50': 'SHAK-50',
         'MGL32': 'MGL32',
         'Sledgehammer': 'Sledgehammer',
@@ -545,7 +544,10 @@
         'Giga Barrel': 'M60',
         'Model 1887': 'Model_1887',
         'Lewis Gun': 'Lewis_Gun',
-        'Pike-556': 'PIKE-556'
+        'Pike-556': 'Pike-556',
+        'PIKE556': 'Pike-556',
+        '.50 Akimbo': '.50_Akimbo',
+        '50 Akimbo': '.50_Akimbo'
       };
       
       // Check special cases first
