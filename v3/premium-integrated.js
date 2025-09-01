@@ -413,7 +413,7 @@
         Medium: {
           weapons: ['AKM', 'CK-01 Repeater', 'Cerberus 52GA', 'CL-40', 'Dual Blades', 'FAMAS',
                    'FCAR', 'Model 1887', 'PIKE-556', 'R.357', 'Riot Shield'],
-          specializations: ['Dematerializer', 'Guardian Turret', 'Healing Beam', 'Recon Senses'],
+          specializations: ['Dematerializer', 'Guardian Turret', 'Healing Beam'],
           gadgets: ['APS Turret', 'Breach Drill', 'Data Reshaper', 'Defibrillator',
                    'Explosive Mine', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
                    'Gas Mine', 'Glitch Trap', 'Goo Grenade', 'Jump Pad',
