@@ -425,6 +425,12 @@
         const winner = column.querySelector('[data-winner="true"]');
         
         if (winner) {
+          // Create pulse ripple effect first
+          this.createPulseRipple(winner);
+          
+          // Small delay for ripple to start
+          await this.sleep(50);
+          
           // Highlight the winner
           winner.classList.add('winner');
           
@@ -437,6 +443,54 @@
           await this.sleep(150);
         }
       }
+    }
+    
+    createPulseRipple(winner) {
+      const rect = winner.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      // Create ripple element
+      const ripple = document.createElement('div');
+      ripple.style.position = 'fixed';
+      ripple.style.left = `${centerX}px`;
+      ripple.style.top = `${centerY}px`;
+      ripple.style.width = '80px';
+      ripple.style.height = '80px';
+      ripple.style.marginLeft = '-40px';
+      ripple.style.marginTop = '-40px';
+      ripple.style.borderRadius = '50%';
+      ripple.style.border = '2px solid rgba(255, 102, 170, 0.8)';
+      ripple.style.background = 'radial-gradient(circle, rgba(255, 102, 170, 0.2) 0%, transparent 70%)';
+      ripple.style.pointerEvents = 'none';
+      ripple.style.zIndex = '99998';
+      
+      // Animate the ripple
+      ripple.style.animation = 'pulseRipple 0.6s ease-out forwards';
+      
+      // Add keyframe animation if not already added
+      if (!document.getElementById('rippleStyle')) {
+        const style = document.createElement('style');
+        style.id = 'rippleStyle';
+        style.textContent = `
+          @keyframes pulseRipple {
+            0% {
+              transform: scale(0);
+              opacity: 1;
+            }
+            100% {
+              transform: scale(2);
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+      
+      document.body.appendChild(ripple);
+      
+      // Clean up
+      setTimeout(() => ripple.remove(), 600);
     }
     
     createColumnSparks(column, container) {
@@ -461,11 +515,11 @@
         spark.style.position = 'fixed';
         spark.style.left = `${centerX}px`;
         spark.style.top = `${centerY}px`;
-        spark.style.width = '10px';
-        spark.style.height = '10px';
-        spark.style.background = '#ff00ff';  // Bright magenta for visibility
+        spark.style.width = '8px';
+        spark.style.height = '8px';
+        spark.style.background = `radial-gradient(circle, #fff 0%, #ff66aa 30%, #ff3366 60%, transparent 100%)`;
         spark.style.borderRadius = '50%';
-        spark.style.boxShadow = '0 0 20px #ff00ff, 0 0 40px #ff00ff';
+        spark.style.boxShadow = '0 0 10px #ff66aa, 0 0 20px rgba(255, 102, 170, 0.6)';
         spark.style.zIndex = '999999';
         spark.style.pointerEvents = 'none';
         
