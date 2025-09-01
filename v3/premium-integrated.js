@@ -448,39 +448,62 @@
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       
-      console.log(`Creating sparks at: ${centerX}, ${centerY}`);
+      console.log(`🎆 Creating ${15} sparks at position: ${centerX}, ${centerY}`);
       
-      // Create sparks emanating from this winner
-      const sparkCount = 12; // More sparks for better effect
+      // Create sparks directly in the container
+      const sparkCount = 15;
       
       for (let i = 0; i < sparkCount; i++) {
         const spark = document.createElement('div');
         spark.className = 'spark';
         
-        // Position spark at winner center
+        // Position spark directly at winner center
+        spark.style.position = 'fixed';
         spark.style.left = `${centerX}px`;
         spark.style.top = `${centerY}px`;
+        spark.style.width = '10px';
+        spark.style.height = '10px';
+        spark.style.background = '#ff00ff';  // Bright magenta for visibility
+        spark.style.borderRadius = '50%';
+        spark.style.boxShadow = '0 0 20px #ff00ff, 0 0 40px #ff00ff';
+        spark.style.zIndex = '999999';
+        spark.style.pointerEvents = 'none';
         
-        // Random burst direction in full circle
-        const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5) * 0.2;
-        const distance = 60 + Math.random() * 100; // Adjusted for visibility
+        // Random burst direction
+        const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5) * 0.3;
+        const distance = 100 + Math.random() * 100;
         const x = Math.cos(angle) * distance;
         const y = Math.sin(angle) * distance;
         
-        spark.style.setProperty('--x', `${x}px`);
-        spark.style.setProperty('--y', `${y}px`);
+        // Apply animation directly
+        spark.style.animation = `sparkMove_${i} 0.8s ease-out forwards`;
         
-        // Add slight random delay for more organic feel
-        spark.style.animationDelay = `${Math.random() * 0.1}s`;
+        // Create unique keyframe for this spark
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes sparkMove_${i} {
+            0% {
+              transform: translate(-5px, -5px) scale(1);
+              opacity: 1;
+            }
+            100% {
+              transform: translate(${x - 5}px, ${y - 5}px) scale(0.2);
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(style);
         
-        container.appendChild(spark);
+        document.body.appendChild(spark);
+        
+        // Clean up this spark after animation
+        setTimeout(() => {
+          spark.remove();
+          style.remove();
+        }, 850);
       }
       
-      // Clean up sparks after animation completes
-      setTimeout(() => {
-        const sparks = container.querySelectorAll('.spark');
-        sparks.forEach(spark => spark.remove());
-      }, 1200);
+      console.log(`✅ Sparks created and added to document.body`);
     }
     
     sleep(ms) {
