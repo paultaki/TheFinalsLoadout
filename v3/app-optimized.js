@@ -44,11 +44,13 @@
         ],
         specializations: ['Cloaking Device', 'Evasive Dash', 'Grappling Hook'],
         gadgets: [
+          // Light exclusive
           'Breach Charge', 'Gateway', 'Glitch Grenade', 'Gravity Vortex',
-          'Nullifier', 'Sonar Grenade', 'H+ Infuser', 'Thermal Bore',
-          'Gas Grenade', 'Thermal Vision', 'Tracking Dart', 'Vanishing Bomb',
-          'Goo Grenade', 'Pyro Grenade', 'Smoke Grenade', 'Frag Grenade',
-          'Flashbang'
+          'H+ Infuser', 'Sonar Grenade', 'Nullifier', 'Thermal Bore',
+          'Thermal Vision', 'Tracking Dart', 'Vanishing Bomb',
+          // Shared with all classes
+          'Flashbang', 'Frag Grenade', 'Gas Grenade', 'Goo Grenade',
+          'Pyro Grenade', 'Smoke Grenade'
         ]
       },
       Medium: {
@@ -58,10 +60,13 @@
         ],
         specializations: ['Dematerializer', 'Guardian Turret', 'Healing Beam'],
         gadgets: [
-          'APS Turret', 'Data Reshaper', 'Defibrillator', 'Explosive Mine',
-          'Gas Mine', 'Glitch Trap', 'Jump Pad', 'Zipline', 'Gas Grenade',
-          'Goo Grenade', 'Breach Drill', 'Pyro Grenade', 'Smoke Grenade',
-          'Frag Grenade', 'Flashbang', 'Proximity Sensor', 'Health Canister'
+          // Medium exclusive
+          'APS Turret', 'Breach Drill', 'Data Reshaper', 'Defibrillator',
+          'Explosive Mine', 'Gas Mine', 'Glitch Trap', 'Jump Pad',
+          'Zipline', 'Proximity Sensor', 'Night Vision',
+          // Shared with all classes
+          'Flashbang', 'Frag Grenade', 'Gas Grenade', 'Goo Grenade',
+          'Pyro Grenade', 'Smoke Grenade'
         ]
       },
       Heavy: {
@@ -71,10 +76,13 @@
         ],
         specializations: ['Charge N Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
         gadgets: [
+          // Heavy exclusive
           'Anti-Gravity Cube', 'Barricade', 'C4', 'Dome Shield',
-          'Lockbolt Launcher', 'Pyro Mine', 'Proximity Sensor', 'RPG-7',
-          'Goo Grenade', 'Healing Emitter', 'Pyro Grenade', 'Smoke Grenade',
-          'Frag Grenade', 'Flashbang', 'Explosive Mine', 'Gas Grenade'
+          'Explosive Mine', 'Healing Emitter', 'Proximity Sensor', 'Lockbolt',
+          'Pyro Mine', 'RPG-7', 'Night Vision',
+          // Shared with all classes
+          'Flashbang', 'Frag Grenade', 'Gas Grenade', 'Goo Grenade',
+          'Pyro Grenade', 'Smoke Grenade'
         ]
       }
     }

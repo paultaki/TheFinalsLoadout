@@ -363,30 +363,6 @@
     }
     
     generateItemList(winner, type) {
-      // For gadgets, use a combined pool from all classes to ensure variety
-      // This prevents class-specific gadget limitations in the spinning animation
-      if (type === 'gadget') {
-        const allData = this.getGameData();
-        const allGadgets = new Set();
-        
-        // Combine gadgets from all classes
-        ['Light', 'Medium', 'Heavy'].forEach(cls => {
-          if (allData[cls] && allData[cls].gadgets) {
-            allData[cls].gadgets.forEach(g => allGadgets.add(g));
-          }
-        });
-        
-        const pool = Array.from(allGadgets);
-        
-        // Make sure winner is in the pool
-        if (!pool.includes(winner)) {
-          pool.push(winner);
-        }
-        
-        return pool.length > 0 ? pool : [winner];
-      }
-      
-      // For weapons and specializations, use class-specific pools
       const className = this.selectedClass.charAt(0).toUpperCase() + this.selectedClass.slice(1);
       const data = this.getFilteredData(className);
       
@@ -397,6 +373,8 @@
         pool = data.weapons || [];
       } else if (type === 'specialization') {
         pool = data.specializations || [];
+      } else if (type === 'gadget') {
+        pool = data.gadgets || [];
       }
       
       // Make sure winner is in the pool
@@ -426,28 +404,28 @@
           weapons: ['93R', 'ARN220', 'Dagger', 'LH1', 'M11', 'M26 Matter', 'Recurve Bow', 
                    'SH1900', 'SR84', 'Sword', 'Throwing Knives', 'V9S', 'XP54'],
           specializations: ['Cloaking Device', 'Evasive Dash', 'Grappling Hook'],
-          gadgets: ['Breach Charge', 'Gateway', 'Glitch Grenade', 'Gravity Vortex', 'Nullifier',
-                   'Sonar Grenade', 'H+ Infuser', 'Thermal Bore', 'Gas Grenade', 'Thermal Vision',
-                   'Tracking Dart', 'Vanishing Bomb', 'Goo Grenade', 'Pyro Grenade', 'Smoke Grenade',
-                   'Frag Grenade', 'Flashbang']
+          gadgets: ['Breach Charge', 'Gateway', 'Glitch Grenade', 'Gravity Vortex', 'H+ Infuser',
+                   'Sonar Grenade', 'Nullifier', 'Thermal Bore', 'Thermal Vision',
+                   'Tracking Dart', 'Vanishing Bomb', 'Flashbang', 'Frag Grenade', 
+                   'Gas Grenade', 'Goo Grenade', 'Pyro Grenade', 'Smoke Grenade']
         },
         Medium: {
           weapons: ['AKM', 'CB-01 Repeater', 'CL40', 'Cerberus 12GA', 'Dual Blades', 'FAMAS',
                    'FCAR', 'Model 1887', 'Pike-556', 'R.357', 'Riot Shield'],
           specializations: ['Dematerializer', 'Guardian Turret', 'Healing Beam'],
-          gadgets: ['APS Turret', 'Data Reshaper', 'Defibrillator', 'Explosive Mine', 'Gas Mine',
-                   'Glitch Trap', 'Jump Pad', 'Zipline', 'Gas Grenade', 'Goo Grenade', 'Breach Drill',
-                   'Pyro Grenade', 'Smoke Grenade', 'Frag Grenade', 'Flashbang', 'Proximity Sensor',
-                   'Health Canister']
+          gadgets: ['APS Turret', 'Breach Drill', 'Data Reshaper', 'Defibrillator',
+                   'Explosive Mine', 'Gas Mine', 'Glitch Trap', 'Jump Pad',
+                   'Zipline', 'Proximity Sensor', 'Night Vision', 'Flashbang',
+                   'Frag Grenade', 'Gas Grenade', 'Goo Grenade', 'Pyro Grenade', 'Smoke Grenade']
         },
         Heavy: {
           weapons: ['.50 Akimbo', 'Flamethrower', 'KS23', 'Lewis Gun', 'M134 Minigun', 'M60',
                    'MGL32', 'SA1216', 'ShAK-50', 'Sledgehammer', 'Spear'],
           specializations: ['Charge N Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
-          gadgets: ['Anti-Gravity Cube', 'Barricade', 'C4', 'Dome Shield', 'Lockbolt Launcher',
-                   'Pyro Mine', 'Proximity Sensor', 'RPG-7', 'Goo Grenade', 'Healing Emitter',
-                   'Pyro Grenade', 'Smoke Grenade', 'Frag Grenade', 'Flashbang', 'Explosive Mine',
-                   'Gas Grenade']
+          gadgets: ['Anti-Gravity Cube', 'Barricade', 'C4', 'Dome Shield',
+                   'Explosive Mine', 'Healing Emitter', 'Proximity Sensor', 'Lockbolt',
+                   'Pyro Mine', 'RPG-7', 'Night Vision', 'Flashbang',
+                   'Frag Grenade', 'Gas Grenade', 'Goo Grenade', 'Pyro Grenade', 'Smoke Grenade']
         }
       };
     }
