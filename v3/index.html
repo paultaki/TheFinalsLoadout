@@ -465,6 +465,24 @@
 
         /* Responsive - Keep all 5 columns visible */
         @media (max-width: 768px) {
+            /* Compact navigation on mobile */
+            .main-nav {
+                padding: 0.25rem 0.5rem;
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+            
+            .nav-links {
+                gap: 0.25rem;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .nav-link {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.7rem;
+            }
+            
             .header {
                 padding: 10px 5px;
                 margin-bottom: 15px;
@@ -535,14 +553,55 @@
         }
 
         @media (max-width: 480px) {
+            /* Ultra-compact navigation on phones */
+            .main-nav {
+                padding: 3px !important;
+                min-height: auto !important;
+            }
+            
+            .nav-links {
+                gap: 2px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .nav-link {
+                padding: 2px 4px !important;
+                font-size: 9px !important;
+                letter-spacing: -0.5px !important;
+                line-height: 1.2 !important;
+            }
+            
+            /* Use abbreviated text on mobile */
+            .nav-link {
+                font-size: 0 !important; /* Hide original text */
+            }
+            
+            .nav-link::after {
+                font-size: 9px !important;
+                content: attr(data-mobile);
+            }
+            
+            .nav-link:nth-child(1)::after { content: 'CLASSIC'; }
+            .nav-link:nth-child(2)::after { content: 'SLOTS'; }
+            .nav-link:nth-child(3)::after { content: 'RAGE'; }
+            .nav-link:nth-child(4)::after { content: 'PATCH'; }
+            .nav-link:nth-child(5)::after { content: 'META'; }
+            .nav-link:nth-child(6)::after { content: 'WT'; }
+            
+            .nav-controls {
+                display: none; /* Hide filter controls on small phones */
+            }
+            
             .header {
-                padding: 8px 5px;
-                margin-bottom: 10px;
+                padding: 5px 3px !important;
+                margin-bottom: 5px !important;
             }
             
             .title { 
-                font-size: 1.2rem;
-                margin-bottom: 3px;
+                font-size: 14px !important;
+                margin-bottom: 2px !important;
+                line-height: 1 !important;
             }
             
             .subtitle {
