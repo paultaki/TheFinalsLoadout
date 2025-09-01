@@ -646,6 +646,7 @@
       // Sequential stopping - each column stops 200ms after the previous
       const staggerDelay = 200; // Delay between each reel stopping
       
+      // First, start ALL columns spinning at the same time
       columns.forEach((col, index) => {
         // Reset first
         col.style.transition = 'none';
@@ -654,20 +655,21 @@
         // Force reflow
         void col.offsetHeight;
         
-        // Calculate individual column duration and delay
-        const columnDelay = index * staggerDelay;
-        const columnDuration = duration - (columns.length - 1 - index) * staggerDelay;
+        // Calculate individual duration for each column
+        // First column gets full duration, each subsequent column gets longer
+        const columnDuration = duration + (index * staggerDelay);
         
-        // Start spinning immediately but stop sequentially
+        // Start ALL columns spinning immediately with their calculated durations
+        col.style.transition = `transform ${columnDuration}ms cubic-bezier(0.17, 0.67, 0.16, 0.99)`;
+        col.style.transform = `translateY(${targetPosition}px)`;
+        
+        // Schedule stop sounds for each column
         setTimeout(() => {
-          // Play stop sound for each column
           this.playSound('stop');
-          col.style.transition = `transform ${columnDuration}ms cubic-bezier(0.17, 0.67, 0.16, 0.99)`;
-          col.style.transform = `translateY(${targetPosition}px)`;
-        }, columnDelay);
+        }, columnDuration - 100); // Play sound slightly before column stops
       });
       
-      // Wait for all columns to finish (last column finishes at original duration)
+      // Wait for all columns to finish (last column takes the longest)
       await this.sleep(duration + (columns.length - 1) * staggerDelay);
     }
     
