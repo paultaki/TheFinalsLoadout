@@ -609,7 +609,8 @@
     }
     
     async animatePremiumSpin(isFinalSpin) {
-      const duration = isFinalSpin ? 3000 : 1000;
+      const baseDuration = isFinalSpin ? 2000 : 1000;  // Base duration for first column
+      const staggerDelay = isFinalSpin ? 500 : 100;    // Much longer delay for final spin
       
       // Calculate target position based on winner position and item height
       const isMobile = window.innerWidth <= 768;
@@ -641,10 +642,7 @@
         return;
       }
       
-      console.log(`Animating ${columns.length} columns to ${targetPosition}px over ${duration}ms`);
-      
-      // Sequential stopping - each column stops 200ms after the previous
-      const staggerDelay = 200; // Delay between each reel stopping
+      console.log(`Animating ${columns.length} columns to ${targetPosition}px - Final: ${isFinalSpin}`);
       
       // First, start ALL columns spinning at the same time
       columns.forEach((col, index) => {
@@ -656,21 +654,34 @@
         void col.offsetHeight;
         
         // Calculate individual duration for each column
-        // First column gets full duration, each subsequent column gets longer
-        const columnDuration = duration + (index * staggerDelay);
+        // First column gets base duration, each subsequent column gets progressively longer
+        const columnDuration = baseDuration + (index * staggerDelay);
+        
+        // Use different easing for dramatic effect on final spin
+        const easing = isFinalSpin 
+          ? 'cubic-bezier(0.17, 0.67, 0.16, 0.99)'  // Smooth deceleration
+          : 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'; // Quicker stop for intermediate spins
         
         // Start ALL columns spinning immediately with their calculated durations
-        col.style.transition = `transform ${columnDuration}ms cubic-bezier(0.17, 0.67, 0.16, 0.99)`;
+        col.style.transition = `transform ${columnDuration}ms ${easing}`;
         col.style.transform = `translateY(${targetPosition}px)`;
         
-        // Schedule stop sounds for each column
+        // Schedule stop sounds for each column with more dramatic timing
         setTimeout(() => {
           this.playSound('stop');
-        }, columnDuration - 100); // Play sound slightly before column stops
+          // Add a visual pulse effect when each column stops on final spin
+          if (isFinalSpin) {
+            col.style.filter = 'brightness(1.2)';
+            setTimeout(() => {
+              col.style.filter = 'brightness(1)';
+            }, 200);
+          }
+        }, columnDuration - 50); // Play sound just before column stops
       });
       
       // Wait for all columns to finish (last column takes the longest)
-      await this.sleep(duration + (columns.length - 1) * staggerDelay);
+      const totalDuration = baseDuration + (columns.length - 1) * staggerDelay;
+      await this.sleep(totalDuration);
     }
     
     async showWinnersSequentially() {
