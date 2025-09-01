@@ -683,10 +683,25 @@
         // First column gets base duration, each subsequent column gets progressively longer
         const columnDuration = baseDuration + (index * staggerDelay);
         
-        // Use different easing for dramatic effect on final spin
-        const easing = isFinalSpin 
-          ? 'cubic-bezier(0.17, 0.67, 0.16, 0.99)'  // Smooth deceleration
-          : 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'; // Quicker stop for intermediate spins
+        // Use different easing curves for each column on final spin
+        let easing;
+        if (isFinalSpin) {
+          // More aggressive deceleration for earlier columns, faster spinning for later ones
+          if (index === 0) {
+            easing = 'cubic-bezier(0.23, 1, 0.32, 1)';      // Sharp deceleration for first column
+          } else if (index === 1) {
+            easing = 'cubic-bezier(0.19, 1, 0.22, 1)';      // Slightly less sharp
+          } else if (index === 2) {
+            easing = 'cubic-bezier(0.165, 0.84, 0.44, 1)';  // Medium deceleration
+          } else if (index === 3) {
+            easing = 'cubic-bezier(0.15, 0.84, 0.35, 1.2)'; // Maintains speed longer
+          } else {
+            easing = 'cubic-bezier(0.12, 0.84, 0.28, 1.3)'; // Stays fast the longest
+          }
+        } else {
+          // Quick stop for intermediate spins
+          easing = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        }
         
         // Start ALL columns spinning immediately with their calculated durations
         col.style.transition = `transform ${columnDuration}ms ${easing}`;
