@@ -61,7 +61,7 @@
           'APS Turret', 'Breach Drill', 'Data Reshaper', 'Defibrillator',
           'Explosive Mine', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
           'Gas Mine', 'Glitch Trap', 'Goo Grenade', 'Jump Pad',
-          'Proximity Sensor', 'Pyro Grenade', 'Zipline', 'Smoke Grenade'
+          'Pyro Grenade', 'Zipline', 'Smoke Grenade', 'Health Canister'
         ]
       },
       Heavy: {
