@@ -450,7 +450,10 @@
             }
             
             .slot-window {
-                height: 210px; /* Exactly 3 items at 70px each */
+                /* Dynamic height for tablets */
+                height: calc(100vh - 400px);
+                min-height: 280px;
+                max-height: 400px;
                 mask-image: linear-gradient(
                     black 0%, 
                     black 100%
@@ -513,7 +516,10 @@
             }
             
             .slot-window {
-                height: 180px; /* Exactly 3 items at 60px each */
+                /* Make height fill available space on mobile */
+                height: calc(100vh - 380px); /* Viewport minus header/controls/padding */
+                min-height: 300px; /* At least 5 items visible */
+                max-height: 450px; /* Cap for usability */
                 mask-image: linear-gradient(
                     black 0%, 
                     black 100%
@@ -699,6 +705,9 @@
     
     <!-- Load the premium integration -->
     <script src="premium-integrated.js?v=20250831"></script>
+    
+    <!-- Debug winner highlighting (remove after testing) -->
+    <script src="debug-winner.js"></script>
     
     <!-- Victory Sparks positioning fix -->
     <script>

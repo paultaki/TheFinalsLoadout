@@ -268,10 +268,10 @@
         
         itemsContainer.innerHTML = '';
         
-        // Generate more items on mobile to fill the taller viewport
+        // Generate enough items to fill viewport
         const isMobile = window.innerWidth <= 768;
-        const totalItems = isMobile ? 400 : 80;
-        const winnerPosition = Math.floor(totalItems / 2); // Center position
+        const totalItems = isMobile ? 150 : 80;
+        const winnerPosition = Math.floor(totalItems / 2); // Center position (75 on mobile, 40 on desktop)
         
         // Generate items for smooth spinning with no gaps on mobile
         for (let i = 0; i < totalItems; i++) {
@@ -362,11 +362,25 @@
       
       // Calculate target position based on winner position and item height
       const isMobile = window.innerWidth <= 768;
-      const winnerPosition = Math.floor((isMobile ? 400 : 80) / 2);
-      const itemHeight = 80; // Approximate item height
-      const viewportHeight = 240; // Slot window height
-      const centerOffset = (viewportHeight - itemHeight) / 2;
-      const targetPosition = -(winnerPosition * itemHeight - centerOffset);
+      const winnerPosition = Math.floor((isMobile ? 150 : 80) / 2);
+      
+      // Get actual item height based on viewport
+      const testItem = document.querySelector('.slot-item');
+      const itemHeight = testItem ? testItem.offsetHeight : (isMobile ? 60 : 80);
+      
+      // Get actual viewport height
+      const slotWindow = document.querySelector('.slot-window');
+      const viewportHeight = slotWindow ? slotWindow.offsetHeight : 240;
+      
+      // Calculate how many items are visible
+      const visibleItems = Math.ceil(viewportHeight / itemHeight);
+      const centerItemIndex = Math.floor(visibleItems / 2);
+      
+      // Position winner in center of viewport
+      // We want winner (at index 75) to be in the middle of the visible area
+      const targetPosition = -(winnerPosition - centerItemIndex) * itemHeight;
+      
+      console.log(`🎯 Animation targeting: Winner ${winnerPosition}, Item ${itemHeight}px, Viewport ${viewportHeight}px, Target ${targetPosition}px`);
       
       // Animate all columns
       const columns = document.querySelectorAll('.slot-items');

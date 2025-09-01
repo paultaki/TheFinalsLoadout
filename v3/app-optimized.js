@@ -287,9 +287,9 @@
         // Clear any existing items
         itemsContainer.innerHTML = '';
         
-        // Simple approach: Generate LOTS of items for mobile to guarantee fill
+        // Generate enough items to fill viewport
         const isMobile = window.innerWidth <= 768;
-        const totalItems = isMobile ? 400 : 50; // 400 items on mobile for complete fill, 50 on desktop
+        const totalItems = isMobile ? 150 : 50; // 150 items on mobile, 50 on desktop
         
         console.log(`📱 Initial population - Generating ${totalItems} placeholder items (${isMobile ? 'Mobile' : 'Desktop'})`);
         
@@ -340,10 +340,10 @@
       // Clear existing items
       itemsContainer.innerHTML = '';
       
-      // Simple, bulletproof approach: Generate LOTS of items on mobile
+      // Generate enough items to fill viewport
       const isMobile = window.innerWidth <= 768;
-      const totalItems = isMobile ? 400 : 50; // 400 items on mobile for complete fill
-      const winnerIndex = Math.floor(totalItems / 2); // Winner in the middle (200 on mobile, 25 on desktop)
+      const totalItems = isMobile ? 150 : 50; // 150 items on mobile, 50 on desktop
+      const winnerIndex = Math.floor(totalItems / 2); // Winner in the middle (75 on mobile, 25 on desktop)
       
       console.log(`🎰 Populating ${type} - ${totalItems} items (${isMobile ? 'Mobile' : 'Desktop'}), winner at ${winnerIndex}`);
       
