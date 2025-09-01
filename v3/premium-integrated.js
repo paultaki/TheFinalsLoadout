@@ -192,6 +192,15 @@
     async startSlotMachine() {
       if (!this.selectedSpins || !this.selectedClass || !this.app) return;
       
+      // Clear previous winners and sparks
+      document.querySelectorAll('.winner').forEach(item => {
+        item.classList.remove('winner');
+      });
+      const sparksContainer = document.getElementById('victorySparks');
+      if (sparksContainer) {
+        sparksContainer.innerHTML = '';
+      }
+      
       const btn = document.getElementById('generateBtn');
       if (btn) {
         btn.disabled = true;
@@ -224,8 +233,7 @@
           await this.animatePremiumSpin(i === this.selectedSpins);
           
           if (i === this.selectedSpins) {
-            this.showWinners();
-            this.createSparks();
+            await this.showWinnersSequentially();
           }
           
           if (i < this.selectedSpins) {
@@ -408,27 +416,58 @@
       await this.sleep(duration);
     }
     
-    showWinners() {
-      document.querySelectorAll('[data-winner="true"]').forEach(item => {
-        item.classList.add('winner');
-      });
+    async showWinnersSequentially() {
+      const columns = document.querySelectorAll('.slot-column');
+      const sparksContainer = document.getElementById('victorySparks');
+      
+      for (let i = 0; i < columns.length; i++) {
+        const column = columns[i];
+        const winner = column.querySelector('[data-winner="true"]');
+        
+        if (winner) {
+          // Highlight the winner
+          winner.classList.add('winner');
+          
+          // Create sparks for this column
+          if (sparksContainer) {
+            this.createColumnSparks(column, sparksContainer);
+          }
+          
+          // Wait before highlighting next column
+          await this.sleep(150);
+        }
+      }
     }
     
-    createSparks() {
-      const container = document.getElementById('victorySparks');
-      if (!container) return;
+    createColumnSparks(column, container) {
+      // Get the position of the column
+      const rect = column.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
       
-      container.innerHTML = '';
-      for (let i = 0; i < 20; i++) {
+      // Create sparks emanating from this column
+      const sparkCount = 8; // Fewer sparks per column for performance
+      
+      for (let i = 0; i < sparkCount; i++) {
         const spark = document.createElement('div');
         spark.className = 'spark';
-        spark.style.setProperty('--x', `${(Math.random() - 0.5) * 300}px`);
-        spark.style.setProperty('--y', `${(Math.random() - 0.5) * 300}px`);
-        spark.style.animationDelay = `${Math.random() * 0.5}s`;
+        
+        // Position spark at column center
+        spark.style.left = `${centerX}px`;
+        spark.style.top = `${centerY}px`;
+        
+        // Random burst direction
+        const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5) * 0.3;
+        const distance = 100 + Math.random() * 80;
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance;
+        
+        spark.style.setProperty('--x', `${x}px`);
+        spark.style.setProperty('--y', `${y}px`);
+        spark.style.animationDelay = '0s'; // Immediate animation
+        
         container.appendChild(spark);
       }
-      
-      setTimeout(() => container.innerHTML = '', 1500);
     }
     
     sleep(ms) {
