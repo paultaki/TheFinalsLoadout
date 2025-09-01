@@ -368,27 +368,31 @@
         /* Individual Spark */
         .spark {
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #ff3366;
+            width: 6px;
+            height: 6px;
+            background: #ff66aa;
             border-radius: 50%;
             opacity: 0;
-            animation: sparkBurst 1s ease-out forwards;
-            box-shadow: 0 0 6px #ff3366, 0 0 12px rgba(255, 51, 102, 0.5);
+            animation: sparkBurst 0.8s ease-out forwards;
+            box-shadow: 0 0 10px #ff3366, 0 0 20px rgba(255, 102, 170, 0.8);
             transform-origin: center;
+            pointer-events: none;
+            z-index: 1000;
         }
         
         @keyframes sparkBurst {
             0% {
-                transform: translate(-2px, -2px) scale(0);
+                transform: translate(-3px, -3px) scale(0);
                 opacity: 1;
             }
-            50% {
+            40% {
                 opacity: 1;
+                background: #ff3366;
             }
             100% {
-                transform: translate(calc(-2px + var(--x)), calc(-2px + var(--y))) scale(1.2);
+                transform: translate(calc(-3px + var(--x)), calc(-3px + var(--y))) scale(0.5);
                 opacity: 0;
+                background: #ff99cc;
             }
         }
 
