@@ -486,7 +486,7 @@
         'FAMAS': 'FAMAS',
         'CL-40': 'CL-40',
         'CL40': 'CL-40',
-        'PIKE-556': 'PIKE-556',
+        'PIKE-556': 'Pike-556',
         'H+ Diffuser': 'H+_Infuser',
         'SH1 Akimbo': '50_Akimbo',
         'AKM-220': 'ARN-220',
