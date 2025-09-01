@@ -519,10 +519,7 @@
                 "setupEventListeners",
                 "setupSlotMachine"
               ],
-              "signature": "()",
-              "called_by": [
-                "Application.setup"
-              ]
+              "signature": "()"
             },
             "waitForApp": {
               "calls": [
@@ -531,72 +528,34 @@
               ],
               "signature": "()"
             },
-            "setupSlotMachine": {
-              "signature": "()",
-              "called_by": [
-                "PremiumIntegratedSlotMachine.waitForApp",
-                "PremiumIntegratedSlotMachine.init"
-              ]
-            },
+            "setupSlotMachine": "()",
             "setupPremiumColumns": "()",
-            "setupEventListeners": {
-              "signature": "()",
-              "called_by": [
-                "PremiumIntegratedSlotMachine.waitForApp",
-                "PremiumIntegratedSlotMachine.init"
-              ]
-            },
+            "setupEventListeners": "()",
             "selectSpins": "(count)",
             "selectClass": "(classType)",
-            "updateAppState": {
-              "signature": "()",
-              "called_by": [
-                "startSlotMachine"
-              ]
-            },
+            "updateAppState": "()",
             "randomizeEverything": "async ()",
-            "updateGenerateButton": {
-              "signature": "()",
-              "called_by": [
-                "startSlotMachine"
-              ]
-            },
+            "updateGenerateButton": "()",
             "checkAutoStart": {
               "calls": [
                 "startSlotMachine"
               ],
               "signature": "()"
             },
-            "startSlotMachine": {
-              "signature": "async ()",
-              "called_by": [
-                "PremiumIntegratedSlotMachine.checkAutoStart",
-                "startSlotMachine"
-              ]
-            },
+            "startSlotMachine": "async ()",
             "populatePremiumColumns": {
               "calls": [
                 "generateItemList"
               ],
               "signature": "(loadout)"
             },
-            "generateItemList": {
-              "signature": "(winner, type)",
-              "called_by": [
-                "PremiumIntegratedSlotMachine.populatePremiumColumns"
-              ]
-            },
+            "generateItemList": "(winner, type)",
             "getGameData": "()",
             "getImagePath": "(itemName)",
             "animatePremiumSpin": "async (isFinalSpin)",
             "showWinnersSequentially": "async ()",
             "createColumnSparks": "(column, container)",
-            "sleep": {
-              "signature": "(ms)",
-              "called_by": [
-                "startSlotMachine"
-              ]
-            },
+            "sleep": "(ms)",
             "__init__": "()"
           },
           "doc": "Premium Integrated Slot Machine"
@@ -606,55 +565,8 @@
           "doc": "Premium Integrated Slot Machine"
         }
       },
-      "variables": [
-        "checkApp",
-        "app",
-        "container",
-        "columns",
-        "column",
-        "randomBtn",
-        "generateBtn",
-        "btn",
-        "className",
-        "spinBtns",
-        "i",
-        "finalSpin",
-        "classBtns",
-        "classes",
-        "finalClass",
-        "sparksContainer",
-        "counter",
-        "columnData",
-        "itemsContainer",
-        "isMobile",
-        "totalItems",
-        "winnerPosition",
-        "item",
-        "itemDiv",
-        "imagePath",
-        "data",
-        "pool",
-        "normalized",
-        "duration",
-        "testItem",
-        "itemHeight",
-        "slotWindow",
-        "viewportHeight",
-        "visibleItems",
-        "centerItemIndex",
-        "targetPosition",
-        "winner",
-        "rect",
-        "centerX",
-        "centerY",
-        "sparkCount",
-        "spark",
-        "angle",
-        "distance",
-        "x",
-        "y"
-      ],
-      "call_graph": {}
+      "updated_by_hook": true,
+      "updated_at": "2025-08-31T19:10:33.984484"
     },
     "PROJECT_INDEX.json": {
       "language": "json",

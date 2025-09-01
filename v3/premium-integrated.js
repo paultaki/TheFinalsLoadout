@@ -440,34 +440,47 @@
     }
     
     createColumnSparks(column, container) {
-      // Get the position of the column
-      const rect = column.getBoundingClientRect();
+      // Get the winner element position within the column
+      const winner = column.querySelector('[data-winner="true"]');
+      if (!winner) return;
+      
+      const rect = winner.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       
-      // Create sparks emanating from this column
-      const sparkCount = 8; // Fewer sparks per column for performance
+      console.log(`Creating sparks at: ${centerX}, ${centerY}`);
+      
+      // Create sparks emanating from this winner
+      const sparkCount = 12; // More sparks for better effect
       
       for (let i = 0; i < sparkCount; i++) {
         const spark = document.createElement('div');
         spark.className = 'spark';
         
-        // Position spark at column center
+        // Position spark at winner center
         spark.style.left = `${centerX}px`;
         spark.style.top = `${centerY}px`;
         
-        // Random burst direction
-        const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5) * 0.3;
-        const distance = 100 + Math.random() * 80;
+        // Random burst direction in full circle
+        const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5) * 0.2;
+        const distance = 60 + Math.random() * 100; // Adjusted for visibility
         const x = Math.cos(angle) * distance;
         const y = Math.sin(angle) * distance;
         
         spark.style.setProperty('--x', `${x}px`);
         spark.style.setProperty('--y', `${y}px`);
-        spark.style.animationDelay = '0s'; // Immediate animation
+        
+        // Add slight random delay for more organic feel
+        spark.style.animationDelay = `${Math.random() * 0.1}s`;
         
         container.appendChild(spark);
       }
+      
+      // Clean up sparks after animation completes
+      setTimeout(() => {
+        const sparks = container.querySelectorAll('.spark');
+        sparks.forEach(spark => spark.remove());
+      }, 1200);
     }
     
     sleep(ms) {
