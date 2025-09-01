@@ -14,44 +14,7 @@
       this.currentLoadout = null;
       this.loadoutData = null;
       this.filterState = this.loadFilterState();
-      this.sounds = {};
-      this.soundEnabled = true;
-      this.initSounds();
       this.init();
-    }
-    
-    initSounds() {
-      // Initialize all sound effects
-      const soundFiles = {
-        click: '/sounds/click.mp3',
-        spinStart: '/sounds/start-spin.mp3',
-        spinning: '/sounds/spinning.mp3',
-        roulette: '/sounds/roulette.mp3',
-        stop: '/sounds/ding.mp3',
-        win: '/sounds/ding-ding.mp3',
-        finalWin: '/sounds/final-sound.mp3'
-      };
-      
-      // Preload all sounds
-      Object.entries(soundFiles).forEach(([key, path]) => {
-        const audio = new Audio(path);
-        audio.preload = 'auto';
-        audio.volume = 0.3; // Set default volume
-        this.sounds[key] = audio;
-      });
-    }
-    
-    playSound(soundName) {
-      if (!this.soundEnabled || !this.sounds[soundName]) return;
-      
-      try {
-        // Clone the audio to allow overlapping sounds
-        const audio = this.sounds[soundName].cloneNode();
-        audio.volume = this.sounds[soundName].volume;
-        audio.play().catch(e => console.log('Sound play failed:', e));
-      } catch (e) {
-        console.log('Sound error:', e);
-      }
     }
     
     init() {
@@ -179,7 +142,6 @@
       // Spin Buttons
       document.querySelectorAll('.spin-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          this.playSound('click');
           this.selectSpins(parseInt(btn.dataset.spins));
           this.checkAutoStart();
         });
@@ -188,7 +150,6 @@
       // Class Buttons
       document.querySelectorAll('.class-btn-premium').forEach(btn => {
         btn.addEventListener('click', () => {
-          this.playSound('click');
           this.selectClass(btn.dataset.class);
           this.checkAutoStart();
         });
@@ -286,9 +247,6 @@
     async startSlotMachine() {
       if (!this.selectedSpins || !this.selectedClass || !this.app) return;
       
-      // Play start sound
-      this.playSound('spinStart');
-      
       // Clear previous winners and sparks
       document.querySelectorAll('.winner').forEach(item => {
         item.classList.remove('winner');
@@ -326,15 +284,10 @@
             document.getElementById('currentSpin').textContent = i;
           }
           
-          // Play spinning sound
-          this.playSound('roulette');
-          
           // Animate the premium columns
           await this.animatePremiumSpin(i === this.selectedSpins);
           
           if (i === this.selectedSpins) {
-            // Play final win sound
-            this.playSound('finalWin');
             await this.showWinnersSequentially();
           }
           
@@ -643,9 +596,6 @@
       
       console.log(`Animating ${columns.length} columns to ${targetPosition}px over ${duration}ms`);
       
-      // Sequential stopping - each column stops 200ms after the previous
-      const staggerDelay = 200; // Delay between each reel stopping
-      
       columns.forEach((col, index) => {
         // Reset first
         col.style.transition = 'none';
@@ -654,21 +604,12 @@
         // Force reflow
         void col.offsetHeight;
         
-        // Calculate individual column duration and delay
-        const columnDelay = index * staggerDelay;
-        const columnDuration = duration - (columns.length - 1 - index) * staggerDelay;
-        
-        // Start spinning immediately but stop sequentially
-        setTimeout(() => {
-          // Play stop sound for each column
-          this.playSound('stop');
-          col.style.transition = `transform ${columnDuration}ms cubic-bezier(0.17, 0.67, 0.16, 0.99)`;
-          col.style.transform = `translateY(${targetPosition}px)`;
-        }, columnDelay);
+        // Now animate
+        col.style.transition = `transform ${duration}ms cubic-bezier(0.17, 0.67, 0.16, 0.99)`;
+        col.style.transform = `translateY(${targetPosition}px)`;
       });
       
-      // Wait for all columns to finish (last column finishes at original duration)
-      await this.sleep(duration + (columns.length - 1) * staggerDelay);
+      await this.sleep(duration);
     }
     
     async showWinnersSequentially() {
@@ -680,8 +621,6 @@
         const winner = column.querySelector('[data-winner="true"]');
         
         if (winner) {
-          // Play win sound for each winner highlight
-          this.playSound('win');
           // Create pulse ripple effect first
           this.createPulseRipple(winner);
           
