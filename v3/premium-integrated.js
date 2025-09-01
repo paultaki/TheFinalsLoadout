@@ -401,31 +401,34 @@
     getFallbackData() {
       return {
         Light: {
-          weapons: ['93R', 'ARN220', 'Dagger', 'LH1', 'M11', 'M26 Matter', 'Recurve Bow', 
-                   'SH1900', 'SR84', 'Sword', 'Throwing Knives', 'V9S', 'XP54'],
+          weapons: ['93R', 'AKM-220', 'Dagger', 'LH1', 'M11', 'M26 Matter', 'Recurve Bow', 
+                   'SH1900', 'SR-84', 'Sword', 'Throwing Knives', 'V9S', 'XP-54'],
           specializations: ['Cloaking Device', 'Evasive Dash', 'Grappling Hook'],
-          gadgets: ['Breach Charge', 'Gateway', 'Glitch Grenade', 'Gravity Vortex', 'H+ Infuser',
-                   'Sonar Grenade', 'Nullifier', 'Thermal Bore', 'Thermal Vision',
-                   'Tracking Dart', 'Vanishing Bomb', 'Flashbang', 'Frag Grenade', 
-                   'Gas Grenade', 'Goo Grenade', 'Pyro Grenade', 'Smoke Grenade']
+          gadgets: ['Breach Charge', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
+                   'Gateway', 'Glitch Grenade', 'Goo Grenade', 'Gravity Vortex',
+                   'H+ Diffuser', 'Nullifier', 'Pyro Grenade', 'Smoke Grenade',
+                   'Sonar Grenade', 'Thermal Bore', 'Thermal Vision',
+                   'Tracking Dart', 'Vanishing Bomb']
         },
         Medium: {
-          weapons: ['AKM', 'CB-01 Repeater', 'CL40', 'Cerberus 12GA', 'Dual Blades', 'FAMAS',
-                   'FCAR', 'Model 1887', 'Pike-556', 'R.357', 'Riot Shield'],
-          specializations: ['Dematerializer', 'Guardian Turret', 'Healing Beam'],
+          weapons: ['AKM', 'CK-01 Repeater', 'Cerberus 52GA', 'CL-40', 'Dual Blades', 'FAMAS',
+                   'FCAR', 'Model 1887', 'PIKE-556', 'R.357', 'Riot Shield'],
+          specializations: ['Dematerializer', 'Guardian Turret', 'Healing Beam', 'Recon Senses'],
           gadgets: ['APS Turret', 'Breach Drill', 'Data Reshaper', 'Defibrillator',
-                   'Explosive Mine', 'Gas Mine', 'Glitch Trap', 'Jump Pad',
-                   'Zipline', 'Proximity Sensor', 'Night Vision', 'Flashbang',
-                   'Frag Grenade', 'Gas Grenade', 'Goo Grenade', 'Pyro Grenade', 'Smoke Grenade']
+                   'Explosive Mine', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
+                   'Gas Mine', 'Glitch Trap', 'Goo Grenade', 'Jump Pad',
+                   'Proximity Sensor', 'Pyro Grenade', 'Zipline', 'Smoke Grenade',
+                   'Night Vision']
         },
         Heavy: {
-          weapons: ['.50 Akimbo', 'Flamethrower', 'KS23', 'Lewis Gun', 'M134 Minigun', 'M60',
-                   'MGL32', 'SA1216', 'ShAK-50', 'Sledgehammer', 'Spear'],
-          specializations: ['Charge N Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
+          weapons: ['SH1 Akimbo', 'Flamethrower', 'KS-23', 'Lewis Gun', 'M134 Minigun',
+                   'M60', 'MGL32', 'SA1216', 'SHAK-50', 'Sledgehammer', 'Spear'],
+          specializations: ['Charge \'N\' Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
           gadgets: ['Anti-Gravity Cube', 'Barricade', 'C4', 'Dome Shield',
-                   'Explosive Mine', 'Healing Emitter', 'Proximity Sensor', 'Lockbolt',
-                   'Pyro Mine', 'RPG-7', 'Night Vision', 'Flashbang',
-                   'Frag Grenade', 'Gas Grenade', 'Goo Grenade', 'Pyro Grenade', 'Smoke Grenade']
+                   'Explosive Mine', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
+                   'Goo Grenade', 'Healing Emitter', 'Lockbolt', 'Night Vision',
+                   'Proximity Sensor', 'Pyro Grenade', 'Pyro Mine', 'RPG-7',
+                   'Smoke Grenade']
         }
       };
     }
@@ -474,13 +477,19 @@
         'Charge \'N\' Slam': 'Charge_N_Slam',
         'Charge N Slam': 'Charge_N_Slam',
         'H+ Infuser': 'H+_Infuser',
+        'CK-01 Repeater': 'CB-01_Repeater',
         'CB-01 Repeater': 'CB-01_Repeater',
+        'Cerberus 52GA': 'Cerberus_12GA',
         'Cerberus 12GA': 'Cerberus_12GA',
         'FAMAS': 'FAMAS',
+        'CL-40': 'CL-40',
         'CL40': 'CL-40',
-        'ARN220': 'ARN-220',
-        'SR84': 'SR-84',
-        'XP54': 'XP-54',
+        'PIKE-556': 'PIKE-556',
+        'H+ Diffuser': 'H+_Infuser',
+        'SH1 Akimbo': '50_Akimbo',
+        'AKM-220': 'ARN-220',
+        'SR-84': 'SR-84',
+        'XP-54': 'XP-54',
         'M134 Minigun': 'M134_Minigun',
         '.50 Akimbo': '50_Akimbo',
         'ShAK-50': 'SHAK-50',

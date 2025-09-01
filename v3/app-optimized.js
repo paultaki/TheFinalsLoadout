@@ -38,51 +38,45 @@
     loadouts: {
       Light: {
         weapons: [
-          '93R', 'ARN220', 'Dagger', 'LH1', 'M11', 'M26 Matter',
-          'Recurve Bow', 'SH1900', 'SR84', 'Sword', 'Throwing Knives',
-          'V9S', 'XP54'
+          '93R', 'AKM-220', 'Dagger', 'LH1', 'M11', 'M26 Matter',
+          'Recurve Bow', 'SH1900', 'SR-84', 'Sword', 'Throwing Knives',
+          'V9S', 'XP-54'
         ],
         specializations: ['Cloaking Device', 'Evasive Dash', 'Grappling Hook'],
         gadgets: [
-          // Light exclusive
-          'Breach Charge', 'Gateway', 'Glitch Grenade', 'Gravity Vortex',
-          'H+ Infuser', 'Sonar Grenade', 'Nullifier', 'Thermal Bore',
-          'Thermal Vision', 'Tracking Dart', 'Vanishing Bomb',
-          // Shared with all classes
-          'Flashbang', 'Frag Grenade', 'Gas Grenade', 'Goo Grenade',
-          'Pyro Grenade', 'Smoke Grenade'
+          'Breach Charge', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
+          'Gateway', 'Glitch Grenade', 'Goo Grenade', 'Gravity Vortex',
+          'H+ Diffuser', 'Nullifier', 'Pyro Grenade', 'Smoke Grenade',
+          'Sonar Grenade', 'Thermal Bore', 'Thermal Vision',
+          'Tracking Dart', 'Vanishing Bomb'
         ]
       },
       Medium: {
         weapons: [
-          'AKM', 'CB-01 Repeater', 'CL40', 'Cerberus 12GA', 'Dual Blades',
-          'FAMAS', 'FCAR', 'Model 1887', 'Pike-556', 'R.357', 'Riot Shield'
+          'AKM', 'CK-01 Repeater', 'Cerberus 52GA', 'CL-40', 'Dual Blades',
+          'FAMAS', 'FCAR', 'Model 1887', 'PIKE-556', 'R.357', 'Riot Shield'
         ],
-        specializations: ['Dematerializer', 'Guardian Turret', 'Healing Beam'],
+        specializations: ['Dematerializer', 'Guardian Turret', 'Healing Beam', 'Recon Senses'],
         gadgets: [
-          // Medium exclusive
           'APS Turret', 'Breach Drill', 'Data Reshaper', 'Defibrillator',
-          'Explosive Mine', 'Gas Mine', 'Glitch Trap', 'Jump Pad',
-          'Zipline', 'Proximity Sensor', 'Night Vision',
-          // Shared with all classes
-          'Flashbang', 'Frag Grenade', 'Gas Grenade', 'Goo Grenade',
-          'Pyro Grenade', 'Smoke Grenade'
+          'Explosive Mine', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
+          'Gas Mine', 'Glitch Trap', 'Goo Grenade', 'Jump Pad',
+          'Proximity Sensor', 'Pyro Grenade', 'Zipline', 'Smoke Grenade',
+          'Night Vision'
         ]
       },
       Heavy: {
         weapons: [
-          '.50 Akimbo', 'Flamethrower', 'KS23', 'Lewis Gun', 'M134 Minigun',
-          'M60', 'MGL32', 'SA1216', 'ShAK-50', 'Sledgehammer', 'Spear'
+          'SH1 Akimbo', 'Flamethrower', 'KS-23', 'Lewis Gun', 'M134 Minigun',
+          'M60', 'MGL32', 'SA1216', 'SHAK-50', 'Sledgehammer', 'Spear'
         ],
-        specializations: ['Charge N Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
+        specializations: ['Charge \'N\' Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
         gadgets: [
-          // Heavy exclusive
           'Anti-Gravity Cube', 'Barricade', 'C4', 'Dome Shield',
-          'Explosive Mine', 'Healing Emitter', 'Proximity Sensor', 'Lockbolt',
-          'Pyro Mine', 'RPG-7', 'Night Vision',
-          // Shared with all classes
-          'Flashbang', 'Frag Grenade', 'Gas Grenade', 'Goo Grenade',
-          'Pyro Grenade', 'Smoke Grenade'
+          'Explosive Mine', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
+          'Goo Grenade', 'Healing Emitter', 'Lockbolt', 'Night Vision',
+          'Proximity Sensor', 'Pyro Grenade', 'Pyro Mine', 'RPG-7',
+          'Smoke Grenade'
         ]
       }
     }
@@ -434,40 +428,50 @@
       
       // First, handle special cases
       const specialCases = {
-        'SA1216': 'SA1216',
-        'RPG-7': 'RPG-7',
-        'M60': 'M60',
-        'CQC-300': 'CQC-300',
-        'MGL32': 'MGL32',
-        'KS23': 'KS-23',
-        'KS-23': 'KS-23',
-        'MK-VI Auto': 'MK-VI_Auto',
-        'AKM': 'AKM',
+        // Light weapons
         '93R': '93R',
-        'ARN220': 'ARN-220',
-        'ARN-220': 'ARN-220',
-        '.50 Akimbo': '50_Akimbo',
-        'V9S': 'V9S',
-        'XP54': 'XP-54',
-        'XP-54': 'XP-54',
-        'SR84': 'SR-84',
-        'SR-84': 'SR-84',
-        'M11': 'M11',
+        'AKM-220': 'ARN-220',
+        'Dagger': 'Dagger',
         'LH1': 'LH1',
+        'M11': 'M11',
+        'M26 Matter': 'M26_Mattock',
+        'Recurve Bow': 'Recurve_Bow',
         'SH1900': 'SH1900',
-        'APS Turret': 'APS_Turret',
-        'C4': 'C4',
-        'R.357': 'R.357',
-        'FCAR': 'FCAR',
+        'SR-84': 'SR-84',
+        'Sword': 'Sword',
+        'V9S': 'V9S',
+        'XP-54': 'XP-54',
+        'Throwing Knives': 'Throwing_Knives',
+        // Medium weapons
+        'AKM': 'AKM',
+        'CK-01 Repeater': 'CB-01_Repeater',
+        'Cerberus 52GA': 'Cerberus_12GA',
+        'CL-40': 'CL-40',
+        'Dual Blades': 'Dual_Blades',
         'FAMAS': 'FAMAS',
-        'CL40': 'CL-40',
-        'CB-01 Repeater': 'CB-01_Repeater',
-        'Cerberus 12GA': 'Cerberus_12GA',
+        'FCAR': 'FCAR',
+        'Model 1887': 'Model_1887',
+        'PIKE-556': 'PIKE-556',
+        'R.357': 'R.357',
+        'Riot Shield': 'Riot_Shield',
+        // Heavy weapons
+        'SH1 Akimbo': '50_Akimbo',
+        'Flamethrower': 'Flamethrower',
+        'KS-23': 'KS-23',
+        'Lewis Gun': 'Lewis_Gun',
         'M134 Minigun': 'M134_Minigun',
-        'ShAK-50': 'SHAK-50',
+        'M60': 'M60',
+        'MGL32': 'MGL32',
+        'SA1216': 'SA1216',
+        'SHAK-50': 'SHAK-50',
         'Sledgehammer': 'Sledgehammer',
         'Spear': 'Spear',
-        'Anti-Gravity Cube': 'Anti-Gravity_Cube'
+        // Gadgets
+        'H+ Diffuser': 'H+_Infuser',
+        'Anti-Gravity Cube': 'Anti-Gravity_Cube',
+        'APS Turret': 'APS_Turret',
+        'C4': 'C4',
+        'RPG-7': 'RPG-7'
       };
       
       // Add missing items to special cases
