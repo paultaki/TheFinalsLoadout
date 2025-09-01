@@ -464,16 +464,18 @@
     getImagePath(itemName) {
       if (!itemName) return '/images/placeholder.webp';
       
-      // Use the app's image path function if available
-      if (this.app && this.app.slotMachine && this.app.slotMachine.getItemImage) {
-        return this.app.slotMachine.getItemImage(itemName);
-      }
+      // Don't use app's image function - it has lowercase issues
+      // if (this.app && this.app.slotMachine && this.app.slotMachine.getItemImage) {
+      //   return this.app.slotMachine.getItemImage(itemName);
+      // }
       
       // Special cases for image names that don't match the item names exactly
       const specialCases = {
         'Nullifier': 'Stun_Gun',
         'Motion Sensor': 'Motion_Sensor',
         'Anti-Gravity Cube': 'Anti-Gravity_Cube',
+        'Lockbolt': 'Lockbolt_Launcher',
+        'Night Vision': 'Night_Vision_Goggles',
         'Charge \'N\' Slam': 'Charge_N_Slam',
         'Charge N Slam': 'Charge_N_Slam',
         'H+ Infuser': 'H+_Infuser',

@@ -471,7 +471,11 @@
         'Anti-Gravity Cube': 'Anti-Gravity_Cube',
         'APS Turret': 'APS_Turret',
         'C4': 'C4',
-        'RPG-7': 'RPG-7'
+        'RPG-7': 'RPG-7',
+        // Additional mappings for special formatting
+        'Nullifier': 'Stun_Gun',
+        'Lockbolt': 'Lockbolt_Launcher',
+        'Night Vision': 'Night_Vision_Goggles'
       };
       
       // Add missing items to special cases
