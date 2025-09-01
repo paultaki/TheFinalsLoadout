@@ -488,7 +488,7 @@
         'CL40': 'CL-40',
         'PIKE-556': 'Pike-556',
         'H+ Diffuser': 'H+_Infuser',
-        'SH1 Akimbo': '50_Akimbo',
+        'SH1 Akimbo': '.50_Akimbo',
         'AKM-220': 'ARN-220',
         'SR-84': 'SR-84',
         'XP-54': 'XP-54',
