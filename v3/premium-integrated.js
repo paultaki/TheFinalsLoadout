@@ -26,7 +26,7 @@
         click: '/sounds/click.mp3',
         spinStart: '/sounds/start-spin.mp3',
         spinning: '/sounds/spinning.mp3',
-        roulette: '/sounds/roulette.mp3',
+        roulette: '/sounds/wheel-tick-loop.mp3',  // Use looping sound
         stop: '/sounds/ding.mp3',
         win: '/sounds/ding-ding.mp3',
         finalWin: '/sounds/final-sound.mp3'
@@ -37,20 +37,43 @@
         const audio = new Audio(path);
         audio.preload = 'auto';
         audio.volume = 0.3; // Set default volume
+        // Set roulette sound to loop
+        if (key === 'roulette') {
+          audio.loop = true;
+        }
         this.sounds[key] = audio;
       });
+      
+      this.currentRouletteSound = null; // Track the current spinning sound
     }
     
     playSound(soundName) {
       if (!this.soundEnabled || !this.sounds[soundName]) return;
       
       try {
-        // Clone the audio to allow overlapping sounds
-        const audio = this.sounds[soundName].cloneNode();
-        audio.volume = this.sounds[soundName].volume;
-        audio.play().catch(e => console.log('Sound play failed:', e));
+        // Special handling for roulette sound (looping)
+        if (soundName === 'roulette') {
+          // Stop any existing roulette sound
+          this.stopRouletteSound();
+          // Start new roulette sound
+          this.currentRouletteSound = this.sounds.roulette;
+          this.currentRouletteSound.currentTime = 0;
+          this.currentRouletteSound.play().catch(e => console.log('Roulette sound failed:', e));
+        } else {
+          // For non-looping sounds, clone to allow overlapping
+          const audio = this.sounds[soundName].cloneNode();
+          audio.volume = this.sounds[soundName].volume;
+          audio.play().catch(e => console.log('Sound play failed:', e));
+        }
       } catch (e) {
         console.log('Sound error:', e);
+      }
+    }
+    
+    stopRouletteSound() {
+      if (this.currentRouletteSound) {
+        this.currentRouletteSound.pause();
+        this.currentRouletteSound.currentTime = 0;
       }
     }
     
@@ -332,8 +355,11 @@
           // Animate the premium columns
           await this.animatePremiumSpin(i === this.selectedSpins);
           
+          // Stop the roulette sound after spin completes
+          this.stopRouletteSound();
+          
           if (i === this.selectedSpins) {
-            // Play final win sound
+            // Only play final win sound and show winners on last spin
             this.playSound('finalWin');
             await this.showWinnersSequentially();
           }
@@ -693,9 +719,7 @@
         const winner = column.querySelector('[data-winner="true"]');
         
         if (winner) {
-          // Play win sound for each winner highlight
-          this.playSound('win');
-          // Create pulse ripple effect first
+          // Create pulse ripple effect first (no sound here - already played finalWin)
           this.createPulseRipple(winner);
           
           // Small delay for ripple to start
