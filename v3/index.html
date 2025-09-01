@@ -666,14 +666,265 @@
                 font-size: 0.5rem;
             }
         }
+        /* Navigation Bar Styles */
+        .main-nav {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 51, 102, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0.5rem 1rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            color: #888;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: color 0.3s;
+            text-transform: uppercase;
+        }
+        
+        .nav-link:hover {
+            color: #ff3366;
+        }
+        
+        .nav-link.active {
+            color: #ff3366;
+            border-bottom: 2px solid #ff3366;
+        }
+        
+        /* History Section Styles */
+        .history-section {
+            margin-top: 3rem;
+            padding: 2rem 1rem;
+            background: rgba(10, 10, 15, 0.8);
+            border-top: 2px solid rgba(255, 51, 102, 0.2);
+        }
+        
+        .history-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .history-title {
+            font-size: 1.8rem;
+            color: #ff3366;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .history-count {
+            color: #888;
+            font-size: 1rem;
+        }
+        
+        .clear-history-btn {
+            background: rgba(255, 51, 102, 0.1);
+            border: 1px solid #ff3366;
+            color: #ff3366;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .clear-history-btn:hover {
+            background: rgba(255, 51, 102, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .history-list {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .history-item {
+            background: rgba(20, 20, 25, 0.9);
+            border: 1px solid rgba(255, 51, 102, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .history-item:hover {
+            border-color: #ff3366;
+            background: rgba(30, 30, 35, 0.9);
+            transform: translateX(4px);
+        }
+        
+        .loadout-details {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        
+        .loadout-class {
+            color: #ff3366;
+            font-weight: 700;
+            font-size: 1.1rem;
+            min-width: 80px;
+        }
+        
+        .loadout-equipment {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        .equipment-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        
+        .equipment-label {
+            color: #888;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+        
+        .equipment-value {
+            color: #fff;
+        }
+        
+        .copy-btn {
+            background: rgba(0, 240, 192, 0.1);
+            border: 1px solid #00f0c0;
+            color: #00f0c0;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(0, 240, 192, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .copy-btn.copied {
+            background: rgba(80, 200, 120, 0.2);
+            border-color: #50c878;
+            color: #50c878;
+        }
+        
+        .empty-history {
+            text-align: center;
+            color: #666;
+            padding: 3rem 1rem;
+            font-style: italic;
+        }
+        
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            color: #888;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(10, 10, 15, 0.9);
+            font-size: 0.75rem;
+        }
+        
+        .support-section {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(80, 200, 120, 0.05) 0%, rgba(0, 255, 204, 0.05) 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(80, 200, 120, 0.2);
+        }
+        
+        .support-btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, #50c878, #00ffcc);
+            color: #0a0a0f;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(80, 200, 120, 0.3);
+        }
+        
+        .support-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(80, 200, 120, 0.5);
+        }
+        
+        /* Mobile Responsive History */
+        @media (max-width: 768px) {
+            .loadout-details {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .loadout-equipment {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .history-item {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .copy-btn {
+                width: 100%;
+                padding: 0.6rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="main-nav">
+        <div class="nav-links">
+            <a href="/" class="nav-link">CLASSIC GENERATOR</a>
+            <a href="/v3/" class="nav-link active">PREMIUM SLOTS</a>
+            <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
+            <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
+            <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
+            <a href="/wt-progress/" class="nav-link">WORLD TOUR</a>
+        </div>
+    </nav>
+
     <!-- Header -->
     <header class="header">
         <h1 class="title">THE FINALS</h1>
-        <h1 class="title">RANDOM LOADOUT GENERATOR</h1>
-        <p class="subtitle">Challenge Yourself With Unique Builds</p>
+        <h1 class="title">PREMIUM SLOT MACHINE</h1>
+        <p class="subtitle">Vegas-Style Loadout Generator</p>
     </header>
 
     <!-- Premium Slot Machine Container -->
@@ -779,5 +1030,208 @@
     
     <!-- Victory Sparks Container -->
     <div id="victorySparks"></div>
+    
+    <!-- History Section -->
+    <section class="history-section">
+        <div class="history-container">
+            <div class="history-header">
+                <h2 class="history-title">
+                    <span>🎰</span>
+                    <span>Loadout History</span>
+                    <span class="history-count" id="historyCount">(0)</span>
+                </h2>
+                <button class="clear-history-btn" id="clearHistoryBtn">Clear All History</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="empty-history">No loadouts generated yet. Spin the slots to get started!</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="support-section">
+            <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;">
+                <span style="font-size:1.5rem;">☕</span>
+                <div>
+                    <p style="margin:0;color:#50c878;font-weight:600;font-size:0.9rem;">Enjoying the premium slot machine?</p>
+                    <p style="margin:0.25rem 0 0.75rem 0;color:#b8bfc6;font-size:0.8rem;">Help keep it running with a coffee!</p>
+                </div>
+            </div>
+            <a href="https://ko-fi.com/nextroundonme" target="_blank" rel="noopener" class="support-btn">
+                <span>💚 Support Me</span>
+            </a>
+        </div>
+        
+        <p style="margin:0 0 0.5rem 0;">
+            © 2025 TheFinalsLoadout.com | Created by 
+            <a href="https://www.paultakisaki.com/" rel="author" style="color:#00f0c0;text-decoration:none;">Paul Takisaki</a>
+        </p>
+        <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;font-size:0.75rem;margin-top:0.5rem;">
+            <a href="/legal/" style="color:#00f0c0;text-decoration:none;">Legal Disclaimer</a>
+            <a href="https://thefinalsloadout.com/feedback" style="color:#ffd700;text-decoration:none;">📝 Submit Feedback</a>
+        </div>
+    </footer>
+    
+    <!-- History Management Script -->
+    <script>
+        class LoadoutHistory {
+            constructor() {
+                this.maxHistory = 5;
+                this.historyKey = 'premiumSlotHistory';
+                this.init();
+            }
+            
+            init() {
+                this.loadHistory();
+                this.setupEventListeners();
+            }
+            
+            setupEventListeners() {
+                // Clear history button
+                const clearBtn = document.getElementById('clearHistoryBtn');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', () => this.clearHistory());
+                }
+            }
+            
+            loadHistory() {
+                const saved = localStorage.getItem(this.historyKey);
+                this.history = saved ? JSON.parse(saved) : [];
+                this.render();
+            }
+            
+            addLoadout(loadout) {
+                if (!loadout) return;
+                
+                // Add timestamp and unique ID
+                const entry = {
+                    ...loadout,
+                    id: Date.now(),
+                    timestamp: new Date().toLocaleTimeString()
+                };
+                
+                // Add to beginning and limit to maxHistory
+                this.history.unshift(entry);
+                if (this.history.length > this.maxHistory) {
+                    this.history = this.history.slice(0, this.maxHistory);
+                }
+                
+                // Save and render
+                this.saveHistory();
+                this.render();
+            }
+            
+            saveHistory() {
+                localStorage.setItem(this.historyKey, JSON.stringify(this.history));
+            }
+            
+            clearHistory() {
+                if (confirm('Clear all loadout history?')) {
+                    this.history = [];
+                    this.saveHistory();
+                    this.render();
+                }
+            }
+            
+            copyLoadout(loadout) {
+                const text = `Class: ${loadout.class || 'Unknown'}
+Weapon: ${loadout.weapon}
+Specialization: ${loadout.specialization}
+Gadget 1: ${loadout.gadget1}
+Gadget 2: ${loadout.gadget2}
+Gadget 3: ${loadout.gadget3}`;
+                
+                navigator.clipboard.writeText(text).then(() => {
+                    // Show copied feedback
+                    event.target.classList.add('copied');
+                    event.target.textContent = '✓ Copied!';
+                    setTimeout(() => {
+                        event.target.classList.remove('copied');
+                        event.target.textContent = '📋 Copy';
+                    }, 2000);
+                });
+            }
+            
+            render() {
+                const container = document.getElementById('historyList');
+                const count = document.getElementById('historyCount');
+                
+                if (!container) return;
+                
+                // Update count
+                if (count) {
+                    count.textContent = `(${this.history.length})`;
+                }
+                
+                // Render history items
+                if (this.history.length === 0) {
+                    container.innerHTML = '<div class="empty-history">No loadouts generated yet. Spin the slots to get started!</div>';
+                } else {
+                    container.innerHTML = this.history.map(item => `
+                        <div class="history-item">
+                            <div class="loadout-details">
+                                <div class="loadout-class">${item.class || 'Unknown'}</div>
+                                <div class="loadout-equipment">
+                                    <div class="equipment-item">
+                                        <span class="equipment-label">Weapon</span>
+                                        <span class="equipment-value">${item.weapon}</span>
+                                    </div>
+                                    <div class="equipment-item">
+                                        <span class="equipment-label">Spec</span>
+                                        <span class="equipment-value">${item.specialization}</span>
+                                    </div>
+                                    <div class="equipment-item">
+                                        <span class="equipment-label">Gadget 1</span>
+                                        <span class="equipment-value">${item.gadget1}</span>
+                                    </div>
+                                    <div class="equipment-item">
+                                        <span class="equipment-label">Gadget 2</span>
+                                        <span class="equipment-value">${item.gadget2}</span>
+                                    </div>
+                                    <div class="equipment-item">
+                                        <span class="equipment-label">Gadget 3</span>
+                                        <span class="equipment-value">${item.gadget3}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="copy-btn" data-id="${item.id}">📋 Copy</button>
+                        </div>
+                    `).join('');
+                    
+                    // Add copy event listeners
+                    container.querySelectorAll('.copy-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = parseInt(e.target.dataset.id);
+                            const loadout = this.history.find(h => h.id === id);
+                            if (loadout) this.copyLoadout(loadout);
+                        });
+                    });
+                }
+            }
+        }
+        
+        // Initialize history manager
+        window.loadoutHistory = new LoadoutHistory();
+        
+        // Hook into the premium slot machine to capture loadouts
+        const originalStartSlotMachine = window.premiumIntegrated?.startSlotMachine;
+        if (window.premiumIntegrated && originalStartSlotMachine) {
+            window.premiumIntegrated.startSlotMachine = async function() {
+                const result = await originalStartSlotMachine.apply(this, arguments);
+                
+                // Add loadout to history after generation
+                if (this.currentLoadout) {
+                    const loadout = {
+                        ...this.currentLoadout,
+                        class: this.selectedClass ? this.selectedClass.charAt(0).toUpperCase() + this.selectedClass.slice(1) : 'Unknown'
+                    };
+                    window.loadoutHistory.addLoadout(loadout);
+                }
+                
+                return result;
+            }.bind(window.premiumIntegrated);
+        }
+    </script>
 </body>
 </html>

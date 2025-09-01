@@ -242,7 +242,13 @@
         }
         
         // Add to history
-        if (this.app.uiController.historyManager) {
+        if (window.loadoutHistory) {
+          const loadout = {
+            ...this.currentLoadout,
+            class: this.selectedClass ? this.selectedClass.charAt(0).toUpperCase() + this.selectedClass.slice(1) : 'Unknown'
+          };
+          window.loadoutHistory.addLoadout(loadout);
+        } else if (this.app.uiController.historyManager) {
           this.app.uiController.historyManager.addEntry(this.currentLoadout);
         }
         
