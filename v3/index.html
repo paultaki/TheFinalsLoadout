@@ -675,6 +675,9 @@
             top: 0;
             z-index: 1000;
             padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .nav-links {
@@ -682,6 +685,205 @@
             justify-content: center;
             gap: 1rem;
             flex-wrap: wrap;
+            flex: 1;
+        }
+        
+        .nav-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .filter-toggle-button {
+            background: rgba(255, 51, 102, 0.1);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            color: #ff3366;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .filter-toggle-button:hover {
+            background: rgba(255, 51, 102, 0.2);
+            border-color: #ff3366;
+            transform: translateY(-2px);
+        }
+        
+        /* Filter Panel Styles */
+        .filter-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .filter-panel-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .filter-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            max-width: 90vw;
+            height: 100vh;
+            background: rgba(20, 20, 25, 0.98);
+            border-left: 2px solid rgba(255, 51, 102, 0.3);
+            z-index: 1999;
+            overflow-y: auto;
+            transition: right 0.3s ease;
+            padding: 1rem;
+        }
+        
+        .filter-panel.active {
+            right: 0;
+        }
+        
+        .filter-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 51, 102, 0.2);
+        }
+        
+        .filter-panel-title {
+            font-size: 1.5rem;
+            color: #ff3366;
+            font-weight: 700;
+        }
+        
+        .close-filter-panel {
+            background: transparent;
+            border: none;
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-filter-panel:hover {
+            color: #ff3366;
+        }
+        
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+        
+        .filter-class-title {
+            color: #ff3366;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        
+        .filter-category {
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-category-title {
+            color: #00f0c0;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-items {
+            display: grid;
+            gap: 0.5rem;
+        }
+        
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.3rem;
+            transition: background 0.2s;
+            border-radius: 4px;
+        }
+        
+        .filter-item:hover {
+            background: rgba(255, 51, 102, 0.05);
+        }
+        
+        .filter-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #ff3366;
+            cursor: pointer;
+        }
+        
+        .filter-item label {
+            color: #ccc;
+            cursor: pointer;
+            flex: 1;
+            font-size: 0.9rem;
+        }
+        
+        .filter-actions {
+            position: sticky;
+            bottom: 0;
+            background: rgba(20, 20, 25, 0.98);
+            padding: 1rem 0;
+            border-top: 1px solid rgba(255, 51, 102, 0.2);
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .filter-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .apply-filters {
+            background: rgba(0, 240, 192, 0.1);
+            border-color: #00f0c0;
+            color: #00f0c0;
+        }
+        
+        .apply-filters:hover {
+            background: rgba(0, 240, 192, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .clear-filters {
+            background: rgba(255, 51, 102, 0.1);
+            border-color: #ff3366;
+            color: #ff3366;
+        }
+        
+        .clear-filters:hover {
+            background: rgba(255, 51, 102, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .select-all-checkbox {
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: #888;
         }
         
         .nav-link {
@@ -918,6 +1120,19 @@
             <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
             <a href="/wt-progress/" class="nav-link">WORLD TOUR</a>
         </div>
+        <div class="nav-controls">
+            <button id="filter-toggle" class="filter-toggle-button" aria-label="Toggle filters">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                    <circle cx="7" cy="6" r="2" fill="currentColor"></circle>
+                    <circle cx="17" cy="12" r="2" fill="currentColor"></circle>
+                    <circle cx="10" cy="18" r="2" fill="currentColor"></circle>
+                </svg>
+                <span>Filters</span>
+            </button>
+        </div>
     </nav>
 
     <!-- Header -->
@@ -1004,9 +1219,6 @@
     <!-- Load the premium integration -->
     <script src="premium-integrated.js?v=20250831"></script>
     
-    <!-- Debug winner highlighting (remove after testing) -->
-    <script src="debug-winner.js"></script>
-    
     <!-- Victory Sparks positioning fix -->
     <script>
         // Fix sparks container positioning
@@ -1030,6 +1242,22 @@
     
     <!-- Victory Sparks Container -->
     <div id="victorySparks"></div>
+    
+    <!-- Filter Panel -->
+    <div class="filter-panel-overlay" id="filter-panel-overlay"></div>
+    <div class="filter-panel" id="filter-panel">
+        <div class="filter-panel-header">
+            <h2 class="filter-panel-title">Filter Equipment</h2>
+            <button class="close-filter-panel" id="close-filter-panel">✕</button>
+        </div>
+        <div id="filter-content">
+            <!-- Filter content will be dynamically populated -->
+        </div>
+        <div class="filter-actions">
+            <button class="filter-btn clear-filters" id="clear-filters">Clear All</button>
+            <button class="filter-btn apply-filters" id="apply-filters">Apply Filters</button>
+        </div>
+    </div>
     
     <!-- History Section -->
     <section class="history-section">
@@ -1232,6 +1460,332 @@ Gadget 3: ${loadout.gadget3}`;
                 return result;
             }.bind(window.premiumIntegrated);
         }
+    </script>
+    
+    <!-- Filter System Script -->
+    <script>
+        class FilterSystem {
+            constructor() {
+                this.filterState = {};
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.loadFilterState();
+                
+                // Wait for premium integrated to be ready
+                const checkReady = setInterval(() => {
+                    if (window.premiumIntegrated && window.premiumIntegrated.loadoutData) {
+                        clearInterval(checkReady);
+                        this.populateFilters();
+                    }
+                }, 100);
+            }
+            
+            setupEventListeners() {
+                // Toggle button
+                const toggleBtn = document.getElementById('filter-toggle');
+                if (toggleBtn) {
+                    toggleBtn.addEventListener('click', () => this.togglePanel());
+                }
+                
+                // Close button
+                const closeBtn = document.getElementById('close-filter-panel');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => this.closePanel());
+                }
+                
+                // Overlay click
+                const overlay = document.getElementById('filter-panel-overlay');
+                if (overlay) {
+                    overlay.addEventListener('click', () => this.closePanel());
+                }
+                
+                // Apply button
+                const applyBtn = document.getElementById('apply-filters');
+                if (applyBtn) {
+                    applyBtn.addEventListener('click', () => this.applyFilters());
+                }
+                
+                // Clear button
+                const clearBtn = document.getElementById('clear-filters');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', () => this.clearAllFilters());
+                }
+            }
+            
+            togglePanel() {
+                const panel = document.getElementById('filter-panel');
+                const overlay = document.getElementById('filter-panel-overlay');
+                
+                if (panel && overlay) {
+                    const isActive = panel.classList.contains('active');
+                    if (isActive) {
+                        this.closePanel();
+                    } else {
+                        panel.classList.add('active');
+                        overlay.classList.add('active');
+                    }
+                }
+            }
+            
+            closePanel() {
+                const panel = document.getElementById('filter-panel');
+                const overlay = document.getElementById('filter-panel-overlay');
+                
+                if (panel && overlay) {
+                    panel.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            }
+            
+            populateFilters() {
+                const container = document.getElementById('filter-content');
+                if (!container || !window.premiumIntegrated) return;
+                
+                const data = window.premiumIntegrated.getGameData();
+                if (!data) return;
+                
+                container.innerHTML = '';
+                
+                ['Light', 'Medium', 'Heavy'].forEach(className => {
+                    const section = document.createElement('div');
+                    section.className = 'filter-section';
+                    section.innerHTML = `<h3 class="filter-class-title">${className} Class</h3>`;
+                    
+                    // Weapons
+                    const weaponsDiv = this.createFilterCategory('Weapons', data[className].weapons, className, 'weapon');
+                    section.appendChild(weaponsDiv);
+                    
+                    // Specializations
+                    const specsDiv = this.createFilterCategory('Specializations', data[className].specializations, className, 'specialization');
+                    section.appendChild(specsDiv);
+                    
+                    // Gadgets
+                    const gadgetsDiv = this.createFilterCategory('Gadgets', data[className].gadgets, className, 'gadget');
+                    section.appendChild(gadgetsDiv);
+                    
+                    container.appendChild(section);
+                });
+            }
+            
+            createFilterCategory(title, items, className, type) {
+                const div = document.createElement('div');
+                div.className = 'filter-category';
+                
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'filter-category-title';
+                titleDiv.innerHTML = `
+                    <span>${title}</span>
+                    <label class="select-all-checkbox">
+                        <input type="checkbox" data-class="${className}" data-type="${type}" data-select-all="true" checked>
+                        <span>Select All</span>
+                    </label>
+                `;
+                div.appendChild(titleDiv);
+                
+                const itemsDiv = document.createElement('div');
+                itemsDiv.className = 'filter-items';
+                
+                items.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'filter-item';
+                    itemDiv.innerHTML = `
+                        <input type="checkbox" id="${className}-${type}-${item}" 
+                               data-class="${className}" 
+                               data-type="${type}" 
+                               value="${item}" 
+                               checked>
+                        <label for="${className}-${type}-${item}">${item}</label>
+                    `;
+                    itemsDiv.appendChild(itemDiv);
+                });
+                
+                div.appendChild(itemsDiv);
+                
+                // Setup select all functionality
+                const selectAll = titleDiv.querySelector('[data-select-all]');
+                if (selectAll) {
+                    selectAll.addEventListener('change', (e) => {
+                        const checkboxes = itemsDiv.querySelectorAll('input[type="checkbox"]');
+                        checkboxes.forEach(cb => cb.checked = e.target.checked);
+                    });
+                }
+                
+                // Update select all when individual items change
+                itemsDiv.addEventListener('change', () => {
+                    const total = itemsDiv.querySelectorAll('input[type="checkbox"]').length;
+                    const checked = itemsDiv.querySelectorAll('input[type="checkbox"]:checked').length;
+                    if (selectAll) {
+                        selectAll.checked = checked === total;
+                        selectAll.indeterminate = checked > 0 && checked < total;
+                    }
+                });
+                
+                return div;
+            }
+            
+            applyFilters() {
+                if (!window.premiumIntegrated) return;
+                
+                const filterState = {
+                    Light: { weapons: [], specializations: [], gadgets: [] },
+                    Medium: { weapons: [], specializations: [], gadgets: [] },
+                    Heavy: { weapons: [], specializations: [], gadgets: [] }
+                };
+                
+                // Get all unchecked items (these will be filtered out)
+                const uncheckedBoxes = document.querySelectorAll('#filter-content input[type="checkbox"]:not(:checked):not([data-select-all])');
+                
+                uncheckedBoxes.forEach(checkbox => {
+                    const className = checkbox.dataset.class;
+                    const type = checkbox.dataset.type;
+                    const value = checkbox.value;
+                    
+                    if (type === 'weapon') {
+                        filterState[className].weapons.push(value);
+                    } else if (type === 'specialization') {
+                        filterState[className].specializations.push(value);
+                    } else if (type === 'gadget') {
+                        filterState[className].gadgets.push(value);
+                    }
+                });
+                
+                // Validate filters
+                const errors = this.validateFilters(filterState);
+                if (errors.length > 0) {
+                    alert('Filter validation failed:\n\n' + errors.join('\n'));
+                    return;
+                }
+                
+                // Apply filters
+                window.premiumIntegrated.filterState = filterState;
+                window.premiumIntegrated.saveFilterState();
+                
+                this.closePanel();
+                
+                // Show confirmation
+                this.showToast('Filters applied successfully!');
+            }
+            
+            validateFilters(filterState) {
+                const errors = [];
+                const data = window.premiumIntegrated.getGameData();
+                
+                ['Light', 'Medium', 'Heavy'].forEach(className => {
+                    const classData = data[className];
+                    const filters = filterState[className];
+                    
+                    // Check weapons
+                    const availableWeapons = classData.weapons.filter(w => !filters.weapons.includes(w));
+                    if (availableWeapons.length === 0) {
+                        errors.push(`${className}: At least 1 weapon must be available`);
+                    }
+                    
+                    // Check specializations
+                    const availableSpecs = classData.specializations.filter(s => !filters.specializations.includes(s));
+                    if (availableSpecs.length === 0) {
+                        errors.push(`${className}: At least 1 specialization must be available`);
+                    }
+                    
+                    // Check gadgets
+                    const availableGadgets = classData.gadgets.filter(g => !filters.gadgets.includes(g));
+                    if (availableGadgets.length < 3) {
+                        errors.push(`${className}: At least 3 gadgets must be available`);
+                    }
+                });
+                
+                return errors;
+            }
+            
+            clearAllFilters() {
+                const checkboxes = document.querySelectorAll('#filter-content input[type="checkbox"]');
+                checkboxes.forEach(cb => cb.checked = true);
+                
+                if (window.premiumIntegrated) {
+                    window.premiumIntegrated.filterState = {
+                        Light: { weapons: [], specializations: [], gadgets: [] },
+                        Medium: { weapons: [], specializations: [], gadgets: [] },
+                        Heavy: { weapons: [], specializations: [], gadgets: [] }
+                    };
+                    window.premiumIntegrated.saveFilterState();
+                }
+                
+                this.showToast('All filters cleared!');
+            }
+            
+            loadFilterState() {
+                if (!window.premiumIntegrated) return;
+                
+                const filterState = window.premiumIntegrated.filterState;
+                if (!filterState) return;
+                
+                // Apply saved filter state to checkboxes
+                Object.keys(filterState).forEach(className => {
+                    const classFilters = filterState[className];
+                    
+                    // Uncheck filtered items
+                    classFilters.weapons.forEach(item => {
+                        const checkbox = document.querySelector(`#${className}-weapon-${item}`);
+                        if (checkbox) checkbox.checked = false;
+                    });
+                    
+                    classFilters.specializations.forEach(item => {
+                        const checkbox = document.querySelector(`#${className}-specialization-${item}`);
+                        if (checkbox) checkbox.checked = false;
+                    });
+                    
+                    classFilters.gadgets.forEach(item => {
+                        const checkbox = document.querySelector(`#${className}-gadget-${item}`);
+                        if (checkbox) checkbox.checked = false;
+                    });
+                });
+            }
+            
+            showToast(message) {
+                const toast = document.createElement('div');
+                toast.className = 'filter-toast';
+                toast.textContent = message;
+                toast.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(0, 240, 192, 0.9);
+                    color: #000;
+                    padding: 1rem 2rem;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    z-index: 2000;
+                    animation: slideUp 0.3s ease;
+                `;
+                
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.animation = 'slideDown 0.3s ease';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2000);
+            }
+        }
+        
+        // Add toast animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideUp {
+                from { transform: translate(-50%, 100%); opacity: 0; }
+                to { transform: translate(-50%, 0); opacity: 1; }
+            }
+            @keyframes slideDown {
+                from { transform: translate(-50%, 0); opacity: 1; }
+                to { transform: translate(-50%, 100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialize filter system
+        window.filterSystem = new FilterSystem();
     </script>
 </body>
 </html>

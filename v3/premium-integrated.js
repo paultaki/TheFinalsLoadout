@@ -12,12 +12,67 @@
       this.selectedClass = null;
       this.isAnimating = false;
       this.currentLoadout = null;
+      this.loadoutData = null;
+      this.filterState = this.loadFilterState();
       this.init();
     }
     
     init() {
+      // Load data first
+      this.loadGameData();
       // Wait for app to be ready
       this.waitForApp();
+    }
+    
+    async loadGameData() {
+      try {
+        // Try to load from the main loadouts.json
+        const response = await fetch('/loadouts.json');
+        if (response.ok) {
+          this.loadoutData = await response.json();
+          console.log('✅ Loaded loadout data from JSON');
+        } else {
+          throw new Error('Failed to load loadouts.json');
+        }
+      } catch (error) {
+        console.warn('⚠️ Using fallback loadout data:', error);
+        // Use fallback data if JSON fails
+        this.loadoutData = this.getFallbackData();
+      }
+    }
+    
+    loadFilterState() {
+      // Load saved filter state from localStorage
+      const saved = localStorage.getItem('premiumFilterState');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Failed to parse filter state:', e);
+        }
+      }
+      // Default state - everything enabled
+      return {
+        Light: {
+          weapons: [],
+          specializations: [],
+          gadgets: []
+        },
+        Medium: {
+          weapons: [],
+          specializations: [],
+          gadgets: []
+        },
+        Heavy: {
+          weapons: [],
+          specializations: [],
+          gadgets: []
+        }
+      };
+    }
+    
+    saveFilterState() {
+      localStorage.setItem('premiumFilterState', JSON.stringify(this.filterState));
     }
     
     waitForApp() {
@@ -309,17 +364,17 @@
     
     generateItemList(winner, type) {
       const className = this.selectedClass.charAt(0).toUpperCase() + this.selectedClass.slice(1);
-      const data = this.getGameData();
+      const data = this.getFilteredData(className);
       
-      if (!data || !data[className]) return [winner];
+      if (!data) return [winner];
       
       let pool = [];
       if (type === 'weapon') {
-        pool = data[className].weapons || [];
+        pool = data.weapons || [];
       } else if (type === 'specialization') {
-        pool = data[className].specializations || [];
+        pool = data.specializations || [];
       } else if (type === 'gadget') {
-        pool = data[className].gadgets || [];
+        pool = data.gadgets || [];
       }
       
       // Make sure winner is in the pool
@@ -331,27 +386,75 @@
     }
     
     getGameData() {
+      // Use loaded JSON data if available
+      if (this.loadoutData) {
+        return this.loadoutData;
+      }
+      
       // Use the game data from the app if available
       if (window.GameData) return window.GameData.loadouts;
       
       // Fallback data
+      return this.getFallbackData();
+    }
+    
+    getFallbackData() {
       return {
         Light: {
-          weapons: ['M11', 'XP-54', 'V9S', 'Dagger', 'Sword', 'Throwing Knives'],
+          weapons: ['93R', 'Dagger', 'SR-84', 'SH1900', 'LH1', 'M26 Matter', 'Recurve Bow', 
+                   'Sword', 'M11', 'ARN-220', 'V9S', 'XP-54', 'Throwing Knives'],
           specializations: ['Cloaking Device', 'Evasive Dash', 'Grappling Hook'],
-          gadgets: ['Breach Charge', 'Flashbang', 'Smoke Grenade', 'Stun Gun', 'Glitch Grenade']
+          gadgets: ['Breach Charge', 'Gateway', 'Glitch Grenade', 'Gravity Vortex', 'Nullifier',
+                   'Sonar Grenade', 'H+ Infuser', 'Thermal Bore', 'Gas Grenade', 'Thermal Vision',
+                   'Tracking Dart', 'Vanishing Bomb', 'Goo Grenade', 'Pyro Grenade', 'Smoke Grenade',
+                   'Frag Grenade', 'Flashbang']
         },
         Medium: {
-          weapons: ['AKM', 'R.357', 'FCAR', 'Model 1887', 'Riot Shield'],
-          specializations: ['Healing Beam', 'Defibrillator', 'Recon Senses'],
-          gadgets: ['Gas Mine', 'Explosive Mine', 'Zipline', 'Jump Pad', 'APS Turret']
+          weapons: ['AKM', 'Cerberus 12GA', 'Dual Blades', 'FAMAS', 'CL-40', 'CB-01 Repeater',
+                   'FCAR', 'Model 1887', 'Pike-556', 'R.357', 'XCES Mortar', 'Riot Shield', 'HBR'],
+          specializations: ['Defibrillator', 'Healing Beam', 'Dematerializer'],
+          gadgets: ['APS Turret', 'Data Reshaper', 'Defribillator', 'Explosive Mine', 'Flashbang',
+                   'Gateway', 'Gas Mine', 'Glitch Trap', 'Goo Grenade', 'Jump Pad', 'Motion Sensor',
+                   'Pyro Mine', 'Night Vision', 'Smoke Grenade', 'Tracking Dart', 'Zipline',
+                   'Gas Grenade', 'Code Breaker', 'Sonar Grenade']
         },
         Heavy: {
-          weapons: ['M60', 'Flamethrower', 'Sledgehammer', 'SA1216', 'Lewis Gun'],
-          specializations: ['Mesh Shield', 'Charge N Slam', 'Goo Gun'],
-          gadgets: ['Barricade', 'C4', 'RPG-7', 'Dome Shield', 'Pyro Mine']
+          weapons: ['Cerberus 12GA', 'H29 Sidearm', 'Scorch Blaster', 'Grenade Launcher', 'Sledgehammer',
+                   'Flamethrower', 'Giga Barrel', 'SA1216', 'M60', 'OPSK 9MM', 'KS-23', 'Lewis Gun'],
+          specializations: ['Charge \'N\' Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
+          gadgets: ['Anti-Gravity Cube', 'Barricade', 'C4', 'Dome Shield', 'Explosive Mine',
+                   'Flashbang', 'Gas Grenade', 'Motion Sensor', 'Gravity Vortex', 'Goo Grenade',
+                   'Night Vision', 'Pyro Mine', 'RPG', 'Smoke Grenade', 'Tracking Dart', 'Code Breaker']
         }
       };
+    }
+    
+    getFilteredData(className) {
+      const data = this.getGameData();
+      const classData = data[className];
+      const filters = this.filterState[className];
+      
+      if (!classData || !filters) return classData;
+      
+      // Apply filters - if filter array is empty, include all items
+      const filtered = {
+        weapons: filters.weapons.length > 0 
+          ? classData.weapons.filter(w => !filters.weapons.includes(w))
+          : classData.weapons,
+        specializations: filters.specializations.length > 0
+          ? classData.specializations.filter(s => !filters.specializations.includes(s))
+          : classData.specializations,
+        gadgets: filters.gadgets.length > 0
+          ? classData.gadgets.filter(g => !filters.gadgets.includes(g))
+          : classData.gadgets
+      };
+      
+      // Ensure we have at least one of each type
+      if (filtered.weapons.length === 0) filtered.weapons = classData.weapons;
+      if (filtered.specializations.length === 0) filtered.specializations = classData.specializations;
+      if (filtered.gadgets.length < 3) filtered.gadgets = classData.gadgets;
+      
+      return filtered;
     }
     
     getImagePath(itemName) {
@@ -362,11 +465,70 @@
         return this.app.slotMachine.getItemImage(itemName);
       }
       
-      // Fallback to simple conversion
-      const normalized = itemName
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join('_');
+      // Special cases for image names that don't match the item names exactly
+      const specialCases = {
+        'Nullifier': 'Stun_Gun',
+        'Motion Sensor': 'Motion_Sensor',
+        'Anti-Gravity Cube': 'Anti-Gravity_Cube',
+        'Charge \'N\' Slam': 'Charge_N_Slam',
+        'H+ Infuser': 'H+_Infuser',
+        'CB-01 Repeater': 'CB-01_Repeater',
+        'Cerberus 12GA': 'Cerberus_12GA',
+        'H29 Sidearm': 'H29_Sidearm',
+        'XCES Mortar': 'XCES_Mortar',
+        'OPSK 9MM': 'OPSK_9MM',
+        'KS-23': 'KS-23',
+        'SA1216': 'SA1216',
+        'RPG': 'RPG-7',
+        'APS Turret': 'APS_Turret',
+        'Night Vision': 'Night_Vision_Goggles',
+        'Code Breaker': 'Code_Breaker',
+        'Thermal Vision': 'Thermal_Vision',
+        'Gravity Vortex': 'Gravity_Vortex',
+        'Data Reshaper': 'Data_Reshaper',
+        'Glitch Trap': 'Glitch_Trap',
+        'Tracking Dart': 'Tracking_Dart',
+        'Jump Pad': 'Jump_Pad',
+        'Dome Shield': 'Dome_Shield',
+        'Pyro Mine': 'Pyro_Mine',
+        'Gas Mine': 'Gas_Mine',
+        'Explosive Mine': 'Explosive_Mine',
+        'Goo Grenade': 'Goo_Grenade',
+        'Gas Grenade': 'Gas_Grenade',
+        'Smoke Grenade': 'Smoke_Grenade',
+        'Frag Grenade': 'Frag_Grenade',
+        'Glitch Grenade': 'Glitch_Grenade',
+        'Sonar Grenade': 'Sonar_Grenade',
+        'Thermal Bore': 'Thermal_Bore',
+        'Breach Charge': 'Breach_Charge',
+        'Vanishing Bomb': 'Vanishing_Bomb',
+        'Winch Claw': 'Winch_Claw',
+        'Mesh Shield': 'Mesh_Shield',
+        'Goo Gun': 'Goo_Gun',
+        'Healing Beam': 'Healing_Beam',
+        'Cloaking Device': 'Cloaking_Device',
+        'Evasive Dash': 'Evasive_Dash',
+        'Grappling Hook': 'Grappling_Hook',
+        'Riot Shield': 'Riot_Shield',
+        'Throwing Knives': 'Throwing_Knives',
+        'Dual Blades': 'Dual_Blades',
+        'Recurve Bow': 'Recurve_Bow',
+        'Grenade Launcher': 'MGL32',
+        'Scorch Blaster': 'Flamethrower',
+        'M26 Matter': 'M26_Mattock',
+        'Giga Barrel': 'M60',
+        'Model 1887': 'Model_1887',
+        'Lewis Gun': 'Lewis_Gun',
+        'Pike-556': 'PIKE-556'
+      };
+      
+      // Check special cases first
+      if (specialCases[itemName]) {
+        return `/images/${specialCases[itemName]}.webp`;
+      }
+      
+      // Default conversion - replace spaces with underscores, keep original case
+      const normalized = itemName.replace(/\s+/g, '_');
       
       return `/images/${normalized}.webp`;
     }
