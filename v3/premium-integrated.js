@@ -26,13 +26,13 @@
     
     async loadGameData() {
       try {
-        // Try to load from the main loadouts.json
-        const response = await fetch('/loadouts.json');
+        // Try to load from the main data/loadouts-simple.json (same as production)
+        const response = await fetch('/data/loadouts-simple.json');
         if (response.ok) {
           this.loadoutData = await response.json();
-          console.log('✅ Loaded loadout data from JSON');
+          console.log('✅ Loaded loadout data from /data/loadouts-simple.json');
         } else {
-          throw new Error('Failed to load loadouts.json');
+          throw new Error('Failed to load loadouts-simple.json');
         }
       } catch (error) {
         console.warn('⚠️ Using fallback loadout data:', error);
@@ -401,8 +401,8 @@
     getFallbackData() {
       return {
         Light: {
-          weapons: ['93R', 'Dagger', 'SR-84', 'SH1900', 'LH1', 'M26 Matter', 'Recurve Bow', 
-                   'Sword', 'M11', 'ARN-220', 'V9S', 'XP-54', 'Throwing Knives'],
+          weapons: ['93R', 'ARN220', 'Dagger', 'LH1', 'M11', 'M26 Matter', 'Recurve Bow', 
+                   'SH1900', 'SR84', 'Sword', 'Throwing Knives', 'V9S', 'XP54'],
           specializations: ['Cloaking Device', 'Evasive Dash', 'Grappling Hook'],
           gadgets: ['Breach Charge', 'Gateway', 'Glitch Grenade', 'Gravity Vortex', 'Nullifier',
                    'Sonar Grenade', 'H+ Infuser', 'Thermal Bore', 'Gas Grenade', 'Thermal Vision',
@@ -410,21 +410,22 @@
                    'Frag Grenade', 'Flashbang']
         },
         Medium: {
-          weapons: ['AKM', 'Cerberus 12GA', 'Dual Blades', 'FAMAS', 'CL-40', 'CB-01 Repeater',
-                   'FCAR', 'Model 1887', 'Pike-556', 'R.357', 'XCES Mortar', 'Riot Shield', 'HBR'],
-          specializations: ['Defibrillator', 'Healing Beam', 'Dematerializer'],
-          gadgets: ['APS Turret', 'Data Reshaper', 'Defribillator', 'Explosive Mine', 'Flashbang',
-                   'Gateway', 'Gas Mine', 'Glitch Trap', 'Goo Grenade', 'Jump Pad', 'Motion Sensor',
-                   'Pyro Mine', 'Night Vision', 'Smoke Grenade', 'Tracking Dart', 'Zipline',
-                   'Gas Grenade', 'Code Breaker', 'Sonar Grenade']
+          weapons: ['AKM', 'CB-01 Repeater', 'CL40', 'Cerberus 12GA', 'Dual Blades', 'FAMAS',
+                   'FCAR', 'Model 1887', 'Pike-556', 'R.357', 'Riot Shield'],
+          specializations: ['Dematerializer', 'Guardian Turret', 'Healing Beam'],
+          gadgets: ['APS Turret', 'Data Reshaper', 'Defibrillator', 'Explosive Mine', 'Gas Mine',
+                   'Glitch Trap', 'Jump Pad', 'Zipline', 'Gas Grenade', 'Goo Grenade', 'Breach Drill',
+                   'Pyro Grenade', 'Smoke Grenade', 'Frag Grenade', 'Flashbang', 'Proximity Sensor',
+                   'Health Canister']
         },
         Heavy: {
-          weapons: ['Cerberus 12GA', 'H29 Sidearm', 'Scorch Blaster', 'Grenade Launcher', 'Sledgehammer',
-                   'Flamethrower', 'Giga Barrel', 'SA1216', 'M60', 'OPSK 9MM', 'KS-23', 'Lewis Gun'],
-          specializations: ['Charge \'N\' Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
-          gadgets: ['Anti-Gravity Cube', 'Barricade', 'C4', 'Dome Shield', 'Explosive Mine',
-                   'Flashbang', 'Gas Grenade', 'Motion Sensor', 'Gravity Vortex', 'Goo Grenade',
-                   'Night Vision', 'Pyro Mine', 'RPG', 'Smoke Grenade', 'Tracking Dart', 'Code Breaker']
+          weapons: ['.50 Akimbo', 'Flamethrower', 'KS23', 'Lewis Gun', 'M134 Minigun', 'M60',
+                   'MGL32', 'SA1216', 'ShAK-50', 'Sledgehammer', 'Spear'],
+          specializations: ['Charge N Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
+          gadgets: ['Anti-Gravity Cube', 'Barricade', 'C4', 'Dome Shield', 'Lockbolt Launcher',
+                   'Pyro Mine', 'Proximity Sensor', 'RPG-7', 'Goo Grenade', 'Healing Emitter',
+                   'Pyro Grenade', 'Smoke Grenade', 'Frag Grenade', 'Flashbang', 'Explosive Mine',
+                   'Gas Grenade']
         }
       };
     }
