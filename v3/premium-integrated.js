@@ -363,6 +363,30 @@
     }
     
     generateItemList(winner, type) {
+      // For gadgets, use a combined pool from all classes to ensure variety
+      // This prevents class-specific gadget limitations in the spinning animation
+      if (type === 'gadget') {
+        const allData = this.getGameData();
+        const allGadgets = new Set();
+        
+        // Combine gadgets from all classes
+        ['Light', 'Medium', 'Heavy'].forEach(cls => {
+          if (allData[cls] && allData[cls].gadgets) {
+            allData[cls].gadgets.forEach(g => allGadgets.add(g));
+          }
+        });
+        
+        const pool = Array.from(allGadgets);
+        
+        // Make sure winner is in the pool
+        if (!pool.includes(winner)) {
+          pool.push(winner);
+        }
+        
+        return pool.length > 0 ? pool : [winner];
+      }
+      
+      // For weapons and specializations, use class-specific pools
       const className = this.selectedClass.charAt(0).toUpperCase() + this.selectedClass.slice(1);
       const data = this.getFilteredData(className);
       
@@ -373,8 +397,6 @@
         pool = data.weapons || [];
       } else if (type === 'specialization') {
         pool = data.specializations || [];
-      } else if (type === 'gadget') {
-        pool = data.gadgets || [];
       }
       
       // Make sure winner is in the pool
@@ -482,7 +504,6 @@
         'SA1216': 'SA1216',
         'RPG': 'RPG-7',
         'APS Turret': 'APS_Turret',
-        'Night Vision': 'Night_Vision_Goggles',
         'Code Breaker': 'Code_Breaker',
         'Thermal Vision': 'Thermal_Vision',
         'Gravity Vortex': 'Gravity_Vortex',

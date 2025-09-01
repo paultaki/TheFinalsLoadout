@@ -38,41 +38,43 @@
     loadouts: {
       Light: {
         weapons: [
-          '93R', 'Dagger', 'SR-84', 'SH1900', 'LH1', 'M26 Matter',
-          'Recurve Bow', 'Sword', 'M11', 'ARN-220', 'V9S', 'XP-54',
-          'Throwing Knives'
+          '93R', 'ARN220', 'Dagger', 'LH1', 'M11', 'M26 Matter',
+          'Recurve Bow', 'SH1900', 'SR84', 'Sword', 'Throwing Knives',
+          'V9S', 'XP54'
         ],
         specializations: ['Cloaking Device', 'Evasive Dash', 'Grappling Hook'],
         gadgets: [
-          'Breach Charge', 'Gateway', 'Glitch Grenade', 'Flashbang',
-          'Frag Grenade', 'Gas Grenade', 'Goo Grenade', 'Pyro Grenade',
-          'Smoke Grenade', 'Stun Gun', 'Thermal Vision', 'Tracking Dart',
-          'Vanishing Bomb', 'Zipline', 'Motion Sensor'
+          'Breach Charge', 'Gateway', 'Glitch Grenade', 'Gravity Vortex',
+          'Nullifier', 'Sonar Grenade', 'H+ Infuser', 'Thermal Bore',
+          'Gas Grenade', 'Thermal Vision', 'Tracking Dart', 'Vanishing Bomb',
+          'Goo Grenade', 'Pyro Grenade', 'Smoke Grenade', 'Frag Grenade',
+          'Flashbang'
         ]
       },
       Medium: {
         weapons: [
-          'AKM', 'Cerberus 12GA', 'Dual Blades', 'FAMAS', 'CL-40',
-          'CB-01 Repeater', 'FCAR', 'Model 1887', 'Pike-556', 'R.357',
-          'Riot Shield'
+          'AKM', 'CB-01 Repeater', 'CL40', 'Cerberus 12GA', 'Dual Blades',
+          'FAMAS', 'FCAR', 'Model 1887', 'Pike-556', 'R.357', 'Riot Shield'
         ],
         specializations: ['Dematerializer', 'Guardian Turret', 'Healing Beam'],
         gadgets: [
           'APS Turret', 'Data Reshaper', 'Defibrillator', 'Explosive Mine',
-          'Gas Mine', 'Glitch Trap', 'Jump Pad', 'Night Vision', 'Pyro Mine',
-          'Recon Drone', 'RPG-7', 'Sonar Grenade', 'Zipline', 'Anti-Gravity Cube'
+          'Gas Mine', 'Glitch Trap', 'Jump Pad', 'Zipline', 'Gas Grenade',
+          'Goo Grenade', 'Breach Drill', 'Pyro Grenade', 'Smoke Grenade',
+          'Frag Grenade', 'Flashbang', 'Proximity Sensor', 'Health Canister'
         ]
       },
       Heavy: {
         weapons: [
-          'CQC-300', 'Charge-N-Slam', 'Flamethrower', 'Hammer', 'KS-23',
-          'Lewis Gun', 'M60', 'MGL32', 'MK-VI AUTO', 'SA1216', 'Spear'
+          '.50 Akimbo', 'Flamethrower', 'KS23', 'Lewis Gun', 'M134 Minigun',
+          'M60', 'MGL32', 'SA1216', 'ShAK-50', 'Sledgehammer', 'Spear'
         ],
-        specializations: ['Goo Gun', 'Mesh Shield', 'Winch Claw'],
+        specializations: ['Charge N Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
         gadgets: [
-          'Anti-Gravity Cube', 'Barricade', 'C4', 'Dome Shield', 'Explosive Mine',
-          'Gas Mine', 'Gateway', 'Glitch Mine', 'Goo Grenade', 'Pyro Mine',
-          'RPG-7', 'Smoke Grenade', 'Zipline', 'Motion Sensor'
+          'Anti-Gravity Cube', 'Barricade', 'C4', 'Dome Shield',
+          'Lockbolt Launcher', 'Pyro Mine', 'Proximity Sensor', 'RPG-7',
+          'Goo Grenade', 'Healing Emitter', 'Pyro Grenade', 'Smoke Grenade',
+          'Frag Grenade', 'Flashbang', 'Explosive Mine', 'Gas Grenade'
         ]
       }
     }
