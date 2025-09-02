@@ -46,8 +46,8 @@
         gadgets: [
           'Breach Charge', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
           'Gateway', 'Glitch Grenade', 'Goo Grenade', 'Gravity Vortex',
-          'H+ Diffuser', 'Nullifier', 'Pyro Grenade', 'Smoke Grenade',
-          'Sonar Grenade', 'Thermal Bore', 'Thermal Vision',
+          'H+ Diffuser', 'Nullifier', 'Proximity Sensor', 'Pyro Grenade', 
+          'Smoke Grenade', 'Sonar Grenade', 'Thermal Bore', 'Thermal Vision',
           'Tracking Dart', 'Vanishing Bomb'
         ]
       },
@@ -61,7 +61,7 @@
           'APS Turret', 'Breach Drill', 'Data Reshaper', 'Defibrillator',
           'Explosive Mine', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
           'Gas Mine', 'Glitch Trap', 'Goo Grenade', 'Jump Pad',
-          'Pyro Grenade', 'Zipline', 'Smoke Grenade', 'Health Canister'
+          'Proximity Sensor', 'Pyro Grenade', 'Zipline', 'Smoke Grenade'
         ]
       },
       Heavy: {

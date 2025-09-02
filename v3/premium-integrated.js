@@ -479,8 +479,8 @@
           specializations: ['Cloaking Device', 'Evasive Dash', 'Grappling Hook'],
           gadgets: ['Breach Charge', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
                    'Gateway', 'Glitch Grenade', 'Goo Grenade', 'Gravity Vortex',
-                   'H+ Diffuser', 'Nullifier', 'Pyro Grenade', 'Smoke Grenade',
-                   'Sonar Grenade', 'Thermal Bore', 'Thermal Vision',
+                   'H+ Diffuser', 'Nullifier', 'Proximity Sensor', 'Pyro Grenade', 
+                   'Smoke Grenade', 'Sonar Grenade', 'Thermal Bore', 'Thermal Vision',
                    'Tracking Dart', 'Vanishing Bomb']
         },
         Medium: {
@@ -490,7 +490,7 @@
           gadgets: ['APS Turret', 'Breach Drill', 'Data Reshaper', 'Defibrillator',
                    'Explosive Mine', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
                    'Gas Mine', 'Glitch Trap', 'Goo Grenade', 'Jump Pad',
-                   'Pyro Grenade', 'Zipline', 'Smoke Grenade', 'Health Canister']
+                   'Proximity Sensor', 'Pyro Grenade', 'Zipline', 'Smoke Grenade']
         },
         Heavy: {
           weapons: ['SH1 Akimbo', 'Flamethrower', 'KS-23', 'Lewis Gun', 'M134 Minigun',
