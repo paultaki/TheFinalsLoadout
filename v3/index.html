@@ -738,12 +738,31 @@
             }
         }
         /* Navigation Bar Styles */
+        /* Scroll Progress Bar */
+        .scroll-progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 10001;
+        }
+
+        .scroll-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff3366, #ff6699);
+            width: 0%;
+            transition: width 0.1s ease-out;
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+        }
+
         .main-nav {
             background: rgba(10, 10, 15, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 51, 102, 0.2);
             position: sticky;
-            top: 0;
+            top: 4px; /* Push down by progress bar height */
             z-index: 1000;
             padding: 0.5rem 1rem;
             display: flex;
@@ -1181,11 +1200,15 @@
     </style>
 </head>
 <body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-container">
+        <div class="scroll-progress-bar" id="scrollProgress"></div>
+    </div>
+    
     <!-- Navigation Bar -->
     <nav class="main-nav">
         <div class="nav-links">
-            <a href="/" class="nav-link">CLASSIC GENERATOR</a>
-            <a href="/v3/" class="nav-link active">PREMIUM SLOTS</a>
+            <a href="/v3/" class="nav-link active">LOADOUT GENERATOR</a>
             <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
             <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
             <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
@@ -1857,6 +1880,24 @@ Gadget 3: ${loadout.gadget3}`;
         
         // Initialize filter system
         window.filterSystem = new FilterSystem();
+        
+        // Scroll Progress Bar
+        function updateScrollProgress() {
+            const scrollTop = window.scrollY;
+            const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercentage = documentHeight > 0 ? (scrollTop / documentHeight) * 100 : 0;
+            const progressBar = document.getElementById('scrollProgress');
+            if (progressBar) {
+                progressBar.style.width = Math.min(scrollPercentage, 100) + '%';
+            }
+        }
+
+        // Update on scroll
+        window.addEventListener('scroll', updateScrollProgress);
+        // Update on resize
+        window.addEventListener('resize', updateScrollProgress);
+        // Initial update
+        document.addEventListener('DOMContentLoaded', updateScrollProgress);
     </script>
 </body>
 </html>
