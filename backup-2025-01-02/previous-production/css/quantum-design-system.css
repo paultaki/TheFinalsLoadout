@@ -1,0 +1,444 @@
+/* ========================================
+   THE FINALS - QUANTUM DESIGN SYSTEM
+   Unified Design Tokens & Components
+   ======================================== */
+
+/* ========================================
+   COLOR SYSTEM
+   ======================================== */
+:root {
+  /* Core Quantum Palette */
+  --quantum-cyan: #00f0c0; /* Primary accent - the signature color */
+  --quantum-purple: #7b2fe3; /* Secondary accent - depth and mystery */
+  --quantum-pink: #ff2a6d; /* Tertiary accent - alerts and energy */
+  --quantum-blue: #1e90ff; /* Supporting blue - links and info */
+
+  /* Semantic Colors */
+  --quantum-gold: #ffb700; /* Success, wins, achievements */
+  --quantum-orange: #ff6b35; /* Action, energy, casino excitement */
+  --quantum-red: #ff3366; /* Danger, nerfs, warnings */
+  --quantum-green: #00ff88; /* Buffs, positive changes */
+
+  /* Background Hierarchy */
+  --quantum-dark: #0a0c12; /* Primary background */
+  --quantum-darker: #060709; /* Deeper sections */
+  --quantum-component: #181c27; /* Card backgrounds */
+  --quantum-component-hover: #1f2333; /* Interactive states */
+
+  /* Borders & Dividers */
+  --quantum-border: #3a3f5e; /* Primary borders */
+  --quantum-border-subtle: #2a2d42; /* Subtle dividers */
+  --quantum-border-strong: #4a506e; /* Emphasized borders */
+
+  /* Text Colors */
+  --text-primary: #e0e7ff; /* Main content */
+  --text-secondary: #a0aed0; /* Muted/secondary text */
+  --text-tertiary: #6a7394; /* Very muted */
+  --text-accent: var(--quantum-cyan); /* Highlighted text */
+  --text-inverse: var(--quantum-dark); /* For light backgrounds */
+
+  /* Class-Specific (The Finals) */
+  --class-light: #00d4ff; /* Light build */
+  --class-medium: #ff00ff; /* Medium build */
+  --class-heavy: #ff6600; /* Heavy build */
+
+  /* Status Colors */
+  --status-buff: var(--quantum-green);
+  --status-nerf: var(--quantum-red);
+  --status-new: var(--quantum-gold);
+  --status-rework: var(--quantum-purple);
+  --status-fix: var(--quantum-blue);
+}
+
+/* ========================================
+   TYPOGRAPHY SYSTEM
+   ======================================== */
+:root {
+  /* Font Families */
+  --font-display: "Orbitron", monospace; /* Headers, impact text */
+  --font-body: "Inter", system-ui, sans-serif; /* Body text, UI */
+  --font-mono: "Fira Code", monospace; /* Code, stats, technical */
+  --font-impact: "Bebas Neue", sans-serif; /* Casino/special (main page only) */
+
+  /* Font Sizes - Desktop */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 2rem; /* 32px */
+  --text-4xl: 2.5rem; /* 40px */
+  --text-5xl: 3rem; /* 48px */
+
+  /* Font Weights */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+  --font-black: 900;
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* Letter Spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+}
+
+/* ========================================
+   SPACING SYSTEM
+   ======================================== */
+:root {
+  /* Base Spacing Scale */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem; /* 48px */
+  --space-16: 4rem; /* 64px */
+  --space-20: 5rem; /* 80px */
+
+  /* Component Spacing */
+  --gap-xs: var(--space-2);
+  --gap-sm: var(--space-3);
+  --gap-md: var(--space-4);
+  --gap-lg: var(--space-6);
+  --gap-xl: var(--space-8);
+}
+
+/* ========================================
+   EFFECTS & ANIMATIONS
+   ======================================== */
+:root {
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  --transition-slower: 0.8s ease;
+
+  /* Easing Functions */
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-sharp: cubic-bezier(0.4, 0, 0.6, 1);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.2);
+  --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+
+  /* Glows */
+  --glow-sm: 0 0 10px;
+  --glow-md: 0 0 20px;
+  --glow-lg: 0 0 30px;
+  --glow-xl: 0 0 40px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+}
+
+/* ========================================
+   COMPONENT CLASSES
+   ======================================== */
+
+/* Quantum Card Base */
+.quantum-card {
+  background: rgba(24, 28, 39, 0.6);
+  border: 1px solid var(--quantum-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.quantum-card:hover {
+  background: rgba(24, 28, 39, 0.8);
+  border-color: var(--quantum-border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Quantum Button Base */
+.quantum-btn {
+  font-family: var(--font-display);
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+}
+
+/* Button Variants */
+.quantum-btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--quantum-purple),
+    var(--quantum-blue)
+  );
+  color: white;
+  box-shadow: 0 4px 15px rgba(123, 47, 227, 0.3);
+}
+
+.quantum-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(123, 47, 227, 0.4);
+}
+
+.quantum-btn-casino {
+  background: linear-gradient(
+    135deg,
+    var(--quantum-orange),
+    var(--quantum-gold)
+  );
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+  font-size: var(--text-xl);
+  padding: var(--space-4) var(--space-8);
+}
+
+.quantum-btn-casino:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.5);
+}
+
+/* Quantum Navigation */
+.quantum-nav {
+  background: rgba(10, 12, 18, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--quantum-border);
+  padding: var(--space-4) var(--space-6);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.quantum-nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.quantum-nav-link:hover {
+  color: var(--quantum-cyan);
+  transform: translateY(-2px);
+}
+
+.quantum-nav-link.active {
+  background: linear-gradient(135deg, var(--quantum-cyan), var(--quantum-blue));
+  color: var(--quantum-dark);
+  font-weight: var(--font-semibold);
+}
+
+/* Status Badges */
+.quantum-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+}
+
+.quantum-badge-buff {
+  background: rgba(0, 255, 136, 0.2);
+  color: var(--status-buff);
+  border: 1px solid var(--status-buff);
+}
+
+.quantum-badge-nerf {
+  background: rgba(255, 42, 109, 0.2);
+  color: var(--status-nerf);
+  border: 1px solid var(--status-nerf);
+}
+
+.quantum-badge-new {
+  background: rgba(255, 183, 0, 0.2);
+  color: var(--status-new);
+  border: 1px solid var(--status-new);
+}
+
+/* Glass Morphism Utilities */
+.quantum-glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.quantum-glass-dark {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Quantum Grid Background */
+.quantum-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+      rgba(0, 240, 192, 0.03) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(0, 240, 192, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ========================================
+   RESPONSIVE UTILITIES
+   ======================================== */
+
+/* Mobile Typography Scale */
+@media (max-width: 768px) {
+  :root {
+    --text-xs: 0.75rem; /* 12px */
+    --text-sm: 0.8125rem; /* 13px */
+    --text-base: 0.875rem; /* 14px */
+    --text-lg: 1rem; /* 16px */
+    --text-xl: 1.125rem; /* 18px */
+    --text-2xl: 1.25rem; /* 20px */
+    --text-3xl: 1.5rem; /* 24px */
+    --text-4xl: 2rem; /* 32px */
+    --text-5xl: 2.5rem; /* 40px */
+  }
+}
+
+/* ========================================
+   ANIMATION KEYFRAMES
+   ======================================== */
+
+/* Quantum Pulse */
+@keyframes quantum-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* Quantum Glow */
+@keyframes quantum-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(0, 240, 192, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 240, 192, 0.8);
+  }
+}
+
+/* Quantum Shimmer */
+@keyframes quantum-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Text Utilities */
+.text-quantum {
+  color: var(--quantum-cyan);
+}
+.text-purple {
+  color: var(--quantum-purple);
+}
+.text-gold {
+  color: var(--quantum-gold);
+}
+.text-muted {
+  color: var(--text-secondary);
+}
+
+/* Background Utilities */
+.bg-quantum-dark {
+  background-color: var(--quantum-dark);
+}
+.bg-quantum-component {
+  background-color: var(--quantum-component);
+}
+
+/* Glow Effects */
+.glow-cyan {
+  box-shadow: var(--glow-md) rgba(0, 240, 192, 0.5);
+}
+.glow-purple {
+  box-shadow: var(--glow-md) rgba(123, 47, 227, 0.5);
+}
+.glow-gold {
+  box-shadow: var(--glow-md) rgba(255, 183, 0, 0.5);
+}
+
+/* Animation Utilities */
+.animate-pulse {
+  animation: quantum-pulse 2s ease-in-out infinite;
+}
+.animate-glow {
+  animation: quantum-glow 2s ease-in-out infinite;
+}
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: quantum-shimmer 1.5s linear infinite;
+}

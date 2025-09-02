@@ -1,0 +1,462 @@
+/**
+ * History System Refined Styles
+ * Visual refinement with modular card design while preserving responsive architecture
+ * This stylesheet ADDS to history-styles.css - do not remove the original
+ */
+
+/* ========================================
+   CSS Custom Properties for Theming
+   ======================================== */
+:root {
+  --card-bg: rgba(15, 15, 20, 0.4);
+  --card-border: rgba(139, 92, 246, 0.3);
+  --gradient-purple: linear-gradient(135deg, rgba(139, 92, 246, 0.4), rgba(167, 139, 250, 0.2));
+  --gradient-border: linear-gradient(135deg, #8b5cf6, #a78bfa);
+  --item-bg: rgba(20, 20, 30, 0.6);
+  --item-border: rgba(139, 92, 246, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --gap-sm: 8px;
+  --gap-md: 12px;
+  --gap-lg: 16px;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+/* ========================================
+   Enhanced History Card Structure
+   ======================================== */
+.history-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  position: relative;
+  padding: 1.25rem;
+}
+
+/* Subtle gradient border effect */
+.history-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius);
+  padding: 1px;
+  background: var(--gradient-border);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.history-card:hover::before {
+  opacity: 0.8;
+}
+
+/* ========================================
+   Refined Card Header
+   ======================================== */
+.history-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+}
+
+.card-class {
+  background: var(--gradient-purple);
+  border: 1px solid var(--card-border);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-primary);
+}
+
+.card-class.light {
+  background: linear-gradient(135deg, rgba(79, 195, 247, 0.3), rgba(3, 169, 244, 0.2));
+  border-color: rgba(79, 195, 247, 0.4);
+}
+
+.card-class.medium {
+  background: linear-gradient(135deg, rgba(171, 71, 188, 0.3), rgba(142, 36, 170, 0.2));
+  border-color: rgba(171, 71, 188, 0.4);
+}
+
+.card-class.heavy {
+  background: linear-gradient(135deg, rgba(255, 23, 68, 0.3), rgba(244, 67, 54, 0.2));
+  border-color: rgba(255, 23, 68, 0.4);
+}
+
+.card-timestamp {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Action buttons refinement */
+.card-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.card-action {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.card-action:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: var(--card-border);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+/* ========================================
+   Equipment Grid - NEW VISUAL TREATMENT
+   ======================================== */
+.history-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+/* Transform loadout items into card grid */
+.loadout-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: var(--gap-md);
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+/* Individual equipment cards */
+.loadout-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 0.5rem;
+  background: var(--item-bg);
+  border: 1px solid var(--item-border);
+  border-radius: var(--radius-sm);
+  min-height: 80px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient border on hover */
+.loadout-item::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius-sm);
+  padding: 1px;
+  background: var(--gradient-border);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.loadout-item:hover::after {
+  opacity: 0.6;
+}
+
+.loadout-item:hover {
+  background: rgba(139, 92, 246, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+}
+
+/* Equipment item styling */
+.loadout-item .item-label {
+  display: none; /* Hide labels for cleaner look */
+}
+
+.loadout-item .item-value {
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  text-align: center;
+  font-weight: 500;
+  line-height: 1.3;
+  word-break: break-word;
+  z-index: 1;
+  position: relative;
+}
+
+/* Icon placeholder (for future implementation) */
+.loadout-item::before {
+  content: '';
+  width: 32px;
+  height: 32px;
+  margin-bottom: 0.5rem;
+  background: var(--gradient-purple);
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+.loadout-item.weapon::before {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+}
+
+.loadout-item.specialization::before {
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+}
+
+.loadout-item.gadgets::before {
+  display: none; /* Gadgets will show multiple items */
+}
+
+/* Special handling for gadgets */
+.loadout-item.gadgets {
+  grid-column: span 3;
+  flex-direction: row;
+  justify-content: center;
+  gap: var(--gap-md);
+  padding: 0.75rem;
+}
+
+.loadout-item.gadgets .item-value {
+  display: flex;
+  gap: var(--gap-md);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ========================================
+   Enhanced Analysis Section
+   ======================================== */
+.analysis-section {
+  background: rgba(16, 16, 20, 0.4);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.analysis-header {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  margin-bottom: 0.75rem;
+}
+
+.analysis-score {
+  background: var(--gradient-purple);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.meta-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+.meta-badge.tier-S {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: rgba(255, 215, 0, 0.4);
+  color: #ffd700;
+}
+
+.meta-badge.tier-A {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.4);
+  color: #a78bfa;
+}
+
+.meta-badge.tier-B {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #60a5fa;
+}
+
+.archetype-badge {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: #4ade80;
+}
+
+.analysis-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   Mobile Responsive Refinements
+   ======================================== */
+@media (max-width: 768px) {
+  /* Maintain existing mobile layout structure */
+  .loadout-items {
+    grid-template-columns: 1fr;
+    gap: var(--gap-sm);
+  }
+  
+  .loadout-item {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: var(--gap-md);
+    min-height: 60px;
+    padding: 0.75rem;
+  }
+  
+  .loadout-item::before {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 0;
+    margin-right: 0;
+  }
+  
+  .loadout-item.gadgets {
+    grid-column: span 1;
+  }
+  
+  /* Ensure touch targets remain 44px+ */
+  .card-action {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Preserve existing container behavior */
+  .history-card {
+    padding: 1rem;
+  }
+  
+  .loadout-item {
+    padding: 0.625rem;
+    min-height: 50px;
+  }
+  
+  .loadout-item .item-value {
+    font-size: 0.7rem;
+  }
+  
+  /* Stack header elements on very small screens */
+  .history-card-header {
+    flex-direction: column;
+    gap: var(--gap-sm);
+  }
+  
+  .card-actions {
+    align-self: flex-end;
+    margin-top: -2rem;
+  }
+}
+
+/* ========================================
+   Animation Refinements
+   ======================================== */
+.history-card {
+  animation: slideInFromRight 0.3s ease;
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Smooth card deletion */
+.history-card.deleting {
+  animation: fadeOutLeft 0.3s ease forwards;
+}
+
+@keyframes fadeOutLeft {
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+/* ========================================
+   Notification Refinements
+   ======================================== */
+.notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1.25rem;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  transform: translateX(400px);
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.success {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.notification.error {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* ========================================
+   Preserve GPU Acceleration
+   ======================================== */
+.history-card,
+.loadout-item,
+.card-action,
+.notification {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}

@@ -2,9 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Finals - Premium Loadout Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="canonical" href="https://www.thefinalsloadout.com/" />
+
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
+
+    <!-- Preload Critical Resources - Logo is LCP element -->
+    <link rel="preload" href="/images/the-finals-logo.webp" as="image" type="image/webp" fetchpriority="high" />
+
+    <!-- Meta Tags -->
+    <title>The Finals BEST Random Loadout Generator | Fun & Unique Loadouts</title>
+    <meta name="description" content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles." />
+    <meta name="author" content="Paul Takisaki" />
+    <link rel="author" href="https://www.paultakisaki.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="The Finals Loadout Roulette" />
+    <meta property="og:description" content="Randomize your loadout and dominate The Finals with style." />
+    <meta property="og:image" content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://www.thefinalsloadout.com/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Finals Loadout Roulette" />
+    <meta name="twitter:description" content="Spin the wheel. Wreck the arena." />
+    <meta name="twitter:image" content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "The Finals Loadout Generator",
+        "url": "https://www.thefinalsloadout.com",
+        "description": "A random loadout generator for The Finals game with optimized weapons and gadgets for different playstyles.",
+        "image": "https://www.thefinalsloadout.com/images/the-finals-logo.webp",
+        "author": {
+            "@type": "Person",
+            "name": "Paul Takisaki",
+            "url": "https://www.paultakisaki.com"
+        }
+    }
+    </script>
+
+    <!-- Fonts - Optimized Loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+        gtag("config", "G-GVGKYFGZ1Z");
+    </script>
+
+    <!-- Console noise control for production -->
+    <script>
+        window.DEBUG = false;
+        if (!window.DEBUG) {
+            console.log = function() {};
+            console.debug = function() {};
+        }
+    </script>
     <style>
         /* Premium Vegas-Style Slot Machine Design */
         * {

@@ -1,5 +1,5 @@
 {
-  "indexed_at": "2025-09-01T23:21:54.435704",
+  "indexed_at": "2025-09-02T00:05:37.451768",
   "root": ".",
   "project_structure": {
     "type": "tree",
@@ -359,11 +359,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SmoothSpinAnimation.stopReelsSequentially",
-                "runNumberSelectorAnimation",
                 "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
+                "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runSlotMachineAnimation"
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "__init__": "(stateManager, slotMachine)"
@@ -666,11 +666,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SmoothSpinAnimation.stopReelsSequentially",
-                "runNumberSelectorAnimation",
                 "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
+                "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runSlotMachineAnimation"
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "__init__": "(stateManager, slotMachine)"
@@ -986,8 +986,8 @@
               ],
               "signature": "(soundName)",
               "called_by": [
-                "toggleSound",
-                "runSlotMachineAnimation"
+                "runSlotMachineAnimation",
+                "toggleSound"
               ]
             },
             "stopRouletteSound": {
@@ -1659,19 +1659,19 @@
             "playSound": {
               "signature": "(type)",
               "called_by": [
-                "toggleSound",
-                "runSlotMachineAnimation"
+                "runSlotMachineAnimation",
+                "toggleSound"
               ]
             },
             "attachEventListeners": "()",
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SmoothSpinAnimation.stopReelsSequentially",
-                "runNumberSelectorAnimation",
                 "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
+                "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runSlotMachineAnimation"
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "getSelections": "()",
@@ -2078,11 +2078,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SmoothSpinAnimation.stopReelsSequentially",
-                "runNumberSelectorAnimation",
                 "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
+                "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runSlotMachineAnimation"
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "cleanup": {
@@ -2257,11 +2257,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SmoothSpinAnimation.stopReelsSequentially",
-                "runNumberSelectorAnimation",
                 "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
+                "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runSlotMachineAnimation"
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "__init__": "()"
@@ -3011,11 +3011,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SmoothSpinAnimation.stopReelsSequentially",
-                "runNumberSelectorAnimation",
                 "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
+                "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runSlotMachineAnimation"
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "quickSpin": "async (columns)",
@@ -3354,11 +3354,11 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SmoothSpinAnimation.stopReelsSequentially",
-                "runNumberSelectorAnimation",
                 "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
+                "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runSlotMachineAnimation"
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "cleanup": {
@@ -3429,8 +3429,8 @@
             "playSound": {
               "signature": "(soundKey)",
               "called_by": [
-                "toggleSound",
-                "runSlotMachineAnimation"
+                "runSlotMachineAnimation",
+                "toggleSound"
               ]
             },
             "stopSound": "(soundKey)",
@@ -3467,8 +3467,8 @@
             "playSound": {
               "signature": "(soundKey)",
               "called_by": [
-                "toggleSound",
-                "runSlotMachineAnimation"
+                "runSlotMachineAnimation",
+                "toggleSound"
               ]
             },
             "stopSound": "(soundKey)",
@@ -3838,8 +3838,8 @@
             "updateLightPosition": {
               "signature": "(speed)",
               "called_by": [
-                "NumberSelector.runHighSpeed",
-                "NumberSelector.runAcceleration"
+                "NumberSelector.runAcceleration",
+                "NumberSelector.runHighSpeed"
               ]
             },
             "selectNumber": "(number)",
@@ -3849,18 +3849,18 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SmoothSpinAnimation.stopReelsSequentially",
-                "runNumberSelectorAnimation",
                 "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
+                "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runSlotMachineAnimation"
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "playSound": {
               "signature": "(key)",
               "called_by": [
-                "toggleSound",
-                "runSlotMachineAnimation"
+                "runSlotMachineAnimation",
+                "toggleSound"
               ]
             },
             "stopSound": "(key)",
@@ -3911,18 +3911,18 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SmoothSpinAnimation.stopReelsSequentially",
-                "runNumberSelectorAnimation",
                 "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
+                "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runSlotMachineAnimation"
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "playSound": {
               "signature": "(key)",
               "called_by": [
-                "toggleSound",
-                "runSlotMachineAnimation"
+                "runSlotMachineAnimation",
+                "toggleSound"
               ]
             },
             "stopSound": "(key)",
@@ -4003,18 +4003,18 @@
             "delay": {
               "signature": "(ms)",
               "called_by": [
-                "SmoothSpinAnimation.stopReelsSequentially",
-                "runNumberSelectorAnimation",
                 "runClassRouletteAnimation",
+                "runNumberSelectorAnimation",
+                "runSlotMachineAnimation",
                 "SimpleSpinAnimation.stopReelsRandomly",
-                "runSlotMachineAnimation"
+                "SmoothSpinAnimation.stopReelsSequentially"
               ]
             },
             "playSound": {
               "signature": "(key)",
               "called_by": [
-                "toggleSound",
-                "runSlotMachineAnimation"
+                "runSlotMachineAnimation",
+                "toggleSound"
               ]
             },
             "__init__": "()"
@@ -4272,5 +4272,5 @@
       "path"
     ]
   },
-  "staleness_check": 1756189332.045035
+  "staleness_check": 1756191955.790523
 }

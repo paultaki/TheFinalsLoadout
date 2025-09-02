@@ -1,0 +1,240 @@
+/**
+ * slot-machine.css - Styles for slot machine component
+ * Part of The Finals Loadout v2
+ * 
+ * Sections:
+ * - Slot Machine Container
+ * - Slot Items & Cells
+ * - Animation States
+ * - Visual Effects
+ * - Respin Feature
+ * - Responsive Adjustments
+ */
+
+/* =====================================================
+   HIDE DUPLICATE INFO DURING SLOT ANIMATION
+   ===================================================== */
+
+/* Hide the selection display when slot machine is active */
+body.slot-machine-active .selection-display,
+.slot-overlay-visible .selection-display {
+  display: none !important;
+}
+
+/* Also hide during overlay animations */
+.overlay-active .selection-display {
+  display: none !important;
+}
+
+/* =====================================================
+   RESPIN FEATURE STYLES
+   ===================================================== */
+
+.respin-button-container {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(30,30,30,0.98) 100%);
+  border: 2px solid #FFD700;
+  border-radius: 12px;
+  box-shadow: 
+    0 0 30px rgba(255, 215, 0, 0.4),
+    0 -10px 40px rgba(0, 0, 0, 0.8),
+    inset 0 0 20px rgba(255, 215, 0, 0.1);
+  z-index: 1000;
+  animation: slideUp 0.5s ease-out;
+  backdrop-filter: blur(10px);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Respin buttons styling */
+.respin-btn,
+.keep-btn {
+  min-width: 180px;
+  height: 65px;
+  padding: 15px 30px;
+  border: 2px solid;
+  border-radius: 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+/* Free Respin button - gold theme with glow */
+.respin-btn {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
+  border-color: #FFD700;
+  color: #000;
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.6),
+    0 4px 15px rgba(255, 165, 0, 0.4),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  animation: pulse-gold 2s infinite;
+}
+
+.respin-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 
+    0 6px 30px rgba(255, 215, 0, 0.6),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.respin-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Keep Loadout button - dark theme with silver border */
+.keep-btn {
+  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 50%, #2a2a2a 100%);
+  border-color: #888;
+  color: #CCC;
+  box-shadow: 
+    0 0 10px rgba(136, 136, 136, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.5),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.keep-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: linear-gradient(135deg, #C8C8C8, #909090);
+  box-shadow: 
+    0 6px 30px rgba(184, 184, 184, 0.5),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.keep-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Button glow effect */
+.btn-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.respin-btn:hover .btn-glow,
+.keep-btn:hover .btn-glow {
+  opacity: 1;
+}
+
+/* Pulse animation for free respin button */
+@keyframes pulse-gold {
+  0%, 100% {
+    box-shadow: 
+      0 4px 20px rgba(255, 215, 0, 0.4),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 4px 30px rgba(255, 215, 0, 0.7),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Button text */
+.btn-text {
+  position: relative;
+  z-index: 1;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile responsiveness for respin buttons */
+@media (max-width: 768px) {
+  .respin-button-container {
+    bottom: 10px;
+    width: calc(100% - 20px);
+    max-width: 400px;
+    padding: 15px;
+  }
+  
+  .respin-button-container .respin-buttons {
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+  
+  .respin-btn,
+  .keep-btn {
+    width: 100%;
+    min-width: unset;
+    height: 60px;
+    font-size: 20px;
+    padding: 12px 20px;
+  }
+  
+  .respin-button-container h3 {
+    font-size: 18px !important;
+    margin-bottom: 10px !important;
+  }
+}
+
+/* Ensure parent containers have proper positioning */
+.slot-overlay-wrapper,
+.slot-machine-overlay {
+  position: relative;
+  min-height: 500px; /* Ensure minimum height for button placement */
+}
+
+/* Slot machine container in overlay */
+.slot-machine-container,
+#overlay-slot-output {
+  position: relative;
+  padding-bottom: 150px; /* Space for buttons */
+}
+
+/* Overlay-specific positioning */
+.slot-overlay-wrapper .respin-button-container,
+.slot-machine-overlay .respin-button-container {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 600px;
+}
+
+/* Dark overlay compatibility */
+.overlay-active .respin-button-container {
+  filter: brightness(1.1);
+}
+
+/* Disabled state during animation */
+.respin-btn:disabled,
+.keep-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  animation: none !important;
+}

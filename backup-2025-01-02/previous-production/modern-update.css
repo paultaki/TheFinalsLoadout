@@ -1,0 +1,783 @@
+/* =============================================
+   MODERN VISUAL UPDATE FOR LOADOUT GENERATOR
+   Matches meta-weapons/patch-notes design system
+   SAFE: Only updates visual styles, no functionality changes
+   ============================================= */
+
+/* ============================================= 
+   1. COLOR SYSTEM UPDATE 
+   ============================================= */
+:root {
+  /* Modern color palette - matching meta-weapons */
+  --modern-cyan: #00f3ff;
+  --modern-pink: #ff1493;
+  --modern-purple: #7b2fe3;
+  --modern-gold: #ffd700;
+  --modern-dark-bg: #0a0a0f;
+  --modern-card-bg: #1a1a2e;
+  --modern-border: rgba(255, 255, 255, 0.1);
+  --modern-text: #e0e0e0;
+  --modern-text-dim: #888;
+}
+
+/* ============================================= 
+   2. NAVIGATION BAR UPDATE
+   Preserves all functionality, only updates visuals
+   ============================================= */
+.main-nav {
+  /* Visual update only - preserve sticky behavior */
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(123, 47, 227, 0.2) 50%,
+    rgba(0, 0, 0, 0.8) 100%
+  ) !important;
+  backdrop-filter: blur(10px) !important;
+  border-bottom: 1px solid rgba(30, 144, 255, 0.3) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+  padding: 1rem 2rem;
+  /* Keep existing positioning */
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+}
+
+.nav-links {
+  /* Center navigation like meta-weapons */
+  justify-content: center !important;
+  flex: 1 !important;
+}
+
+.main-nav .nav-link {
+  /* Modern typography */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  /* Modern pill-shaped buttons */
+  padding: 0.5rem 1rem !important;
+  border-radius: 4px !important;
+  color: #fff !important;
+  transition: all 0.3s ease !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.main-nav .nav-link:hover {
+  background-color: rgba(30, 144, 255, 0.2) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 15px rgba(30, 144, 255, 0.4) !important;
+  color: var(--modern-cyan) !important;
+}
+
+.main-nav .nav-link.active {
+  background: linear-gradient(135deg, var(--modern-cyan), var(--modern-purple)) !important;
+  color: var(--modern-dark-bg) !important;
+  font-weight: 700 !important;
+}
+
+/* Special rage quit link styling */
+.main-nav a[href*="ragequit"] {
+  border: 1px solid var(--modern-pink) !important;
+  color: var(--modern-pink) !important;
+}
+
+.main-nav a[href*="ragequit"]:hover {
+  background: rgba(255, 20, 147, 0.1) !important;
+  box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4) !important;
+}
+
+/* ============================================= 
+   3. BACKGROUND GRADIENT UPDATE
+   More subtle, darker gradients
+   ============================================= */
+body {
+  background: linear-gradient(
+    135deg,
+    #0a0a0f 0%,
+    #0f0f1a 25%,
+    #0a0a0f 50%,
+    #141420 75%,
+    #0a0a0f 100%
+  ) !important;
+  /* Keep existing font stack */
+}
+
+/* Hero section background update */
+.hero {
+  background: linear-gradient(
+    135deg, 
+    rgba(0, 240, 192, 0.03), 
+    rgba(123, 47, 227, 0.03)
+  ) !important;
+}
+
+/* ============================================= 
+   4. GENERATE LOADOUT BUTTON UPDATE
+   PRESERVES ALL ANIMATION LOGIC AND HANDLERS
+   ============================================= */
+.spin-button {
+  /* Modern pill shape with gradient border */
+  background: linear-gradient(135deg, var(--modern-purple), var(--modern-pink)) !important;
+  border: 2px solid transparent !important;
+  background-clip: padding-box !important;
+  position: relative !important;
+  /* Modern typography */
+  font-family: 'Orbitron', -apple-system, sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+  /* Pill shape */
+  border-radius: 50px !important;
+  padding: 1rem 2.5rem !important;
+  font-size: 1.1rem !important;
+  /* Modern shadow */
+  box-shadow: 
+    0 4px 20px rgba(123, 47, 227, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  /* Keep existing transitions */
+  transition: all 0.3s ease !important;
+}
+
+.spin-button::before {
+  /* Gradient border effect */
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, var(--modern-cyan), var(--modern-purple), var(--modern-pink));
+  border-radius: 50px;
+  z-index: -1;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.spin-button:hover {
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 
+    0 8px 30px rgba(123, 47, 227, 0.5),
+    0 0 60px rgba(255, 20, 147, 0.3) !important;
+}
+
+.spin-button:hover::before {
+  opacity: 1;
+}
+
+/* Preserve disabled state */
+.spin-button:disabled,
+.spin-button.spinning {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+/* ============================================= 
+   5. FILTER BUTTON UPDATE
+   Only visual changes
+   ============================================= */
+.filter-toggle-button {
+  /* Modern styling matching nav buttons */
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--modern-border) !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(10px) !important;
+  transition: all 0.3s ease !important;
+}
+
+.filter-toggle-button:hover {
+  background: rgba(0, 243, 255, 0.1) !important;
+  border-color: var(--modern-cyan) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ============================================= 
+   6. CLASS BADGES UPDATE - IMPROVED READABILITY
+   Better contrast and visibility
+   ============================================= */
+/* Base class badge styling for better readability */
+.badge,
+.class-badge,
+.history-class-badge {
+  /* Ensure text is always readable */
+  font-weight: 700 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+  letter-spacing: 0.05em !important;
+  padding: 4px 12px !important;
+  border-radius: 20px !important;
+  text-transform: uppercase !important;
+}
+
+.badge.light,
+.class-badge.light {
+  background: linear-gradient(135deg, #4FC3F7, #29B6F6) !important; /* Brighter cyan */
+  color: #000000 !important; /* Black text on light background for contrast */
+  box-shadow: 0 2px 10px rgba(79, 195, 247, 0.4) !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) !important; /* Light shadow for black text */
+}
+
+.badge.medium,
+.class-badge.medium {
+  background: linear-gradient(135deg, #9C27B0, #8E24AA) !important; /* Darker purple for better contrast */
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(156, 39, 176, 0.4) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important; /* Stronger shadow for readability */
+  font-weight: 700 !important;
+}
+
+.badge.heavy,
+.class-badge.heavy {
+  background: linear-gradient(135deg, #FF1744, #E91E63) !important; /* Bright red/pink */
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(255, 23, 68, 0.4) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Alternative bordered style for even better readability */
+.class-badge.alt-style {
+  background: rgba(20, 20, 30, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 2px solid !important;
+  color: #ffffff !important;
+}
+
+.class-badge.light.alt-style {
+  border-color: #4FC3F7 !important;
+  color: #4FC3F7 !important;
+  box-shadow: inset 0 0 10px rgba(79, 195, 247, 0.3), 0 0 20px rgba(79, 195, 247, 0.2) !important;
+  text-shadow: 0 0 10px rgba(79, 195, 247, 0.5) !important;
+}
+
+.class-badge.medium.alt-style {
+  border-color: #AB47BC !important;
+  color: #AB47BC !important;
+  box-shadow: inset 0 0 10px rgba(171, 71, 188, 0.3), 0 0 20px rgba(171, 71, 188, 0.2) !important;
+  text-shadow: 0 0 10px rgba(171, 71, 188, 0.5) !important;
+}
+
+.class-badge.heavy.alt-style {
+  border-color: #FF1744 !important;
+  color: #FF1744 !important;
+  box-shadow: inset 0 0 10px rgba(255, 23, 68, 0.3), 0 0 20px rgba(255, 23, 68, 0.2) !important;
+  text-shadow: 0 0 10px rgba(255, 23, 68, 0.5) !important;
+}
+
+/* ============================================= 
+   7. LOADOUT HISTORY CARDS
+   Glass morphism effect, preserve structure
+   ============================================= */
+/* History number and timestamp styling */
+.history-number,
+.loadout-number {
+  color: #888 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  opacity: 0.9 !important;
+}
+
+.history-time,
+.time-ago {
+  color: #666 !important;
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  opacity: 0.8 !important;
+  margin-left: 0.5rem !important;
+}
+.history-item {
+  /* Glass morphism effect */
+  background: rgba(26, 26, 46, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid var(--modern-border) !important;
+  border-radius: 12px !important;
+  /* Modern shadow */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  /* Keep existing transitions */
+  transition: all 0.3s ease !important;
+}
+
+.history-item:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 
+    0 12px 40px rgba(0, 243, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(0, 243, 255, 0.3) !important;
+}
+
+/* History item gradient accents based on class */
+.history-item[data-class="light"] {
+  border-left: 3px solid var(--modern-cyan) !important;
+}
+
+.history-item[data-class="medium"] {
+  border-left: 3px solid var(--modern-purple) !important;
+}
+
+.history-item[data-class="heavy"] {
+  border-left: 3px solid var(--modern-pink) !important;
+}
+
+/* ============================================= 
+   8. CARDS AND CONTAINERS
+   Glass morphism, modern borders
+   ============================================= */
+.item-card,
+.loadout-item,
+.weapon-item,
+.gadget-item {
+  background: rgba(26, 26, 46, 0.4) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid var(--modern-border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ============================================= 
+   9. TYPOGRAPHY UPDATE
+   Sharper, more modern
+   ============================================= */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  color: var(--modern-text) !important;
+}
+
+/* ============================================= 
+   10. MOBILE RESPONSIVE UPDATES
+   Preserve existing breakpoints
+   ============================================= */
+@media (max-width: 768px) {
+  .main-nav {
+    padding: 0.75rem 1rem !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+  
+  .nav-links {
+    gap: 1rem !important;
+    width: 100% !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .main-nav .nav-link {
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.8rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .main-nav {
+    padding: 0.5rem 0.75rem !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+  
+  .nav-links {
+    gap: 0.75rem !important;
+    width: 100% !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .main-nav .nav-link {
+    font-size: 0.75rem !important;
+    padding: 0.3rem 0.6rem !important;
+  }
+  
+  .spin-button {
+    padding: 0.8rem 1.5rem !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* ============================================= 
+   11. SLOT MACHINE VISUAL POLISH
+   Only safe visual updates, no animation changes
+   ============================================= */
+.slot-machine {
+  background: rgba(26, 26, 46, 0.4) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid var(--modern-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Item columns visual update */
+.itemCol {
+  background: rgba(10, 10, 15, 0.6) !important;
+  border: 1px solid var(--modern-border) !important;
+  border-radius: 8px !important;
+}
+
+/* Winner state visual update - preserve animations */
+.itemCol.winner {
+  box-shadow: 
+    0 0 30px var(--modern-cyan),
+    inset 0 0 20px rgba(0, 243, 255, 0.2) !important;
+  border-color: var(--modern-cyan) !important;
+  /* Keep existing animations */
+}
+
+/* ============================================= 
+   12. FOOTER UPDATE
+   ============================================= */
+footer {
+  text-align: center !important;
+  padding: 3rem 1rem !important;
+  color: var(--modern-text-dim) !important;
+  margin-top: 4rem !important;
+  border-top: 1px solid var(--modern-border) !important;
+}
+
+footer a {
+  color: var(--modern-gold) !important;
+  text-decoration: none !important;
+  transition: all 0.3s !important;
+}
+
+footer a:hover {
+  color: var(--modern-cyan) !important;
+}
+
+/* ============================================= 
+   PREMIUM POLISH UPDATES - Phase 2
+   CSS-only enhancements for complete integration
+   ============================================= */
+
+/* ============================================= 
+   1. GENERATE LOADOUT BUTTON - PREMIUM ENHANCEMENT
+   Enhanced hover state with glow and scale
+   ============================================= */
+.spin-button {
+  /* Enhanced base state for premium feel */
+  transform: translateY(0) scale(1) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  will-change: transform, box-shadow;
+}
+
+.spin-button:hover:not(:disabled) {
+  /* Premium hover state with subtle scale and glow */
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 
+    0 10px 40px rgba(255, 20, 147, 0.4),
+    0 0 80px rgba(255, 20, 147, 0.2),
+    0 0 120px rgba(123, 47, 227, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.spin-button:hover:not(:disabled)::before {
+  /* Intensify gradient border on hover */
+  opacity: 1 !important;
+  filter: brightness(1.2);
+}
+
+/* Active state - preserve energy feel */
+.spin-button:active:not(:disabled) {
+  transform: scale(0.98) !important;
+  box-shadow: 
+    0 4px 20px rgba(255, 20, 147, 0.5),
+    inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ============================================= 
+   2. CUSTOMIZE FILTERS BUTTON - PREMIUM STYLE
+   Pill shape with gradient border technique
+   ============================================= */
+.secondary-filter-button,
+#secondary-filter-button {
+  /* Base styling with glass morphism */
+  position: relative !important;
+  background: rgba(20, 20, 30, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: none !important;
+  border-radius: 100px !important;
+  padding: 0.75rem 1.5rem !important;
+  color: var(--modern-text) !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  transition: all 0.3s ease !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+}
+
+/* Gradient border using pseudo-element */
+.secondary-filter-button::before,
+#secondary-filter-button::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: -2px !important;
+  background: linear-gradient(
+    135deg, 
+    var(--modern-cyan), 
+    var(--modern-purple)
+  ) !important;
+  border-radius: 100px !important;
+  z-index: -1 !important;
+  opacity: 0.3 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+/* Hover state with glow */
+.secondary-filter-button:hover,
+#secondary-filter-button:hover {
+  background: rgba(20, 20, 30, 0.8) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 
+    0 8px 25px rgba(0, 243, 255, 0.2),
+    0 0 40px rgba(123, 47, 227, 0.1) !important;
+}
+
+.secondary-filter-button:hover::before,
+#secondary-filter-button:hover::before {
+  opacity: 0.6 !important;
+}
+
+/* Active state */
+.secondary-filter-button:active,
+#secondary-filter-button:active {
+  transform: scale(0.98) !important;
+}
+
+/* Maintain icon spacing */
+.secondary-filter-button svg,
+#secondary-filter-button svg,
+.secondary-filter-button i,
+#secondary-filter-button i {
+  margin-right: 0.5rem !important;
+  vertical-align: middle !important;
+}
+
+/* ============================================= 
+   3. LOADOUT HISTORY CARDS - GLASS MORPHISM
+   Premium card styling with gradient borders
+   ============================================= */
+.history-section .history-item,
+.history-content .history-item {
+  /* Glass morphism with blur */
+  position: relative !important;
+  background: rgba(20, 20, 30, 0.4) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 1.25rem !important;
+  overflow: hidden !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Gradient border for history cards */
+.history-section .history-item::before,
+.history-content .history-item::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: -1px !important;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 243, 255, 0.3),
+    rgba(123, 47, 227, 0.3),
+    rgba(255, 20, 147, 0.3)
+  ) !important;
+  border-radius: 12px !important;
+  z-index: -1 !important;
+  opacity: 0.5 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+/* Hover state for history cards */
+.history-section .history-item:hover,
+.history-content .history-item:hover {
+  transform: translateY(-4px) !important;
+  background: rgba(20, 20, 30, 0.6) !important;
+  box-shadow: 
+    0 12px 40px rgba(0, 243, 255, 0.15),
+    0 0 60px rgba(123, 47, 227, 0.1) !important;
+}
+
+.history-section .history-item:hover::before,
+.history-content .history-item:hover::before {
+  opacity: 0.8 !important;
+}
+
+/* Ensure copy button remains functional */
+.history-item .copy-btn,
+.history-item .copy-button {
+  position: relative !important;
+  z-index: 2 !important;
+  background: rgba(0, 243, 255, 0.1) !important;
+  border: 1px solid rgba(0, 243, 255, 0.3) !important;
+  border-radius: 8px !important;
+  padding: 0.5rem 1rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.history-item .copy-btn:hover,
+.history-item .copy-button:hover {
+  background: rgba(0, 243, 255, 0.2) !important;
+  border-color: var(--modern-cyan) !important;
+  transform: scale(1.05) !important;
+}
+
+/* ============================================= 
+   4. CLEAR ALL HISTORY BUTTON - SECONDARY STYLE
+   Subtle gradient border, less prominent than primary
+   ============================================= */
+#clear-history,
+#clearHistory,
+.clear-history-btn,
+.expand-history-btn,
+button[onclick*="clearHistory"],
+button[onclick*="clear"] {
+  /* Secondary button with glass effect */
+  position: relative !important;
+  background: rgba(30, 30, 40, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: none !important;
+  border-radius: 100px !important;
+  padding: 0.6rem 1.2rem !important;
+  color: var(--modern-text-dim) !important;
+  font-weight: 500 !important;
+  font-size: 0.85rem !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  transition: all 0.3s ease !important;
+  overflow: hidden !important;
+}
+
+/* Subtle gradient border */
+#clear-history::before,
+#clearHistory::before,
+.clear-history-btn::before,
+.expand-history-btn::before,
+button[onclick*="clearHistory"]::before,
+button[onclick*="clear"]::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: -1px !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  ) !important;
+  border-radius: 100px !important;
+  z-index: -1 !important;
+  opacity: 0.5 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+/* Hover state - gentle glow */
+#clear-history:hover,
+#clearHistory:hover,
+.clear-history-btn:hover,
+.expand-history-btn:hover,
+button[onclick*="clearHistory"]:hover,
+button[onclick*="clear"]:hover {
+  background: rgba(30, 30, 40, 0.8) !important;
+  color: var(--modern-text) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 
+    0 4px 15px rgba(255, 255, 255, 0.05),
+    0 0 30px rgba(255, 255, 255, 0.02) !important;
+}
+
+#clear-history:hover::before,
+#clearHistory:hover::before,
+.clear-history-btn:hover::before,
+.expand-history-btn:hover::before,
+button[onclick*="clearHistory"]:hover::before,
+button[onclick*="clear"]:hover::before {
+  opacity: 0.8 !important;
+}
+
+/* Active state */
+#clear-history:active,
+#clearHistory:active,
+.clear-history-btn:active,
+.expand-history-btn:active,
+button[onclick*="clearHistory"]:active,
+button[onclick*="clear"]:active {
+  transform: scale(0.98) !important;
+}
+
+/* ============================================= 
+   5. PERFORMANCE OPTIMIZATIONS
+   GPU acceleration and fallbacks
+   ============================================= */
+
+/* Enable GPU acceleration for transformed elements */
+.spin-button,
+.secondary-filter-button,
+#secondary-filter-button,
+.history-item,
+#clear-history,
+#clearHistory,
+.clear-history-btn,
+.expand-history-btn {
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+}
+
+/* Fallback for browsers without backdrop-filter support */
+@supports not (backdrop-filter: blur(10px)) {
+  .secondary-filter-button,
+  #secondary-filter-button,
+  .history-section .history-item,
+  .history-content .history-item,
+  #clear-history,
+  #clearHistory,
+  .clear-history-btn,
+  .expand-history-btn {
+    background: rgba(20, 20, 30, 0.95) !important;
+  }
+}
+
+/* ============================================= 
+   6. MOBILE TOUCH STATES
+   Ensure proper feedback on touch devices
+   ============================================= */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  .spin-button:active {
+    transform: scale(0.98) !important;
+  }
+  
+  .secondary-filter-button:active,
+  #secondary-filter-button:active {
+    transform: scale(0.98) !important;
+  }
+  
+  .history-item:active {
+    transform: scale(0.99) !important;
+  }
+  
+  /* Add tap highlight for better feedback */
+  .spin-button,
+  .secondary-filter-button,
+  #secondary-filter-button,
+  .history-item .copy-btn,
+  #clear-history,
+  #clearHistory,
+  .clear-history-btn,
+  .expand-history-btn {
+    -webkit-tap-highlight-color: rgba(0, 243, 255, 0.1);
+  }
+}

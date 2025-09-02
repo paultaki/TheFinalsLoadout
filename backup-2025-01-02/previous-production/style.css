@@ -1,0 +1,4294 @@
+:root {
+  /* Match The Finals' actual brand colors - mapped to quantum */
+  --finals-black: var(--quantum-dark, #0a0c12);
+  --finals-white: var(--text-primary, #e0e7ff);
+  --finals-red: var(--quantum-red, #ff3366);
+  --finals-blue: var(--quantum-cyan, #00f0c0);
+  --finals-yellow: var(--quantum-gold, #ffb700);
+
+  /* Class-specific - mapped to quantum */
+  --light-blue: var(--quantum-cyan, #00f0c0);
+  --medium-magenta: var(--quantum-purple, #7b2fe3);
+  --heavy-orange: var(--quantum-gold, #ffb700);
+
+  /* UI states - mapped to quantum */
+  --bg-primary: var(--quantum-dark, #0a0c12);
+  --bg-card: var(--quantum-component, #181c27);
+  --border-subtle: var(--quantum-border, #3a3f5e);
+
+  /* Legacy neon colors for backward compatibility - mapped to quantum */
+  --neon-purple: var(--quantum-purple, #7b2fe3);
+  --neon-blue: var(--quantum-blue, #1e90ff);
+  --neon-cyan: var(--quantum-cyan, #00f0c0);
+  --neon-pink: var(--quantum-pink, #ff2a6d);
+  --neon-orange: var(--quantum-orange, #ff6b35);
+  --neon-yellow: var(--quantum-gold, #ffb700);
+
+  /* Typography */
+  --base-font: "Inter", sans-serif;
+  --impact-font: "Bebas Neue", sans-serif;
+}
+
+/* Critical Animations */
+@keyframes finalFlash {
+  0% {
+    box-shadow: 0 0 100px rgba(255, 215, 0, 1);
+    transform: scale(1.2);
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 60px rgba(255, 183, 0, 0.9);
+    transform: scale(1.15);
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(255, 140, 0, 0.7);
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+@keyframes slowPulse {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.7);
+    transform: scale(1.05);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 183, 0, 0.9);
+    transform: scale(1.1);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.7);
+    transform: scale(1.05);
+  }
+}
+
+/* Progress & Navigation */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--finals-blue), var(--finals-yellow));
+  width: 0%;
+  z-index: 1001;
+  transition: width 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 212, 255, 0.4);
+}
+
+/* Countdown Timer - Unified Compact Style */
+.countdown-compact,
+.countdown-box-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.countdown-box {
+  background: rgba(139, 69, 19, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 3px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 28px;
+  position: relative;
+  backdrop-filter: blur(5px);
+}
+
+.countdown-number {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  font-family: var(--impact-font);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.countdown-unit {
+  display: block;
+  font-size: 8px;
+  color: var(--finals-yellow);
+  text-transform: uppercase;
+  line-height: 1;
+  margin-top: 1px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Return to Top Button */
+.return-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--finals-blue), var(--neon-purple));
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+}
+
+.return-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.return-to-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5);
+  background: linear-gradient(135deg, var(--neon-purple), var(--finals-blue));
+}
+
+/* Mobile Navigation - Simplified */
+@media (max-width: 768px) {
+  .footerSection {
+    display: none !important;
+  }
+
+  /* Keep nav visible on mobile with filter and sound buttons - match WT Tracker */
+  .main-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    padding: 0.75rem 1rem !important;
+    gap: 0.75rem !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Ensure nav controls are visible and properly contained on mobile */
+  .nav-controls {
+    display: flex !important;
+    gap: 0.75rem;
+    align-items: center;
+    position: relative !important;
+    order: 1 !important;
+    width: auto !important;
+    justify-content: center !important;
+    margin: 0 !important;
+  }
+  
+  /* Ensure nav links are ordered properly */
+  .nav-links {
+    order: 2 !important;
+    width: 100% !important;
+    justify-content: center !important;
+    gap: 1rem !important;
+    flex-wrap: wrap !important;
+    margin: 0 !important;
+  }
+  
+  /* Smaller nav link sizes to match WT Tracker */
+  .main-nav .nav-link {
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.8rem !important;
+  }
+
+  /* Ensure nav buttons are visible on mobile */
+  .nav-button,
+  .filter-toggle-button,
+  .sound-toggle-button {
+    display: flex !important;
+    width: 40px;
+    height: 40px;
+  }
+
+  .scroll-progress-bar {
+    height: 3px;
+  }
+
+  .return-to-top {
+    bottom: 70px; /* Adjust position to avoid overlapping with mobile UI */
+    right: 15px;
+    width: 45px;
+    height: 45px;
+  }
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: linear-gradient(135deg, #1b1b3a, #34003d, #240049, #003d66);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  will-change: background-position;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Slot Machine Core */
+#output {
+  background: radial-gradient(ellipse at center, #4a3a5e, #2a2a3a);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 100px rgba(138, 43, 226, 0.3),
+    inset 0 0 50px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  margin: 20px auto;
+  min-height: 200px;
+  contain: layout style;
+  display: none; /* Hidden by default until content is loaded */
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#output:not(:empty) {
+  display: block; /* Show when content is added */
+}
+
+.item-container {
+  background: linear-gradient(to bottom, #0a0a0a, #1a1a1a);
+  border: 4px solid transparent;
+  border-image: linear-gradient(45deg, #ffd700, #ff6b6b, #ffd700) 1;
+  box-shadow: inset 0 10px 30px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(255, 215, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+/* Slot window effect */
+.item-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  animation: slotShine 3s infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+@keyframes slotShine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
+}
+
+/* Animation states */
+.high-speed-blur .scroll-container {
+  filter: blur(3px);
+}
+
+.extreme-blur .scroll-container {
+  filter: blur(8px);
+}
+
+@keyframes lockIn {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.item-container.locked {
+  animation: lockIn 0.5s ease-out;
+}
+
+.item-container.locking {
+  border-color: #ffd700 !important;
+  box-shadow: inset 0 10px 30px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(255, 215, 0, 0.8);
+}
+
+/* Final loadout glow effect */
+.item-container.final-glow {
+  animation: finalGlow 2s ease-in-out infinite;
+  border-image: linear-gradient(45deg, #ffd700, #ff6b6b, #ffd700) 1;
+}
+
+/* Ensure slot machine text is always white */
+#output .itemCol p,
+.slot-machine-wrapper .itemCol p,
+.items-container .itemCol p {
+  color: #fff !important;
+}
+
+/* Final slot machine - smaller size on main page */
+.final-slot-machine-wrapper {
+  transform: scale(0.8);
+  transform-origin: center;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+#output.final-result {
+  padding: 10px;
+  margin: 10px auto;
+}
+
+/* Adjust for mobile */
+@media (max-width: 768px) {
+  .final-slot-machine-wrapper {
+    transform: scale(0.9);
+  }
+}
+
+@keyframes finalGlow {
+  0%, 100% {
+    box-shadow: inset 0 10px 30px rgba(0, 0, 0, 0.8),
+      0 0 20px rgba(255, 215, 0, 0.4),
+      0 0 40px rgba(255, 215, 0, 0.2);
+  }
+  50% {
+    box-shadow: inset 0 10px 30px rgba(0, 0, 0, 0.8),
+      0 0 30px rgba(255, 215, 0, 0.6),
+      0 0 60px rgba(255, 215, 0, 0.4),
+      0 0 80px rgba(255, 215, 0, 0.2);
+  }
+}
+
+@keyframes screenShake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-2px, 2px);
+  }
+  50% {
+    transform: translate(2px, -2px);
+  }
+  75% {
+    transform: translate(-2px, -2px);
+  }
+}
+
+.screen-shake {
+  animation: screenShake 0.2s ease-out;
+}
+
+/* Navigation */
+.main-nav {
+  position: sticky !important;
+  top: 0 !important;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(10, 12, 18, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--quantum-border);
+}
+
+.main-nav .nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-family: "Fira Code", monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.main-nav .nav-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--quantum-cyan),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.main-nav .nav-link:hover {
+  color: var(--quantum-cyan);
+  transform: translateY(-2px);
+}
+
+.main-nav .nav-link:hover::before {
+  left: 100%;
+}
+
+.main-nav .nav-link.active {
+  background: linear-gradient(
+    135deg,
+    var(--quantum-cyan),
+    var(--quantum-blue)
+  );
+  color: var(--quantum-dark);
+  font-weight: 600;
+}
+
+.main-nav a[href*="ragequit"] {
+  border: 1px solid var(--quantum-orange) !important;
+  color: var(--quantum-orange) !important;
+  background: transparent !important;
+}
+
+/* Nav layout containers */
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-controls {
+  margin-left: auto;
+  display: flex;
+  gap: 0.8rem;
+  position: relative;
+}
+
+/* Sound toggle button positioning in nav - Override fixed positioning */
+.main-nav .sound-toggle-button,
+.nav-controls .sound-toggle-button {
+  position: static !important;   /* Override fixed positioning */
+  top: auto !important;
+  right: auto !important;
+  margin-left: 0 !important;
+  padding: 6px 10px;
+  width: 40px !important;
+  height: 40px !important;
+}
+
+/* Nav buttons (filter & sound) */
+.nav-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-button:hover {
+  transform: scale(1.1);
+  border-color: rgba(123, 47, 227, 0.6);
+  box-shadow: 0 0 20px rgba(123, 47, 227, 0.4);
+}
+
+.nav-button svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* Audio icon logic */
+.sound-toggle-button .sound-on {
+  display: block;
+}
+
+.sound-toggle-button .sound-off {
+  display: none;
+}
+
+.sound-toggle-button.muted .sound-on {
+  display: none;
+}
+
+.sound-toggle-button.muted .sound-off {
+  display: block;
+}
+
+.sound-toggle-button.muted {
+  background: rgba(255, 68, 68, 0.6);
+  border-color: rgba(255, 68, 68, 0.4);
+}
+
+/* Mobile Navigation (≤640px) - Two row layout */
+@media (max-width: 640px) {
+  .main-nav {
+    flex-direction: column;
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-controls {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .main-nav a {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .nav-button {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+
+/* Celebration Effects */
+.celebration-banner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  text-align: center;
+  animation: bannerSlideIn 0.5s ease-out;
+}
+
+.banner-text {
+  font-size: 48px;
+  font-weight: 900;
+  color: #ffd700;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.6),
+    0 0 60px rgba(255, 215, 0, 0.4);
+  letter-spacing: 3px;
+  animation: textGlow 1s ease-in-out infinite alternate;
+}
+
+.banner-subtext {
+  font-size: 20px;
+  color: #fff;
+  margin-top: 10px;
+  opacity: 0.9;
+}
+
+@keyframes bannerSlideIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes textGlow {
+  0% {
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+  }
+  100% {
+    text-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 50px rgba(255, 215, 0, 0.8);
+  }
+}
+
+.celebration-banner.fade-out {
+  animation: bannerFadeOut 0.5s ease-out forwards;
+}
+
+@keyframes bannerFadeOut {
+  to {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.celebration-flash {
+  animation: celebrationFlash 0.5s ease-out;
+}
+
+@keyframes celebrationFlash {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.3);
+  }
+}
+
+/* Floating celebration text */
+.floating-celebration-text {
+  position: absolute;
+  font-size: 32px;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+  animation: floatUp 2s ease-out forwards;
+  pointer-events: none;
+  z-index: 90;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(0);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(-20px) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+body {
+  font-family: var(--base-font);
+  font-weight: 400;
+  color: #fff;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  min-height: auto;
+  background: linear-gradient(
+    180deg,
+    #1b1b3a,
+    #2e004d
+  ); /* Dark blue to deep purple */
+  background-size: cover;
+  color: white;
+}
+
+body.flexStyle {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header Section */
+.headerSection {
+  padding: 10px 0 10px;
+  position: relative;
+}
+
+.mainTitle {
+  font-size: 1.5rem;
+  margin: 5px 0;
+  color: var(--neon-yellow);
+  font-weight: 500;
+}
+
+.headerSection p {
+  font-size: 10-px;
+  line-height: 1.2;
+  font-weight: 300;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* Sound Toggle Button */
+.sound-toggle,
+.sound-toggle-button {
+  /* Removed fixed positioning - button now in nav */
+  position: relative !important; /* Override any fixed positioning */
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--neon-yellow);
+  z-index: 1000;
+  /* Remove any positioning offsets */
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  bottom: auto !important;
+}
+
+.sound-toggle:hover,
+.sound-toggle-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--neon-yellow);
+  transform: scale(1.1);
+}
+
+.sound-toggle svg,
+.sound-toggle-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sound-toggle.muted .sound-on,
+.sound-toggle-button.muted .sound-on {
+  display: none;
+}
+
+.sound-toggle.muted .sound-off,
+.sound-toggle-button.muted .sound-off {
+  display: block !important;
+}
+
+.sound-toggle.muted,
+.sound-toggle-button.muted {
+  color: #999;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Button Styles */
+.btnRow {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.btnRow + .btnRow {
+  margin-top: 20px;
+}
+
+.item-container:hover {
+  transform: translateY(-5px) translateZ(20px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.itemCol {
+  padding-top: 5px;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  opacity: 0.9; /* Prevent unnecessary redraws */
+}
+
+.itemCol img {
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+  border-radius: 5px;
+  width: 140px;
+  height: 144px;
+  object-fit: cover;
+}
+
+.itemCol p {
+  color: #fff !important; /* Force white text on all devices */
+  padding: 8px 0 10px;
+  font-size: 16px; /* 👀 Increase readability */
+  font-weight: bold; /* Makes it pop more */
+  margin: 0;
+  white-space: normal; /* Allow word wrapping */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
+  line-height: 1.2;
+  hyphens: auto;
+}
+
+.selected + .itemCol {
+  opacity: 0;
+}
+
+/* Hover Effect */
+#punishmentLoadoutButton:hover {
+  transform: translateY(-3px) scale(1.07);
+  box-shadow: 0 0 20px rgba(255, 140, 0, 0.8);
+  background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
+}
+
+/* Skull Icon Fix */
+.skull-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+/* Fix Pulse Animation */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff4500, #ff7b00) !important;
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.6);
+  }
+  50% {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ff7b00, #ff4500) !important;
+    box-shadow: 0 6px 18px rgba(255, 140, 0, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff4500, #ff7b00) !important;
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.6);
+  }
+}
+
+/* Pulsing Glow Effect */
+@keyframes subtlePulse {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(255, 140, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+  }
+}
+/* Footer Section */
+.footerSection {
+  color: #ddd;
+  font-size: 0.9rem;
+}
+
+.footerSection a {
+  color: var(--quantum-gold, #ffb700);
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.container {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.footerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footerRow p {
+  margin: 0;
+}
+
+/* Utility Classes */
+.text-start {
+  text-align: left;
+}
+
+.text-end {
+  text-align: right;
+}
+
+[disabled="true"] {
+  cursor: not-allowed;
+}
+
+/* Increase instruction font size for better readability */
+.step {
+  font-size: 1.3rem; /* Increased from 1.1rem */
+  font-weight: bold;
+  margin-bottom: 12px; /* Adds slight spacing below each step */
+}
+
+.patch-container {
+  background: #1a1f2e;
+  border: 1px solid #2a3040;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.patch-header {
+  background: #2a3040;
+  border-radius: 12px;
+  padding: 1rem;
+  border-bottom: 1px solid #3a4050;
+}
+
+.patch-date {
+  color: var(--neon-yellow);
+  font-weight: 600;
+  margin: 0;
+}
+
+.patch-content {
+  padding: 1.5rem;
+}
+
+.update-section {
+  margin-bottom: 2rem;
+}
+
+.update-section h3 {
+  color: var(--neon-yellow);
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.update-item {
+  background: rgba(42, 48, 64, 0.5);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid transparent;
+}
+
+.update-item.nerf {
+  border-left-color: #ff4444;
+}
+.update-item.nerf .update-title {
+  color: #ff4444;
+}
+
+.update-item.buff {
+  border-left-color: #44ff44;
+}
+.update-item.buff .update-title {
+  color: #44ff44;
+}
+
+.update-item.adjustment {
+  border-left-color: #ffaa00;
+}
+.update-item.adjustment .update-title {
+  color: #ffaa00;
+}
+
+.update-item.improvement {
+  border-left-color: #44aaff;
+}
+.update-item.improvement .update-title {
+  color: #44aaff;
+}
+
+.update-item.fixes {
+  border-left-color: #aa44ff;
+}
+.update-item.fixes .update-title {
+  color: #aa44ff;
+}
+
+.update-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.update-item ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 0;
+  color: #cccccc;
+}
+
+.update-item li {
+  margin-bottom: 0.25rem;
+}
+
+/* Space out Step 2 from class buttons */
+.step + .btnRow {
+  margin-top: 15px; /* Creates better separation */
+}
+
+#punishmentLoadoutButton {
+  animation: subtlePulse 2.5s ease-in-out infinite; /* Keeps pulsing effect */
+}
+
+/* Clean Placeholder Styling - The Finals Style */
+.placeholder-container {
+  background: #1a1a1a !important;
+  border: 1px solid #333 !important;
+  width: 120px; /* Fixed width to prevent layout shift */
+  height: 200px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+  color: #666 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  contain: layout style; /* Optimize rendering */
+  border-radius: 0;
+  padding: 2rem;
+  text-align: center;
+  flex-direction: column;
+  position: relative;
+}
+
+.placeholder-container::before {
+  content: "?";
+  font-size: 3rem;
+  font-weight: 800;
+  color: #666;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: var(--impact-font);
+}
+
+/* Remove those cube images entirely */
+.placeholder-container img {
+  display: none;
+}
+
+.placeholder-container p {
+  font-size: 14px !important;
+  color: #666 !important;
+  margin: 0;
+  font-family: var(--base-font);
+  font-weight: 600;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+}
+
+.step {
+  margin: 20px 0;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.step.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.step h2 {
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+body {
+  font-family: var(--base-font);
+  color: #fff;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  color: white;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Subtle animated cyber grid overlay */
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("images/cubes.png");
+  opacity: 0.1;
+  pointer-events: none;
+  animation: slowMove 20s linear infinite;
+}
+
+/* Smooth scrolling for a more fluid experience */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Neon glow effect for headers */
+h1,
+h2,
+h3 {
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.7);
+}
+
+/* Image hover effect */
+img:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Prevent horizontal scrolling on the entire page */
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Mobile Performance Optimizations */
+@media (max-width: 768px) {
+  /* Reduce animation complexity on mobile */
+  body.mobile-optimized .particle {
+    animation-duration: 0.8s !important; /* Faster animations */
+  }
+
+  body.mobile-optimized .flash-overlay {
+    animation-duration: 0.3s !important;
+  }
+
+  /* Disable blur effects on mobile for better performance */
+  body.mobile-optimized .scroll-container {
+    filter: none !important;
+  }
+
+  /* Simplify box shadows on mobile */
+  body.mobile-optimized .item-container {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  /* Reduce gradient animation complexity */
+  body.mobile-optimized {
+    animation-duration: 25s; /* Slower animation */
+  }
+}
+
+/* Optimize animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Keep essential animations but make them instant */
+  .scroll-container {
+    transition: transform 0.01ms !important;
+  }
+
+}
+
+/* Hardware acceleration for smooth animations */
+.roulette-wheel,
+.roulette-ball,
+.scroll-container,
+.itemCol,
+.particle {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
+/* Optimize font rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Force audio button position - override all other rules */
+/* Removed fixed positioning for sound toggle - button now in nav */
+
+
+/* Reduce repaints for fixed elements */
+.main-nav {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.itemCol.winner {
+  position: relative;
+  animation: landingFlash 0.3s ease-out, springBack 0.8s ease-out 0.3s,
+    continuousPulse 2s ease-in-out 1.1s infinite;
+}
+
+/* Container Styles */
+.items-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 200px; /* Prevent layout shift */
+  contain: layout style; /* Optimize rendering */
+  background: rgba(255, 255, 255, 0.12);
+  padding: 8px 15px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  margin: 15px auto;
+  width: 100%;
+  max-width: 800px;
+  min-width: auto;
+  flex-wrap: nowrap;
+  overflow-x: visible;
+  position: relative;
+  transform-origin: center;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.items-container::-webkit-scrollbar {
+  display: none;
+}
+
+.item-container {
+  flex: 0 0 140px;
+  width: 140px;
+  height: 200px;
+  margin: 0;
+  background-color: #fff;
+  border: 3px solid #ffcc00 !important; /* Brighter yellow */
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: neonGlow 1.5s infinite alternate;
+}
+
+.item-container:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 0px 25px rgba(255, 183, 0, 1);
+}
+
+/* Mobile Styles - Improved Layout */
+@media (max-width: 768px) {
+  /* Show sound toggle on mobile next to filter button */
+  #sound-toggle.sound-toggle-button {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Ensure nav controls are properly displayed */
+  .nav-controls {
+    display: flex !important;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* Mobile slot machine - let desktop styles scale naturally */
+  #output:not(#overlay-slot-output) {
+    margin: 15px auto !important;
+    padding: 15px !important;
+    max-width: calc(100vw - 30px) !important;
+  }
+
+  #output:not(#overlay-slot-output) .items-container {
+    gap: var(--slot-gap, 10px) !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Scale item containers proportionally - but not in overlay */
+  #output:not(#overlay-slot-output) .items-container .item-container {
+    flex: 0 0 auto !important;
+    width: 120px !important;
+    min-width: 120px !important;
+    height: 180px !important;
+  }
+
+  /* Keep images proportional - but not in overlay */
+  #output:not(#overlay-slot-output) .items-container .itemCol img {
+    max-width: 90% !important;
+    max-height: 120px !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  /* Readable text size - but not in overlay */
+  #output:not(#overlay-slot-output) .items-container .itemCol p {
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+    padding: 5px 3px !important;
+  }
+
+  /* Adjust main container padding */
+  .container {
+    padding: 0 10px;
+  }
+
+  /* Button row - prevent wrapping */
+  .btnRow {
+    gap: 10px;
+    padding: 0 5px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    margin: 10px 0;
+    width: 100%;
+  }
+
+  /* Header and text adjustments */
+  .finals-logo {
+    width: 100px;
+    height: auto;
+    margin: 0 auto 15px;
+  }
+
+  .mainTitle {
+    font-size: 1.2rem;
+    margin: 10px 0;
+  }
+
+  .headerSection {
+    padding: 20px 0;
+  }
+
+  .headerSection p {
+    font-size: 1.1rem;
+    line-height: 1.2;
+    margin: 5px 0;
+  }
+
+  .step h2 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+
+  .step {
+    margin: 10px 0;
+  }
+
+  /* Adjust vertical spacing */
+  .mainContent {
+    padding-bottom: 20px;
+  }
+
+  #output {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    width: 100%;
+    overflow-x: hidden;
+    max-width: 100vw;
+    position: relative;
+  }
+}
+
+/* Extra small screens - commented out to use natural scaling
+@media (max-width: 480px) {
+  #output .items-container .item-container {
+    flex: 0 0 17vw !important;
+    width: 17vw !important;
+    max-width: 65px !important;
+    height: 90px !important;
+  }
+
+  #output .items-container .itemCol img {
+    max-height: 40px !important;
+  }
+
+  #output .items-container {
+    gap: 1vw !important;
+  }
+}
+*/
+
+/* Extra small devices - iPhone specific - commented out to use natural scaling
+@media (max-width: 375px) {
+*/
+/*
+  .items-container {
+    transform: none !important;
+    background: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: auto !important;
+    gap: 1px;
+    padding: 0 1px;
+    overflow-x: visible;
+  }
+
+  .item-container {
+    flex: 0 0 calc((100vw - 5px) / 5);
+    width: calc((100vw - 5px) / 5);
+    max-width: 85px;
+    min-width: 65px;
+    height: 100px;
+    margin: 0;
+  }
+
+  .items-container .itemCol {
+    width: calc((100vw - 5px) / 5) !important;
+    max-width: 85px !important;
+    min-width: 65px !important;
+    flex: 0 0 calc((100vw - 5px) / 5) !important;
+    margin: 0 !important;
+    height: 100px !important;
+  }
+
+  .items-container .itemCol img {
+    width: 100% !important;
+    max-width: 80px !important;
+    height: auto !important;
+    max-height: 50px !important;
+    min-height: 40px !important;
+  }
+
+  .items-container .itemCol p {
+    font-size: 8px !important;
+    line-height: 1 !important;
+    padding: 1px !important;
+  }
+
+  .btnRow {
+    gap: 8px;
+  }
+}
+
+/* Prevent horizontal scroll on body */
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Force container to stay within viewport */
+.container {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Ensure 5 slot machine items are always visible on all screens */
+@media (max-width: 768px) {
+  .items-container {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: visible !important;
+    min-width: auto !important;
+  }
+
+  /* Force exactly 5 items to fit */
+  .items-container > * {
+    flex: 0 0 calc((100% - 32px) / 5) !important;
+    max-width: calc((100% - 32px) / 5) !important;
+    min-width: 0 !important;
+  }
+}
+
+/* Season Update Notice */
+.season-update-notice {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 10px 0 20px 0;
+  text-align: center;
+  background: linear-gradient(
+    135deg,
+    #e8e8e8 0%,
+    #ffffff 15%,
+    #d4a5ff 35%,
+    #ffffff 50%,
+    #c79dff 65%,
+    #ffffff 85%,
+    #b8b8b8 100%
+  ) !important;
+  background-size: 300% 300% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  text-shadow: none !important;
+  animation: metallic-shine 3s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+  .season-update-notice {
+    font-size: 1rem;
+    margin: 8px 0 15px 0;
+  }
+}
+
+/* =====================
+   Consolidated Animations
+   ===================== */
+
+/* Background gradient shift */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Subtle movement animation */
+@keyframes slowMove {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Simple logo pulse animation for mobile */
+@keyframes logoMobilePulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 4px #ff00ff) drop-shadow(0 0 6px #00f3ff);
+  }
+  50% {
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 6px #ff00ff) drop-shadow(0 0 10px #00f3ff);
+  }
+}
+
+/* Mobile-specific fix for background animation */
+@media (max-width: 768px) {
+  body::before {
+    /* Use will-change to optimize for mobile GPU acceleration */
+    will-change: transform;
+    /* Ensure hardware acceleration */
+    transform: translateZ(0);
+    /* Reduce animation complexity on mobile if needed */
+    animation: slowMove 20s ease-in-out infinite;
+  }
+
+  /* Fix fast logo animation on mobile */
+  .finals-logo {
+    /* Use much simpler animation on mobile */
+    animation: logoMobilePulse 3s ease-in-out infinite !important;
+    /* Enable hardware acceleration */
+    will-change: transform, filter;
+    transform: translateZ(0);
+  }
+}
+
+/* Shine effect for placeholders */
+@keyframes shineEffect {
+  0% {
+    transform: rotate(0deg) translateX(-30%);
+  }
+  50% {
+    transform: rotate(45deg) translateX(30%);
+  }
+  100% {
+    transform: rotate(0deg) translateX(-30%);
+  }
+}
+
+/* Final item landing animations */
+@keyframes finalFlash {
+  0% {
+    box-shadow: 0 0 100px rgba(255, 215, 0, 1);
+    transform: scale(1.2);
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 60px rgba(255, 183, 0, 0.9);
+    transform: scale(1.15);
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(255, 140, 0, 0.7);
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+@keyframes slotMachineOvershoot {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(8px);
+  }
+  45% {
+    transform: translateY(-4px);
+  }
+  65% {
+    transform: translateY(2px);
+  }
+  85% {
+    transform: translateY(-1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes continuousPulse {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.7);
+    transform: scale(1.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 183, 0, 0.9);
+    transform: scale(1.12);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.7);
+    transform: scale(1.1);
+  }
+}
+
+/* Punishment button pulse */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: scale(1.02);
+    background: linear-gradient(
+      45deg,
+      var(--neon-red),
+      var(--neon-orange, 0.9)
+    );
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* New animation for selected state */
+@keyframes selectedPulse {
+  0% {
+    box-shadow: 0 0 10px var(--neon-yellow), 0 0 20px var(--neon-yellow),
+      0 0 30px var(--neon-yellow);
+  }
+  50% {
+    box-shadow: 0 0 15px var(--neon-yellow), 0 0 30px var(--neon-yellow),
+      0 0 45px var(--neon-yellow);
+  }
+  100% {
+    box-shadow: 0 0 10px var(--neon-yellow), 0 0 20px var(--neon-yellow),
+      0 0 30px var(--neon-yellow);
+  }
+}
+
+@keyframes landingFlash {
+  0% {
+    box-shadow: 0 0 60px rgba(255, 183, 0, 0.8),
+      inset 0 0 60px rgba(255, 183, 0, 0.8);
+    transform: scale(1.15);
+    filter: brightness(1.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 183, 0, 0.6),
+      inset 0 0 30px rgba(255, 183, 0, 0.6);
+    transform: scale(1.1);
+    filter: brightness(1.3);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.4),
+      inset 0 0 20px rgba(255, 183, 0, 0.4);
+    transform: scale(1.05);
+    filter: brightness(1.1);
+  }
+}
+
+@keyframes pulsateWinner {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.4),
+      inset 0 0 20px rgba(255, 183, 0, 0.4);
+    transform: scale(1.05);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 183, 0, 0.6),
+      inset 0 0 30px rgba(255, 183, 0, 0.6);
+    transform: scale(1.08);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.4),
+      inset 0 0 20px rgba(255, 183, 0, 0.4);
+    transform: scale(1.05);
+  }
+}
+
+.item-container.landing-flash {
+  animation: landingFlash 0.5s ease-out forwards;
+}
+
+.item-container.winner-pulsate {
+  animation: pulsateWinner 2s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+  .outlineBtnStyle {
+    margin-top: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+
+  .btnRow {
+    margin: 8px 0;
+    gap: 15px;
+  }
+
+  #output {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .items-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto;
+    display: flex !important;
+    justify-content: center !important;
+    gap: px !important;
+    transform: none !important;
+    position: static !important;
+    left: auto !important;
+    box-sizing: border-box !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Mobile-specific slot machine item sizing */
+  .items-container .itemCol {
+    width: calc((100vw - 0px) / 5) !important;
+    max-width: 0px !important;
+    min-width: 55px !important;
+    flex: 0 0 calc((00vw - 80px) / 5) !important;
+    margin: 0 2px !important;
+  }
+
+  .items-container .itemCol img {
+    width: 100% !important;
+    max-width: 80px !important;
+    height: auto !important;
+    max-height: 80px !important;
+    min-height: 60px !important;
+  }
+
+  .items-container .itemCol p {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    padding: 3px 2px !important;
+    margin: 0 !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /* slot-machine-wrapper removed - content now generated dynamically */
+}
+
+@media (max-width: 375px) {
+  .items-container {
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    gap: 2px;
+    padding: 5px;
+  }
+
+  .item-container {
+    flex: 0 0 calc((100vw - 30px) / 5);
+    width: calc((100vw - 30px) / 5);
+    max-width: 75px;
+    min-width: 50px;
+    height: 120px;
+    margin: 0 1px;
+  }
+
+  .items-container .itemCol {
+    width: calc((100vw - 15px) / 5) !important;
+    max-width: 80px !important;
+    min-width: 60px !important;
+    flex: 0 0 calc((100vw - 15px) / 5) !important;
+    margin: 0 !important;
+  }
+
+  .items-container .itemCol img {
+    width: 100% !important;
+    max-width: 65px !important;
+    height: auto !important;
+    max-height: 65px !important;
+    min-height: 45px !important;
+  }
+
+  .items-container .itemCol p {
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+    padding: 2px 1px !important;
+  }
+
+  .btnRow {
+    gap: 8px;
+  }
+}
+img {
+  image-rendering: crisp-edges;
+}
+
+.cyber-grid {
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: gridMove 20s linear infinite;
+}
+
+/* Neon glow effects */
+.neon-glow {
+  box-shadow: 0 0 5px rgba(123, 47, 227, 0.2), 0 0 10px rgba(123, 47, 227, 0.2),
+    0 0 15px rgba(123, 47, 227, 0.2), 0 0 20px rgba(123, 47, 227, 0.2);
+  animation: neonPulse 2s ease-in-out infinite;
+}
+
+/* Enhanced background gradient animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Cyberpunk-style grid overlay */
+.cyber-grid {
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
+}
+
+/* Neon glow effects */
+.neon-glow {
+  box-shadow: 0 0 5px rgba(123, 47, 227, 0.2), 0 0 10px rgba(123, 47, 227, 0.2),
+    0 0 15px rgba(123, 47, 227, 0.2), 0 0 20px rgba(123, 47, 227, 0.2);
+  animation: neonPulse 2s ease-in-out infinite;
+}
+@keyframes neonPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Fix for Class Selection Buttons */
+
+.spin-button {
+  background: linear-gradient(135deg, #8a2be2, #ff00ff);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(255, 0, 255, 0.4);
+}
+
+.spin-button:hover {
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 8px 20px rgba(255, 0, 255, 0.6);
+}
+
+.spin-button:active {
+  transform: scale(0.95);
+  background: linear-gradient(135deg, #ff1493, #1e90ff); /* Neon Pink & Blue */
+  box-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 10px rgba(0, 255, 255, 0.8); /* Glow */
+  border: 2px solid rgba(255, 20, 147, 0.8); /* Hot Pink Border */
+}
+
+.spin-button.active {
+  background: linear-gradient(135deg, #ff00ff, #ff4500);
+  box-shadow: 0 4px 15px rgba(255, 69, 0, 0.8);
+  background: linear-gradient(135deg, #ff1493, #1e90ff); /* Neon Pink & Blue */
+  box-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 10px rgba(0, 255, 255, 0.8); /* Glow */
+  border: 2px solid rgba(255, 20, 147, 0.8); /* Hot Pink Border */
+}
+
+/* Buff Section - Darker Blue */
+.buff-section {
+  background: #1e293b; /* Dark Blue */
+  border-left: 5px solid #4a90e2; /* Bright Blue */
+  color: #c7dbff; /* Softer Light Blue */
+  padding: 20px;
+  border-radius: 6px;
+}
+
+/* Nerf Section - Dark Red */
+.nerf-section {
+  background: #3b1e1e; /* Darker Red */
+  border-left: 5px solid #e24a4a; /* Medium Red */
+  color: #ffb3b3; /* Softer Light Red */
+  padding: 20px;
+  border-radius: 6px;
+}
+
+/* QoL Section - Dark Gold */
+.qol-section {
+  background: #3b2a1e; /* Darker Gold */
+  border-left: 5px solid #e2a04a; /* Medium Gold */
+  color: #ffe4c4; /* Softer Light Gold */
+  padding: 20px;
+  border-radius: 6px;
+}
+
+/* Title Styling */
+.buff-section h3,
+.nerf-section h3,
+.qol-section h3 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff; /* Bright White */
+  margin-bottom: 10px;
+}
+
+/* Bullet Point Fix - Align Lists */
+.buff-section ul,
+.nerf-section ul,
+.qol-section ul {
+  padding-left: 25px;
+  margin-top: 8px;
+}
+
+/* Bullet Point Fix - Better Spacing */
+.buff-section ul li,
+.nerf-section ul li,
+.qol-section ul li {
+  list-style-type: disc;
+  margin-bottom: 6px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Patch Date Styling */
+.patch-date {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ffcc00;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* Buffs/Nerfs Container */
+.buff-item {
+  margin-bottom: 25px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Fix for Punishment Loadout Button */
+#punishmentLoadoutButton {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 15px;
+  background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+  border: 1px solid #ff3d00 !important;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  color: white !important;
+  cursor: pointer;
+  border-radius: 6px;
+  box-shadow: 0 0 6px rgba(255, 69, 0, 0.8);
+  transition: all 0.3s ease-in-out;
+  animation: subtlePulse 2s ease-in-out infinite;
+}
+
+/* Hover Effect */
+#punishmentLoadoutButton:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.9);
+  background: linear-gradient(45deg, #ff6f00, #d50000) !important;
+}
+
+.skull-icon {
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  display: inline-flex; /* Add this */
+  align-items: center; /* Add this */
+  justify-content: center; /* Add this */
+  margin-top: -1px; /* Fine-tune vertical alignment */
+}
+
+/* Fix Button Animation */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.7);
+  }
+  50% {
+    transform: scale(1.06);
+    background: linear-gradient(45deg, #ff6f00, #d50000) !important;
+    box-shadow: 0 6px 14px rgba(255, 140, 0, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.7);
+  }
+}
+
+/* Ensure no unwanted styles from outlineBtnStyle affect it */
+.outlineBtnStyle {
+  all: unset !important;
+}
+
+/* Fix Button Animation */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.7);
+  }
+  50% {
+    transform: scale(1.06);
+    background: linear-gradient(45deg, #ff6f00, #d50000) !important;
+    box-shadow: 0 6px 14px rgba(255, 140, 0, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #d50000, #ff6f00) !important;
+    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.7);
+  }
+}
+
+/* Fix Button Animation */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff0000, #ff7b00) !important;
+    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.6);
+  }
+  50% {
+    transform: scale(1.06);
+    background: linear-gradient(45deg, #ff7b00, #ff0000) !important;
+    box-shadow: 0 6px 14px rgba(255, 140, 0, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff0000, #ff7b00) !important;
+    box-shadow: 0 4px 10px rgba(255, 69, 0, 0.6);
+  }
+}
+
+/* Fix Button Animation */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff0000, #ff7b00) !important;
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.6);
+  }
+  50% {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ff7b00, #ff0000) !important;
+    box-shadow: 0 6px 18px rgba(255, 140, 0, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, #ff0000, #ff7b00) !important;
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.6);
+  }
+}
+
+.patch-notes {
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 15px;
+}
+
+.notes-container {
+  background: rgb(21, 23, 28);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.patch-notes h2 {
+  color: #ffb700;
+  text-align: center;
+  padding: 0.5rem;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.patch-date {
+  color: #ffb700;
+  text-align: center;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.patch-section {
+  margin: 1rem 0;
+}
+
+.patch-section h3 {
+  color: #ffb700;
+  text-align: center;
+  margin: 1rem 0;
+  font-size: 1.1rem;
+}
+
+.change-item {
+  background: rgba(26, 28, 35, 0.95);
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 12px;
+  position: relative;
+  text-align: center;
+}
+
+/* Colored bars for different change types */
+.change-item.nerf::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #ff4444;
+}
+
+.change-item.adjustment::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #ffaa00;
+}
+
+.change-item.buff::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #44ff44;
+}
+
+.change-title {
+  color: #ffb700;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.change-details {
+  color: #ffffff;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Section headers */
+.section-title {
+  color: #ffb700;
+  text-align: center;
+  padding: 0.75rem;
+  margin: 1rem 0;
+  font-size: 1.1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Remove list styling and center bullet points */
+.change-details ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.change-details li {
+  margin: 0.5rem 0;
+}
+
+/* Add these styles to your existing CSS */
+.locked-tag {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  right: auto;
+  transform: translate(-50%, -100%);
+  background: linear-gradient(45deg, #ffb700, #ff7b00);
+  color: black;
+  padding: 2px 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+.locked-tag.show {
+  animation: tagPop 0.3s ease-out forwards;
+}
+
+@keyframes tagPop {
+  0% {
+    transform: scale(0) rotate(-10deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Make sure item containers have relative positioning for the locked tag */
+.item-container {
+  position: relative;
+  padding-top: 28px !important;
+}
+
+/* 🔥 Intense Yellow Flash Effect When Locked In 🔥 */
+@keyframes intenseYellowFlash {
+  0% {
+    box-shadow: 0 0 40px rgba(255, 20, 147, 1);
+  } /* Neon Pink */
+  50% {
+    box-shadow: 0 0 80px rgba(0, 255, 255, 1);
+  } /* Cyan */
+  100% {
+    box-shadow: 0 0 40px rgba(255, 20, 147, 1);
+  }
+}
+
+/* 🔥 Continuous Pulse After Flash 🔥 */
+@keyframes continuousYellowPulse {
+  0% {
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 20, 147, 1);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+  }
+}
+
+/* Apply Flash Effect When Locked In */
+.item-container.landing-flash {
+  animation: intenseYellowFlash 0.5s ease-in-out,
+    continuousYellowPulse 2s infinite ease-in-out 0.5s;
+}
+
+/* Ensure the footer row maintains proper spacing */
+.footerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Allows items to adjust */
+  gap: 10px;
+  min-height: 60px; /* Ensures enough space */
+  overflow: visible;
+}
+
+.main-nav {
+  background: rgba(0, 0, 0, 0.8) !important;
+  padding: 8px 15px !important;
+  display: flex !important;
+  justify-content: flex-start !important;
+  gap: 20px !important;
+  width: 100% !important;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5) !important;
+  position: sticky !important;   /* ⬅️ flip from relative → sticky  */
+  top: 0 !important;             /* keep at the top of viewport    */
+  left: 0;
+  right: 0;
+  margin: 0 !important;
+  z-index: 1000 !important;      /* above most things, but below progress bar */
+  flex-wrap: nowrap !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.main-nav a {
+  color: white !important;
+  text-decoration: none !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  padding: 5px 5px !important;
+  transition: color 0.3s ease, transform 0.2s ease !important;
+  position: relative !important;
+  white-space: nowrap !important;
+  display: inline-block !important;
+  margin: 0 !important;
+}
+
+/* Force active state styling */
+.main-nav a.active {
+  color: var(--quantum-gold, #ffb700) !important; /* Using a specific color since var may not be working */
+}
+
+/* Force hover styling */
+.main-nav a:hover {
+  color: var(--quantum-gold, #ffb700) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Tabula Rasa Special Link */
+.tabula-rasa-link {
+  position: relative;
+  background: linear-gradient(45deg, #00ff88, #00cc66) !important;
+  color: #000 !important;
+  font-weight: 600;
+  text-shadow: none !important;
+  animation: tabulaGlow 2s ease-in-out infinite;
+}
+
+.tabula-rasa-link::before {
+  content: "🎲";
+  margin-right: 8px;
+}
+
+.tabula-rasa-link:hover {
+  color: #000 !important;
+  background: linear-gradient(45deg, #00cc66, #00ff88) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+}
+
+@keyframes tabulaGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+  }
+}
+
+/* Completely disable the underline effect temporarily */
+.main-nav a::after {
+  display: none !important;
+}
+
+.main-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+
+/* Header logo size */
+.finals-logo,
+.roulette-logo {
+  width: 180px;
+  margin: 0 auto 10px !important;
+}
+
+/* Fix header/nav ordering */
+body > nav {
+  order: 2 !important;
+}
+
+body > header {
+  order: 1 !important;
+}
+
+.subTitle {
+  font-size: 1rem;
+  margin-top: -2px;
+}
+
+/* Adjust main container padding */
+.container {
+  padding-top: 0px !important;
+  padding-right: 2px !important;
+  padding-bottom: 5px !important; /* Assuming you want to keep the bottom padding */
+  padding-left: 2px !important;
+}
+/* ===== 2. CLASS & SPIN SELECTION AREA ===== */
+
+/* Step headers */
+.step h2,
+#classSelection h2,
+#spinSelection h2 {
+  font-size: 1.5em !important;
+  margin-bottom: 15px !important;
+  padding-bottom: 0 !important;
+}
+
+#spinSelection h2 {
+  margin-top: 15px !important;
+}
+
+.step {
+  margin: 10px 0;
+}
+
+/* Main adjustments for tablets and smaller screens */
+@media (max-width: 768px) {
+  /* ===== 1. HEADER AREA ADJUSTMENTS ===== */
+  /* Reduce space between logo and nav bar */
+  .headerSection {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    margin-bottom: 5px !important;
+  }
+
+  /* Header logo size */
+  .finals-logo,
+  .roulette-logo {
+    width: 180px;
+    margin: 0 auto 10px !important;
+  }
+
+  /* Fix header/nav ordering */
+  body > nav {
+    order: 2 !important;
+  }
+
+  body > header {
+    order: 1 !important;
+  }
+
+  .subTitle {
+    font-size: 1rem;
+    margin-top: -2px;
+  }
+
+  /* Adjust main container padding */
+  .container {
+    padding: 15px 10px !important;
+  }
+
+  /* ===== 2. CLASS & SPIN SELECTION AREA ===== */
+
+  /* Step headers */
+  .step h2,
+  #classSelection h2,
+  #spinSelection h2 {
+    font-size: 18px !important;
+    margin-bottom: 15px !important;
+    padding-bottom: 0 !important;
+  }
+
+  #spinSelection h2 {
+    margin-top: 15px !important;
+    font-size: 1.4rem !important;
+  }
+
+  .step {
+    margin: 10px 0;
+  }
+
+  /* Button row spacing for class and spin sections */
+  #classSelection .btnRow,
+  #spinSelection .btnRow,
+  .class-spin-container .btnRow {
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+  }
+
+  /* ===== 3. SLOT MACHINE AREA ===== */
+  /* Main output container */
+  #output {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+    margin-top: 10px;
+    margin-bottom: 5px !important; /* Improved spacing */
+    width: 100%;
+    position: relative;
+    overflow-x: hidden;
+    max-width: 100vw;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 1;
+  }
+
+  /* Adjust item containers */
+  .item-container {
+    width: 110px;
+    margin: 0 4px;
+  }
+
+  /* Reduce the size and space of the slot machine */
+  .items-container {
+    transform: scale(0.45);
+    transform-origin: center top;
+    width: 600px !important;
+    margin: 0 auto 10px !important;
+    padding: 3px 10px !important;
+  }
+
+  /* Ensure space between elements */
+  .btnRow:not(#classSelection .btnRow):not(#spinSelection .btnRow) {
+    margin-top: -50px !important;
+  }
+
+  #output + .btnRow {
+    margin-top: -50px !important;
+  }
+
+
+  /* Fix the class-spin container */
+  .class-spin-container {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 1px 0 !important;
+    margin: 2px 0 !important; /* Reduce top & bottom spacing */
+  }
+
+  /* slot-machine-wrapper removed - content now generated dynamically */
+
+  /* Button row styling */
+  .btnRow {
+    display: flex;
+    justify-content: center;
+    gap: 3px !important; /* Slightly reduce spacing */
+    padding: 0 0px !important;
+    flex-wrap: nowrap;
+    margin: 3px 0 !important; /* Reduce extra margin */
+  }
+
+  /* ===== 4. RAGE QUIT BUTTON AREA ===== */
+  .rage-quit-link {
+    font-size: 12px !important;
+    padding: 4px 10px !important; /* Shrink button padding */
+    white-space: nowrap !important;
+    letter-spacing: 1px !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 90%;
+    margin: 3px auto !important; /* Keep spacing balanced */
+  }
+
+  /* Adjust vertical spacing */
+  .mainContent {
+    padding-bottom: 5px;
+  }
+}
+
+/* ===== SMALL SCREENS (PHONES) ===== */
+@media (max-width: 480px) {
+  .finals-logo,
+  .roulette-logo {
+    width: 150px;
+    margin: 0 auto 8px !important;
+  }
+
+  .subTitle {
+    font-size: 0.9rem;
+  }
+
+  #classSelection h2,
+  #spinSelection h2 {
+    font-size: 1.4rem !important;
+  }
+
+  /* Reduce spacing on very small screens */
+  .btnRow:not(#classSelection .btnRow):not(#spinSelection .btnRow) {
+    margin-top: -85px !important;
+  }
+
+  #output + .btnRow {
+    margin-top: -85px !important;
+  }
+
+
+}
+
+
+/* Extra small screens */
+@media (max-width: 375px) {
+  .items-container {
+    transform: none !important;
+    background: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: auto !important;
+    gap: 1px;
+    padding: 0 1px;
+    overflow-x: visible;
+  }
+
+  .item-container {
+    flex: 0 0 calc((100vw - 5px) / 5);
+    width: calc((100vw - 5px) / 5);
+    max-width: 85px;
+    min-width: 65px;
+    height: 100px;
+    margin: 0;
+  }
+
+  .items-container .itemCol {
+    width: calc((100vw - 5px) / 5) !important;
+    max-width: 85px !important;
+    min-width: 65px !important;
+    flex: 0 0 calc((100vw - 5px) / 5) !important;
+    margin: 0 !important;
+    height: 100px !important;
+  }
+
+  .items-container .itemCol img {
+    width: 100% !important;
+    max-width: 80px !important;
+    height: auto !important;
+    max-height: 50px !important;
+    min-height: 40px !important;
+  }
+
+  .items-container .itemCol p {
+    font-size: 8px !important;
+    line-height: 1 !important;
+    padding: 1px !important;
+  }
+
+  .btnRow {
+    gap: 8px;
+  }
+}
+
+/* Prevent horizontal scroll on body */
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Force container to stay within viewport */
+.container {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Ensure 5 slot machine items are always visible on all screens */
+@media (max-width: 768px) {
+
+/* =====================
+   Consolidated Animations
+   ===================== */
+
+/* Background gradient shift */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Subtle movement animation */
+@keyframes slowMove {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Simple logo pulse animation for mobile */
+@keyframes logoMobilePulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 4px #ff00ff) drop-shadow(0 0 6px #00f3ff);
+  }
+  50% {
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 6px #ff00ff) drop-shadow(0 0 10px #00f3ff);
+  }
+}
+
+/* Mobile-specific fix for background animation */
+@media (max-width: 768px) {
+  body::before {
+    /* Use will-change to optimize for mobile GPU acceleration */
+    will-change: transform;
+    /* Ensure hardware acceleration */
+    transform: translateZ(0);
+    /* Reduce animation complexity on mobile if needed */
+    animation: slowMove 20s ease-in-out infinite;
+  }
+
+  /* Fix fast logo animation on mobile */
+  .finals-logo {
+    /* Use much simpler animation on mobile */
+    animation: logoMobilePulse 3s ease-in-out infinite !important;
+    /* Enable hardware acceleration */
+    will-change: transform, filter;
+    transform: translateZ(0);
+  }
+}
+
+/* Shine effect for placeholders */
+@keyframes shineEffect {
+  0% {
+    transform: rotate(0deg) translateX(-30%);
+  }
+  50% {
+    transform: rotate(45deg) translateX(30%);
+  }
+  100% {
+    transform: rotate(0deg) translateX(-30%);
+  }
+}
+
+/* Final item landing animations */
+@keyframes finalFlash {
+  0% {
+    box-shadow: 0 0 100px rgba(255, 215, 0, 1);
+    transform: scale(1.2);
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 60px rgba(255, 183, 0, 0.9);
+    transform: scale(1.15);
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(255, 140, 0, 0.7);
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+@keyframes slotMachineOvershoot {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(8px);
+  }
+  45% {
+    transform: translateY(-4px);
+  }
+  65% {
+    transform: translateY(2px);
+  }
+  85% {
+    transform: translateY(-1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes continuousPulse {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.7);
+    transform: scale(1.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 183, 0, 0.9);
+    transform: scale(1.12);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.7);
+    transform: scale(1.1);
+  }
+}
+
+/* Punishment button pulse */
+@keyframes subtlePulse {
+  0% {
+    transform: scale(1);
+    background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: scale(1.02);
+    background: linear-gradient(
+      45deg,
+      var(--neon-red),
+      var(--neon-orange, 0.9)
+    );
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    background: linear-gradient(45deg, var(--neon-red), var(--neon-orange));
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* New animation for selected state */
+@keyframes selectedPulse {
+  0% {
+    box-shadow: 0 0 10px var(--neon-yellow), 0 0 20px var(--neon-yellow),
+      0 0 30px var(--neon-yellow);
+  }
+  50% {
+    box-shadow: 0 0 15px var(--neon-yellow), 0 0 30px var(--neon-yellow),
+      0 0 45px var(--neon-yellow);
+  }
+  100% {
+    box-shadow: 0 0 10px var(--neon-yellow), 0 0 20px var(--neon-yellow),
+      0 0 30px var(--neon-yellow);
+  }
+}
+
+@keyframes landingFlash {
+  0% {
+    box-shadow: 0 0 60px rgba(255, 183, 0, 0.8),
+      inset 0 0 60px rgba(255, 183, 0, 0.8);
+    transform: scale(1.15);
+    filter: brightness(1.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 183, 0, 0.6),
+      inset 0 0 30px rgba(255, 183, 0, 0.6);
+    transform: scale(1.1);
+    filter: brightness(1.3);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.4),
+      inset 0 0 20px rgba(255, 183, 0, 0.4);
+    transform: scale(1.05);
+    filter: brightness(1.1);
+  }
+}
+
+@keyframes pulsateWinner {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.4),
+      inset 0 0 20px rgba(255, 183, 0, 0.4);
+    transform: scale(1.05);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 183, 0, 0.6),
+      inset 0 0 30px rgba(255, 183, 0, 0.6);
+    transform: scale(1.08);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.4),
+      inset 0 0 20px rgba(255, 183, 0, 0.4);
+    transform: scale(1.05);
+  }
+}
+
+.item-container.landing-flash {
+  animation: landingFlash 0.5s ease-out forwards;
+}
+
+.item-container.winner-pulsate {
+  animation: pulsateWinner 2s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+  .outlineBtnStyle {
+    margin-top: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+
+  .btnRow {
+    margin: 8px 0;
+    gap: 15px;
+  }
+
+  #output {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .items-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto;
+    display: flex !important;
+    justify-content: center !important;
+    gap: px !important;
+    transform: none !important;
+    position: static !important;
+    left: auto !important;
+    box-sizing: border-box !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Mobile-specific slot machine item sizing */
+  .items-container .itemCol {
+    width: calc((100vw - 0px) / 5) !important;
+    max-width: 0px !important;
+    min-width: 55px !important;
+    flex: 0 0 calc((00vw - 80px) / 5) !important;
+    margin: 0 2px !important;
+  }
+
+  .items-container .itemCol img {
+    width: 100% !important;
+    max-width: 80px !important;
+    height: auto !important;
+    max-height: 80px !important;
+    min-height: 60px !important;
+  }
+
+  .items-container .itemCol p {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    padding: 3px 2px !important;
+    margin: 0 !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /* slot-machine-wrapper removed - content now generated dynamically */
+}
+
+@media (max-width: 375px) {
+  .items-container {
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    gap: 2px;
+    padding: 5px;
+  }
+
+  .item-container {
+    flex: 0 0 calc((100vw - 30px) / 5);
+    width: calc((100vw - 30px) / 5);
+    max-width: 75px;
+    min-width: 50px;
+    height: 120px;
+    margin: 0 1px;
+  }
+
+  .items-container .itemCol {
+    width: calc((100vw - 15px) / 5) !important;
+    max-width: 80px !important;
+    min-width: 60px !important;
+    flex: 0 0 calc((100vw - 15px) / 5) !important;
+    margin: 0 !important;
+  }
+
+  .items-container .itemCol img {
+    width: 100% !important;
+    max-width: 65px !important;
+    height: auto !important;
+    max-height: 65px !important;
+    min-height: 45px !important;
+  }
+
+  .items-container .itemCol p {
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+    padding: 2px 1px !important;
+  }
+
+  .btnRow {
+    gap: 8px;
+  }
+}
+img {
+  image-rendering: crisp-edges;
+}
+
+.cyber-grid {
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: gridMove 20s linear infinite;
+}
+
+/* Neon glow effects */
+.neon-glow {
+  box-shadow: 0 0 5px rgba(123, 47, 227, 0.2), 0 0 10px rgba(123, 47, 227, 0.2),
+    0 0 15px rgba(123, 47, 227, 0.2), 0 0 20px rgba(123, 47, 227, 0.2);
+  animation: neonPulse 2s ease-in-out infinite;
+}
+
+/* Enhanced background gradient animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Cyberpunk-style grid overlay */
+.cyber-grid {
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
+}
+
+/* Neon glow effects */
+.neon-glow {
+  box-shadow: 0 0 5px rgba(123, 47, 227, 0.2), 0 0 10px rgba(123, 47, 227, 0.2),
+    0 0 15px rgba(123, 47, 227, 0.2), 0 0 20px rgba(123, 47, 227, 0.2);
+  animation: neonPulse 2s ease-in-out infinite;
+}
+@keyframes neonPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Fix for Class Selection Buttons */
+/* Fix for Class Selection Buttons */
+
+.spin-button {
+  background: linear-gradient(135deg, #8a2be2, #ff00ff);
+  color: white;
+  border: none;
+    filter: brightness(1) contrast(1);
+  }
+
+
+
+/* Gadget group label styling */
+.gadget-group .item-label {
+  margin-bottom: 0.5rem;
+}
+
+/* Ensure proper spacing for items with labels */
+.loadout-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.loadout-item .item-icon,
+.loadout-item .item-name {
+  align-self: flex-start;
+}
+
+
+/* Mobile nav button visibility fixes - Added for casino mode */
+@media (max-width: 768px) {
+  /* Ensure nav buttons are visible on mobile */
+  .nav-controls {
+    display: flex \!important;
+    visibility: visible \!important;
+    opacity: 1 \!important;
+  }
+
+  .nav-button {
+    display: flex \!important;
+    visibility: visible \!important;
+    opacity: 1 \!important;
+  }
+
+  /* Ensure sound button stays in nav on mobile */
+  .sound-toggle-button {
+    position: relative \!important;
+    top: auto \!important;
+    right: auto \!important;
+    left: auto \!important;
+    bottom: auto \!important;
+  }
+}
+
+/* Fix sound toggle button icon visibility */
+.sound-toggle-button svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.sound-toggle-button .sound-on,
+.sound-toggle-button .sound-off {
+  width: 20px;
+  height: 20px;
+  display: none;
+}
+
+.sound-toggle-button:not(.muted) .sound-on {
+  display: block \!important;
+}
+
+.sound-toggle-button.muted .sound-off {
+  display: block \!important;
+}
+
+/* Ensure muted state is visible */
+.sound-toggle-button.muted {
+  background: rgba(255, 68, 68, 0.3) \!important;
+  border-color: rgba(255, 68, 68, 0.6) \!important;
+}
+
+/* Overlay container for animated overlays and reveal cards */
+#overlay-container {
+  display: none; /* flex when active */
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(10,10,10,0.75);
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay-card {
+  background: linear-gradient(135deg, #ffd700, #ff3366);
+  color: #0a0a0a;
+  font-size: 2rem;
+  padding: 2rem 3rem;
+  border-radius: 24px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+  text-align: center;
+  font-family: "Bebas Neue", sans-serif;
+  animation: pop-in 0.4s cubic-bezier(.6,1.6,.4,1) backwards;
+}
+
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.6) rotate(-8deg);}
+  70% { opacity: 1; transform: scale(1.08) rotate(3deg);}
+  100% { opacity: 1; transform: scale(1);}
+}
+
+/* ===========================
+   Static Slot Machine History Styles
+   =========================== */
+
+/* CSS Variables */
+:root {
+  --neon-purple: #7b2fe3;
+  --neon-blue: #1e90ff;
+  --neon-cyan: #00f3ff;
+  --neon-pink: #ff1493;
+  --neon-orange: #ff7b00;
+  --neon-yellow: #ffb700;
+
+  /* Class Colors */
+  --light-color: #4fc3f7;
+  --medium-color: #ab47bc;
+  --heavy-color: #ff1744;
+
+  /* Dark Theme */
+  --bg-dark: #1a1a1a;
+  --bg-darker: #0f0f0f;
+  --border-glow: rgba(123, 47, 227, 0.5);
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: linear-gradient(-45deg, #1d1a21, #2a1f2d, #1f2a2d, #201c24);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+  color: #fff;
+  min-height: 100vh;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Test Controls */
+.test-controls {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--border-glow);
+}
+
+.test-controls h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 40px var(--neon-purple);
+}
+
+.test-button {
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  margin: 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(123, 47, 227, 0.4);
+}
+
+.test-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(123, 47, 227, 0.6);
+}
+
+/* History Container */
+.slot-history-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.history-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 2rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: linear-gradient(
+    135deg,
+    #e8e8e8 0%,
+    #ffffff 15%,
+    #d4a5ff 35%,
+    #ffffff 50%,
+    #c79dff 65%,
+    #ffffff 85%,
+    #b8b8b8 100%
+  ) !important;
+  background-size: 300% 300% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  text-shadow: none !important;
+  position: relative;
+  animation: metallic-shine 3s ease-in-out infinite;
+}
+
+@keyframes metallic-shine {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.history-count {
+  text-shadow: none !important;
+  background: linear-gradient(
+    135deg,
+    #e8e8e8 0%,
+    #ffffff 15%,
+    #d4a5ff 35%,
+    #ffffff 50%,
+    #c79dff 65%,
+    #ffffff 85%,
+    #b8b8b8 100%
+  ) !important;
+  background-size: 300% 300% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  animation: metallic-shine 3s ease-in-out infinite;
+}
+
+.title-icon {
+  font-size: 2rem;
+  animation: iconPulse 2s ease-in-out infinite;
+  text-shadow: none !important;
+  filter: none !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(5deg); }
+}
+
+.history-count {
+  font-size: 1.5rem;
+  color: var(--neon-yellow);
+  opacity: 1;
+  text-shadow: 0 0 10px rgba(255, 183, 0, 0.8);
+}
+
+/* Static Slot Machine Item */
+.static-slot-item {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(123, 47, 227, 0.1));
+  border: 2px solid var(--border-glow);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  animation: itemEntry 0.6s ease-out;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes itemEntry {
+  from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+  }
+}
+
+/* Item Header */
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.item-metadata {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Class Badge */
+.class-badge {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.4rem 1rem;
+  border-radius: 25px;
+  border: 2px solid;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.class-badge.light {
+  color: var(--light-color);
+  border-color: var(--light-color);
+  box-shadow: 0 0 15px rgba(79, 195, 247, 0.4);
+}
+
+.class-badge.medium {
+  color: var(--medium-color);
+  border-color: var(--medium-color);
+  box-shadow: 0 0 15px rgba(171, 71, 188, 0.4);
+}
+
+.class-badge.heavy {
+  color: var(--heavy-color);
+  border-color: var(--heavy-color);
+  box-shadow: 0 0 15px rgba(255, 23, 68, 0.4);
+}
+
+.spin-number {
+  background: linear-gradient(135deg, var(--neon-orange), var(--neon-yellow));
+  color: #000;
+  font-weight: 800;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+/* Updated timestamp styling for better visibility */
+.timestamp,
+.history-time,
+.time-ago,
+[class*="time"] {
+  color: #888 !important;
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  opacity: 0.8 !important;
+  text-transform: none !important;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Updated action button styling for history controls */
+.action-btn,
+.history-controls button,
+.history-actions button,
+.copy-button,
+.image-button {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 6px !important;
+  padding: 6px 12px !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  transition: all 0.2s ease !important;
+  backdrop-filter: blur(5px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-btn:hover,
+.history-controls button:hover,
+.history-actions button:hover,
+.copy-button:hover,
+.image-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(0, 243, 255, 0.4) !important;
+  color: #00f3ff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(0, 243, 255, 0.2) !important;
+}
+
+/* Active state */
+.action-btn:active,
+.history-controls button:active,
+.history-actions button:active {
+  transform: translateY(0) !important;
+}
+
+.action-btn.copy-text::before {
+  content: "📋";
+}
+
+.action-btn.copy-image::before {
+  content: "📸";
+}
+/* Slot Machine Display - Now 5 boxes */
+.slot-display {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.slot-box {
+  flex: 1;
+  max-width: 200px;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(123, 47, 227, 0.2));
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.slot-box::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: linear-gradient(45deg, transparent 40%, var(--neon-cyan), transparent 60%);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+
+.slot-box:hover::before {
+  opacity: 0.5;
+  animation: glowRotate 2s linear infinite;
+}
+
+@keyframes glowRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Class-specific colors */
+.slot-box.light {
+  border-color: var(--light-color);
+}
+
+.slot-box.light .slot-label {
+  color: var(--light-color);
+}
+
+.slot-box.medium {
+  border-color: var(--medium-color);
+}
+
+.slot-box.medium .slot-label {
+  color: var(--medium-color);
+}
+
+.slot-box.heavy {
+  border-color: var(--heavy-color);
+}
+
+.slot-box.heavy .slot-label {
+  color: var(--heavy-color);
+}
+
+.slot-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+}
+
+.slot-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin: 0 auto 0.5rem;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.slot-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff !important;
+  margin: 0;
+  line-height: 1.2;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+/* History Control Buttons Container */
+.history-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  margin: 2rem auto;
+  max-width: 300px;
+}
+
+/* Responsive layout for history controls */
+@media (min-width: 576px) {
+  .history-controls {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1.5rem;
+    max-width: none;
+  }
+}
+
+/* Base styling for history buttons */
+.expand-history-btn {
+  display: inline-block;
+  padding: 0.875rem 2rem;
+  background: linear-gradient(135deg, rgba(123, 47, 227, 0.15), rgba(30, 144, 255, 0.15));
+  border: 2px solid rgba(123, 47, 227, 0.4);
+  color: #fff;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: "Orbitron", sans-serif;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  min-width: 180px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(123, 47, 227, 0.2);
+}
+
+/* Shine effect for history buttons */
+.expand-history-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+/* Default hover state */
+.expand-history-btn:hover {
+  background: linear-gradient(135deg, rgba(123, 47, 227, 0.25), rgba(30, 144, 255, 0.25));
+  border-color: var(--neon-cyan);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(123, 47, 227, 0.3), 0 0 20px rgba(0, 243, 255, 0.3);
+}
+
+.expand-history-btn:hover::before {
+  left: 100%;
+}
+
+/* Clear History Button (Red variant) */
+.expand-history-btn[id="clear-history"] {
+  background: linear-gradient(135deg, rgba(255, 42, 109, 0.15), rgba(255, 69, 0, 0.15));
+  border-color: rgba(255, 42, 109, 0.4);
+  box-shadow: 0 2px 10px rgba(255, 42, 109, 0.2);
+}
+
+.expand-history-btn[id="clear-history"]:hover {
+  background: linear-gradient(135deg, rgba(255, 42, 109, 0.25), rgba(255, 69, 0, 0.25));
+  border-color: rgba(255, 42, 109, 0.6);
+  box-shadow: 0 6px 25px rgba(255, 42, 109, 0.3), 0 0 20px rgba(255, 42, 109, 0.4);
+}
+
+/* Mobile responsiveness for history buttons */
+@media (max-width: 768px) {
+  .history-controls {
+    gap: 0.75rem;
+    margin: 1.5rem auto;
+  }
+  
+  .expand-history-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.8rem;
+    min-width: 160px;
+  }
+}
+
+/* Toast Notifications */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 700;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 968px) {
+  .slot-display {
+      gap: 0.75rem;
+  }
+
+  .slot-box {
+      max-width: 160px;
+      padding: 0.75rem;
+  }
+
+  .slot-image {
+      width: 60px;
+      height: 60px;
+  }
+
+  .slot-name {
+      font-size: 0.8rem;
+      color: #fff !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .static-slot-item {
+      padding: 1rem 0.5rem;
+  }
+
+  .slot-display {
+      flex-wrap: nowrap;
+      gap: 0.25rem;
+  }
+
+  .slot-box {
+      flex: 1;
+      min-width: 0;
+      padding: 0.5rem 0.25rem;
+  }
+
+  .slot-image {
+      width: 45px;
+      height: 45px;
+  }
+
+  .slot-label {
+      font-size: 0.6rem;
+  }
+  .slot-name {
+      font-size: 0.7rem;
+  }
+  .action-buttons {
+      gap: 0.5rem;
+  }
+  .action-btn {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.7rem;
+  }
+  .item-header {
+      margin-bottom: 0.5rem;
+  }
+  .class-badge {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.7rem;
+  }
+}
+
+/* Loading State */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--neon-cyan);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.static-slot-item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7), 0 0 30px var(--border-glow);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Background Particles (Optional) */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  background: var(--neon-cyan);
+  border-radius: 50%;
+  opacity: 0;
+  animation: float 20s infinite linear;
+}
+
+@keyframes float {
+  0% {
+      transform: translateY(100vh) scale(0);
+      opacity: 0;
+  }
+  10%, 90% {
+      opacity: 1;
+  }
+  100% {
+      transform: translateY(-100px) scale(1);
+      opacity: 0;
+  }
+}
+
+/* AI Analysis Section */
+.ai-analysis {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 170, 0, 0.1));
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.ai-analysis.loading {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.ai-analysis.loading .roast-text {
+  opacity: 0.7;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.ai-analysis.high-score {
+  border-color: #00ff00;
+  background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 200, 0, 0.1));
+}
+
+.ai-analysis.mid-score {
+  border-color: #ffd700;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 170, 0, 0.1));
+}
+
+.ai-analysis.low-score {
+  border-color: #ff4444;
+  background: linear-gradient(135deg, rgba(255, 68, 68, 0.1), rgba(255, 100, 100, 0.1));
+}
+
+.ai-analysis.fallback {
+  border-style: dashed;
+  opacity: 0.8;
+}
+
+.ai-icon {
+  font-size: 24px;
+  animation: robotBounce 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes robotBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.roast-text {
+  flex: 1;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #fff;
+  font-style: italic;
+}
+
+.score-badge {
+  background: linear-gradient(45deg, #ffd700, #ffa500);
+  color: #000;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+  flex-shrink: 0;
+  animation: scorePulse 2s ease-in-out infinite;
+}
+
+@keyframes scorePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Mobile responsive AI analysis */
+@media (max-width: 768px) {
+  .ai-analysis {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .roast-text {
+    font-size: 0.8rem;
+  }
+
+  .score-badge {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+/* Ensure slot machine history works on ALL screen sizes */
+
+/* --- CRITICAL FIX: Enforce horizontal layout for slot display on DESKTOP views --- */
+@media (min-width: 769px) {
+    #history-list .slot-display {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 1rem !important;
+        justify-content: center !important;
+    }
+
+    .static-slot-item {
+        margin-bottom: 2rem;
+    }
+
+    .slot-box {
+        max-width: 220px;
+        padding: 1.25rem;
+    }
+
+    .slot-image {
+        width: 90px;
+        height: 90px;
+    }
+
+    .slot-name {
+        font-size: 1rem;
+    }
+
+    .slot-label {
+        font-size: 0.8rem;
+    }
+}
+
+/* AI Analysis Animated Loading Effect */
+.ai-loading-animation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.ai-loading-shapes {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: shapesFloat 3s ease-in-out infinite;
+}
+
+.ai-loading-shape {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  animation: shapeGlow 2s ease-in-out infinite;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.ai-loading-shape:nth-child(1) {
+  background: linear-gradient(45deg, #ffff00, #ffd700);
+  color: #ffff00;
+  animation-delay: 0s;
+}
+
+.ai-loading-shape:nth-child(2) {
+  background: linear-gradient(45deg, #ff8c00, #ff6b35);
+  color: #ff8c00;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  animation-delay: 0.2s;
+}
+
+.ai-loading-shape:nth-child(3) {
+  background: linear-gradient(45deg, #ff6b6b, #ff4757);
+  color: #ff6b6b;
+  width: 16px;
+  height: 10px;
+  border-radius: 3px;
+  animation-delay: 0.4s;
+}
+
+.ai-loading-shape:nth-child(4) {
+  background: linear-gradient(45deg, #ff69b4, #e91e63);
+  color: #ff69b4;
+  border-radius: 50%;
+  animation-delay: 0.6s;
+}
+
+.ai-loading-shape:nth-child(5) {
+  background: linear-gradient(45deg, #9c27b0, #8e24aa);
+  color: #9c27b0;
+  width: 14px;
+  height: 14px;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  animation-delay: 0.8s;
+}
+
+.ai-loading-shape:nth-child(6) {
+  background: linear-gradient(45deg, #673ab7, #5e35b1);
+  color: #673ab7;
+  width: 10px;
+  height: 16px;
+  border-radius: 2px;
+  animation-delay: 1s;
+}
+
+.ai-loading-shape:nth-child(7) {
+  background: linear-gradient(45deg, #2196f3, #1976d2);
+  color: #2196f3;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  animation-delay: 1.2s;
+}
+
+.ai-loading-shape:nth-child(8) {
+  background: linear-gradient(45deg, #00bcd4, #0097a7);
+  color: #00bcd4;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  animation-delay: 1.4s;
+}
+
+@keyframes shapesFloat {
+  0%, 100% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes shapeGlow {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+    box-shadow: 0 0 8px currentColor;
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.2) translateY(-2px);
+    box-shadow: 0 0 16px currentColor, 0 0 32px currentColor;
+    filter: brightness(1.3);
+  }
+}
+
+.ai-loading-text {
+  color: #fff;
+  font-size: 0.9rem;
+  margin-left: 12px;
+  opacity: 0.9;
+  animation: textPulse 2s ease-in-out infinite;
+}
+
+@keyframes textPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* Apply to AI Analysis Loading States */
+.ai-analysis.loading .roast-text {
+  opacity: 0.7;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Slot Machine Roast Loading Animation */
+.slot-machine-roast.loading .roast-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slot-machine-roast .ai-loading-animation {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.slot-machine-roast .ai-loading-text {
+  white-space: nowrap;
+  font-style: italic;
+}
+
+/* Mobile optimization for loading animation */
+@media (max-width: 768px) {
+  .ai-loading-shapes {
+    gap: 8px;
+  }
+  
+  .ai-loading-shape {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .ai-loading-shape:nth-child(3) {
+    width: 14px;
+    height: 8px;
+  }
+  
+  .ai-loading-shape:nth-child(6) {
+    width: 8px;
+    height: 14px;
+  }
+  
+  .ai-loading-shape:nth-child(7) {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .ai-loading-text {
+    font-size: 0.8rem;
+    margin-left: 8px;
+  }
+}
+

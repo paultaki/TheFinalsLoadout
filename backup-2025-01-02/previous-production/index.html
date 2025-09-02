@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <link rel="canonical" href="https://www.thefinalsloadout.com/" />
+
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
+
+    <!-- Preload Critical Resources - Logo is LCP element -->
+    <link
+      rel="preload"
+      href="/images/the-finals-logo.webp"
+      as="image"
+      type="image/webp"
+      fetchpriority="high"
+    />
+    <!-- Removed unused preloads to reduce memory usage -->
+    <link rel="preload" href="style.css" as="style" />
+
+    <!-- Meta Tags -->
+    <title>
+      The Finals BEST Random Loadout Generator | Fun & Unique Loadouts
+    </title>
+    <meta
+      name="description"
+      content="Get the best random loadouts for The Finals game to have fun and be challenged. Find new weapon builds for Light, Medium, and Heavy playstyles."
+    />
+    <meta name="author" content="Paul Takisaki" />
+    <link rel="author" href="https://www.paultakisaki.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="The Finals Loadout Roulette" />
+    <meta
+      property="og:description"
+      content="Randomize your loadout and dominate The Finals with style."
+    />
+    <meta
+      property="og:image"
+      content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://www.thefinalsloadout.com/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Finals Loadout Roulette" />
+    <meta
+      name="twitter:description"
+      content="Spin the wheel. Wreck the arena."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png"
+    />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "The Finals Loadout Generator",
+        "url": "https://www.thefinalsloadout.com",
+        "description": "A random loadout generator for The Finals game with optimized weapons and gadgets for different playstyles.",
+        "image": "https://www.thefinalsloadout.com/images/the-finals-logo.webp",
+        "author": {
+          "@type": "Person",
+          "name": "Paul Takisaki",
+          "url": "https://www.paultakisaki.com"
+        }
+      }
+    </script>
+
+    <!-- Fonts - Optimized Loading with font-display: swap -->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap"
+    />
+    <!-- Load additional font weights asynchronously -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@800&family=Fira+Code:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@800&family=Fira+Code:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+      />
+    </noscript>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+
+    <!-- Google Analytics (GA4) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-GVGKYFGZ1Z");
+    </script>
+
+    <!-- Console noise control for production -->
+    <script>
+      window.DEBUG = false;
+      if (!window.DEBUG) {
+        console.log = function() {};
+        console.debug = function() {};
+      }
+    </script>
+
+    <!-- Minimal Critical CSS - Above-the-Fold Only -->
+    <style>
+      /* Minimal Critical CSS - Only essential above-the-fold styles */
+      *{box-sizing:border-box}
+      body{margin:0;background:#1d1a21;color:#fff;font-family:Inter,system-ui,sans-serif;text-align:center;min-height:100vh}
+      .main-nav{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.8);padding:1rem 2rem;display:flex;justify-content:center;align-items:center;min-height:72px}
+      .nav-links{display:flex;gap:2rem;align-items:center;justify-content:center}
+      .nav-link{color:#fff;text-decoration:none;padding:.5rem 1rem;font-size:.9rem;font-weight:600;text-transform:uppercase}
+      .container{max-width:960px;margin:0 auto;padding:0 15px}
+      .headerSection{padding:2rem 0;min-height:320px}
+      
+      /* Fix CLS for images - explicit dimensions */
+      .finals-logo{width:240px;height:240px;aspect-ratio:1/1;display:block;margin:0 auto}
+      .finals-logo-mobile{width:144px;height:144px;aspect-ratio:1/1}
+      img{max-width:100%;height:auto}
+      
+      /* Reserve space for dynamic content */
+      .subTitle{font-size:1.5rem;margin:1rem 0;color:#ffb700;min-height:2rem}
+      h1,h2{font-family:"Bebas Neue",sans-serif;text-transform:uppercase}
+      .hero-button,.spin-button{padding:1rem 2rem;font-size:1.2rem;background:#7b2fe3;color:#fff;border:none;border-radius:50px;cursor:pointer;font-weight:700;text-transform:uppercase;min-height:60px}
+      
+      /* Reserve space for main content areas */
+      #output{min-height:400px}
+      .selection-display{min-height:60px}
+      .slot-machine{min-height:500px}
+      
+      /* Prevent icon shifts */
+      svg{display:inline-block;vertical-align:middle;width:20px;height:20px}
+      .nav-button{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center}
+      
+      /* Font optimization - force immediate display with fallbacks */
+      .subTitle-mobile{font-family:"Bebas Neue",Impact,sans-serif;font-display:swap}
+      body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;font-display:swap}
+    </style>
+
+    <!-- Preload critical above-the-fold CSS -->
+    <link rel="preload" href="css/cls-fixes.css" as="style" />
+    <link rel="preload" href="css/quantum-design-system.css" as="style" />
+    <link rel="preload" href="style.css" as="style" />
+    
+    <!-- Critical CSS - load immediately -->
+    <link rel="stylesheet" href="css/cls-fixes.css" />
+    <link rel="stylesheet" href="css/quantum-design-system.css" />
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Non-critical CSS - load asynchronously -->
+    <link rel="preload" href="css/non-critical-inline.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="styles/casino-styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="styles/overlay-system.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="modern-update.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="styles/slot-machine.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/filters.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/mobile-performance.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="styles/hotfix.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- Fallback for browsers without JavaScript -->
+    <noscript>
+      <link rel="stylesheet" href="css/non-critical-inline.css" />
+      <link rel="stylesheet" href="styles/casino-styles.css" />
+      <link rel="stylesheet" href="styles/overlay-system.css" />
+      <link rel="stylesheet" href="modern-update.css" />
+      <link rel="stylesheet" href="styles/slot-machine.css" />
+      <link rel="stylesheet" href="css/filters.css" />
+      <link rel="stylesheet" href="css/mobile-performance.css" />
+      <link rel="stylesheet" href="styles/hotfix.css" />
+    </noscript>
+  </head>
+
+  <body class="casino-mode">
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+
+    <!-- Return to Top Button -->
+    <button
+      class="return-to-top"
+      id="returnToTop"
+      aria-label="Return to top"
+      title="Return to top"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+
+    <audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="tickSound" src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="classWinSound" src="sounds/chang.mp3" preload="auto"></audio>
+    <audio
+      id="spinWinSound"
+      src="sounds/Tabby%20Tune.mp3"
+      preload="auto"
+    ></audio>
+    <audio id="spinningSound" src="sounds/spinning.mp3" preload="auto"></audio>
+    <audio
+      id="transitionSound"
+      src="sounds/transition.mp3"
+      preload="auto"
+    ></audio>
+    <audio id="finalSound" src="sounds/final-sound.mp3" preload="auto"></audio>
+    <audio id="spinStart" src="sounds/start-spin.mp3" preload="auto"></audio>
+    <audio id="columnStop" src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="finalLock" src="sounds/final-sound.mp3" preload="auto"></audio>
+    <audio
+      id="celebrationSound"
+      src="sounds/pop-pour-perform.mp3"
+      preload="auto"
+    ></audio>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+      <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+      <div class="nav-links">
+        <a href="/" class="nav-link active">LOADOUT GENERATOR</a>
+        <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
+        <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
+        <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
+        <a href="/wt-progress/" class="nav-link">WORLD TOUR TRACKER (NEW)</a>
+      </div>
+      <div class="nav-controls">
+        <!-- Filter Toggle Button -->
+        <button
+          id="filter-toggle"
+          class="filter-toggle-button nav-button"
+          aria-label="Toggle filters"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polygon
+              points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+            ></polygon>
+          </svg>
+        </button>
+        <!-- Sound Toggle Button (moved here) -->
+        <button
+          id="sound-toggle"
+          class="sound-toggle-button nav-button"
+          aria-label="Toggle sound"
+        >
+          <svg
+            class="sound-on"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path
+              d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
+            ></path>
+          </svg>
+          <svg
+            class="sound-off"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- New Filters Promotional Flag -->
+    <div id="filters-promo-flag" class="promo-flag">
+      <div class="flag-content">
+        <span class="flag-text">Try our new filters!</span>
+        <div class="flag-arrow"></div>
+      </div>
+    </div>
+
+    <!-- Filter Panel Overlay -->
+    <div id="filter-panel-overlay" class="filter-panel-overlay"></div>
+
+    <!-- Slide-out Filter Panel -->
+    <div id="filter-panel" class="filter-panel slide-out">
+      <!-- Header Row -->
+      <div class="filter-header">
+        <h3 class="filter-title">FILTERS</h3>
+        <button
+          id="close-filter-panel"
+          class="filter-close"
+          aria-label="Close filters"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="filter-tabs" role="tablist">
+        <button
+          class="tab-button active"
+          data-tab="weapons"
+          role="tab"
+          aria-selected="true"
+          aria-controls="weapons-tab"
+        >
+          Weapons
+        </button>
+        <button
+          class="tab-button"
+          data-tab="specializations"
+          role="tab"
+          aria-selected="false"
+          aria-controls="specializations-tab"
+        >
+          Specs
+        </button>
+        <button
+          class="tab-button"
+          data-tab="gadgets"
+          role="tab"
+          aria-selected="false"
+          aria-controls="gadgets-tab"
+        >
+          Gadgets
+        </button>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="filter-search-container">
+        <input
+          type="text"
+          id="filter-search"
+          placeholder="Search weapons..."
+          class="filter-search-input"
+          aria-label="Search items"
+        />
+      </div>
+
+      <!-- Class Chips -->
+      <div class="filter-class-chips">
+        <button class="class-filter class-chip active" data-class="all">
+          ALL
+        </button>
+        <button class="class-filter class-chip light-chip" data-class="light">
+          LIGHT
+        </button>
+        <button class="class-filter class-chip medium-chip" data-class="medium">
+          MEDIUM
+        </button>
+        <button class="class-filter class-chip heavy-chip" data-class="heavy">
+          HEAVY
+        </button>
+      </div>
+
+      <!-- Class Include Card -->
+      <div class="class-include-card">
+        <h4 class="include-card-title">
+          SELECT CLASSES TO INCLUDE IN RANDOM SELECTION
+        </h4>
+        <div class="class-include-checkboxes">
+          <label class="class-include-checkbox">
+            <input
+              type="checkbox"
+              id="exclude-light"
+              data-exclude-class="light"
+              checked
+            />
+            <span class="checkbox-box light-checkbox"></span>
+            <span class="checkbox-label">LIGHT</span>
+          </label>
+          <label class="class-include-checkbox">
+            <input
+              type="checkbox"
+              id="exclude-medium"
+              data-exclude-class="medium"
+              checked
+            />
+            <span class="checkbox-box medium-checkbox"></span>
+            <span class="checkbox-label">MEDIUM</span>
+          </label>
+          <label class="class-include-checkbox">
+            <input
+              type="checkbox"
+              id="exclude-heavy"
+              data-exclude-class="heavy"
+              checked
+            />
+            <span class="checkbox-box heavy-checkbox"></span>
+            <span class="checkbox-label">HEAVY</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Filter Content Container -->
+      <div class="filter-content-container">
+        <!-- Content Area - Weapons Tab (Active by Default) -->
+        <div class="tab-content active" id="weapons-tab" role="tabpanel">
+          <!-- Light Weapons Section -->
+          <div class="filter-category-card">
+            <button class="category-header" aria-expanded="true">
+              <span class="category-title">LIGHT WEAPONS</span>
+              <span class="category-caret">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="category-content">
+              <div class="item-list" id="light-weapons-grid">
+                <!-- Select All option as first item -->
+                <label class="item-checkbox select-all-checkbox">
+                  <input
+                    type="checkbox"
+                    checked
+                    data-type="weapon-selectall"
+                    data-class="light"
+                  />
+                  <span class="checkbox-box"></span>
+                  <span class="checkbox-label"
+                    ><strong>Select All Light Weapons</strong></span
+                  >
+                </label>
+                <!-- Individual weapons will be populated here by JavaScript -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Medium Weapons Section -->
+          <div class="filter-category-card">
+            <button class="category-header" aria-expanded="true">
+              <span class="category-title">MEDIUM WEAPONS</span>
+              <span class="category-caret">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="category-content">
+              <div class="item-list" id="medium-weapons-grid">
+                <!-- Select All option as first item -->
+                <label class="item-checkbox select-all-checkbox">
+                  <input
+                    type="checkbox"
+                    checked
+                    data-type="weapon-selectall"
+                    data-class="medium"
+                  />
+                  <span class="checkbox-box"></span>
+                  <span class="checkbox-label"
+                    ><strong>Select All Medium Weapons</strong></span
+                  >
+                </label>
+                <!-- Individual weapons will be populated here by JavaScript -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Heavy Weapons Section -->
+          <div class="filter-category-card">
+            <button class="category-header" aria-expanded="true">
+              <span class="category-title">HEAVY WEAPONS</span>
+              <span class="category-caret">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="category-content">
+              <div class="item-list" id="heavy-weapons-grid">
+                <!-- Select All option as first item -->
+                <label class="item-checkbox select-all-checkbox">
+                  <input
+                    type="checkbox"
+                    checked
+                    data-type="weapon-selectall"
+                    data-class="heavy"
+                  />
+                  <span class="checkbox-box"></span>
+                  <span class="checkbox-label"
+                    ><strong>Select All Heavy Weapons</strong></span
+                  >
+                </label>
+                <!-- Individual weapons will be populated here by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Specializations Tab (Hidden by Default) -->
+        <div class="tab-content" id="specializations-tab" style="display: none">
+          <!-- Light Specializations Section -->
+          <div class="item-category light-category">
+            <div class="category-header">
+              <h3>Light Class Specials</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="light-specializations-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="specialization-selectall"
+                  data-class="light"
+                />
+                <span><strong>Select All Light Specials</strong></span>
+              </label>
+              <!-- Individual specializations will be populated here by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Medium Specializations Section -->
+          <div class="item-category medium-category">
+            <div class="category-header">
+              <h3>Medium Class Specials</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="medium-specializations-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="specialization-selectall"
+                  data-class="medium"
+                />
+                <span><strong>Select All Medium Specials</strong></span>
+              </label>
+              <!-- Individual specializations will be populated here by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Heavy Specializations Section -->
+          <div class="item-category heavy-category">
+            <div class="category-header">
+              <h3>Heavy Class Specials</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="heavy-specializations-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="specialization-selectall"
+                  data-class="heavy"
+                />
+                <span><strong>Select All Heavy Specials</strong></span>
+              </label>
+              <!-- Individual specializations will be populated here by JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Gadgets Tab (Hidden by Default) -->
+        <div class="tab-content" id="gadgets-tab" style="display: none">
+          <!-- Light Gadgets Section -->
+          <div class="item-category light-category">
+            <div class="category-header">
+              <h3>Light Class Gadgets</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="light-gadgets-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="gadget-selectall"
+                  data-class="light"
+                />
+                <span><strong>Select All Light Gadgets</strong></span>
+              </label>
+              <!-- Individual gadgets will be populated here by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Medium Gadgets Section -->
+          <div class="item-category medium-category">
+            <div class="category-header">
+              <h3>Medium Class Gadgets</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="medium-gadgets-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="gadget-selectall"
+                  data-class="medium"
+                />
+                <span><strong>Select All Medium Gadgets</strong></span>
+              </label>
+              <!-- Individual gadgets will be populated here by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Heavy Gadgets Section -->
+          <div class="item-category heavy-category">
+            <div class="category-header">
+              <h3>Heavy Class Gadgets</h3>
+              <button class="category-toggle">▼</button>
+            </div>
+            <div class="item-grid" id="heavy-gadgets-grid">
+              <!-- Select All option as first item -->
+              <label class="item-checkbox select-all-checkbox">
+                <input
+                  type="checkbox"
+                  checked
+                  data-type="gadget-selectall"
+                  data-class="heavy"
+                />
+                <span><strong>Select All Heavy Gadgets</strong></span>
+              </label>
+              <!-- Individual gadgets will be populated here by JavaScript -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Action Buttons -->
+      <div class="filter-actions">
+        <button id="reset-filters" class="filter-action-btn reset-btn">
+          RESET ALL
+        </button>
+        <button id="apply-filters" class="filter-action-btn apply-btn">
+          APPLY FILTERS
+        </button>
+      </div>
+    </div>
+
+    <!-- Header Section -->
+    <section class="headerSection">
+      <div class="container">
+        <img
+          src="/images/the-finals-logo.webp"
+          alt="The Finals"
+          class="finals-logo-mobile"
+          width="144"
+          height="144"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <h1 class="subTitle-mobile">Random Loadout Generator</h1>
+        <p class="season-update-notice">SEASON 7</p>
+      </div>
+    </section>
+
+    <!-- Under Construction Notice -->
+    <div class="container" style="margin-top: 1rem; margin-bottom: 0;">
+      <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 0.625rem 1rem; font-size: 0.813rem; color: rgba(255, 255, 255, 0.6); text-align: center;">
+        <span style="color: #f59e0b; margin-right: 0.5rem;">🚧</span>Site under active development • New features being added daily
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+      <div class="selection-container">
+        <div class="spin-control">
+          <button id="main-spin-button" class="main-spin-button">
+            <span class="spin-text">GENERATE LOADOUT</span>
+            <div class="spin-energy"></div>
+          </button>
+
+          <!-- Secondary Filter Button -->
+          <button id="secondary-filter-button" class="secondary-filter-button">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polygon
+                points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+              ></polygon>
+            </svg>
+            <span>Customize Filters</span>
+          </button>
+
+          <div class="spin-status" id="spinStatus"></div>
+          <div id="selection-display" class="selection-display">
+            <div class="selection-info">
+              <span class="selection-class"></span>
+              <span class="selection-divider">•</span>
+              <span class="selection-spins"></span>
+            </div>
+          </div>
+        </div>
+
+        <div id="roulette-container" class="roulette-container hidden"></div>
+
+        <div id="output">
+          <!-- Slot machine content will be dynamically generated here -->
+        </div>
+      </div>
+
+      <section id="loadout-history" class="loadout-history">
+        <div id="slot-history-container" class="slot-history-container">
+          <h2 class="history-title">
+            <span class="title-icon">🎰</span>
+            <span>Loadout History</span>
+            <span class="history-count" id="history-count">(0)</span>
+          </h2>
+          <div id="history-list">
+            <!-- Slot machine history items will be dynamically inserted here by SlotHistoryManager -->
+          </div>
+          <div class="history-controls">
+            <button id="clear-history" class="expand-history-btn">
+              Clear All History
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="text-align:center;padding:1.5rem 1rem;color:#888;margin-top:2rem;border-top:1px solid rgba(255,255,255,0.1);background:rgba(10,10,15,0.9);position:relative;z-index:10;font-size:0.75rem;">
+      <!-- Support Section -->
+      <div style="margin-bottom:1.5rem;padding:1.5rem;background:linear-gradient(135deg,rgba(80,200,120,0.05) 0%,rgba(0,255,204,0.05) 100%);border-radius:12px;border:1px solid rgba(80,200,120,0.2);">
+        <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;">
+          <span style="font-size:1.5rem;">☕</span>
+          <div>
+            <p style="margin:0;color:#50c878;font-weight:600;font-size:0.9rem;">Enjoying the loadout generator?</p>
+            <p style="margin:0.25rem 0 0.75rem 0;color:#b8bfc6;font-size:0.8rem;">Help keep it running with a coffee!</p>
+          </div>
+        </div>
+        <a href="https://ko-fi.com/nextroundonme" target="_blank" rel="noopener" style="display:inline-block;padding:0.75rem 2rem;background:linear-gradient(135deg,#50c878,#00ffcc);color:#0a0a0f;text-decoration:none;border-radius:8px;font-weight:700;font-size:0.9rem;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(80,200,120,0.3);position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 25px rgba(80,200,120,0.5)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 15px rgba(80,200,120,0.3)';">
+          <span style="position:relative;z-index:1;">💚 Support Me</span>
+        </a>
+      </div>
+      
+      <p style="margin:0 0 0.5rem 0;">
+        © 2025 TheFinalsLoadout.com | Created by 
+        <a href="https://www.paultakisaki.com/" rel="author" style="color:#00f0c0;text-decoration:none;transition:opacity 0.3s;">Paul Takisaki</a>
+      </p>
+      <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;font-size:0.75rem;margin-top:0.5rem;">
+        <a href="/legal/" style="color:#00f0c0;text-decoration:none;transition:opacity 0.3s;">Legal Disclaimer</a>
+        <a href="https://thefinalsloadout.com/feedback" style="color:#ffd700;">📝 Submit Feedback</a>
+      </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Error Modal for Filter Validation -->
+    <div
+      id="filter-error-modal"
+      class="error-modal-overlay"
+      style="display: none"
+    >
+      <div class="error-modal">
+        <div class="error-modal-header">
+          <h3>⚠️ Validation Error</h3>
+          <button
+            id="close-error-modal"
+            class="close-error-modal"
+            aria-label="Close error modal"
+          >
+            ×
+          </button>
+        </div>
+        <div class="error-modal-body">
+          <p id="error-modal-message">
+            An error occurred with your filter settings.
+          </p>
+        </div>
+        <div class="error-modal-footer">
+          <button id="error-modal-ok" class="error-modal-button">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="addSound" src="sounds/chang.mp3" preload="auto"></audio>
+    <audio id="copySound" src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="exportSound" src="sounds/final-sound.mp3" preload="auto"></audio>
+
+    <!-- Performance optimization script - load early -->
+    <script src="performance-init.js" defer></script>
+
+    <!-- Configuration and Feature Flags -->
+    <script src="js/config.js" defer></script>
+
+    <!-- Progressive Loading System -->
+    <script type="module">
+      import progressiveLoader from './js/progressive-loader.js';
+      
+      // Initialize progressive loader
+      progressiveLoader.init().then(profile => {
+        console.log('✅ Progressive loader initialized:', profile);
+        
+        // Only load animations when needed
+        window.loadAnimations = async (type) => {
+          if (profile.isLowEnd || profile.isMobile) {
+            // Mobile uses built-in lightweight animations
+            return;
+          }
+          
+          // Desktop loads on-demand
+          switch(type) {
+            case 'spin':
+              await window.animationLoaders?.loadSpinWheel?.();
+              break;
+            case 'slot':
+              await window.animationLoaders?.loadSlotMachine?.();
+              break;
+          }
+        };
+      });
+    </script>
+
+    <!-- Core Scripts - Minimal initial load -->
+    <script src="js/device-profiler.js" defer></script>
+    <script src="js/volume-control.js?v=1" defer></script>
+    
+    <!-- Heavy animations loaded on-demand when user interacts -->
+    <script>
+      // Lazy load animations on first user interaction
+      let animationsLoaded = false;
+      const loadHeavyAnimations = () => {
+        if (animationsLoaded) return;
+        animationsLoaded = true;
+        
+        // Load roulette animation
+        const rouletteScript = document.createElement('script');
+        rouletteScript.src = 'js/roulette-animation.js?v=2';
+        rouletteScript.defer = true;
+        document.head.appendChild(rouletteScript);
+        
+        // Load overlay manager
+        const overlayScript = document.createElement('script');
+        overlayScript.src = 'js/overlay-manager.js?v=2';
+        overlayScript.defer = true;
+        document.head.appendChild(overlayScript);
+        
+        console.log('🎯 Heavy animations loaded on interaction');
+      };
+      
+      // Load on first click or after 3 seconds
+      document.addEventListener('click', loadHeavyAnimations, { once: true });
+      setTimeout(loadHeavyAnimations, 3000);
+    </script>
+    
+    <!-- Main app -->
+    <script type="module" src="app.js?v=24"></script>
+
+    <!-- Non-module scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script>
+      // FAQ Toggle Script
+      document.addEventListener("DOMContentLoaded", function () {
+        var faqToggleButton = document.getElementById("faq-toggle-button");
+        var faqContent = document.getElementById("faq-content");
+        var faqToggle = document.querySelector(".faq-toggle");
+
+        if (faqToggleButton && faqContent && faqToggle) {
+          faqToggleButton.addEventListener("click", function () {
+            faqContent.classList.toggle("open");
+            faqToggle.innerText = faqContent.classList.contains("open")
+              ? "−"
+              : "+";
+          });
+        }
+      });
+    </script>
+
+    <!-- Web Vitals for performance monitoring -->
+    <script>
+      // Simple Web Vitals tracking
+      if ("PerformanceObserver" in window) {
+        // Track Largest Contentful Paint (LCP)
+        new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          console.log("LCP:", lastEntry.startTime.toFixed(2) + "ms");
+        }).observe({ entryTypes: ["largest-contentful-paint"] });
+
+        // Track First Input Delay (FID)
+        new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach((entry) => {
+            console.log("FID:", entry.processingStart - entry.startTime + "ms");
+          });
+        }).observe({ entryTypes: ["first-input"] });
+
+        // Track Cumulative Layout Shift (CLS)
+        let clsValue = 0;
+        new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (!entry.hadRecentInput) {
+              clsValue += entry.value;
+              console.log("Current CLS:", clsValue.toFixed(3));
+            }
+          }
+        }).observe({ entryTypes: ["layout-shift"] });
+      }
+    </script>
+
+    <!-- Cloudflare Insights -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+      integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+      data-cf-beacon='{"rayId":"90d5a0a2197ddbbe","version":"2025.1.0","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"8bb8edbcac2e4a7fa5df7831fe04ea61","b":1}'
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Scroll Progress Bar and Return to Top Script -->
+    <script>
+      // Scroll Progress Bar
+      function updateScrollProgress() {
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        const scrollProgress = (scrollTop / scrollHeight) * 100;
+        document.getElementById("scrollProgressBar").style.width =
+          scrollProgress + "%";
+      }
+
+      // Return to Top Button
+      const returnToTopBtn = document.getElementById("returnToTop");
+
+      function toggleReturnToTop() {
+        if (window.pageYOffset > 300) {
+          returnToTopBtn.classList.add("visible");
+        } else {
+          returnToTopBtn.classList.remove("visible");
+        }
+      }
+
+      returnToTopBtn.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      });
+
+      // Add scroll event listeners
+      window.addEventListener("scroll", () => {
+        updateScrollProgress();
+        toggleReturnToTop();
+      });
+
+      // Initial check
+      toggleReturnToTop();
+    </script>
+
+    <!-- Mobile Enhancements -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Hide selection display on page load
+        const selectionDisplay = document.getElementById("selection-display");
+        if (selectionDisplay) {
+          selectionDisplay.classList.remove("visible");
+          selectionDisplay.classList.add("hidden");
+        }
+
+        // Global function to hide selection display (can be called from app.js)
+        window.hideSelectionDisplay = function () {
+          const selectionDisplay = document.getElementById("selection-display");
+          if (selectionDisplay) {
+            selectionDisplay.classList.remove("visible");
+            selectionDisplay.classList.add("hidden");
+          }
+        };
+
+        // Mobile History - Keep Original Structure
+        function initMobileHistory() {
+          // No need to override the original history structure
+          // The CSS handles mobile layout automatically
+          console.log("Mobile history initialized - using original structure");
+        }
+
+        // Initialize mobile features
+        if (window.innerWidth <= 768) {
+          initMobileHistory();
+          initMobileSpinEffects();
+        }
+
+        // TEMPORARY: Clear localStorage to reset audio state for debugging
+        // localStorage.removeItem('soundEnabled');
+
+        // Initialize audio toggle
+        initAudioToggle();
+
+        // Ensure window.state is synchronized with localStorage on load
+        const soundEnabledValue = localStorage.getItem("soundEnabled");
+        const soundEnabled =
+          soundEnabledValue === null ? true : soundEnabledValue !== "false";
+
+        if (window.state) {
+          window.state.soundEnabled = soundEnabled;
+        }
+
+        // Set default if not set
+        if (soundEnabledValue === null) {
+          localStorage.setItem("soundEnabled", "true");
+        }
+
+        // Initialize audio on first user interaction (for mobile)
+        initAudioOnInteraction();
+
+        // TEMPORARY: Add a test audio function for debugging
+        window.testAudio = function () {
+          console.log("Testing audio with state:", window.state.soundEnabled);
+          const clickSound = document.getElementById("clickSound");
+          if (clickSound) {
+            console.log("Click sound element found");
+            clickSound.volume = 0.05;
+            clickSound
+              .play()
+              .then(() => {
+                console.log("Audio played successfully");
+              })
+              .catch((err) => {
+                console.error("Audio play failed:", err);
+              });
+          } else {
+            console.error("Click sound element not found");
+          }
+        };
+
+        // Audio Toggle Implementation
+        function initAudioToggle() {
+          const soundToggle = document.getElementById("sound-toggle");
+          const mobileSoundToggle = document.getElementById(
+            "mobile-sound-toggle"
+          );
+
+          // Handle both desktop and mobile toggles
+          const toggles = [soundToggle, mobileSoundToggle].filter(
+            (toggle) => toggle !== null
+          );
+
+          if (toggles.length === 0) {
+            console.warn("No sound toggle buttons found");
+            return;
+          }
+
+          // Get initial state from localStorage or default to enabled
+          const soundEnabledValue = localStorage.getItem("soundEnabled");
+          const isEnabled =
+            soundEnabledValue === null ? true : soundEnabledValue !== "false";
+
+          console.log("Audio toggle init:", { soundEnabledValue, isEnabled });
+
+          // Set initial visual state for all toggles
+          toggles.forEach((toggle) =>
+            updateAudioToggleVisual(toggle, isEnabled)
+          );
+
+          // Sync with global state on initialization
+          if (window.state) {
+            window.state.soundEnabled = isEnabled;
+          }
+
+          // If localStorage doesn't have the value, set it to the default (true)
+          if (soundEnabledValue === null) {
+            localStorage.setItem("soundEnabled", "true");
+          }
+
+          // Add click handler to all toggles
+          toggles.forEach((toggle) =>
+            toggle.addEventListener("click", handleToggleClick)
+          );
+
+          function handleToggleClick() {
+            const soundEnabledValue = localStorage.getItem("soundEnabled");
+            const currentState =
+              soundEnabledValue === null ? true : soundEnabledValue !== "false";
+            const newState = !currentState;
+
+            console.log(
+              "Audio toggle clicked:",
+              "current =",
+              currentState,
+              "new =",
+              newState
+            );
+
+            // Save new state
+            localStorage.setItem("soundEnabled", newState.toString());
+            console.log("Saved to localStorage:", newState.toString());
+
+            // Update global state FIRST - this is critical for audio to work
+            if (window.state) {
+              window.state.soundEnabled = newState;
+              console.log(
+                "Updated window.state.soundEnabled to",
+                window.state.soundEnabled
+              );
+            } else {
+              console.error(
+                "WARNING: window.state not found! Audio may not mute properly."
+              );
+            }
+
+            // Update visual after state is updated for all toggles
+            toggles.forEach((toggle) =>
+              updateAudioToggleVisual(toggle, newState)
+            );
+
+            // Stop all audio if disabling
+            if (!newState) {
+              stopAllAudio();
+            }
+
+            console.log(
+              "Sound",
+              newState ? "enabled" : "disabled",
+              "localStorage:",
+              localStorage.getItem("soundEnabled")
+            );
+          }
+        }
+
+        function updateAudioToggleVisual(soundToggle, isEnabled) {
+          if (!soundToggle) return;
+
+          const soundOn = soundToggle.querySelector(".sound-on");
+          const soundOff = soundToggle.querySelector(".sound-off");
+
+          console.log("Updating audio visual:", isEnabled, soundOn, soundOff);
+
+          if (isEnabled) {
+            // Audio is ON - show speaker icon, remove red muted styling
+            soundToggle.classList.remove("muted");
+            if (soundOn) {
+              soundOn.style.display = "block";
+              soundOn.style.visibility = "visible";
+            }
+            if (soundOff) {
+              soundOff.style.display = "none";
+              soundOff.style.visibility = "hidden";
+            }
+          } else {
+            // Audio is OFF - show muted icon, add red muted styling
+            soundToggle.classList.add("muted");
+            if (soundOn) {
+              soundOn.style.display = "none";
+              soundOn.style.visibility = "hidden";
+            }
+            if (soundOff) {
+              soundOff.style.display = "block";
+              soundOff.style.visibility = "visible";
+            }
+          }
+        }
+
+        function stopAllAudio() {
+          // Stop all audio elements
+          const audioElements = document.querySelectorAll("audio");
+          audioElements.forEach((audio) => {
+            audio.pause();
+            audio.currentTime = 0;
+          });
+        }
+
+        // Initialize audio on first user interaction (for mobile compatibility)
+        function initAudioOnInteraction() {
+          let audioInitialized = false;
+
+          function initAudio() {
+            if (audioInitialized) return;
+
+            // Create a silent AudioContext to unlock audio
+            try {
+              const AudioContext =
+                window.AudioContext || window.webkitAudioContext;
+              const audioContext = new AudioContext();
+
+              // Create a silent sound
+              const buffer = audioContext.createBuffer(1, 1, 22050);
+              const source = audioContext.createBufferSource();
+              source.buffer = buffer;
+              source.connect(audioContext.destination);
+              source.start();
+
+              // Don't try to play any audio elements during initialization
+              // Modern browsers handle preload="auto" properly
+              // This prevents any accidental sound playback
+
+              audioInitialized = true;
+              console.log("Audio initialized successfully");
+            } catch (e) {
+              console.log("Audio initialization failed:", e);
+            }
+          }
+
+          // Add listeners for first user interaction
+          ["touchstart", "click"].forEach((event) => {
+            document.addEventListener(event, initAudio, { once: true });
+          });
+        }
+
+        // Mobile SPIN button particle effects
+        function initMobileSpinEffects() {
+          const spinButton = document.getElementById("main-spin-button");
+          if (!spinButton) return;
+
+          // Create mobile particle effect
+          function createMobileParticleEffect(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Mobile-optimized particle count
+            const particleCount = 6;
+
+            for (let i = 0; i < particleCount; i++) {
+              const particle = document.createElement("div");
+              particle.style.cssText = `
+                position: fixed;
+                width: 6px;
+                height: 6px;
+                background: linear-gradient(45deg, #7b2fe3, #1e90ff);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1000001;
+                left: ${centerX}px;
+                top: ${centerY}px;
+                box-shadow: 0 0 8px rgba(123, 47, 227, 0.8);
+              `;
+
+              // Random direction for firework effect
+              const angle =
+                (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.3;
+              const distance = 40 + Math.random() * 60;
+              const targetX = centerX + Math.cos(angle) * distance;
+              const targetY = centerY + Math.sin(angle) * distance;
+
+              document.body.appendChild(particle);
+
+              // Animate the particle
+              const animation = particle.animate(
+                [
+                  {
+                    transform: "translate(0, 0) scale(1)",
+                    opacity: 1,
+                  },
+                  {
+                    transform: `translate(${targetX - centerX}px, ${
+                      targetY - centerY
+                    }px) scale(0)`,
+                    opacity: 0,
+                  },
+                ],
+                {
+                  duration: 600,
+                  easing: "ease-out",
+                }
+              );
+
+              animation.onfinish = () => {
+                if (particle.parentNode) {
+                  particle.parentNode.removeChild(particle);
+                }
+              };
+            }
+          }
+
+          // Add click/touch effect for mobile
+          spinButton.addEventListener("click", function (e) {
+            // Create particle effect on click
+            createMobileParticleEffect(this);
+
+            // Add button scale effect
+            this.style.transform = "scale(0.95)";
+            setTimeout(() => {
+              this.style.transform = "scale(1)";
+            }, 150);
+
+            // Trigger haptic feedback if available
+            if (navigator.vibrate) {
+              navigator.vibrate(50);
+            }
+          });
+
+          // Add touch feedback
+          spinButton.addEventListener("touchstart", function (e) {
+            this.style.transform = "scale(0.98)";
+          });
+
+          spinButton.addEventListener("touchend", function (e) {
+            this.style.transform = "scale(1)";
+          });
+        }
+
+        // Promotional Flag Management
+        function initPromoFlag() {
+          const promoFlag = document.getElementById("filters-promo-flag");
+          const filterButton = document.getElementById("filter-toggle");
+
+          if (!promoFlag) return;
+
+          // Check if user has already seen the promo
+          const hasSeenPromo = localStorage.getItem("hasSeenFiltersPromo");
+          if (hasSeenPromo === "true") {
+            promoFlag.style.display = "none";
+            return;
+          }
+
+          // Function to dismiss the flag
+          function dismissFlag() {
+            promoFlag.classList.add("dismissed");
+            localStorage.setItem("hasSeenFiltersPromo", "true");
+            setTimeout(() => {
+              promoFlag.style.display = "none";
+            }, 500);
+          }
+
+          // Dismiss when user clicks the filter button (if it exists)
+          if (filterButton) {
+            filterButton.addEventListener("click", dismissFlag, { once: true });
+          }
+
+          // Auto-dismiss after 10 seconds - this is the main dismissal method
+          console.log("🚩 Promotional flag will auto-dismiss in 10 seconds");
+          setTimeout(() => {
+            console.log("🚩 Auto-dismissing promotional flag after 10 seconds");
+            dismissFlag();
+          }, 10000);
+        }
+
+        // Initialize the promo flag
+        initPromoFlag();
+
+        // Secondary Filter Button Functionality
+        function initSecondaryFilterButton() {
+          const secondaryFilterBtn = document.getElementById(
+            "secondary-filter-button"
+          );
+
+          if (secondaryFilterBtn) {
+            // Add click event to open filter panel
+            secondaryFilterBtn.addEventListener("click", function (e) {
+              e.preventDefault();
+
+              // Trigger the same functionality as the main filter button
+              const filterToggleBtn = document.getElementById("filter-toggle");
+              if (filterToggleBtn) {
+                filterToggleBtn.click();
+              }
+
+              // Add visual feedback
+              this.style.transform = "translateY(0)";
+              setTimeout(() => {
+                this.style.transform = "";
+              }, 150);
+            });
+
+            console.log("✅ Secondary filter button initialized");
+          }
+        }
+
+        // Initialize secondary filter button
+        initSecondaryFilterButton();
+
+        // Debug: Check if promo flag is visible
+        setTimeout(() => {
+          const flag = document.getElementById("filters-promo-flag");
+          if (flag) {
+            console.log("🚩 Promo flag found:", {
+              display: window.getComputedStyle(flag).display,
+              visibility: window.getComputedStyle(flag).visibility,
+              opacity: window.getComputedStyle(flag).opacity,
+              position: window.getComputedStyle(flag).position,
+              top: window.getComputedStyle(flag).top,
+              right: window.getComputedStyle(flag).right,
+              zIndex: window.getComputedStyle(flag).zIndex,
+              hasSeenPromo: localStorage.getItem("hasSeenFiltersPromo"),
+            });
+          } else {
+            console.log("❌ Promo flag element not found in DOM");
+          }
+        }, 1000);
+      });
+    </script>
+
+    <!-- Global Overlay Container -->
+    <div id="overlay-root" class="overlay-root"></div>
+
+    <!-- New Slot Machine Implementation - deferred for performance -->
+    <script src="js/slot-machine.js" defer></script>
+    <script src="js/slot-integration.js" defer></script>
+
+    <!-- rel noopener noreferrer safeguard for external links -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('a[target="_blank"]').forEach(function(a){
+          const rel = (a.getAttribute('rel') || '').toLowerCase();
+          if (!rel.includes('noopener')) a.setAttribute('rel', (rel + ' noopener').trim());
+          if (!rel.includes('noreferrer')) a.setAttribute('rel', (a.getAttribute('rel') + ' noreferrer').trim());
+        });
+      });
+    </script>
+
+    <!-- Ko-fi Widget -->
+    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script>
+      kofiWidgetOverlay.draw('nextroundonme', {
+        'type': 'floating-chat',
+        'floating-chat.donateButton.text': 'Support me',
+        'floating-chat.donateButton.background-color': '#00b9fe',
+        'floating-chat.donateButton.text-color': '#fff'
+      });
+    </script>
+  </body>
+</html>
