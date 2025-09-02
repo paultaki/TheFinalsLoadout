@@ -29,7 +29,7 @@
         roulette: '/sounds/wheel-tick-loop.mp3',  // Use looping sound
         stop: '/sounds/ding.mp3',
         win: '/sounds/ding-ding.mp3',
-        finalWin: '/sounds/final-sound.mp3'
+        finalWin: '/sounds/pop-pour-perform.mp3'
       };
       
       // Preload all sounds
@@ -40,6 +40,8 @@
         if (key === 'roulette') {
           audio.volume = 0.2; // Quieter spinning sound (20%)
           audio.loop = true;
+        } else if (key === 'finalWin') {
+          audio.volume = 0.5; // Louder final celebration sound (50%)
         } else {
           audio.volume = 0.3; // Default volume for other sounds (30%)
         }
