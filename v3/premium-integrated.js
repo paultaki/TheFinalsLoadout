@@ -36,10 +36,12 @@
       Object.entries(soundFiles).forEach(([key, path]) => {
         const audio = new Audio(path);
         audio.preload = 'auto';
-        audio.volume = 0.3; // Set default volume
-        // Set roulette sound to loop
+        // Set different volumes for different sounds
         if (key === 'roulette') {
+          audio.volume = 0.2; // Quieter spinning sound (20%)
           audio.loop = true;
+        } else {
+          audio.volume = 0.3; // Default volume for other sounds (30%)
         }
         this.sounds[key] = audio;
       });
