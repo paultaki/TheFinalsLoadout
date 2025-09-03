@@ -434,27 +434,40 @@
         // Generate enough items to fill viewport
         const isMobile = window.innerWidth <= 768;
         const totalItems = isMobile ? 150 : 80;
-        const randomWinnerPosition = Math.floor(Math.random() * (totalItems - 20)) + 10; // Random position away from edges
         
-        // Generate random items for the entire column
+        // Create a shuffled array of items for true randomness
+        const shuffledItems = [];
         for (let i = 0; i < totalItems; i++) {
-          const randomItem = pool[Math.floor(Math.random() * pool.length)];
+          // Pick a random item from the pool for each position
+          shuffledItems.push(pool[Math.floor(Math.random() * pool.length)]);
+        }
+        
+        // Pick multiple random "winner" positions for variety
+        const winnerPositions = new Set();
+        for (let j = 0; j < 5; j++) {
+          winnerPositions.add(Math.floor(Math.random() * totalItems));
+        }
+        
+        // Generate the column with shuffled items
+        shuffledItems.forEach((item, i) => {
           const itemDiv = document.createElement('div');
           itemDiv.className = 'slot-item';
-          // Mark a random position as "winner" just for visual consistency during spin
-          if (i === randomWinnerPosition) itemDiv.dataset.winner = 'true';
+          // Mark random positions as "winner" for visual variety
+          if (winnerPositions.has(i)) itemDiv.dataset.winner = 'true';
           
-          const imagePath = this.getImagePath(randomItem);
+          const imagePath = this.getImagePath(item);
           itemDiv.innerHTML = `
-            <img src="${imagePath}" alt="${randomItem}" onerror="this.src='/images/placeholder.webp'">
-            <div class="slot-item-name">${randomItem}</div>
+            <img src="${imagePath}" alt="${item}" onerror="this.src='/images/placeholder.webp'">
+            <div class="slot-item-name">${item}</div>
           `;
           itemsContainer.appendChild(itemDiv);
-        }
+        });
         
         // Reset position
         itemsContainer.style.transform = 'translateY(0)';
       });
+      
+      console.log('Populated columns with random items for intermediate spin');
     }
     
     populatePremiumColumns(loadout) {
@@ -749,7 +762,7 @@
         return;
       }
       
-      console.log(`Animating ${columns.length} columns to ${targetPosition}px - Final: ${isFinalSpin}`);
+      console.log(`Animating ${columns.length} columns - Final: ${isFinalSpin}`, targetPositions);
       
       // First, start ALL columns spinning at the same time
       columns.forEach((col, index) => {
