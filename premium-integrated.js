@@ -347,13 +347,21 @@
         this.currentLoadout = this.app.uiController.createRandomLoadout(className);
         console.log('Generated loadout:', this.currentLoadout);
         
-        // Populate the premium columns with items
-        this.populatePremiumColumns(this.currentLoadout);
-        
         // Run the spin sequence
         for (let i = 1; i <= this.selectedSpins; i++) {
           if (counter) {
             document.getElementById('currentSpin').textContent = i;
+          }
+          
+          // Populate columns for this spin
+          // For intermediate spins, use random items
+          // For final spin, use the actual loadout
+          if (i === this.selectedSpins) {
+            // Final spin - use the actual loadout
+            this.populatePremiumColumns(this.currentLoadout);
+          } else {
+            // Intermediate spin - use random items
+            this.populatePremiumColumnsRandom();
           }
           
           // Play spinning sound
@@ -398,6 +406,55 @@
           this.updateGenerateButton();
         }
       }
+    }
+    
+    populatePremiumColumnsRandom() {
+      // Generate completely random items for intermediate spins
+      const className = this.selectedClass.charAt(0).toUpperCase() + this.selectedClass.slice(1);
+      const data = this.getFilteredData(className);
+      
+      if (!data) return;
+      
+      // Get item pools for each column type
+      const columnPools = [
+        data.weapons || [],           // Column 0: Weapons
+        data.specializations || [],   // Column 1: Specializations
+        data.gadgets || [],           // Column 2: Gadget 1
+        data.gadgets || [],           // Column 3: Gadget 2
+        data.gadgets || [],           // Column 4: Gadget 3
+      ];
+      
+      // Populate each column with random items
+      columnPools.forEach((pool, index) => {
+        const itemsContainer = document.getElementById(`premium-items-${index}`);
+        if (!itemsContainer || pool.length === 0) return;
+        
+        itemsContainer.innerHTML = '';
+        
+        // Generate enough items to fill viewport
+        const isMobile = window.innerWidth <= 768;
+        const totalItems = isMobile ? 150 : 80;
+        const randomWinnerPosition = Math.floor(Math.random() * (totalItems - 20)) + 10; // Random position away from edges
+        
+        // Generate random items for the entire column
+        for (let i = 0; i < totalItems; i++) {
+          const randomItem = pool[Math.floor(Math.random() * pool.length)];
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'slot-item';
+          // Mark a random position as "winner" just for visual consistency during spin
+          if (i === randomWinnerPosition) itemDiv.dataset.winner = 'true';
+          
+          const imagePath = this.getImagePath(randomItem);
+          itemDiv.innerHTML = `
+            <img src="${imagePath}" alt="${randomItem}" onerror="this.src='/images/placeholder.webp'">
+            <div class="slot-item-name">${randomItem}</div>
+          `;
+          itemsContainer.appendChild(itemDiv);
+        }
+        
+        // Reset position
+        itemsContainer.style.transform = 'translateY(0)';
+      });
     }
     
     populatePremiumColumns(loadout) {
