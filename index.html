@@ -12,7 +12,7 @@
     <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
 
     <!-- Preload Critical Resources - Logo is LCP element -->
-    <link rel="preload" href="/images/the-finals-logo.webp" as="image" type="image/webp" fetchpriority="high" />
+    <!-- Removed unused preload: <link rel="preload" href="/images/the-finals-logo.webp" as="image" type="image/webp" fetchpriority="high" /> -->
 
     <!-- Meta Tags -->
     <title>The Finals BEST Random Loadout Generator | Fun & Unique Loadouts</title>
@@ -52,10 +52,15 @@
     }
     </script>
 
-    <!-- Fonts - Optimized Loading -->
+    <!-- Fonts - Optimized Loading (Non-blocking) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <!-- Load fonts asynchronously to prevent render blocking -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;900&display=swap" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;900&display=swap">
+    </noscript>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
