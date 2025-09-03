@@ -349,6 +349,7 @@
         
         // Run the spin sequence
         for (let i = 1; i <= this.selectedSpins; i++) {
+          console.log(`🎰 Starting spin ${i} of ${this.selectedSpins}`);
           if (counter) {
             document.getElementById('currentSpin').textContent = i;
           }
@@ -357,9 +358,11 @@
           // For intermediate spins, use random items
           // For final spin, use the actual loadout
           if (i === this.selectedSpins) {
+            console.log('🎯 Final spin - using actual loadout');
             // Final spin - use the actual loadout
             this.populatePremiumColumns(this.currentLoadout);
           } else {
+            console.log('🔄 Intermediate spin - using random items');
             // Intermediate spin - use random items
             this.populatePremiumColumnsRandom();
           }
