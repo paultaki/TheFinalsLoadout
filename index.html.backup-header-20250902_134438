@@ -124,26 +124,6 @@
             text-transform: uppercase;
         }
 
-        /* Header Logo Styling */
-        .header-logo {
-            max-width: 300px;  /* Reduced from 600px to half size */
-            width: 100%;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-            filter: drop-shadow(0 0 30px rgba(255, 51, 102, 0.3));
-            animation: logoGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes logoGlow {
-            from {
-                filter: drop-shadow(0 0 20px rgba(255, 51, 102, 0.3));
-            }
-            to {
-                filter: drop-shadow(0 0 40px rgba(255, 51, 102, 0.5));
-            }
-        }
-
         /* Premium Slot Machine Container */
         .slot-machine-premium {
             width: 90%;
@@ -435,34 +415,6 @@
             z-index: 10;
         }
 
-        /* Persistent pulsing glow for winners */
-        .slot-item.winner-glow {
-            animation: persistentGlow 2s ease-in-out infinite;
-            position: relative;
-            z-index: 10;
-            box-shadow: 
-                0 0 20px rgba(255, 51, 102, 0.6),
-                inset 0 0 20px rgba(255, 51, 102, 0.2);
-            border: 2px solid rgba(255, 51, 102, 0.5);
-        }
-
-        @keyframes persistentGlow {
-            0%, 100% {
-                box-shadow: 
-                    0 0 20px rgba(255, 51, 102, 0.6),
-                    inset 0 0 20px rgba(255, 51, 102, 0.2);
-                border-color: rgba(255, 51, 102, 0.5);
-                transform: scale(1);
-            }
-            50% {
-                box-shadow: 
-                    0 0 40px rgba(255, 51, 102, 0.9),
-                    inset 0 0 30px rgba(255, 51, 102, 0.4);
-                border-color: rgba(255, 51, 102, 0.8);
-                transform: scale(1.05);
-            }
-        }
-
         @keyframes winnerFlash {
             0% { background: transparent; }
             50% { 
@@ -608,10 +560,6 @@
             .header {
                 padding: 10px 5px;
                 margin-bottom: 15px;
-            }
-
-            .header-logo {
-                max-width: 175px;  /* Reduced from 350px to half size */
             }
             
             .title { 
@@ -1357,14 +1305,9 @@
 
     <!-- Header -->
     <header class="header">
-        <!-- Logo image - easy to revert by uncommenting text below and removing img -->
-        <img src="/images/logo-header-v2.webp" alt="The Finals Premium Slot Machine" class="header-logo">
-        <!-- Previous logo: <img src="/images/logo-header.webp" alt="The Finals Premium Slot Machine" class="header-logo"> -->
-        <!-- Original text header (backup) - uncomment to restore:
         <h1 class="title">THE FINALS</h1>
         <h1 class="title">PREMIUM SLOT MACHINE</h1>
         <p class="subtitle">Vegas-Style Loadout Generator</p>
-        -->
     </header>
 
     <!-- Premium Slot Machine Container -->

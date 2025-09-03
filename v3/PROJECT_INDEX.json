@@ -1,5 +1,5 @@
 {
-  "indexed_at": "2025-09-02T00:05:37.451768",
+  "indexed_at": "2025-09-02T08:48:17.031867",
   "root": ".",
   "project_structure": {
     "type": "tree",
@@ -986,8 +986,8 @@
               ],
               "signature": "(soundName)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "toggleSound"
+                "toggleSound",
+                "runSlotMachineAnimation"
               ]
             },
             "stopRouletteSound": {
@@ -1293,8 +1293,8 @@
             "animateSlotMachine": {
               "signature": "async (columns, scrollContents, predeterminedResults, preservePosition = false)",
               "called_by": [
-                "overrideAll",
-                "overrideAnimations"
+                "overrideAnimations",
+                "overrideAll"
               ]
             },
             "animateQuickSpin": "async (columns, scrollContents, preservePosition = false)",
@@ -1659,8 +1659,8 @@
             "playSound": {
               "signature": "(type)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "toggleSound"
+                "toggleSound",
+                "runSlotMachineAnimation"
               ]
             },
             "attachEventListeners": "()",
@@ -2066,8 +2066,8 @@
             "animateSlotMachine": {
               "signature": "async (columns, winners)",
               "called_by": [
-                "overrideAll",
-                "overrideAnimations"
+                "overrideAnimations",
+                "overrideAll"
               ]
             },
             "setupContainers": "(columns)",
@@ -2241,8 +2241,8 @@
             "animateSlotMachine": {
               "signature": "async (columns, winners)",
               "called_by": [
-                "overrideAll",
-                "overrideAnimations"
+                "overrideAnimations",
+                "overrideAll"
               ]
             },
             "startSpinning": "()",
@@ -3022,8 +3022,8 @@
             "animateSlotMachine": {
               "signature": "async (columns, scrollContents, predeterminedResults, preservePosition)",
               "called_by": [
-                "overrideAll",
-                "overrideAnimations"
+                "overrideAnimations",
+                "overrideAll"
               ]
             },
             "animateQuickSpin": {
@@ -3332,8 +3332,8 @@
             "animateSlotMachine": {
               "signature": "async (columns, winners)",
               "called_by": [
-                "overrideAll",
-                "overrideAnimations"
+                "overrideAnimations",
+                "overrideAll"
               ]
             },
             "startSpinning": "(containers)",
@@ -3429,8 +3429,8 @@
             "playSound": {
               "signature": "(soundKey)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "toggleSound"
+                "toggleSound",
+                "runSlotMachineAnimation"
               ]
             },
             "stopSound": "(soundKey)",
@@ -3467,8 +3467,8 @@
             "playSound": {
               "signature": "(soundKey)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "toggleSound"
+                "toggleSound",
+                "runSlotMachineAnimation"
               ]
             },
             "stopSound": "(soundKey)",
@@ -3859,8 +3859,8 @@
             "playSound": {
               "signature": "(key)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "toggleSound"
+                "toggleSound",
+                "runSlotMachineAnimation"
               ]
             },
             "stopSound": "(key)",
@@ -3921,8 +3921,8 @@
             "playSound": {
               "signature": "(key)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "toggleSound"
+                "toggleSound",
+                "runSlotMachineAnimation"
               ]
             },
             "stopSound": "(key)",
@@ -4013,8 +4013,8 @@
             "playSound": {
               "signature": "(key)",
               "called_by": [
-                "runSlotMachineAnimation",
-                "toggleSound"
+                "toggleSound",
+                "runSlotMachineAnimation"
               ]
             },
             "__init__": "()"
@@ -4272,5 +4272,5 @@
       "path"
     ]
   },
-  "staleness_check": 1756191955.790523
+  "staleness_check": 1756223319.199741
 }
