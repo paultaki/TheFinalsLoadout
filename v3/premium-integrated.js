@@ -316,9 +316,12 @@
       // Play start sound
       this.playSound('spinStart');
       
-      // Clear previous winners and sparks
+      // Clear previous winners, glow effects, and sparks
       document.querySelectorAll('.winner').forEach(item => {
         item.classList.remove('winner');
+      });
+      document.querySelectorAll('.winner-glow').forEach(item => {
+        item.classList.remove('winner-glow');
       });
       const sparksContainer = document.getElementById('victorySparks');
       if (sparksContainer) {
@@ -344,13 +347,24 @@
         this.currentLoadout = this.app.uiController.createRandomLoadout(className);
         console.log('Generated loadout:', this.currentLoadout);
         
-        // Populate the premium columns with items
-        this.populatePremiumColumns(this.currentLoadout);
-        
         // Run the spin sequence
         for (let i = 1; i <= this.selectedSpins; i++) {
+          console.log(`🎰 Starting spin ${i} of ${this.selectedSpins}`);
           if (counter) {
             document.getElementById('currentSpin').textContent = i;
+          }
+          
+          // Populate columns for this spin
+          // For intermediate spins, use random items
+          // For final spin, use the actual loadout
+          if (i === this.selectedSpins) {
+            console.log('🎯 Final spin - using actual loadout');
+            // Final spin - use the actual loadout
+            this.populatePremiumColumns(this.currentLoadout);
+          } else {
+            console.log('🔄 Intermediate spin - using random items');
+            // Intermediate spin - use random items
+            this.populatePremiumColumnsRandom();
           }
           
           // Play spinning sound
@@ -395,6 +409,68 @@
           this.updateGenerateButton();
         }
       }
+    }
+    
+    populatePremiumColumnsRandom() {
+      // Generate completely random items for intermediate spins
+      const className = this.selectedClass.charAt(0).toUpperCase() + this.selectedClass.slice(1);
+      const data = this.getFilteredData(className);
+      
+      if (!data) return;
+      
+      // Get item pools for each column type
+      const columnPools = [
+        data.weapons || [],           // Column 0: Weapons
+        data.specializations || [],   // Column 1: Specializations
+        data.gadgets || [],           // Column 2: Gadget 1
+        data.gadgets || [],           // Column 3: Gadget 2
+        data.gadgets || [],           // Column 4: Gadget 3
+      ];
+      
+      // Populate each column with random items
+      columnPools.forEach((pool, index) => {
+        const itemsContainer = document.getElementById(`premium-items-${index}`);
+        if (!itemsContainer || pool.length === 0) return;
+        
+        itemsContainer.innerHTML = '';
+        
+        // Generate enough items to fill viewport
+        const isMobile = window.innerWidth <= 768;
+        const totalItems = isMobile ? 150 : 80;
+        
+        // Create a shuffled array of items for true randomness
+        const shuffledItems = [];
+        for (let i = 0; i < totalItems; i++) {
+          // Pick a random item from the pool for each position
+          shuffledItems.push(pool[Math.floor(Math.random() * pool.length)]);
+        }
+        
+        // Pick multiple random "winner" positions for variety
+        const winnerPositions = new Set();
+        for (let j = 0; j < 5; j++) {
+          winnerPositions.add(Math.floor(Math.random() * totalItems));
+        }
+        
+        // Generate the column with shuffled items
+        shuffledItems.forEach((item, i) => {
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'slot-item';
+          // Mark random positions as "winner" for visual variety
+          if (winnerPositions.has(i)) itemDiv.dataset.winner = 'true';
+          
+          const imagePath = this.getImagePath(item);
+          itemDiv.innerHTML = `
+            <img src="${imagePath}" alt="${item}" onerror="this.src='/images/placeholder.webp'">
+            <div class="slot-item-name">${item}</div>
+          `;
+          itemsContainer.appendChild(itemDiv);
+        });
+        
+        // Reset position
+        itemsContainer.style.transform = 'translateY(0)';
+      });
+      
+      console.log('Populated columns with random items for intermediate spin');
     }
     
     populatePremiumColumns(loadout) {
@@ -642,11 +718,8 @@
       const baseDuration = isFinalSpin ? 2000 : 1000;  // Base duration for first column
       const staggerDelay = isFinalSpin ? 500 : 100;    // Much longer delay for final spin
       
-      // Calculate target position based on winner position and item height
+      // Get item dimensions
       const isMobile = window.innerWidth <= 768;
-      const winnerPosition = Math.floor((isMobile ? 150 : 80) / 2);
-      
-      // Get actual item height based on viewport
       const testItem = document.querySelector('.slot-item');
       const itemHeight = testItem ? testItem.offsetHeight : (isMobile ? 60 : 80);
       
@@ -658,21 +731,41 @@
       const visibleItems = Math.ceil(viewportHeight / itemHeight);
       const centerItemIndex = Math.floor(visibleItems / 2);
       
-      // Position winner in center of viewport
-      // We want winner (at index 75) to be in the middle of the visible area
-      const targetPosition = -(winnerPosition - centerItemIndex) * itemHeight;
+      // For intermediate spins, generate random landing positions
+      // For final spin, use the actual winner positions
+      let targetPositions = [];
+      const columns = document.querySelectorAll('.slot-items');
+      const totalItems = isMobile ? 150 : 80;
       
-      console.log(`🎯 Animation targeting: Winner ${winnerPosition}, Item ${itemHeight}px, Viewport ${viewportHeight}px, Target ${targetPosition}px`);
+      if (isFinalSpin) {
+        // Use actual winner position for final spin
+        const winnerPosition = Math.floor(totalItems / 2);
+        const targetPosition = -(winnerPosition - centerItemIndex) * itemHeight;
+        // All columns use same target for simplicity, but could vary
+        targetPositions = Array(columns.length).fill(targetPosition);
+      } else {
+        // Generate random positions for each column on intermediate spins
+        // Make sure they land on different items to create variety
+        for (let i = 0; i < columns.length; i++) {
+          // Random position between 20% and 80% of the total items
+          const minPos = Math.floor(totalItems * 0.2);
+          const maxPos = Math.floor(totalItems * 0.8);
+          const randomPos = Math.floor(Math.random() * (maxPos - minPos)) + minPos;
+          const targetPosition = -(randomPos - centerItemIndex) * itemHeight;
+          targetPositions.push(targetPosition);
+        }
+      }
+      
+      console.log(`🎯 Animation targeting: Final ${isFinalSpin}, Item ${itemHeight}px, Viewport ${viewportHeight}px, Targets:`, targetPositions);
       
       // Animate all columns
-      const columns = document.querySelectorAll('.slot-items');
       
       if (columns.length === 0) {
         console.error('No slot columns found to animate!');
         return;
       }
       
-      console.log(`Animating ${columns.length} columns to ${targetPosition}px - Final: ${isFinalSpin}`);
+      console.log(`Animating ${columns.length} columns - Final: ${isFinalSpin}`, targetPositions);
       
       // First, start ALL columns spinning at the same time
       columns.forEach((col, index) => {
@@ -708,14 +801,16 @@
         }
         
         // Start ALL columns spinning immediately with their calculated durations
+        // Use individual target position for this column
         col.style.transition = `transform ${columnDuration}ms ${easing}`;
-        col.style.transform = `translateY(${targetPosition}px)`;
+        col.style.transform = `translateY(${targetPositions[index]}px)`;
         
         // Schedule stop sounds for each column with more dramatic timing
         setTimeout(() => {
-          this.playSound('stop');
-          // Add a visual pulse effect when each column stops on final spin
+          // Only play stop sound on final spin
           if (isFinalSpin) {
+            this.playSound('stop');
+            // Add a visual pulse effect when each column stops on final spin
             col.style.filter = 'brightness(1.2)';
             setTimeout(() => {
               col.style.filter = 'brightness(1)';
@@ -744,8 +839,13 @@
           // Small delay for ripple to start
           await this.sleep(50);
           
-          // Highlight the winner
+          // Highlight the winner with initial flash
           winner.classList.add('winner');
+          
+          // After flash animation completes, add persistent glow
+          setTimeout(() => {
+            winner.classList.add('winner-glow');
+          }, 700); // 700ms matches the winnerFlash animation duration
           
           // Create sparks for this column
           if (sparksContainer) {
