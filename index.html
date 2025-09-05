@@ -934,6 +934,60 @@
             border-color: #ff3366;
             transform: translateY(-2px);
         }
+
+        /* Secondary Filter Button - Prominent Style */
+        .secondary-filter-button {
+            width: 100%;
+            margin-top: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(255, 51, 102, 0.2));
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: subtlePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(138, 43, 226, 0.5),
+                            0 0 60px rgba(255, 51, 102, 0.3);
+            }
+        }
+
+        .secondary-filter-button:hover {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(255, 51, 102, 0.3));
+            border-color: #ff3366;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 51, 102, 0.4);
+            animation: none;
+        }
+
+        .secondary-filter-button:active {
+            transform: translateY(0);
+        }
+
+        .secondary-filter-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Remove animation after first click */
+        .secondary-filter-button.clicked {
+            animation: none;
+        }
         
         /* Filter Panel Styles */
         .filter-panel-overlay {
@@ -1385,6 +1439,19 @@
                 <span>RANDOM EVERYTHING</span>
             </button>
 
+            <!-- Secondary Filter Button - More prominent placement -->
+            <button id="secondary-filter-button" class="secondary-filter-button" aria-label="Customize filters">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                    <circle cx="7" cy="6" r="2" fill="currentColor"></circle>
+                    <circle cx="17" cy="12" r="2" fill="currentColor"></circle>
+                    <circle cx="10" cy="18" r="2" fill="currentColor"></circle>
+                </svg>
+                <span>Customize Filters</span>
+            </button>
+
             <!-- Selection Grid -->
             <div class="selection-grid">
                 <!-- Spin Selection -->
@@ -1717,10 +1784,20 @@ Gadget 3: ${loadout.gadget3}`;
             }
             
             setupEventListeners() {
-                // Toggle button
+                // Toggle button - original nav button
                 const toggleBtn = document.getElementById('filter-toggle');
                 if (toggleBtn) {
                     toggleBtn.addEventListener('click', () => this.togglePanel());
+                }
+                
+                // Secondary filter button - prominent placement
+                const secondaryBtn = document.getElementById('secondary-filter-button');
+                if (secondaryBtn) {
+                    secondaryBtn.addEventListener('click', () => {
+                        this.togglePanel();
+                        // Remove pulse animation after first click
+                        secondaryBtn.classList.add('clicked');
+                    });
                 }
                 
                 // Close button
