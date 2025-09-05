@@ -99,25 +99,98 @@
         <div class="scroll-progress-bar" id="scrollProgress"></div>
     </div>
     
-    <!-- Test Button for Mobile Menu -->
-    <button onclick="document.getElementById('mobileMenu').style.transform='translateX(100%)'" style="position:fixed; top:60px; left:10px; z-index:10001; background:yellow; padding:10px;">TEST OPEN</button>
-    <button onclick="document.getElementById('mobileMenu').style.transform='translateX(0)'" style="position:fixed; top:100px; left:10px; z-index:10001; background:orange; padding:10px;">TEST CLOSE</button>
-    
-    <!-- Navigation Bar -->
-    <nav class="main-nav">
-        <!-- Hamburger Menu Button (Mobile) -->
-        <button class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+    <!-- Simple Working Mobile Menu -->
+    <style>
+        /* Hide mobile menu button on desktop */
+        @media (min-width: 769px) {
+            #menuBtn, #simpleMenu, #menuOverlay {
+                display: none !important;
+            }
+        }
         
-        <div class="nav-links" id="mobileMenu" style="position: fixed !important; top: 0; right: 100%; width: 280px; height: 100vh; background: #ff0000; z-index: 9999; transition: transform 0.3s; display: flex; flex-direction: column; padding-top: 60px; transform: translateX(0);">
-            <a href="/v3/" class="nav-link active" style="color: white; padding: 15px; border-bottom: 1px solid white;">LOADOUT GENERATOR</a>
-            <a href="/ragequit/" class="nav-link" style="color: white; padding: 15px; border-bottom: 1px solid white;">RAGE QUIT</a>
-            <a href="/patch-notes/" class="nav-link" style="color: white; padding: 15px; border-bottom: 1px solid white;">PATCH NOTES</a>
-            <a href="/meta-weapons/" class="nav-link" style="color: white; padding: 15px; border-bottom: 1px solid white;">META WEAPONS</a>
-            <a href="/wt-progress/" class="nav-link" style="color: white; padding: 15px; border-bottom: 1px solid white;">WORLD TOUR</a>
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            /* Hide desktop nav on mobile */
+            .desktop-nav {
+                display: none !important;
+            }
+            #simpleMenu {
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100vh;
+                background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+                z-index: 99999;
+                transition: left 0.3s ease;
+                padding-top: 60px;
+                box-shadow: 5px 0 20px rgba(0,0,0,0.7);
+                border-right: 2px solid rgba(255, 51, 102, 0.3);
+            }
+            #simpleMenu.show {
+                left: 0;
+            }
+            #simpleMenu a:hover {
+                background: rgba(255, 51, 102, 0.1);
+                padding-left: 25px;
+            }
+            #menuBtn {
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 100000;
+                background: rgba(26, 26, 26, 0.95);
+                color: #ff3366;
+                border: 1px solid rgba(255, 51, 102, 0.3);
+                border-radius: 8px;
+                padding: 10px 12px;
+                cursor: pointer;
+                font-size: 20px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                transition: all 0.3s;
+            }
+            #menuBtn:hover {
+                background: rgba(255, 51, 102, 0.1);
+                transform: scale(1.1);
+            }
+            
+            /* Dark overlay */
+            #menuOverlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 99998;
+                display: none;
+            }
+            #menuOverlay.show {
+                display: block;
+            }
+        }
+    </style>
+    
+    <button id="menuBtn" onclick="document.getElementById('simpleMenu').classList.toggle('show'); document.getElementById('menuOverlay').classList.toggle('show')">☰</button>
+    
+    <div id="menuOverlay" onclick="document.getElementById('simpleMenu').classList.remove('show'); this.classList.remove('show')"></div>
+    
+    <div id="simpleMenu">
+        <a href="/v3/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">LOADOUT GENERATOR</a>
+        <a href="/ragequit/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">RAGE QUIT</a>
+        <a href="/patch-notes/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">PATCH NOTES</a>
+        <a href="/meta-weapons/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">META WEAPONS</a>
+        <a href="/wt-progress/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">WORLD TOUR</a>
+    </div>
+    
+    <!-- Navigation Bar (Desktop) -->
+    <nav class="main-nav desktop-nav">
+        <div class="nav-links desktop-nav-links">
+            <a href="/v3/" class="nav-link active">LOADOUT GENERATOR</a>
+            <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
+            <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
+            <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
+            <a href="/wt-progress/" class="nav-link">WORLD TOUR</a>
         </div>
     </nav>
 
