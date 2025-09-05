@@ -98,9 +98,35 @@ Hard rules:
 
 ---
 
-## 8 · Examples & definition-of-done ✅
+## 8 · Recent Updates (January 2025) 📱
 
-### 8.1 · Class structure
+### 8.1 · Header Logo Implementation
+- Replaced text-based header with image logo (`/images/logo final.webp`)
+- Logo has animated glow effect using CSS animations
+- Max width set to 300px for optimal display
+- Previous text header commented out for easy rollback
+
+### 8.2 · Filter Button Enhancement
+- **Dual filter button system:**
+  - Original filter button remains in top navigation bar
+  - New prominent secondary filter button added below "RANDOM EVERYTHING" button
+- **Secondary filter button features:**
+  - Full-width purple-pink gradient background
+  - Subtle pulsing glow animation (`subtlePulse` keyframe)
+  - Animation stops after first click (`.clicked` class added)
+  - Clear "Customize Filters" label with icon
+- Both buttons trigger same `togglePanel()` function
+
+### 8.3 · Mobile Optimizations
+- Improved touch targets (minimum 44px height)
+- Better responsive scaling for filter buttons
+- Enhanced viewport settings for mobile devices
+
+---
+
+## 9 · Examples & definition-of-done ✅
+
+### 9.1 · Class structure
 
 ```js
 loadouts = {
@@ -111,23 +137,22 @@ loadouts = {
   },
   ...
 }
-8.2 · Locked-in loadout sample
-json
+```
 
+### 9.2 · Locked-in loadout sample
+```json
 {
   "class": "Medium",
   "weapon": "AKM",
   "specialization": "Healing Beam",
   "gadgets": ["Pyro Grenade", "Frag Grenade", "Jump Pad"]
 }
-8.3 · Spin logic
-Each reel spins 2600ms staggered (0ms, 250ms, 500ms, 750ms, 1000ms)
+```
 
-Final spin adds landing-flash + locked-tag
-
-Only one spin active at a time (state.isSpinning = true)
-
-getUniqueGadgets() ensures no repeats
+### 9.3 · Spin logic
+- Each reel spins 2600ms staggered (0ms, 250ms, 500ms, 750ms, 1000ms)
+- Final spin adds landing-flash + locked-tag
+- Only one spin active at a time (state.isSpinning = true)
+- getUniqueGadgets() ensures no repeats
 
 End of primer – use this as your Claude reference for legacy site updates or debugging.
-```
