@@ -192,6 +192,7 @@ const state = {
   // FILTER STATE CACHING
   // ================================
   cachedFilteredLoadouts: null, // Cache filtered loadouts at start of spin sequence
+  spinSequenceActive: false, // Track if we're in a multi-spin sequence
 };
 
 // Make state globally accessible
@@ -483,26 +484,65 @@ async function loadCompiledLoadouts() {
 // Function to get filtered loadouts based on checkbox selections
 function getFilteredLoadouts() {
   console.log("📋 Getting filtered loadouts...");
+  console.log(`📋 Current spin: ${state.currentSpin}, Total spins: ${state.totalSpins}`);
+  console.log(`📋 Is final spin? ${state.currentSpin === 1}`);
+  console.log(`📋 state.isSpinning: ${state.isSpinning}`);
+  console.log(`📋 state.spinSequenceActive: ${state.spinSequenceActive}`);
+  console.log(`📋 Cache exists? ${!!state.cachedFilteredLoadouts}`);
   
-  // If we have cached filtered loadouts for this spin sequence, use them
-  if (state.cachedFilteredLoadouts && state.isSpinning) {
-    console.log("📦 Using cached filtered loadouts for consistency across spins");
+  // CRITICAL CHECK FOR FINAL SPIN
+  if (state.currentSpin === 1) {
+    console.log("🔴🔴🔴 FINAL SPIN IN getFilteredLoadouts 🔴🔴🔴");
+    console.log(`🔴 Cache check: exists=${!!state.cachedFilteredLoadouts}, sequenceActive=${state.spinSequenceActive}`);
+    if (state.cachedFilteredLoadouts && state.spinSequenceActive) {
+      console.log("✅ WILL USE CACHE for final spin");
+      if (state.cachedFilteredLoadouts.Light) {
+        console.log("🔴 Cached Light weapons:", state.cachedFilteredLoadouts.Light.weapons);
+      }
+    } else {
+      console.error("❌ WILL NOT USE CACHE for final spin - THIS IS THE BUG!");
+      console.error("❌ Attempting to recover by forcing cache usage");
+      // EMERGENCY RECOVERY: If we have a cache but sequence is inactive, use it anyway
+      if (state.cachedFilteredLoadouts && !state.spinSequenceActive) {
+        console.warn("🔧 RECOVERY: Using cache despite inactive sequence");
+        return JSON.parse(JSON.stringify(state.cachedFilteredLoadouts));
+      }
+    }
+  }
+  
+  // Use cached filters if they exist - prioritize cache over sequence flag
+  // This ensures final spin works even if sequence flag is incorrectly cleared
+  if (state.cachedFilteredLoadouts) {
+    console.log(`📦 USING CACHED filtered loadouts for spin ${state.currentSpin}/${state.totalSpins}`);
+    if (!state.spinSequenceActive) {
+      console.warn("⚠️ spinSequenceActive is false but cache exists - using cache anyway");
+    }
     console.log("🔍 Cached filter state:", {
       Light: {
-        weapons: state.cachedFilteredLoadouts.Light?.weapons?.length || 0,
-        gadgets: state.cachedFilteredLoadouts.Light?.gadgets?.length || 0
+        weapons: state.cachedFilteredLoadouts.Light?.weapons || [],
+        gadgets: state.cachedFilteredLoadouts.Light?.gadgets || []
       },
       Medium: {
-        weapons: state.cachedFilteredLoadouts.Medium?.weapons?.length || 0,
-        gadgets: state.cachedFilteredLoadouts.Medium?.gadgets?.length || 0
+        weapons: state.cachedFilteredLoadouts.Medium?.weapons || [],
+        gadgets: state.cachedFilteredLoadouts.Medium?.gadgets || []
       },
       Heavy: {
-        weapons: state.cachedFilteredLoadouts.Heavy?.weapons?.length || 0,
-        gadgets: state.cachedFilteredLoadouts.Heavy?.gadgets?.length || 0
+        weapons: state.cachedFilteredLoadouts.Heavy?.weapons || [],
+        gadgets: state.cachedFilteredLoadouts.Heavy?.gadgets || []
       }
     });
-    return state.cachedFilteredLoadouts;
+    // Return a deep copy to prevent any mutations
+    const cachedCopy = JSON.parse(JSON.stringify(state.cachedFilteredLoadouts));
+    console.log(`📦 Returning cached copy for consistency`);
+    return cachedCopy;
   }
+  
+  // Extra safety check - if we're in a spin sequence but cache is missing, that's a problem
+  if (state.spinSequenceActive && !state.cachedFilteredLoadouts) {
+    console.error("🔴 ERROR: Spin sequence active but no cache! This will cause filter issues!");
+  }
+  
+  console.log("⚠️ NOT using cache - reading filters from DOM");
 
   // Create a deep copy of the original loadouts
   const filteredLoadouts = JSON.parse(JSON.stringify(loadouts));
@@ -607,10 +647,37 @@ function getFilteredLoadouts() {
     },
   });
   
-  // Cache the filtered loadouts if we're starting a spin sequence
-  if (state.isSpinning && !state.cachedFilteredLoadouts) {
-    console.log("💾 Caching filtered loadouts for this spin sequence");
+  // Cache the filtered loadouts if we're in a spin sequence and don't have cache yet
+  if (state.spinSequenceActive && !state.cachedFilteredLoadouts) {
+    console.log("💾 CREATING CACHE of filtered loadouts for entire spin sequence");
+    console.log("💾 This cache will be used for ALL spins including the final spin");
     state.cachedFilteredLoadouts = JSON.parse(JSON.stringify(filteredLoadouts));
+    
+    // Log what we're caching for debugging
+    console.log("💾 Cached loadouts:", {
+      Light: {
+        weapons: state.cachedFilteredLoadouts.Light?.weapons || [],
+        gadgets: state.cachedFilteredLoadouts.Light?.gadgets || []
+      },
+      Medium: {
+        weapons: state.cachedFilteredLoadouts.Medium?.weapons || [],
+        gadgets: state.cachedFilteredLoadouts.Medium?.gadgets || []
+      },
+      Heavy: {
+        weapons: state.cachedFilteredLoadouts.Heavy?.weapons || [],
+        gadgets: state.cachedFilteredLoadouts.Heavy?.gadgets || []
+      }
+    });
+    
+    // Mark cache as locked to prevent accidental clearing
+    console.log("🔒 Filter cache is now LOCKED for this spin sequence");
+  } else if (state.spinSequenceActive && state.cachedFilteredLoadouts) {
+    console.log("✅ Cache already exists for this sequence - NOT recreating");
+  } else {
+    console.log("⚠️ NOT creating cache:", {
+      spinSequenceActive: state.spinSequenceActive,
+      cacheExists: !!state.cachedFilteredLoadouts
+    });
   }
 
   return filteredLoadouts;
@@ -743,10 +810,39 @@ const displayLoadout = (classType) => {
   }
 
   // Get the filtered loadouts
+  console.log(`🔍 BEFORE getFilteredLoadouts - Spin ${state.currentSpin}/${state.totalSpins}`);
+  console.log(`🔍 state.isSpinning: ${state.isSpinning}`);
+  console.log(`🔍 state.spinSequenceActive: ${state.spinSequenceActive}`);
+  console.log(`🔍 state.cachedFilteredLoadouts exists: ${!!state.cachedFilteredLoadouts}`);
+  
+  // Critical check for final spin
+  if (state.currentSpin === 1) {
+    console.log("🎯🎯🎯 FINAL SPIN CHECK IN displayLoadout 🎯🎯🎯");
+    console.log(`  - spinSequenceActive: ${state.spinSequenceActive}`);
+    console.log(`  - cache exists: ${!!state.cachedFilteredLoadouts}`);
+    if (!state.spinSequenceActive) {
+      console.error("🔴 BUG FOUND: spinSequenceActive is FALSE on final spin!");
+      console.error("🔴 FORCING spinSequenceActive = true to fix the issue");
+      state.spinSequenceActive = true; // Force it to be true
+    }
+    if (!state.cachedFilteredLoadouts) {
+      console.error("🔴 BUG FOUND: Cache is NULL on final spin!");
+      console.error("🔴 This should never happen - cache was cleared too early");
+    }
+  }
+  
   const filteredLoadouts = getFilteredLoadouts();
   const loadout = filteredLoadouts[classType];
   
+  // VERIFICATION: Make sure we got the right filtered loadout
+  if (state.currentSpin === 1) {
+    console.log("🔍 FINAL SPIN - Verifying filteredLoadouts[" + classType + "]:");
+    console.log("🔍 Weapons returned:", loadout.weapons);
+    console.log("🔍 This should match your filter selection");
+  }
+  
   console.log(`🎮 DisplayLoadout for ${classType} - Spin ${state.currentSpin}/${state.totalSpins}`);
+  console.log(`📦 Is this the FINAL spin? ${state.currentSpin === 1}`);
   console.log(`📦 Available filtered items:`, {
     weapons: loadout.weapons,
     specializations: loadout.specializations,
@@ -756,11 +852,36 @@ const displayLoadout = (classType) => {
   console.log(`Displaying loadout for ${classType} class`);
 
   // Select random weapon and specialization
+  console.log(`🔴 WEAPON SELECTION - Spin ${state.currentSpin}/${state.totalSpins} (Final: ${state.currentSpin === 1})`);
+  console.log(`🔴 Class: ${classType}`);
+  console.log(`🔴 Available weapons:`, loadout.weapons);
+  console.log(`🔴 Number of weapons available:`, loadout.weapons.length);
+  
+  // CRITICAL FINAL SPIN CHECK
+  if (state.currentSpin === 1) {
+    console.log("🚨🚨🚨 FINAL SPIN WEAPON SELECTION 🚨🚨🚨");
+    console.log("🚨 Weapons pool:", loadout.weapons);
+    console.log("🚨 Should this be filtered? Check if it matches your filter selection");
+    
+    // Check what the cache says
+    if (state.cachedFilteredLoadouts && state.cachedFilteredLoadouts[classType]) {
+      console.log("🚨 Cache says weapons should be:", state.cachedFilteredLoadouts[classType].weapons);
+      if (JSON.stringify(loadout.weapons) !== JSON.stringify(state.cachedFilteredLoadouts[classType].weapons)) {
+        console.error("❌❌❌ BUG CONFIRMED: loadout.weapons doesn't match cache!");
+        console.error("❌ Using wrong weapon pool for final spin!");
+        console.error("❌ Forcing use of cached weapons");
+        // FORCE FIX: Use cached weapons directly
+        loadout.weapons = [...state.cachedFilteredLoadouts[classType].weapons];
+        console.log("✅ FIXED: Now using cached weapons:", loadout.weapons);
+      }
+    }
+  }
+  
   const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
   
-  console.log(`🎯 Selected weapon: ${selectedWeapon} from`, loadout.weapons);
-  console.log(`🎯 Selected spec: ${selectedSpec} from`, loadout.specializations);
+  console.log(`🎯 SELECTED weapon: ${selectedWeapon}`);
+  console.log(`🎯 Selected spec: ${selectedSpec}`);
 
   // Select three unique gadgets
   console.log(`Available gadgets for ${classType}:`, loadout.gadgets);
@@ -1795,8 +1916,8 @@ async function finalizeSpin(columns) {
     // Update UI to show remaining spins
     updateSpinCountdown(state.currentSpin);
 
-    // DON'T clear isSpinning flag - we're still in the spin sequence!
-    // state.isSpinning = false; // REMOVED - this was breaking filter caching
+    // Clear isSpinning flag but keep spinSequenceActive true
+    state.isSpinning = false;
 
     // Start next spin after a short delay
     setTimeout(() => {
@@ -1804,6 +1925,9 @@ async function finalizeSpin(columns) {
         "🎲 Starting next spin in sequence. Remaining:",
         state.currentSpin
       );
+      console.log(`🎲 spinSequenceActive: ${state.spinSequenceActive}`);
+      state.isSpinning = true; // Re-enable for next spin
+      
       if (state.selectedClass === "random") {
         displayRandomLoadout();
       } else {
@@ -1844,10 +1968,16 @@ async function finalizeSpin(columns) {
   }
 
   state.isSpinning = false;
+  state.spinSequenceActive = false;
   
   // Clear cached filter loadouts at end of spin sequence
-  state.cachedFilteredLoadouts = null;
-  console.log("🧹 Cleared cached filter loadouts at end of spin sequence");
+  // ONLY clear if we're really at the end
+  if (state.currentSpin === 1) {
+    state.cachedFilteredLoadouts = null;
+    console.log("🧹 Final spin complete - NOW clearing cache and deactivating sequence");
+  } else {
+    console.log("🚫 NOT clearing cache yet - not the final spin");
+  }
 
   // DIRECT BUTTON MANIPULATION - 100% reliable method
   console.log("🔒 Getting direct references to all spin buttons");
@@ -2246,10 +2376,20 @@ const spinLoadout = () => {
 
   console.log(`🌀 Starting spin sequence: ${state.totalSpins} total spins`);
   
-  // Clear cached filters from previous spin sequence
-  state.cachedFilteredLoadouts = null;
-  console.log("🧹 Cleared cached filter loadouts from previous spin sequence");
-
+  // CRITICAL: Cache the filters BEFORE starting the sequence
+  // This ensures filters are locked in for ALL spins including final
+  console.log("🔒 Pre-caching filters BEFORE spin sequence starts");
+  state.cachedFilteredLoadouts = null; // Clear old cache
+  state.spinSequenceActive = true;
+  
+  // Force cache creation by calling getFilteredLoadouts NOW
+  const initialFilters = getFilteredLoadouts();
+  console.log("🔒 Filters locked in for entire sequence:", {
+    Light: initialFilters.Light?.weapons || [],
+    Medium: initialFilters.Medium?.weapons || [],
+    Heavy: initialFilters.Heavy?.weapons || []
+  });
+  
   state.isSpinning = true;
   state.currentSpin = state.totalSpins;
 
