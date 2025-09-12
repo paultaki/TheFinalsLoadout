@@ -6,7 +6,7 @@
     <title>THE FINALS World Tour Tracker - Season 8 Rank Calculator | Real-Time Progress</title>
     <meta
       name="description"
-      content="Track your World Tour progress in THE FINALS Season 8. Calculate daily points needed for any rank from Bronze to Emerald, visualize your pace, share progress screenshots. Free rank calculator with 28 ranks from Bronze IV to Emerald I."
+      content="Track your World Tour progress in THE FINALS Season 8. Calculate daily points needed for any rank from Bronze to Emerald, visualize your pace, share progress screenshots. Free rank calculator with 24 ranks from Bronze IV to Emerald I."
     />
 
     <meta
@@ -101,7 +101,7 @@
         "name": "How many points do I need for Emerald rank in THE FINALS Season 8?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "You need 5,325 points to reach Emerald I, the highest rank in World Tour. Emerald IV starts at 3,750 points."
+          "text": "You need 2,400 points to reach Emerald I, the highest rank in World Tour. Emerald IV starts at 1,800 points."
         }
       },{
         "@type": "Question",
@@ -613,7 +613,6 @@
       .rank-gold { background: linear-gradient(135deg, #FFD700, #FFA500); }
       .rank-platinum { background: linear-gradient(135deg, #E5E4E2, #B0B0B0); }
       .rank-diamond { background: linear-gradient(135deg, #B9F2FF, #00CED1); }
-      .rank-ruby { background: linear-gradient(135deg, #E0115F, #8B0020); }
       .rank-emerald { background: linear-gradient(135deg, #50C878, #2E8B57); }
 
       /* Daily Entries */
@@ -1190,7 +1189,7 @@
               class="points-input"
               value="0"
               min="0"
-              max="5325"
+              max="2400"
               aria-label="Current points"
               title="Click to edit your current points"
               placeholder="0"
@@ -1299,34 +1298,30 @@
 
       // Season 8 Ranks
       const ranks = [
-        { name: "Bronze IV", points: 300, icon: "B4", color: "#CD7F32", tier: "bronze" },
-        { name: "Bronze III", points: 375, icon: "B3", color: "#CD7F32", tier: "bronze" },
-        { name: "Bronze II", points: 450, icon: "B2", color: "#CD7F32", tier: "bronze" },
-        { name: "Bronze I", points: 525, icon: "B1", color: "#CD7F32", tier: "bronze" },
-        { name: "Silver IV", points: 625, icon: "S4", color: "#C0C0C0", tier: "silver" },
-        { name: "Silver III", points: 725, icon: "S3", color: "#C0C0C0", tier: "silver" },
-        { name: "Silver II", points: 825, icon: "S2", color: "#C0C0C0", tier: "silver" },
-        { name: "Silver I", points: 925, icon: "S1", color: "#C0C0C0", tier: "silver" },
-        { name: "Gold IV", points: 1050, icon: "G4", color: "#FFD700", tier: "gold" },
-        { name: "Gold III", points: 1175, icon: "G3", color: "#FFD700", tier: "gold" },
-        { name: "Gold II", points: 1300, icon: "G2", color: "#FFD700", tier: "gold" },
-        { name: "Gold I", points: 1425, icon: "G1", color: "#FFD700", tier: "gold" },
-        { name: "Platinum IV", points: 1575, icon: "P4", color: "#E5E4E2", tier: "platinum" },
-        { name: "Platinum III", points: 1725, icon: "P3", color: "#E5E4E2", tier: "platinum" },
-        { name: "Platinum II", points: 1875, icon: "P2", color: "#E5E4E2", tier: "platinum" },
-        { name: "Platinum I", points: 2025, icon: "P1", color: "#E5E4E2", tier: "platinum" },
-        { name: "Diamond IV", points: 2200, icon: "D4", color: "#B9F2FF", tier: "diamond" },
-        { name: "Diamond III", points: 2375, icon: "D3", color: "#B9F2FF", tier: "diamond" },
-        { name: "Diamond II", points: 2550, icon: "D2", color: "#B9F2FF", tier: "diamond" },
-        { name: "Diamond I", points: 2725, icon: "D1", color: "#B9F2FF", tier: "diamond" },
-        { name: "Ruby IV", points: 2925, icon: "R4", color: "#E0115F", tier: "ruby" },
-        { name: "Ruby III", points: 3125, icon: "R3", color: "#E0115F", tier: "ruby" },
-        { name: "Ruby II", points: 3325, icon: "R2", color: "#E0115F", tier: "ruby" },
-        { name: "Ruby I", points: 3525, icon: "R1", color: "#E0115F", tier: "ruby" },
-        { name: "Emerald IV", points: 3750, icon: "E4", color: "#50C878", tier: "emerald" },
-        { name: "Emerald III", points: 3975, icon: "E3", color: "#50C878", tier: "emerald" },
-        { name: "Emerald II", points: 4200, icon: "E2", color: "#50C878", tier: "emerald" },
-        { name: "Emerald I", points: 5325, icon: "E1", color: "#50C878", tier: "emerald" }
+        { name: "Bronze IV", points: 25, icon: "B4", color: "#CD7F32", tier: "bronze" },
+        { name: "Bronze III", points: 50, icon: "B3", color: "#CD7F32", tier: "bronze" },
+        { name: "Bronze II", points: 75, icon: "B2", color: "#CD7F32", tier: "bronze" },
+        { name: "Bronze I", points: 100, icon: "B1", color: "#CD7F32", tier: "bronze" },
+        { name: "Silver IV", points: 150, icon: "S4", color: "#C0C0C0", tier: "silver" },
+        { name: "Silver III", points: 200, icon: "S3", color: "#C0C0C0", tier: "silver" },
+        { name: "Silver II", points: 250, icon: "S2", color: "#C0C0C0", tier: "silver" },
+        { name: "Silver I", points: 300, icon: "S1", color: "#C0C0C0", tier: "silver" },
+        { name: "Gold IV", points: 375, icon: "G4", color: "#FFD700", tier: "gold" },
+        { name: "Gold III", points: 450, icon: "G3", color: "#FFD700", tier: "gold" },
+        { name: "Gold II", points: 525, icon: "G2", color: "#FFD700", tier: "gold" },
+        { name: "Gold I", points: 600, icon: "G1", color: "#FFD700", tier: "gold" },
+        { name: "Platinum IV", points: 700, icon: "P4", color: "#E5E4E2", tier: "platinum" },
+        { name: "Platinum III", points: 800, icon: "P3", color: "#E5E4E2", tier: "platinum" },
+        { name: "Platinum II", points: 900, icon: "P2", color: "#E5E4E2", tier: "platinum" },
+        { name: "Platinum I", points: 1000, icon: "P1", color: "#E5E4E2", tier: "platinum" },
+        { name: "Diamond IV", points: 1150, icon: "D4", color: "#B9F2FF", tier: "diamond" },
+        { name: "Diamond III", points: 1300, icon: "D3", color: "#B9F2FF", tier: "diamond" },
+        { name: "Diamond II", points: 1450, icon: "D2", color: "#B9F2FF", tier: "diamond" },
+        { name: "Diamond I", points: 1600, icon: "D1", color: "#B9F2FF", tier: "diamond" },
+        { name: "Emerald IV", points: 1800, icon: "E4", color: "#50C878", tier: "emerald" },
+        { name: "Emerald III", points: 2000, icon: "E3", color: "#50C878", tier: "emerald" },
+        { name: "Emerald II", points: 2200, icon: "E2", color: "#50C878", tier: "emerald" },
+        { name: "Emerald I", points: 2400, icon: "E1", color: "#50C878", tier: "emerald" }
       ];
 
       // Storage Management with Versioning
@@ -1379,8 +1374,8 @@
         migrateFromSeason7() {
           try {
             const oldPoints = parseInt(localStorage.getItem('currentPoints') || '0');
-            // Proportional conversion: S7 max was 2400, S8 max is 5325
-            const conversionRatio = 5325 / 2400;
+            // Proportional conversion: S7 max was 2400, S8 max is 2400
+            const conversionRatio = 2400 / 2400;
             const newPoints = Math.round(oldPoints * conversionRatio);
             
             localStorage.setItem('currentPoints', newPoints.toString());
@@ -1649,7 +1644,7 @@
 
         const oldPoints = currentPoints;
         const goalRank = ranks.find(r => r.name === selectedGoal);
-        const maxPoints = goalRank ? goalRank.points : 5325;
+        const maxPoints = goalRank ? goalRank.points : 2400;
         
         newPoints = Math.max(0, Math.min(maxPoints, newPoints));
         currentPoints = newPoints;
@@ -1675,7 +1670,7 @@
 
       function updateDashboard() {
         const goalRank = ranks.find(r => r.name === selectedGoal);
-        const goalPoints = goalRank ? goalRank.points : 5325;
+        const goalPoints = goalRank ? goalRank.points : 2400;
         const pointsNeeded = Math.max(0, goalPoints - currentPoints);
         const pointsPerDay = daysRemaining > 0 ? Math.ceil(pointsNeeded / daysRemaining) : 0;
         
@@ -1721,7 +1716,7 @@
 
       function updatePaceIndicator() {
         const goalRank = ranks.find(r => r.name === selectedGoal);
-        const goalPoints = goalRank ? goalRank.points : 5325;
+        const goalPoints = goalRank ? goalRank.points : 2400;
         
         const seasonStart = new Date(SEASON_START_DATE);
         const today = new Date();
@@ -2035,7 +2030,6 @@
         else if (rank.tier === 'gold') message = 'Golden player! Impressive progress!';
         else if (rank.tier === 'platinum') message = 'Platinum prestige! Elite territory!';
         else if (rank.tier === 'diamond') message = 'Diamond hands! Near the top!';
-        else if (rank.tier === 'ruby') message = 'Ruby rare! Among the best!';
         else if (rank.tier === 'emerald') message = 'EMERALD LEGEND! You\'ve made it!';
         
         popup.innerHTML = `
@@ -2115,7 +2109,7 @@
       // Nav functions
       function shareProgress() {
         const goalRank = ranks.find(r => r.name === selectedGoal);
-        const goalPoints = goalRank ? goalRank.points : 5325;
+        const goalPoints = goalRank ? goalRank.points : 2400;
         const progress = ((currentPoints / goalPoints) * 100).toFixed(1);
         
         const text = `🎮 THE FINALS Season 8 Progress\n` +
