@@ -30,7 +30,6 @@
       "H+ Infuser",
       "Thermal Bore",
       "Gas Grenade",
-      "Thermal Vision",
       "Tracking Dart",
       "Vanishing Bomb",
       "Goo Grenade",
@@ -50,6 +49,7 @@
       "FAMAS",
       "FCAR",
       "Model 1887",
+      "P90",
       "Pike-556",
       "R.357",
       "Riot Shield"
@@ -91,7 +91,8 @@
       "SA1216",
       "ShAK-50",
       "Sledgehammer",
-      "Spear"
+      "Spear",
+      "BFR Titan"
     ],
     "specializations": [
       "Charge N Slam",

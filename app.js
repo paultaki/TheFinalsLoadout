@@ -371,7 +371,6 @@ let loadouts = {
       "Sonar Grenade",
       "Thermal Bore",
       "Gas Grenade",
-      "Thermal Vision",
       "Tracking Dart",
       "Vanishing Bomb",
       "Goo Grenade",
@@ -391,6 +390,7 @@ let loadouts = {
       "CB-01 Repeater",
       "FCAR",
       "Model 1887",
+      "P90",
       "Pike-556",
       "R.357",
       "Riot Shield",
@@ -429,6 +429,7 @@ let loadouts = {
       "Sledgehammer",
       "ShAK-50",
       "Spear",
+      "BFR Titan",
     ],
     specializations: ["Charge N Slam", "Goo Gun", "Mesh Shield", "Winch Claw"],
     gadgets: [

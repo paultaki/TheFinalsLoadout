@@ -47,14 +47,14 @@
           'Breach Charge', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
           'Gateway', 'Glitch Grenade', 'Goo Grenade', 'Gravity Vortex',
           'H+ Diffuser', 'Nullifier', 'Proximity Sensor', 'Pyro Grenade', 
-          'Smoke Grenade', 'Sonar Grenade', 'Thermal Bore', 'Thermal Vision',
-          'Tracking Dart', 'Vanishing Bomb'
+          'Smoke Grenade', 'Sonar Grenade', 'Thermal Bore', 'Tracking Dart',
+          'Vanishing Bomb'
         ]
       },
       Medium: {
         weapons: [
           'AKM', 'CK-01 Repeater', 'Cerberus 52GA', 'CL-40', 'Dual Blades',
-          'FAMAS', 'FCAR', 'Model 1887', 'PIKE-556', 'R.357', 'Riot Shield'
+          'FAMAS', 'FCAR', 'Model 1887', 'P90', 'PIKE-556', 'R.357', 'Riot Shield'
         ],
         specializations: ['Dematerializer', 'Guardian Turret', 'Healing Beam'],
         gadgets: [
@@ -67,7 +67,7 @@
       Heavy: {
         weapons: [
           'SH1 Akimbo', 'Flamethrower', 'KS-23', 'Lewis Gun', 'M134 Minigun',
-          'M60', 'MGL32', 'SA1216', 'SHAK-50', 'Sledgehammer', 'Spear'
+          'M60', 'MGL32', 'SA1216', 'SHAK-50', 'Sledgehammer', 'Spear', 'BFR Titan'
         ],
         specializations: ['Charge \'N\' Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
         gadgets: [
