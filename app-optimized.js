@@ -47,14 +47,14 @@
           'Breach Charge', 'Flashbang', 'Frag Grenade', 'Gas Grenade',
           'Gateway', 'Glitch Grenade', 'Goo Grenade', 'Gravity Vortex',
           'H+ Diffuser', 'Nullifier', 'Proximity Sensor', 'Pyro Grenade', 
-          'Smoke Grenade', 'Sonar Grenade', 'Thermal Bore', 'Tracking Dart',
-          'Vanishing Bomb'
+          'Smoke Grenade', 'Sonar Grenade', 'Thermal Bore', 'Thermal Vision',
+          'Tracking Dart', 'Vanishing Bomb'
         ]
       },
       Medium: {
         weapons: [
           'AKM', 'CK-01 Repeater', 'Cerberus 52GA', 'CL-40', 'Dual Blades',
-          'FAMAS', 'FCAR', 'Model 1887', 'P90', 'PIKE-556', 'R.357', 'Riot Shield'
+          'FAMAS', 'FCAR', 'Model 1887', 'PIKE-556', 'R.357', 'Riot Shield'
         ],
         specializations: ['Dematerializer', 'Guardian Turret', 'Healing Beam'],
         gadgets: [
@@ -67,7 +67,7 @@
       Heavy: {
         weapons: [
           'SH1 Akimbo', 'Flamethrower', 'KS-23', 'Lewis Gun', 'M134 Minigun',
-          'M60', 'MGL32', 'SA1216', 'SHAK-50', 'Sledgehammer', 'Spear', 'BFR Titan'
+          'M60', 'MGL32', 'SA1216', 'SHAK-50', 'Sledgehammer', 'Spear'
         ],
         specializations: ['Charge \'N\' Slam', 'Goo Gun', 'Mesh Shield', 'Winch Claw'],
         gadgets: [
@@ -403,14 +403,18 @@
 
     getRandomItem(type, className) {
       const data = GameData.loadouts[className];
+      
+      // Apply filters to get the correct pool
+      const filteredData = this.applyFilters(data, className);
+      
       let pool = [];
       
       if (type === 'weapon') {
-        pool = data.weapons;
+        pool = filteredData.weapons;
       } else if (type === 'specialization') {
-        pool = data.specializations;
+        pool = filteredData.specializations;
       } else if (type === 'gadget') {
-        pool = data.gadgets;
+        pool = filteredData.gadgets;
       }
       
       return pool[Math.floor(Math.random() * pool.length)];
@@ -700,13 +704,16 @@
     createRandomLoadout(className) {
       const data = GameData.loadouts[className];
       
-      // Select random items
-      const weapon = data.weapons[Math.floor(Math.random() * data.weapons.length)];
-      const specialization = data.specializations[Math.floor(Math.random() * data.specializations.length)];
+      // Apply filters from the filter panel
+      const filteredData = this.applyFilters(data, className);
       
-      // Select 3 unique gadgets
+      // Select random items from filtered lists
+      const weapon = filteredData.weapons[Math.floor(Math.random() * filteredData.weapons.length)];
+      const specialization = filteredData.specializations[Math.floor(Math.random() * filteredData.specializations.length)];
+      
+      // Select 3 unique gadgets from filtered list
       const gadgets = [];
-      const availableGadgets = [...data.gadgets];
+      const availableGadgets = [...filteredData.gadgets];
       
       for (let i = 0; i < 3; i++) {
         const index = Math.floor(Math.random() * availableGadgets.length);
@@ -723,6 +730,46 @@
         gadget3: gadgets[2],
         gadgets,
         timestamp: Date.now()
+      };
+    }
+    
+    applyFilters(data, className) {
+      // Get checked items from filter panel
+      const getCheckedItems = (type) => {
+        const checkboxes = document.querySelectorAll(`#filter-panel input[id^="${className}-${type}-"]:checked`);
+        return Array.from(checkboxes).map(cb => {
+          // Extract item name from checkbox ID (format: Light-weapon-93R)
+          const id = cb.id;
+          const prefix = `${className}-${type}-`;
+          return id.substring(prefix.length).replace(/-/g, ' ');
+        });
+      };
+      
+      const checkedWeapons = getCheckedItems('weapon');
+      const checkedSpecs = getCheckedItems('specialization');
+      const checkedGadgets = getCheckedItems('gadget');
+      
+      // If no filters selected for a category, use all items
+      const filteredWeapons = checkedWeapons.length > 0 
+        ? data.weapons.filter(w => checkedWeapons.some(checked => 
+            w.toLowerCase().replace(/[\s-]/g, '') === checked.toLowerCase().replace(/[\s-]/g, '')))
+        : data.weapons;
+        
+      const filteredSpecs = checkedSpecs.length > 0
+        ? data.specializations.filter(s => checkedSpecs.some(checked => 
+            s.toLowerCase().replace(/[\s-]/g, '') === checked.toLowerCase().replace(/[\s-]/g, '')))
+        : data.specializations;
+        
+      const filteredGadgets = checkedGadgets.length > 0
+        ? data.gadgets.filter(g => checkedGadgets.some(checked => 
+            g.toLowerCase().replace(/[\s-]/g, '') === checked.toLowerCase().replace(/[\s-]/g, '')))
+        : data.gadgets;
+      
+      // Ensure we have at least one item in each category
+      return {
+        weapons: filteredWeapons.length > 0 ? filteredWeapons : data.weapons,
+        specializations: filteredSpecs.length > 0 ? filteredSpecs : data.specializations,
+        gadgets: filteredGadgets.length > 0 ? filteredGadgets : data.gadgets
       };
     }
 
