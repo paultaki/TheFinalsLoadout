@@ -487,6 +487,20 @@ function getFilteredLoadouts() {
   // If we have cached filtered loadouts for this spin sequence, use them
   if (state.cachedFilteredLoadouts && state.isSpinning) {
     console.log("📦 Using cached filtered loadouts for consistency across spins");
+    console.log("🔍 Cached filter state:", {
+      Light: {
+        weapons: state.cachedFilteredLoadouts.Light?.weapons?.length || 0,
+        gadgets: state.cachedFilteredLoadouts.Light?.gadgets?.length || 0
+      },
+      Medium: {
+        weapons: state.cachedFilteredLoadouts.Medium?.weapons?.length || 0,
+        gadgets: state.cachedFilteredLoadouts.Medium?.gadgets?.length || 0
+      },
+      Heavy: {
+        weapons: state.cachedFilteredLoadouts.Heavy?.weapons?.length || 0,
+        gadgets: state.cachedFilteredLoadouts.Heavy?.gadgets?.length || 0
+      }
+    });
     return state.cachedFilteredLoadouts;
   }
 
@@ -731,12 +745,22 @@ const displayLoadout = (classType) => {
   // Get the filtered loadouts
   const filteredLoadouts = getFilteredLoadouts();
   const loadout = filteredLoadouts[classType];
+  
+  console.log(`🎮 DisplayLoadout for ${classType} - Spin ${state.currentSpin}/${state.totalSpins}`);
+  console.log(`📦 Available filtered items:`, {
+    weapons: loadout.weapons,
+    specializations: loadout.specializations,
+    gadgets: loadout.gadgets
+  });
 
   console.log(`Displaying loadout for ${classType} class`);
 
   // Select random weapon and specialization
   const selectedWeapon = getRandomUniqueItems(loadout.weapons, 1)[0];
   const selectedSpec = getRandomUniqueItems(loadout.specializations, 1)[0];
+  
+  console.log(`🎯 Selected weapon: ${selectedWeapon} from`, loadout.weapons);
+  console.log(`🎯 Selected spec: ${selectedSpec} from`, loadout.specializations);
 
   // Select three unique gadgets
   console.log(`Available gadgets for ${classType}:`, loadout.gadgets);
@@ -755,7 +779,7 @@ const displayLoadout = (classType) => {
   // Make a defensive copy and ensure it's truly immutable
   const selectedGadgets = Object.freeze([...selectedGadgetsRaw]);
 
-  console.log(`🎯 Final gadgets for display: ${selectedGadgets.join(", ")}`);
+  console.log(`🎯 Final gadgets for display: ${selectedGadgets.join(", ")} from`, loadout.gadgets);
   console.log(`🎯 Gadget 1: "${selectedGadgets[0]}"`);
   console.log(`🎯 Gadget 2: "${selectedGadgets[1]}"`);
   console.log(`🎯 Gadget 3: "${selectedGadgets[2]}"`);
@@ -1771,8 +1795,8 @@ async function finalizeSpin(columns) {
     // Update UI to show remaining spins
     updateSpinCountdown(state.currentSpin);
 
-    // Clear isSpinning flag to allow next spin
-    state.isSpinning = false;
+    // DON'T clear isSpinning flag - we're still in the spin sequence!
+    // state.isSpinning = false; // REMOVED - this was breaking filter caching
 
     // Start next spin after a short delay
     setTimeout(() => {
