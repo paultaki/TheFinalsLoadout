@@ -1521,3 +1521,63 @@
         z-index: 1998 !important;
     }
 }
+
+/* Season 8 Badge */
+.season-badge {
+    margin-top: 15px;
+    padding: 12px 25px;
+    background: linear-gradient(135deg, rgba(255, 51, 102, 0.1), rgba(255, 102, 153, 0.05));
+    border: 2px solid rgba(255, 51, 102, 0.3);
+    border-radius: 50px;
+    display: inline-block;
+    animation: seasonPulse 2s ease-in-out infinite;
+}
+
+.season-text {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, #ff3366, #ff6699);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: block;
+}
+
+.season-subtext {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 5px;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+@keyframes seasonPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(255, 51, 102, 0.2);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 30px rgba(255, 51, 102, 0.4);
+    }
+}
+
+/* Mobile adjustments for Season Badge */
+@media (max-width: 768px) {
+    .season-badge {
+        margin-top: 10px;
+        padding: 8px 15px;
+    }
+    
+    .season-text {
+        font-size: 1.4rem;
+    }
+    
+    .season-subtext {
+        font-size: 0.8rem;
+    }
+}
