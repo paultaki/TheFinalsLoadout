@@ -187,6 +187,11 @@ const state = {
   respinInProgress: false, // Prevent multiple respin clicks
   respinSessionCount: 0, // Track respins per session for abuse prevention
   currentFinalLoadout: null, // Store current final loadout data for respin
+  
+  // ================================
+  // FILTER STATE CACHING
+  // ================================
+  cachedFilteredLoadouts: null, // Cache filtered loadouts at start of spin sequence
 };
 
 // Make state globally accessible
@@ -478,6 +483,12 @@ async function loadCompiledLoadouts() {
 // Function to get filtered loadouts based on checkbox selections
 function getFilteredLoadouts() {
   console.log("📋 Getting filtered loadouts...");
+  
+  // If we have cached filtered loadouts for this spin sequence, use them
+  if (state.cachedFilteredLoadouts && state.isSpinning) {
+    console.log("📦 Using cached filtered loadouts for consistency across spins");
+    return state.cachedFilteredLoadouts;
+  }
 
   // Create a deep copy of the original loadouts
   const filteredLoadouts = JSON.parse(JSON.stringify(loadouts));
@@ -581,6 +592,12 @@ function getFilteredLoadouts() {
       gadgets: filteredLoadouts.Heavy.gadgets.length,
     },
   });
+  
+  // Cache the filtered loadouts if we're starting a spin sequence
+  if (state.isSpinning && !state.cachedFilteredLoadouts) {
+    console.log("💾 Caching filtered loadouts for this spin sequence");
+    state.cachedFilteredLoadouts = JSON.parse(JSON.stringify(filteredLoadouts));
+  }
 
   return filteredLoadouts;
 }
@@ -1803,6 +1820,10 @@ async function finalizeSpin(columns) {
   }
 
   state.isSpinning = false;
+  
+  // Clear cached filter loadouts at end of spin sequence
+  state.cachedFilteredLoadouts = null;
+  console.log("🧹 Cleared cached filter loadouts at end of spin sequence");
 
   // DIRECT BUTTON MANIPULATION - 100% reliable method
   console.log("🔒 Getting direct references to all spin buttons");
@@ -2200,6 +2221,10 @@ const spinLoadout = () => {
   }
 
   console.log(`🌀 Starting spin sequence: ${state.totalSpins} total spins`);
+  
+  // Clear cached filters from previous spin sequence
+  state.cachedFilteredLoadouts = null;
+  console.log("🧹 Cleared cached filter loadouts from previous spin sequence");
 
   state.isSpinning = true;
   state.currentSpin = state.totalSpins;
