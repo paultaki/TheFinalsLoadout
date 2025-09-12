@@ -213,6 +213,28 @@
             <span class="season-text">🎯 Season 8 Ready!</span>
             <span class="season-subtext">BFR Titan & P90 Added</span>
         </div>
+        
+        <!-- Thank You Note (auto-hides after 72 hours) -->
+        <div id="thankYouNote" style="text-align: center; margin-top: 8px; margin-bottom: 10px; display: none;">
+            <p style="font-size: 0.85em; color: #888; font-style: italic; margin: 0;">
+                Thanks for reporting the filtering issue. If you see anymore bugs or have suggestions drop me a note on the 
+                <a href="/feedback" style="color: #aaa; text-decoration: underline;">feedback</a> page.
+            </p>
+        </div>
+        
+        <script>
+        // Auto-hide thank you note after 72 hours
+        (function() {
+            const noteElement = document.getElementById('thankYouNote');
+            const noteAddedTime = new Date('2025-01-12T00:00:00').getTime(); // Today's date
+            const currentTime = new Date().getTime();
+            const hoursPassed = (currentTime - noteAddedTime) / (1000 * 60 * 60);
+            
+            if (hoursPassed < 72) {
+                noteElement.style.display = 'block';
+            }
+        })();
+        </script>
     </header>
 
     <!-- Premium Slot Machine Container -->
