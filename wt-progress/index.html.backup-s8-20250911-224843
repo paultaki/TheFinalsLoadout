@@ -1,0 +1,3771 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>THE FINALS World Tour Tracker - Season 7 Emerald Rank Calculator | Real-Time Progress</title>
+    <meta
+      name="description"
+      content="Track your World Tour progress in THE FINALS Season 7. Calculate daily points needed for Emerald rank, visualize your pace, share progress screenshots. Free rank calculator with 16 ranks from Gold to Emerald."
+    />
+
+    <meta
+      name="keywords"
+      content="THE FINALS World Tour tracker, Emerald rank calculator, Season 7 progress, daily points calculator, rank tracker, gaming tools"
+    />
+
+    <!-- Mobile Web App Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="WT Tracker">
+
+    <!-- Performance Optimizations -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" as="style">
+
+    <!--  Open Graph / Facebook social   -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://www.thefinalsloadout.com/wt-progress/"
+    />
+    <meta
+      property="og:title"
+      content="S7 World Tour Progress Tracker - The Finals"
+    />
+    <meta
+      property="og:description"
+      content="Track your progress to Emerald rank in The Finals Season 7"
+    />
+    <meta
+      property="og:image"
+      content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta
+      property="og:url"
+      content="https://www.thefinalsloadout.com/wt-progress/"
+    />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="S7 Emerald Progress Tracker - The Finals"
+    />
+    <meta
+      name="twitter:description"
+      content="Track your progress to Emerald rank in The Finals Season 7"
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.thefinalsloadout.com/wt-progress/images/social1200x630.png"
+    />
+    <meta
+      name="twitter:url"
+      content="https://www.thefinalsloadout.com/wt-progress/"
+    />
+
+    <!-- Structured Data - WebApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "THE FINALS World Tour Progress Tracker",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "127"
+      },
+      "description": "Track World Tour progress and calculate points needed for Emerald rank",
+      "screenshot": "https://thefinalsloadout.com/wt-progress/images/screenshot.png"
+    }
+    </script>
+
+    <!-- FAQ Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How many points do I need for Emerald rank in THE FINALS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You need 2,400 points to reach Emerald 1, the highest rank in World Tour. Emerald 4 starts at 1,800 points."
+        }
+      },{
+        "@type": "Question",
+        "name": "How do World Tour points work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In World Tour: 1st place = 25 points, 2nd place = 14 points, Qualifying for Round 2 = 6 points, Round 1 elimination = 2 points."
+        }
+      },{
+        "@type": "Question",
+        "name": "How long is THE FINALS Season 7?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Season 7 runs from June 12 to September 10, 2025, lasting 91 days total."
+        }
+      }]
+    }
+    </script>
+
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/logo.png" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Accessibility - Screen reader only content */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+      }
+
+      /* Focus indicators */
+      *:focus {
+        outline: 2px solid #50c878;
+        outline-offset: 2px;
+      }
+
+      button:focus,
+      input:focus,
+      a:focus {
+        outline: 3px solid #50c878;
+        outline-offset: 3px;
+        box-shadow: 0 0 0 4px rgba(80, 200, 120, 0.2);
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          #0a0a0a 0%,
+          #1a1a1a 50%,
+          #0d1117 100%
+        );
+        color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        padding: 0;
+        margin: 0;
+        min-height: 100vh;
+        position: relative;
+        padding-top: 80px; /* Account for sticky nav */
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+            circle at 20% 50%,
+            rgba(80, 200, 120, 0.05) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(0, 255, 204, 0.03) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+        padding: 20px;
+      }
+
+      /* Navigation Styles */
+      .main-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.8) 0%,
+          rgba(80, 200, 120, 0.2) 50%,
+          rgba(0, 0, 0, 0.8) 100%
+        );
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        border-bottom: 1px solid rgba(80, 200, 120, 0.3);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .scroll-progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #50c878, #00ffcc);
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+      }
+
+      .main-nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .main-nav a::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(80, 200, 120, 0.4),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .main-nav a:hover::before {
+        left: 100%;
+      }
+
+      .main-nav a:hover,
+      .main-nav a.active {
+        background-color: rgba(80, 200, 120, 0.8);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(80, 200, 120, 0.4);
+      }
+
+      .nav-controls {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .nav-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-button svg {
+        width: 20px;
+        height: 20px;
+        display: block;
+      }
+
+      .sound-toggle-button .sound-on {
+        display: block;
+      }
+
+      .sound-toggle-button .sound-off {
+        display: none;
+      }
+
+      .sound-toggle-button.muted .sound-on {
+        display: none;
+      }
+
+      .sound-toggle-button.muted .sound-off {
+        display: block;
+      }
+
+      .nav-button:hover {
+        transform: scale(1.1);
+        border-color: rgba(80, 200, 120, 0.6);
+        box-shadow: 0 0 20px rgba(80, 200, 120, 0.4);
+      }
+
+      .nav-button.muted {
+        background: rgba(255, 68, 68, 0.6);
+        border-color: rgba(255, 68, 68, 0.4);
+      }
+
+      /* Mobile Navigation */
+      @media (max-width: 640px) {
+        .main-nav {
+          flex-direction: column;
+          padding: 0.75rem 1rem;
+          gap: 0.75rem;
+        }
+
+        .nav-links {
+          width: 100%;
+          justify-content: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .main-nav a {
+          font-size: 0.8rem;
+          padding: 0.4rem 0.8rem;
+        }
+
+        .nav-controls {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .nav-button {
+          width: 36px;
+          height: 36px;
+        }
+
+        body {
+          padding-top: 140px; /* More space for mobile nav to avoid covering logo */
+        }
+      }
+
+      .logo {
+        display: block;
+        margin: 0 auto 40px auto;
+        max-width: 300px;
+        height: auto;
+        filter: drop-shadow(0 8px 32px rgba(80, 200, 120, 0.3));
+        animation: floatAnimation 6s ease-in-out infinite;
+      }
+
+      @keyframes floatAnimation {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* Value update animation */
+      @keyframes valueUpdate {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+          filter: brightness(1.3);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .stat-value.updating {
+        animation: valueUpdate 0.5s ease-out;
+      }
+
+      /* Progress Dashboard */
+      .dashboard {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 24px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        animation: shimmer 3s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.5;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 0.8;
+        }
+      }
+
+      .stat-label {
+        font-size: 0.875em;
+        color: #b8bfc6; /* Improved contrast from #8b949e */
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 500;
+      }
+
+      .stat-value {
+        font-size: 2.5em;
+        font-weight: 700;
+        background: linear-gradient(135deg, #fff 0%, #8b949e 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+      }
+
+      /* Highlight important stats */
+      .stat-card.primary {
+        background: rgba(80, 200, 120, 0.08);
+        border: 1px solid rgba(80, 200, 120, 0.3);
+      }
+
+      .stat-card.primary .stat-value {
+        background: linear-gradient(135deg, #50c878 0%, #00ffcc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+        filter: drop-shadow(0 0 20px rgba(80, 200, 120, 0.5));
+      }
+
+      .stat-card.warning {
+        background: rgba(255, 179, 0, 0.08);
+        border: 1px solid rgba(255, 179, 0, 0.3);
+      }
+
+      .stat-card.warning .stat-value {
+        background: linear-gradient(135deg, #ffb300 0%, #ff6f00 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+        filter: drop-shadow(0 0 20px rgba(255, 179, 0, 0.5));
+      }
+
+      .stat-card.error {
+        background: rgba(255, 71, 87, 0.08);
+        border: 1px solid rgba(255, 71, 87, 0.3);
+      }
+
+      .stat-card.error .stat-value {
+        background: linear-gradient(135deg, #ff4757 0%, #ee5a6f 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+        filter: drop-shadow(0 0 20px rgba(255, 71, 87, 0.5));
+      }
+
+      .stat-card.success {
+        background: rgba(80, 200, 120, 0.12);
+        border: 1px solid rgba(80, 200, 120, 0.4);
+      }
+
+      .stat-card.success .stat-value {
+        background: linear-gradient(135deg, #50c878 0%, #00ffcc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+        filter: drop-shadow(0 0 30px rgba(80, 200, 120, 0.8));
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      /* Progress Bar */
+      .progress-section {
+        margin-bottom: 40px;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+      }
+
+      .progress-section h2 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #50c878 0%, #00ffcc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+      }
+
+      .progress-container {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(80, 200, 120, 0.2);
+        border-radius: 50px;
+        padding: 4px;
+        position: relative;
+        height: 24px;
+        overflow: hidden;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          #50c878 0%,
+          #00ffcc 50%,
+          #50c878 100%
+        );
+        background-size: 200% 100%;
+        border-radius: 50px;
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        box-shadow: 0 0 30px rgba(80, 200, 120, 0.8),
+          inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        animation: glow 2s ease-in-out infinite;
+      }
+
+      @keyframes glow {
+        0%,
+        100% {
+          filter: brightness(1);
+          background-position: 0% 50%;
+        }
+        50% {
+          filter: brightness(1.2);
+          background-position: 100% 50%;
+        }
+      }
+
+      .progress-bar::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        animation: shine 2s infinite;
+      }
+
+      @keyframes shine {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: 600;
+        font-size: 0.875em;
+        color: #fff;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        z-index: 10;
+        letter-spacing: 0.05em;
+      }
+
+      .pace-indicator {
+        margin-top: 16px;
+        text-align: center;
+        font-size: 0.9em;
+        color: #8b949e;
+      }
+
+      .pace-indicator.ahead {
+        color: #50c878;
+      }
+
+      .pace-indicator.behind {
+        color: #ff4757;
+      }
+
+      /* Rank Ladder */
+      .rank-ladder {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 40px;
+      }
+
+      .rank-ladder h2 {
+        color: #fff;
+        margin-bottom: 24px;
+        font-size: 1.5em;
+      }
+
+      .rank-item {
+        display: grid;
+        grid-template-columns: 60px 150px 100px 100px 100px 150px 1fr;
+        align-items: center;
+        padding: 12px 16px;
+        margin-bottom: 8px;
+        border-radius: 12px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid transparent;
+      }
+
+      .rank-item:hover {
+        transform: translateX(4px);
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .rank-item.completed {
+        background: rgba(80, 200, 120, 0.05);
+        border: 1px solid rgba(80, 200, 120, 0.2);
+        opacity: 0.7;
+      }
+
+      .rank-item.completed::before {
+        content: "✓";
+        position: absolute;
+        left: -20px;
+        color: #50c878;
+        font-size: 1.2em;
+      }
+
+      .rank-item.current {
+        background: linear-gradient(
+          135deg,
+          rgba(138, 43, 226, 0.15) 0%,
+          rgba(30, 144, 255, 0.15) 100%
+        );
+        border: 2px solid #8a2be2;
+        position: relative;
+        transform: scale(1.02);
+        box-shadow: 0 0 30px rgba(138, 43, 226, 0.4),
+          0 4px 20px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(138, 43, 226, 0.1);
+      }
+
+      .rank-item.current::after {
+        content: "CURRENT";
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.7em;
+        font-weight: 700;
+        color: #8a2be2;
+        letter-spacing: 0.1em;
+        padding: 4px 12px;
+        background: rgba(138, 43, 226, 0.1);
+        border-radius: 20px;
+        border: 1px solid rgba(138, 43, 226, 0.3);
+      }
+
+      .rank-item.locked {
+        background: rgba(128, 128, 128, 0.03);
+        opacity: 0.4;
+        filter: grayscale(0.5);
+      }
+
+      .rank-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.75em;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        letter-spacing: -0.05em;
+        color: #000;
+      }
+
+      .rank-icon::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.2) 0%,
+          transparent 100%
+        );
+        border-radius: 50%;
+      }
+
+      .rank-status {
+        font-size: 0.75em;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .mini-progress {
+        height: 6px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 3px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+      }
+
+      .mini-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #50c878 0%, #00ffcc 100%);
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 10px rgba(80, 200, 120, 0.5);
+      }
+
+      /* Win Points Reference */
+      .reference-card {
+        position: fixed;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        font-size: 0.875em;
+        transition: all 0.3s ease;
+        z-index: 100;
+      }
+
+      .reference-card:hover {
+        transform: translateY(-50%) scale(1.05);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      .reference-card h3 {
+        background: linear-gradient(135deg, #00ffcc 0%, #50c878 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+        margin-bottom: 16px;
+        text-align: center;
+        font-size: 1em;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .reference-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        padding: 8px 12px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        transition: all 0.2s ease;
+      }
+
+      .reference-item:hover {
+        background: rgba(80, 200, 120, 0.1);
+        transform: translateX(-2px);
+      }
+
+      .reference-item span:first-child {
+        color: #8b949e;
+        font-weight: 500;
+      }
+
+      .reference-item span:last-child {
+        font-weight: 700;
+        background: linear-gradient(135deg, #50c878 0%, #00ffcc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+      }
+
+      /* Daily Tracker */
+      .daily-tracker {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 30px;
+      }
+
+      .daily-tracker h2 {
+        color: #fff;
+        margin-bottom: 24px;
+        font-size: 1.5em;
+      }
+
+
+      input {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 0.95em;
+        transition: all 0.2s ease;
+      }
+
+      input::placeholder {
+        color: #8b949e;
+      }
+
+      input:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      input:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #50c878;
+        box-shadow: 0 0 0 3px rgba(80, 200, 120, 0.2);
+      }
+
+      .points-input-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      #currentPointsInput {
+        background: rgba(0, 0, 0, 0.3);
+        border: 2px solid transparent;
+        background-image: linear-gradient(
+            rgba(0, 0, 0, 0.3),
+            rgba(0, 0, 0, 0.3)
+          ),
+          linear-gradient(135deg, #50c878 0%, #00ffcc 100%);
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+        color: #fff;
+        font-size: 2.5em;
+        text-align: center;
+        width: 150px;
+        font-weight: 700;
+        padding: 8px;
+        border-radius: 12px;
+        position: relative;
+        z-index: 10;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      #currentPointsInput:hover {
+        transform: scale(1.05);
+        filter: brightness(1.1);
+      }
+
+      #currentPointsInput:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(80, 200, 120, 0.3);
+      }
+
+      button {
+        background: linear-gradient(135deg, #50c878 0%, #00ffcc 100%);
+        border: none;
+        color: #0a0a0a;
+        padding: 12px 24px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.95em;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      button::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.5s, height 0.5s;
+      }
+
+      button:hover::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(80, 200, 120, 0.4);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .delete-btn {
+        background: linear-gradient(135deg, #ff4757 0%, #ff6348 100%);
+        color: #fff;
+        padding: 6px 12px;
+        font-size: 0.875em;
+        margin-left: 12px;
+      }
+
+      .delete-btn:hover {
+        box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+      }
+
+
+      /* Daily Entries */
+      .daily-entries-item {
+        padding: 16px;
+        margin: 8px 0;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .daily-entries-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateX(4px);
+      }
+
+      /* Swipe to delete styles */
+      .daily-entries-item.swiping {
+        transition: transform 0.1s ease-out;
+      }
+
+      .daily-entries-item.swipe-delete {
+        transform: translateX(-100%);
+        opacity: 0;
+        transition: all 0.3s ease-out;
+      }
+
+      .swipe-delete-bg {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(to left, #ff4757, #ff6348);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 20px;
+        color: white;
+        font-weight: bold;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .daily-entries-item.show-delete .swipe-delete-bg {
+        opacity: 1;
+      }
+
+      .entry-points {
+        color: #50c878;
+        font-weight: 600;
+      }
+
+      .entry-date {
+        color: #8b949e;
+        font-weight: 500;
+      }
+
+      .next-rank-name {
+        display: block;
+        font-size: 0.4em;
+        color: #8b949e;
+        font-weight: 400;
+        margin-top: 4px;
+      }
+
+      /* Goal Breakdown Styles */
+      .goal-breakdown {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.8em;
+        line-height: 1.6;
+      }
+
+      .goal-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 0;
+        padding: 8px 12px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        transition: all 0.2s ease;
+      }
+
+      .goal-option:hover {
+        background: rgba(80, 200, 120, 0.1);
+        transform: translateX(4px);
+      }
+
+      .goal-option-label {
+        color: #8b949e;
+        font-weight: 500;
+        font-size: 0.9em;
+      }
+
+      .goal-option-detail {
+        color: #50c878;
+        font-weight: 600;
+      }
+
+      .goal-or {
+        text-align: center;
+        color: #8b949e;
+        font-size: 0.8em;
+        margin: 5px 0;
+        font-style: italic;
+      }
+
+      /* Notification System */
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        z-index: 1000;
+        animation: slideIn 0.3s ease-out;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .notification.success {
+        background: linear-gradient(135deg, #2e6349 0%, #50c878 100%);
+        border: 2px solid #50c878;
+      }
+
+      .notification.error {
+        background: linear-gradient(135deg, #8b0000 0%, #ff6347 100%);
+        border: 2px solid #ff6347;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      /* Ko-fi Button Sizing */
+      .floatingchat-container-wrap {
+        transform: scale(0.85) !important;
+        transform-origin: bottom left !important;
+      }
+
+      @media (max-width: 768px) {
+        .floatingchat-container-wrap {
+          transform: scale(0.7) !important;
+          bottom: 10px !important;
+          left: 10px !important;
+        }
+        
+        .floatingchat-container-wrap iframe {
+          max-width: 50px !important;
+          max-height: 50px !important;
+        }
+      }
+
+      /* Mobile Touch Targets */
+      @media (max-width: 768px) {
+        .quick-action-btn {
+          min-height: 48px;
+          min-width: 48px;
+          font-size: 1.1em;
+        }
+
+        .stat-card {
+          min-height: 120px;
+          cursor: pointer;
+        }
+
+        #currentPointsInput {
+          min-height: 48px;
+          font-size: 2.2em;
+        }
+
+        button {
+          min-height: 48px;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        body {
+          padding: 140px 10px 10px 10px; /* Top padding for nav bar */
+        }
+
+        .logo {
+          max-width: 200px;
+          margin-bottom: 20px;
+        }
+
+        .dashboard {
+          grid-template-columns: 1fr;
+          gap: 15px;
+        }
+
+        .stat-card {
+          padding: 15px;
+        }
+
+        .stat-value {
+          font-size: 2em;
+        }
+
+        .stat-label {
+          font-size: 0.85em;
+        }
+
+        #currentPointsInput {
+          font-size: 2em;
+          width: 120px;
+        }
+
+        /* Make rank ladder horizontally scrollable on mobile */
+        .rank-ladder {
+          padding: 15px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        #rankLadder {
+          display: flex;
+          gap: 12px;
+          padding-bottom: 10px;
+          min-width: max-content;
+        }
+
+        .rank-item {
+          flex: 0 0 auto;
+          width: 280px;
+          display: grid;
+          grid-template-columns: 50px 1fr;
+          grid-template-rows: auto auto auto;
+          gap: 8px;
+          padding: 12px;
+          font-size: 0.85em;
+        }
+
+        .rank-icon {
+          grid-row: 1 / span 3;
+          width: 40px;
+          height: 40px;
+          font-size: 0.7em;
+          margin: auto;
+        }
+
+        .rank-item > div:nth-child(2) {
+          font-weight: bold;
+          font-size: 1em;
+        }
+
+        .rank-item > div:nth-child(3),
+        .rank-item > div:nth-child(4),
+        .rank-item > div:nth-child(5),
+        .rank-item > div:nth-child(6) {
+          font-size: 0.8em;
+        }
+
+        .mini-progress {
+          grid-column: 1 / -1;
+          width: 100%;
+          margin-top: 8px;
+          height: 8px;
+        }
+
+        /* Make reference card mobile-friendly FAB */
+        .reference-card {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          top: auto;
+          transform: none;
+          width: 56px;
+          height: 56px;
+          padding: 0;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #50c878 0%, #00ffcc 100%);
+          box-shadow: 0 4px 12px rgba(80, 200, 120, 0.4);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          overflow: hidden;
+        }
+
+        .reference-card.expanded {
+          width: auto;
+          height: auto;
+          padding: 20px;
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.03);
+          backdrop-filter: blur(10px);
+        }
+
+        .reference-card h3 {
+          display: none;
+        }
+
+        .reference-card.expanded h3 {
+          display: block;
+        }
+
+        .reference-card .reference-item {
+          display: none;
+        }
+
+        .reference-card.expanded .reference-item {
+          display: flex;
+        }
+
+        /* FAB icon */
+        .reference-card::before {
+          content: "?";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 24px;
+          font-weight: bold;
+          color: #0a0a0a;
+        }
+
+        .reference-card.expanded::before {
+          display: none;
+        }
+
+
+        /* Progress section */
+        .progress-section h2 {
+          font-size: 1.3em;
+        }
+
+        .progress-container {
+          height: 35px;
+        }
+
+        .progress-text {
+          font-size: 0.9em;
+        }
+
+        /* Entry display */
+        .daily-tracker {
+          padding: 15px;
+        }
+
+        /* Delete button positioning */
+        .delete-btn {
+          white-space: nowrap;
+          font-size: 0.8em;
+          padding: 4px 8px;
+        }
+      }
+
+      /* Extra small devices */
+      @media (max-width: 480px) {
+        .stat-value {
+          font-size: 1.8em;
+        }
+
+        #currentPointsInput {
+          font-size: 1.8em;
+          width: 100px;
+        }
+
+        .rank-item {
+          font-size: 0.75em;
+        }
+
+        h2 {
+          font-size: 1.2em;
+        }
+      }
+
+      /* Snapshot Styles */
+      .snapshot-container {
+        position: relative;
+        background: #0d1117;
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 20px;
+      }
+
+      .snapshot-stats {
+        margin-top: 30px;
+        text-align: center;
+        padding: 20px;
+        background: rgba(80, 200, 120, 0.05);
+        border: 1px solid rgba(80, 200, 120, 0.2);
+        border-radius: 16px;
+        position: relative;
+      }
+
+      .ss-stat-line {
+        font-size: 1.2em;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .ss-progress-container {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(80, 200, 120, 0.2);
+        border-radius: 50px;
+        padding: 4px;
+        position: relative;
+        height: 40px;
+        overflow: hidden;
+        margin-bottom: 20px;
+      }
+
+      .ss-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #50c878 0%, #00ffcc 100%);
+        border-radius: 50px;
+        transition: width 0.5s ease;
+        box-shadow: 0 0 30px rgba(80, 200, 120, 0.8);
+      }
+
+      .ss-progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: 700;
+        font-size: 1.1em;
+        color: #fff;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        z-index: 10;
+      }
+
+      .ss-watermark {
+        position: absolute;
+        bottom: 10px;
+        right: 15px;
+        font-size: 0.9em;
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 500;
+        letter-spacing: 0.05em;
+      }
+
+      /* Quick Action Buttons - Collapsible */
+      .quick-add-container {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        z-index: 100;
+        transition: all 0.3s ease;
+      }
+
+      .quick-add-toggle {
+        background: linear-gradient(135deg, #50c878, #00ffcc);
+        color: #0a0a0a;
+        border: none;
+        border-radius: 30px;
+        padding: 12px 24px;
+        font-weight: 700;
+        font-size: 0.9em;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(80, 200, 120, 0.4);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+      }
+
+      .quick-add-toggle:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(80, 200, 120, 0.5);
+      }
+
+      .quick-add-toggle.active {
+        background: linear-gradient(135deg, #ff4757, #ff6348);
+        box-shadow: 0 4px 20px rgba(255, 71, 87, 0.4);
+      }
+
+      .quick-actions {
+        position: absolute;
+        bottom: 60px;
+        right: 0;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(80, 200, 120, 0.3);
+        border-radius: 16px;
+        padding: 12px;
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 180px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      }
+
+      .quick-actions.expanded {
+        display: flex;
+        animation: slideUp 0.3s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .quick-action-btn {
+        padding: 10px 16px;
+        background: rgba(80, 200, 120, 0.1);
+        border: 1px solid rgba(80, 200, 120, 0.3);
+        border-radius: 8px;
+        color: #50c878;
+        font-weight: 600;
+        font-size: 0.9em;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+      }
+
+      .quick-action-btn:hover {
+        background: rgba(80, 200, 120, 0.2);
+        border-color: #50c878;
+        transform: translateX(-4px);
+        box-shadow: 0 2px 10px rgba(80, 200, 120, 0.3);
+      }
+
+      .quick-action-btn:active {
+        transform: translateX(0);
+      }
+
+      .quick-action-btn.win {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+        border-color: #ffd700;
+        color: #ffd700;
+      }
+
+      .quick-action-btn.win:hover {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+        box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+      }
+
+      .quick-action-points {
+        font-weight: 800;
+        font-size: 1.1em;
+      }
+
+      /* Mobile positioning */
+      @media (max-width: 768px) {
+        .quick-add-container {
+          bottom: 70px;
+          right: 15px;
+        }
+
+        .quick-add-toggle {
+          padding: 10px 20px;
+          font-size: 0.85em;
+        }
+
+        .quick-actions {
+          right: 0;
+          left: auto;
+          min-width: 160px;
+        }
+      }
+
+      /* Milestone Celebration */
+      .milestone-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        background: linear-gradient(135deg, rgba(138, 43, 226, 0.95), rgba(80, 200, 120, 0.95));
+        padding: 30px;
+        border-radius: 20px;
+        color: white;
+        text-align: center;
+        z-index: 10000;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        animation: milestoneAppear 0.5s ease-out forwards;
+      }
+
+      @keyframes milestoneAppear {
+        to {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      .milestone-title {
+        font-size: 2em;
+        font-weight: 800;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .milestone-message {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+      }
+
+      .milestone-close {
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .milestone-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      /* Progress Ahead/Behind Indicator */
+      .progress-status {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9em;
+        display: inline-block;
+        margin: 10px auto;
+        animation: statusPulse 2s ease-in-out infinite;
+      }
+
+      .progress-status.ahead {
+        background: rgba(80, 200, 120, 0.2);
+        border: 1px solid #50c878;
+        color: #50c878;
+      }
+
+      .progress-status.behind {
+        background: rgba(255, 71, 87, 0.2);
+        border: 1px solid #ff4757;
+        color: #ff4757;
+      }
+
+      .progress-status.on-track {
+        background: rgba(255, 215, 0, 0.2);
+        border: 1px solid #ffd700;
+        color: #ffd700;
+      }
+
+      @keyframes statusPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+      }
+
+      /* Skeleton Loader */
+      .skeleton {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+      }
+
+      @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+
+      .skeleton-text {
+        height: 20px;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+
+      .skeleton-box {
+        height: 100px;
+        border-radius: 12px;
+        margin: 10px 0;
+      }
+
+      /* Edit Points Callout */
+      .edit-callout {
+        position: absolute;
+        top: -45px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+        color: #000;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        animation: bounceCallout 2s ease-in-out infinite;
+        z-index: 100;
+        letter-spacing: 0.5px;
+      }
+
+      .edit-callout::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid #ffed4e;
+      }
+
+      @keyframes bounceCallout {
+        0%, 100% {
+          transform: translateX(-50%) translateY(0);
+        }
+        50% {
+          transform: translateX(-50%) translateY(-5px);
+        }
+      }
+
+      @keyframes fadeOut {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* Hide callout after first interaction */
+      .edit-callout.hidden {
+        display: none;
+      }
+
+      /* Make the parent position relative for absolute positioning */
+      .stat-card.primary .points-input-container {
+        position: relative;
+      }
+
+      /* Share Button */
+      .share-progress-btn {
+        display: block;
+        margin: 40px auto;
+        padding: 20px 48px;
+        background: linear-gradient(135deg, #50c878 0%, #00ffcc 100%);
+        border: 2px solid rgba(80, 200, 120, 0.5);
+        border-radius: 16px;
+        color: #0a0a0a;
+        font-size: 1.3em;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 32px rgba(80, 200, 120, 0.5),
+                    0 0 80px rgba(80, 200, 120, 0.2),
+                    inset 0 0 20px rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+        animation: pulseGlow 2s ease-in-out infinite;
+      }
+
+      @keyframes pulseGlow {
+        0%, 100% {
+          box-shadow: 0 8px 32px rgba(80, 200, 120, 0.5),
+                      0 0 80px rgba(80, 200, 120, 0.2),
+                      inset 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        50% {
+          box-shadow: 0 8px 40px rgba(80, 200, 120, 0.7),
+                      0 0 100px rgba(80, 200, 120, 0.4),
+                      inset 0 0 25px rgba(255, 255, 255, 0.3);
+        }
+      }
+
+      .share-progress-btn:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 12px 40px rgba(80, 200, 120, 0.8),
+                    0 0 120px rgba(80, 200, 120, 0.5),
+                    inset 0 0 30px rgba(255, 255, 255, 0.3);
+        background: linear-gradient(135deg, #5dd885 0%, #00ffdd 100%);
+      }
+
+      .share-progress-btn:active {
+        transform: translateY(0);
+      }
+
+      .share-progress-btn::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.5s, height 0.5s;
+      }
+
+      .share-progress-btn:hover::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      /* Snapshot-specific overrides */
+      .capturing .snapshot-container {
+        box-shadow: 0 0 80px rgba(80, 200, 120, 0.4);
+        background: linear-gradient(135deg, #0d1117 0%, #0a0a0a 100%);
+      }
+
+      .capturing .dashboard {
+        display: none !important;
+      }
+
+      .capturing .progress-section {
+        display: none !important;
+      }
+
+      .capturing .snapshot-stats {
+        display: block !important;
+      }
+
+      @media (max-width: 768px) {
+        .snapshot-container {
+          padding: 20px;
+        }
+
+        .share-progress-btn {
+          font-size: 1.1em;
+          padding: 16px 36px;
+        }
+      }
+    </style>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-GVGKYFGZ1Z");
+    </script>
+    <!-- Load html2canvas from CDN before it's used -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+      <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+      <div class="nav-links">
+        <a href="../index.html" class="nav-link">LOADOUT GENERATOR</a>
+        <a href="../ragequit/index.html" class="nav-link">RAGE QUIT</a>
+        <a href="../patch-notes/index.html" class="nav-link">PATCH NOTES</a>
+        <a href="../meta-weapons/index.html" class="nav-link">META WEAPONS</a>
+        <a href="#" class="nav-link active">WT TRACKER</a>
+      </div>
+    </nav>
+
+    <!-- ARIA Live Region for announcements -->
+    <div
+      aria-live="polite"
+      aria-atomic="true"
+      class="sr-only"
+      id="aria-live-region"
+    ></div>
+
+
+    <!-- Compact Hero Section -->
+    <div style="text-align: center; max-width: 800px; margin: 1rem auto 2rem; padding: 0 1rem;">
+      <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(135deg, #50c878, #20b2aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">World Tour Season 7 Tracker</h1>
+      <p style="font-size: 0.95rem; color: #b0b0b0; margin-bottom: 1rem;">Calculate your path to Emerald rank • Track daily progress</p>
+    </div>
+
+    <div class="container">
+      <!-- Snapshot Container -->
+      <div id="trackerSnapshot" class="snapshot-container">
+        <img
+          src="images/logo.webp"
+          alt="THE FINALS World Tour Season 7 Progress Tracker Logo"
+          class="logo"
+          loading="lazy"
+          onerror="this.src='images/logo.png'; this.onerror=null;"
+        />
+
+        <!-- Progress Status Indicator (moved up) -->
+        <div style="text-align: center; margin: 15px 0;">
+          <div id="progressStatus" class="progress-status on-track">
+            📊 Calculating your pace...
+          </div>
+        </div>
+
+        <!-- Progress Dashboard -->
+        <div class="dashboard">
+          <div class="stat-card primary" style="border: 2px solid #50c878; background: linear-gradient(135deg, rgba(80, 200, 120, 0.1) 0%, rgba(80, 200, 120, 0.05) 100%); box-shadow: 0 0 20px rgba(80, 200, 120, 0.2);">
+            <div class="stat-label">Current Points</div>
+            <div class="points-input-container">
+              <div class="edit-callout" id="editCallout">
+                👆 Click to edit!
+              </div>
+              <input
+                type="number"
+                id="currentPointsInput"
+                value="400"
+                min="0"
+                max="2400"
+                aria-label="Current points"
+                title="Click to edit your current points"
+              />
+            </div>
+          </div>
+          <div class="stat-card warning">
+            <div class="stat-label">Days Remaining</div>
+            <div class="stat-value" id="daysRemaining" style="font-size: 3.5em;">60</div>
+          </div>
+          <div class="stat-card primary">
+            <div class="stat-label">Points Needed Per Day</div>
+            <div class="stat-value" id="pointsPerDay" style="font-size: 3.5em;">32</div>
+            <div class="goal-breakdown" id="goalBreakdown"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Completion</div>
+            <div class="stat-value" id="completion">16.7%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Points to Next Rank</div>
+            <div class="stat-value" id="pointsToNext">
+              <span class="next-rank-points">50</span>
+              <span class="next-rank-name"></span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Projected Completion</div>
+            <div class="stat-value" id="projectedDate">Sept 12</div>
+          </div>
+        </div>
+
+        <!-- Main Progress Bar -->
+        <div class="progress-section">
+          <h2>Progress to Emerald 1</h2>
+          <div class="progress-container">
+            <div
+              class="progress-bar"
+              id="mainProgress"
+              style="width: 16.7%"
+            ></div>
+            <div class="progress-text">400 / 2400</div>
+          </div>
+          <div class="pace-indicator" id="paceIndicator"></div>
+        </div>
+
+        <!-- Snapshot Stats for Sharing -->
+        <div class="snapshot-stats" style="display: none">
+          <div class="ss-stat-line">
+            <span id="ss-points"></span> Points • <span id="ss-pace"></span> •
+            ETA: <span id="ss-eta"></span>
+          </div>
+          <div class="ss-progress-container">
+            <div class="ss-progress-bar" id="ss-progress-bar"></div>
+            <div class="ss-progress-text" id="ss-progress-text"></div>
+          </div>
+          <div class="ss-watermark">thefinalsloadout.com</div>
+        </div>
+      </div>
+      <!-- End Snapshot Container -->
+
+      <!-- Quick Add Container (Floating) -->
+      <div class="quick-add-container">
+        <button class="quick-add-toggle" id="quickAddToggle" onclick="toggleQuickAdd()">
+          <span id="toggleIcon">⚡</span>
+          <span id="toggleText">Quick Add Points</span>
+        </button>
+        <div class="quick-actions" id="quickActions">
+          <button class="quick-action-btn win" onclick="quickAddPoints(25)">
+            <span>🏆 Win</span>
+            <span class="quick-action-points">+25</span>
+          </button>
+          <button class="quick-action-btn" onclick="quickAddPoints(14)">
+            <span>🥈 2nd Place</span>
+            <span class="quick-action-points">+14</span>
+          </button>
+          <button class="quick-action-btn" onclick="quickAddPoints(6)">
+            <span>🔄 Round 2</span>
+            <span class="quick-action-points">+6</span>
+          </button>
+          <button class="quick-action-btn" onclick="quickAddPoints(2)">
+            <span>⚡ Round 1</span>
+            <span class="quick-action-points">+2</span>
+          </button>
+          <button id="undoButton" class="quick-action-btn" onclick="undoLastAdd()" style="border-color: #ff4757; color: #ff4757;">
+            <span>↩️ Undo</span>
+            <span class="quick-action-points" id="undoPoints">-0</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Share Button -->
+      <button id="shareProgressBtn" class="share-progress-btn">
+        📸 Share My Progress
+      </button>
+
+      <!-- Rank Ladder -->
+      <div class="rank-ladder">
+        <h2 style="color: #50c878; margin-bottom: 20px">Rank Ladder</h2>
+        <div id="rankLadder"></div>
+      </div>
+
+
+    </div>
+
+    <script>
+      // Notification system with ARIA announcements
+      function showNotification(message, type = "success") {
+        const notification = document.createElement("div");
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        // Announce to screen readers
+        announceToScreenReader(message);
+
+        setTimeout(() => {
+          notification.style.animation = "slideIn 0.3s ease-out reverse";
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }
+
+      // Screen reader announcement function
+      function announceToScreenReader(message) {
+        const liveRegion = document.getElementById("aria-live-region");
+        if (liveRegion) {
+          liveRegion.textContent = message;
+          // Clear after announcement
+          setTimeout(() => {
+            liveRegion.textContent = "";
+          }, 1000);
+        }
+      }
+
+      // Confetti Animation System
+      function createConfetti() {
+        const colors = [
+          "#50c878",
+          "#00ffcc",
+          "#FFD700",
+          "#87CEEB",
+          "#E5E4E2",
+          "#8a2be2",
+        ];
+        const confettiCount = 150;
+        const container = document.createElement("div");
+        container.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 10000;
+        `;
+
+        for (let i = 0; i < confettiCount; i++) {
+          const confetti = document.createElement("div");
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          const size = Math.random() * 10 + 5;
+          const left = Math.random() * 100;
+          const animationDelay = Math.random() * 3;
+          const animationDuration = Math.random() * 3 + 2;
+
+          confetti.style.cssText = `
+            position: absolute;
+            background-color: ${color};
+            width: ${size}px;
+            height: ${size}px;
+            left: ${left}%;
+            top: -20px;
+            opacity: 1;
+            transform: rotate(${Math.random() * 360}deg);
+            animation: confettiFall ${animationDuration}s linear ${animationDelay}s forwards;
+          `;
+
+          container.appendChild(confetti);
+        }
+
+        document.body.appendChild(container);
+
+        // Remove confetti after animation
+        setTimeout(() => {
+          container.remove();
+        }, 6000);
+      }
+
+      // Add CSS animation for confetti
+      const style = document.createElement("style");
+      style.textContent = `
+        @keyframes confettiFall {
+          0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Rank data
+      const ranks = [
+        { name: "Gold 4", points: 375, icon: "G4" },
+        { name: "Gold 3", points: 450, icon: "G3" },
+        { name: "Gold 2", points: 525, icon: "G2" },
+        { name: "Gold 1", points: 600, icon: "G1" },
+        { name: "Platinum 4", points: 700, icon: "P4" },
+        { name: "Platinum 3", points: 800, icon: "P3" },
+        { name: "Platinum 2", points: 900, icon: "P2" },
+        { name: "Platinum 1", points: 1000, icon: "P1" },
+        { name: "Diamond 4", points: 1150, icon: "D4" },
+        { name: "Diamond 3", points: 1300, icon: "D3" },
+        { name: "Diamond 2", points: 1450, icon: "D2" },
+        { name: "Diamond 1", points: 1600, icon: "D1" },
+        { name: "Emerald 4", points: 1800, icon: "E4" },
+        { name: "Emerald 3", points: 2000, icon: "E3" },
+        { name: "Emerald 2", points: 2200, icon: "E2" },
+        { name: "Emerald 1", points: 2400, icon: "E1" },
+      ];
+
+      // Data Integrity & Recovery System
+      class DataIntegrityManager {
+        constructor() {
+          this.version = "1.0";
+          this.backupKey = "wt_progress_backup";
+          this.lastValidationKey = "wt_last_validation";
+        }
+
+        // Create a backup of current data
+        createBackup() {
+          const backup = {
+            version: this.version,
+            timestamp: new Date().toISOString(),
+            currentPoints: currentPoints,
+            dailyEntries: dailyEntries,
+            seasonStartDate: SEASON_START_DATE,
+            seasonEndDate: SEASON_END_DATE,
+          };
+
+          try {
+            localStorage.setItem(this.backupKey, JSON.stringify(backup));
+            console.log("Backup created successfully");
+          } catch (e) {
+            console.error("Failed to create backup:", e);
+          }
+        }
+
+        // Validate data integrity
+        validateData() {
+          const issues = [];
+
+          // Check 1: Verify running totals
+          let calculatedTotal = 0;
+          dailyEntries.forEach((entry, index) => {
+            calculatedTotal += entry.points;
+
+            if (entry.total !== calculatedTotal) {
+              issues.push({
+                type: "total_mismatch",
+                index: index,
+                expected: calculatedTotal,
+                actual: entry.total,
+                entry: entry,
+              });
+            }
+
+            // Check 2: Verify points are within reasonable range
+            if (Math.abs(entry.points) > 100) {
+              issues.push({
+                type: "suspicious_points",
+                index: index,
+                points: entry.points,
+                entry: entry,
+              });
+            }
+          });
+
+          // Check 3: Verify current points matches last entry
+          if (dailyEntries.length > 0) {
+            const lastEntry = dailyEntries[dailyEntries.length - 1];
+            if (lastEntry.total !== currentPoints) {
+              issues.push({
+                type: "current_points_mismatch",
+                expected: lastEntry.total,
+                actual: currentPoints,
+              });
+            }
+          }
+
+          // Check 4: Check for duplicate dates
+          const dateCounts = {};
+          dailyEntries.forEach((entry, index) => {
+            if (dateCounts[entry.date]) {
+              issues.push({
+                type: "duplicate_date",
+                date: entry.date,
+                indices: [dateCounts[entry.date].index, index],
+              });
+            } else {
+              dateCounts[entry.date] = { index: index };
+            }
+          });
+
+          return issues;
+        }
+
+        // Auto-repair data issues
+        repairData(issues) {
+          let repaired = false;
+
+          issues.forEach((issue) => {
+            switch (issue.type) {
+              case "total_mismatch":
+                // Fix running totals
+                dailyEntries[issue.index].total = issue.expected;
+                repaired = true;
+                break;
+
+              case "current_points_mismatch":
+                // Fix current points to match last entry
+                currentPoints = issue.expected;
+                localStorage.setItem("currentPoints", currentPoints);
+                document.getElementById("currentPointsInput").value =
+                  currentPoints;
+                repaired = true;
+                break;
+            }
+          });
+
+          if (repaired) {
+            localStorage.setItem("dailyEntries", JSON.stringify(dailyEntries));
+            this.createBackup();
+          }
+
+          return repaired;
+        }
+
+        // Restore from backup
+        restoreFromBackup() {
+          try {
+            const backupData = localStorage.getItem(this.backupKey);
+            if (!backupData) {
+              showNotification("No backup found", "error");
+              return false;
+            }
+
+            const backup = JSON.parse(backupData);
+
+            // Confirm with user
+            const backupDate = new Date(backup.timestamp).toLocaleString();
+            if (
+              confirm(
+                `Restore data from backup created on ${backupDate}? This will overwrite current data.`
+              )
+            ) {
+              currentPoints = backup.currentPoints;
+              dailyEntries = backup.dailyEntries;
+
+              // Save restored data
+              localStorage.setItem("currentPoints", currentPoints);
+              localStorage.setItem(
+                "dailyEntries",
+                JSON.stringify(dailyEntries)
+              );
+
+              // Update UI
+              document.getElementById("currentPointsInput").value =
+                currentPoints;
+              updateDashboard();
+              renderRankLadder();
+              // renderDailyEntries(); // Removed - Daily Progress feature removed
+
+              showNotification("Data restored successfully", "success");
+              return true;
+            }
+          } catch (e) {
+            console.error("Failed to restore backup:", e);
+            showNotification("Failed to restore backup", "error");
+          }
+
+          return false;
+        }
+
+        // Run validation and show results
+        runValidation() {
+          const issues = this.validateData();
+
+          if (issues.length === 0) {
+            console.log("Data validation passed");
+            localStorage.setItem(
+              this.lastValidationKey,
+              new Date().toISOString()
+            );
+            return true;
+          }
+
+          console.warn("Data validation found issues:", issues);
+
+          // Show user the issues
+          let message = "Data integrity issues found:\n\n";
+          issues.forEach((issue) => {
+            switch (issue.type) {
+              case "total_mismatch":
+                message += `• Running total mismatch on ${issue.entry.date}\n`;
+                break;
+              case "current_points_mismatch":
+                message += `• Current points don't match last entry\n`;
+                break;
+              case "duplicate_date":
+                message += `• Duplicate entries for ${issue.date}\n`;
+                break;
+              case "suspicious_points":
+                message += `• Unusual points value (${issue.points}) on ${issue.entry.date}\n`;
+                break;
+            }
+          });
+
+          message += "\nWould you like to auto-repair these issues?";
+
+          if (confirm(message)) {
+            if (this.repairData(issues)) {
+              showNotification("Data repaired successfully", "success");
+              updateDashboard();
+              renderRankLadder();
+              // renderDailyEntries(); // Removed - Daily Progress feature removed
+            }
+          }
+
+          return false;
+        }
+      }
+
+      // Initialize data integrity manager
+      const dataIntegrity = new DataIntegrityManager();
+
+      // Performance Caching System
+      class PerformanceCache {
+        constructor() {
+          this.cache = new Map();
+          this.dependencies = new Map();
+          this.maxCacheSize = 50; // Limit cache size
+          this.cacheHits = 0;
+          this.cacheMisses = 0;
+        }
+
+        // Generate cache key from function name and dependencies
+        generateKey(functionName, ...deps) {
+          return `${functionName}_${deps.join("_")}`;
+        }
+
+        // Get cached value or compute and cache
+        getOrCompute(functionName, computeFn, ...dependencies) {
+          const key = this.generateKey(functionName, ...dependencies);
+
+          // Check cache
+          if (this.cache.has(key)) {
+            this.cacheHits++;
+            return this.cache.get(key);
+          }
+
+          // Cache miss - compute value
+          this.cacheMisses++;
+          const value = computeFn();
+
+          // Store in cache
+          this.cache.set(key, value);
+
+          // Track dependencies for invalidation
+          dependencies.forEach((dep) => {
+            if (!this.dependencies.has(dep)) {
+              this.dependencies.set(dep, new Set());
+            }
+            this.dependencies.get(dep).add(key);
+          });
+
+          // Limit cache size
+          if (this.cache.size > this.maxCacheSize) {
+            const firstKey = this.cache.keys().next().value;
+            this.cache.delete(firstKey);
+          }
+
+          return value;
+        }
+
+        // Invalidate cache entries that depend on a value
+        invalidate(...dependencies) {
+          dependencies.forEach((dep) => {
+            if (this.dependencies.has(dep)) {
+              this.dependencies.get(dep).forEach((key) => {
+                this.cache.delete(key);
+              });
+              this.dependencies.delete(dep);
+            }
+          });
+        }
+
+        // Clear entire cache
+        clear() {
+          this.cache.clear();
+          this.dependencies.clear();
+        }
+
+        // Get cache statistics
+        getStats() {
+          const total = this.cacheHits + this.cacheMisses;
+          const hitRate =
+            total > 0 ? ((this.cacheHits / total) * 100).toFixed(1) : 0;
+          return {
+            hits: this.cacheHits,
+            misses: this.cacheMisses,
+            hitRate: `${hitRate}%`,
+            size: this.cache.size,
+          };
+        }
+      }
+
+      // Initialize performance cache
+      const perfCache = new PerformanceCache();
+
+      // Safe localStorage access with corruption recovery
+      function safeLocalStorageGet(key, defaultValue) {
+        try {
+          const value = localStorage.getItem(key);
+          if (value === null) return defaultValue;
+
+          // For JSON data
+          if (typeof defaultValue === "object") {
+            return JSON.parse(value);
+          }
+
+          // For numeric data
+          if (typeof defaultValue === "number") {
+            const parsed = parseInt(value);
+            return isNaN(parsed) ? defaultValue : parsed;
+          }
+
+          return value;
+        } catch (e) {
+          console.error(`Failed to read ${key} from localStorage:`, e);
+
+          // Attempt recovery from backup
+          if (key === "dailyEntries" || key === "currentPoints") {
+            try {
+              const backup = localStorage.getItem("wt_progress_backup");
+              if (backup) {
+                const backupData = JSON.parse(backup);
+                showNotification(
+                  "Recovered data from backup due to corruption",
+                  "success"
+                );
+
+                if (key === "dailyEntries")
+                  return backupData.dailyEntries || defaultValue;
+                if (key === "currentPoints")
+                  return backupData.currentPoints || defaultValue;
+              }
+            } catch (backupError) {
+              console.error("Backup recovery also failed:", backupError);
+            }
+          }
+
+          return defaultValue;
+        }
+      }
+
+      // Google Analytics Event Tracking
+      function trackEvent(action, label, value) {
+        if (typeof gtag !== 'undefined') {
+          gtag('event', action, {
+            'event_category': 'World Tour Tracker',
+            'event_label': label,
+            'value': value
+          });
+        }
+      }
+
+      // State - with localStorage and corruption recovery
+      let currentPoints = safeLocalStorageGet("currentPoints", 400);
+      let dailyEntries = safeLocalStorageGet("dailyEntries", []);
+      let previousRank = null; // Track previous rank for confetti trigger
+      let lastAddedPoints = 0; // Track the last points added for undo functionality
+
+      // Season dates configuration
+      const SEASON_START_DATE =
+        localStorage.getItem("seasonStartDate") || "2025-06-12";
+      const SEASON_END_DATE =
+        localStorage.getItem("seasonEndDate") || "2025-09-10";
+
+      const startDate = new Date(SEASON_START_DATE);
+      const endDate = new Date(SEASON_END_DATE);
+      const today = new Date();
+
+      startDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+      endDate.setHours(23, 59, 59, 999); // End of the last day
+
+      let daysRemaining = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
+      const totalSeasonDays = Math.ceil(
+        (endDate - startDate) / (1000 * 60 * 60 * 24)
+      );
+      const daysElapsed = Math.max(
+        0,
+        Math.ceil((today - startDate) / (1000 * 60 * 60 * 24))
+      );
+
+      // Prevent negative or zero days
+      if (daysRemaining <= 0) {
+        daysRemaining = 1; // Minimum 1 day to prevent division by zero
+        console.warn("Season has ended or ends today");
+      }
+
+      // Function to initialize form inputs (will be called after DOM is ready)
+      function initializeFormInputs() {
+        // Only initialize currentPointsInput now since Daily Progress is removed
+        const currentPointsInputEl = document.getElementById("currentPointsInput");
+        const editCallout = document.getElementById("editCallout");
+        
+        if (currentPointsInputEl) {
+          currentPointsInputEl.value = currentPoints;
+          
+          // Hide callout on first interaction
+          const hideCallout = () => {
+            if (editCallout && !editCallout.classList.contains('hidden')) {
+              editCallout.classList.add('hidden');
+              localStorage.setItem('calloutHidden', 'true');
+            }
+          };
+          
+          // Check if callout was already hidden
+          if (localStorage.getItem('calloutHidden') === 'true' && editCallout) {
+            editCallout.classList.add('hidden');
+          }
+          
+          // Hide callout after 5 seconds if not interacted with
+          setTimeout(() => {
+            if (editCallout && !editCallout.classList.contains('hidden')) {
+              editCallout.style.animation = 'fadeOut 0.5s ease-out forwards';
+              setTimeout(() => {
+                editCallout.classList.add('hidden');
+              }, 500);
+            }
+          }, 5000);
+          
+          // Handle input interactions
+          currentPointsInputEl.addEventListener('click', hideCallout);
+          currentPointsInputEl.addEventListener('focus', hideCallout);
+          currentPointsInputEl.addEventListener('input', hideCallout);
+        }
+      }
+
+      // Debug: Log cache stats periodically (can be removed in production)
+      if (window.location.search.includes("debug")) {
+        setInterval(() => {
+          console.log("Cache Stats:", perfCache.getStats());
+        }, 10000);
+      }
+
+      // Debounce function for performance
+      function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      }
+
+      // Add event listeners for current points input with debouncing
+      const debouncedUpdate = debounce(updateCurrentPoints, 300);
+
+      document
+        .getElementById("currentPointsInput")
+        .addEventListener("input", function (e) {
+          debouncedUpdate(e.target.value);
+        });
+
+      document
+        .getElementById("currentPointsInput")
+        .addEventListener("change", function (e) {
+          updateCurrentPoints(e.target.value);
+        });
+
+      // Run data validation on startup
+      setTimeout(() => {
+        dataIntegrity.runValidation();
+      }, 500);
+
+      // Re-validate when window regains focus (in case of external changes)
+      window.addEventListener("focus", () => {
+        const storedPoints = safeLocalStorageGet(
+          "currentPoints",
+          currentPoints
+        );
+        const storedEntries = safeLocalStorageGet("dailyEntries", dailyEntries);
+
+        if (
+          storedPoints !== currentPoints ||
+          JSON.stringify(storedEntries) !== JSON.stringify(dailyEntries)
+        ) {
+          console.log("Detected external data change, reloading...");
+          location.reload();
+        }
+      });
+
+      // Wrap initialization in DOMContentLoaded to ensure DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          initializeFormInputs(); // Initialize the points input
+          updateDashboard();
+          renderRankLadder();
+          updateUndoButton(); // Initialize undo button state
+          // renderDailyEntries(); // Removed - Daily Progress feature removed
+        });
+      } else {
+        // DOM is already ready
+        initializeFormInputs(); // Initialize the points input
+        updateDashboard();
+        renderRankLadder();
+        updateUndoButton(); // Initialize undo button state
+        // renderDailyEntries(); // Removed - Daily Progress feature removed
+      }
+
+      function updateCurrentPoints(value) {
+        let newPoints = parseInt(value) || 0;
+        // Validate points range
+        newPoints = Math.max(0, Math.min(2400, newPoints));
+
+        // Check for rank achievement before updating
+        const oldRank = getCurrentRank(currentPoints);
+        const newRank = getCurrentRank(newPoints);
+
+        currentPoints = newPoints;
+
+        // Update the input if value was clamped
+        document.getElementById("currentPointsInput").value = currentPoints;
+
+        localStorage.setItem("currentPoints", currentPoints);
+
+        // Invalidate caches that depend on currentPoints
+        perfCache.invalidate(currentPoints);
+
+        updateDashboard();
+        renderRankLadder();
+
+        // Check if we reached a new rank
+        if (oldRank && newRank && oldRank.points < newRank.points) {
+          createConfetti();
+          showNotification(
+            `🎉 Congratulations! You've reached ${newRank.name}!`,
+            "success"
+          );
+          announceToScreenReader(
+            `Congratulations! You've reached ${newRank.name}!`
+          );
+        }
+
+        // Create backup after points change
+        dataIntegrity.createBackup();
+      }
+
+      function getCurrentRank(points) {
+        for (let i = ranks.length - 1; i >= 0; i--) {
+          if (points >= ranks[i].points) {
+            return ranks[i];
+          }
+        }
+        return null;
+      }
+
+      function calculateAveragePointsPerDay() {
+        return perfCache.getOrCompute(
+          "avgPointsPerDay",
+          () => {
+            // Calculate average based on total points earned since season start
+            const seasonStart = new Date(SEASON_START_DATE);
+            const today = new Date();
+
+            // Set to start of day for accurate calculation
+            seasonStart.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+
+            // Calculate days since season start
+            const daysSinceStart = Math.max(
+              1,
+              Math.ceil((today - seasonStart) / (1000 * 60 * 60 * 24))
+            );
+
+            // Average points per day = current points / days since start
+            return currentPoints / daysSinceStart;
+          },
+          currentPoints,
+          SEASON_START_DATE
+        );
+      }
+
+      function animateValue(element, newValue) {
+        element.textContent = newValue;
+        element.classList.add("updating");
+        setTimeout(() => element.classList.remove("updating"), 500);
+      }
+
+      // Smart Goal Decomposition Functions
+      function decomposeGoal(dailyPoints) {
+        return perfCache.getOrCompute(
+          "goalDecomposition",
+          () => {
+            const pointValues = {
+              first: 25,
+              second: 14,
+              round2: 6,
+              round1: 2,
+            };
+
+            const combinations = [];
+
+            // Calculate all reasonable combinations
+            // Option 1: First place focus
+            const firstPlaceOnly = Math.ceil(dailyPoints / pointValues.first);
+            if (firstPlaceOnly <= 3) {
+              combinations.push({
+                label: "Win",
+                detail: `${firstPlaceOnly} match${
+                  firstPlaceOnly > 1 ? "es" : ""
+                }`,
+                matches: firstPlaceOnly,
+                difficulty: "high",
+              });
+            }
+
+            // Option 2: Second place focus
+            const secondPlaceOnly = Math.ceil(dailyPoints / pointValues.second);
+            if (secondPlaceOnly <= 4) {
+              combinations.push({
+                label: "2nd Place",
+                detail: `${secondPlaceOnly} time${
+                  secondPlaceOnly > 1 ? "s" : ""
+                }`,
+                matches: secondPlaceOnly,
+                difficulty: "medium",
+              });
+            }
+
+            // Option 3: Mixed approach (most realistic)
+            if (dailyPoints >= pointValues.first) {
+              const remaining = dailyPoints - pointValues.first;
+              const seconds = Math.ceil(remaining / pointValues.second);
+              if (seconds <= 2) {
+                combinations.push({
+                  label: "Mixed",
+                  detail: `1 win + ${
+                    seconds > 0
+                      ? seconds + " second" + (seconds > 1 ? "s" : "")
+                      : "nothing else"
+                  }`,
+                  matches: 1 + seconds,
+                  difficulty: "medium",
+                });
+              }
+            }
+
+            // Option 4: Conservative approach (round 2 qualifications)
+            const round2Only = Math.ceil(dailyPoints / pointValues.round2);
+            if (round2Only <= 8) {
+              combinations.push({
+                label: "Qualify R2",
+                detail: `${round2Only} time${round2Only > 1 ? "s" : ""}`,
+                matches: round2Only,
+                difficulty: "low",
+              });
+            }
+
+            // Option 5: Volume approach
+            const volumeApproach = Math.ceil(
+              dailyPoints / ((pointValues.round2 + pointValues.round1) / 2)
+            );
+            if (volumeApproach >= 8 && volumeApproach <= 15) {
+              combinations.push({
+                label: "Volume",
+                detail: `${volumeApproach} matches (mixed results)`,
+                matches: volumeApproach,
+                difficulty: "low",
+              });
+            }
+
+            return combinations.slice(0, 3); // Return top 3 most reasonable options
+          },
+          dailyPoints
+        );
+      }
+
+      function renderGoalBreakdown(dailyPoints) {
+        const breakdownElement = document.getElementById("goalBreakdown");
+
+        if (dailyPoints <= 0 || currentPoints >= 2400) {
+          breakdownElement.innerHTML = "";
+          return;
+        }
+
+        const combinations = decomposeGoal(dailyPoints);
+
+        if (combinations.length === 0) {
+          breakdownElement.innerHTML =
+            '<div class="goal-option-label">Target too high for reasonable daily play</div>';
+          return;
+        }
+
+        let html = "";
+        combinations.forEach((combo, index) => {
+          if (index > 0) {
+            html += '<div class="goal-or">OR</div>';
+          }
+          html += `
+            <div class="goal-option">
+              <span class="goal-option-label">${combo.label}:</span>
+              <span class="goal-option-detail">${combo.detail}</span>
+            </div>
+          `;
+        });
+
+        breakdownElement.innerHTML = html;
+      }
+
+      // Toggle Quick Add Menu
+      function toggleQuickAdd() {
+        const quickActions = document.getElementById('quickActions');
+        const toggleBtn = document.getElementById('quickAddToggle');
+        const toggleText = document.getElementById('toggleText');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        if (quickActions.classList.contains('expanded')) {
+          quickActions.classList.remove('expanded');
+          toggleBtn.classList.remove('active');
+          toggleText.textContent = 'Quick Add Points';
+          toggleIcon.textContent = '⚡';
+        } else {
+          quickActions.classList.add('expanded');
+          toggleBtn.classList.add('active');
+          toggleText.textContent = 'Close';
+          toggleIcon.textContent = '✕';
+        }
+      }
+
+      // Close quick add menu when clicking outside
+      document.addEventListener('click', function(e) {
+        const container = document.querySelector('.quick-add-container');
+        if (container && !container.contains(e.target)) {
+          const quickActions = document.getElementById('quickActions');
+          const toggleBtn = document.getElementById('quickAddToggle');
+          const toggleText = document.getElementById('toggleText');
+          const toggleIcon = document.getElementById('toggleIcon');
+          
+          if (quickActions && quickActions.classList.contains('expanded')) {
+            quickActions.classList.remove('expanded');
+            toggleBtn.classList.remove('active');
+            toggleText.textContent = 'Quick Add Points';
+            toggleIcon.textContent = '⚡';
+          }
+        }
+      });
+
+      // Update undo button display
+      function updateUndoButton() {
+        const undoPointsSpan = document.getElementById("undoPoints");
+        const undoButton = document.getElementById("undoButton");
+        if (lastAddedPoints > 0) {
+          undoPointsSpan.textContent = `-${lastAddedPoints}`;
+          undoButton.disabled = false;
+          undoButton.style.opacity = "1";
+        } else {
+          undoPointsSpan.textContent = "-0";
+          undoButton.disabled = true;
+          undoButton.style.opacity = "0.5";
+        }
+      }
+
+      // Undo last added points
+      function undoLastAdd() {
+        if (lastAddedPoints > 0) {
+          const oldPoints = currentPoints;
+          currentPoints = Math.max(0, currentPoints - lastAddedPoints);
+          
+          // Update input
+          document.getElementById("currentPointsInput").value = currentPoints;
+          
+          // Save to localStorage
+          localStorage.setItem("currentPoints", currentPoints);
+          
+          // Reset last added points
+          lastAddedPoints = 0;
+          updateUndoButton();
+          
+          // Check for rank milestone (in case we go down a rank)
+          checkMilestone(oldPoints, currentPoints);
+          
+          // Update dashboard
+          updateDashboard();
+          renderRankLadder();
+          
+          // Visual feedback
+          const input = document.getElementById("currentPointsInput");
+          input.classList.add("updating");
+          setTimeout(() => input.classList.remove("updating"), 300);
+        }
+      }
+
+      // Quick Add Points Function
+      function quickAddPoints(points) {
+        const oldPoints = currentPoints;
+        currentPoints = Math.max(0, Math.min(2400, currentPoints + points));
+        
+        // Track last added points for undo (but not if this is an undo operation)
+        if (points > 0) {
+          lastAddedPoints = points;
+          updateUndoButton();
+        }
+        
+        // Update input
+        document.getElementById("currentPointsInput").value = currentPoints;
+        
+        // Save to localStorage
+        localStorage.setItem("currentPoints", currentPoints);
+        
+        // Check for rank milestone
+        checkMilestone(oldPoints, currentPoints);
+        
+        // Update dashboard
+        updateDashboard();
+        renderRankLadder();
+        
+        // Visual feedback
+        const input = document.getElementById("currentPointsInput");
+        input.classList.add("updating");
+        setTimeout(() => input.classList.remove("updating"), 500);
+        
+        // Show notification
+        if (points > 0) {
+          showNotification(`+${points} points added! Total: ${currentPoints}`, "success");
+        } else {
+          showNotification(`${points} points removed. Total: ${currentPoints}`, "success");
+        }
+        
+        // Close the quick add menu after use
+        const quickActions = document.getElementById('quickActions');
+        const toggleBtn = document.getElementById('quickAddToggle');
+        const toggleText = document.getElementById('toggleText');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        if (quickActions && quickActions.classList.contains('expanded')) {
+          setTimeout(() => {
+            quickActions.classList.remove('expanded');
+            toggleBtn.classList.remove('active');
+            toggleText.textContent = 'Quick Add Points';
+            toggleIcon.textContent = '⚡';
+          }, 300);
+        }
+      }
+
+      // Check for Rank Milestones
+      function checkMilestone(oldPoints, newPoints) {
+        for (let rank of ranks) {
+          if (oldPoints < rank.points && newPoints >= rank.points) {
+            // Reached a new rank!
+            showMilestonePopup(rank);
+            createConfetti();
+            break;
+          }
+        }
+      }
+
+      // Show Milestone Popup
+      function showMilestonePopup(rank) {
+        const popup = document.createElement("div");
+        popup.className = "milestone-popup";
+        
+        let motivationalMessage = "";
+        if (rank.name.includes("Gold")) {
+          motivationalMessage = "You're off to a great start! Keep pushing!";
+        } else if (rank.name.includes("Platinum")) {
+          motivationalMessage = "Platinum player! You're in the top tier!";
+        } else if (rank.name.includes("Diamond")) {
+          motivationalMessage = "Diamond hands! Elite status achieved!";
+        } else if (rank.name.includes("Emerald")) {
+          motivationalMessage = "LEGENDARY! You're among the best!";
+        }
+        
+        popup.innerHTML = `
+          <div class="milestone-title">🎉 ${rank.name} Unlocked!</div>
+          <div class="milestone-message">${motivationalMessage}</div>
+          <div style="font-size: 0.9em; opacity: 0.8; margin-bottom: 15px;">
+            ${rank.points} points achieved
+          </div>
+          <button class="milestone-close" onclick="this.parentElement.remove()">Continue</button>
+        `;
+        
+        document.body.appendChild(popup);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+          if (popup.parentNode) {
+            popup.style.animation = "milestoneAppear 0.5s ease-out reverse";
+            setTimeout(() => popup.remove(), 500);
+          }
+        }, 5000);
+      }
+
+      // Update Progress Status
+      function updateProgressStatus() {
+        const statusElement = document.getElementById("progressStatus");
+        if (!statusElement) return;
+        
+        const avgPointsPerDay = calculateAveragePointsPerDay();
+        const requiredPointsPerDay = daysRemaining > 0 ? 
+          Math.ceil((2400 - currentPoints) / daysRemaining) : 0;
+        
+        let status = "on-track";
+        let message = "";
+        
+        if (currentPoints >= 2400) {
+          status = "ahead";
+          message = "🏆 Emerald 1 Achieved! Congratulations!";
+        } else if (avgPointsPerDay === 0) {
+          message = "📊 Start earning points to see your pace";
+        } else if (avgPointsPerDay > requiredPointsPerDay * 1.2) {
+          status = "ahead";
+          // Calculate how many days it will take to reach 2400 at current pace
+          const daysToComplete = Math.ceil((2400 - currentPoints) / avgPointsPerDay);
+          // Days ahead = days remaining - days needed to complete
+          const daysAhead = Math.floor(daysRemaining - daysToComplete);
+          message = `🚀 ${daysAhead} days ahead of schedule!`;
+        } else if (avgPointsPerDay < requiredPointsPerDay * 0.8) {
+          status = "behind";
+          const extraPointsNeeded = Math.ceil(requiredPointsPerDay - avgPointsPerDay);
+          message = `⚠️ Need ${extraPointsNeeded} more points/day`;
+        } else {
+          status = "on-track";
+          message = `✅ On track! Keep up the pace!`;
+        }
+        
+        statusElement.className = `progress-status ${status}`;
+        statusElement.innerHTML = message;
+      }
+
+      function updateDashboard() {
+        const pointsNeeded = Math.max(0, 2400 - currentPoints);
+        const pointsPerDay =
+          daysRemaining > 0 ? Math.ceil(pointsNeeded / daysRemaining) : 0;
+        const completion = ((currentPoints / 2400) * 100).toFixed(1);
+
+        // Calculate pace-based projection with date
+        let projectedMessage;
+
+        if (currentPoints >= 2400) {
+          // Player has already reached Emerald 1
+          projectedMessage = "Complete!";
+        } else {
+          // Calculate average points per day since season start
+          const avgPointsPerDay = calculateAveragePointsPerDay();
+
+          if (avgPointsPerDay > 0) {
+            // Calculate days needed to complete at current pace
+            const daysToComplete = Math.ceil(pointsNeeded / avgPointsPerDay);
+
+            // Calculate projected completion date
+            const projectedDate = new Date();
+            projectedDate.setDate(projectedDate.getDate() + daysToComplete);
+
+            // Check if projection is before season end
+            const seasonEnd = new Date(SEASON_END_DATE);
+
+            if (projectedDate <= seasonEnd) {
+              // Format the date as "Aug 2"
+              projectedMessage = projectedDate.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              });
+            } else {
+              projectedMessage = "Not on Track";
+            }
+          } else {
+            // Player hasn't started earning points yet
+            projectedMessage = "Not on Track";
+          }
+        }
+
+        // Find next rank
+        let pointsToNext = 0;
+        let nextRankName = "Emerald 1";
+        for (let rank of ranks) {
+          if (rank.points > currentPoints) {
+            pointsToNext = rank.points - currentPoints;
+            nextRankName = rank.name;
+            break;
+          }
+        }
+
+        // Update UI with animations
+        animateValue(document.getElementById("daysRemaining"), daysRemaining);
+        animateValue(document.getElementById("pointsPerDay"), pointsPerDay);
+        animateValue(document.getElementById("completion"), completion + "%");
+        animateValue(
+          document.querySelector("#pointsToNext .next-rank-points"),
+          pointsToNext
+        );
+        document.querySelector(
+          "#pointsToNext .next-rank-name"
+        ).textContent = `(${nextRankName})`;
+
+        // Render goal breakdown
+        renderGoalBreakdown(pointsPerDay);
+        // Update progress status
+        updateProgressStatus();
+        // Update projected completion with appropriate styling
+        const projectedElement = document.getElementById("projectedDate");
+        animateValue(projectedElement, projectedMessage);
+
+        // Apply appropriate class based on status
+        projectedElement.parentElement.classList.remove(
+          "warning",
+          "success",
+          "error",
+          "primary"
+        );
+        if (projectedMessage === "Complete!") {
+          projectedElement.parentElement.classList.add("success");
+        } else if (projectedMessage === "Not on Track") {
+          projectedElement.parentElement.classList.add("error");
+        } else {
+          // It's a date projection - they're on track
+          projectedElement.parentElement.classList.add("primary");
+        }
+
+        // Update main progress bar
+        document.getElementById("mainProgress").style.width = completion + "%";
+        document.querySelector(
+          ".progress-text"
+        ).textContent = `${currentPoints} / 2400`;
+
+        // Calculate and update pace indicator
+        const expectedProgress = (daysElapsed / totalSeasonDays) * 100;
+        const actualProgress = parseFloat(completion);
+        const progressDiff = actualProgress - expectedProgress;
+
+        const paceElement = document.getElementById("paceIndicator");
+        paceElement.classList.remove("ahead", "behind");
+
+        if (daysElapsed === 0) {
+          paceElement.textContent = `Season Day 1 of ${totalSeasonDays}`;
+        } else if (currentPoints >= 2400) {
+          paceElement.textContent = "🎉 Emerald 1 Achieved!";
+          paceElement.classList.add("ahead");
+        } else if (Math.abs(progressDiff) < 2) {
+          paceElement.textContent = `On pace (Day ${daysElapsed} of ${totalSeasonDays})`;
+        } else if (progressDiff > 0) {
+          paceElement.textContent = `${progressDiff.toFixed(
+            1
+          )}% ahead of schedule (Day ${daysElapsed} of ${totalSeasonDays})`;
+          paceElement.classList.add("ahead");
+        } else {
+          paceElement.textContent = `${Math.abs(progressDiff).toFixed(
+            1
+          )}% behind schedule (Day ${daysElapsed} of ${totalSeasonDays})`;
+          paceElement.classList.add("behind");
+        }
+      }
+
+      function renderRankLadder() {
+        const ladder = document.getElementById("rankLadder");
+        if (!ladder) {
+          return;
+        }
+        ladder.innerHTML = "";
+
+        ranks.forEach((rank, index) => {
+          const prevPoints = index > 0 ? ranks[index - 1].points : 0;
+          const status =
+            currentPoints >= rank.points
+              ? "completed"
+              : currentPoints < rank.points && currentPoints >= prevPoints
+              ? "current"
+              : "locked";
+          const completion = Math.min(
+            (currentPoints / rank.points) * 100,
+            100
+          ).toFixed(0);
+          const gap = Math.max(rank.points - currentPoints, 0);
+
+          const rankItem = document.createElement("div");
+          rankItem.className = `rank-item ${status}`;
+
+          // Determine icon color based on rank tier
+          let iconColor = "#3B7F5F";
+          if (rank.name.includes("Emerald")) iconColor = "#50C878";
+          else if (rank.name.includes("Diamond")) iconColor = "#87CEEB";
+          else if (rank.name.includes("Platinum")) iconColor = "#E5E4E2";
+          else if (rank.name.includes("Gold")) iconColor = "#FFD700";
+
+          rankItem.innerHTML = `
+                    <div class="rank-icon" style="background: ${iconColor};">${
+            rank.icon
+          }</div>
+                    <div style="font-weight: bold;">${rank.name}</div>
+                    <div>${rank.points}</div>
+                    <div style="color: ${
+                      status === "completed"
+                        ? "#50C878"
+                        : status === "current"
+                        ? "#FFD700"
+                        : "#808080"
+                    };">${status.toUpperCase()}</div>
+                    <div>${completion}%</div>
+                    <div>${gap} gap</div>
+                    <div class="mini-progress">
+                        <div class="mini-progress-bar" style="width: ${completion}%"></div>
+                    </div>
+                `;
+
+          ladder.appendChild(rankItem);
+        });
+      }
+
+      function addDailyEntry() {
+        const date = document.getElementById("dateInput").value;
+        const pointsValue = document.getElementById("pointsInput").value;
+        const notes = document.getElementById("notesInput").value.trim();
+
+        if (!date || !pointsValue) {
+          showNotification("Please enter both date and points", "error");
+          return;
+        }
+
+        const points = parseInt(pointsValue);
+        if (isNaN(points) || points === 0) {
+          showNotification("Please enter a valid points value", "error");
+          return;
+        }
+
+        // Check for duplicate date
+        const existingEntry = dailyEntries.find((entry) => entry.date === date);
+        if (existingEntry) {
+          const confirmReplace = confirm(
+            `An entry already exists for ${date} with ${existingEntry.points} points.\n\n` +
+              `Would you like to replace it with ${points} points?`
+          );
+
+          if (!confirmReplace) {
+            return;
+          }
+
+          // Remove the existing entry
+          const index = dailyEntries.findIndex((entry) => entry.date === date);
+          dailyEntries.splice(index, 1);
+
+          // Recalculate running totals from the beginning
+          currentPoints = 0;
+          dailyEntries.forEach((entry) => {
+            currentPoints += entry.points;
+            entry.total = currentPoints;
+          });
+        }
+
+        // Validate points won't exceed maximum
+        if (currentPoints + points > 2400) {
+          showNotification("Points cannot exceed 2400 (Emerald 1)", "error");
+          return;
+        }
+
+        // Allow negative points but warn
+        if (
+          points < 0 &&
+          !confirm("Are you sure you want to add negative points?")
+        ) {
+          return;
+        }
+
+        currentPoints += points;
+        dailyEntries.push({ date, points, total: currentPoints, notes });
+
+        // Track event
+        trackEvent('add_entry', 'daily_points', points);
+
+        // Sort entries by date to maintain chronological order
+        dailyEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        // Recalculate all running totals after sorting
+        let runningTotal = 0;
+        dailyEntries.forEach((entry) => {
+          runningTotal += entry.points;
+          entry.total = runningTotal;
+        });
+        currentPoints = runningTotal;
+
+        // Save to localStorage
+        localStorage.setItem("currentPoints", currentPoints);
+        localStorage.setItem("dailyEntries", JSON.stringify(dailyEntries));
+
+        // Update input field
+        document.getElementById("currentPointsInput").value = currentPoints;
+
+        // Clear inputs
+        document.getElementById("pointsInput").value = "";
+        document.getElementById("notesInput").value = "";
+
+        // Update everything
+        updateDashboard();
+        renderRankLadder();
+        // renderDailyEntries(); // Removed - Daily Progress feature removed
+
+        // Show success notification
+        showNotification(
+          `Added ${
+            points > 0 ? "+" : ""
+          }${points} points! Total: ${currentPoints}`,
+          "success"
+        );
+
+        // Create backup after adding entry
+        dataIntegrity.createBackup();
+      }
+
+      function renderDailyEntries() {
+        const container = document.getElementById("dailyEntries");
+        container.innerHTML = ""; // Clear safely
+
+        // Add heading
+        const heading = document.createElement("h3");
+        heading.style.cssText = "color: #50C878; margin-top: 20px;";
+        heading.textContent = "Recent Entries";
+        container.appendChild(heading);
+
+        dailyEntries
+          .slice(-5)
+          .reverse()
+          .forEach((entry, displayIndex) => {
+            const actualIndex = dailyEntries.length - 1 - displayIndex;
+            const entryDiv = document.createElement("div");
+            entryDiv.className = "daily-entries-item";
+
+            // Add swipe delete background
+            const swipeBg = document.createElement("div");
+            swipeBg.className = "swipe-delete-bg";
+            swipeBg.textContent = "Delete";
+            entryDiv.appendChild(swipeBg);
+
+            // Create content div
+            const contentDiv = document.createElement("div");
+
+            // Date
+            const dateStrong = document.createElement("strong");
+            dateStrong.className = "entry-date";
+            dateStrong.textContent = entry.date;
+            contentDiv.appendChild(dateStrong);
+            contentDiv.appendChild(document.createTextNode(" - "));
+
+            // Points
+            const pointsSpan = document.createElement("span");
+            pointsSpan.className = "entry-points";
+            pointsSpan.textContent = `${entry.points > 0 ? "+" : ""}${
+              entry.points
+            } points`;
+            contentDiv.appendChild(pointsSpan);
+            contentDiv.appendChild(
+              document.createTextNode(" - Total: " + entry.total)
+            );
+
+            // Notes
+            if (entry.notes) {
+              contentDiv.appendChild(
+                document.createTextNode(" - " + entry.notes)
+              );
+            }
+
+            // Delete button
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "delete-btn";
+            deleteBtn.textContent = "Delete";
+            deleteBtn.onclick = () => deleteEntry(actualIndex);
+
+            entryDiv.appendChild(contentDiv);
+            entryDiv.appendChild(deleteBtn);
+
+            // Add swipe functionality on mobile
+            if (window.innerWidth <= 768) {
+              let startX = 0;
+              let currentX = 0;
+              let isSwiping = false;
+
+              entryDiv.addEventListener("touchstart", function (e) {
+                startX = e.touches[0].clientX;
+                isSwiping = true;
+                this.classList.add("swiping");
+              });
+
+              entryDiv.addEventListener("touchmove", function (e) {
+                if (!isSwiping) return;
+
+                currentX = e.touches[0].clientX;
+                const diffX = currentX - startX;
+
+                if (diffX < 0) {
+                  // Swiping left
+                  const translateX = Math.max(diffX, -100);
+                  this.style.transform = `translateX(${translateX}px)`;
+
+                  if (Math.abs(diffX) > 50) {
+                    this.classList.add("show-delete");
+                  } else {
+                    this.classList.remove("show-delete");
+                  }
+                }
+              });
+
+              entryDiv.addEventListener("touchend", function (e) {
+                if (!isSwiping) return;
+                isSwiping = false;
+                this.classList.remove("swiping");
+
+                const diffX = currentX - startX;
+
+                if (Math.abs(diffX) > 100) {
+                  // Delete the entry
+                  this.classList.add("swipe-delete");
+                  setTimeout(() => {
+                    deleteEntry(actualIndex);
+                  }, 300);
+                } else {
+                  // Snap back
+                  this.style.transform = "";
+                  this.classList.remove("show-delete");
+                }
+              });
+            }
+
+            container.appendChild(entryDiv);
+          });
+      }
+
+      function deleteEntry(index) {
+        if (confirm("Are you sure you want to delete this entry?")) {
+          // Remove the entry
+          dailyEntries.splice(index, 1);
+
+          // Recalculate all running totals
+          let runningTotal = 0;
+          dailyEntries.forEach((entry) => {
+            runningTotal += entry.points;
+            entry.total = runningTotal;
+          });
+
+          // Update current points
+          currentPoints = runningTotal;
+
+          // Update localStorage
+          localStorage.setItem("currentPoints", currentPoints);
+          localStorage.setItem("dailyEntries", JSON.stringify(dailyEntries));
+
+          // Update input field
+          document.getElementById("currentPointsInput").value = currentPoints;
+
+          // Update everything
+          updateDashboard();
+          renderRankLadder();
+          // renderDailyEntries(); // Removed - Daily Progress feature removed
+        }
+      }
+
+      // Share Progress functionality
+      // Wrap event listener in DOMContentLoaded to ensure elements exist
+      function initializeShareButton() {
+        const shareBtn = document.getElementById("shareProgressBtn");
+        if (!shareBtn) {
+          console.error("Share Progress button not found");
+          return;
+        }
+        
+        shareBtn.addEventListener("click", async function () {
+          const button = this;
+          const originalText = button.textContent;
+          button.disabled = true;
+          button.textContent = "📸 Capturing...";
+
+          try {
+            // Update snapshot values
+            const completion = ((currentPoints / 2400) * 100).toFixed(1);
+            const paceText =
+              document.getElementById("paceIndicator").textContent;
+            const projectedDate =
+              document.getElementById("projectedDate").textContent;
+
+            // Set snapshot data
+            document.getElementById("ss-points").textContent = currentPoints;
+            document.getElementById("ss-pace").textContent = paceText.includes(
+              "ahead"
+            )
+              ? "AHEAD OF PACE"
+              : paceText.includes("behind")
+              ? "BEHIND PACE"
+              : "ON PACE";
+            document.getElementById("ss-eta").textContent = projectedDate;
+            document.getElementById("ss-progress-bar").style.width =
+              completion + "%";
+            document.getElementById(
+              "ss-progress-text"
+            ).textContent = `${currentPoints} / 2400 (${completion}%)`;
+
+            // Add capturing class
+            document.body.classList.add("capturing");
+
+            // Wait for styles to apply
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            // Capture the snapshot
+            const element = document.getElementById("trackerSnapshot");
+            const canvas = await html2canvas(element, {
+              backgroundColor: "#0d1117",
+              scale: 2,
+              logging: false,
+              useCORS: true,
+              allowTaint: true,
+            });
+
+            // Remove capturing class
+            document.body.classList.remove("capturing");
+
+            // Track screenshot event
+            trackEvent('share', 'progress_screenshot', currentPoints);
+
+            // Convert to blob and download
+            canvas.toBlob(
+              function (blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "emerald-tracker.png";
+                a.click();
+                URL.revokeObjectURL(url);
+
+                // Success feedback
+                button.textContent = "✅ Downloaded!";
+                setTimeout(() => {
+                  button.textContent = originalText;
+                  button.disabled = false;
+                }, 2000);
+              },
+              "image/png",
+              1.0
+            );
+          } catch (error) {
+            console.error("Failed to capture snapshot:", error);
+            document.body.classList.remove("capturing");
+            button.textContent = "❌ Failed";
+            setTimeout(() => {
+              button.textContent = originalText;
+              button.disabled = false;
+            }, 2000);
+          }
+        });
+      }
+      
+      // Mobile Swipe Gestures
+      function initializeSwipeGestures() {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+        
+        const rankLadder = document.getElementById('rankLadder');
+        if (!rankLadder) return;
+        
+        // Add horizontal scroll with momentum on mobile
+        if (window.innerWidth <= 768) {
+          rankLadder.style.overflowX = 'auto';
+          rankLadder.style.webkitOverflowScrolling = 'touch';
+          rankLadder.style.scrollSnapType = 'x mandatory';
+          
+          // Add snap points to rank items
+          const rankItems = rankLadder.querySelectorAll('.rank-item');
+          rankItems.forEach(item => {
+            item.style.scrollSnapAlign = 'start';
+          });
+        }
+        
+        // Swipe to add points on dashboard
+        const dashboard = document.querySelector('.dashboard');
+        if (dashboard) {
+          dashboard.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+          });
+          
+          dashboard.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+          });
+        }
+        
+        function handleSwipe() {
+          const swipeDistanceX = touchEndX - touchStartX;
+          const swipeDistanceY = touchEndY - touchStartY;
+          
+          // Only process horizontal swipes
+          if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY)) {
+            if (swipeDistanceX > 50) {
+              // Swipe right - add points
+              quickAddPoints(2);
+              showNotification('Swipe right: +2 points', 'success');
+            } else if (swipeDistanceX < -50) {
+              // Swipe left - subtract points
+              quickAddPoints(-2);
+              showNotification('Swipe left: -2 points', 'success');
+            }
+          }
+        }
+      }
+
+      // Lazy Loading for Rank Images
+      function initializeLazyLoading() {
+        // Add IntersectionObserver for rank ladder items
+        const observerOptions = {
+          root: null,
+          rootMargin: '50px',
+          threshold: 0.01
+        };
+        
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const element = entry.target;
+              // Load any background images or data
+              element.classList.add('loaded');
+              observer.unobserve(element);
+            }
+          });
+        }, observerOptions);
+        
+        // Observe rank items
+        document.querySelectorAll('.rank-item').forEach(item => {
+          imageObserver.observe(item);
+        });
+      }
+
+      // Initialize all features when DOM is ready
+      function initializeAllFeatures() {
+        initializeFormInputs();
+        updateDashboard();
+        renderRankLadder();
+        initializeShareButton();
+        initializeSwipeGestures();
+        initializeLazyLoading();
+        
+        // Add loading skeleton removal
+        setTimeout(() => {
+          document.querySelectorAll('.skeleton').forEach(el => {
+            el.classList.remove('skeleton');
+          });
+        }, 500);
+      }
+
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeAllFeatures);
+      } else {
+        initializeAllFeatures();
+      }
+    </script>
+
+    <!-- Additional Information Section -->
+    <section class="seo-content" style="max-width: 800px; margin: 3rem auto 2rem; padding: 0 1rem; color: #e0e0e0; line-height: 1.6;">
+      <h2 style="font-size: 1.5rem; margin: 1.5rem 0 0.75rem; color: #50c878;">How World Tour Ranking Works</h2>
+      <ul style="list-style: none; padding-left: 0; margin-bottom: 2rem;">
+        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0;">🏆</span>
+          <strong style="color: #50c878;">Point System:</strong> Win = 25 points, 2nd = 14 points, Round 2 = 6 points, Round 1 = 2 points
+        </li>
+        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0;">📅</span>
+          <strong style="color: #50c878;">Season Duration:</strong> June 12 - September 10, 2025 (91 days)
+        </li>
+        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0;">📊</span>
+          <strong style="color: #50c878;">Rank Tiers:</strong> 16 ranks from Gold 4 (375 points) to Emerald 1 (2,400 points)
+        </li>
+      </ul>
+
+      <p style="margin-top: 2rem; padding: 1rem; background: rgba(80, 200, 120, 0.1); border-left: 3px solid #50c878; border-radius: 4px;">
+        New to THE FINALS? Check out our <a href="/meta-weapons/" style="color: #50c878; text-decoration: underline;">current meta weapons</a> or <a href="/patch-notes/" style="color: #50c878; text-decoration: underline;">latest patch notes</a> to improve your gameplay.
+      </p>
+    </section>
+
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 1.5rem 1rem; color: #888; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(10, 10, 15, 0.9); position: relative; z-index: 10; font-size: 0.75rem;">
+      <!-- Support Section -->
+      <div style="margin-bottom: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(80, 200, 120, 0.05) 0%, rgba(0, 255, 204, 0.05) 100%); border-radius: 12px; border: 1px solid rgba(80, 200, 120, 0.2);">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <span style="font-size: 1.5rem;">☕</span>
+          <div>
+            <p style="margin: 0; color: #50c878; font-weight: 600; font-size: 0.9rem;">Enjoying the tracker?</p>
+            <p style="margin: 0.25rem 0 0.75rem 0; color: #b8bfc6; font-size: 0.8rem;">Help keep it running with a coffee!</p>
+          </div>
+        </div>
+        <a href="https://ko-fi.com/nextroundonme" target="_blank" rel="noopener" style="
+          display: inline-block;
+          padding: 0.75rem 2rem;
+          background: linear-gradient(135deg, #50c878, #00ffcc);
+          color: #0a0a0f;
+          text-decoration: none;
+          border-radius: 8px;
+          font-weight: 700;
+          font-size: 0.9rem;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(80, 200, 120, 0.3);
+          position: relative;
+          overflow: hidden;
+        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 25px rgba(80, 200, 120, 0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(80, 200, 120, 0.3)';">
+          <span style="position: relative; z-index: 1;">💚 Support Me</span>
+        </a>
+      </div>
+
+      <p style="margin: 0 0 0.5rem 0;">
+        © 2025 TheFinalsLoadout.com | Created by 
+        <a href="https://www.paultakisaki.com/" rel="author" style="color: #00f0c0; text-decoration: none; transition: opacity 0.3s;">Paul Takisaki</a>
+      </p>
+      <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; font-size: 0.75rem; margin-top: 0.5rem;">
+        <a href="/legal/" style="color: #00f0c0; text-decoration: none; transition: opacity 0.3s;">Legal Disclaimer</a>
+        <a href="https://thefinalsloadout.com/feedback" style="color: #ffd700;">📝 Submit Feedback</a>
+      </div>
+    </footer>
+
+    <!-- Scroll Progress Bar Script -->
+    <script>
+      function updateScrollProgress() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollProgress = (scrollTop / scrollHeight) * 100;
+        const progressBar = document.getElementById("scrollProgressBar");
+        if (progressBar) {
+          progressBar.style.width = scrollProgress + "%";
+        }
+      }
+
+      window.addEventListener("scroll", updateScrollProgress);
+      updateScrollProgress(); // Initial call
+    </script>
+
+  </body>
+</html>
