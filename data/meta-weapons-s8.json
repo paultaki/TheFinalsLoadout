@@ -1,0 +1,199 @@
+{
+  "version": "8.0.0",
+  "updated_at": "2025-09-11",
+  "totals": {
+    "total": 37,
+    "light": 13,
+    "medium": 12,
+    "heavy": 12
+  },
+  "tiers": {
+    "S": [
+      "FCAR",
+      "FAMAS"
+    ],
+    "A": [
+      "Pike-556",
+      "LH1",
+      "BFR Titan",
+      "KS-23",
+      ".50 Akimbo",
+      "M60",
+      "Riot Shield",
+      "Model 1887",
+      "V9S",
+      "SR-84"
+    ],
+    "B": [
+      "P90",
+      "CB-01 Repeater",
+      "AKM",
+      "R.357",
+      "Lewis Gun",
+      "SA1216",
+      "M11",
+      "XP-54",
+      "Dual Blades",
+      "93R"
+    ],
+    "C": [
+      "CL-40",
+      "Cerberus 12GA",
+      "Flamethrower",
+      "M134 Minigun",
+      "MGL32",
+      "SH1900",
+      "M26 Matter",
+      "Sledgehammer",
+      "Spear",
+      "Sword",
+      "Dagger",
+      "ARN-220",
+      "Recurve Bow",
+      "ShAK-50",
+      "Throwing Knives"
+    ]
+  },
+  "weapons": [
+    {
+      "name": "BFR Titan",
+      "class": "Heavy",
+      "tier": "A",
+      "status": "new",
+      "badge": "HOT",
+      "ttk": "TBD",
+      "notes": "High damage revolver, 5 rounds, manual reload per round, strong hip-fire, low environmental damage. Early lobbies report overtuned in skilled hands.",
+      "sights": ["Iron Sight", "Quickspark"]
+    },
+    {
+      "name": "P90",
+      "class": "Medium",
+      "tier": "B",
+      "status": "new",
+      "badge": "NEW",
+      "ttk": "TBD",
+      "notes": "High-capacity SMG. Feels weak vs FCAR/FAMAS at range. Spray-friendly, short-range pressure."
+    },
+    {
+      "name": "Pike-556",
+      "class": "Medium",
+      "tier": "A",
+      "status": "nerfed",
+      "badge": "NERFED",
+      "ttk": "TBD",
+      "notes": "[S8] Base damage 50→48, worse hip-fire, slightly better long-range; intended as mid-to-long rifle.",
+      "sights": ["Iron Sight", "Iron Vantage", "Red Dot Sight", "Holo Sight"]
+    },
+    {
+      "name": "LH1",
+      "class": "Light",
+      "tier": "A",
+      "status": "buffed",
+      "badge": "BUFFED",
+      "ttk": "TBD",
+      "notes": "[S8] Damage 42→44. Better body TTK; still precision-leaning.",
+      "sights": ["Iron Sight", "Magnifex", "Red Dot Sight"]
+    },
+    {
+      "name": "CB-01 Repeater",
+      "class": "Medium",
+      "tier": "B",
+      "status": "buffed",
+      "badge": "BUFFED",
+      "ttk": "TBD",
+      "notes": "[S8] Damage 84→88. Better breakpoints on Medium/Heavy.",
+      "sights": ["Iron Sight", "Magnifex", "Red Dot Sight"]
+    },
+    {
+      "name": ".50 Akimbo",
+      "class": "Heavy",
+      "tier": "A",
+      "status": "nerfed",
+      "badge": "NERFED",
+      "ttk": "TBD",
+      "notes": "[S8] Effective range trimmed. Still dominant close."
+    },
+    {
+      "name": "Riot Shield",
+      "class": "Medium",
+      "tier": "A",
+      "status": "nerfed",
+      "badge": "NERFED",
+      "ttk": "TBD",
+      "notes": "[S8] Reduced lunge speed and trigger range. Less sticky chase, lane-control remains."
+    },
+    {
+      "name": "FCAR",
+      "class": "Medium",
+      "tier": "S",
+      "ttk": "270ms",
+      "notes": "Consistent top performer. Versatile at all ranges.",
+      "sights": ["Iron Sight", "Magnifex", "Red Dot Sight", "Holo Sight"]
+    },
+    {
+      "name": "FAMAS",
+      "class": "Medium",
+      "tier": "S",
+      "ttk": "240ms",
+      "notes": "Burst rifle excellence. High skill ceiling.",
+      "sights": ["Iron Sight", "Magnifex", "Red Dot Sight", "Holo Sight"]
+    },
+    {
+      "name": "XP-54",
+      "class": "Light",
+      "tier": "B",
+      "ttk": "280ms",
+      "notes": "Reliable AR for Light builds.",
+      "sights": ["Iron Sight", "Magnifex", "Red Dot Sight", "Holo Sight"]
+    },
+    {
+      "name": "V9S",
+      "class": "Light",
+      "tier": "A",
+      "ttk": "260ms",
+      "notes": "Fast TTK pistol. Rewards accuracy.",
+      "sights": ["Iron Sight", "Quickspark", "Red Dot Sight"]
+    },
+    {
+      "name": "R.357",
+      "class": "Medium",
+      "tier": "B",
+      "ttk": "300ms",
+      "notes": "High damage revolver. Good for peek fights.",
+      "sights": ["Iron Sight", "Quickspark", "Red Dot Sight"]
+    }
+  ],
+  "specialization_gadget_updates": {
+    "healing_beam": {
+      "status": "buffed",
+      "notes": "[S8] Healing per second 46 (up from 40)."
+    },
+    "guardian_turret": {
+      "status": "buffed",
+      "notes": "[S8] Cooldowns reduced: 40→35s and retrieval 20→17.5s."
+    },
+    "dematerializer": {
+      "status": "nerfed",
+      "notes": "[S8] Charges 3→2 with reliability and UI feedback improvements."
+    },
+    "winch_claw": {
+      "status": "nerfed",
+      "notes": "[S8] Cooldowns increased; less frequent hooks."
+    },
+    "thermal_vision": {
+      "status": "disabled",
+      "notes": "[S8] Temporarily disabled."
+    }
+  },
+  "sights_updates": {
+    "magnifex": {
+      "added_to": ["XP-54", "FCAR", "FAMAS", "LH1", "CB-01 Repeater"]
+    },
+    "quickspark": {
+      "added_to": ["R.357", "V9S", "BFR Titan"]
+    },
+    "iron_vantage": {
+      "added_to": ["Pike-556"]
+    }
+  }
+}
