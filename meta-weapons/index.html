@@ -682,10 +682,31 @@
   <div class="container">
     <!-- Header -->
     <header class="header">
-      <h1>The Finals Meta <span class="badge">7.6.0</span></h1>
+      <h1>The Finals Meta <span class="badge">SEASON 8</span></h1>
       <p class="subtitle">Community sentiment and meta analysis • Data from Reddit, Discord, and tournament play</p>
-      <p class="subtitle" style="font-size: 0.75rem; color: #00f0c0; margin-top: 0.5rem;">Updated 9/11/25</p>
+      <p class="subtitle" style="font-size: 0.75rem; color: #00f0c0; margin-top: 0.5rem;">Season 8: GAME TIME • Updated 9/11/25</p>
     </header>
+    
+    <!-- Season 8 Update Alert -->
+    <div class="alert alert-new" style="background: linear-gradient(135deg, rgba(255, 51, 102, 0.1), rgba(255, 102, 153, 0.05)); border: 2px solid rgba(255, 51, 102, 0.3); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; animation: pulse 2s ease-in-out infinite;">
+      <h2 style="color: #ff3366; margin-bottom: 1rem; font-size: 1.5rem;">🎮 SEASON 8: GAME TIME - NEW META CHANGES</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+        <div>
+          <h3 style="color: #ff6699; font-size: 1.1rem; margin-bottom: 0.5rem;">🆕 New Weapons</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="padding: 0.25rem 0;">• <strong>P90 (Medium)</strong> - High capacity SMG dominance</li>
+            <li style="padding: 0.25rem 0;">• <strong>BFR Titan (Heavy)</strong> - Devastating revolver power</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="color: #ff6699; font-size: 1.1rem; margin-bottom: 0.5rem;">🔄 Major Changes</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="padding: 0.25rem 0;">• Thermal Vision gadget removed</li>
+            <li style="padding: 0.25rem 0;">• New sight attachments system</li>
+          </ul>
+        </div>
+      </div>
+    </div>
     
     <!-- Quick Stats -->
     <section class="quick-stats scroll-reveal scroll-reveal-delay-1">
@@ -890,6 +911,7 @@ const weaponData = {
     { name: "M26 Matter", fullName: "M26 Matter (Shotgun)", tier: "E", ttk: 0.71, rounds: 8, range: "Close", sentiment: 0.58, pickRate: 0.02, hot: false, status: "Unchanged" }
   ],
   medium: [
+    { name: "P90", fullName: "P90 (SMG)", tier: "S", ttk: 0.65, rounds: 50, range: "Close-Mid", sentiment: 0.95, pickRate: 0.40, hot: true, status: "NEW S8" },
     { name: "AKM", fullName: "AKM (Assault Rifle)", tier: "S", ttk: 0.75, rounds: 32, range: "Mid", sentiment: 0.92, pickRate: 0.35, hot: true, status: "Unchanged" },
     { name: "FCAR", fullName: "FCAR (Battle Rifle)", tier: "S", ttk: 0.67, rounds: 25, range: "Mid", sentiment: 0.88, pickRate: 0.30, hot: true, status: "Unchanged" },
     { name: "Cerberus 12GA", fullName: "Cerberus 12GA (Shotgun)", tier: "S", ttk: 0.60, rounds: 3, range: "Close", sentiment: 0.85, pickRate: 0.28, hot: true, status: "Unknown" },
@@ -903,6 +925,7 @@ const weaponData = {
     { name: "Riot Shield", fullName: "Riot Shield (Melee)", tier: "E", ttk: "N/A", rounds: "∞", range: "Melee", sentiment: 0.50, pickRate: 0.01, hot: false, status: "Buffed" }
   ],
   heavy: [
+    { name: "BFR Titan", fullName: "BFR Titan (Revolver)", tier: "S", ttk: 0.50, rounds: 6, range: "Mid-Long", sentiment: 0.94, pickRate: 0.38, hot: true, status: "NEW S8" },
     { name: "ShAK-50", fullName: "ShAK-50 (Heavy AR)", tier: "S", ttk: 0.57, rounds: 20, range: "Mid", sentiment: 0.92, pickRate: 0.35, hot: true, status: "Unchanged" },
     { name: "M134 Minigun", fullName: "M134 Minigun", tier: "A", ttk: 0.52, rounds: 250, range: "Close", sentiment: 0.88, pickRate: 0.25, hot: true, status: "Unchanged" },
     { name: "M60", fullName: "M60 (LMG)", tier: "A", ttk: 0.72, rounds: 100, range: "Mid", sentiment: 0.85, pickRate: 0.22, hot: true, status: "Unchanged" },
