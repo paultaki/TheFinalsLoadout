@@ -792,7 +792,83 @@
         animation: fadeIn 0.5s forwards;
         opacity: 0;
       }
-      
+
+      /* Tooltip styles */
+      .tooltip-container {
+        position: relative;
+        display: inline-block;
+        cursor: help;
+      }
+
+      .tooltip {
+        visibility: hidden;
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.95);
+        color: #fff;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 1px solid var(--primary);
+        font-size: 0.85rem;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        min-width: 250px;
+        text-align: left;
+      }
+
+      .tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: var(--primary) transparent transparent transparent;
+      }
+
+      .tooltip-container:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .tooltip-title {
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .tooltip-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 4px 0;
+        gap: 20px;
+      }
+
+      .tooltip-label {
+        color: #b0b0b0;
+      }
+
+      .tooltip-value {
+        color: #fff;
+        font-weight: 500;
+      }
+
+      .tooltip-formula {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--primary);
+        font-size: 0.8rem;
+        text-align: center;
+      }
+
       @keyframes fadeIn {
         to {
           opacity: 1;
@@ -1326,6 +1402,7 @@
             <div class="step-number">1</div>
             <h3 class="step-title">Select Your Goal</h3>
             <select id="goalSelect" class="goal-select">
+              <option value="" disabled>Select your target rank</option>
               <option value="Bronze IV">Bronze IV (25 points)</option>
               <option value="Bronze III">Bronze III (50 points)</option>
               <option value="Bronze II">Bronze II (75 points)</option>
@@ -1364,7 +1441,7 @@
             <div class="step-number">2</div>
             <h3 class="step-title">Enter Current Points</h3>
             <div class="points-input-container">
-              <input type="number" id="currentPoints" class="points-input" value="1007" min="0" max="2400" placeholder="0">
+              <input type="number" id="currentPoints" class="points-input" value="0" min="0" max="2400" placeholder="0">
               <div class="input-hint">Tap to update your points</div>
             </div>
             <div class="completed-status">
@@ -1409,8 +1486,32 @@
             </svg>
           </div>
           <div class="stat-label">Projected Completion</div>
-          <div class="stat-value">132.1%</div>
-          <div class="stat-context">On pace to exceed goal</div>
+          <div class="tooltip-container">
+            <div class="stat-value" id="projectedCompletion">0%</div>
+            <div class="tooltip" id="projectedTooltip">
+              <div class="tooltip-title">How is this calculated?</div>
+              <div class="tooltip-row">
+                <span class="tooltip-label">Current Points:</span>
+                <span class="tooltip-value" id="tooltipCurrentPoints">0</span>
+              </div>
+              <div class="tooltip-row">
+                <span class="tooltip-label">Avg Daily Rate:</span>
+                <span class="tooltip-value" id="tooltipAvgRate">0</span>
+              </div>
+              <div class="tooltip-row">
+                <span class="tooltip-label">Days Remaining:</span>
+                <span class="tooltip-value" id="tooltipDaysLeft">0</span>
+              </div>
+              <div class="tooltip-row">
+                <span class="tooltip-label">Projected Total:</span>
+                <span class="tooltip-value" id="tooltipProjected">0</span>
+              </div>
+              <div class="tooltip-formula">
+                Current + (Daily Rate × Days Left)
+              </div>
+            </div>
+          </div>
+          <div class="stat-context" id="projectedContext">Calculating...</div>
         </div>
         
         <div class="stat-card">
@@ -1421,51 +1522,27 @@
             </svg>
           </div>
           <div class="stat-label">Points to Next Rank</div>
-          <div class="stat-value">100</div>
-          <div class="stat-context">Diamond IV</div>
+          <div class="stat-value" id="pointsToNextRank">0</div>
+          <div class="stat-context" id="nextRankName">Calculating...</div>
         </div>
       </section>
   
       <!-- Progress Visualization -->
       <section class="progress-section achievement-animation">
         <div class="progress-heading">
-          <h2>Progress to Platinum I</h2>
+          <h2 id="progressHeading">Progress to Goal</h2>
           <div class="progress-percent" id="progressPercent">100.7%</div>
         </div>
         
         <div class="progress-bar-container">
-          <div class="progress-bar" style="width: 100%">
+          <div class="progress-bar" id="mainProgressBar" style="width: 0%">
             <div class="progress-glow"></div>
           </div>
         </div>
         
-        <div class="progress-milestones">
+        <div class="progress-milestones" id="progressMilestones">
           <div class="milestone-track"></div>
-          
-          <div class="milestone completed" style="left: 0%">
-            <div class="milestone-popup">Bronze IV: 25 pts</div>
-            <div class="milestone-label">B4</div>
-          </div>
-          
-          <div class="milestone completed" style="left: 25%">
-            <div class="milestone-popup">Silver I: 300 pts</div>
-            <div class="milestone-label">S1</div>
-          </div>
-          
-          <div class="milestone completed" style="left: 50%">
-            <div class="milestone-popup">Gold I: 600 pts</div>
-            <div class="milestone-label">G1</div>
-          </div>
-          
-          <div class="milestone completed" style="left: 75%">
-            <div class="milestone-popup">Platinum II: 900 pts</div>
-            <div class="milestone-label">P2</div>
-          </div>
-          
-          <div class="milestone completed" style="left: 100%">
-            <div class="milestone-popup">Platinum I: 1000 pts</div>
-            <div class="milestone-label">P1</div>
-          </div>
+          <!-- Milestones will be generated dynamically -->
         </div>
         
         <div class="pace-indicator pace-ahead">
@@ -1521,19 +1598,8 @@
       <!-- Rank Ladder -->
       <section class="rank-ladder">
         <h2>Rank Progression</h2>
-        <div class="rank-grid">
-          <div class="rank-item completed">
-            <div class="rank-icon" style="background: var(--bronze);">B4</div>
-            <div class="rank-info">
-              <div class="rank-name">Bronze IV</div>
-              <div class="rank-points">25 pts</div>
-            </div>
-            <div class="rank-status completed">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-              </svg>
-            </div>
-          </div>
+        <div class="rank-grid" id="rankGrid">
+          <!-- Rank items will be generated dynamically -->
           
           <div class="rank-item completed">
             <div class="rank-icon" style="background: var(--bronze);">B3</div>
@@ -1759,7 +1825,9 @@
 
         if (pointsInput) {
           pointsInput.value = currentPoints;
+          // Add both input and change listeners for better compatibility
           pointsInput.addEventListener('input', handlePointsChange);
+          pointsInput.addEventListener('change', handlePointsChange);
         }
 
         if (goalSelect) {
@@ -1770,13 +1838,29 @@
         calculateDaysRemaining();
         updateDashboard();
         updateGoalPreview();
+        updateProgressMilestones();
+        updateRankLadder();
+
+        // Add button event listeners
+        const shareBtn = document.getElementById('shareBtn');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', shareProgress);
+        }
+
+        const screenshotBtn = document.getElementById('screenshotBtn');
+        if (screenshotBtn) {
+          screenshotBtn.addEventListener('click', () => {
+            alert('Use your browser\'s screenshot feature or press Ctrl+Shift+S');
+          });
+        }
       }
 
       function handlePointsChange(e) {
         const newPoints = parseInt(e.target.value) || 0;
         currentPoints = Math.max(0, Math.min(2400, newPoints));
-        localStorage.setItem('currentPoints', currentPoints);
+        localStorage.setItem('currentPoints', currentPoints.toString());
         updateDashboard();
+        console.log('Points changed to:', currentPoints); // Debug log
       }
 
       function handleGoalChange(e) {
@@ -1784,6 +1868,7 @@
         localStorage.setItem('selectedGoal', selectedGoal);
         updateGoalPreview();
         updateDashboard();
+        console.log('Goal changed to:', selectedGoal); // Debug log
       }
 
       function calculateDaysRemaining() {
@@ -1817,10 +1902,16 @@
         const progressEl = document.getElementById('progressPercent');
         if (progressEl) progressEl.textContent = progress.toFixed(1) + '%';
 
-        // Update progress bar
-        const progressBar = document.querySelector('.progress-bar');
+        // Update main progress bar - use ID instead of class
+        const progressBar = document.getElementById('mainProgressBar');
         if (progressBar) {
           progressBar.style.width = progress + '%';
+        }
+
+        // Update progress heading
+        const progressHeading = document.getElementById('progressHeading');
+        if (progressHeading) {
+          progressHeading.textContent = `Progress to ${selectedGoal}`;
         }
 
         // Update progress text
@@ -1829,8 +1920,58 @@
           progressText.textContent = `${currentPoints} / ${goalPoints} points`;
         }
 
+        // Calculate and update projected completion
+        const seasonStart = new Date(SEASON_START_DATE);
+        const today = new Date();
+        const daysElapsed = Math.max(1, Math.ceil((today - seasonStart) / (1000 * 60 * 60 * 24)));
+        const avgPointsPerDay = currentPoints / daysElapsed;
+        const projectedTotalPoints = currentPoints + (avgPointsPerDay * daysRemaining);
+        const projectedCompletion = ((projectedTotalPoints / goalPoints) * 100).toFixed(1);
+
+        const projectedEl = document.getElementById('projectedCompletion');
+        if (projectedEl) {
+          projectedEl.textContent = projectedCompletion + '%';
+        }
+
+        const projectedContext = document.getElementById('projectedContext');
+        if (projectedContext) {
+          if (projectedTotalPoints >= goalPoints) {
+            projectedContext.textContent = 'On pace to reach goal!';
+          } else {
+            projectedContext.textContent = 'Need to increase daily pace';
+          }
+        }
+
+        // Update tooltip values
+        const tooltipCurrentPoints = document.getElementById('tooltipCurrentPoints');
+        const tooltipAvgRate = document.getElementById('tooltipAvgRate');
+        const tooltipDaysLeft = document.getElementById('tooltipDaysLeft');
+        const tooltipProjected = document.getElementById('tooltipProjected');
+
+        if (tooltipCurrentPoints) {
+          tooltipCurrentPoints.textContent = currentPoints;
+        }
+        if (tooltipAvgRate) {
+          tooltipAvgRate.textContent = Math.round(avgPointsPerDay) + ' pts/day';
+        }
+        if (tooltipDaysLeft) {
+          tooltipDaysLeft.textContent = daysRemaining;
+        }
+        if (tooltipProjected) {
+          tooltipProjected.textContent = Math.round(projectedTotalPoints) + ' pts';
+        }
+
+        // Update points to next rank
+        updateNextRank();
+
         // Update current rank
         updateCurrentRank();
+
+        // Update milestones to reflect completion status
+        updateProgressMilestones();
+
+        // Update rank ladder
+        updateRankLadder();
       }
 
       function updateGoalPreview() {
@@ -1847,6 +1988,130 @@
         }
         if (rankName) rankName.textContent = goalRank.name;
         if (rankPoints) rankPoints.textContent = `${goalRank.points} points`;
+
+        // Update milestones
+        updateProgressMilestones();
+
+        // Update rank ladder
+        updateRankLadder();
+      }
+
+      function updateProgressMilestones() {
+        const goalRank = ranks.find(r => r.name === selectedGoal);
+        if (!goalRank) return;
+
+        const milestonesContainer = document.getElementById('progressMilestones');
+        if (!milestonesContainer) return;
+
+        // Clear existing milestones but keep the track
+        milestonesContainer.innerHTML = '<div class="milestone-track"></div>';
+
+        // Find all ranks up to and including the goal
+        const relevantRanks = ranks.filter(r => r.points <= goalRank.points);
+
+        // Select key milestones (first rank of each tier that's below goal, plus the goal)
+        const milestones = [];
+        const tiers = ['bronze', 'silver', 'gold', 'platinum', 'diamond', 'emerald'];
+
+        for (const tier of tiers) {
+          // Get the highest rank of each tier that's still below or equal to goal
+          const tierRanks = relevantRanks.filter(r => r.tier === tier);
+          if (tierRanks.length > 0) {
+            // Add the highest rank of this tier (e.g., Bronze I, Silver I, etc.)
+            const highestTierRank = tierRanks[tierRanks.length - 1];
+            if (!milestones.find(m => m.name === highestTierRank.name)) {
+              milestones.push(highestTierRank);
+            }
+          }
+        }
+
+        // Always include the goal if it's not already there
+        if (!milestones.find(m => m.name === goalRank.name)) {
+          milestones.push(goalRank);
+        }
+
+        // Limit to max 5 milestones for better visibility
+        let displayMilestones = milestones;
+        if (milestones.length > 5) {
+          // Keep first, goal, and evenly distributed ones
+          const step = Math.floor(milestones.length / 4);
+          displayMilestones = [
+            milestones[0],
+            milestones[step],
+            milestones[step * 2],
+            milestones[step * 3],
+            goalRank
+          ];
+        }
+
+        // Create milestone elements
+        displayMilestones.forEach(rank => {
+          const percentage = (rank.points / goalRank.points) * 100;
+          const isCompleted = currentPoints >= rank.points;
+
+          const milestoneEl = document.createElement('div');
+          milestoneEl.className = `milestone ${isCompleted ? 'completed' : ''}`;
+          milestoneEl.style.left = `${percentage}%`;
+
+          milestoneEl.innerHTML = `
+            <div class="milestone-popup">${rank.name}: ${rank.points} pts</div>
+            <div class="milestone-label">${rank.icon}</div>
+          `;
+
+          milestonesContainer.appendChild(milestoneEl);
+        });
+      }
+
+      function updateRankLadder() {
+        const goalRank = ranks.find(r => r.name === selectedGoal);
+        if (!goalRank) return;
+
+        const rankGrid = document.getElementById('rankGrid');
+        if (!rankGrid) return;
+
+        // Clear existing rank items
+        rankGrid.innerHTML = '';
+
+        // Get all ranks up to and including the goal
+        const ranksToShow = ranks.filter(r => r.points <= goalRank.points);
+
+        // Create rank items for all ranks up to goal
+        ranksToShow.forEach((rank, index) => {
+          const isCompleted = currentPoints >= rank.points;
+          const isCurrent = isCompleted &&
+            (index === ranksToShow.length - 1 || currentPoints < ranksToShow[index + 1].points);
+
+          const rankItem = document.createElement('div');
+          rankItem.className = `rank-item ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`;
+          rankItem.style.animationDelay = `${index * 0.05}s`;
+
+          // SVG for checkmark
+          const checkSvg = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </svg>
+          `;
+
+          // SVG for pending
+          const pendingSvg = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            </svg>
+          `;
+
+          rankItem.innerHTML = `
+            <div class="rank-icon" style="background: var(--${rank.tier});">${rank.icon}</div>
+            <div class="rank-info">
+              <div class="rank-name">${rank.name}</div>
+              <div class="rank-points">${rank.points} pts</div>
+            </div>
+            <div class="rank-status ${isCompleted ? 'completed' : 'pending'}">
+              ${isCompleted ? checkSvg : pendingSvg}
+            </div>
+          `;
+
+          rankGrid.appendChild(rankItem);
+        });
       }
 
       function updateCurrentRank() {
@@ -1865,6 +2130,28 @@
           } else {
             currentRankEl.textContent = 'Unranked';
           }
+        }
+      }
+
+      function updateNextRank() {
+        let nextRank = null;
+        for (const rank of ranks) {
+          if (rank.points > currentPoints) {
+            nextRank = rank;
+            break;
+          }
+        }
+
+        const pointsToNextEl = document.getElementById('pointsToNextRank');
+        const nextRankNameEl = document.getElementById('nextRankName');
+
+        if (nextRank) {
+          const pointsToNext = nextRank.points - currentPoints;
+          if (pointsToNextEl) pointsToNextEl.textContent = pointsToNext;
+          if (nextRankNameEl) nextRankNameEl.textContent = nextRank.name;
+        } else {
+          if (pointsToNextEl) pointsToNextEl.textContent = '0';
+          if (nextRankNameEl) nextRankNameEl.textContent = 'Max rank achieved!';
         }
       }
 
