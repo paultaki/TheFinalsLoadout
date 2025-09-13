@@ -121,6 +121,52 @@
         display: flex;
         gap: 10px;
       }
+
+      /* Navigation Links */
+      .nav-links {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex: 1;
+        justify-content: center;
+        max-width: 600px;
+        margin: 0 20px;
+      }
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-family: 'Chakra Petch', sans-serif;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 6px 12px;
+        border-radius: 6px;
+        transition: all 0.2s;
+        position: relative;
+      }
+
+      .nav-link:hover {
+        color: var(--primary);
+        background: rgba(0, 229, 176, 0.1);
+        transform: translateY(-1px);
+      }
+
+      .nav-link.active {
+        color: var(--primary);
+        background: rgba(0, 229, 176, 0.15);
+      }
+
+      .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 12px;
+        right: 12px;
+        height: 2px;
+        background: var(--primary);
+      }
       
       .btn {
         background: var(--bg-input);
@@ -136,6 +182,37 @@
         align-items: center;
         gap: 8px;
         outline: none;
+        position: relative;
+      }
+
+      .btn-text {
+        display: inline;
+      }
+
+      /* Button tooltips */
+      .btn::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+        margin-bottom: 8px;
+        border: 1px solid var(--primary);
+      }
+
+      .btn:hover::after {
+        opacity: 1;
+        visibility: visible;
       }
       
       .btn:hover {
@@ -1259,9 +1336,35 @@
         .container {
           padding: 15px;
         }
-        
+
+        .nav-links {
+          display: none;  /* Hide navigation on mobile - hamburger menu can be added if needed */
+        }
+
         .site-header {
           padding: 10px 0;
+        }
+
+        /* Mobile button styles - icons only */
+        .header-actions .btn {
+          padding: 10px;
+          min-width: 44px;
+          min-height: 44px;
+          justify-content: center;
+        }
+
+        .header-actions .btn svg {
+          width: 20px;
+          height: 20px;
+        }
+
+        .header-actions .btn-text {
+          display: none;
+        }
+
+        /* Show tooltip on mobile too */
+        .header-actions .btn::after {
+          font-size: 0.75rem;
         }
         
         .nav-logo {
@@ -1359,26 +1462,36 @@
           <span>THE FINALS Tracker</span>
           <span class="season-badge">S8</span>
         </a>
+
+        <!-- Navigation Links -->
+        <nav class="nav-links">
+          <a href="/" class="nav-link">LOADOUT GENERATOR</a>
+          <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
+          <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
+          <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
+          <a href="/wt-progress/" class="nav-link active">WORLD TOUR</a>
+        </nav>
+
         <div class="header-actions">
-          <button class="btn" id="shareBtn">
+          <button class="btn" id="shareBtn" data-tooltip="Share Progress">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
               <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
             </svg>
-            Share
+            <span class="btn-text">Share</span>
           </button>
-          <button class="btn" id="screenshotBtn">
+          <button class="btn" id="screenshotBtn" data-tooltip="Take Screenshot">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
               <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
               <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
             </svg>
-            Screenshot
+            <span class="btn-text">Screenshot</span>
           </button>
-          <button class="btn btn-primary" id="helpBtn">
+          <button class="btn" id="resetBtn" data-tooltip="Reset All Data" onclick="resetData()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-              <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+              <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+              <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
             </svg>
-            Help
+            <span class="btn-text">Reset</span>
           </button>
         </div>
       </div>
@@ -1923,10 +2036,24 @@
         // Calculate and update projected completion
         const seasonStart = new Date(SEASON_START_DATE);
         const today = new Date();
-        const daysElapsed = Math.max(1, Math.ceil((today - seasonStart) / (1000 * 60 * 60 * 24)));
+        const timeDiff = today - seasonStart;
+        const daysElapsed = Math.max(1, Math.floor(timeDiff / (1000 * 60 * 60 * 24)) + 1);
         const avgPointsPerDay = currentPoints / daysElapsed;
         const projectedTotalPoints = currentPoints + (avgPointsPerDay * daysRemaining);
         const projectedCompletion = ((projectedTotalPoints / goalPoints) * 100).toFixed(1);
+
+        // Debug logging
+        console.log('Projected Completion Debug:', {
+          seasonStart: seasonStart.toDateString(),
+          today: today.toDateString(),
+          daysElapsed,
+          currentPoints,
+          avgPointsPerDay: avgPointsPerDay.toFixed(2),
+          daysRemaining,
+          projectedTotalPoints: Math.round(projectedTotalPoints),
+          goalPoints,
+          projectedCompletion: projectedCompletion + '%'
+        });
 
         const projectedEl = document.getElementById('projectedCompletion');
         if (projectedEl) {
