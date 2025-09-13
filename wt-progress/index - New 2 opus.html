@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>THE FINALS World Tour Tracker v2 - Enhanced Analytics</title>
+    <meta
+      name="description"
+      content="Advanced World Tour progress tracker with match analytics, smart predictions, and performance insights for THE FINALS Season 8"
+    />
+
+    <!-- Mobile Web App Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="WT Tracker" />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #50c878;
+        --primary-dark: #2e8b57;
+        --secondary: #20b2aa;
+        --bg-dark: #0a0a0a;
+        --bg-medium: #1a1a1a;
+        --bg-light: #2a2a2a;
+        --text-primary: #ffffff;
+        --text-secondary: #b0b0b0;
+        --success: #50c878;
+        --warning: #ffc107;
+        --danger: #ff4757;
+        --border: rgba(255, 255, 255, 0.1);
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          var(--bg-dark) 0%,
+          var(--bg-medium) 50%,
+          #0d1117 100%
+        );
+        color: var(--text-primary);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Header */
+      .header {
+        text-align: center;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+      }
+
+      .season-info {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+      }
+
+      .season-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: var(--bg-dark);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+
+      /* Main Grid Layout */
+      .main-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      @media (max-width: 1024px) {
+        .main-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Card Styles */
+      .card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 1.5rem;
+        backdrop-filter: blur(10px);
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--primary);
+      }
+
+      /* Quick Input Section */
+      .quick-input {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .current-points-display {
+        text-align: center;
+        padding: 2rem;
+        background: linear-gradient(
+          135deg,
+          rgba(80, 200, 120, 0.1) 0%,
+          rgba(0, 0, 0, 0.5) 100%
+        );
+        border-radius: 15px;
+        border: 2px solid var(--primary);
+      }
+
+      .points-value {
+        font-size: 4rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .points-label {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .match-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+
+      .match-btn {
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        color: var(--text-primary);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        min-height: 80px;
+        position: relative;
+      }
+
+      .match-btn:hover {
+        transform: translateY(-2px);
+        background: rgba(80, 200, 120, 0.2);
+        border-color: var(--primary);
+        box-shadow: 0 5px 15px rgba(80, 200, 120, 0.3);
+      }
+
+      .match-btn.win {
+        border-color: #ffd700;
+        background: rgba(255, 215, 0, 0.1);
+      }
+
+      .match-btn-icon {
+        font-size: 1.5rem;
+      }
+
+      .match-btn-points {
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      .keyboard-hint {
+        position: absolute;
+        top: 5px;
+        right: 8px;
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+        opacity: 0.6;
+      }
+
+      /* Bulk Entry */
+      .bulk-entry {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .bulk-input {
+        width: 100%;
+        padding: 0.75rem;
+        background: rgba(0, 0, 0, 0.5);
+        border: 2px solid var(--border);
+        color: var(--text-primary);
+        border-radius: 8px;
+        font-family: monospace;
+        margin-bottom: 0.5rem;
+      }
+
+      .bulk-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: rgba(80, 200, 120, 0.1);
+      }
+
+      .bulk-help {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+      }
+
+      /* Analytics Section */
+      .chart-container {
+        position: relative;
+        height: 300px;
+        margin-bottom: 1.5rem;
+      }
+
+      .chart-canvas {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Stats Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .stat-box {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .stat-box-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-box-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      /* Goal Progress */
+      .goal-section {
+        margin-bottom: 2rem;
+      }
+
+      .goal-selector {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .goal-select {
+        flex: 1;
+        min-width: 200px;
+        padding: 0.75rem;
+        background: rgba(80, 200, 120, 0.1);
+        border: 2px solid var(--primary);
+        color: var(--text-primary);
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .goal-select option {
+        background: var(--bg-dark);
+        color: var(--text-primary);
+      }
+
+      .progress-bar-container {
+        position: relative;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        border-radius: 20px;
+        transition: width 0.5s ease;
+        box-shadow: 0 0 20px rgba(80, 200, 120, 0.5);
+      }
+
+      .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Pace Indicator */
+      .pace-indicator {
+        padding: 1rem;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .pace-indicator.ahead {
+        background: rgba(80, 200, 120, 0.2);
+        color: var(--success);
+        border: 1px solid var(--success);
+      }
+
+      .pace-indicator.behind {
+        background: rgba(255, 71, 87, 0.2);
+        color: var(--danger);
+        border: 1px solid var(--danger);
+      }
+
+      .pace-indicator.on-track {
+        background: rgba(255, 193, 7, 0.2);
+        color: var(--warning);
+        border: 1px solid var(--warning);
+      }
+
+      /* Match History */
+      .match-history {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .match-item {
+        display: grid;
+        grid-template-columns: 100px 80px 1fr auto;
+        align-items: center;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s;
+      }
+
+      .match-item:hover {
+        background: rgba(80, 200, 120, 0.05);
+        transform: translateX(5px);
+      }
+
+      .match-time {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      .match-result {
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .match-points {
+        color: var(--success);
+        font-weight: 700;
+      }
+
+      .delete-match {
+        background: none;
+        border: none;
+        color: var(--danger);
+        cursor: pointer;
+        padding: 0.5rem;
+        opacity: 0.6;
+        transition: opacity 0.3s;
+      }
+
+      .delete-match:hover {
+        opacity: 1;
+      }
+
+      /* Rank Ladder */
+      .rank-ladder {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 0.75rem;
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 0.5rem;
+      }
+
+      .rank-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s;
+      }
+
+      .rank-item:hover {
+        transform: scale(1.02);
+        background: rgba(80, 200, 120, 0.1);
+        border-color: rgba(80, 200, 120, 0.3);
+      }
+
+      .rank-item.completed {
+        background: rgba(80, 200, 120, 0.15);
+        border-color: var(--primary);
+      }
+
+      .rank-item.current {
+        background: rgba(255, 193, 7, 0.15);
+        border-color: var(--warning);
+        box-shadow: 0 0 15px rgba(255, 193, 7, 0.3);
+      }
+
+      .rank-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+      }
+
+      .rank-bronze {
+        background: linear-gradient(135deg, #cd7f32, #8b4513);
+      }
+      .rank-silver {
+        background: linear-gradient(135deg, #c0c0c0, #808080);
+      }
+      .rank-gold {
+        background: linear-gradient(135deg, #ffd700, #ffa500);
+      }
+      .rank-platinum {
+        background: linear-gradient(135deg, #e5e4e2, #b0b0b0);
+      }
+      .rank-diamond {
+        background: linear-gradient(135deg, #b9f2ff, #00ced1);
+      }
+      .rank-emerald {
+        background: linear-gradient(135deg, #50c878, #2e8b57);
+      }
+
+      .rank-info {
+        flex: 1;
+      }
+
+      .rank-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .rank-points {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      .rank-progress {
+        font-size: 0.85rem;
+        color: var(--success);
+        text-align: right;
+      }
+
+      /* Notification */
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        background: rgba(80, 200, 120, 0.9);
+        color: var(--bg-dark);
+        font-weight: 600;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        transform: translateX(400px);
+        transition: transform 0.3s;
+        z-index: 1000;
+        max-width: 300px;
+      }
+
+      .notification.show {
+        transform: translateX(0);
+      }
+
+      .notification.error {
+        background: rgba(255, 71, 87, 0.9);
+        color: white;
+      }
+
+      .notification.warning {
+        background: rgba(255, 193, 7, 0.9);
+        color: var(--bg-dark);
+      }
+
+      /* Actions Bar */
+      .actions-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid var(--border);
+        padding: 1rem;
+        z-index: 100;
+      }
+
+      .actions-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .action-btn {
+        padding: 0.75rem 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--text-primary);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 600;
+      }
+
+      .action-btn:hover {
+        background: rgba(80, 200, 120, 0.2);
+        border-color: var(--primary);
+        transform: translateY(-2px);
+      }
+
+      /* Session Indicator */
+      .session-indicator {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: rgba(10, 10, 10, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .session-active {
+        color: var(--success);
+      }
+
+      .session-stats {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(80, 200, 120, 0.5);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(80, 200, 120, 0.7);
+      }
+
+      /* Mobile Optimizations */
+      @media (max-width: 768px) {
+        .container {
+          padding: 10px;
+          padding-bottom: 100px;
+        }
+
+        .header h1 {
+          font-size: 1.75rem;
+        }
+
+        .points-value {
+          font-size: 3rem;
+        }
+
+        .match-buttons {
+          grid-template-columns: 1fr;
+        }
+
+        .match-btn {
+          min-height: 60px;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .rank-ladder {
+          grid-template-columns: 1fr;
+        }
+
+        .session-indicator {
+          display: none;
+        }
+      }
+
+      /* Loading State */
+      .loading {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      /* Focus States */
+      *:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+
+      button:focus,
+      input:focus,
+      select:focus {
+        outline: 3px solid var(--primary);
+        outline-offset: 3px;
+        box-shadow: 0 0 0 4px rgba(80, 200, 120, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Session Indicator -->
+    <div class="session-indicator" id="sessionIndicator" style="display: none">
+      <div class="session-active">🎮 Session Active</div>
+      <div class="session-stats">
+        <span id="sessionMatches">0 matches</span>
+        <span id="sessionPoints">0 pts</span>
+        <span id="sessionTime">0m</span>
+      </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <span class="season-badge">✨ SEASON 8</span>
+        <h1>World Tour Progress Tracker</h1>
+        <div class="season-info">
+          September 11, 2025 - December 11, 2025 •
+          <span id="daysRemaining">91</span> days remaining
+        </div>
+      </div>
+
+      <!-- Goal Section -->
+      <div class="goal-section">
+        <div class="card">
+          <div class="goal-selector">
+            <label for="goalSelect" style="font-weight: 600"
+              >Target Rank:</label
+            >
+            <select id="goalSelect" class="goal-select" onchange="updateGoal()">
+              <!-- Will be populated by JS -->
+            </select>
+            <div
+              id="goalInfo"
+              style="display: flex; align-items: center; gap: 0.5rem"
+            >
+              <span id="goalPoints" style="color: var(--text-secondary)"></span>
+            </div>
+          </div>
+
+          <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+            <div id="progressText" class="progress-text">0 / 0</div>
+          </div>
+
+          <div id="paceIndicator" class="pace-indicator">
+            Calculating pace...
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-box-value" id="dailyRequired">0</div>
+              <div class="stat-box-label">Daily Points Needed</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-box-value" id="projectedDate">--</div>
+              <div class="stat-box-label">Projected Completion</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-box-value" id="todayPoints">0</div>
+              <div class="stat-box-label">Today's Points</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-box-value" id="avgDaily">0</div>
+              <div class="stat-box-label">Avg Daily Points</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="main-grid">
+        <!-- Quick Input Panel -->
+        <div class="card">
+          <h2 class="card-title">Quick Input</h2>
+
+          <div class="current-points-display">
+            <div class="points-value" id="currentPoints">0</div>
+            <div class="points-label">Current Points</div>
+          </div>
+
+          <div class="match-buttons">
+            <button
+              class="match-btn win"
+              onclick="addMatch('win')"
+              data-key="1"
+            >
+              <span class="keyboard-hint">1</span>
+              <span class="match-btn-icon">🏆</span>
+              <span>Win</span>
+              <span class="match-btn-points">+21</span>
+            </button>
+            <button class="match-btn" onclick="addMatch('2nd')" data-key="2">
+              <span class="keyboard-hint">2</span>
+              <span class="match-btn-icon">🥈</span>
+              <span>2nd Place</span>
+              <span class="match-btn-points">+12</span>
+            </button>
+            <button class="match-btn" onclick="addMatch('3rd')" data-key="3">
+              <span class="keyboard-hint">3</span>
+              <span class="match-btn-icon">🥉</span>
+              <span>3rd Place</span>
+              <span class="match-btn-points">+8</span>
+            </button>
+            <button
+              class="match-btn"
+              onclick="addMatch('qualified')"
+              data-key="4"
+            >
+              <span class="keyboard-hint">4</span>
+              <span class="match-btn-icon">✅</span>
+              <span>Qualified</span>
+              <span class="match-btn-points">+5</span>
+            </button>
+            <button
+              class="match-btn"
+              onclick="addMatch('eliminated')"
+              data-key="5"
+            >
+              <span class="keyboard-hint">5</span>
+              <span class="match-btn-icon">❌</span>
+              <span>Eliminated</span>
+              <span class="match-btn-points">+2</span>
+            </button>
+            <button
+              class="match-btn"
+              onclick="undoLastMatch()"
+              style="border-color: var(--danger)"
+            >
+              <span class="keyboard-hint">Z</span>
+              <span class="match-btn-icon">↩️</span>
+              <span>Undo</span>
+              <span class="match-btn-points" id="undoPoints">-0</span>
+            </button>
+          </div>
+
+          <div class="bulk-entry">
+            <div class="bulk-help">
+              Bulk Entry: Enter match results (W/2/3/Q/E)
+            </div>
+            <input
+              type="text"
+              id="bulkInput"
+              class="bulk-input"
+              placeholder="Example: W 2 3 Q E W"
+              onkeypress="handleBulkInput(event)"
+            />
+            <button
+              class="action-btn"
+              onclick="processBulkInput()"
+              style="width: 100%"
+            >
+              Process Bulk Entry
+            </button>
+          </div>
+        </div>
+
+        <!-- Analytics Panel -->
+        <div class="card">
+          <h2 class="card-title">Performance Analytics</h2>
+
+          <div class="chart-container">
+            <canvas id="progressChart" class="chart-canvas"></canvas>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-box-value" id="winRate">0%</div>
+              <div class="stat-box-label">Win Rate</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-box-value" id="avgPlacement">--</div>
+              <div class="stat-box-label">Avg Placement</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-box-value" id="bestStreak">0</div>
+              <div class="stat-box-label">Best Streak</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-box-value" id="totalMatches">0</div>
+              <div class="stat-box-label">Total Matches</div>
+            </div>
+          </div>
+
+          <h3
+            style="
+              margin-top: 1.5rem;
+              margin-bottom: 1rem;
+              color: var(--primary);
+            "
+          >
+            Recent Matches
+          </h3>
+          <div class="match-history" id="matchHistory">
+            <div
+              style="
+                text-align: center;
+                color: var(--text-secondary);
+                padding: 2rem;
+              "
+            >
+              No matches recorded yet
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rank Ladder -->
+      <div class="card">
+        <h2 class="card-title">Rank Progression</h2>
+        <div class="rank-ladder" id="rankLadder">
+          <!-- Will be populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions Bar -->
+    <div class="actions-bar">
+      <div class="actions-container">
+        <button class="action-btn" onclick="exportData()">
+          📤 Export Data
+        </button>
+        <button class="action-btn" onclick="importData()">
+          📥 Import Data
+        </button>
+        <button class="action-btn" onclick="shareProgress()">
+          🔗 Share Progress
+        </button>
+        <button class="action-btn" onclick="resetData()">🔄 Reset All</button>
+      </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Hidden file input for import -->
+    <input
+      type="file"
+      id="importFile"
+      style="display: none"
+      accept=".json"
+      onchange="handleImport(event)"
+    />
+
+    <script>
+      // Configuration
+      const SEASON_START = "2025-09-11";
+      const SEASON_END = "2025-12-11";
+      const SEASON_DAYS = 91;
+
+      // Ranks data
+      const ranks = [
+        { name: "Bronze IV", points: 25, icon: "B4", tier: "bronze" },
+        { name: "Bronze III", points: 50, icon: "B3", tier: "bronze" },
+        { name: "Bronze II", points: 75, icon: "B2", tier: "bronze" },
+        { name: "Bronze I", points: 100, icon: "B1", tier: "bronze" },
+        { name: "Silver IV", points: 150, icon: "S4", tier: "silver" },
+        { name: "Silver III", points: 200, icon: "S3", tier: "silver" },
+        { name: "Silver II", points: 250, icon: "S2", tier: "silver" },
+        { name: "Silver I", points: 300, icon: "S1", tier: "silver" },
+        { name: "Gold IV", points: 375, icon: "G4", tier: "gold" },
+        { name: "Gold III", points: 450, icon: "G3", tier: "gold" },
+        { name: "Gold II", points: 525, icon: "G2", tier: "gold" },
+        { name: "Gold I", points: 600, icon: "G1", tier: "gold" },
+        { name: "Platinum IV", points: 700, icon: "P4", tier: "platinum" },
+        { name: "Platinum III", points: 800, icon: "P3", tier: "platinum" },
+        { name: "Platinum II", points: 900, icon: "P2", tier: "platinum" },
+        { name: "Platinum I", points: 1000, icon: "P1", tier: "platinum" },
+        { name: "Diamond IV", points: 1150, icon: "D4", tier: "diamond" },
+        { name: "Diamond III", points: 1300, icon: "D3", tier: "diamond" },
+        { name: "Diamond II", points: 1450, icon: "D2", tier: "diamond" },
+        { name: "Diamond I", points: 1600, icon: "D1", tier: "diamond" },
+        { name: "Emerald IV", points: 1800, icon: "E4", tier: "emerald" },
+        { name: "Emerald III", points: 2000, icon: "E3", tier: "emerald" },
+        { name: "Emerald II", points: 2200, icon: "E2", tier: "emerald" },
+        { name: "Emerald I", points: 2400, icon: "E1", tier: "emerald" },
+      ];
+
+      // Match points
+      const matchPoints = {
+        win: 21,
+        "2nd": 12,
+        "3rd": 8,
+        qualified: 5,
+        eliminated: 2,
+      };
+
+      // State
+      let state = {
+        currentPoints: 0,
+        selectedGoal: "Emerald I",
+        matches: [],
+        sessions: [],
+        currentSession: null,
+      };
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", () => {
+        loadState();
+        initializeUI();
+        setupKeyboardShortcuts();
+        updateDisplay();
+        startSessionTracking();
+      });
+
+      // State Management
+      function loadState() {
+        const saved = localStorage.getItem("wtTrackerState");
+        if (saved) {
+          try {
+            state = JSON.parse(saved);
+            // Ensure matches array exists
+            if (!state.matches) state.matches = [];
+            if (!state.sessions) state.sessions = [];
+          } catch (e) {
+            console.error("Failed to load state:", e);
+          }
+        }
+      }
+
+      function saveState() {
+        localStorage.setItem("wtTrackerState", JSON.stringify(state));
+      }
+
+      // UI Initialization
+      function initializeUI() {
+        // Populate goal selector
+        const select = document.getElementById("goalSelect");
+        ranks.forEach((rank) => {
+          const option = document.createElement("option");
+          option.value = rank.name;
+          option.textContent = `${rank.name} (${rank.points} pts)`;
+          if (rank.name === state.selectedGoal) {
+            option.selected = true;
+          }
+          select.appendChild(option);
+        });
+
+        // Set current points in the input field
+        document.getElementById("currentPointsInput").value =
+          state.currentPoints;
+
+        // Initialize chart
+        initializeChart();
+      }
+
+      // Keyboard Shortcuts
+      function setupKeyboardShortcuts() {
+        document.addEventListener("keydown", (e) => {
+          // Ignore if typing in input
+          if (e.target.tagName === "INPUT") return;
+
+          switch (e.key) {
+            case "1":
+              addMatch("win");
+              break;
+            case "2":
+              addMatch("2nd");
+              break;
+            case "3":
+              addMatch("3rd");
+              break;
+            case "4":
+              addMatch("qualified");
+              break;
+            case "5":
+              addMatch("eliminated");
+              break;
+            case "z":
+            case "Z":
+              if (e.ctrlKey || e.metaKey) {
+                e.preventDefault();
+                undoLastMatch();
+              }
+              break;
+          }
+        });
+      }
+
+      // Match Management
+      function addMatch(result) {
+        const points = matchPoints[result];
+        const match = {
+          id: Date.now(),
+          timestamp: new Date().toISOString(),
+          result: result,
+          points: points,
+          totalAfter: state.currentPoints + points,
+          sessionId: state.currentSession?.id,
+        };
+
+        state.matches.push(match);
+        state.currentPoints += points;
+
+        // Update session
+        if (state.currentSession) {
+          state.currentSession.matches++;
+          state.currentSession.points += points;
+          state.currentSession.lastActivity = Date.now();
+        }
+
+        saveState();
+        updateDisplay();
+        showNotification(`+${points} points! (${result})`, "success");
+      }
+
+      function undoLastMatch() {
+        if (state.matches.length === 0) {
+          showNotification("No matches to undo", "error");
+          return;
+        }
+
+        const lastMatch = state.matches.pop();
+        state.currentPoints -= lastMatch.points;
+
+        // Update session
+        if (
+          state.currentSession &&
+          lastMatch.sessionId === state.currentSession.id
+        ) {
+          state.currentSession.matches--;
+          state.currentSession.points -= lastMatch.points;
+        }
+
+        saveState();
+        updateDisplay();
+        showNotification(
+          `Undid ${lastMatch.result} (-${lastMatch.points})`,
+          "warning"
+        );
+      }
+
+      function deleteMatch(matchId) {
+        const index = state.matches.findIndex((m) => m.id === matchId);
+        if (index === -1) return;
+
+        const match = state.matches[index];
+
+        // Recalculate all points after this match
+        state.matches.splice(index, 1);
+
+        // Recalculate total points
+        state.currentPoints = state.matches.reduce(
+          (sum, m) => sum + m.points,
+          0
+        );
+
+        saveState();
+        updateDisplay();
+        showNotification(`Deleted match (-${match.points})`, "warning");
+      }
+
+      // Bulk Input Processing
+      function processBulkInput() {
+        const input = document
+          .getElementById("bulkInput")
+          .value.toUpperCase()
+          .trim();
+        if (!input) return;
+
+        const mapping = {
+          W: "win",
+          1: "win",
+          2: "2nd",
+          3: "3rd",
+          Q: "qualified",
+          4: "qualified",
+          E: "eliminated",
+          5: "eliminated",
+          L: "eliminated",
+        };
+
+        const results = input.split(/[\s,]+/).filter((r) => r);
+        let addedPoints = 0;
+        let matchCount = 0;
+
+        results.forEach((r) => {
+          const result = mapping[r];
+          if (result) {
+            const points = matchPoints[result];
+            const match = {
+              id: Date.now() + matchCount,
+              timestamp: new Date().toISOString(),
+              result: result,
+              points: points,
+              totalAfter: state.currentPoints + addedPoints + points,
+              sessionId: state.currentSession?.id,
+            };
+            state.matches.push(match);
+            addedPoints += points;
+            matchCount++;
+          }
+        });
+
+        if (matchCount > 0) {
+          state.currentPoints += addedPoints;
+
+          if (state.currentSession) {
+            state.currentSession.matches += matchCount;
+            state.currentSession.points += addedPoints;
+            state.currentSession.lastActivity = Date.now();
+          }
+
+          saveState();
+          updateDisplay();
+          showNotification(
+            `Added ${matchCount} matches (+${addedPoints} points)`,
+            "success"
+          );
+          document.getElementById("bulkInput").value = "";
+        } else {
+          showNotification("Invalid input format", "error");
+        }
+      }
+
+      function handleBulkInput(event) {
+        if (event.key === "Enter") {
+          processBulkInput();
+        }
+      }
+
+      // Session Tracking
+      function startSessionTracking() {
+        // Check for existing session
+        const now = Date.now();
+        const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+
+        if (
+          state.currentSession &&
+          now - state.currentSession.lastActivity < SESSION_TIMEOUT
+        ) {
+          // Resume session
+          updateSessionIndicator();
+        } else {
+          // Start new session
+          state.currentSession = {
+            id: now,
+            start: now,
+            lastActivity: now,
+            matches: 0,
+            points: 0,
+          };
+        }
+
+        // Update session every minute
+        setInterval(updateSessionIndicator, 60000);
+      }
+
+      function updateSessionIndicator() {
+        if (!state.currentSession) return;
+
+        const indicator = document.getElementById("sessionIndicator");
+        const duration = Math.floor(
+          (Date.now() - state.currentSession.start) / 60000
+        );
+
+        if (state.currentSession.matches > 0) {
+          indicator.style.display = "block";
+          document.getElementById(
+            "sessionMatches"
+          ).textContent = `${state.currentSession.matches} matches`;
+          document.getElementById(
+            "sessionPoints"
+          ).textContent = `${state.currentSession.points} pts`;
+          document.getElementById("sessionTime").textContent = `${duration}m`;
+        } else {
+          indicator.style.display = "none";
+        }
+      }
+
+      // Display Updates
+      function updateDisplay() {
+        updateCurrentPoints();
+        updateGoalProgress();
+        updateStats();
+        updateMatchHistory();
+        updateRankLadder();
+        updateChart();
+        updateSessionIndicator();
+      }
+
+      function updateCurrentPoints() {
+        document.getElementById("currentPoints").textContent =
+          state.currentPoints;
+
+        // Update undo button
+        const undoPoints = document.getElementById("undoPoints");
+        if (state.matches.length > 0) {
+          const lastMatch = state.matches[state.matches.length - 1];
+          undoPoints.textContent = `-${lastMatch.points}`;
+        } else {
+          undoPoints.textContent = "-0";
+        }
+      }
+
+      function updateGoalProgress() {
+        const goalRank = ranks.find((r) => r.name === state.selectedGoal);
+        const goalPoints = goalRank ? goalRank.points : 2400;
+        const progress = Math.min(
+          100,
+          (state.currentPoints / goalPoints) * 100
+        );
+
+        document.getElementById(
+          "goalPoints"
+        ).textContent = `${goalPoints} points`;
+        document.getElementById("progressBar").style.width = `${progress}%`;
+        document.getElementById(
+          "progressText"
+        ).textContent = `${state.currentPoints} / ${goalPoints}`;
+
+        // Calculate days remaining
+        const today = new Date();
+        const seasonEnd = new Date(SEASON_END);
+        const daysRemaining = Math.max(
+          0,
+          Math.ceil((seasonEnd - today) / (1000 * 60 * 60 * 24))
+        );
+        document.getElementById("daysRemaining").textContent = daysRemaining;
+
+        // Calculate required daily points
+        const pointsNeeded = Math.max(0, goalPoints - state.currentPoints);
+        const dailyRequired =
+          daysRemaining > 0 ? Math.ceil(pointsNeeded / daysRemaining) : 0;
+        document.getElementById("dailyRequired").textContent = dailyRequired;
+
+        // Calculate pace
+        updatePaceIndicator(goalPoints, daysRemaining);
+
+        // Calculate projected completion
+        updateProjectedCompletion(goalPoints);
+      }
+
+      function updatePaceIndicator(goalPoints, daysRemaining) {
+        const seasonStart = new Date(SEASON_START);
+        const today = new Date();
+        const seasonEnd = new Date(SEASON_END);
+
+        const totalDays = Math.ceil(
+          (seasonEnd - seasonStart) / (1000 * 60 * 60 * 24)
+        );
+        const daysElapsed = Math.max(
+          1,
+          Math.ceil((today - seasonStart) / (1000 * 60 * 60 * 24))
+        );
+
+        const expectedProgress = (daysElapsed / totalDays) * goalPoints;
+        const actualProgress = state.currentPoints;
+        const difference = actualProgress - expectedProgress;
+
+        const indicator = document.getElementById("paceIndicator");
+
+        if (state.currentPoints >= goalPoints) {
+          indicator.textContent = `🎉 Goal Achieved! Congratulations!`;
+          indicator.className = "pace-indicator ahead";
+        } else if (Math.abs(difference) < 50) {
+          indicator.textContent = "✅ On track to reach goal";
+          indicator.className = "pace-indicator on-track";
+        } else if (difference > 0) {
+          const daysAhead = Math.floor(difference / (goalPoints / totalDays));
+          indicator.textContent = `🚀 ${daysAhead} days ahead of schedule`;
+          indicator.className = "pace-indicator ahead";
+        } else {
+          const catchUpPoints = Math.ceil(-difference / daysRemaining);
+          indicator.textContent = `⚠️ Behind schedule - need ${catchUpPoints} extra points/day`;
+          indicator.className = "pace-indicator behind";
+        }
+      }
+
+      function updateProjectedCompletion(goalPoints) {
+        // Calculate based on last 7 days performance
+        const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+        const recentMatches = state.matches.filter(
+          (m) => new Date(m.timestamp) > sevenDaysAgo
+        );
+
+        let projectedDate = "--";
+
+        if (recentMatches.length > 0) {
+          const recentPoints = recentMatches.reduce(
+            (sum, m) => sum + m.points,
+            0
+          );
+          const avgDaily = recentPoints / 7;
+
+          if (avgDaily > 0) {
+            const pointsNeeded = Math.max(0, goalPoints - state.currentPoints);
+            const daysNeeded = Math.ceil(pointsNeeded / avgDaily);
+            const completionDate = new Date();
+            completionDate.setDate(completionDate.getDate() + daysNeeded);
+
+            if (completionDate <= new Date(SEASON_END)) {
+              projectedDate = completionDate.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              });
+            } else {
+              projectedDate = "After season";
+            }
+          }
+        }
+
+        document.getElementById("projectedDate").textContent = projectedDate;
+      }
+
+      function updateStats() {
+        // Today's points
+        const today = new Date().toDateString();
+        const todayMatches = state.matches.filter(
+          (m) => new Date(m.timestamp).toDateString() === today
+        );
+        const todayPoints = todayMatches.reduce((sum, m) => sum + m.points, 0);
+        document.getElementById("todayPoints").textContent = todayPoints;
+
+        // Average daily points
+        const seasonStart = new Date(SEASON_START);
+        const today2 = new Date();
+        const daysElapsed = Math.max(
+          1,
+          Math.ceil((today2 - seasonStart) / (1000 * 60 * 60 * 24))
+        );
+        const avgDaily = Math.round(state.currentPoints / daysElapsed);
+        document.getElementById("avgDaily").textContent = avgDaily;
+
+        // Win rate
+        const wins = state.matches.filter((m) => m.result === "win").length;
+        const winRate =
+          state.matches.length > 0
+            ? Math.round((wins / state.matches.length) * 100)
+            : 0;
+        document.getElementById("winRate").textContent = `${winRate}%`;
+
+        // Average placement
+        const placements = {
+          win: 1,
+          "2nd": 2,
+          "3rd": 3,
+          qualified: 4,
+          eliminated: 5,
+        };
+
+        const avgPlacement =
+          state.matches.length > 0
+            ? (
+                state.matches.reduce(
+                  (sum, m) => sum + placements[m.result],
+                  0
+                ) / state.matches.length
+              ).toFixed(1)
+            : "--";
+        document.getElementById("avgPlacement").textContent = avgPlacement;
+
+        // Best streak (consecutive wins)
+        let currentStreak = 0;
+        let bestStreak = 0;
+        state.matches.forEach((m) => {
+          if (m.result === "win") {
+            currentStreak++;
+            bestStreak = Math.max(bestStreak, currentStreak);
+          } else {
+            currentStreak = 0;
+          }
+        });
+        document.getElementById("bestStreak").textContent = bestStreak;
+
+        // Total matches
+        document.getElementById("totalMatches").textContent =
+          state.matches.length;
+      }
+
+      function updateMatchHistory() {
+        const container = document.getElementById("matchHistory");
+
+        if (state.matches.length === 0) {
+          container.innerHTML =
+            '<div style="text-align: center; color: var(--text-secondary); padding: 2rem;">No matches recorded yet</div>';
+          return;
+        }
+
+        // Show last 20 matches
+        const recent = state.matches.slice(-20).reverse();
+
+        container.innerHTML = recent
+          .map((match) => {
+            const date = new Date(match.timestamp);
+            const timeStr = date.toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            const dateStr = date.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            });
+
+            const icons = {
+              win: "🏆",
+              "2nd": "🥈",
+              "3rd": "🥉",
+              qualified: "✅",
+              eliminated: "❌",
+            };
+
+            return `
+                    <div class="match-item">
+                        <div class="match-time">${dateStr} ${timeStr}</div>
+                        <div class="match-result">${icons[match.result]} ${
+              match.result
+            }</div>
+                        <div class="match-points">+${match.points}</div>
+                        <button class="delete-match" onclick="deleteMatch(${
+                          match.id
+                        })">🗑️</button>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      function updateRankLadder() {
+        const container = document.getElementById("rankLadder");
+
+        container.innerHTML = ranks
+          .map((rank) => {
+            const isCompleted = state.currentPoints >= rank.points;
+            const isCurrent =
+              !isCompleted &&
+              (ranks.indexOf(rank) === 0 ||
+                state.currentPoints >= ranks[ranks.indexOf(rank) - 1]?.points);
+
+            let className = "rank-item";
+            if (isCompleted) className += " completed";
+            if (isCurrent) className += " current";
+
+            const progress = isCompleted
+              ? "✓"
+              : `+${rank.points - state.currentPoints}`;
+
+            return `
+                    <div class="${className}">
+                        <div class="rank-icon rank-${rank.tier}">${rank.icon}</div>
+                        <div class="rank-info">
+                            <div class="rank-name">${rank.name}</div>
+                            <div class="rank-points">${rank.points} pts</div>
+                        </div>
+                        <div class="rank-progress">${progress}</div>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      // Chart
+      let chart = null;
+
+      function initializeChart() {
+        const canvas = document.getElementById("progressChart");
+        const ctx = canvas.getContext("2d");
+
+        // Simple line chart implementation
+        updateChart();
+      }
+
+      function updateChart() {
+        const canvas = document.getElementById("progressChart");
+        const ctx = canvas.getContext("2d");
+
+        // Clear canvas
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+
+        if (state.matches.length === 0) {
+          ctx.fillStyle = "rgba(176, 176, 176, 0.5)";
+          ctx.font = "14px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(
+            "No data to display",
+            canvas.width / 2,
+            canvas.height / 2
+          );
+          return;
+        }
+
+        // Group matches by day
+        const dailyData = {};
+        state.matches.forEach((match) => {
+          const date = new Date(match.timestamp).toLocaleDateString();
+          if (!dailyData[date]) {
+            dailyData[date] = 0;
+          }
+          dailyData[date] += match.points;
+        });
+
+        // Create cumulative data
+        const dates = Object.keys(dailyData).sort();
+        const values = [];
+        let cumulative = 0;
+
+        dates.forEach((date) => {
+          cumulative += dailyData[date];
+          values.push(cumulative);
+        });
+
+        // Draw chart
+        if (values.length > 0) {
+          const maxValue = Math.max(...values);
+          const padding = 40;
+          const chartWidth = canvas.width - padding * 2;
+          const chartHeight = canvas.height - padding * 2;
+
+          // Draw grid
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+          ctx.lineWidth = 1;
+
+          for (let i = 0; i <= 5; i++) {
+            const y = padding + (chartHeight * i) / 5;
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(canvas.width - padding, y);
+            ctx.stroke();
+          }
+
+          // Draw line
+          ctx.strokeStyle = "#50c878";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+
+          values.forEach((value, index) => {
+            const x = padding + (chartWidth * index) / (values.length - 1 || 1);
+            const y = padding + chartHeight - (chartHeight * value) / maxValue;
+
+            if (index === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              ctx.lineTo(x, y);
+            }
+          });
+
+          ctx.stroke();
+
+          // Draw points
+          ctx.fillStyle = "#50c878";
+          values.forEach((value, index) => {
+            const x = padding + (chartWidth * index) / (values.length - 1 || 1);
+            const y = padding + chartHeight - (chartHeight * value) / maxValue;
+
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, Math.PI * 2);
+            ctx.fill();
+          });
+
+          // Draw labels
+          ctx.fillStyle = "rgba(176, 176, 176, 0.8)";
+          ctx.font = "12px sans-serif";
+          ctx.textAlign = "right";
+
+          for (let i = 0; i <= 5; i++) {
+            const value = Math.round((maxValue * (5 - i)) / 5);
+            const y = padding + (chartHeight * i) / 5;
+            ctx.fillText(value, padding - 5, y + 4);
+          }
+        }
+      }
+
+      // Goal Management
+      function updateGoal() {
+        const select = document.getElementById("goalSelect");
+        state.selectedGoal = select.value;
+        saveState();
+        updateDisplay();
+        showNotification(`Goal updated to ${state.selectedGoal}`, "success");
+      }
+
+      // Data Management
+      function exportData() {
+        const dataStr = JSON.stringify(state, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `wt-tracker-${
+          new Date().toISOString().split("T")[0]
+        }.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showNotification("Data exported successfully", "success");
+      }
+
+      function importData() {
+        document.getElementById("importFile").click();
+      }
+
+      function handleImport(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const imported = JSON.parse(e.target.result);
+            state = imported;
+            saveState();
+            updateDisplay();
+            showNotification("Data imported successfully", "success");
+          } catch (error) {
+            showNotification("Failed to import data", "error");
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      function shareProgress() {
+        const goalRank = ranks.find((r) => r.name === state.selectedGoal);
+        const goalPoints = goalRank ? goalRank.points : 2400;
+        const progress = ((state.currentPoints / goalPoints) * 100).toFixed(1);
+
+        const text =
+          `🎮 THE FINALS Season 8 Progress\n` +
+          `📊 ${state.currentPoints}/${goalPoints} points (${progress}%)\n` +
+          `🎯 Goal: ${state.selectedGoal}\n` +
+          `🏆 ${
+            state.matches.filter((m) => m.result === "win").length
+          } wins\n` +
+          `📈 ${state.matches.length} total matches`;
+
+        if (navigator.share) {
+          navigator.share({
+            title: "My World Tour Progress",
+            text: text,
+          });
+        } else {
+          navigator.clipboard.writeText(text);
+          showNotification("Progress copied to clipboard!", "success");
+        }
+      }
+
+      function resetData() {
+        if (
+          confirm(
+            "Are you sure you want to reset all data? This cannot be undone."
+          )
+        ) {
+          state = {
+            currentPoints: 0,
+            selectedGoal: "Emerald I",
+            matches: [],
+            sessions: [],
+            currentSession: null,
+          };
+          saveState();
+          location.reload();
+        }
+      }
+
+      // Notifications
+      function showNotification(message, type = "success") {
+        const notification = document.getElementById("notification");
+        notification.textContent = message;
+        notification.className = `notification ${type} show`;
+
+        setTimeout(() => {
+          notification.classList.remove("show");
+        }, 3000);
+      }
+
+      // Auto-save
+      window.addEventListener("beforeunload", () => {
+        saveState();
+      });
+
+      // Update chart on resize
+      window.addEventListener("resize", () => {
+        updateChart();
+      });
+    </script>
+  </body>
+</html>

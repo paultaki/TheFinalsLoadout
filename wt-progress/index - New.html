@@ -1,0 +1,1934 @@
+<artifact id="world-tour-tracker-redesign" type="text/html">
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE FINALS World Tour Tracker S8</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        /* Core palette */
+        --bg-dark: #0a0b12;
+        --bg-card: #141824;
+        --bg-input: rgba(255, 255, 255, 0.05);
+        --primary: #00e5b0;
+        --primary-dark: #00c896;
+        --primary-light: rgba(0, 229, 176, 0.1);
+        --accent: #ff3366;
+        --text: #ffffff;
+        --text-muted: #8a8f98;
+        --border: rgba(255, 255, 255, 0.08);
+        
+        /* Rank colors */
+        --bronze: linear-gradient(135deg, #CD7F32, #8B4513);
+        --silver: linear-gradient(135deg, #C0C0C0, #808080);
+        --gold: linear-gradient(135deg, #FFD700, #FFA500);
+        --platinum: linear-gradient(135deg, #E5E4E2, #B0B0B0);
+        --diamond: linear-gradient(135deg, #B9F2FF, #00CED1);
+        --emerald: linear-gradient(135deg, #00e5b0, #00A381);
+        
+        /* Shadows and effects */
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+        --glow: 0 0 20px rgba(0, 229, 176, 0.4);
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        background: var(--bg-dark);
+        background-image: 
+          radial-gradient(circle at 20% 30%, rgba(0, 229, 176, 0.03) 0%, transparent 50%),
+          radial-gradient(circle at 80% 70%, rgba(255, 51, 102, 0.03) 0%, transparent 50%);
+        color: var(--text);
+        font-family: 'Inter', sans-serif;
+        line-height: 1.6;
+        min-height: 100vh;
+        padding-bottom: 80px;
+      }
+  
+      h1, h2, h3, h4, .nav-logo, .step-number, .rank-name {
+        font-family: 'Chakra Petch', sans-serif;
+        font-weight: 700;
+      }
+      
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      
+      /* Header & Navigation */
+      .site-header {
+        background: rgba(10, 11, 18, 0.8);
+        backdrop-filter: blur(10px);
+        border-bottom: 2px solid var(--primary-dark);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        padding: 15px 0;
+      }
+      
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.4rem;
+        color: var(--text);
+        text-decoration: none;
+      }
+      
+      .logo-icon {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary);
+        color: var(--bg-dark);
+        border-radius: 6px;
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+      
+      .season-badge {
+        display: inline-flex;
+        align-items: center;
+        background: var(--primary);
+        color: var(--bg-dark);
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-left: 10px;
+      }
+      
+      .header-actions {
+        display: flex;
+        gap: 10px;
+      }
+      
+      .btn {
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        outline: none;
+      }
+      
+      .btn:hover {
+        background: var(--primary-light);
+        border-color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+      }
+      
+      .btn-primary {
+        background: var(--primary);
+        color: var(--bg-dark);
+        border: none;
+      }
+      
+      .btn-primary:hover {
+        background: var(--primary-dark);
+      }
+      
+      /* Hero section */
+      .hero-section {
+        text-align: center;
+        padding: 30px 0;
+        position: relative;
+      }
+      
+      .hero-section h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, var(--primary), #4edfff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1.2;
+      }
+      
+      .hero-section p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+      }
+      
+      /* Onboarding Flow */
+      .setup-flow {
+        background: rgba(20, 24, 36, 0.7);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: var(--shadow-md);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .setup-flow::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+      }
+      
+      .setup-header {
+        margin-bottom: 30px;
+        text-align: center;
+      }
+      
+      .setup-header h2 {
+        font-size: 1.6rem;
+        margin-bottom: 8px;
+        color: var(--primary);
+      }
+      
+      .setup-header p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+      
+      .setup-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+      }
+      
+      .setup-step {
+        background: var(--bg-card);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 25px;
+        position: relative;
+        transition: all 0.3s;
+      }
+      
+      .setup-step:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary);
+      }
+      
+      .step-number {
+        position: absolute;
+        top: -15px;
+        left: 25px;
+        background: var(--primary);
+        color: var(--bg-dark);
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 700;
+      }
+      
+      .step-title {
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+        color: var(--text);
+        padding-top: 10px;
+      }
+      
+      /* Goal Selection */
+      .goal-select {
+        width: 100%;
+        background: var(--bg-input);
+        border: 2px solid var(--border);
+        color: var(--text);
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2300e5b0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: calc(100% - 15px) center;
+        padding-right: 40px;
+        transition: all 0.3s;
+        margin-bottom: 15px;
+      }
+      
+      .goal-select:hover, .goal-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(0, 229, 176, 0.1);
+      }
+
+      /* Fix dropdown option styling */
+      .goal-select option {
+        background: #1a1a1a;
+        color: #ffffff;
+        padding: 0.5rem;
+      }
+
+      .goal-select option:hover,
+      .goal-select option:focus {
+        background: #2a2a2a;
+        color: var(--primary);
+      }
+
+      .goal-select option:checked {
+        background: rgba(0, 229, 176, 0.2);
+        color: var(--primary);
+      }
+      
+      .goal-preview {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 15px;
+      }
+      
+      .goal-badge {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-input);
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 1.1rem;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .badge-emerald {
+        background: var(--emerald);
+        color: var(--bg-dark);
+      }
+      
+      .badge-diamond {
+        background: var(--diamond);
+        color: var(--bg-dark);
+      }
+      
+      .badge-platinum {
+        background: var(--platinum);
+        color: var(--bg-dark);
+      }
+      
+      .badge-gold {
+        background: var(--gold);
+        color: var(--bg-dark);
+      }
+      
+      .badge-silver {
+        background: var(--silver);
+        color: var(--bg-dark);
+      }
+      
+      .badge-bronze {
+        background: var(--bronze);
+        color: var(--bg-dark);
+      }
+      
+      .goal-details {
+        flex: 1;
+      }
+      
+      .goal-name {
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 3px;
+      }
+      
+      .goal-points {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+      
+      /* Points Input */
+      .points-input-container {
+        position: relative;
+        margin-bottom: 15px;
+      }
+      
+      .points-input {
+        width: 100%;
+        background: var(--bg-input);
+        border: 2px dashed var(--border);
+        color: var(--primary);
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        padding: 20px;
+        border-radius: 12px;
+        transition: all 0.3s;
+      }
+      
+      .points-input:hover {
+        border-color: var(--primary);
+      }
+      
+      .points-input:focus {
+        outline: none;
+        border: 2px solid var(--primary);
+        box-shadow: 0 0 0 4px rgba(0, 229, 176, 0.1);
+      }
+      
+      .input-hint {
+        position: absolute;
+        bottom: -22px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--primary);
+        pointer-events: none;
+        transition: opacity 0.2s;
+      }
+      
+      .points-input-container:hover .input-hint {
+        opacity: 0;
+      }
+      
+      /* Dashboard Cards */
+      .dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+      
+      .stat-card {
+        background: var(--bg-card);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+      
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+        border-color: rgba(0, 229, 176, 0.3);
+      }
+      
+      .stat-card-primary {
+        background: linear-gradient(135deg, rgba(0, 229, 176, 0.1), rgba(0, 229, 176, 0.05));
+        border: 2px solid rgba(0, 229, 176, 0.2);
+      }
+      
+      .stat-icon {
+        margin-bottom: 15px;
+        display: inline-flex;
+        width: 50px;
+        height: 50px;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-dark);
+        border-radius: 50%;
+        color: var(--primary);
+        font-size: 1.4rem;
+      }
+      
+      .stat-label {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+      }
+      
+      .stat-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), #4edfff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1.2;
+        margin-bottom: 5px;
+      }
+      
+      .stat-context {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+      
+      /* Progress Visualization */
+      .progress-section {
+        background: var(--bg-card);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 30px;
+        margin-bottom: 40px;
+        position: relative;
+      }
+      
+      .progress-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+      }
+      
+      .progress-heading h2 {
+        font-size: 1.4rem;
+        color: var(--text);
+      }
+      
+      .progress-percent {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      
+      .progress-bar-container {
+        position: relative;
+        height: 20px;
+        background: var(--bg-input);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 20px;
+      }
+      
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+        border-radius: 10px;
+        transition: width 0.5s ease;
+        position: relative;
+      }
+      
+      .progress-glow {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 40px;
+        background: linear-gradient(90deg, transparent, rgba(0, 229, 176, 0.7));
+        filter: blur(10px);
+        opacity: 0.8;
+      }
+      
+      .progress-milestones {
+        position: relative;
+        height: 50px;
+        margin: 40px 0 20px;
+      }
+      
+      .milestone-track {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--border);
+        transform: translateY(-50%);
+      }
+      
+      .milestone {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--bg-card);
+        border: 2px solid var(--border);
+        z-index: 1;
+        transition: all 0.3s;
+      }
+      
+      .milestone.completed {
+        background: var(--primary);
+        border-color: var(--primary-dark);
+        box-shadow: 0 0 15px rgba(0, 229, 176, 0.4);
+      }
+      
+      .milestone.current {
+        background: var(--bg-card);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(0, 229, 176, 0.2);
+      }
+      
+      .milestone-label {
+        position: absolute;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        white-space: nowrap;
+      }
+      
+      .milestone.completed .milestone-label {
+        color: var(--primary);
+      }
+      
+      .milestone-popup {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-10px);
+        background: var(--bg-dark);
+        border: 1px solid var(--primary);
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        color: var(--text);
+        white-space: nowrap;
+        z-index: 10;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s;
+        pointer-events: none;
+      }
+      
+      .milestone:hover .milestone-popup {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(-5px);
+      }
+      
+      .pace-indicator {
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: 600;
+        transition: all 0.3s;
+        margin-top: 10px;
+      }
+      
+      .pace-ahead {
+        background: rgba(0, 229, 176, 0.1);
+        color: var(--primary);
+        border-left: 3px solid var(--primary);
+      }
+      
+      .pace-behind {
+        background: rgba(255, 51, 102, 0.1);
+        color: var(--accent);
+        border-left: 3px solid var(--accent);
+      }
+      
+      .pace-ontrack {
+        background: rgba(255, 215, 0, 0.1);
+        color: #ffd700;
+        border-left: 3px solid #ffd700;
+      }
+      
+      /* Quick Actions */
+      .quick-actions {
+        background: var(--bg-card);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 30px;
+        margin-bottom: 40px;
+      }
+      
+      .quick-actions h2 {
+        margin-bottom: 20px;
+        font-size: 1.4rem;
+      }
+      
+      .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 15px;
+      }
+      
+      .action-btn {
+        background: var(--bg-dark);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .action-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+      }
+      
+      .action-win {
+        border-color: #ffd700;
+        background: rgba(255, 215, 0, 0.05);
+      }
+      
+      .action-win:hover {
+        background: rgba(255, 215, 0, 0.1);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+      }
+      
+      .action-second {
+        border-color: #C0C0C0;
+        background: rgba(192, 192, 192, 0.05);
+      }
+      
+      .action-second:hover {
+        background: rgba(192, 192, 192, 0.1);
+        box-shadow: 0 5px 15px rgba(192, 192, 192, 0.2);
+      }
+      
+      .action-third {
+        border-color: #CD7F32;
+        background: rgba(205, 127, 50, 0.05);
+      }
+      
+      .action-third:hover {
+        background: rgba(205, 127, 50, 0.1);
+        box-shadow: 0 5px 15px rgba(205, 127, 50, 0.2);
+      }
+      
+      .action-qualified {
+        border-color: #50C878;
+        background: rgba(80, 200, 120, 0.05);
+      }
+      
+      .action-qualified:hover {
+        background: rgba(80, 200, 120, 0.1);
+        box-shadow: 0 5px 15px rgba(80, 200, 120, 0.2);
+      }
+      
+      .action-eliminated {
+        border-color: #DDDDDD;
+        background: rgba(221, 221, 221, 0.05);
+      }
+      
+      .action-eliminated:hover {
+        background: rgba(221, 221, 221, 0.1);
+        box-shadow: 0 5px 15px rgba(221, 221, 221, 0.2);
+      }
+      
+      .action-undo {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(255, 51, 102, 0.05);
+      }
+      
+      .action-undo:hover {
+        background: rgba(255, 51, 102, 0.1);
+        box-shadow: 0 5px 15px rgba(255, 51, 102, 0.2);
+      }
+      
+      .action-icon {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+      }
+      
+      .action-name {
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+      
+      .action-points {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      
+      /* Rank Ladder */
+      .rank-ladder {
+        background: var(--bg-card);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 30px;
+        margin-bottom: 40px;
+      }
+      
+      .rank-ladder h2 {
+        margin-bottom: 25px;
+        font-size: 1.4rem;
+        position: sticky;
+        top: 70px;
+        background: var(--bg-card);
+        padding: 5px 0;
+        z-index: 10;
+      }
+      
+      .rank-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+        max-height: 600px;
+        overflow-y: auto;
+        padding-right: 10px;
+      }
+      
+      .rank-item {
+        background: var(--bg-dark);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.3s;
+        animation: fadeIn 0.5s forwards;
+        opacity: 0;
+      }
+      
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+      }
+      
+      .rank-item:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+      }
+      
+      .rank-item.completed {
+        background: rgba(0, 229, 176, 0.08);
+        border-color: var(--primary);
+      }
+      
+      .rank-item.current {
+        background: linear-gradient(90deg, rgba(0, 229, 176, 0.15), rgba(0, 229, 176, 0.05));
+        border-color: var(--primary);
+        box-shadow: var(--glow);
+      }
+      
+      .rank-icon {
+        width: 45px;
+        height: 45px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 0.9rem;
+        box-shadow: var(--shadow-sm);
+      }
+      
+      .rank-info {
+        flex: 1;
+      }
+      
+      .rank-name {
+        font-weight: 700;
+        margin-bottom: 3px;
+      }
+      
+      .rank-points {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+      
+      .rank-status {
+        flex-shrink: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+      }
+      
+      .rank-status.completed {
+        color: var(--primary);
+      }
+      
+      .rank-status.pending {
+        color: var(--text-muted);
+      }
+      
+      /* Daily Log */
+      .daily-log {
+        background: var(--bg-card);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 30px;
+        margin-bottom: 40px;
+      }
+      
+      .daily-log h2 {
+        margin-bottom: 25px;
+        font-size: 1.4rem;
+      }
+      
+      .log-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+      }
+      
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .form-label {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+      
+      .form-input {
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 12px 15px;
+        border-radius: 8px;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.2s;
+      }
+      
+      .form-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(0, 229, 176, 0.1);
+      }
+      
+      .add-entry-btn {
+        background: var(--primary);
+        color: var(--bg-dark);
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.2s;
+        align-self: flex-end;
+      }
+      
+      .add-entry-btn:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+      }
+      
+      .log-entries {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      
+      .log-header {
+        display: grid;
+        grid-template-columns: 100px 80px 1fr auto;
+        background: var(--bg-dark);
+        padding: 12px 15px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .log-entries-list {
+        max-height: 350px;
+        overflow-y: auto;
+      }
+      
+      .log-item {
+        display: grid;
+        grid-template-columns: 100px 80px 1fr auto;
+        padding: 15px;
+        border-bottom: 1px solid var(--border);
+        transition: all 0.2s;
+      }
+      
+      .log-item:last-child {
+        border-bottom: none;
+      }
+      
+      .log-item:hover {
+        background: var(--bg-dark);
+      }
+      
+      .log-date {
+        font-size: 0.9rem;
+      }
+      
+      .log-points {
+        font-weight: 700;
+        color: var(--primary);
+      }
+      
+      .log-notes {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+      
+      .log-total {
+        font-size: 0.9rem;
+        text-align: right;
+      }
+      
+      /* Footer */
+      .site-footer {
+        background: linear-gradient(180deg, rgba(10, 11, 18, 0) 0%, rgba(10, 11, 18, 0.9) 100%);
+        padding: 30px 0;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        z-index: 10;
+      }
+      
+      .support-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+      
+      .support-text {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+      
+      .support-btn {
+        background: linear-gradient(135deg, var(--primary), #4edfff);
+        color: var(--bg-dark);
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: var(--shadow-md);
+      }
+      
+      .support-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+      }
+      
+      .last-updated {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        color: var(--text-muted);
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        z-index: 20;
+      }
+      
+      /* Notifications */
+      .notification {
+        position: fixed;
+        top: 90px;
+        right: 20px;
+        background: var(--primary);
+        color: var(--bg-dark);
+        padding: 15px 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        box-shadow: var(--shadow-lg);
+        transform: translateX(200%);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 1000;
+      }
+      
+      .notification.show {
+        transform: translateX(0);
+      }
+      
+      .notification.error {
+        background: var(--accent);
+        color: white;
+      }
+      
+      /* Onboarding */
+      .onboarding-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(10, 11, 18, 0.9);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+      }
+      
+      .onboarding-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+      
+      .onboarding-card {
+        background: var(--bg-card);
+        border: 2px solid var(--primary);
+        border-radius: 16px;
+        padding: 30px;
+        max-width: 500px;
+        text-align: center;
+        position: relative;
+        transform: scale(0.9);
+        transition: all 0.3s;
+      }
+      
+      .onboarding-overlay.show .onboarding-card {
+        transform: scale(1);
+      }
+      
+      .onboarding-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .onboarding-close:hover {
+        color: var(--primary);
+        transform: scale(1.1);
+      }
+      
+      .onboarding-icon {
+        font-size: 3rem;
+        color: var(--primary);
+        margin-bottom: 20px;
+      }
+      
+      .onboarding-title {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        color: var(--text);
+      }
+      
+      .onboarding-text {
+        color: var(--text-muted);
+        margin-bottom: 25px;
+        line-height: 1.7;
+      }
+      
+      .onboarding-btn {
+        background: var(--primary);
+        color: var(--bg-dark);
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .onboarding-btn:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+      
+      .onboarding-steps {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 20px;
+      }
+      
+      .onboarding-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--bg-input);
+        transition: all 0.2s;
+      }
+      
+      .onboarding-dot.active {
+        background: var(--primary);
+        transform: scale(1.2);
+      }
+      
+      /* Responsive */
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+        
+        .site-header {
+          padding: 10px 0;
+        }
+        
+        .nav-logo {
+          font-size: 1.2rem;
+        }
+        
+        .hero-section h1 {
+          font-size: 2rem;
+        }
+        
+        .goal-preview {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        
+        .setup-steps {
+          grid-template-columns: 1fr;
+        }
+        
+        .action-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .rank-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .log-form {
+          grid-template-columns: 1fr;
+        }
+        
+        .log-header, .log-item {
+          grid-template-columns: 80px 60px 1fr;
+        }
+        
+        .log-header div:last-child, .log-item div:last-child {
+          display: none;
+        }
+      }
+      
+      /* Helper Classes */
+      .completed-status {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 10px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--primary);
+      }
+      
+      .achievement-animation {
+        animation: celebrate 2s infinite;
+      }
+      
+      @keyframes celebrate {
+        0%, 100% {
+          transform: scale(1);
+          box-shadow: 0 0 20px rgba(0, 229, 176, 0.5);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 0 40px rgba(0, 229, 176, 0.8);
+        }
+      }
+      
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: rgba(0, 229, 176, 0.3);
+        border-radius: 4px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 229, 176, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="site-header">
+      <div class="container header-container">
+        <a href="/" class="nav-logo">
+          <div class="logo-icon">WT</div>
+          <span>THE FINALS Tracker</span>
+          <span class="season-badge">S8</span>
+        </a>
+        <div class="header-actions">
+          <button class="btn" id="shareBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+            </svg>
+            Share
+          </button>
+          <button class="btn" id="screenshotBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+              <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
+            </svg>
+            Screenshot
+          </button>
+          <button class="btn btn-primary" id="helpBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+            </svg>
+            Help
+          </button>
+        </div>
+      </div>
+    </header>
+  
+    <div class="container">
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <h1>World Tour Progress Tracker</h1>
+        <p>Season 8 • September 11, 2025 - December 11, 2025 • <span id="daysLeft">91</span> Days</p>
+      </section>
+  
+      <!-- Setup Flow -->
+      <section class="setup-flow">
+        <div class="setup-header">
+          <h2>Track Your Progress</h2>
+          <p>Set your goal and track your daily progress throughout Season 8</p>
+        </div>
+        <div class="setup-steps">
+          <div class="setup-step">
+            <div class="step-number">1</div>
+            <h3 class="step-title">Select Your Goal</h3>
+            <select id="goalSelect" class="goal-select">
+              <option value="Bronze IV">Bronze IV (25 points)</option>
+              <option value="Bronze III">Bronze III (50 points)</option>
+              <option value="Bronze II">Bronze II (75 points)</option>
+              <option value="Bronze I">Bronze I (100 points)</option>
+              <option value="Silver IV">Silver IV (150 points)</option>
+              <option value="Silver III">Silver III (200 points)</option>
+              <option value="Silver II">Silver II (250 points)</option>
+              <option value="Silver I">Silver I (300 points)</option>
+              <option value="Gold IV">Gold IV (375 points)</option>
+              <option value="Gold III">Gold III (450 points)</option>
+              <option value="Gold II">Gold II (525 points)</option>
+              <option value="Gold I">Gold I (600 points)</option>
+              <option value="Platinum IV">Platinum IV (700 points)</option>
+              <option value="Platinum III">Platinum III (800 points)</option>
+              <option value="Platinum II">Platinum II (900 points)</option>
+              <option value="Platinum I" selected>Platinum I (1000 points)</option>
+              <option value="Diamond IV">Diamond IV (1150 points)</option>
+              <option value="Diamond III">Diamond III (1300 points)</option>
+              <option value="Diamond II">Diamond II (1450 points)</option>
+              <option value="Diamond I">Diamond I (1600 points)</option>
+              <option value="Emerald IV">Emerald IV (1800 points)</option>
+              <option value="Emerald III">Emerald III (2000 points)</option>
+              <option value="Emerald II">Emerald II (2200 points)</option>
+              <option value="Emerald I">Emerald I (2400 points)</option>
+            </select>
+            <div class="goal-preview">
+              <div id="goalRankIcon" class="rank-icon rank-platinum">P1</div>
+              <div class="goal-details">
+                <div id="goalRankName" class="goal-name">Platinum I</div>
+                <div id="goalRankPoints" class="goal-points">1000 points</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="setup-step">
+            <div class="step-number">2</div>
+            <h3 class="step-title">Enter Current Points</h3>
+            <div class="points-input-container">
+              <input type="number" id="currentPoints" class="points-input" value="1007" min="0" max="2400" placeholder="0">
+              <div class="input-hint">Tap to update your points</div>
+            </div>
+            <div class="completed-status">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+              </svg>
+              Platinum I Achieved!
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <!-- Dashboard Stats -->
+      <section class="dashboard">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z"/>
+              <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+            </svg>
+          </div>
+          <div class="stat-label">Days Remaining</div>
+          <div class="stat-value" id="daysRemaining">89</div>
+          <div class="stat-context">Season ends Dec 11, 2025</div>
+        </div>
+        
+        <div class="stat-card stat-card-primary">
+          <div class="stat-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
+            </svg>
+          </div>
+          <div class="stat-label">Daily Points Needed</div>
+          <div class="stat-value" id="pointsPerDay">0</div>
+          <div class="stat-context">Goal already achieved!</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-8zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-11z"/>
+            </svg>
+          </div>
+          <div class="stat-label">Projected Completion</div>
+          <div class="stat-value">132.1%</div>
+          <div class="stat-context">On pace to exceed goal</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
+              <path d="M9.5 6.5a1.5 1.5 0 0 1-1 1.415l.385 1.99a.5.5 0 0 1-.491.595h-.788a.5.5 0 0 1-.49-.595l.384-1.99a1.5 1.5 0 1 1 2-1.415z"/>
+            </svg>
+          </div>
+          <div class="stat-label">Points to Next Rank</div>
+          <div class="stat-value">100</div>
+          <div class="stat-context">Diamond IV</div>
+        </div>
+      </section>
+  
+      <!-- Progress Visualization -->
+      <section class="progress-section achievement-animation">
+        <div class="progress-heading">
+          <h2>Progress to Platinum I</h2>
+          <div class="progress-percent" id="progressPercent">100.7%</div>
+        </div>
+        
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: 100%">
+            <div class="progress-glow"></div>
+          </div>
+        </div>
+        
+        <div class="progress-milestones">
+          <div class="milestone-track"></div>
+          
+          <div class="milestone completed" style="left: 0%">
+            <div class="milestone-popup">Bronze IV: 25 pts</div>
+            <div class="milestone-label">B4</div>
+          </div>
+          
+          <div class="milestone completed" style="left: 25%">
+            <div class="milestone-popup">Silver I: 300 pts</div>
+            <div class="milestone-label">S1</div>
+          </div>
+          
+          <div class="milestone completed" style="left: 50%">
+            <div class="milestone-popup">Gold I: 600 pts</div>
+            <div class="milestone-label">G1</div>
+          </div>
+          
+          <div class="milestone completed" style="left: 75%">
+            <div class="milestone-popup">Platinum II: 900 pts</div>
+            <div class="milestone-label">P2</div>
+          </div>
+          
+          <div class="milestone completed" style="left: 100%">
+            <div class="milestone-popup">Platinum I: 1000 pts</div>
+            <div class="milestone-label">P1</div>
+          </div>
+        </div>
+        
+        <div class="pace-indicator pace-ahead">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 5px;">
+            <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
+          </svg>
+          Platinum I Achieved! Congratulations!
+        </div>
+      </section>
+  
+      <!-- Quick Actions -->
+      <section class="quick-actions">
+        <h2>Add Match Results</h2>
+        <div class="action-grid">
+          <div class="action-btn action-win" onclick="quickAddPoints(21)">
+            <div class="action-icon">🏆</div>
+            <div class="action-name">Win</div>
+            <div class="action-points">+21</div>
+          </div>
+          
+          <div class="action-btn action-second" onclick="quickAddPoints(12)">
+            <div class="action-icon">🥈</div>
+            <div class="action-name">2nd Place</div>
+            <div class="action-points">+12</div>
+          </div>
+          
+          <div class="action-btn action-third" onclick="quickAddPoints(8)">
+            <div class="action-icon">🥉</div>
+            <div class="action-name">3rd Place</div>
+            <div class="action-points">+8</div>
+          </div>
+          
+          <div class="action-btn action-qualified" onclick="quickAddPoints(5)">
+            <div class="action-icon">✅</div>
+            <div class="action-name">Qualified</div>
+            <div class="action-points">+5</div>
+          </div>
+          
+          <div class="action-btn action-eliminated" onclick="quickAddPoints(2)">
+            <div class="action-icon">❌</div>
+            <div class="action-name">Eliminated</div>
+            <div class="action-points">+2</div>
+          </div>
+          
+          <div class="action-btn action-undo" onclick="undoLastAction()">
+            <div class="action-icon">↩️</div>
+            <div class="action-name">Undo</div>
+            <div class="action-points" id="undoPoints">-0</div>
+          </div>
+        </div>
+      </section>
+  
+      <!-- Rank Ladder -->
+      <section class="rank-ladder">
+        <h2>Rank Progression</h2>
+        <div class="rank-grid">
+          <div class="rank-item completed">
+            <div class="rank-icon" style="background: var(--bronze);">B4</div>
+            <div class="rank-info">
+              <div class="rank-name">Bronze IV</div>
+              <div class="rank-points">25 pts</div>
+            </div>
+            <div class="rank-status completed">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="rank-item completed">
+            <div class="rank-icon" style="background: var(--bronze);">B3</div>
+            <div class="rank-info">
+              <div class="rank-name">Bronze III</div>
+              <div class="rank-points">50 pts</div>
+            </div>
+            <div class="rank-status completed">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="rank-item completed">
+            <div class="rank-icon" style="background: var(--bronze);">B2</div>
+            <div class="rank-info">
+              <div class="rank-name">Bronze II</div>
+              <div class="rank-points">75 pts</div>
+            </div>
+            <div class="rank-status completed">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="rank-item completed">
+            <div class="rank-icon" style="background: var(--bronze);">B1</div>
+            <div class="rank-info">
+              <div class="rank-name">Bronze I</div>
+              <div class="rank-points">100 pts</div>
+            </div>
+            <div class="rank-status completed">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+              </svg>
+            </div>
+          </div>
+          
+          <!-- Continue for Silver, Gold, Platinum, Diamond, Emerald tiers -->
+          <div class="rank-item completed">
+            <div class="rank-icon" style="background: var(--silver);">S4</div>
+            <div class="rank-info">
+              <div class="rank-name">Silver IV</div>
+              <div class="rank-points">150 pts</div>
+            </div>
+            <div class="rank-status completed">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+              </svg>
+            </div>
+          </div>
+          
+          <!-- Last few ranks including current -->
+          <div class="rank-item completed">
+            <div class="rank-icon" style="background: var(--platinum);">P2</div>
+            <div class="rank-info">
+              <div class="rank-name">Platinum II</div>
+              <div class="rank-points">900 pts</div>
+            </div>
+            <div class="rank-status completed">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="rank-item completed current">
+            <div class="rank-icon" style="background: var(--platinum);">P1</div>
+            <div class="rank-info">
+              <div class="rank-name">Platinum I</div>
+              <div class="rank-points">1000 pts</div>
+            </div>
+            <div class="rank-status completed">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="rank-item">
+            <div class="rank-icon" style="background: var(--diamond);">D4</div>
+            <div class="rank-info">
+              <div class="rank-name">Diamond IV</div>
+              <div class="rank-points">1150 pts</div>
+            </div>
+            <div class="rank-status pending">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855-.143.268-.276.56-.395.872.705.157 1.472.257 2.282.287V1.077zM4.249 3.539c.142-.384.304-.744.481-1.078a6.7 6.7 0 0 1 .597-.933A7.01 7.01 0 0 0 3.051 3.05c.362.184.763.349 1.198.49zM3.509 7.5c.036-1.07.188-2.087.436-3.008a9.124 9.124 0 0 1-1.565-.667A6.964 6.964 0 0 0 1.018 7.5h2.49zm1.4-2.741a12.344 12.344 0 0 0-.4 2.741H7.5V5.091c-.91-.03-1.783-.145-2.591-.332zM8.5 5.09V7.5h2.99a12.342 12.342 0 0 0-.399-2.741c-.808.187-1.681.301-2.591.332zM4.51 8.5c.035.987.176 1.914.399 2.741A13.612 13.612 0 0 1 7.5 10.91V8.5H4.51zm3.99 0v2.409c.91.03 1.783.145 2.591.332.223-.827.364-1.754.4-2.741H8.5zm-3.282 3.696c.12.312.252.604.395.872.552 1.035 1.218 1.65 1.887 1.855V11.91c-.81.03-1.577.13-2.282.287zm.11 2.276a6.696 6.696 0 0 1-.598-.933 8.853 8.853 0 0 1-.481-1.079 8.38 8.38 0 0 0-1.198.49 7.01 7.01 0 0 0 2.276 1.522zm-1.383-2.964A13.36 13.36 0 0 1 3.508 8.5h-2.49a6.963 6.963 0 0 0 1.362 3.675c.47-.258.995-.482 1.565-.667zm6.728 2.964a7.009 7.009 0 0 0 2.275-1.521 8.376 8.376 0 0 0-1.197-.49 8.853 8.853 0 0 1-.481 1.078 6.688 6.688 0 0 1-.597.933zM8.5 11.909v3.014c.67-.204 1.335-.82 1.887-1.855.143-.268.276-.56.395-.872A12.63 12.63 0 0 0 8.5 11.91zm3.555-.401c.57.185 1.095.409 1.565.667A6.963 6.963 0 0 0 14.982 8.5h-2.49a13.36 13.36 0 0 1-.437 3.008zM14.982 7.5a6.963 6.963 0 0 0-1.362-3.675c-.47.258-.995.482-1.565.667.248.92.4 1.938.437 3.008h2.49zM11.27 2.461c.177.334.339.694.482 1.078a8.368 8.368 0 0 0 1.196-.49 7.01 7.01 0 0 0-2.275-1.52c.218.283.418.597.597.932zm-.488 1.343a7.765 7.765 0 0 0-.395-.872C9.835 1.897 9.17 1.282 8.5 1.077V4.09c.81-.03 1.577-.13 2.282-.287z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <!-- Daily Log -->
+      <section class="daily-log">
+        <h2>Daily Progress Log</h2>
+        <div class="log-form">
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input type="date" id="dateInput" class="form-input" value="2025-09-13">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Points</label>
+            <input type="number" id="pointsInput" class="form-input" placeholder="Points">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Notes (optional)</label>
+            <input type="text" id="notesInput" class="form-input" placeholder="Notes">
+          </div>
+          
+          <button class="add-entry-btn">Add Entry</button>
+        </div>
+        
+        <div class="log-entries">
+          <div class="log-header">
+            <div>Date</div>
+            <div>Points</div>
+            <div>Notes</div>
+            <div>Total</div>
+          </div>
+          
+          <div class="log-entries-list">
+            <div class="log-item">
+              <div class="log-date">9/11/2025</div>
+              <div class="log-points">+264</div>
+              <div class="log-notes"></div>
+              <div class="log-total">Total: 1132</div>
+            </div>
+            
+            <!-- More log entries can be dynamically added here -->
+          </div>
+        </div>
+      </section>
+    </div>
+  
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="support-section">
+        <div class="support-text">Enjoying the World Tour tracker?</div>
+        <a href="#" class="support-btn">☕ Support Me</a>
+      </div>
+    </footer>
+  
+    <!-- Last Updated -->
+    <div class="last-updated">Last updated: 1 minute ago</div>
+  
+    <!-- Notification -->
+    <div id="notification" class="notification">Points added successfully!</div>
+  
+    <!-- Onboarding Overlay -->
+    <div class="onboarding-overlay" id="onboardingOverlay">
+      <div class="onboarding-card">
+        <button class="onboarding-close">×</button>
+        <div class="onboarding-icon">🏆</div>
+        <h3 class="onboarding-title">Welcome to World Tour Tracker!</h3>
+        <p class="onboarding-text">Track your progress through Season 8 ranks. Set a goal, log your matches, and see exactly what you need to reach your target rank.</p>
+        <button class="onboarding-btn">Get Started</button>
+        <div class="onboarding-steps">
+          <div class="onboarding-dot active"></div>
+          <div class="onboarding-dot"></div>
+          <div class="onboarding-dot"></div>
+        </div>
+      </div>
+    </div>
+  
+    <script>
+      // Season 8 Configuration
+      const SEASON_START_DATE = '2025-09-11';
+      const SEASON_END_DATE = '2025-12-11';
+      const SEASON_DAYS = 91;
+
+      // Season 8 Ranks
+      const ranks = [
+        { name: "Bronze IV", points: 25, icon: "B4", color: "#CD7F32", tier: "bronze" },
+        { name: "Bronze III", points: 50, icon: "B3", color: "#CD7F32", tier: "bronze" },
+        { name: "Bronze II", points: 75, icon: "B2", color: "#CD7F32", tier: "bronze" },
+        { name: "Bronze I", points: 100, icon: "B1", color: "#CD7F32", tier: "bronze" },
+        { name: "Silver IV", points: 150, icon: "S4", color: "#C0C0C0", tier: "silver" },
+        { name: "Silver III", points: 200, icon: "S3", color: "#C0C0C0", tier: "silver" },
+        { name: "Silver II", points: 250, icon: "S2", color: "#C0C0C0", tier: "silver" },
+        { name: "Silver I", points: 300, icon: "S1", color: "#C0C0C0", tier: "silver" },
+        { name: "Gold IV", points: 375, icon: "G4", color: "#FFD700", tier: "gold" },
+        { name: "Gold III", points: 450, icon: "G3", color: "#FFD700", tier: "gold" },
+        { name: "Gold II", points: 525, icon: "G2", color: "#FFD700", tier: "gold" },
+        { name: "Gold I", points: 600, icon: "G1", color: "#FFD700", tier: "gold" },
+        { name: "Platinum IV", points: 700, icon: "P4", color: "#E5E4E2", tier: "platinum" },
+        { name: "Platinum III", points: 800, icon: "P3", color: "#E5E4E2", tier: "platinum" },
+        { name: "Platinum II", points: 900, icon: "P2", color: "#E5E4E2", tier: "platinum" },
+        { name: "Platinum I", points: 1000, icon: "P1", color: "#E5E4E2", tier: "platinum" },
+        { name: "Diamond IV", points: 1150, icon: "D4", color: "#B9F2FF", tier: "diamond" },
+        { name: "Diamond III", points: 1300, icon: "D3", color: "#B9F2FF", tier: "diamond" },
+        { name: "Diamond II", points: 1450, icon: "D2", color: "#B9F2FF", tier: "diamond" },
+        { name: "Diamond I", points: 1600, icon: "D1", color: "#B9F2FF", tier: "diamond" },
+        { name: "Emerald IV", points: 1800, icon: "E4", color: "#50C878", tier: "emerald" },
+        { name: "Emerald III", points: 2000, icon: "E3", color: "#50C878", tier: "emerald" },
+        { name: "Emerald II", points: 2200, icon: "E2", color: "#50C878", tier: "emerald" },
+        { name: "Emerald I", points: 2400, icon: "E1", color: "#50C878", tier: "emerald" }
+      ];
+
+      // Global state
+      let currentPoints = 0;
+      let selectedGoal = 'Emerald I';
+      let daysRemaining = 0;
+
+      // Initialize on load
+      document.addEventListener('DOMContentLoaded', () => {
+        initializeApp();
+      });
+
+      function initializeApp() {
+        // Load saved data
+        currentPoints = parseInt(localStorage.getItem('currentPoints') || '0');
+        selectedGoal = localStorage.getItem('selectedGoal') || 'Emerald I';
+
+        // Set initial values
+        const pointsInput = document.getElementById('currentPoints');
+        const goalSelect = document.getElementById('goalSelect');
+
+        if (pointsInput) {
+          pointsInput.value = currentPoints;
+          pointsInput.addEventListener('input', handlePointsChange);
+        }
+
+        if (goalSelect) {
+          goalSelect.value = selectedGoal;
+          goalSelect.addEventListener('change', handleGoalChange);
+        }
+
+        calculateDaysRemaining();
+        updateDashboard();
+        updateGoalPreview();
+      }
+
+      function handlePointsChange(e) {
+        const newPoints = parseInt(e.target.value) || 0;
+        currentPoints = Math.max(0, Math.min(2400, newPoints));
+        localStorage.setItem('currentPoints', currentPoints);
+        updateDashboard();
+      }
+
+      function handleGoalChange(e) {
+        selectedGoal = e.target.value;
+        localStorage.setItem('selectedGoal', selectedGoal);
+        updateGoalPreview();
+        updateDashboard();
+      }
+
+      function calculateDaysRemaining() {
+        const today = new Date();
+        const seasonEnd = new Date(SEASON_END_DATE);
+        const diffTime = seasonEnd - today;
+        daysRemaining = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+        return daysRemaining;
+      }
+
+      function updateDashboard() {
+        const goalRank = ranks.find(r => r.name === selectedGoal);
+        const goalPoints = goalRank ? goalRank.points : 2400;
+        const pointsNeeded = Math.max(0, goalPoints - currentPoints);
+        const pointsPerDay = daysRemaining > 0 ? Math.ceil(pointsNeeded / daysRemaining) : 0;
+
+        // Update days remaining
+        const daysEl = document.getElementById('daysRemaining');
+        if (daysEl) daysEl.textContent = daysRemaining;
+
+        // Update points needed
+        const pointsNeededEl = document.getElementById('pointsNeeded');
+        if (pointsNeededEl) pointsNeededEl.textContent = pointsNeeded;
+
+        // Update points per day
+        const pointsPerDayEl = document.getElementById('pointsPerDay');
+        if (pointsPerDayEl) pointsPerDayEl.textContent = pointsPerDay;
+
+        // Update progress percentage
+        const progress = Math.min(100, (currentPoints / goalPoints) * 100);
+        const progressEl = document.getElementById('progressPercent');
+        if (progressEl) progressEl.textContent = progress.toFixed(1) + '%';
+
+        // Update progress bar
+        const progressBar = document.querySelector('.progress-bar');
+        if (progressBar) {
+          progressBar.style.width = progress + '%';
+        }
+
+        // Update progress text
+        const progressText = document.getElementById('progressText');
+        if (progressText) {
+          progressText.textContent = `${currentPoints} / ${goalPoints} points`;
+        }
+
+        // Update current rank
+        updateCurrentRank();
+      }
+
+      function updateGoalPreview() {
+        const goalRank = ranks.find(r => r.name === selectedGoal);
+        if (!goalRank) return;
+
+        const rankIcon = document.getElementById('goalRankIcon');
+        const rankName = document.getElementById('goalRankName');
+        const rankPoints = document.getElementById('goalRankPoints');
+
+        if (rankIcon) {
+          rankIcon.textContent = goalRank.icon;
+          rankIcon.className = `rank-icon rank-${goalRank.tier}`;
+        }
+        if (rankName) rankName.textContent = goalRank.name;
+        if (rankPoints) rankPoints.textContent = `${goalRank.points} points`;
+      }
+
+      function updateCurrentRank() {
+        let currentRank = null;
+        for (let i = ranks.length - 1; i >= 0; i--) {
+          if (currentPoints >= ranks[i].points) {
+            currentRank = ranks[i];
+            break;
+          }
+        }
+
+        const currentRankEl = document.getElementById('currentRank');
+        if (currentRankEl) {
+          if (currentRank) {
+            currentRankEl.textContent = currentRank.name;
+          } else {
+            currentRankEl.textContent = 'Unranked';
+          }
+        }
+      }
+
+      function quickAddPoints(points) {
+        currentPoints = Math.min(2400, currentPoints + points);
+        const pointsInput = document.getElementById('currentPoints');
+        if (pointsInput) pointsInput.value = currentPoints;
+        localStorage.setItem('currentPoints', currentPoints);
+        updateDashboard();
+
+        // Show feedback
+        showNotification(`+${points} points added!`);
+      }
+
+      function showNotification(message) {
+        // Simple notification (you can enhance this)
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = message;
+        notification.style.cssText = `
+          position: fixed;
+          top: 80px;
+          right: 20px;
+          background: var(--primary);
+          color: var(--bg-dark);
+          padding: 12px 20px;
+          border-radius: 8px;
+          font-weight: 600;
+          z-index: 1000;
+          animation: slideIn 0.3s ease;
+        `;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+      }
+
+      function resetData() {
+        if (confirm('Are you sure you want to reset all data?')) {
+          localStorage.clear();
+          location.reload();
+        }
+      }
+
+      function shareProgress() {
+        const goalRank = ranks.find(r => r.name === selectedGoal);
+        const goalPoints = goalRank ? goalRank.points : 2400;
+        const progress = ((currentPoints / goalPoints) * 100).toFixed(1);
+
+        const text = `🎮 THE FINALS Season 8 Progress\n` +
+                    `📊 ${currentPoints}/${goalPoints} points (${progress}%)\n` +
+                    `🎯 Goal: ${selectedGoal}\n` +
+                    `📅 ${daysRemaining} days remaining`;
+
+        if (navigator.share) {
+          navigator.share({ title: 'My World Tour Progress', text: text });
+        } else {
+          navigator.clipboard.writeText(text);
+          showNotification('Progress copied to clipboard!');
+        }
+      }
+    </script>
+  </body>
+  </html>
+  </artifact>
+  
