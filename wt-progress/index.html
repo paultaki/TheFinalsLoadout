@@ -431,17 +431,19 @@
       }
 
       .goal-select {
-        background: linear-gradient(135deg, rgba(80, 200, 120, 0.1) 0%, rgba(0, 0, 0, 0.6) 100%);
-        border: 2px solid #50c878;
+        background: linear-gradient(135deg, rgba(80, 200, 120, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%);
+        border: 3px solid #50c878;
         color: #fff;
-        padding: 0.85rem 1.2rem;
-        border-radius: 10px;
-        font-size: 1.05rem;
-        font-weight: 600;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        font-size: 1.15rem;
+        font-weight: 700;
         cursor: pointer;
         transition: all 0.3s;
-        min-width: 220px;
-        box-shadow: 0 2px 8px rgba(80, 200, 120, 0.2);
+        min-width: 280px;
+        box-shadow: 0 4px 15px rgba(80, 200, 120, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
       .goal-select:hover {
@@ -621,8 +623,9 @@
         outline: 3px solid #50c878;
         outline-offset: 3px;
         background: rgba(80, 200, 120, 0.2);
-        border: 2px solid #50c878;
-        box-shadow: 0 0 20px rgba(80, 200, 120, 0.3);
+        border: 3px solid #50c878;
+        box-shadow: 0 0 30px rgba(80, 200, 120, 0.5);
+        transform: scale(1.05);
       }
 
       /* Progress Section */
@@ -1175,6 +1178,34 @@
     </style>
   </head>
   <body>
+    <!-- First Time User Overlay -->
+    <div id="firstTimeOverlay" class="first-time-overlay" style="display: none;">
+      <div class="first-time-content">
+        <h2 class="first-time-title">Welcome to World Tour Tracker!</h2>
+        <p style="color: #b0b0b0; margin-bottom: 1.5rem;">Get started in just 2 simple steps:</p>
+
+        <div class="first-time-step">
+          <div class="first-time-step-number">1</div>
+          <div class="first-time-step-text">
+            <strong style="color: #50c878;">Select Your Goal Rank</strong><br>
+            Choose your target rank from the dropdown menu
+          </div>
+        </div>
+
+        <div class="first-time-step">
+          <div class="first-time-step-number">2</div>
+          <div class="first-time-step-text">
+            <strong style="color: #50c878;">Enter Your Current Points</strong><br>
+            Tap the points field and enter your current World Tour points
+          </div>
+        </div>
+
+        <button class="first-time-button" onclick="closeFirstTimeOverlay()">Get Started!</button>
+      </div>
+    </div>
+
+    <!-- Help Button -->
+    <button class="help-button" onclick="showHelp()" title="Need help?">?</button>
     <!-- Mobile Menu Button and Overlay -->
     <style>
         /* Main Navigation Bar Styles */
@@ -1762,6 +1793,8 @@
       // Initialize on load
       document.addEventListener('DOMContentLoaded', () => {
         initializeApp();
+        checkFirstTimeUser();
+        addInteractiveHighlights();
       });
 
       function initializeApp() {
@@ -2397,6 +2430,74 @@
           updateDashboard();
         }
       }, 60000); // Update every minute
+
+      // First time user functions
+      function checkFirstTimeUser() {
+        const hasVisited = localStorage.getItem('hasVisitedBefore');
+        if (!hasVisited) {
+          document.getElementById('firstTimeOverlay').style.display = 'flex';
+        }
+      }
+
+      function closeFirstTimeOverlay() {
+        document.getElementById('firstTimeOverlay').style.display = 'none';
+        localStorage.setItem('hasVisitedBefore', 'true');
+
+        // Add highlight animations to guide user
+        const goalContainer = document.getElementById('goalSelectorContainer');
+        const pointsContainer = document.getElementById('pointsInputContainer');
+
+        goalContainer.classList.add('highlight-action');
+        setTimeout(() => {
+          goalContainer.classList.remove('highlight-action');
+          pointsContainer.classList.add('highlight-action');
+          setTimeout(() => {
+            pointsContainer.classList.remove('highlight-action');
+          }, 6000);
+        }, 1000);
+      }
+
+      function showHelp() {
+        document.getElementById('firstTimeOverlay').style.display = 'flex';
+      }
+
+      function addInteractiveHighlights() {
+        const pointsInput = document.getElementById('currentPoints');
+        const pointsContainer = document.getElementById('pointsInputContainer');
+        const goalSelect = document.getElementById('goalSelect');
+        const goalContainer = document.getElementById('goalSelectorContainer');
+
+        // Add click handler to the entire points container
+        pointsContainer.addEventListener('click', () => {
+          pointsInput.focus();
+          pointsInput.select();
+        });
+
+        // Remove highlight when user interacts
+        goalSelect.addEventListener('change', () => {
+          goalContainer.classList.remove('highlight-action');
+          // Highlight points input after goal selection
+          setTimeout(() => {
+            pointsContainer.classList.add('highlight-action');
+            setTimeout(() => {
+              pointsContainer.classList.remove('highlight-action');
+            }, 4000);
+          }, 500);
+        });
+
+        pointsInput.addEventListener('input', () => {
+          pointsContainer.classList.remove('highlight-action');
+        });
+
+        // If user hasn't set points or goal, add subtle animation
+        if (currentPoints === 0 && !localStorage.getItem('hasVisitedBefore')) {
+          setTimeout(() => {
+            if (currentPoints === 0) {
+              goalContainer.classList.add('highlight-action');
+            }
+          }, 2000);
+        }
+      }
     </script>
 
     <!-- Support Section -->
