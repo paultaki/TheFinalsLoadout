@@ -566,7 +566,6 @@
         border-radius: 15px;
         padding: 20px;
         text-align: center;
-        backdrop-filter: blur(10px);
         transition: all 0.3s;
         display: flex;
         flex-direction: column;
@@ -1739,26 +1738,29 @@
         </div>
 
         <div class="stats-column">
-          <div class="stat-card half-height" style="position: relative; z-index: 1;">
+          <div class="stat-card half-height" style="position: relative; z-index: 1000 !important; isolation: isolate;">
             <div class="stat-icon" style="font-size: 2em; margin-bottom: 10px;">📈</div>
             <div class="stat-label">Projected Completion
               <span class="tooltip-icon" style="cursor: help; color: #888; font-size: 0.9em;">ⓘ</span>
               <div class="tooltip-content" style="
                 display: none;
                 position: absolute;
-                background: #1a1a2e;
+                background: #000000;
+                opacity: 1;
                 border: 1px solid #50c878;
                 border-radius: 8px;
                 padding: 15px;
                 width: 280px;
                 left: 50%;
                 transform: translateX(-50%);
-                top: 70px;
-                z-index: 10001;
+                bottom: 100%;
+                margin-bottom: 10px;
+                z-index: 100001;
                 text-align: left;
                 font-size: 0.85rem;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.5);
                 pointer-events: none;
+                backdrop-filter: none;
               ">
                 <div style="color: #50c878; font-weight: 600; margin-bottom: 10px;">How Projected Completion Works:</div>
                 <div style="color: #b0b0b0; line-height: 1.6;">
@@ -1780,25 +1782,27 @@
             <div class="stat-value" id="completion" style="font-size: 2.7em;">--</div>
             <div class="stat-subtitle" id="completionStatus" style="font-size: 0.9em; color: #50c878; margin-top: 5px;"></div>
           </div>
-          <div class="stat-card half-height" style="position: relative; z-index: 1;">
+          <div class="stat-card half-height" style="position: relative;">
             <div class="stat-icon" style="font-size: 2em; margin-bottom: 10px;">📆</div>
             <div class="stat-label">Est. Completion Date
               <span class="tooltip-icon" style="cursor: help; color: #888; font-size: 0.9em;">ⓘ</span>
               <div class="tooltip-content" style="
                 display: none;
                 position: absolute;
-                background: #1a1a2e;
+                background: #000000;
+                opacity: 1;
+                backdrop-filter: none;
                 border: 1px solid #50c878;
                 border-radius: 8px;
                 padding: 15px;
                 width: 280px;
                 left: 50%;
                 transform: translateX(-50%);
-                bottom: 70px;
-                z-index: 10001;
+                top: calc(100% - 25px);
+                z-index: 100001;
                 text-align: left;
                 font-size: 0.85rem;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+                box-shadow: 0 6px 20px rgba(0,0,0,0.8);
                 pointer-events: none;
               ">
                 <div style="color: #50c878; font-weight: 600; margin-bottom: 10px;">How Completion Date Works:</div>
