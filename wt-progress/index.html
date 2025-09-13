@@ -223,14 +223,171 @@
         50% { transform: scale(1.05); }
       }
 
+      /* Step indicators */
+      .step-indicator {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, #50c878, #20b2aa);
+        color: #000;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        animation: pulse-attention 2s infinite;
+      }
+
+      @keyframes pulse-attention {
+        0%, 100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(80, 200, 120, 0.7);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 0 20px 5px rgba(80, 200, 120, 0.3);
+        }
+      }
+
+      /* First load animation */
+      @keyframes highlight-first-load {
+        0%, 100% {
+          box-shadow: 0 0 30px rgba(80, 200, 120, 0.5);
+          border-color: #50c878;
+        }
+        50% {
+          box-shadow: 0 0 50px rgba(80, 200, 120, 0.8);
+          border-color: #60d888;
+        }
+      }
+
+      .highlight-action {
+        animation: highlight-first-load 2s ease-in-out 3;
+      }
+
+      /* First time overlay */
+      .first-time-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+      }
+
+      .first-time-content {
+        background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+        border: 3px solid #50c878;
+        border-radius: 20px;
+        padding: 2rem;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 0 0 50px rgba(80, 200, 120, 0.5);
+      }
+
+      .first-time-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #50c878, #20b2aa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .first-time-step {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        text-align: left;
+        padding: 1rem;
+        background: rgba(80, 200, 120, 0.1);
+        border-radius: 10px;
+        border: 1px solid rgba(80, 200, 120, 0.3);
+      }
+
+      .first-time-step-number {
+        background: linear-gradient(135deg, #50c878, #20b2aa);
+        color: #000;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.2rem;
+        margin-right: 1rem;
+        flex-shrink: 0;
+      }
+
+      .first-time-step-text {
+        color: #fff;
+        font-size: 1rem;
+      }
+
+      .first-time-button {
+        background: linear-gradient(135deg, #50c878, #20b2aa);
+        color: #000;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 1.5rem;
+        transition: all 0.3s;
+      }
+
+      .first-time-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 20px rgba(80, 200, 120, 0.5);
+      }
+
+      /* Help button */
+      .help-button {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        background: linear-gradient(135deg, #50c878, #20b2aa);
+        color: #000;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s;
+        z-index: 1000;
+      }
+
+      .help-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(80, 200, 120, 0.5);
+      }
+
       /* Goal Selector */
       .goal-selector-container {
         background: linear-gradient(135deg, rgba(80, 200, 120, 0.15) 0%, rgba(80, 200, 120, 0.05) 100%);
-        border: 2px solid #50c878;
+        border: 3px solid #50c878;
         border-radius: 15px;
         padding: 1.5rem;
         margin: 2rem 0;
         box-shadow: 0 0 30px rgba(80, 200, 120, 0.3);
+        position: relative;
+      }
+
+      .goal-selector-container.highlight-action {
+        animation: highlight-first-load 2s ease-in-out infinite;
       }
 
       .goal-selector-header {
@@ -243,18 +400,27 @@
       }
 
       .goal-selector-title {
-        font-size: 1.25rem;
+        font-size: 1.35rem;
         font-weight: 700;
         color: #50c878;
         margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
       }
-      
+
       .goal-hint {
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.5);
-        margin-bottom: 12px;
-        font-style: italic;
-        animation: pulse 2s ease-in-out infinite;
+        font-size: 1rem;
+        color: #fff;
+        background: rgba(80, 200, 120, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        border: 1px solid rgba(80, 200, 120, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        animation: pulse-attention 2s ease-in-out infinite;
       }
 
       .goal-selector {
@@ -381,41 +547,63 @@
         align-items: center;
         justify-content: center;
         position: relative;
-        gap: 8px;
+        gap: 12px;
+        padding: 1rem;
+        background: linear-gradient(135deg, rgba(80, 200, 120, 0.15) 0%, rgba(80, 200, 120, 0.05) 100%);
+        border-radius: 15px;
+        border: 3px dashed rgba(80, 200, 120, 0.5);
+        transition: all 0.3s;
       }
-      
+
+      .points-input-container.highlight-action {
+        animation: highlight-first-load 2s ease-in-out infinite;
+      }
+
+      .points-input-container:hover {
+        border-style: solid;
+        border-color: #50c878;
+        box-shadow: 0 0 20px rgba(80, 200, 120, 0.3);
+      }
+
       .input-hint {
-        font-size: 0.85rem;
-        color: rgba(80, 200, 120, 0.7);
-        opacity: 0.8;
-        transition: opacity 0.3s ease;
-        text-align: center;
-        animation: pulse 2s ease-in-out infinite;
+        font-size: 1.1rem;
+        color: #fff;
+        background: linear-gradient(135deg, #50c878, #20b2aa);
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.3s;
+        animation: pulse-attention 2s ease-in-out infinite;
+        box-shadow: 0 4px 15px rgba(80, 200, 120, 0.3);
       }
-      
+
+      .input-hint:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(80, 200, 120, 0.5);
+      }
+
       .points-input-container:hover .input-hint {
-        opacity: 0;
-      }
-      
-      @keyframes pulse {
-        0%, 100% { opacity: 0.6; }
-        50% { opacity: 1; }
+        opacity: 0.8;
       }
 
       .points-input {
-        background: rgba(80, 200, 120, 0.08);
-        border: 2px dashed rgba(80, 200, 120, 0.4);
+        background: rgba(0, 0, 0, 0.6);
+        border: 3px solid #50c878;
         color: #50c878;
-        font-size: 2.5em;
+        font-size: 3em;
         font-weight: 700;
         text-align: center;
-        width: 180px;
-        padding: 10px;
-        cursor: text;
+        width: 200px;
+        padding: 15px;
+        cursor: pointer;
         transition: all 0.3s;
         border-radius: 12px;
         -webkit-appearance: none;
         -moz-appearance: textfield;
+        box-shadow: 0 0 20px rgba(80, 200, 120, 0.2) inset;
       }
       
       .points-input::placeholder {
@@ -1176,10 +1364,11 @@
       </div>
 
       <!-- Goal Selector -->
-      <div class="goal-selector-container">
+      <div class="goal-selector-container" id="goalSelectorContainer">
         <div class="goal-selector-header">
-          <div class="goal-selector-title">🎯 Your Goal</div>
-          <div class="goal-hint">👇 Select your target rank from the dropdown</div>
+          <span class="step-indicator">STEP 1</span>
+          <div class="goal-selector-title">🎯 Choose Your Target Rank</div>
+          <div class="goal-hint">👇 TAP THE DROPDOWN TO SELECT YOUR GOAL RANK</div>
           <div class="goal-selector">
             <select id="goalSelect" class="goal-select" onchange="updateGoal()">
               <!-- Options will be populated by JavaScript -->
@@ -1197,10 +1386,11 @@
 
       <!-- Stats Grid -->
       <div class="stats-grid">
-        <div class="stat-card primary">
-          <div class="stat-label">Current Points</div>
-          <div class="points-input-container">
-            <div class="input-hint">✏️ Click to enter your points</div>
+        <div class="stat-card primary" style="position: relative;">
+          <span class="step-indicator" style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%);">STEP 2</span>
+          <div class="stat-label" style="margin-top: 1.5rem; font-size: 1rem; font-weight: 700;">Enter Your Current Points</div>
+          <div class="points-input-container" id="pointsInputContainer">
+            <div class="input-hint">📝 TAP HERE TO UPDATE YOUR POINTS</div>
             <input
               type="number"
               id="currentPoints"
@@ -1210,7 +1400,7 @@
               max="2400"
               aria-label="Current points"
               title="Click to edit your current points"
-              placeholder="0"
+              placeholder="Enter Points"
             />
           </div>
         </div>
@@ -2161,7 +2351,29 @@
 
       function resetData() {
         if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
-          storage.clearStorage();
+          // Clear all localStorage data
+          localStorage.clear();
+
+          // Reset global variables to defaults
+          currentPoints = 0;
+          selectedGoal = 'Emerald I';
+          dailyEntries = [];
+          undoHistory = [];
+
+          // Set fresh defaults in localStorage
+          localStorage.setItem('cacheVersion', STORAGE_VERSION);
+          localStorage.setItem('currentPoints', '0');
+          localStorage.setItem('selectedGoal', 'Emerald I');
+          localStorage.setItem('dailyEntries', '[]');
+          localStorage.setItem('undoHistory', '[]');
+          localStorage.setItem('seasonStartDate', SEASON_START_DATE);
+          localStorage.setItem('seasonEndDate', SEASON_END_DATE);
+
+          // Clear storage cache
+          storage.cache = {};
+          storage.cacheTimestamps = {};
+
+          // Reload the page to reinitialize everything
           location.reload();
         }
       }
