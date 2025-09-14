@@ -11,7 +11,7 @@
 
     <meta
       name="keywords"
-      content="THE FINALS World Tour tracker, Emerald rank calculator, Season 8 progress, daily points calculator, rank tracker, gaming tools"
+      content="THE FINALS World Tour tracker, Emerald rank calculator, daily points calculator, rank tracker, gaming tools, configurable season tracker"
     />
 
     <!-- Mobile Web App Meta Tags -->
@@ -31,11 +31,11 @@
     />
     <meta
       property="og:title"
-      content="S8 World Tour Progress Tracker - The Finals"
+      content="World Tour Progress Tracker - The Finals"
     />
     <meta
       property="og:description"
-      content="Track your progress to any rank in The Finals Season 8"
+      content="Track your progress to any rank in The Finals. Fully configurable for any season."
     />
     <meta
       property="og:image"
@@ -53,11 +53,11 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="S8 World Tour Progress Tracker - The Finals"
+      content="World Tour Progress Tracker - The Finals"
     />
     <meta
       name="twitter:description"
-      content="Track your progress to any rank in The Finals Season 8"
+      content="Track your progress to any rank in The Finals. Fully configurable for any season."
     />
     <meta
       name="twitter:image"
@@ -98,24 +98,24 @@
       "@type": "FAQPage",
       "mainEntity": [{
         "@type": "Question",
-        "name": "How many points do I need for Emerald rank in THE FINALS Season 8?",
+        "name": "How many points do I need for Emerald rank in THE FINALS?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "You need 2,400 points to reach Emerald I, the highest rank in World Tour. Emerald IV starts at 1,800 points."
+          "text": "The points required for each rank are fully configurable. By default, Emerald I requires 2,400 points and Emerald IV starts at 1,800 points."
         }
       },{
         "@type": "Question",
-        "name": "How do World Tour points work in Season 8?",
+        "name": "How do World Tour points work?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "In World Tour Season 8: Win = 25 points, Lose Final = 14 points, Knocked out Round 2 = 6 points, Knocked out Round 1 = 2 points."
+          "text": "Point values are fully configurable in settings. Default values: Win = 25 points, Lose Final = 14 points, Round 2 KO = 6 points, Round 1 KO = 2 points."
         }
       },{
         "@type": "Question",
-        "name": "How long is THE FINALS Season 8?",
+        "name": "How can I configure this tracker for different seasons?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Season 8 runs from December 11, 2024 to March 12, 2025, lasting 91 days total."
+          "text": "Click the Settings button to customize season dates, point values, and rank requirements for any season."
         }
       }]
     }
@@ -1793,7 +1793,7 @@
     <div class="container">
       <!-- Hero Section -->
       <div style="text-align: center; max-width: 800px; margin: 1rem auto 1rem; padding: 2rem 1rem 0;">
-        <img src="/wt-progress/images/wt-logo.webp" alt="World Tour" style="width: 40%; max-width: 280px; height: auto; margin: 0 auto 0.5rem; display: block;" class="wt-logo">
+        <img src="/wt-progress/images/wt-manual-logo.webp" alt="World Tour" style="width: 40%; max-width: 280px; height: auto; margin: 0 auto 0.5rem; display: block;" class="wt-logo">
         <p style="font-size: 0.95rem; color: #b0b0b0; margin-bottom: 1rem;">
           <span id="seasonDateRange">September 11, 2025 - December 11, 2025</span> • <span id="seasonTotalDays">91</span> Days
         </p>
@@ -2118,8 +2118,9 @@
             // Fresh install
             this.clearStorage();
           } else if (oldVersion === 'v7.0') {
-            // Migrate from Season 7
-            const shouldMigrate = confirm('Season 7 data detected. Would you like to convert your progress proportionally to Season 8? (Cancel for fresh start)');
+            // Migrate from previous season
+            const settings = wtSettings.load();
+            const shouldMigrate = confirm(`Previous season data detected. Would you like to convert your progress to ${settings.seasonName}? (Cancel for fresh start)`);
             
             if (shouldMigrate) {
               this.migrateFromSeason7();
@@ -2134,16 +2135,18 @@
         migrateFromSeason7() {
           try {
             const oldPoints = parseInt(localStorage.getItem('currentPoints') || '0');
-            // Proportional conversion: S7 max was 2400, S8 max is 2400
-            const conversionRatio = 2400 / 2400;
+            // Proportional conversion based on max rank points
+            const maxPoints = Math.max(...ranks.map(r => r.points));
+            const conversionRatio = maxPoints / 2400; // Assuming previous max was 2400
             const newPoints = Math.round(oldPoints * conversionRatio);
-            
+
             localStorage.setItem('currentPoints', newPoints.toString());
-            
+
             // Clear old daily entries as they won't match new point system
             localStorage.removeItem('dailyEntries');
-            
-            showNotification(`Migrated to Season 8! Your ${oldPoints} points converted to ${newPoints} points.`, 'success');
+
+            const settings = wtSettings.load();
+            showNotification(`Migrated to ${settings.seasonName}! Your ${oldPoints} points converted to ${newPoints} points.`, 'success');
           } catch (error) {
             console.error('Migration error:', error);
             this.clearStorage();
@@ -2611,8 +2614,9 @@
         const pointsPerDay = daysRemaining > 0 ? Math.ceil(pointsNeeded / daysRemaining) : 0;
         
         // Calculate projected completion based on average daily points
-        // Season started on 2025-09-11, calculate days elapsed
-        const seasonStart = new Date('2025-09-11');
+        // Calculate days elapsed from configured season start
+        const settings = wtSettings.load();
+        const seasonStart = new Date(settings.seasonStartDate);
         const today = new Date();
         const daysElapsed = Math.max(1, Math.ceil((today - seasonStart) / (1000 * 60 * 60 * 24)));
         const avgPointsPerDay = currentPoints / daysElapsed;
@@ -3326,7 +3330,8 @@
         const goalPoints = goalRank ? goalRank.points : 2400;
         const progress = ((currentPoints / goalPoints) * 100).toFixed(1);
         
-        const text = `🎮 THE FINALS Season 8 Progress\n` +
+        const settings = wtSettings.load();
+        const text = `🎮 THE FINALS ${settings.seasonName} Progress\n` +
                     `📊 ${currentPoints}/${goalPoints} points (${progress}%)\n` +
                     `🎯 Goal: ${selectedGoal}\n` +
                     `📅 ${daysRemaining} days remaining\n` +
