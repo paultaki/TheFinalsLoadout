@@ -2056,8 +2056,8 @@
       let SEASON_END_DATE = currentSettings.seasonEndDate;
       let SEASON_DAYS = calculateSeasonDays(SEASON_START_DATE, SEASON_END_DATE);
 
-      // Replace hardcoded ranks with configurable ones
-      /*ranks = [
+      // Ranks are now loaded from settings
+      /* Old hardcoded ranks removed - now using configurable settings
         { name: "Bronze IV", points: 25, icon: "B4", color: "#CD7F32", tier: "bronze" },
         { name: "Bronze III", points: 50, icon: "B3", color: "#CD7F32", tier: "bronze" },
         { name: "Bronze II", points: 75, icon: "B2", color: "#CD7F32", tier: "bronze" },
@@ -2082,7 +2082,7 @@
         { name: "Emerald III", points: 2000, icon: "E3", color: "#50C878", tier: "emerald" },
         { name: "Emerald II", points: 2200, icon: "E2", color: "#50C878", tier: "emerald" },
         { name: "Emerald I", points: 2400, icon: "E1", color: "#50C878", tier: "emerald" }
-      ];
+      ]; */
 
       // Storage Management with Versioning
       class StorageManager {

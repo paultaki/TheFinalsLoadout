@@ -1,6 +1,17 @@
 // World Tour Tracker Settings System
 const SETTINGS_KEY = 'wtTrackerSettings';
 
+// Notification wrapper (uses showNotification if available, otherwise alert)
+function notify(message, type) {
+  if (typeof showNotification === 'function') {
+    showNotification(message, type);
+  } else if (type === 'error') {
+    alert('Error: ' + message);
+  } else {
+    alert(message);
+  }
+}
+
 // Default Configuration
 const DEFAULT_SETTINGS = {
   seasonName: 'Season 8',
@@ -179,25 +190,25 @@ function saveSettings() {
 
   // Validate
   if (new Date(newSettings.seasonEndDate) <= new Date(newSettings.seasonStartDate)) {
-    showNotification('End date must be after start date', 'error');
+    notify('End date must be after start date', 'error');
     return;
   }
 
   // Validate ranks are in ascending order
   for (let i = 1; i < newSettings.ranks.length; i++) {
     if (newSettings.ranks[i].points <= newSettings.ranks[i - 1].points) {
-      showNotification('Rank points must be in ascending order', 'error');
+      notify('Rank points must be in ascending order', 'error');
       return;
     }
   }
 
   // Save and apply
   if (saveSettingsToStorage(newSettings)) {
-    showNotification('Settings saved successfully!', 'success');
+    notify('Settings saved successfully!', 'success');
     closeSettings();
     setTimeout(() => location.reload(), 1000); // Reload to apply new settings
   } else {
-    showNotification('Failed to save settings', 'error');
+    notify('Failed to save settings', 'error');
   }
 }
 
@@ -205,7 +216,7 @@ function resetToDefaults() {
   if (confirm('Reset all settings to defaults? This cannot be undone.')) {
     saveSettingsToStorage(DEFAULT_SETTINGS);
     populateSettingsModal();
-    showNotification('Settings reset to defaults', 'success');
+    notify('Settings reset to defaults', 'success');
   }
 }
 
@@ -219,7 +230,7 @@ function exportSettings() {
   a.download = `wt-tracker-settings-${new Date().toISOString().split('T')[0]}.json`;
   a.click();
   URL.revokeObjectURL(url);
-  showNotification('Settings exported successfully', 'success');
+  notify('Settings exported successfully', 'success');
 }
 
 function importSettings(event) {
@@ -236,10 +247,10 @@ function importSettings(event) {
       }
       saveSettingsToStorage(imported);
       populateSettingsModal();
-      showNotification('Settings imported successfully', 'success');
+      notify('Settings imported successfully', 'success');
       setTimeout(() => location.reload(), 1000);
     } catch (error) {
-      showNotification('Failed to import settings: ' + error.message, 'error');
+      notify('Failed to import settings: ' + error.message, 'error');
     }
   };
   reader.readAsText(file);
@@ -261,7 +272,7 @@ function shareSettings() {
     });
   } else {
     navigator.clipboard.writeText(text);
-    showNotification('Settings copied to clipboard!', 'success');
+    notify('Settings copied to clipboard!', 'success');
   }
 }
 

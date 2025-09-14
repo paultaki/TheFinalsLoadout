@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Settings</title>
+</head>
+<body>
+    <h1>Settings Test</h1>
+    <button onclick="testSettings()">Test Settings</button>
+    <button onclick="openSettings()">Open Settings</button>
+    <div id="output"></div>
+
+    <!-- Settings Modal (simplified) -->
+    <div id="settingsModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 10000;">
+        <div style="background: white; margin: 50px auto; padding: 20px; max-width: 500px;">
+            <h2>Settings</h2>
+            <button onclick="closeSettings()">Close</button>
+            <button onclick="saveSettings()">Save</button>
+        </div>
+    </div>
+
+    <script src="settings.js"></script>
+    <script>
+        function testSettings() {
+            const settings = wtSettings.load();
+            document.getElementById('output').innerHTML = '<pre>' + JSON.stringify(settings, null, 2) + '</pre>';
+            console.log('Settings loaded:', settings);
+        }
+
+        function showNotification(message, type) {
+            alert(message);
+        }
+
+        // Test on load
+        window.onload = () => {
+            testSettings();
+        };
+    </script>
+</body>
+</html>
