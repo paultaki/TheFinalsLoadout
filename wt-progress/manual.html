@@ -1762,6 +1762,7 @@
         <a href="/">LOADOUT GENERATOR</a>
         <a href="/ragequit/">RAGE QUIT</a>
         <a href="/patch-notes/">PATCH NOTES</a>
+        <a href="#" onclick="openSettings(); document.getElementById('simpleMenu').classList.remove('show'); document.getElementById('menuOverlay').classList.remove('show'); return false;">⚙️ SETTINGS</a>
         <a href="/meta-weapons/">META WEAPONS</a>
         <a href="/wt-progress/" class="active">WORLD TOUR</a>
     </div>
@@ -1793,6 +1794,12 @@
     <div class="container">
       <!-- Hero Section -->
       <div style="text-align: center; max-width: 800px; margin: 1rem auto 1rem; padding: 2rem 1rem 0;">
+        <!-- Settings Prompt -->
+        <div style="background: linear-gradient(135deg, rgba(80, 200, 120, 0.2), rgba(80, 200, 120, 0.1)); border: 2px solid #50c878; border-radius: 10px; padding: 12px 20px; margin-bottom: 1.5rem; display: inline-block;">
+          <p style="color: #50c878; font-weight: 600; margin: 0; font-size: 1rem;">
+            ⚙️ Click <span style="text-decoration: underline;">Settings</span> in the navigation bar to configure for your season
+          </p>
+        </div>
         <img src="/wt-progress/images/wt-manual-logo.webp" alt="World Tour" style="width: 48%; max-width: 336px; height: auto; margin: 0 auto 0.5rem; display: block;" class="wt-logo">
         <p style="font-size: 0.95rem; color: #b0b0b0; margin-bottom: 1rem;">
           <span id="seasonDateRange">September 11, 2025 - December 11, 2025</span> • <span id="seasonTotalDays">91</span> Days
