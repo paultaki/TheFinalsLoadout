@@ -2460,36 +2460,48 @@
         const seasonEnd = new Date(SEASON_END_DATE);
 
         if (avgPointsPerDay > 0) {
-          const daysToGoal = Math.ceil((goalPoints - currentPoints) / avgPointsPerDay);
-          const completionDate = new Date();
-          completionDate.setDate(completionDate.getDate() + daysToGoal);
+          const pointsRemaining = goalPoints - currentPoints;
 
-          if (completionDate <= seasonEnd) {
-            // Will complete before season ends
-            if (daysToGoal <= 0) {
-              completionDateText = '✅ COMPLETE!';
-            } else if (daysToGoal === 1) {
-              completionDateText = 'Tomorrow';
-            } else if (daysToGoal <= 7) {
-              completionDateText = `${daysToGoal} days`;
-            } else {
-              completionDateText = completionDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-            }
-
-            // Calculate how many days ahead of schedule
-            const daysAhead = daysRemaining - daysToGoal;
-            if (daysAhead > 0 && daysToGoal > 0) {
-              completionDateSubtext = `${daysAhead} days ahead of schedule`;
-              completionDateColor = '#50c878';
-            }
+          // Check if already at or above goal
+          if (pointsRemaining <= 0) {
+            completionDateText = '✅ GOAL REACHED!';
+            completionDateColor = '#50c878';
           } else {
-            // Won't complete at current pace
-            completionDateText = `<span style="color: #ff4757;">❌</span> <span style="color: #ff4757;">${completionDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>`;
-            completionDateColor = '#ff4757';
+            const daysToGoal = Math.ceil(pointsRemaining / avgPointsPerDay);
+            const completionDate = new Date();
+            completionDate.setDate(completionDate.getDate() + daysToGoal);
 
-            // Calculate how many days past season end
-            const daysOverdue = Math.ceil((completionDate - seasonEnd) / (1000 * 60 * 60 * 24));
-            completionDateSubtext = `${daysOverdue} days past season end`;
+            // Compare dates properly (set both to midnight for accurate comparison)
+            const completionDateMidnight = new Date(completionDate);
+            completionDateMidnight.setHours(0, 0, 0, 0);
+            const seasonEndMidnight = new Date(seasonEnd);
+            seasonEndMidnight.setHours(23, 59, 59, 999); // End of day for season end
+
+            if (completionDateMidnight <= seasonEndMidnight) {
+              // Will complete before season ends
+              if (daysToGoal === 1) {
+                completionDateText = 'Tomorrow';
+              } else if (daysToGoal <= 7) {
+                completionDateText = `In ${daysToGoal} days`;
+              } else {
+                completionDateText = completionDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+              }
+
+              // Calculate how many days ahead of schedule
+              const daysAhead = daysRemaining - daysToGoal;
+              if (daysAhead > 0 && daysToGoal > 0) {
+                completionDateSubtext = `${daysAhead} days ahead of schedule`;
+                completionDateColor = '#50c878';
+              }
+            } else {
+              // Won't complete at current pace
+              completionDateText = `<span style="color: #ff4757;">❌</span> <span style="color: #ff4757;">${completionDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>`;
+              completionDateColor = '#ff4757';
+
+              // Calculate how many days past season end
+              const daysOverdue = Math.ceil((completionDate - seasonEnd) / (1000 * 60 * 60 * 24));
+              completionDateSubtext = `${daysOverdue} days past season end`;
+            }
           }
         } else if (currentPoints === 0) {
           completionDateText = 'Start playing!';
