@@ -729,30 +729,24 @@
                         <span class="keyboard-hint">1</span>
                         <span class="match-btn-icon">🏆</span>
                         <span>Win</span>
-                        <span class="match-btn-points">+21</span>
+                        <span class="match-btn-points">+25</span>
                     </button>
-                    <button class="match-btn" onclick="addMatch('2nd')" data-key="2">
+                    <button class="match-btn" onclick="addMatch('3rd')" data-key="2">
                         <span class="keyboard-hint">2</span>
-                        <span class="match-btn-icon">🥈</span>
-                        <span>2nd Place</span>
-                        <span class="match-btn-points">+12</span>
-                    </button>
-                    <button class="match-btn" onclick="addMatch('3rd')" data-key="3">
-                        <span class="keyboard-hint">3</span>
                         <span class="match-btn-icon">🥉</span>
-                        <span>3rd Place</span>
-                        <span class="match-btn-points">+8</span>
+                        <span>Lose Final</span>
+                        <span class="match-btn-points">+14</span>
                     </button>
-                    <button class="match-btn" onclick="addMatch('qualified')" data-key="4">
-                        <span class="keyboard-hint">4</span>
+                    <button class="match-btn" onclick="addMatch('qualified')" data-key="3">
+                        <span class="keyboard-hint">3</span>
                         <span class="match-btn-icon">✅</span>
-                        <span>Qualified</span>
-                        <span class="match-btn-points">+5</span>
+                        <span>Round 2 KO</span>
+                        <span class="match-btn-points">+6</span>
                     </button>
-                    <button class="match-btn" onclick="addMatch('eliminated')" data-key="5">
-                        <span class="keyboard-hint">5</span>
+                    <button class="match-btn" onclick="addMatch('eliminated')" data-key="4">
+                        <span class="keyboard-hint">4</span>
                         <span class="match-btn-icon">❌</span>
-                        <span>Eliminated</span>
+                        <span>Round 1 KO</span>
                         <span class="match-btn-points">+2</span>
                     </button>
                     <button class="match-btn" onclick="undoLastMatch()" style="border-color: var(--danger);">
@@ -764,8 +758,8 @@
                 </div>
                 
                 <div class="bulk-entry">
-                    <div class="bulk-help">Bulk Entry: Enter match results (W/2/3/Q/E)</div>
-                    <input type="text" id="bulkInput" class="bulk-input" placeholder="Example: W 2 3 Q E W" onkeypress="handleBulkInput(event)">
+                    <div class="bulk-help">Bulk Entry: Enter match results (W/L/Q/E or 1/2/3/4)</div>
+                    <input type="text" id="bulkInput" class="bulk-input" placeholder="Example: W L Q E W 1 2 3 4" onkeypress="handleBulkInput(event)">
                     <button class="action-btn" onclick="processBulkInput()" style="width: 100%;">Process Bulk Entry</button>
                 </div>
             </div>
@@ -867,10 +861,9 @@
         
         // Match points
         const matchPoints = {
-            'win': 21,
-            '2nd': 12,
-            '3rd': 8,
-            'qualified': 5,
+            'win': 25,
+            '3rd': 14,
+            'qualified': 6,
             'eliminated': 2
         };
         
@@ -937,10 +930,9 @@
                 
                 switch(e.key) {
                     case '1': addMatch('win'); break;
-                    case '2': addMatch('2nd'); break;
-                    case '3': addMatch('3rd'); break;
-                    case '4': addMatch('qualified'); break;
-                    case '5': addMatch('eliminated'); break;
+                    case '2': addMatch('3rd'); break;
+                    case '3': addMatch('qualified'); break;
+                    case '4': addMatch('eliminated'); break;
                     case 'z':
                     case 'Z':
                         if (e.ctrlKey || e.metaKey) {
@@ -1024,13 +1016,12 @@
             const mapping = {
                 'W': 'win',
                 '1': 'win',
-                '2': '2nd',
-                '3': '3rd',
+                '2': '3rd',
+                '3': 'qualified',
                 'Q': 'qualified',
-                '4': 'qualified',
+                '4': 'eliminated',
                 'E': 'eliminated',
-                '5': 'eliminated',
-                'L': 'eliminated'
+                'L': '3rd'
             };
             
             const results = input.split(/[\s,]+/).filter(r => r);
@@ -1251,10 +1242,9 @@
             // Average placement
             const placements = {
                 'win': 1,
-                '2nd': 2,
-                '3rd': 3,
-                'qualified': 4,
-                'eliminated': 5
+                '3rd': 2,
+                'qualified': 3,
+                'eliminated': 4
             };
             
             const avgPlacement = state.matches.length > 0 
@@ -1297,7 +1287,6 @@
                 
                 const icons = {
                     'win': '🏆',
-                    '2nd': '🥈',
                     '3rd': '🥉',
                     'qualified': '✅',
                     'eliminated': '❌'
