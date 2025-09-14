@@ -1795,7 +1795,7 @@
       <div style="text-align: center; max-width: 800px; margin: 1rem auto 1rem; padding: 2rem 1rem 0;">
         <img src="/wt-progress/images/wt-logo.webp" alt="World Tour" style="width: 40%; max-width: 280px; height: auto; margin: 0 auto 0.5rem; display: block;" class="wt-logo">
         <p style="font-size: 0.95rem; color: #b0b0b0; margin-bottom: 1rem;">
-          September 11, 2025 - December 11, 2025 • 91 Days
+          <span id="seasonDateRange">September 11, 2025 - December 11, 2025</span> • <span id="seasonTotalDays">91</span> Days
         </p>
       </div>
 
@@ -1811,7 +1811,7 @@
           <div class="setup-container">
             <div class="setup-step scroll-reveal">
               <div class="step-number">1</div>
-              <h3 class="step-title">Select Your S8 Goal</h3>
+              <h3 class="step-title">Select Your <span id="goalSeasonName">Season</span> Goal</h3>
               <div class="goal-selector" style="min-height: 100px; display: flex; align-items: center; justify-content: center;">
                 <select id="goalSelect" class="goal-select" onchange="updateGoal()">
                   <!-- Options will be populated by JavaScript -->
@@ -1846,7 +1846,7 @@
         <div class="stats-column scroll-reveal">
           <div class="stat-card half-height">
             <div class="stat-icon" style="font-size: 2em; margin-bottom: 10px;">📅</div>
-            <div class="stat-label">Days Remaining in Season 8</div>
+            <div class="stat-label">Days Remaining in <span id="daysSeasonName">Season</span></div>
             <div class="stat-value" id="daysRemaining" style="font-size: 2.7em;">--</div>
             <div class="stat-subtitle" id="seasonEndDate" style="font-size: 0.9em; color: #888; margin-top: 5px;">--</div>
           </div>
@@ -2327,9 +2327,30 @@
         if (round2Display) round2Display.textContent = `+${matchPoints.round2}`;
         if (round1Display) round1Display.textContent = `+${matchPoints.round1}`;
 
-        // Update season name displays
+        // Update all season name displays
         const seasonNameDisplay = document.getElementById('seasonNameDisplay');
         if (seasonNameDisplay) seasonNameDisplay.textContent = settings.seasonName;
+
+        const goalSeasonName = document.getElementById('goalSeasonName');
+        if (goalSeasonName) goalSeasonName.textContent = settings.seasonName;
+
+        const daysSeasonName = document.getElementById('daysSeasonName');
+        if (daysSeasonName) daysSeasonName.textContent = settings.seasonName;
+
+        // Update date range display
+        const dateRange = document.getElementById('seasonDateRange');
+        if (dateRange) {
+          const startDate = new Date(settings.seasonStartDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+          const endDate = new Date(settings.seasonEndDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+          dateRange.textContent = `${startDate} - ${endDate}`;
+        }
+
+        // Update total days
+        const totalDays = document.getElementById('seasonTotalDays');
+        if (totalDays) {
+          const days = calculateSeasonDays(settings.seasonStartDate, settings.seasonEndDate);
+          totalDays.textContent = days;
+        }
 
         // Update title
         document.title = `THE FINALS World Tour Tracker - ${settings.seasonName} | Configurable Calculator`;
