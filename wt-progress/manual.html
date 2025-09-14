@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>THE FINALS World Tour Tracker - Season 8 Rank Calculator | Real-Time Progress</title>
+    <title>THE FINALS World Tour Tracker - Configurable Rank Calculator | Real-Time Progress</title>
     <meta
       name="description"
-      content="Track your World Tour progress in THE FINALS Season 8. Calculate daily points needed for any rank from Bronze to Emerald, visualize your pace, share progress screenshots. Free rank calculator with 24 ranks from Bronze IV to Emerald I."
+      content="Track your World Tour progress in THE FINALS. Calculate daily points needed for any rank from Bronze to Emerald, visualize your pace, share progress screenshots. Fully configurable for any season."
     />
 
     <meta
@@ -1471,6 +1471,123 @@
     </style>
   </head>
   <body>
+    <!-- Settings Modal -->
+    <div id="settingsModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 10000;">
+      <div style="position: relative; max-width: 900px; margin: 50px auto; background: #1a1a1a; border-radius: 15px; border: 2px solid #50c878; max-height: 80vh; overflow-y: auto;">
+        <div style="padding: 20px; border-bottom: 1px solid rgba(80, 200, 120, 0.3);">
+          <h2 style="color: #50c878; margin: 0; display: flex; justify-content: space-between; align-items: center;">
+            ⚙️ Tracker Settings
+            <button onclick="closeSettings()" style="background: none; border: none; color: #ff4757; font-size: 1.5em; cursor: pointer;">✕</button>
+          </h2>
+        </div>
+
+        <!-- Tabs -->
+        <div style="display: flex; border-bottom: 1px solid rgba(80, 200, 120, 0.3); background: rgba(0,0,0,0.3);">
+          <button class="settings-tab active" onclick="switchSettingsTab('match')" data-tab="match" style="flex: 1; padding: 15px; background: none; border: none; color: #50c878; cursor: pointer; font-weight: 600;">Match Points</button>
+          <button class="settings-tab" onclick="switchSettingsTab('ranks')" data-tab="ranks" style="flex: 1; padding: 15px; background: none; border: none; color: #888; cursor: pointer; font-weight: 600;">Rank Requirements</button>
+          <button class="settings-tab" onclick="switchSettingsTab('season')" data-tab="season" style="flex: 1; padding: 15px; background: none; border: none; color: #888; cursor: pointer; font-weight: 600;">Season Dates</button>
+          <button class="settings-tab" onclick="switchSettingsTab('import')" data-tab="import" style="flex: 1; padding: 15px; background: none; border: none; color: #888; cursor: pointer; font-weight: 600;">Import/Export</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div style="padding: 20px;">
+          <!-- Match Points Tab -->
+          <div id="matchTab" class="settings-content">
+            <h3 style="color: #50c878; margin-bottom: 20px;">Configure Match Point Values</h3>
+            <div style="display: grid; gap: 15px;">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="width: 150px; color: #ccc;">🏆 Win:</span>
+                <input type="number" id="winPoints" min="1" max="100" value="25" style="background: rgba(80, 200, 120, 0.1); border: 2px solid #50c878; color: white; padding: 8px; border-radius: 5px; width: 100px;">
+                <span style="color: #888;">points</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="width: 150px; color: #ccc;">🥉 Lose Final:</span>
+                <input type="number" id="loseFinalPoints" min="1" max="100" value="14" style="background: rgba(80, 200, 120, 0.1); border: 2px solid #50c878; color: white; padding: 8px; border-radius: 5px; width: 100px;">
+                <span style="color: #888;">points</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="width: 150px; color: #ccc;">✅ Round 2 KO:</span>
+                <input type="number" id="round2Points" min="1" max="100" value="6" style="background: rgba(80, 200, 120, 0.1); border: 2px solid #50c878; color: white; padding: 8px; border-radius: 5px; width: 100px;">
+                <span style="color: #888;">points</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="width: 150px; color: #ccc;">❌ Round 1 KO:</span>
+                <input type="number" id="round1Points" min="1" max="100" value="2" style="background: rgba(80, 200, 120, 0.1); border: 2px solid #50c878; color: white; padding: 8px; border-radius: 5px; width: 100px;">
+                <span style="color: #888;">points</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ranks Tab -->
+          <div id="ranksTab" class="settings-content" style="display: none;">
+            <h3 style="color: #50c878; margin-bottom: 20px;">Configure Rank Requirements</h3>
+            <div style="max-height: 400px; overflow-y: auto;">
+              <table id="ranksTable" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background: rgba(80, 200, 120, 0.1);">
+                    <th style="padding: 10px; text-align: left; color: #50c878;">Rank Name</th>
+                    <th style="padding: 10px; text-align: left; color: #50c878;">Points Required</th>
+                    <th style="padding: 10px; text-align: left; color: #50c878;">Icon</th>
+                    <th style="padding: 10px; text-align: left; color: #50c878;">Tier</th>
+                  </tr>
+                </thead>
+                <tbody id="ranksTableBody">
+                  <!-- Will be populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Season Tab -->
+          <div id="seasonTab" class="settings-content" style="display: none;">
+            <h3 style="color: #50c878; margin-bottom: 20px;">Configure Season Dates</h3>
+            <div style="display: grid; gap: 15px;">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="width: 150px; color: #ccc;">Season Name:</span>
+                <input type="text" id="seasonName" value="Season 8" style="background: rgba(80, 200, 120, 0.1); border: 2px solid #50c878; color: white; padding: 8px; border-radius: 5px; width: 200px;">
+              </div>
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="width: 150px; color: #ccc;">Start Date:</span>
+                <input type="date" id="seasonStart" value="2025-09-11" style="background: rgba(80, 200, 120, 0.1); border: 2px solid #50c878; color: white; padding: 8px; border-radius: 5px; width: 200px;">
+              </div>
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="width: 150px; color: #ccc;">End Date:</span>
+                <input type="date" id="seasonEnd" value="2025-12-11" style="background: rgba(80, 200, 120, 0.1); border: 2px solid #50c878; color: white; padding: 8px; border-radius: 5px; width: 200px;">
+              </div>
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="width: 150px; color: #ccc;">Total Days:</span>
+                <span id="totalDays" style="color: #50c878; font-weight: 600;">91 days</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Import/Export Tab -->
+          <div id="importTab" class="settings-content" style="display: none;">
+            <h3 style="color: #50c878; margin-bottom: 20px;">Import/Export Settings</h3>
+            <div style="display: grid; gap: 20px;">
+              <div>
+                <button onclick="exportSettings()" style="background: linear-gradient(135deg, #50c878, #2e8b57); border: none; color: white; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-right: 10px;">📤 Export Settings</button>
+                <button onclick="document.getElementById('importSettingsFile').click()" style="background: linear-gradient(135deg, #20b2aa, #17a2b8); border: none; color: white; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600;">📥 Import Settings</button>
+                <input type="file" id="importSettingsFile" accept=".json" style="display: none;" onchange="importSettings(event)">
+              </div>
+              <div>
+                <button onclick="shareSettings()" style="background: linear-gradient(135deg, #ffd700, #ffa500); border: none; color: #1a1a1a; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600;">🔗 Share Configuration</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="padding: 20px; border-top: 1px solid rgba(80, 200, 120, 0.3); display: flex; justify-content: space-between;">
+          <button onclick="resetToDefaults()" style="background: rgba(255, 71, 87, 0.2); border: 2px solid #ff4757; color: #ff4757; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">Reset to Defaults</button>
+          <div>
+            <button onclick="closeSettings()" style="background: rgba(255, 255, 255, 0.1); border: 2px solid #888; color: #888; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-right: 10px;">Cancel</button>
+            <button onclick="saveSettings()" style="background: linear-gradient(135deg, #50c878, #2e8b57); border: none; color: white; padding: 10px 30px; border-radius: 8px; cursor: pointer; font-weight: 600;">Save Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- First Time User Overlay -->
     <div id="firstTimeOverlay" class="first-time-overlay" style="display: none;">
       <div class="first-time-content">
@@ -1655,6 +1772,7 @@
             <a href="/" class="nav-link">LOADOUT GENERATOR</a>
             <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
             <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
+            <button onclick="openSettings()" class="nav-link" style="background: none; border: none; cursor: pointer;">⚙️ SETTINGS</button>
             <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
             <a href="/wt-progress/" class="nav-link active">WORLD TOUR</a>
         </div>
@@ -1687,7 +1805,7 @@
         <div class="track-progress-section">
           <div class="track-progress-header">
             <h2 style="font-size: 2em; background: linear-gradient(135deg, #50c878, #20b2aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">Track Your Progress</h2>
-            <p style="color: #888; margin-bottom: 30px;">Set your goal and track your daily progress throughout Season 8</p>
+            <p style="color: #888; margin-bottom: 30px;">Set your goal and track your daily progress throughout <span id="seasonNameDisplay">the season</span></p>
           </div>
 
           <div class="setup-container">
@@ -1856,25 +1974,25 @@
         <div class="match-results-section scroll-reveal">
         <h2>Add Match Results</h2>
         <div class="quick-actions">
-          <button class="quick-action-btn win" onclick="quickAddPoints(25)">
+          <button class="quick-action-btn win" onclick="quickAddPoints('win')">
             <span class="quick-action-icon">🏆</span>
             <span class="quick-action-label">Win</span>
-            <span class="quick-action-points">+25</span>
+            <span class="quick-action-points" id="winPointsDisplay">+25</span>
           </button>
-          <button class="quick-action-btn third" onclick="quickAddPoints(14)">
+          <button class="quick-action-btn third" onclick="quickAddPoints('loseFinal')">
             <span class="quick-action-icon">🥉</span>
             <span class="quick-action-label">Lose Final</span>
-            <span class="quick-action-points">+14</span>
+            <span class="quick-action-points" id="loseFinalPointsDisplay">+14</span>
           </button>
-          <button class="quick-action-btn qualified" onclick="quickAddPoints(6)">
+          <button class="quick-action-btn qualified" onclick="quickAddPoints('round2')">
             <span class="quick-action-icon">✅</span>
             <span class="quick-action-label">Round 2 KO</span>
-            <span class="quick-action-points">+6</span>
+            <span class="quick-action-points" id="round2PointsDisplay">+6</span>
           </button>
-          <button class="quick-action-btn eliminated" onclick="quickAddPoints(2)">
+          <button class="quick-action-btn eliminated" onclick="quickAddPoints('round1')">
             <span class="quick-action-icon">❌</span>
             <span class="quick-action-label">Round 1 KO</span>
-            <span class="quick-action-points">+2</span>
+            <span class="quick-action-points" id="round1PointsDisplay">+2</span>
           </button>
           <button id="undoButton" class="quick-action-btn undo" onclick="undoLastAdd()">
             <span class="quick-action-icon">↩️</span>
@@ -1926,15 +2044,20 @@
     <!-- Notification -->
     <div id="notification" class="notification"></div>
 
+    <script src="settings.js"></script>
     <script>
-      // Season 8 Configuration
-      const STORAGE_VERSION = 'v8.0';
-      const SEASON_START_DATE = '2025-09-11';
-      const SEASON_END_DATE = '2025-12-11';
-      const SEASON_DAYS = 91;
+      // Load settings and initialize configuration
+      const STORAGE_VERSION = 'v9.0';
 
-      // Season 8 Ranks
-      const ranks = [
+      // Initialize settings from settings.js
+      let currentSettings = wtSettings.load();
+      let ranks = currentSettings.ranks;
+      let SEASON_START_DATE = currentSettings.seasonStartDate;
+      let SEASON_END_DATE = currentSettings.seasonEndDate;
+      let SEASON_DAYS = calculateSeasonDays(SEASON_START_DATE, SEASON_END_DATE);
+
+      // Replace hardcoded ranks with configurable ones
+      /*ranks = [
         { name: "Bronze IV", points: 25, icon: "B4", color: "#CD7F32", tier: "bronze" },
         { name: "Bronze III", points: 50, icon: "B3", color: "#CD7F32", tier: "bronze" },
         { name: "Bronze II", points: 75, icon: "B2", color: "#CD7F32", tier: "bronze" },
@@ -2188,8 +2311,35 @@
         };
       }
 
+      // Function to update display with current settings
+      function updateSettingsDisplay() {
+        const settings = wtSettings.load();
+        const matchPoints = settings.matchPoints;
+
+        // Update match point displays
+        const winDisplay = document.getElementById('winPointsDisplay');
+        const loseFinalDisplay = document.getElementById('loseFinalPointsDisplay');
+        const round2Display = document.getElementById('round2PointsDisplay');
+        const round1Display = document.getElementById('round1PointsDisplay');
+
+        if (winDisplay) winDisplay.textContent = `+${matchPoints.win}`;
+        if (loseFinalDisplay) loseFinalDisplay.textContent = `+${matchPoints.loseFinal}`;
+        if (round2Display) round2Display.textContent = `+${matchPoints.round2}`;
+        if (round1Display) round1Display.textContent = `+${matchPoints.round1}`;
+
+        // Update season name displays
+        const seasonNameDisplay = document.getElementById('seasonNameDisplay');
+        if (seasonNameDisplay) seasonNameDisplay.textContent = settings.seasonName;
+
+        // Update title
+        document.title = `THE FINALS World Tour Tracker - ${settings.seasonName} | Configurable Calculator`;
+      }
+
       // Initialize on load
       document.addEventListener('DOMContentLoaded', () => {
+        // Update display with current settings
+        updateSettingsDisplay();
+
         // Scroll Reveal Animation
         const observerOptions = {
           threshold: 0.1,
@@ -2692,12 +2842,13 @@
           return;
         }
 
-        // Calculate realistic scenarios with Season 8 points
+        // Calculate realistic scenarios with configurable points
+        const matchPoints = wtSettings.getMatchPoints();
         const scenarios = [
-          { wins: Math.ceil(dailyPoints / 25), type: 'wins' },
-          { loseFinal: Math.ceil(dailyPoints / 14), type: 'loseFinal' },
-          { round2: Math.ceil(dailyPoints / 6), type: 'round2' },
-          { round1: Math.ceil(dailyPoints / 2), type: 'round1' }
+          { wins: Math.ceil(dailyPoints / matchPoints.win), type: 'wins' },
+          { loseFinal: Math.ceil(dailyPoints / matchPoints.loseFinal), type: 'loseFinal' },
+          { round2: Math.ceil(dailyPoints / matchPoints.round2), type: 'round2' },
+          { round1: Math.ceil(dailyPoints / matchPoints.round1), type: 'round1' }
         ];
 
         let html = '<div style="font-size: 0.8em; margin-top: 10px; color: #b0b0b0;">Hit ANY of these:</div>';
@@ -2880,23 +3031,26 @@
         });
       }
 
-      function quickAddPoints(points) {
+      function quickAddPoints(matchType) {
+        const matchPoints = wtSettings.getMatchPoints();
+        const points = matchPoints[matchType];
         const oldPoints = currentPoints;
-        
+
         // Add to undo history (max 5 items)
         undoHistory.push({
           points: points,
           timestamp: Date.now(),
-          oldTotal: oldPoints
+          oldTotal: oldPoints,
+          matchType: matchType
         });
-        
+
         if (undoHistory.length > 5) {
           undoHistory.shift();
         }
-        
+
         storage.set('undoHistory', undoHistory);
         updateUndoButton();
-        
+
         updateCurrentPoints(currentPoints + points);
         
         // Add to daily entries
