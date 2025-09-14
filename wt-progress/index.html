@@ -108,7 +108,7 @@
         "name": "How do World Tour points work in Season 8?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "In World Tour Season 8: Win = 21 points, 2nd place = 12 points, 3rd place = 8 points, Qualified (Round 2) = 5 points, Eliminated (Round 1) = 2 points."
+          "text": "In World Tour Season 8: Win = 25 points, Lose Final = 14 points, Knocked out Round 2 = 6 points, Knocked out Round 1 = 2 points."
         }
       },{
         "@type": "Question",
@@ -2694,10 +2694,10 @@
 
         // Calculate realistic scenarios with Season 8 points
         const scenarios = [
-          { wins: Math.ceil(dailyPoints / 21), type: 'wins' },
-          { seconds: Math.ceil(dailyPoints / 12), type: 'seconds' },
-          { thirds: Math.ceil(dailyPoints / 8), type: 'thirds' },
-          { qualified: Math.ceil(dailyPoints / 5), type: 'qualified' }
+          { wins: Math.ceil(dailyPoints / 25), type: 'wins' },
+          { loseFinal: Math.ceil(dailyPoints / 14), type: 'loseFinal' },
+          { round2: Math.ceil(dailyPoints / 6), type: 'round2' },
+          { round1: Math.ceil(dailyPoints / 2), type: 'round1' }
         ];
 
         let html = '<div style="font-size: 0.8em; margin-top: 10px; color: #b0b0b0;">Hit ANY of these:</div>';
@@ -2707,9 +2707,9 @@
         scenarios.forEach(scenario => {
           if (scenario[Object.keys(scenario)[0]] <= 10) {
             const label = scenario.type === 'wins' ? '🏆 Wins' :
-                         scenario.type === 'seconds' ? '🥈 2nd' :
-                         scenario.type === 'thirds' ? '🥉 3rd' :
-                         '✅ Qualified';
+                         scenario.type === 'loseFinal' ? '🥉 Lose Final' :
+                         scenario.type === 'round2' ? '✅ Round 2 KO' :
+                         '❌ Round 1 KO';
             if (addedCount > 0) {
               html += `<div style="font-size: 0.7em; color: #666; text-align: center; margin: -2px 0;">— OR —</div>`;
             }
