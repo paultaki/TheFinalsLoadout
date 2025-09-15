@@ -123,6 +123,7 @@
 
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
     <link rel="apple-touch-icon" href="images/logo.png" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
       * {
         margin: 0;
@@ -1915,6 +1916,106 @@
           <button class="add-entry-btn" onclick="addDailyEntry()">Add Entry</button>
         </div>
         <div class="entries-list" id="entriesList"></div>
+
+        <!-- Performance Graph Section -->
+        <div class="graph-section" style="margin-top: 30px;">
+          <button class="graph-toggle-btn" onclick="toggleGraph()" style="
+            width: 100%;
+            background: linear-gradient(135deg, rgba(80, 200, 120, 0.1), rgba(32, 178, 170, 0.1));
+            border: 1px solid rgba(80, 200, 120, 0.3);
+            color: #50c878;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+          ">
+            <span id="graphToggleIcon">📊</span>
+            <span id="graphToggleText">Show Performance Graph</span>
+            <span id="graphToggleArrow" style="margin-left: auto;">▼</span>
+          </button>
+
+          <div id="graphContainer" style="
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          ">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+              <h3 style="
+                background: linear-gradient(135deg, #50c878, #20b2aa);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin: 0;
+              ">Daily Performance Trend</h3>
+              <select id="graphTimeRange" onchange="updateGraph()" style="
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: #ffffff;
+                padding: 8px 12px;
+                border-radius: 8px;
+                cursor: pointer;
+              ">
+                <option value="7">Last 7 days</option>
+                <option value="14">Last 14 days</option>
+                <option value="30" selected>Last 30 days</option>
+                <option value="all">All time</option>
+              </select>
+            </div>
+            <canvas id="performanceChart" width="400" height="200"></canvas>
+            <div id="graphStats" style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+              gap: 15px;
+              margin-top: 20px;
+            ">
+              <div class="graph-stat-card" style="
+                background: rgba(80, 200, 120, 0.1);
+                padding: 12px;
+                border-radius: 8px;
+                border: 1px solid rgba(80, 200, 120, 0.2);
+              ">
+                <div style="color: #888; font-size: 0.9em;">Average Daily</div>
+                <div id="avgDaily" style="color: #50c878; font-size: 1.5em; font-weight: bold;">0</div>
+              </div>
+              <div class="graph-stat-card" style="
+                background: rgba(32, 178, 170, 0.1);
+                padding: 12px;
+                border-radius: 8px;
+                border: 1px solid rgba(32, 178, 170, 0.2);
+              ">
+                <div style="color: #888; font-size: 0.9em;">Best Day</div>
+                <div id="bestDay" style="color: #20b2aa; font-size: 1.5em; font-weight: bold;">0</div>
+              </div>
+              <div class="graph-stat-card" style="
+                background: rgba(255, 199, 0, 0.1);
+                padding: 12px;
+                border-radius: 8px;
+                border: 1px solid rgba(255, 199, 0, 0.2);
+              ">
+                <div style="color: #888; font-size: 0.9em;">Current Streak</div>
+                <div id="currentStreak" style="color: #ffc700; font-size: 1.5em; font-weight: bold;">0 days</div>
+              </div>
+              <div class="graph-stat-card" style="
+                background: rgba(138, 43, 226, 0.1);
+                padding: 12px;
+                border-radius: 8px;
+                border: 1px solid rgba(138, 43, 226, 0.2);
+              ">
+                <div style="color: #888; font-size: 0.9em;">Total Points</div>
+                <div id="totalGraphPoints" style="color: #8a2be2; font-size: 1.5em; font-weight: bold;">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         </div>
     </div>
 
@@ -2186,6 +2287,191 @@
           clearTimeout(timeout);
           timeout = setTimeout(later, wait);
         };
+      }
+
+      // Graph functionality
+      let performanceChart = null;
+      let graphVisible = false;
+
+      function toggleGraph() {
+        const container = document.getElementById('graphContainer');
+        const toggleText = document.getElementById('graphToggleText');
+        const toggleArrow = document.getElementById('graphToggleArrow');
+        const toggleBtn = document.querySelector('.graph-toggle-btn');
+
+        graphVisible = !graphVisible;
+
+        if (graphVisible) {
+          container.style.display = 'block';
+          toggleText.textContent = 'Hide Performance Graph';
+          toggleArrow.textContent = '▲';
+          toggleBtn.style.background = 'linear-gradient(135deg, rgba(80, 200, 120, 0.2), rgba(32, 178, 170, 0.2))';
+          updateGraph();
+        } else {
+          container.style.display = 'none';
+          toggleText.textContent = 'Show Performance Graph';
+          toggleArrow.textContent = '▼';
+          toggleBtn.style.background = 'linear-gradient(135deg, rgba(80, 200, 120, 0.1), rgba(32, 178, 170, 0.1))';
+        }
+      }
+
+      function updateGraph() {
+        const timeRange = document.getElementById('graphTimeRange').value;
+        const entries = JSON.parse(localStorage.getItem('dailyEntries') || '[]');
+
+        if (entries.length === 0) {
+          const container = document.getElementById('graphContainer');
+          const statsHtml = container.querySelector('#graphStats').outerHTML;
+          container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;">No data to display yet. Add some daily entries to see your performance graph!</div>' + statsHtml;
+          return;
+        }
+
+        // Sort entries by date
+        entries.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        // Filter based on time range
+        let filteredEntries = entries;
+        if (timeRange !== 'all') {
+          const days = parseInt(timeRange);
+          const cutoffDate = new Date();
+          cutoffDate.setDate(cutoffDate.getDate() - days);
+          filteredEntries = entries.filter(e => new Date(e.date) >= cutoffDate);
+        }
+
+        // Prepare data for chart
+        const labels = filteredEntries.map(e => {
+          const date = new Date(e.date);
+          return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        });
+        const data = filteredEntries.map(e => e.points);
+
+        // Calculate stats
+        const avgDaily = Math.round(data.reduce((a, b) => a + b, 0) / data.length);
+        const bestDay = Math.max(...data);
+        const totalPoints = data.reduce((a, b) => a + b, 0);
+
+        // Calculate streak
+        let streak = 0;
+        const today = new Date().toISOString().split('T')[0];
+        for (let i = entries.length - 1; i >= 0; i--) {
+          const entryDate = new Date(entries[i].date);
+          const expectedDate = new Date();
+          expectedDate.setDate(expectedDate.getDate() - streak);
+
+          if (entryDate.toISOString().split('T')[0] === expectedDate.toISOString().split('T')[0]) {
+            streak++;
+          } else {
+            break;
+          }
+        }
+
+        // Update stats
+        document.getElementById('avgDaily').textContent = avgDaily + ' pts';
+        document.getElementById('bestDay').textContent = bestDay + ' pts';
+        document.getElementById('currentStreak').textContent = streak + (streak === 1 ? ' day' : ' days');
+        document.getElementById('totalGraphPoints').textContent = totalPoints.toLocaleString();
+
+        // Create or update chart
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+
+        if (performanceChart) {
+          performanceChart.destroy();
+        }
+
+        // Calculate daily goal line
+        const goalPoints = parseInt(localStorage.getItem('requiredPointsPerDay') || '0');
+        const goalLine = new Array(labels.length).fill(goalPoints);
+
+        performanceChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Daily Points',
+              data: data,
+              borderColor: '#50c878',
+              backgroundColor: 'rgba(80, 200, 120, 0.1)',
+              borderWidth: 3,
+              pointBackgroundColor: '#50c878',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              tension: 0.3
+            },
+            {
+              label: 'Daily Goal',
+              data: goalLine,
+              borderColor: 'rgba(255, 199, 0, 0.5)',
+              backgroundColor: 'transparent',
+              borderWidth: 2,
+              borderDash: [5, 5],
+              pointRadius: 0,
+              pointHoverRadius: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              mode: 'index',
+              intersect: false
+            },
+            plugins: {
+              legend: {
+                display: true,
+                labels: {
+                  color: '#888',
+                  font: {
+                    size: 12
+                  }
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                borderColor: '#50c878',
+                borderWidth: 1,
+                displayColors: true,
+                callbacks: {
+                  label: function(context) {
+                    if (context.dataset.label === 'Daily Points') {
+                      return context.dataset.label + ': ' + context.parsed.y + ' points';
+                    }
+                    return context.dataset.label + ': ' + context.parsed.y + ' points';
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.05)',
+                  drawBorder: false
+                },
+                ticks: {
+                  color: '#888',
+                  maxRotation: 45,
+                  minRotation: 0
+                }
+              },
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.05)',
+                  drawBorder: false
+                },
+                ticks: {
+                  color: '#888',
+                  callback: function(value) {
+                    return value + ' pts';
+                  }
+                }
+              }
+            }
+          }
+        });
       }
 
       // Initialize on load
