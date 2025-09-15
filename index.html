@@ -181,6 +181,7 @@
         <a href="/patch-notes/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">PATCH NOTES</a>
         <a href="/meta-weapons/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">META WEAPONS</a>
         <a href="/wt-progress/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">WORLD TOUR</a>
+        <a href="/spotlight" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">SPOTLIGHT</a>
     </div>
     
     <!-- Navigation Bar (Desktop) -->
@@ -191,8 +192,18 @@
             <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
             <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
             <a href="/wt-progress/" class="nav-link">WORLD TOUR</a>
+            <a href="/spotlight" class="nav-link">SPOTLIGHT</a>
         </div>
     </nav>
+
+    <!-- Streamer Spotlight Pill -->
+    <div style="text-align: center; margin: 10px 0;">
+        <a href="/spotlight" style="display: inline-block; padding: 6px 16px; background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; font-size: 0.875rem; font-weight: 600; border-radius: 9999px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);"
+           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(236, 72, 153, 0.5)';"
+           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(236, 72, 153, 0.3)';">
+            ✨ Streamer Spotlight: ks_rachel
+        </a>
+    </div>
 
     <!-- Header -->
     <header class="header">
@@ -397,7 +408,51 @@
             </div>
         </div>
     </section>
-    
+
+    <!-- Streamer Spotlight Section -->
+    <section id="streamer-spotlight" class="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 mt-6">
+        <div class="flex items-center gap-3">
+            <img src="/images/streamers/ks_rachel.jpg" alt="ks_rachel avatar" class="h-12 w-12 rounded-xl object-cover">
+            <div class="flex-1">
+                <p class="text-sm uppercase tracking-wide text-pink-300">Streamer Spotlight</p>
+                <h3 class="text-xl font-semibold">ks_rachel</h3>
+                <p class="text-sm text-zinc-400">Random loadout via channel points. Clip below.</p>
+            </div>
+            <div class="hidden sm:flex gap-2">
+                <a href="https://twitch.tv/ks_rachel" class="rounded-xl bg-emerald-500 px-3 py-2 font-semibold text-black hover:bg-emerald-400">Watch</a>
+                <a href="/spotlight/ks_rachel" class="rounded-xl border border-zinc-700 px-3 py-2 font-semibold hover:bg-zinc-800">Profile</a>
+            </div>
+        </div>
+
+        <!-- Click to load the embed -->
+        <div class="mt-4 overflow-hidden rounded-xl border border-zinc-800">
+            <button id="load-spotlight-clip" class="block w-full aspect-video text-zinc-300 bg-[url('/images/streamers/ks_rachel_thumb.jpg')] bg-cover bg-center">
+                <span class="sr-only">Play clip</span>
+            </button>
+        </div>
+
+        <div class="mt-3 sm:hidden flex gap-2">
+            <a href="https://twitch.tv/ks_rachel" class="flex-1 rounded-xl bg-emerald-500 px-3 py-2 text-center font-semibold text-black">Watch</a>
+            <a href="/spotlight/ks_rachel" class="flex-1 rounded-xl border border-zinc-700 px-3 py-2 text-center font-semibold">Profile</a>
+        </div>
+    </section>
+
+    <script>
+        const btn = document.getElementById('load-spotlight-clip');
+        if (btn) {
+            btn.addEventListener('click', () => {
+                const parent = btn.parentElement;
+                parent.innerHTML = `
+                    <iframe
+                        class="w-full h-[56vw] max-h-[540px]"
+                        src="https://clips.twitch.tv/embed?clip=REPLACE_CLIP_ID&parent=thefinalsloadout.com"
+                        allowfullscreen
+                        loading="lazy">
+                    </iframe>`;
+            });
+        }
+    </script>
+
     <!-- Footer -->
     <footer>
         <div class="support-section">
