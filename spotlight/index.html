@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamer Spotlight - The Finals Loadout</title>
+    <link rel="stylesheet" href="/premium-styles.css">
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .spotlight-hero {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .hero-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            border: 2px solid rgba(236, 72, 153, 0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .hero-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .hero-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 1rem;
+            object-fit: cover;
+            border: 3px solid #ec4899;
+        }
+        .hero-info h1 {
+            font-size: 2.5rem;
+            margin: 0 0 0.5rem 0;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-tagline {
+            color: #9ca3af;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+        }
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn-watch {
+            background: #10b981;
+            color: #000;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .btn-watch:hover {
+            background: #34d399;
+        }
+        .btn-follow {
+            background: #8b5cf6;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .btn-follow:hover {
+            background: #a78bfa;
+        }
+        .clips-section {
+            margin-top: 2rem;
+        }
+        .clips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .clip-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .clip-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .clip-thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+        .clip-info {
+            padding: 1rem;
+        }
+        .clip-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .clip-date {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        .back-link {
+            display: inline-block;
+            margin: 2rem;
+            color: #ec4899;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Back to Generator</a>
+
+    <div class="spotlight-hero">
+        <div class="hero-card">
+            <div class="hero-header">
+                <img src="/images/streamers/ks_rachel.jpg" alt="ks_rachel" class="hero-avatar">
+                <div class="hero-info">
+                    <h1>ks_rachel</h1>
+                    <p class="hero-tagline">Random loadout via channel points - pure chaos, pure fun!</p>
+                    <div class="hero-actions">
+                        <a href="https://twitch.tv/ks_rachel" target="_blank" class="btn-watch">🎮 Watch Live</a>
+                        <a href="https://twitch.tv/ks_rachel" target="_blank" class="btn-follow">💜 Follow</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clips-section">
+                <h2>Featured Clips</h2>
+                <div class="clips-grid">
+                    <div class="clip-card" onclick="playClip('CLIP_ID_1')">
+                        <img src="/images/streamers/clip1_thumb.jpg" alt="Clip 1" class="clip-thumbnail">
+                        <div class="clip-info">
+                            <div class="clip-title">Epic Random Loadout Win</div>
+                            <div class="clip-date">2 days ago</div>
+                        </div>
+                    </div>
+
+                    <div class="clip-card" onclick="playClip('CLIP_ID_2')">
+                        <img src="/images/streamers/clip2_thumb.jpg" alt="Clip 2" class="clip-thumbnail">
+                        <div class="clip-info">
+                            <div class="clip-title">Chat Chose Violence</div>
+                            <div class="clip-date">5 days ago</div>
+                        </div>
+                    </div>
+
+                    <div class="clip-card" onclick="playClip('CLIP_ID_3')">
+                        <img src="/images/streamers/clip3_thumb.jpg" alt="Clip 3" class="clip-thumbnail">
+                        <div class="clip-info">
+                            <div class="clip-title">Worst Loadout = Best Plays</div>
+                            <div class="clip-date">1 week ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="clip-player" style="display: none; margin-top: 2rem;">
+            <!-- Clip player will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        function playClip(clipId) {
+            const player = document.getElementById('clip-player');
+            player.style.display = 'block';
+            player.innerHTML = `
+                <div style="background: #1a1a1a; border-radius: 1rem; padding: 1rem; border: 1px solid #333;">
+                    <iframe
+                        width="100%"
+                        height="500"
+                        src="https://clips.twitch.tv/embed?clip=${clipId}&parent=thefinalsloadout.com"
+                        frameborder="0"
+                        allowfullscreen="true"
+                        scrolling="no">
+                    </iframe>
+                </div>
+            `;
+            player.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
