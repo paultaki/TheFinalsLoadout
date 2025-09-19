@@ -224,7 +224,12 @@
             <span class="season-text">🎯 Season 8 Ready!</span>
             <span class="season-subtext">BFR Titan & P90 Added</span>
         </div>
-        
+
+        <!-- Downtime Apology Note -->
+        <div style="text-align: center; margin-top: 10px; margin-bottom: 10px; color: #ff6b35; font-size: 14px;">
+            Sorry for the downtime! Thanks to those who let me know! 🙏
+        </div>
+
         <!-- Thank You Note (auto-hides after 72 hours) -->
         <div id="thankYouNote" style="text-align: center; margin-top: 8px; margin-bottom: 10px;">
             <p style="font-size: 0.85em; color: #888; font-style: italic; margin: 0;">
@@ -333,11 +338,56 @@
         <!-- The app needs this container to initialize -->
     </div>
 
+    <!-- Slot Machine Output Structure (required by app.js) -->
+    <div id="output" style="display: none;">
+        <div class="items-container">
+            <!-- Weapon Column -->
+            <div class="slot-column" data-type="weapon">
+                <div class="slot-header">WEAPON</div>
+                <div class="slot-scroll">
+                    <div class="slot-items"></div>
+                </div>
+            </div>
+
+            <!-- Specialization Column -->
+            <div class="slot-column" data-type="specialization">
+                <div class="slot-header">SPECIALIZATION</div>
+                <div class="slot-scroll">
+                    <div class="slot-items"></div>
+                </div>
+            </div>
+
+            <!-- Gadget 1 Column -->
+            <div class="slot-column" data-type="gadget1">
+                <div class="slot-header">GADGET 1</div>
+                <div class="slot-scroll">
+                    <div class="slot-items"></div>
+                </div>
+            </div>
+
+            <!-- Gadget 2 Column -->
+            <div class="slot-column" data-type="gadget2">
+                <div class="slot-header">GADGET 2</div>
+                <div class="slot-scroll">
+                    <div class="slot-items"></div>
+                </div>
+            </div>
+
+            <!-- Gadget 3 Column -->
+            <div class="slot-column" data-type="gadget3">
+                <div class="slot-header">GADGET 3</div>
+                <div class="slot-scroll">
+                    <div class="slot-items"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Load the main app scripts -->
     <script src="app-optimized.js?v=20250831-filter-fix"></script>
     
     <!-- Load the premium integration -->
-    <script src="/v3/premium-integrated.js?v=20250831"></script>
+    <script src="premium-integrated.js?v=20250831"></script>
     
     <!-- Victory Sparks positioning fix -->
     <script>
