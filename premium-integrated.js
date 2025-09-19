@@ -715,8 +715,13 @@
     }
     
     async animatePremiumSpin(isFinalSpin) {
+      console.log(`🎵 animatePremiumSpin called with isFinalSpin=${isFinalSpin}`);
+
       const baseDuration = isFinalSpin ? 2000 : 1000;  // Base duration for first column
       const staggerDelay = isFinalSpin ? 500 : 100;    // Much longer delay for final spin
+
+      // Track which columns have played their stop sound to prevent duplicates
+      const columnsWithSoundPlayed = new Set();
       
       // Get item dimensions
       const isMobile = window.innerWidth <= 768;
@@ -807,8 +812,10 @@
         
         // Schedule stop sounds for each column with more dramatic timing
         setTimeout(() => {
-          // Only play stop sound on final spin
-          if (isFinalSpin) {
+          // Only play stop sound on final spin and if not already played for this column
+          if (isFinalSpin && !columnsWithSoundPlayed.has(index)) {
+            columnsWithSoundPlayed.add(index);
+            console.log(`🔔 Playing DING sound for column ${index + 1} at ${columnDuration - 50}ms`);
             this.playSound('stop');
             // Add a visual pulse effect when each column stops on final spin
             col.style.filter = 'brightness(1.2)';

@@ -226,7 +226,7 @@
         </div>
 
         <!-- Downtime Apology Note -->
-        <div style="text-align: center; margin-top: 10px; margin-bottom: 10px; color: #ff6b35; font-size: 14px;">
+        <div style="text-align: center; margin-top: 10px; margin-bottom: 10px; color: #ff4796; font-size: 14px;">
             Sorry for the downtime! Thanks to those who let me know! 🙏
         </div>
 
@@ -458,6 +458,334 @@
             </div>
         </div>
     </section>
+
+    <!-- Stream Tools Button and Panel -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <!-- Subtle floating button -->
+        <button id="streamToolsBtn" onclick="toggleStreamPanel()"
+                style="background: linear-gradient(135deg, #ff4796, #9b59b6);
+                       border: none;
+                       border-radius: 50%;
+                       width: 60px;
+                       height: 60px;
+                       cursor: pointer;
+                       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                       display: flex;
+                       align-items: center;
+                       justify-content: center;
+                       transition: all 0.3s ease;
+                       position: relative;">
+            <span style="font-size: 24px;">📺</span>
+            <!-- Small badge indicator -->
+            <span style="position: absolute; top: -5px; right: -5px;
+                        background: #ff0000;
+                        color: white;
+                        font-size: 10px;
+                        padding: 2px 5px;
+                        border-radius: 10px;
+                        font-weight: bold;
+                        animation: pulse 2s infinite;">LIVE</span>
+        </button>
+
+        <!-- Stream Tools Backdrop -->
+        <div id="streamToolsBackdrop" onclick="closeStreamPanel()" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.3); z-index: 999; cursor: pointer;"></div>
+
+        <!-- Slide-out panel -->
+        <div id="streamToolsPanel" style="position: fixed;
+                                          right: -400px;
+                                          bottom: 90px;
+                                          width: 380px;
+                                          background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%);
+                                          border-radius: 15px;
+                                          border: 1px solid rgba(255, 255, 255, 0.1);
+                                          box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+                                          padding: 20px;
+                                          transition: right 0.3s ease;
+                                          z-index: 999;">
+
+            <!-- Panel Header -->
+            <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <h3 style="margin: 0; background: linear-gradient(90deg, #ff4796, #9b59b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 18px;">🎮 Stream Tools</h3>
+                <p style="margin: 5px 0 0 0; color: #888; font-size: 12px;">Live overlay for OBS/Streamlabs</p>
+            </div>
+
+            <!-- Quick Actions -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                <button onclick="sendLastLoadoutQuick()"
+                        style="padding: 10px;
+                               background: rgba(255, 71, 150, 0.2);
+                               border: 1px solid #ff4796;
+                               border-radius: 8px;
+                               color: white;
+                               cursor: pointer;
+                               transition: background 0.2s;"
+                        onmouseover="this.style.background='rgba(255, 71, 150, 0.3)'"
+                        onmouseout="this.style.background='rgba(255, 71, 150, 0.2)'">
+                    📤 Send Current
+                </button>
+                <button onclick="testOverlayQuick()"
+                        style="padding: 10px;
+                               background: rgba(76, 175, 80, 0.2);
+                               border: 1px solid #4CAF50;
+                               border-radius: 8px;
+                               color: white;
+                               cursor: pointer;
+                               transition: background 0.2s;"
+                        onmouseover="this.style.background='rgba(76, 175, 80, 0.3)'"
+                        onmouseout="this.style.background='rgba(76, 175, 80, 0.2)'">
+                    🎲 Test Overlay
+                </button>
+            </div>
+
+            <!-- Overlay URL -->
+            <div style="margin-bottom: 15px;">
+                <label style="color: #aaa; font-size: 12px; display: block; margin-bottom: 5px;">Your Overlay URL:</label>
+                <div style="background: #000; padding: 8px; border-radius: 5px; display: flex; gap: 5px;">
+                    <input type="text" id="quickOverlayUrl" value="https://www.thefinals.com/overlay/" readonly
+                           style="flex: 1; background: transparent; border: none; color: #fff; font-family: monospace; font-size: 11px;">
+                    <button onclick="copyQuickUrl()" style="padding: 4px 8px; background: #ff4796; border: none; border-radius: 3px; color: white; font-size: 11px; cursor: pointer;">📋</button>
+                </div>
+            </div>
+
+            <!-- Settings Summary -->
+            <div style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                <div style="color: #aaa; font-size: 12px; margin-bottom: 8px;">Current Settings:</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 11px; color: #ccc;">
+                    <div>Position: <span id="currentPos" style="color: #ff4796;">Top Right</span></div>
+                    <div>Theme: <span id="currentTheme" style="color: #ff4796;">Dark</span></div>
+                    <div>Size: <span id="currentSize" style="color: #ff4796;">Normal</span></div>
+                    <div>Auto-hide: <span id="currentHide" style="color: #ff4796;">No</span></div>
+                    <div style="grid-column: 1 / -1; margin-top: 5px; border-top: 1px solid rgba(255,71,150,0.2); padding-top: 5px;">
+                        <strong>OBS Settings:</strong> <span style="color: #ff4796;">600x180</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Setup Link -->
+            <a href="/stream-tools" target="_blank"
+               style="display: block;
+                      text-align: center;
+                      padding: 12px;
+                      background: linear-gradient(90deg, #ff4796, #9b59b6);
+                      border-radius: 8px;
+                      color: white;
+                      text-decoration: none;
+                      font-weight: bold;
+                      transition: transform 0.2s;"
+               onmouseover="this.style.transform='translateY(-2px)'"
+               onmouseout="this.style.transform='translateY(0)'">
+                🚀 Full Setup & Customization →
+            </a>
+
+            <!-- Status indicator -->
+            <div id="streamStatus" style="margin-top: 10px; padding: 8px; background: rgba(76, 175, 80, 0.1); border: 1px solid #4CAF50; border-radius: 5px; text-align: center; font-size: 11px; color: #4CAF50; display: none;">
+                ✓ Overlay Active
+            </div>
+        </div>
+    </div>
+
+    <!-- Styles for Stream Tools -->
+    <style>
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        #streamToolsBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 71, 150, 0.4);
+        }
+
+        /* Remember user preference */
+        .stream-panel-open {
+            right: 20px !important;
+        }
+    </style>
+
+    <script>
+        // Stream Tools Panel Functions
+        function toggleStreamPanel() {
+            const panel = document.getElementById('streamToolsPanel');
+            const backdrop = document.getElementById('streamToolsBackdrop');
+            const btn = document.getElementById('streamToolsBtn');
+
+            if (panel.classList.contains('stream-panel-open')) {
+                closeStreamPanel();
+            } else {
+                panel.classList.add('stream-panel-open');
+                panel.style.right = '20px';
+                backdrop.style.display = 'block';
+                localStorage.setItem('streamPanelOpen', 'true');
+                checkStreamStatus();
+            }
+        }
+
+        function closeStreamPanel() {
+            const panel = document.getElementById('streamToolsPanel');
+            const backdrop = document.getElementById('streamToolsBackdrop');
+            panel.classList.remove('stream-panel-open');
+            panel.style.right = '-400px';
+            backdrop.style.display = 'none';
+            localStorage.setItem('streamPanelOpen', 'false');
+        }
+
+        function sendLastLoadoutQuick() {
+            // Get the last loadout from history
+            let historyStr = localStorage.getItem('slotMachineHistory') || localStorage.getItem('premiumSlotHistory');
+            if (!historyStr) {
+                showQuickStatus('No loadout found! Generate one first.', false);
+                return;
+            }
+
+            try {
+                const history = JSON.parse(historyStr);
+                if (history.length === 0) {
+                    showQuickStatus('No loadouts in history!', false);
+                    return;
+                }
+
+                const lastLoadout = history[0];
+
+                // Helper functions for image URLs
+                const getImagePath = (itemName) => {
+                    if (!itemName || typeof itemName !== 'string') return null;
+                    return `images/${itemName.replace(/ /g, "_")}.webp`;
+                };
+
+                const getFullImageUrl = (path) => {
+                    if (!path) return null;
+                    if (path.startsWith('http')) return path;
+                    const baseUrl = window.location.hostname === 'localhost'
+                        ? `http://localhost:${window.location.port || '8000'}`
+                        : 'https://www.thefinals.com';
+                    return `${baseUrl}/${path}`;
+                };
+
+                const getItemName = (item) => typeof item === 'object' ? item.name : item;
+
+                const getItemImageUrl = (item) => {
+                    if (typeof item === 'object' && item.image) {
+                        return getFullImageUrl(item.image);
+                    }
+                    const itemName = getItemName(item);
+                    const imagePath = getImagePath(itemName);
+                    return getFullImageUrl(imagePath);
+                };
+
+                // Format for overlay
+                const overlayData = {
+                    class: lastLoadout.class || lastLoadout.classType || 'Unknown',
+                    name: lastLoadout.name || 'Recent Loadout',
+                    weapon: {
+                        name: getItemName(lastLoadout.weapon),
+                        image: getItemImageUrl(lastLoadout.weapon)
+                    },
+                    specialization: {
+                        name: getItemName(lastLoadout.specialization),
+                        image: getItemImageUrl(lastLoadout.specialization)
+                    },
+                    gadgets: lastLoadout.gadgets ? lastLoadout.gadgets.map(g => ({
+                        name: getItemName(g),
+                        image: getItemImageUrl(g)
+                    })) : [],
+                    timestamp: new Date().toISOString()
+                };
+
+                localStorage.setItem('loadout_overlay_default', JSON.stringify(overlayData));
+                console.log('Sent to overlay:', overlayData);
+
+                // Send via Supabase for real-time OBS updates
+                sendLoadoutSupabase(overlayData);
+
+                showQuickStatus('✅ Loadout sent to overlay!', true);
+
+            } catch (error) {
+                console.error('Error sending loadout:', error);
+                showQuickStatus('Error sending loadout!', false);
+            }
+        }
+
+        function testOverlayQuick() {
+            const testData = {
+                class: 'Medium',
+                name: 'Test Loadout',
+                weapon: { name: 'FCAR', image: null },
+                specialization: { name: 'Healing Beam', image: null },
+                gadgets: [
+                    { name: 'Defibrillator', image: null },
+                    { name: 'Jump Pad', image: null },
+                    { name: 'Gas Mine', image: null }
+                ],
+                timestamp: new Date().toISOString()
+            };
+
+            // Send via Supabase for OBS
+            sendLoadoutSupabase(testData);
+
+            // Also save to localStorage for browser preview
+            localStorage.setItem('loadout_overlay_default', JSON.stringify(testData));
+
+            showQuickStatus('✅ Test loadout sent!', true);
+        }
+
+        function copyQuickUrl() {
+            const url = document.getElementById('quickOverlayUrl').value;
+            navigator.clipboard.writeText(url).then(() => {
+                showQuickStatus('✅ URL copied to clipboard!', true);
+            });
+        }
+
+        function showQuickStatus(message, success) {
+            const status = document.getElementById('streamStatus');
+            status.textContent = message;
+            status.style.display = 'block';
+            status.style.background = success ? 'rgba(76, 175, 80, 0.1)' : 'rgba(255, 0, 0, 0.1)';
+            status.style.borderColor = success ? '#4CAF50' : '#ff0000';
+            status.style.color = success ? '#4CAF50' : '#ff0000';
+
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 3000);
+        }
+
+        function checkStreamStatus() {
+            // Check if there's an active overlay session
+            const overlayData = localStorage.getItem('loadout_overlay_default');
+            if (overlayData) {
+                const status = document.getElementById('streamStatus');
+                status.textContent = '✓ Overlay Active';
+                status.style.display = 'block';
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        // Load saved preferences on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if panel should be open
+            if (localStorage.getItem('streamPanelOpen') === 'true') {
+                const panel = document.getElementById('streamToolsPanel');
+                panel.classList.add('stream-panel-open');
+                panel.style.right = '20px';
+            }
+
+            // Update settings display from localStorage if available
+            const settings = localStorage.getItem('overlaySettings');
+            if (settings) {
+                try {
+                    const parsed = JSON.parse(settings);
+                    document.getElementById('currentPos').textContent = parsed.position || 'Top Right';
+                    document.getElementById('currentTheme').textContent = parsed.theme || 'Dark';
+                    document.getElementById('currentSize').textContent = parsed.compact ? 'Compact' : 'Normal';
+                    document.getElementById('currentHide').textContent = parsed.hideEmpty ? 'Yes' : 'No';
+                } catch (e) {
+                    // Use defaults
+                }
+            }
+        });
+    </script>
 
     <!-- Streamer Spotlight Section -->
     <section id="streamer-spotlight" class="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 mt-6" style="display: none;">
@@ -1202,6 +1530,102 @@ Gadget 3: ${loadout.gadget3}`;
         window.addEventListener('resize', updateScrollProgress);
         // Initial update
         document.addEventListener('DOMContentLoaded', updateScrollProgress);
+    </script>
+
+    <!-- Supabase Integration for OBS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://vdwkgrgacwxjnofglbyn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkd2tncmdhY3d4am5vZmdsYnluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMTU5MjcsImV4cCI6MjA3Mzg5MTkyN30.7EsHGeSQG2ueT_ydwjKMYoAHz9O_wIK5d79SsRBWmMc';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Generate or get unique channel ID for this user
+        function getMyChannelId() {
+            let channelId = localStorage.getItem('myStreamChannelId');
+            if (!channelId) {
+                // Generate a unique ID for this browser/streamer
+                channelId = 'stream_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('myStreamChannelId', channelId);
+            }
+            return channelId;
+        }
+
+        // Get the channel ID and display it
+        const myChannelId = getMyChannelId();
+        console.log('Your unique channel ID:', myChannelId);
+
+        // Update the overlay URL to include the channel
+        function updateOverlayUrlWithChannel() {
+            const urlInput = document.getElementById('quickOverlayUrl');
+            if (urlInput) {
+                urlInput.value = `http://localhost:8000/overlay/?channel=${myChannelId}`;
+            }
+        }
+
+        // Call this when the page loads
+        document.addEventListener('DOMContentLoaded', updateOverlayUrlWithChannel);
+
+        // Create channel once and reuse it
+        const channelName = 'overlay_' + myChannelId;
+        let overlayChannel = null;
+        let isSubscribed = false;
+
+        // Initialize the channel
+        function initChannel() {
+            if (!overlayChannel) {
+                overlayChannel = supabase.channel(channelName);
+                overlayChannel.subscribe((status) => {
+                    if (status === 'SUBSCRIBED') {
+                        isSubscribed = true;
+                        console.log(`✅ Connected to channel: ${channelName}`);
+                    }
+                });
+            }
+            return overlayChannel;
+        }
+
+        // Initialize on page load
+        initChannel();
+
+        // Send loadout via Supabase
+        function sendLoadoutSupabase(overlayData) {
+            const channel = initChannel();
+
+            // Send immediately if already subscribed, or wait for subscription
+            if (isSubscribed) {
+                channel.send({
+                    type: 'broadcast',
+                    event: 'loadout_update',
+                    payload: overlayData
+                });
+                console.log(`✅ Sent loadout via Supabase on channel: ${channelName}`);
+                showQuickStatus('✅ Sent to OBS!', true);
+            } else {
+                // Wait for subscription then send
+                const checkSubscription = setInterval(() => {
+                    if (isSubscribed) {
+                        clearInterval(checkSubscription);
+                        channel.send({
+                            type: 'broadcast',
+                            event: 'loadout_update',
+                            payload: overlayData
+                        });
+                        console.log(`✅ Sent loadout via Supabase on channel: ${channelName}`);
+                        showQuickStatus('✅ Sent to OBS!', true);
+                    }
+                }, 100);
+
+                // Timeout after 5 seconds
+                setTimeout(() => {
+                    clearInterval(checkSubscription);
+                    if (!isSubscribed) {
+                        console.error('Failed to connect to Supabase');
+                        showQuickStatus('⚠️ Connection issue, please refresh', false);
+                    }
+                }, 5000);
+            }
+        }
     </script>
 </body>
 </html>

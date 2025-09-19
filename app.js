@@ -3676,10 +3676,71 @@ class SlotHistoryManager {
     this.playSound("addSound");
     this.showToast("Loadout saved to history!");
 
+    // Send loadout to OBS overlay
+    this.sendToOverlay(loadout);
+
     // Generate AI analysis for the new loadout (index 0)
     setTimeout(() => {
       this.generateAIAnalysis(0);
     }, 1000);
+  }
+
+  // Send loadout data to OBS overlay via localStorage
+  sendToOverlay(loadout) {
+    try {
+      // Debug log to see what we're receiving
+      console.log('📺 Raw loadout data received:', loadout);
+
+      // Helper to get full URL for images
+      const getFullImageUrl = (path) => {
+        if (!path) return null;
+        // If it's already a full URL, return it
+        if (path.startsWith('http')) return path;
+        // Otherwise, prepend the domain
+        const baseUrl = window.location.hostname === 'localhost'
+          ? `http://localhost:${window.location.port || '8000'}`
+          : 'https://www.thefinals.com';
+        return `${baseUrl}/${path}`;
+      };
+
+      // Prepare loadout data with images for overlay
+      const overlayData = {
+        class: loadout.class || loadout.classType || 'Unknown',
+        name: loadout.name || generateLoadoutName(
+          loadout.class || loadout.classType,
+          typeof loadout.weapon === 'object' ? loadout.weapon.name : loadout.weapon,
+          typeof loadout.specialization === 'object' ? loadout.specialization.name : loadout.specialization
+        ),
+        weapon: {
+          name: typeof loadout.weapon === 'object' ? loadout.weapon.name : loadout.weapon,
+          image: getFullImageUrl(typeof loadout.weapon === 'object' ? loadout.weapon.image : getImagePath(loadout.weapon))
+        },
+        specialization: {
+          name: typeof loadout.specialization === 'object' ? loadout.specialization.name : loadout.specialization,
+          image: getFullImageUrl(typeof loadout.specialization === 'object' ? loadout.specialization.image : getImagePath(loadout.specialization))
+        },
+        gadgets: loadout.gadgets ? loadout.gadgets.map(g => ({
+          name: typeof g === 'object' ? g.name : g,
+          image: getFullImageUrl(typeof g === 'object' ? g.image : getImagePath(g))
+        })) : [],
+        timestamp: new Date().toISOString()
+      };
+
+      // Send to default channel
+      localStorage.setItem('loadout_overlay_default', JSON.stringify(overlayData));
+
+      // Also send to numbered channels for multi-stream setups
+      for (let i = 1; i <= 5; i++) {
+        const channelData = localStorage.getItem(`overlay_channel_${i}_enabled`);
+        if (channelData === 'true') {
+          localStorage.setItem(`loadout_overlay_channel${i}`, JSON.stringify(overlayData));
+        }
+      }
+
+      console.log('📺 Loadout sent to OBS overlay:', overlayData);
+    } catch (error) {
+      console.error('Failed to send loadout to overlay:', error);
+    }
   }
 
   clearHistory() {

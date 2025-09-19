@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Tools - THE FINALS Loadout Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, rgba(10, 5, 15, 1) 0%, rgba(25, 15, 30, 1) 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 2px solid rgba(255, 71, 150, 0.3);
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            background: linear-gradient(90deg, #ff4796 0%, #9b59b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #ff4796;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid #ff4796;
+            border-radius: 8px;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 71, 150, 0.1);
+            transform: translateX(-5px);
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #ff0000;
+            margin-left: 15px;
+        }
+
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #ff0000;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main content sections */
+        .section {
+            background: rgba(20, 20, 30, 0.6);
+            border: 1px solid rgba(255, 71, 150, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #ff4796;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Grid layouts */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Preview window */
+        .preview-container {
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 71, 150, 0.3);
+            height: 300px;
+            position: relative;
+        }
+
+        .preview-header {
+            background: rgba(255, 71, 150, 0.2);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* URL display */
+        .url-display {
+            background: #000;
+            border: 1px solid rgba(255, 71, 150, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .url-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: monospace;
+            font-size: 14px;
+            outline: none;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #ff4796, #9b59b6);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 71, 150, 0.2);
+            color: #ff4796;
+            border: 1px solid #ff4796;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 71, 150, 0.3);
+        }
+
+        /* Customization controls */
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .control-select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 71, 150, 0.3);
+            border-radius: 5px;
+            color: white;
+            font-size: 14px;
+        }
+
+        /* Feature grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 71, 150, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Steps Grid */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .step-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 71, 150, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .step-card:hover {
+            border-color: rgba(255, 71, 150, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 71, 150, 0.2);
+        }
+
+        .step-number {
+            background: linear-gradient(90deg, #ff4796, #9b59b6);
+            padding: 8px 15px;
+            font-weight: bold;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        .step-content {
+            padding: 15px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .step-desc {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .step-image {
+            width: auto;
+            height: auto;
+            max-width: min(100%, 430px); /* Won't go larger than 430px (typical OBS screenshot width) */
+            border-radius: 8px;
+            border: 1px solid rgba(255, 71, 150, 0.1);
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Action buttons group */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .container {
+                padding: 10px;
+            }
+
+            /* Stack preview and controls on mobile */
+            div[style*="grid-template-columns: 2fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            .preview-container {
+                height: 250px !important;
+            }
+
+            .header h1 {
+                font-size: 36px;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .live-badge {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <a href="/" class="back-link">
+                ← Back to Generator
+            </a>
+            <div>
+                <h1>Stream Tools</h1>
+                <span class="live-badge">
+                    <span class="pulse-dot"></span>
+                    LIVE OVERLAY SYSTEM
+                </span>
+            </div>
+            <p style="color: #ccc; margin-top: 15px; font-size: 18px;">
+                Professional overlay for OBS, Streamlabs, and all streaming software
+            </p>
+        </header>
+
+        <!-- Live Preview and Controls Section -->
+        <div class="section">
+            <h2 class="section-title">
+                <span>🎮</span>
+                Live Overlay Preview
+            </h2>
+
+            <!-- Preview Container -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 30px;">
+                <div class="preview-container" style="height: 400px;">
+                    <div class="preview-header">
+                        <span style="color: #ff4796;">Live Preview</span>
+                        <button onclick="refreshPreview()" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">
+                            ↻ Refresh
+                        </button>
+                    </div>
+                    <iframe id="overlayPreview"
+                            src="/overlay/"
+                            style="width: 100%; height: calc(100% - 45px); border: none;">
+                    </iframe>
+                </div>
+
+                <!-- Quick Actions Panel -->
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- URL Copy Section -->
+                    <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 71, 150, 0.2); border-radius: 12px; padding: 20px;">
+                        <h3 style="margin-bottom: 15px; color: #ff4796; font-size: 18px;">📋 Your Overlay URL</h3>
+                        <div class="url-display" style="margin-bottom: 15px;">
+                            <input type="text"
+                                   id="overlayUrl"
+                                   class="url-input"
+                                   value=""
+                                   readonly>
+                            <button onclick="copyUrl()" class="btn btn-primary">
+                                Copy
+                            </button>
+                        </div>
+                        <div style="color: #888; font-size: 12px;">
+                            <strong>Dimensions:</strong> 600px × 200px
+                        </div>
+                    </div>
+
+                    <!-- Test Controls -->
+                    <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 71, 150, 0.2); border-radius: 12px; padding: 20px;">
+                        <h3 style="margin-bottom: 15px; color: #ff4796; font-size: 18px;">🎯 Test Your Overlay</h3>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button onclick="sendTestLoadout()" class="btn btn-primary">
+                                🎲 Send Test Loadout
+                            </button>
+                            <button onclick="sendLastLoadout()" class="btn btn-secondary">
+                                📤 Send Current Loadout
+                            </button>
+                        </div>
+                        <p style="color: #888; font-size: 12px; margin-top: 10px; line-height: 1.5;">
+                            Test loadouts appear instantly in the preview above
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customization Section -->
+        <div class="section">
+            <h2 class="section-title">
+                <span>🎨</span>
+                Customize Your Overlay
+            </h2>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 71, 150, 0.1); border-radius: 10px; padding: 20px;">
+                    <div class="control-group">
+                        <label class="control-label">📍 Position</label>
+                        <select id="overlayPosition" onchange="updateOverlay()" class="control-select">
+                            <option value="top-left">Top Left</option>
+                            <option value="top-right">Top Right</option>
+                            <option value="bottom-left">Bottom Left</option>
+                            <option value="bottom-right">Bottom Right</option>
+                            <option value="center" selected>Center</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 71, 150, 0.1); border-radius: 10px; padding: 20px;">
+                    <div class="control-group">
+                        <label class="control-label">🎨 Theme</label>
+                        <select id="overlayTheme" onchange="updateOverlay()" class="control-select">
+                            <option value="dark">Dark</option>
+                            <option value="light">Light</option>
+                            <option value="transparent">Transparent</option>
+                            <option value="finals">THE FINALS Red</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 71, 150, 0.1); border-radius: 10px; padding: 20px;">
+                    <div class="control-group">
+                        <label class="control-label">📏 Size</label>
+                        <select id="overlayCompact" onchange="updateOverlay()" class="control-select">
+                            <option value="false">Normal (Full Details)</option>
+                            <option value="true">Compact (Minimal)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 71, 150, 0.1); border-radius: 10px; padding: 20px;">
+                    <div class="control-group">
+                        <label class="control-label">👻 When Empty</label>
+                        <select id="overlayHideEmpty" onchange="updateOverlay()" class="control-select">
+                            <option value="false">Show Waiting Message</option>
+                            <option value="true">Hide Completely</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; padding: 15px; background: rgba(255, 71, 150, 0.1); border: 1px solid rgba(255, 71, 150, 0.3); border-radius: 8px;">
+                <p style="color: #ccc; font-size: 14px; margin: 0;">
+                    💡 <strong>Pro Tip:</strong> Your settings update the URL automatically. The overlay remembers your preferences for your stream.
+                </p>
+            </div>
+        </div>
+
+        <!-- Setup Instructions Section -->
+        <div class="section">
+            <h2 class="section-title">
+                <span>📖</span>
+                Quick Setup Guide
+            </h2>
+
+            <div class="steps-grid">
+                <!-- Step 1 -->
+                <div class="step-card">
+                    <div class="step-number">STEP 1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Copy Your Overlay URL</h3>
+                        <p class="step-desc">Click the "Copy" button above to get your unique overlay link. This URL connects your stream to the loadout generator.</p>
+                        <img src="images/obs 1.webp" alt="Step 1: Copy URL" class="step-image">
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-card">
+                    <div class="step-number">STEP 2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Add Browser Source in OBS</h3>
+                        <p class="step-desc">In OBS, click the + button in Sources and select "Browser". Name it something like "Finals Loadout Overlay".</p>
+                        <img src="images/obs 2.webp" alt="Step 2: Add Browser Source" class="step-image">
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-card">
+                    <div class="step-number">STEP 3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Configure Browser Source</h3>
+                        <p class="step-desc">Paste your URL and set Width: 600px, Height: 200px. You can adjust these based on your stream layout.</p>
+                        <img src="images/obs 3.webp" alt="Step 3: Configure Source" class="step-image">
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-card">
+                    <div class="step-number">STEP 4</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Start Streaming!</h3>
+                        <p class="step-desc">Position the overlay on your stream. When you generate loadouts on the main site, they'll appear live on stream!</p>
+                        <img src="images/obs 4.webp" alt="Step 4: Start Streaming" class="step-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="section">
+            <h2 class="section-title">
+                <span>✨</span>
+                Why Streamers Love It
+            </h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Real-Time Updates</div>
+                    <div class="feature-desc">Loadouts appear on stream instantly when generated</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🖼️</div>
+                    <div class="feature-title">Item Images</div>
+                    <div class="feature-desc">Shows actual weapon and gadget icons from the game</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">Fully Customizable</div>
+                    <div class="feature-desc">Match your stream's theme and layout perfectly</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-title">No Login Required</div>
+                    <div class="feature-desc">Works instantly without any account or setup</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">All Platforms</div>
+                    <div class="feature-desc">Works with OBS, Streamlabs, XSplit, and more</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-title">Zero Latency</div>
+                    <div class="feature-desc">Updates happen in milliseconds, not seconds</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button onclick="window.location.href='/'" class="btn btn-primary">
+                ← Back to Generator
+            </button>
+            <button onclick="openFullscreen()" class="btn btn-secondary">
+                🔗 Open Overlay in New Tab
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Get channel ID (same as main page)
+        function getMyChannelId() {
+            let channelId = localStorage.getItem('myStreamChannelId');
+            if (!channelId) {
+                channelId = 'stream_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('myStreamChannelId', channelId);
+            }
+            return channelId;
+        }
+
+        // Update overlay URL and preview
+        function updateOverlay() {
+            const position = document.getElementById('overlayPosition').value;
+            const theme = document.getElementById('overlayTheme').value;
+            const compact = document.getElementById('overlayCompact').value;
+            const hideEmpty = document.getElementById('overlayHideEmpty').value;
+            const channelId = getMyChannelId();
+
+            const params = new URLSearchParams({
+                channel: channelId,
+                position: position,
+                theme: theme,
+                compact: compact,
+                hideEmpty: hideEmpty
+            });
+
+            // Use current domain instead of hardcoded domain
+            const baseUrl = window.location.origin;
+            const url = `${baseUrl}/overlay/?${params.toString()}`;
+            document.getElementById('overlayUrl').value = url;
+
+            // Update preview
+            const iframe = document.getElementById('overlayPreview');
+            iframe.src = `/overlay/?${params.toString()}`;
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateOverlay();
+        });
+
+        // Refresh preview
+        function refreshPreview() {
+            const iframe = document.getElementById('overlayPreview');
+            const src = iframe.src;
+            iframe.src = '';
+            setTimeout(() => {
+                iframe.src = src;
+            }, 100);
+        }
+
+        // Copy URL
+        function copyUrl() {
+            const input = document.getElementById('overlayUrl');
+            input.select();
+            navigator.clipboard.writeText(input.value).then(() => {
+                // Show feedback
+                const btn = event.target;
+                const original = btn.innerHTML;
+                btn.innerHTML = '✅ Copied!';
+                btn.style.background = 'linear-gradient(90deg, #4CAF50, #45a049)';
+                setTimeout(() => {
+                    btn.innerHTML = original;
+                    btn.style.background = '';
+                }, 2000);
+            });
+        }
+
+        // Initialize Supabase (if needed)
+        let supabase = null;
+        if (typeof window.supabase !== 'undefined') {
+            supabase = window.supabase.createClient(
+                'https://nabbbidjnmljaadmjjln.supabase.co',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hYmJiaWRqbm1samFhZG1qamxuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzcxNTI2MDAsImV4cCI6MjA1MjcyODYwMH0.C-apFqin1kBOOV8L3R8Y0cakcAU2A8KtFqQr2PwVHAc'
+            );
+        }
+
+        // Send test loadout
+        function sendTestLoadout() {
+            const testData = {
+                class: 'Medium',
+                name: 'Test Loadout',
+                weapon: { name: 'FCAR', image: '/images/FCAR.webp' },
+                specialization: { name: 'Healing Beam', image: '/images/Healing_Beam.webp' },
+                gadgets: [
+                    { name: 'Defibrillator', image: '/images/Defibrillator.webp' },
+                    { name: 'Jump Pad', image: '/images/Jump_Pad.webp' },
+                    { name: 'Gas Grenade', image: '/images/Gas_Grenade.webp' }
+                ],
+                timestamp: new Date().toISOString()
+            };
+
+            // Send via Supabase if available
+            if (supabase) {
+                const channelId = getMyChannelId();
+                const channel = supabase.channel(channelId);
+                channel.subscribe((status) => {
+                    if (status === 'SUBSCRIBED') {
+                        channel.send({
+                            type: 'broadcast',
+                            event: 'loadout_update',
+                            payload: testData
+                        });
+                    }
+                });
+            }
+
+            // Also store locally for fallback
+            localStorage.setItem('loadout_overlay_default', JSON.stringify(testData));
+
+            // Show feedback
+            const btn = event.target;
+            const original = btn.innerHTML;
+            btn.innerHTML = '✅ Sent!';
+            setTimeout(() => {
+                btn.innerHTML = original;
+            }, 2000);
+        }
+
+        // Send last loadout
+        function sendLastLoadout() {
+            // Implementation same as main page
+            let historyStr = localStorage.getItem('slotMachineHistory') || localStorage.getItem('premiumSlotHistory');
+            if (!historyStr) {
+                alert('No loadout history found. Generate a loadout first!');
+                return;
+            }
+
+            const history = JSON.parse(historyStr);
+            if (history.length === 0) {
+                alert('No loadouts in history.');
+                return;
+            }
+
+            const lastLoadout = history[history.length - 1];
+
+            // Send via Supabase if available
+            if (supabase) {
+                const channelId = getMyChannelId();
+                const channel = supabase.channel(channelId);
+                channel.subscribe((status) => {
+                    if (status === 'SUBSCRIBED') {
+                        channel.send({
+                            type: 'broadcast',
+                            event: 'loadout_update',
+                            payload: lastLoadout
+                        });
+                    }
+                });
+            }
+
+            // Show feedback
+            const btn = event.target;
+            const original = btn.innerHTML;
+            btn.innerHTML = '✅ Sent!';
+            setTimeout(() => {
+                btn.innerHTML = original;
+            }, 2000);
+        }
+
+        // Open in new tab
+        function openFullscreen() {
+            const url = document.getElementById('overlayUrl').value;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>

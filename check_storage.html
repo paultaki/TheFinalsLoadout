@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check Storage</title>
+</head>
+<body>
+    <h1>LocalStorage Debug</h1>
+    <pre id="output"></pre>
+    <script>
+        const output = document.getElementById('output');
+        let text = 'LocalStorage contents:\n\n';
+        
+        // Check for history
+        const history = localStorage.getItem('slotMachineHistory');
+        text += 'slotMachineHistory: ' + (history ? history.substring(0, 500) + '...' : 'NOT FOUND') + '\n\n';
+        
+        // Check for overlay data
+        const overlay = localStorage.getItem('loadout_overlay_default');
+        text += 'loadout_overlay_default: ' + (overlay || 'NOT FOUND') + '\n\n';
+        
+        // List all keys
+        text += 'All localStorage keys:\n';
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            text += '- ' + key + '\n';
+        }
+        
+        output.textContent = text;
+    </script>
+</body>
+</html>

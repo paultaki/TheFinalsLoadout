@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Overlay Data</title>
+</head>
+<body>
+    <h1>Overlay Data Debug</h1>
+    <button onclick="checkData()">Check Current Overlay Data</button>
+    <button onclick="generateNew()">Generate Test Loadout</button>
+    <button onclick="clearData()">Clear Overlay Data</button>
+    <pre id="output" style="background: #f0f0f0; padding: 20px; border-radius: 5px;"></pre>
+    
+    <script>
+        function checkData() {
+            const data = localStorage.getItem('loadout_overlay_default');
+            const output = document.getElementById('output');
+            
+            if (data) {
+                const parsed = JSON.parse(data);
+                output.textContent = 'Current overlay data:\n' + JSON.stringify(parsed, null, 2);
+                
+                // Check if images are loading
+                if (parsed.weapon && parsed.weapon.image) {
+                    output.textContent += '\n\nWeapon image URL: ' + parsed.weapon.image;
+                    
+                    // Try to load the image
+                    const img = new Image();
+                    img.onload = () => {
+                        output.textContent += '\n✅ Weapon image loads successfully!';
+                    };
+                    img.onerror = () => {
+                        output.textContent += '\n❌ Weapon image failed to load!';
+                    };
+                    img.src = parsed.weapon.image;
+                }
+            } else {
+                output.textContent = 'No overlay data found in localStorage';
+            }
+        }
+        
+        function generateNew() {
+            // Generate a new loadout and trigger the send
+            window.location.href = '/';
+        }
+        
+        function clearData() {
+            localStorage.removeItem('loadout_overlay_default');
+            document.getElementById('output').textContent = 'Overlay data cleared';
+        }
+        
+        // Auto-check on load
+        window.onload = checkData;
+    </script>
+</body>
+</html>

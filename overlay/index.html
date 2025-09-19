@@ -17,27 +17,32 @@
             color: #fff;
             overflow: hidden;
             position: relative;
-            width: 100vw;
-            height: 100vh;
+            width: 600px;
+            height: 180px;
+            margin: 0;
+            padding: 0;
         }
 
+        /* Slot Machine Style Container */
         .overlay-container {
             position: absolute;
-            padding: 20px;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 100%);
-            border-radius: 15px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, rgba(20, 10, 25, 0.98) 0%, rgba(35, 20, 40, 0.95) 100%);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 71, 150, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
             transition: all 0.3s ease;
-            min-width: 300px;
+            width: 540px;
+            height: 160px;
+            padding: 8px 8px 12px 8px;
+            top: 5px;
+            left: 10px;
         }
 
         /* Position presets */
-        .top-left { top: 20px; left: 20px; }
-        .top-right { top: 20px; right: 20px; }
-        .bottom-left { bottom: 20px; left: 20px; }
-        .bottom-right { bottom: 20px; right: 20px; }
+        .top-left { top: 10px; left: 10px; }
+        .top-right { top: 10px; right: 10px; }
+        .bottom-left { bottom: 10px; left: 10px; }
+        .bottom-right { bottom: 10px; right: 10px; }
         .center {
             top: 50%;
             left: 50%;
@@ -46,121 +51,155 @@
 
         /* Theme presets */
         .theme-dark {
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 100%);
-            border-color: rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, rgba(20, 10, 25, 0.98) 0%, rgba(35, 20, 40, 0.95) 100%);
+            border-color: rgba(255, 71, 150, 0.4);
         }
 
         .theme-light {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 240, 0.9) 100%);
             color: #000;
-            border-color: rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-light .column-header {
+            color: #ff4796 !important;
         }
 
         .theme-finals {
-            background: linear-gradient(135deg, rgba(255, 47, 0, 0.9) 0%, rgba(255, 102, 0, 0.7) 100%);
-            border-color: rgba(255, 200, 0, 0.5);
+            background: linear-gradient(135deg, rgba(228, 49, 79, 0.95) 0%, rgba(200, 30, 60, 0.9) 100%);
+            border-color: rgba(228, 49, 79, 0.5);
+        }
+
+        .theme-finals .column-header {
+            color: #ffffff !important;
+        }
+
+        .theme-finals .site-branding {
+            background: none;
+            -webkit-text-fill-color: #ffffff;
+        }
+
+        .theme-finals .class-name {
+            color: #ffffff !important;
+        }
+
+        .theme-finals .item-name {
+            color: #ffffff !important;
         }
 
         .theme-transparent {
-            background: rgba(0, 0, 0, 0.5);
-            border: none;
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 71, 150, 0.4);
+            backdrop-filter: blur(10px);
         }
 
-        .loadout-header {
+        /* Class Header */
+        .class-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 8px;
+            padding: 6px 10px;
+            background: linear-gradient(90deg, rgba(255, 71, 150, 0.15) 0%, rgba(150, 71, 255, 0.1) 100%);
+            border-radius: 5px;
         }
 
-        .class-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .class-light {
-            background: linear-gradient(135deg, #4CAF50, #8BC34A);
-        }
-
-        .class-medium {
-            background: linear-gradient(135deg, #2196F3, #03A9F4);
-        }
-
-        .class-heavy {
-            background: linear-gradient(135deg, #F44336, #FF5722);
-        }
-
-        .loadout-title {
-            flex: 1;
-        }
-
-        .loadout-name {
+        .class-name {
             font-size: 18px;
             font-weight: bold;
-            margin-bottom: 3px;
-        }
-
-        .loadout-class {
-            font-size: 14px;
-            opacity: 0.8;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
 
-        .loadout-items {
-            display: grid;
-            gap: 8px;
-        }
-
-        .loadout-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            transition: transform 0.2s ease;
-        }
-
-        .loadout-item:hover {
-            transform: translateX(5px);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .item-icon {
-            width: 30px;
-            height: 30px;
-            margin-right: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .site-branding {
             font-size: 16px;
-        }
-
-        .item-details {
-            flex: 1;
-        }
-
-        .item-type {
-            font-size: 10px;
-            text-transform: uppercase;
-            opacity: 0.6;
+            background: linear-gradient(90deg, #ff4796, #ff71b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
             letter-spacing: 0.5px;
         }
 
+        .class-light { color: #ff4796; }
+        .class-medium { color: #9b59b6; }
+        .class-heavy { color: #3498db; }
+
+        /* Slot Machine Columns */
+        .slot-columns {
+            display: flex;
+            gap: 0;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .slot-column {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 71, 150, 0.2);
+            border-right: none;
+            padding: 6px;
+            min-width: 100px;
+            flex: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .slot-column:first-child {
+            border-radius: 6px 0 0 6px;
+        }
+
+        .slot-column:last-child {
+            border-radius: 0 6px 6px 0;
+            border-right: 1px solid rgba(255, 71, 150, 0.2);
+        }
+
+        .slot-column:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 71, 150, 0.4);
+        }
+
+        .column-header {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            margin-bottom: 6px;
+            color: #ff71b0;
+            font-weight: bold;
+        }
+
+        .item-display {
+            background: rgba(255, 71, 150, 0.06);
+            border: 1px solid rgba(255, 71, 150, 0.15);
+            border-radius: 4px;
+            padding: 4px;
+            text-align: center;
+            height: 72px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .item-image {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
+            transition: transform 0.2s ease;
+        }
+
+        .item-image:hover {
+            transform: scale(1.1);
+        }
+
         .item-name {
-            font-size: 14px;
+            font-size: 9px;
             font-weight: 500;
+            line-height: 1.1;
+            word-wrap: break-word;
+            max-width: 100%;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 2px;
         }
 
         /* Animations */
@@ -175,41 +214,67 @@
             }
         }
 
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 71, 150, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 71, 150, 0.8); }
+        }
+
         .animate-in {
             animation: slideIn 0.5s ease;
         }
 
+        .new-loadout .item-display {
+            animation: glow 1s ease-in-out;
+        }
+
         /* Compact mode */
-        .compact .loadout-header {
-            margin-bottom: 10px;
+        .compact {
+            width: 540px;
+            height: 160px;
+            padding: 8px 8px 12px 8px;
         }
 
-        .compact .class-icon {
-            width: 35px;
-            height: 35px;
-            font-size: 18px;
+        .compact .class-header {
+            padding: 4px 8px;
+            margin-bottom: 4px;
         }
 
-        .compact .loadout-name {
-            font-size: 16px;
-        }
-
-        .compact .loadout-class {
-            font-size: 12px;
-        }
-
-        .compact .loadout-item {
-            padding: 6px 10px;
-        }
-
-        .compact .item-icon {
-            width: 24px;
-            height: 24px;
+        .compact .class-name {
             font-size: 14px;
         }
 
+        .compact .site-branding {
+            font-size: 14px;
+        }
+
+        .compact .slot-columns {
+            padding: 0;
+            gap: 0;
+        }
+
+        .compact .slot-column {
+            min-width: 85px;
+            padding: 6px;
+        }
+
+        .compact .column-header {
+            font-size: 8px;
+            margin-bottom: 4px;
+        }
+
+        .compact .item-display {
+            padding: 4px;
+            height: 65px;
+            gap: 2px;
+        }
+
+        .compact .item-image {
+            width: 40px;
+            height: 40px;
+        }
+
         .compact .item-name {
-            font-size: 13px;
+            font-size: 9px;
         }
 
         /* Hidden state */
@@ -217,34 +282,61 @@
             display: none;
         }
 
-        /* Loading state */
-        .loading {
+        /* No loadout state */
+        .no-loadout {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Loading dots animation */
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        /* Fallback for missing images */
+        .item-icon-fallback {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 107, 53, 0.2);
+            border: 2px solid rgba(255, 107, 53, 0.4);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px;
-            color: rgba(255, 255, 255, 0.6);
+            font-size: 24px;
+            color: #ff6b35;
         }
 
-        .no-loadout {
-            text-align: center;
-            padding: 40px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .no-loadout h3 {
-            margin-bottom: 10px;
-        }
-
-        .no-loadout p {
-            font-size: 14px;
-            line-height: 1.5;
+        .compact .item-icon-fallback {
+            width: 45px;
+            height: 45px;
+            font-size: 20px;
         }
     </style>
 </head>
 <body>
-    <div id="overlayContainer" class="overlay-container top-right theme-dark">
-        <div class="loading">Waiting for loadout...</div>
+    <div id="overlayContainer" class="overlay-container theme-dark">
+        <div class="no-loadout">
+            <div class="class-header">
+                <div style="font-size: 16px; font-weight: bold; background: linear-gradient(90deg, #ff4796, #ff71b0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">WAITING</div>
+                <div class="site-branding">TheFinalsLoadout.com</div>
+            </div>
+            <div style="padding: 20px; text-align: center;">
+                <p style="margin: 0; color: rgba(255, 255, 255, 0.7); font-size: 12px;">Generate a loadout to display here<span class="loading-dots"></span></p>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -256,7 +348,7 @@
             compact: params.get('compact') === 'true',
             hideEmpty: params.get('hideEmpty') === 'true',
             channel: params.get('channel') || 'default',
-            refresh: parseInt(params.get('refresh')) || 1000,
+            refresh: parseInt(params.get('refresh')) || 500,
             animate: params.get('animate') !== 'false'
         };
 
@@ -264,22 +356,50 @@
         const container = document.getElementById('overlayContainer');
         container.className = `overlay-container ${config.position} theme-${config.theme}${config.compact ? ' compact' : ''}`;
 
-        // Icons for different item types
+        // Icon fallbacks for different item types
         const itemIcons = {
             weapon: '🔫',
             specialization: '⚡',
             gadget: '🎯'
         };
 
-        // Class icons
-        const classIcons = {
-            light: 'L',
-            medium: 'M',
-            heavy: 'H'
-        };
+        // Function to create item HTML with image or fallback
+        function createItemHTML(item, type, index) {
+            const name = typeof item === 'object' ? item.name : item;
+            const image = typeof item === 'object' ? item.image : null;
 
-        // Function to render loadout
+            let imageHTML;
+            console.log(`Item: ${name}, Image path: ${image}`); // Debug log
+
+            if (image && image !== 'null' && image !== null) {
+                // Try to load the image with debugging
+                imageHTML = `<img class="item-image" src="${image}" alt="${name}"
+                            onload="console.log('✅ Loaded: ${name}')"
+                            onerror="console.error('❌ Failed to load: ${name} from ${image}'); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="item-icon-fallback" style="display:none;">${itemIcons[type] || '📦'}</div>`;
+            } else {
+                // Use fallback icon
+                console.log(`No image for ${name}, using fallback icon`);
+                imageHTML = `<div class="item-icon-fallback">${itemIcons[type] || '📦'}</div>`;
+            }
+
+            const headerText = type === 'gadget' ? `GADGET ${index + 1}` : type.toUpperCase();
+
+            return `
+                <div class="slot-column">
+                    <div class="column-header">${headerText}</div>
+                    <div class="item-display">
+                        ${imageHTML}
+                        <div class="item-name">${name || 'Empty'}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Function to render loadout in slot machine style
         function renderLoadout(loadout) {
+            console.log('🎰 Rendering loadout:', loadout); // Debug the entire loadout
+
             if (!loadout || !loadout.class) {
                 if (config.hideEmpty) {
                     container.classList.add('hidden');
@@ -287,8 +407,8 @@
                     container.classList.remove('hidden');
                     container.innerHTML = `
                         <div class="no-loadout">
-                            <h3>No Active Loadout</h3>
-                            <p>Generate a loadout on THE FINALS Loadout website<br>to see it here!</p>
+                            <h3>Waiting for Loadout<span class="loading-dots"></span></h3>
+                            <p>Generate a loadout on THE FINALS Loadout website!</p>
                         </div>
                     `;
                 }
@@ -297,54 +417,59 @@
 
             container.classList.remove('hidden');
 
-            const classLower = loadout.class.toLowerCase();
+            const classLower = (loadout.class || 'unknown').toLowerCase();
+
+            // Build columns HTML
+            let columnsHTML = '';
+
+            // Weapon column
+            columnsHTML += createItemHTML(loadout.weapon, 'weapon', 0);
+
+            // Specialization column
+            columnsHTML += createItemHTML(loadout.specialization, 'specialization', 0);
+
+            // Gadgets columns
+            if (loadout.gadgets && loadout.gadgets.length > 0) {
+                loadout.gadgets.forEach((gadget, index) => {
+                    columnsHTML += createItemHTML(gadget, 'gadget', index);
+                });
+            } else {
+                columnsHTML += createItemHTML('None', 'gadget', 0);
+            }
+
             const loadoutHTML = `
-                <div class="loadout-header">
-                    <div class="class-icon class-${classLower}">
-                        ${classIcons[classLower] || '?'}
-                    </div>
-                    <div class="loadout-title">
-                        <div class="loadout-name">${loadout.name || 'Random Loadout'}</div>
-                        <div class="loadout-class">${loadout.class} Build</div>
-                    </div>
+                <div class="class-header">
+                    <div class="class-name class-${classLower}">${loadout.class} BUILD</div>
+                    <div class="site-branding">TheFinalsLoadout.com</div>
                 </div>
-                <div class="loadout-items">
-                    ${loadout.weapon ? `
-                        <div class="loadout-item">
-                            <div class="item-icon">${itemIcons.weapon}</div>
-                            <div class="item-details">
-                                <div class="item-type">Weapon</div>
-                                <div class="item-name">${loadout.weapon}</div>
-                            </div>
-                        </div>
-                    ` : ''}
-                    ${loadout.specialization ? `
-                        <div class="loadout-item">
-                            <div class="item-icon">${itemIcons.specialization}</div>
-                            <div class="item-details">
-                                <div class="item-type">Specialization</div>
-                                <div class="item-name">${loadout.specialization}</div>
-                            </div>
-                        </div>
-                    ` : ''}
-                    ${loadout.gadgets && loadout.gadgets.length > 0 ? loadout.gadgets.map((gadget, index) => `
-                        <div class="loadout-item">
-                            <div class="item-icon">${itemIcons.gadget}</div>
-                            <div class="item-details">
-                                <div class="item-type">Gadget ${index + 1}</div>
-                                <div class="item-name">${gadget}</div>
-                            </div>
-                        </div>
-                    `).join('') : ''}
+                <div class="slot-columns">
+                    ${columnsHTML}
                 </div>
             `;
 
             container.innerHTML = loadoutHTML;
 
             if (config.animate) {
-                container.classList.add('animate-in');
-                setTimeout(() => container.classList.remove('animate-in'), 500);
+                container.classList.add('animate-in', 'new-loadout');
+                setTimeout(() => {
+                    container.classList.remove('animate-in', 'new-loadout');
+                }, 1000);
             }
+        }
+
+        // Try BroadcastChannel for cross-context communication
+        let broadcastChannel = null;
+        try {
+            broadcastChannel = new BroadcastChannel('loadout_overlay_channel');
+            broadcastChannel.onmessage = (event) => {
+                console.log('Received broadcast:', event.data);
+                if (event.data && event.data.type === 'loadout_update') {
+                    renderLoadout(event.data.loadout);
+                }
+            };
+            console.log('BroadcastChannel initialized');
+        } catch (e) {
+            console.log('BroadcastChannel not supported, falling back to localStorage polling');
         }
 
         // Function to check for loadout updates
@@ -396,15 +521,77 @@
 
         // Test function for development
         window.testLoadout = function() {
+            const classes = ['Light', 'Medium', 'Heavy'];
+            const weapons = {
+                Light: ['V9S', 'XP-54', 'M11', 'LH1', 'Dagger', 'Sword', 'Throwing Knives'],
+                Medium: ['FCAR', 'AKM', 'R.357', 'Model 1887', 'FAMAS'],
+                Heavy: ['SA1216', 'M60', 'Lewis Gun', 'Flamethrower', 'Sledgehammer']
+            };
+            const specializations = {
+                Light: ['Evasive Dash', 'Grappling Hook', 'Cloaking Device'],
+                Medium: ['Guardian Turret', 'Healing Beam', 'Dematerializer'],
+                Heavy: ['Mesh Shield', 'Charge \'n\' Slam', 'Goo Gun']
+            };
+            const gadgets = ['Frag Grenade', 'Gas Grenade', 'Goo Grenade', 'Flashbang', 'Smoke Grenade', 'C4', 'RPG', 'Defibrillator'];
+
+            const selectedClass = classes[Math.floor(Math.random() * classes.length)];
+            const classWeapons = weapons[selectedClass];
+            const classSpecs = specializations[selectedClass];
+
             const testData = {
-                class: 'Medium',
-                name: 'Tactical Healer',
-                weapon: 'FCAR',
-                specialization: 'Healing Beam',
-                gadgets: ['Defibrillator', 'Jump Pad', 'Gas Mine']
+                class: selectedClass,
+                name: 'Test Loadout',
+                weapon: {
+                    name: classWeapons[Math.floor(Math.random() * classWeapons.length)],
+                    image: '/images/weapons/fcar.png'  // Example image path
+                },
+                specialization: {
+                    name: classSpecs[Math.floor(Math.random() * classSpecs.length)],
+                    image: '/images/specializations/healing-beam.png'  // Example image path
+                },
+                gadgets: [
+                    { name: gadgets[Math.floor(Math.random() * gadgets.length)], image: '/images/gadgets/frag.png' },
+                    { name: gadgets[Math.floor(Math.random() * gadgets.length)], image: null },
+                    { name: gadgets[Math.floor(Math.random() * gadgets.length)], image: null }
+                ],
+                timestamp: new Date().toISOString()
             };
             localStorage.setItem(`loadout_overlay_${config.channel}`, JSON.stringify(testData));
         };
+    </script>
+
+    <!-- Supabase Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://vdwkgrgacwxjnofglbyn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkd2tncmdhY3d4am5vZmdsYnluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMTU5MjcsImV4cCI6MjA3Mzg5MTkyN30.7EsHGeSQG2ueT_ydwjKMYoAHz9O_wIK5d79SsRBWmMc';
+        const supabaseOverlay = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Get channel from URL parameters (use the config.channel we already parse)
+        const channelId = config.channel || 'default';
+        const channelName = 'overlay_' + channelId;
+
+        // Listen for loadout updates on the specific channel
+        const channelOverlay = supabaseOverlay.channel(channelName);
+
+        channelOverlay
+            .on('broadcast', { event: 'loadout_update' }, (payload) => {
+                console.log(`✅ Received loadout from Supabase on channel: ${channelName}`, payload);
+                renderLoadout(payload.payload);
+            })
+            .subscribe((status) => {
+                if (status === 'SUBSCRIBED') {
+                    console.log(`✅ Connected to Supabase channel: ${channelName}! Waiting for loadouts...`);
+                    // Show connection status briefly
+                    const container = document.getElementById('overlayContainer');
+                    const statusDiv = document.createElement('div');
+                    statusDiv.style.cssText = 'position: absolute; top: 40px; right: 10px; background: #4CAF50; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px;';
+                    statusDiv.textContent = `✅ Connected to channel: ${channelId}`;
+                    container.appendChild(statusDiv);
+                    setTimeout(() => statusDiv.remove(), 3000);
+                }
+            });
     </script>
 </body>
 </html>
