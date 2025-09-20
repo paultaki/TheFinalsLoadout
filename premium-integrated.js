@@ -342,6 +342,9 @@
       this.activeTimeouts.forEach(timeout => clearTimeout(timeout));
       this.activeTimeouts = [];
 
+      // Stop any existing roulette sound before starting new spin
+      this.stopRouletteSound();
+
       // Reset sound tracking at the start of a new sequence
       this.columnsWithSoundPlayed.clear();
       this.lastStopSoundTime = 0;
@@ -381,13 +384,16 @@
         this.currentLoadout = this.app.uiController.createRandomLoadout(className);
         console.log('Generated loadout:', this.currentLoadout);
         
+        // Start the roulette sound once at the beginning
+        this.playSound('roulette');
+
         // Run the spin sequence
         for (let i = 1; i <= this.selectedSpins; i++) {
           console.log(`🎰 Starting spin ${i} of ${this.selectedSpins}`);
           if (counter) {
             document.getElementById('currentSpin').textContent = i;
           }
-          
+
           // Populate columns for this spin
           // For intermediate spins, use random items
           // For final spin, use the actual loadout
@@ -400,16 +406,14 @@
             // Intermediate spin - use random items
             this.populatePremiumColumnsRandom();
           }
-          
-          // Play spinning sound
-          this.playSound('roulette');
-          
+
+          // Don't restart roulette sound - it's already playing
+
           // Animate the premium columns
           await this.animatePremiumSpin(i === this.selectedSpins);
-          
-          // Stop the roulette sound after spin completes
-          this.stopRouletteSound();
-          
+
+          // Roulette sound is stopped in animatePremiumSpin for final spin only
+
           if (i === this.selectedSpins) {
             // Only play final win sound and show winners on last spin
             this.playSound('finalWin');
@@ -851,14 +855,30 @@
               return;
             }
 
-            // Only play stop sound if not already played for this column and we haven't played 5 sounds yet
+            // Only play stop sound if not already played for this column
             const columnKey = `${spinId}-${index}`;
-            const soundsPlayedForThisSpin = Array.from(this.columnsWithSoundPlayed).filter(key => key.startsWith(`${spinId}-`)).length;
 
-            if (!this.columnsWithSoundPlayed.has(columnKey) && soundsPlayedForThisSpin < 5) {
+            if (!this.columnsWithSoundPlayed.has(columnKey)) {
               this.columnsWithSoundPlayed.add(columnKey);
-              console.log(`🔔 Playing DING sound ${soundsPlayedForThisSpin + 1}/5 for column ${index + 1}, spinId=${spinId}`);
-              this.playSound('stop');
+              console.log(`🔔 Playing DING sound for column ${index + 1} at ${columnDuration}ms`);
+
+              // Directly play the ding sound without going through playSound to avoid restrictions
+              if (this.sounds.stop) {
+                try {
+                  const audio = this.sounds.stop.cloneNode();
+                  audio.volume = this.sounds.stop.volume || 0.4;
+                  audio.currentTime = 0;
+                  const playPromise = audio.play();
+                  if (playPromise) {
+                    playPromise.catch(e => console.log(`Ding sound failed for column ${index + 1}:`, e));
+                  }
+                } catch (e) {
+                  console.log(`Error playing ding for column ${index + 1}:`, e);
+                }
+              } else {
+                console.log(`⚠️ Stop sound not loaded for column ${index + 1}`);
+              }
+
               // Add a visual pulse effect when each column stops on final spin
               col.style.filter = 'brightness(1.2)';
               setTimeout(() => {
@@ -867,7 +887,7 @@
             } else {
               console.log(`⏭️ Column ${index + 1} already played for spin ${spinId}`);
             }
-          }, columnDuration - 50); // Play sound just before column stops
+          }, columnDuration); // Play sound exactly when column stops
 
           this.activeTimeouts.push(timeoutId);
         }
@@ -875,6 +895,16 @@
       
       // Wait for all columns to finish (last column takes the longest)
       const totalDuration = baseDuration + (columns.length - 1) * staggerDelay;
+
+      // Schedule roulette sound stop exactly when the last column stops (only on final spin)
+      if (isFinalSpin) {
+        const stopTimeoutId = setTimeout(() => {
+          console.log('🛑 Stopping roulette sound after final spin completion');
+          this.stopRouletteSound();
+        }, totalDuration);
+        this.activeTimeouts.push(stopTimeoutId);
+      }
+
       await this.sleep(totalDuration);
     }
     
