@@ -16,6 +16,8 @@
       this.filterState = this.loadFilterState();
       this.sounds = {};
       this.soundEnabled = true;
+      this.columnsWithSoundPlayed = new Set(); // Track which columns have played sound
+      this.lastStopSoundTime = 0; // Track when we last played a stop sound
       this.initSounds();
       this.init();
     }
@@ -26,7 +28,7 @@
         click: '/sounds/click.mp3',
         spinStart: '/sounds/start-spin.mp3',
         spinning: '/sounds/spinning.mp3',
-        roulette: '/sounds/wheel-tick-loop.mp3',  // Use looping sound
+        roulette: '/sounds/roulette.mp3',  // Use smooth roulette sound instead of ticking
         stop: '/sounds/ding.mp3',
         win: '/sounds/ding-ding.mp3',
         finalWin: '/sounds/pop-pour-perform.mp3'
@@ -53,7 +55,7 @@
     
     playSound(soundName) {
       if (!this.soundEnabled || !this.sounds[soundName]) return;
-      
+
       try {
         // Special handling for roulette sound (looping)
         if (soundName === 'roulette') {
@@ -63,8 +65,22 @@
           this.currentRouletteSound = this.sounds.roulette;
           this.currentRouletteSound.currentTime = 0;
           this.currentRouletteSound.play().catch(e => console.log('Roulette sound failed:', e));
+        } else if (soundName === 'stop') {
+          // For stop sound, use the original audio element (don't clone)
+          // Also add a minimum delay between stop sounds to prevent overlap
+          const now = Date.now();
+          const timeSinceLastStop = now - this.lastStopSoundTime;
+
+          if (timeSinceLastStop > 100) { // Minimum 100ms between stop sounds
+            this.lastStopSoundTime = now;
+            const audio = this.sounds[soundName];
+            audio.currentTime = 0; // Reset to start
+            audio.play().catch(e => console.log('Stop sound failed:', e));
+          } else {
+            console.log(`⏭️ Skipping stop sound, too soon (${timeSinceLastStop}ms since last)`);
+          }
         } else {
-          // For non-looping sounds, clone to allow overlapping
+          // For other sounds, clone to allow overlapping
           const audio = this.sounds[soundName].cloneNode();
           audio.volume = this.sounds[soundName].volume;
           audio.play().catch(e => console.log('Sound play failed:', e));
@@ -312,10 +328,14 @@
     
     async startSlotMachine() {
       if (!this.selectedSpins || !this.selectedClass || !this.app) return;
-      
+
+      // Reset sound tracking at the start of a new sequence
+      this.columnsWithSoundPlayed.clear();
+      this.lastStopSoundTime = 0;
+
       // Play start sound
       this.playSound('spinStart');
-      
+
       // Clear previous winners, glow effects, and sparks
       document.querySelectorAll('.winner').forEach(item => {
         item.classList.remove('winner');
@@ -715,13 +735,15 @@
     }
     
     async animatePremiumSpin(isFinalSpin) {
-      console.log(`🎵 animatePremiumSpin called with isFinalSpin=${isFinalSpin}`);
+      console.log(`🎵 animatePremiumSpin called with isFinalSpin=${isFinalSpin}, columnsWithSoundPlayed size: ${this.columnsWithSoundPlayed.size}`);
 
       const baseDuration = isFinalSpin ? 2000 : 1000;  // Base duration for first column
       const staggerDelay = isFinalSpin ? 500 : 100;    // Much longer delay for final spin
 
-      // Track which columns have played their stop sound to prevent duplicates
-      const columnsWithSoundPlayed = new Set();
+      // Reset the sound tracking for this spin sequence
+      if (isFinalSpin) {
+        this.columnsWithSoundPlayed.clear();
+      }
       
       // Get item dimensions
       const isMobile = window.innerWidth <= 768;
@@ -811,19 +833,21 @@
         col.style.transform = `translateY(${targetPositions[index]}px)`;
         
         // Schedule stop sounds for each column with more dramatic timing
-        setTimeout(() => {
-          // Only play stop sound on final spin and if not already played for this column
-          if (isFinalSpin && !columnsWithSoundPlayed.has(index)) {
-            columnsWithSoundPlayed.add(index);
-            console.log(`🔔 Playing DING sound for column ${index + 1} at ${columnDuration - 50}ms`);
-            this.playSound('stop');
-            // Add a visual pulse effect when each column stops on final spin
-            col.style.filter = 'brightness(1.2)';
-            setTimeout(() => {
-              col.style.filter = 'brightness(1)';
-            }, 200);
-          }
-        }, columnDuration - 50); // Play sound just before column stops
+        if (isFinalSpin) {
+          setTimeout(() => {
+            // Only play stop sound if not already played for this column
+            if (!this.columnsWithSoundPlayed.has(index)) {
+              this.columnsWithSoundPlayed.add(index);
+              console.log(`🔔 Playing DING sound for column ${index + 1} at ${columnDuration - 50}ms, total played: ${this.columnsWithSoundPlayed.size}`);
+              this.playSound('stop');
+              // Add a visual pulse effect when each column stops on final spin
+              col.style.filter = 'brightness(1.2)';
+              setTimeout(() => {
+                col.style.filter = 'brightness(1)';
+              }, 200);
+            }
+          }, columnDuration - 50); // Play sound just before column stops
+        }
       });
       
       // Wait for all columns to finish (last column takes the longest)
