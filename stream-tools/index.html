@@ -392,7 +392,7 @@
                         </button>
                     </div>
                     <iframe id="overlayPreview"
-                            src="/overlay.html"
+                            src="/overlay/"
                             style="width: 100%; height: calc(100% - 45px); border: none;">
                     </iframe>
                 </div>
@@ -633,12 +633,12 @@
 
             // Use current domain instead of hardcoded domain
             const baseUrl = window.location.origin;
-            const url = `${baseUrl}/overlay.html?${params.toString()}`;
+            const url = `${baseUrl}/overlay/?${params.toString()}`;
             document.getElementById('overlayUrl').value = url;
 
             // Update preview
             const iframe = document.getElementById('overlayPreview');
-            iframe.src = `/overlay.html?${params.toString()}`;
+            iframe.src = `/overlay/?${params.toString()}`;
         }
 
         // Initialize on page load
@@ -709,7 +709,33 @@
                 timestamp: new Date().toISOString()
             };
 
-            // Send via Supabase if available
+            // Store to localStorage
+            localStorage.setItem('loadout_overlay_default', JSON.stringify(testData));
+
+            // Send via BroadcastChannel for better cross-tab communication
+            try {
+                const bc = new BroadcastChannel('loadout_overlay_channel');
+                bc.postMessage({
+                    type: 'loadout_update',
+                    loadout: testData
+                });
+                bc.close();
+                console.log('📡 Sent via BroadcastChannel');
+            } catch (e) {
+                console.log('BroadcastChannel not supported:', e);
+            }
+
+            // Update the preview iframe directly
+            const iframe = document.getElementById('overlayPreview');
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    type: 'loadout_update',
+                    payload: testData
+                }, '*');
+                console.log('📡 Sent to preview iframe');
+            }
+
+            // Also try Supabase if available
             if (supabase) {
                 const channelId = getMyChannelId();
                 const channel = supabase.channel(channelId);
@@ -720,12 +746,10 @@
                             event: 'loadout_update',
                             payload: testData
                         });
+                        setTimeout(() => channel.unsubscribe(), 100);
                     }
                 });
             }
-
-            // Also store locally for fallback
-            localStorage.setItem('loadout_overlay_default', JSON.stringify(testData));
 
             // Show feedback
             showFeedback('Loadout sent!');
@@ -748,7 +772,33 @@
 
             const lastLoadout = history[history.length - 1];
 
-            // Send via Supabase if available
+            // Store to localStorage
+            localStorage.setItem('loadout_overlay_default', JSON.stringify(lastLoadout));
+
+            // Send via BroadcastChannel for better cross-tab communication
+            try {
+                const bc = new BroadcastChannel('loadout_overlay_channel');
+                bc.postMessage({
+                    type: 'loadout_update',
+                    loadout: lastLoadout
+                });
+                bc.close();
+                console.log('📡 Sent via BroadcastChannel');
+            } catch (e) {
+                console.log('BroadcastChannel not supported:', e);
+            }
+
+            // Update the preview iframe directly
+            const iframe = document.getElementById('overlayPreview');
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    type: 'loadout_update',
+                    payload: lastLoadout
+                }, '*');
+                console.log('📡 Sent to preview iframe');
+            }
+
+            // Also try Supabase if available
             if (supabase) {
                 const channelId = getMyChannelId();
                 const channel = supabase.channel(channelId);
@@ -759,6 +809,7 @@
                             event: 'loadout_update',
                             payload: lastLoadout
                         });
+                        setTimeout(() => channel.unsubscribe(), 100);
                     }
                 });
             }
