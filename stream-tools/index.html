@@ -392,7 +392,7 @@
                         </button>
                     </div>
                     <iframe id="overlayPreview"
-                            src="/overlay/"
+                            src="/overlay.html"
                             style="width: 100%; height: calc(100% - 45px); border: none;">
                     </iframe>
                 </div>
@@ -511,7 +511,7 @@
                     <div class="step-content">
                         <h3 class="step-title">Copy Your Overlay URL</h3>
                         <p class="step-desc">Click the "Copy" button above to get your unique overlay link. This URL connects your stream to the loadout generator.</p>
-                        <img src="images/obs 1.webp" alt="Step 1: Copy URL" class="step-image">
+                        <img src="images/obs-1.webp" alt="Step 1: Copy URL" class="step-image">
                     </div>
                 </div>
 
@@ -521,7 +521,7 @@
                     <div class="step-content">
                         <h3 class="step-title">Add Browser Source in OBS</h3>
                         <p class="step-desc">In OBS, click the + button in Sources and select "Browser". Name it something like "Finals Loadout Overlay".</p>
-                        <img src="images/obs 2.webp" alt="Step 2: Add Browser Source" class="step-image">
+                        <img src="images/obs-2.webp" alt="Step 2: Add Browser Source" class="step-image">
                     </div>
                 </div>
 
@@ -531,7 +531,7 @@
                     <div class="step-content">
                         <h3 class="step-title">Configure Browser Source</h3>
                         <p class="step-desc">Paste your URL and set Width: 600px, Height: 200px. You can adjust these based on your stream layout.</p>
-                        <img src="images/obs 3.webp" alt="Step 3: Configure Source" class="step-image">
+                        <img src="images/obs-3.webp" alt="Step 3: Configure Source" class="step-image">
                     </div>
                 </div>
 
@@ -541,7 +541,7 @@
                     <div class="step-content">
                         <h3 class="step-title">Start Streaming!</h3>
                         <p class="step-desc">Position the overlay on your stream. When you generate loadouts on the main site, they'll appear live on stream!</p>
-                        <img src="images/obs 4.webp" alt="Step 4: Start Streaming" class="step-image">
+                        <img src="images/obs-4.webp" alt="Step 4: Start Streaming" class="step-image">
                     </div>
                 </div>
             </div>
@@ -633,12 +633,12 @@
 
             // Use current domain instead of hardcoded domain
             const baseUrl = window.location.origin;
-            const url = `${baseUrl}/overlay/?${params.toString()}`;
+            const url = `${baseUrl}/overlay.html?${params.toString()}`;
             document.getElementById('overlayUrl').value = url;
 
             // Update preview
             const iframe = document.getElementById('overlayPreview');
-            iframe.src = `/overlay/?${params.toString()}`;
+            iframe.src = `/overlay.html?${params.toString()}`;
         }
 
         // Initialize on page load
@@ -656,13 +656,25 @@
             }, 100);
         }
 
+        // Show feedback
+        function showFeedback(message) {
+            const btn = event ? event.target : document.activeElement;
+            if (btn && btn.tagName === 'BUTTON') {
+                const original = btn.innerHTML;
+                btn.innerHTML = '✅ ' + message;
+                setTimeout(() => {
+                    btn.innerHTML = original;
+                }, 2000);
+            }
+        }
+
         // Copy URL
-        function copyUrl() {
+        function copyUrl(event) {
             const input = document.getElementById('overlayUrl');
             input.select();
             navigator.clipboard.writeText(input.value).then(() => {
                 // Show feedback
-                const btn = event.target;
+                const btn = event ? event.target : document.querySelector('button[onclick*="copyUrl"]');
                 const original = btn.innerHTML;
                 btn.innerHTML = '✅ Copied!';
                 btn.style.background = 'linear-gradient(90deg, #4CAF50, #45a049)';
@@ -683,7 +695,7 @@
         }
 
         // Send test loadout
-        function sendTestLoadout() {
+        function sendTestLoadout(event) {
             const testData = {
                 class: 'Medium',
                 name: 'Test Loadout',
@@ -716,16 +728,11 @@
             localStorage.setItem('loadout_overlay_default', JSON.stringify(testData));
 
             // Show feedback
-            const btn = event.target;
-            const original = btn.innerHTML;
-            btn.innerHTML = '✅ Sent!';
-            setTimeout(() => {
-                btn.innerHTML = original;
-            }, 2000);
+            showFeedback('Loadout sent!');
         }
 
         // Send last loadout
-        function sendLastLoadout() {
+        function sendLastLoadout(event) {
             // Implementation same as main page
             let historyStr = localStorage.getItem('slotMachineHistory') || localStorage.getItem('premiumSlotHistory');
             if (!historyStr) {
@@ -757,12 +764,7 @@
             }
 
             // Show feedback
-            const btn = event.target;
-            const original = btn.innerHTML;
-            btn.innerHTML = '✅ Sent!';
-            setTimeout(() => {
-                btn.innerHTML = original;
-            }, 2000);
+            showFeedback('Loadout sent!');
         }
 
         // Open in new tab
