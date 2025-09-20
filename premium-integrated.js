@@ -18,6 +18,8 @@
       this.soundEnabled = true;
       this.columnsWithSoundPlayed = new Set(); // Track which columns have played sound
       this.lastStopSoundTime = 0; // Track when we last played a stop sound
+      this.currentSpinId = 0; // Track spin ID to prevent overlapping callbacks
+      this.activeTimeouts = []; // Track active timeouts
       this.initSounds();
       this.init();
     }
@@ -66,14 +68,21 @@
           this.currentRouletteSound.currentTime = 0;
           this.currentRouletteSound.play().catch(e => console.log('Roulette sound failed:', e));
         } else if (soundName === 'stop') {
-          // For stop sound, use the original audio element (don't clone)
-          // Also add a minimum delay between stop sounds to prevent overlap
+          // For stop sound, completely prevent overlapping
+          const audio = this.sounds[soundName];
+
+          // Check if sound is already playing
+          if (!audio.paused && audio.currentTime > 0 && audio.currentTime < audio.duration) {
+            console.log(`⏭️ Stop sound already playing, skipping`);
+            return;
+          }
+
+          // Also check minimum time between sounds
           const now = Date.now();
           const timeSinceLastStop = now - this.lastStopSoundTime;
 
-          if (timeSinceLastStop > 100) { // Minimum 100ms between stop sounds
+          if (timeSinceLastStop > 200) { // Increased to 200ms minimum between stop sounds
             this.lastStopSoundTime = now;
-            const audio = this.sounds[soundName];
             audio.currentTime = 0; // Reset to start
             audio.play().catch(e => console.log('Stop sound failed:', e));
           } else {
@@ -329,9 +338,14 @@
     async startSlotMachine() {
       if (!this.selectedSpins || !this.selectedClass || !this.app) return;
 
+      // Clear any pending timeouts from previous spins
+      this.activeTimeouts.forEach(timeout => clearTimeout(timeout));
+      this.activeTimeouts = [];
+
       // Reset sound tracking at the start of a new sequence
       this.columnsWithSoundPlayed.clear();
       this.lastStopSoundTime = 0;
+      this.currentSpinId = Date.now(); // Unique ID for this spin sequence
 
       // Play start sound
       this.playSound('spinStart');
@@ -735,15 +749,11 @@
     }
     
     async animatePremiumSpin(isFinalSpin) {
-      console.log(`🎵 animatePremiumSpin called with isFinalSpin=${isFinalSpin}, columnsWithSoundPlayed size: ${this.columnsWithSoundPlayed.size}`);
+      const spinId = this.currentSpinId; // Capture current spin ID
+      console.log(`🎵 animatePremiumSpin called with isFinalSpin=${isFinalSpin}, spinId=${spinId}, columnsWithSoundPlayed size: ${this.columnsWithSoundPlayed.size}`);
 
       const baseDuration = isFinalSpin ? 2000 : 1000;  // Base duration for first column
       const staggerDelay = isFinalSpin ? 500 : 100;    // Much longer delay for final spin
-
-      // Reset the sound tracking for this spin sequence
-      if (isFinalSpin) {
-        this.columnsWithSoundPlayed.clear();
-      }
       
       // Get item dimensions
       const isMobile = window.innerWidth <= 768;
@@ -834,19 +844,32 @@
         
         // Schedule stop sounds for each column with more dramatic timing
         if (isFinalSpin) {
-          setTimeout(() => {
-            // Only play stop sound if not already played for this column
-            if (!this.columnsWithSoundPlayed.has(index)) {
-              this.columnsWithSoundPlayed.add(index);
-              console.log(`🔔 Playing DING sound for column ${index + 1} at ${columnDuration - 50}ms, total played: ${this.columnsWithSoundPlayed.size}`);
+          const timeoutId = setTimeout(() => {
+            // Check if this is still the current spin
+            if (spinId !== this.currentSpinId) {
+              console.log(`⏭️ Skipping sound for old spin ${spinId}, current is ${this.currentSpinId}`);
+              return;
+            }
+
+            // Only play stop sound if not already played for this column and we haven't played 5 sounds yet
+            const columnKey = `${spinId}-${index}`;
+            const soundsPlayedForThisSpin = Array.from(this.columnsWithSoundPlayed).filter(key => key.startsWith(`${spinId}-`)).length;
+
+            if (!this.columnsWithSoundPlayed.has(columnKey) && soundsPlayedForThisSpin < 5) {
+              this.columnsWithSoundPlayed.add(columnKey);
+              console.log(`🔔 Playing DING sound ${soundsPlayedForThisSpin + 1}/5 for column ${index + 1}, spinId=${spinId}`);
               this.playSound('stop');
               // Add a visual pulse effect when each column stops on final spin
               col.style.filter = 'brightness(1.2)';
               setTimeout(() => {
                 col.style.filter = 'brightness(1)';
               }, 200);
+            } else {
+              console.log(`⏭️ Column ${index + 1} already played for spin ${spinId}`);
             }
           }, columnDuration - 50); // Play sound just before column stops
+
+          this.activeTimeouts.push(timeoutId);
         }
       });
       
@@ -1009,12 +1032,22 @@
     }
   }
   
-  // Initialize when DOM is ready
+  // Initialize when DOM is ready (prevent multiple instances)
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-      window.premiumIntegrated = new PremiumIntegratedSlotMachine();
+      if (!window.premiumIntegrated) {
+        console.log('Creating PremiumIntegratedSlotMachine instance');
+        window.premiumIntegrated = new PremiumIntegratedSlotMachine();
+      } else {
+        console.log('PremiumIntegratedSlotMachine already exists, skipping creation');
+      }
     });
   } else {
-    window.premiumIntegrated = new PremiumIntegratedSlotMachine();
+    if (!window.premiumIntegrated) {
+      console.log('Creating PremiumIntegratedSlotMachine instance');
+      window.premiumIntegrated = new PremiumIntegratedSlotMachine();
+    } else {
+      console.log('PremiumIntegratedSlotMachine already exists, skipping creation');
+    }
   }
 })();
