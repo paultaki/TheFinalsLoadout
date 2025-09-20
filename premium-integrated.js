@@ -88,6 +88,15 @@
           } else {
             console.log(`⏭️ Skipping stop sound, too soon (${timeSinceLastStop}ms since last)`);
           }
+        } else if (soundName === 'finalWin') {
+          // For finalWin sound, prevent duplicates
+          const audio = this.sounds[soundName];
+          if (!audio.paused && audio.currentTime > 0 && audio.currentTime < audio.duration) {
+            console.log(`⏭️ FinalWin sound already playing, skipping duplicate`);
+            return;
+          }
+          audio.currentTime = 0;
+          audio.play().catch(e => console.log('FinalWin sound failed:', e));
         } else {
           // For other sounds, clone to allow overlapping
           const audio = this.sounds[soundName].cloneNode();
@@ -806,8 +815,9 @@
         return;
       }
       
-      console.log(`Animating ${columns.length} columns - Final: ${isFinalSpin}`, targetPositions);
-      
+      console.log(`🎰 Animating ${columns.length} columns - Final: ${isFinalSpin}`, targetPositions);
+      console.log(`🎲 Column durations will be:`, columns.length > 0 ? Array.from({length: columns.length}, (_, i) => `Column ${i+1}: ${baseDuration + (i * staggerDelay)}ms`) : 'No columns');
+
       // First, start ALL columns spinning at the same time
       columns.forEach((col, index) => {
         // Reset first
@@ -848,35 +858,33 @@
         
         // Schedule stop sounds for each column with more dramatic timing
         if (isFinalSpin) {
-          const timeoutId = setTimeout(() => {
-            // Check if this is still the current spin
-            if (spinId !== this.currentSpinId) {
-              console.log(`⏭️ Skipping sound for old spin ${spinId}, current is ${this.currentSpinId}`);
-              return;
-            }
+          // Create a closure to capture the current index value
+          const scheduleColumnSound = (columnIndex, delay) => {
+            console.log(`📅 Scheduling DING for column ${columnIndex + 1} at ${delay}ms`);
 
-            // Only play stop sound if not already played for this column
-            const columnKey = `${spinId}-${index}`;
+            const timeoutId = setTimeout(() => {
+              // Check if this is still the current spin
+              if (spinId !== this.currentSpinId) {
+                console.log(`⏭️ Skipping sound for old spin ${spinId}, current is ${this.currentSpinId}`);
+                return;
+              }
 
-            if (!this.columnsWithSoundPlayed.has(columnKey)) {
-              this.columnsWithSoundPlayed.add(columnKey);
-              console.log(`🔔 Playing DING sound for column ${index + 1} at ${columnDuration}ms`);
+              console.log(`🔔 PLAYING DING #${columnIndex + 1} of ${columns.length} at time ${Date.now()}`);
 
-              // Directly play the ding sound without going through playSound to avoid restrictions
+              // Play the ding sound directly
               if (this.sounds.stop) {
                 try {
-                  const audio = this.sounds.stop.cloneNode();
-                  audio.volume = this.sounds.stop.volume || 0.4;
-                  audio.currentTime = 0;
-                  const playPromise = audio.play();
-                  if (playPromise) {
-                    playPromise.catch(e => console.log(`Ding sound failed for column ${index + 1}:`, e));
-                  }
+                  // Create a fresh audio element for each ding
+                  const audio = new Audio('/sounds/ding.mp3');
+                  audio.volume = 0.4;
+                  audio.play().then(() => {
+                    console.log(`✅ DING #${columnIndex + 1} played successfully`);
+                  }).catch(e => {
+                    console.log(`❌ DING #${columnIndex + 1} failed:`, e);
+                  });
                 } catch (e) {
-                  console.log(`Error playing ding for column ${index + 1}:`, e);
+                  console.log(`❌ Error creating DING #${columnIndex + 1}:`, e);
                 }
-              } else {
-                console.log(`⚠️ Stop sound not loaded for column ${index + 1}`);
               }
 
               // Add a visual pulse effect when each column stops on final spin
@@ -884,12 +892,14 @@
               setTimeout(() => {
                 col.style.filter = 'brightness(1)';
               }, 200);
-            } else {
-              console.log(`⏭️ Column ${index + 1} already played for spin ${spinId}`);
-            }
-          }, columnDuration); // Play sound exactly when column stops
 
-          this.activeTimeouts.push(timeoutId);
+            }, delay);
+
+            this.activeTimeouts.push(timeoutId);
+          };
+
+          // Schedule the sound for this column
+          scheduleColumnSound(index, columnDuration);
         }
       });
       
