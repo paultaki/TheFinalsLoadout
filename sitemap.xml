@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Home -->
+  <!-- Homepage - Main Loadout Generator -->
   <url>
     <loc>https://thefinalsloadout.com/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-01-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- WT Progress Tracker -->
+  <!-- Stream Overlay for OBS -->
+  <url>
+    <loc>https://thefinalsloadout.com/overlay.html</loc>
+    <lastmod>2025-01-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- World Tour Progress Tracker -->
   <url>
     <loc>https://thefinalsloadout.com/wt-progress/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-01-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Rage Quit Simulator -->
+  <!-- Meta Weapons Guide -->
   <url>
-    <loc>https://thefinalsloadout.com/ragequit/</loc>
-    <lastmod>2025-08-01</lastmod>
+    <loc>https://thefinalsloadout.com/meta-weapons/</loc>
+    <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -28,41 +36,49 @@
   <!-- Patch Notes -->
   <url>
     <loc>https://thefinalsloadout.com/patch-notes/</loc>
-    <lastmod>2025-08-03</lastmod>
+    <lastmod>2025-01-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Meta Weapons -->
+  <!-- Rage Quit Generator -->
   <url>
-    <loc>https://thefinalsloadout.com/meta-weapons/</loc>
-    <lastmod>2025-07-05</lastmod>
+    <loc>https://thefinalsloadout.com/ragequit/</loc>
+    <lastmod>2025-01-14</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
 
-  <!-- Feedback -->
+  <!-- Stream Tools -->
+  <url>
+    <loc>https://thefinalsloadout.com/stream-tools/</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Overlay Configuration -->
+  <url>
+    <loc>https://thefinalsloadout.com/overlay/</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Feedback Page -->
   <url>
     <loc>https://thefinalsloadout.com/feedback/</loc>
-    <lastmod>2025-07-07</lastmod>
+    <lastmod>2025-01-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
-  <!-- Legal -->
+  <!-- Legal Information -->
   <url>
     <loc>https://thefinalsloadout.com/legal/</loc>
-    <lastmod>2025-08-05</lastmod>
+    <lastmod>2025-01-05</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
-  </url>
-
-  <!-- Loadout History (legacy page) -->
-  <url>
-    <loc>https://thefinalsloadout.com/loadout-history.html</loc>
-    <lastmod>2025-08-033</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
   </url>
 
 </urlset>

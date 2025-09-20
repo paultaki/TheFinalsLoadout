@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <title>THE FINALS Loadout Generator - OBS Stream Overlay</title>
+    <meta name="description" content="Interactive stream overlay for THE FINALS loadout generator. Show your viewers real-time loadout spins with animated visuals and sound effects. Perfect for OBS, Streamlabs, and other streaming software.">
+    <meta name="keywords" content="THE FINALS, loadout generator, stream overlay, OBS overlay, Twitch overlay, streaming tools, THE FINALS streamer, loadout randomizer, gaming overlay">
+    <meta name="author" content="THE FINALS Loadout Generator">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="THE FINALS Loadout Generator - Stream Overlay">
+    <meta property="og:description" content="Professional stream overlay for THE FINALS content creators. Real-time loadout displays with animations for your viewers.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://thefinalsloadout.com/overlay.html">
+    <meta property="og:image" content="https://thefinalsloadout.com/images/og-overlay.jpg">
+    <meta property="og:site_name" content="THE FINALS Loadout Generator">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="THE FINALS Stream Overlay">
+    <meta name="twitter:description" content="Interactive loadout overlay for THE FINALS streamers">
+    <meta name="twitter:image" content="https://thefinalsloadout.com/images/og-overlay.jpg">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://thefinalsloadout.com/overlay.html">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+        gtag("config", "G-GVGKYFGZ1Z", {
+            page_title: "Stream Overlay",
+            page_path: "/overlay.html"
+        });
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: transparent;
+            color: #fff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Container for overlay content */
+        .overlay-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Hidden by default, shown when loadout is active */
+        .loadout-display {
+            display: none;
+            background: linear-gradient(135deg, rgba(20, 20, 35, 0.95) 0%, rgba(30, 30, 50, 0.95) 100%);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            animation: slideIn 0.5s ease-out;
+            border: 2px solid rgba(255, 102, 170, 0.3);
+            max-width: 800px;
+        }
+
+        .loadout-display.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .class-title {
+            font-size: 36px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(90deg, #ff66aa, #66ddff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .loadout-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .loadout-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .loadout-item:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        .item-type {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ff66aa;
+        }
+
+        /* Spinning animation */
+        .spinning {
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Winner glow effect */
+        .winner-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 102, 170, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(255, 102, 170, 0.8), 0 0 60px rgba(102, 221, 255, 0.6); }
+        }
+
+        /* Info panel for streamers */
+        .info-panel {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .info-panel.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay-container">
+        <div id="loadoutDisplay" class="loadout-display">
+            <h2 id="classTitle" class="class-title">LOADING...</h2>
+            <div id="loadoutGrid" class="loadout-grid">
+                <!-- Loadout items will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div id="infoPanel" class="info-panel">
+            <strong>OBS Overlay Active</strong><br>
+            Waiting for loadout data...<br>
+            <small>URL: thefinalsloadout.com</small>
+        </div>
+    </div>
+
+    <!-- Overlay Manager Script -->
+    <script src="/js/overlay-manager2.js"></script>
+
+    <script>
+        // Track page view
+        gtag('event', 'page_view', {
+            page_title: 'Stream Overlay Loaded',
+            page_location: window.location.href,
+            page_path: '/overlay.html'
+        });
+
+        // Initialize overlay manager
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Stream overlay initialized');
+
+            // Show info panel if in preview mode (has query parameter)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('preview') === 'true') {
+                document.getElementById('infoPanel').classList.add('show');
+            }
+
+            // Track overlay initialization
+            gtag('event', 'overlay_initialized', {
+                event_category: 'Overlay',
+                event_label: 'Stream Overlay Started'
+            });
+        });
+
+        // Listen for loadout updates
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'loadout_overlay_default' && e.newValue) {
+                // Track loadout display event
+                gtag('event', 'loadout_displayed', {
+                    event_category: 'Overlay',
+                    event_label: 'Loadout Shown on Stream'
+                });
+            }
+        });
+    </script>
+</body>
+</html>
