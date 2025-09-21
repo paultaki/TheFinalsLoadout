@@ -227,53 +227,57 @@
             animation: glow 1s ease-in-out;
         }
 
-        /* Compact mode - text only */
+        /* Compact mode - text only, horizontal layout */
         .compact {
             width: auto;
-            min-width: 300px;
-            max-width: 500px;
             height: auto;
-            padding: 12px 16px;
+            padding: 10px 15px;
         }
 
         .compact .slot-columns {
-            flex-direction: column;
-            gap: 8px;
+            flex-direction: row;
+            gap: 20px;
+            align-items: center;
         }
 
         .compact .slot-column-compact {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            line-height: 1.4;
+            gap: 4px;
+            padding: 0 10px;
+            border-right: 1px solid rgba(255, 71, 150, 0.2);
+        }
+
+        .compact .slot-column-compact:last-child {
+            border-right: none;
         }
 
         .compact .compact-label {
             font-weight: bold;
             color: #ff4796;
-            min-width: 100px;
             text-transform: uppercase;
-            font-size: 12px;
+            font-size: 10px;
+            letter-spacing: 1px;
         }
 
         .compact .compact-name {
             color: #fff;
             font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
         }
 
         .compact .class-header {
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255, 71, 150, 0.3);
+            margin-bottom: 10px;
         }
 
         .compact .class-name {
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .compact .site-branding {
-            font-size: 10px;
+            font-size: 9px;
         }
 
         .compact .class-header {
@@ -447,8 +451,8 @@
             const name = typeof item === 'object' ? item.name : item;
             const image = typeof item === 'object' ? item.image : null;
 
-            // Check if compact mode is enabled
-            const isCompact = config.compact === 'true' || config.compact === true;
+            // Check if compact mode is enabled (config.compact is already a boolean)
+            const isCompact = config.compact;
 
             const headerText = type === 'gadget' ? `GADGET ${index + 1}` : type.toUpperCase();
 
@@ -665,14 +669,30 @@
             if (e.key === 'overlayConfig' && e.newValue) {
                 try {
                     const newConfig = JSON.parse(e.newValue);
-                    console.log('Config updated:', newConfig);
+                    console.log('Config updated via storage:', newConfig);
+
+                    // Update global config
+                    if (newConfig.compact !== undefined) {
+                        config.compact = newConfig.compact === 'true' || newConfig.compact === true;
+                    }
+                    if (newConfig.theme !== undefined) {
+                        config.theme = newConfig.theme;
+                    }
+                    if (newConfig.hideEmpty !== undefined) {
+                        config.hideEmpty = newConfig.hideEmpty === 'true' || newConfig.hideEmpty === true;
+                    }
 
                     // Apply new theme/position immediately
                     const container = document.getElementById('overlayContainer');
                     if (container) {
-                        container.className = `overlay-container theme-${newConfig.theme || 'dark'}${newConfig.compact === 'true' ? ' compact' : ''}`;
-                        console.log('Applied new theme:', newConfig.theme);
-                        console.log('Compact mode:', newConfig.compact === 'true');
+                        container.className = `overlay-container theme-${config.theme || 'dark'}${config.compact ? ' compact' : ''}`;
+                        console.log('Applied new theme:', config.theme);
+                        console.log('Compact mode:', config.compact);
+
+                        // Re-render with new compact setting
+                        if (lastLoadout) {
+                            renderLoadout(lastLoadout);
+                        }
                     }
                 } catch (err) {
                     console.error('Failed to parse config:', err);
@@ -865,20 +885,33 @@
                     .on('broadcast', { event: 'config_update' }, (payload) => {
                         console.log('📨 Received config update:', payload.payload);
                         const newConfig = payload.payload;
+
+                        // Update global config
+                        if (newConfig.compact !== undefined) {
+                            config.compact = newConfig.compact === 'true' || newConfig.compact === true;
+                            console.log('Updated compact mode:', config.compact);
+                        }
+                        if (newConfig.theme !== undefined) {
+                            config.theme = newConfig.theme;
+                        }
+                        if (newConfig.hideEmpty !== undefined) {
+                            config.hideEmpty = newConfig.hideEmpty === 'true' || newConfig.hideEmpty === true;
+                        }
+
                         const container = document.getElementById('overlayContainer');
                         if (container && newConfig) {
                             // Update the class
-                            container.className = `overlay-container theme-${newConfig.theme || 'dark'}${newConfig.compact === 'true' ? ' compact' : ''}`;
+                            container.className = `overlay-container theme-${config.theme || 'dark'}${config.compact ? ' compact' : ''}`;
 
                             // Force style updates based on theme
-                            if (newConfig.theme === 'light') {
+                            if (config.theme === 'light') {
                                 container.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 240, 0.9) 100%)';
                                 container.style.color = '#000';
                                 container.style.borderColor = 'rgba(0, 0, 0, 0.2)';
-                            } else if (newConfig.theme === 'finals') {
+                            } else if (config.theme === 'finals') {
                                 container.style.background = 'linear-gradient(135deg, rgba(228, 49, 79, 0.95) 0%, rgba(200, 30, 60, 0.9) 100%)';
                                 container.style.borderColor = 'rgba(228, 49, 79, 0.5)';
-                            } else if (newConfig.theme === 'transparent') {
+                            } else if (config.theme === 'transparent') {
                                 container.style.background = 'rgba(0, 0, 0, 0.6)';
                                 container.style.border = '2px solid rgba(255, 71, 150, 0.4)';
                             } else { // dark theme (default)
@@ -887,12 +920,18 @@
                                 container.style.color = '#fff';
                             }
 
+                            // Re-render the current loadout with new compact setting
+                            if (lastLoadout) {
+                                console.log('Re-rendering loadout with compact mode:', config.compact);
+                                renderLoadout(lastLoadout);
+                            }
+
                             // Force a repaint in OBS
                             container.style.display = 'none';
                             container.offsetHeight; // Trigger reflow
                             container.style.display = 'block';
 
-                            console.log('✅ Applied theme:', newConfig.theme);
+                            console.log('✅ Applied config - Theme:', config.theme, 'Compact:', config.compact);
                         }
                     })
                     .subscribe((status) => {
