@@ -641,6 +641,16 @@
             const hideEmpty = document.getElementById('overlayHideEmpty').value;
             const channelId = getMyChannelId();
 
+            // Save theme preferences to localStorage so overlay can read them
+            const overlayConfig = {
+                position: position,
+                theme: theme,
+                compact: compact,
+                hideEmpty: hideEmpty
+            };
+            localStorage.setItem('overlayConfig', JSON.stringify(overlayConfig));
+            console.log('Saved overlay config:', overlayConfig);
+
             const params = new URLSearchParams({
                 channel: channelId,
                 position: position,

@@ -355,11 +355,24 @@
 
         // Configuration from URL parameters
         const params = new URLSearchParams(window.location.search);
+
+        // Check localStorage for saved config (from stream-tools)
+        let savedConfig = {};
+        try {
+            const configStr = localStorage.getItem('overlayConfig');
+            if (configStr) {
+                savedConfig = JSON.parse(configStr);
+                console.log('Loaded saved config:', savedConfig);
+            }
+        } catch (e) {
+            console.log('No saved config found');
+        }
+
         const config = {
-            position: params.get('position') || 'top-right',
-            theme: params.get('theme') || 'dark',
-            compact: params.get('compact') === 'true',
-            hideEmpty: params.get('hideEmpty') === 'true',
+            position: params.get('position') || savedConfig.position || 'top-right',
+            theme: params.get('theme') || savedConfig.theme || 'dark',
+            compact: params.get('compact') === 'true' || savedConfig.compact === 'true',
+            hideEmpty: params.get('hideEmpty') === 'true' || savedConfig.hideEmpty === 'true',
             channel: params.get('channel') || 'default',
             refresh: parseInt(params.get('refresh')) || 500,
             animate: params.get('animate') !== 'false'
@@ -593,6 +606,24 @@
 
         // Listen for storage events (updates from main site)
         window.addEventListener('storage', (e) => {
+            // Listen for config changes
+            if (e.key === 'overlayConfig' && e.newValue) {
+                try {
+                    const newConfig = JSON.parse(e.newValue);
+                    console.log('Config updated:', newConfig);
+
+                    // Apply new theme/position immediately
+                    const container = document.getElementById('overlayContainer');
+                    if (container) {
+                        container.className = `overlay-container ${newConfig.position || 'top-right'} theme-${newConfig.theme || 'dark'}${newConfig.compact === 'true' ? ' compact' : ''}`;
+                        console.log('Applied new theme:', newConfig.theme);
+                    }
+                } catch (err) {
+                    console.error('Failed to parse config:', err);
+                }
+                return;
+            }
+
             if (e.key === `loadout_overlay_${config.channel}`) {
                 checkForUpdates();
             }
