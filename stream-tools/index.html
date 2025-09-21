@@ -445,6 +445,9 @@
                             <button onclick="sendLastLoadout()" class="btn btn-secondary">
                                 📤 Send Current Loadout
                             </button>
+                            <button onclick="clearLoadoutCache()" class="btn btn-warning" style="background: #ff6600; border-color: #ff6600;">
+                                🗑️ Clear Cached Loadout
+                            </button>
                         </div>
                         <p style="color: #888; font-size: 12px; margin-top: 10px; line-height: 1.5;">
                             Test loadouts appear instantly in the preview above
@@ -693,6 +696,9 @@
         window.addEventListener('DOMContentLoaded', () => {
             updateOverlay();
 
+            // Initialize Supabase loadout listener
+            initSupabaseLoadoutListener();
+
             // Check for existing loadout and send to preview
             checkAndLoadExistingLoadout();
 
@@ -887,15 +893,83 @@
             showFeedback('Loadout sent!');
         }
 
+        // Store the last received loadout globally
+        let lastReceivedLoadout = null;
+
+        // Listen for loadouts on Supabase to capture and store them
+        function initSupabaseLoadoutListener() {
+            if (!supabase) {
+                console.log('⏳ Waiting for Supabase to initialize...');
+                setTimeout(initSupabaseLoadoutListener, 500);
+                return;
+            }
+
+            console.log('🎧 Setting up Supabase loadout listener...');
+
+            // Listen on obs_default channel for any loadouts being sent
+            const obsChannel = supabase.channel('obs_default');
+            obsChannel
+                .on('broadcast', { event: 'loadout_update' }, (payload) => {
+                    console.log('📨 Received loadout from Supabase:', payload);
+                    lastReceivedLoadout = payload.payload;
+
+                    // Store it locally as well
+                    localStorage.setItem('lastSupabaseLoadout', JSON.stringify(lastReceivedLoadout));
+                    localStorage.setItem('currentLoadout', JSON.stringify(lastReceivedLoadout));
+
+                    // Update the preview if we're on stream-tools page
+                    sendLoadoutToPreview(lastReceivedLoadout);
+                })
+                .subscribe((status) => {
+                    console.log(`📡 OBS channel subscription status: ${status}`);
+                });
+        }
+
+        // Helper function to send loadout to preview iframe
+        function sendLoadoutToPreview(loadout) {
+            const iframe = document.getElementById('overlayPreview');
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    type: 'loadout_update',
+                    payload: loadout
+                }, '*');
+                console.log('📡 Sent loadout to preview iframe');
+            }
+        }
+
         // Check and load existing loadout when page opens
         function checkAndLoadExistingLoadout() {
             // Check multiple possible storage locations
             const channelId = getMyChannelId();
 
-            // First check the overlay storage keys
-            let loadoutData = localStorage.getItem(`loadout_overlay_${channelId}`) ||
-                             localStorage.getItem('loadout_overlay_default') ||
-                             localStorage.getItem('currentLoadout');
+            console.log('🔍 Checking for existing loadout...');
+            console.log('  - Channel ID:', channelId);
+
+            // List all potential keys and their values for debugging
+            const keys = [
+                'lastSupabaseLoadout',
+                'currentLoadout',
+                `loadout_overlay_${channelId}`,
+                'loadout_overlay_default',
+                'slotMachineHistory',
+                'premiumSlotHistory'
+            ];
+
+            console.log('📦 Checking localStorage keys:');
+            keys.forEach(key => {
+                const value = localStorage.getItem(key);
+                if (value) {
+                    console.log(`  ✓ ${key}: ${value.substring(0, 100)}...`);
+                } else {
+                    console.log(`  ✗ ${key}: null`);
+                }
+            });
+
+            // Try to get the last Supabase loadout first (most reliable)
+            let loadoutData = localStorage.getItem('lastSupabaseLoadout') ||
+                             localStorage.getItem('currentLoadout') ||
+                             localStorage.getItem(`loadout_overlay_${channelId}`) ||
+                             localStorage.getItem('loadout_overlay_default');
 
             // If no overlay data, check history
             if (!loadoutData) {
@@ -904,10 +978,17 @@
                     try {
                         const history = JSON.parse(historyStr);
                         if (history && history.length > 0) {
-                            loadoutData = JSON.stringify(history[0]);
+                            // Don't send the whole history item, just the loadout part
+                            const historyItem = history[0];
+                            console.log('📜 Found history item:', historyItem);
+
+                            // Check if it's actually a loadout or if we need to extract it
+                            if (historyItem.weapon || historyItem.class) {
+                                loadoutData = JSON.stringify(historyItem);
+                            }
                         }
                     } catch (e) {
-                        console.log('Could not parse history');
+                        console.log('Could not parse history:', e);
                     }
                 }
             }
@@ -917,16 +998,17 @@
                     const loadout = JSON.parse(loadoutData);
                     console.log('📋 Found existing loadout:', loadout);
 
+                    // Don't auto-load if it's a test loadout (check for specific test markers)
+                    if (loadout.name === 'Test Loadout' && loadout.weapon?.name === 'FCAR') {
+                        console.log('⚠️ Skipping test loadout - waiting for real loadout');
+                        return;
+                    }
+
+                    lastReceivedLoadout = loadout;
+
                     // Send to preview iframe
                     setTimeout(() => {
-                        const iframe = document.getElementById('overlayPreview');
-                        if (iframe && iframe.contentWindow) {
-                            iframe.contentWindow.postMessage({
-                                type: 'loadout_update',
-                                payload: loadout
-                            }, '*');
-                            console.log('📡 Sent existing loadout to preview');
-                        }
+                        sendLoadoutToPreview(loadout);
 
                         // Also update via localStorage for local preview
                         localStorage.setItem(`loadout_overlay_${channelId}`, JSON.stringify(loadout));
@@ -942,13 +1024,31 @@
                         } catch (e) {
                             console.log('BroadcastChannel not supported');
                         }
-                    }, 1000); // Wait for iframe to be ready
+                    }, 1500); // Wait a bit longer for iframe to be ready
                 } catch (e) {
-                    console.log('Could not parse loadout data');
+                    console.log('Could not parse loadout data:', e);
                 }
             } else {
-                console.log('📭 No existing loadout found');
+                console.log('📭 No existing loadout found - waiting for one to be sent from main page');
             }
+        }
+
+        // Clear cached loadout data
+        function clearLoadoutCache() {
+            const channelId = getMyChannelId();
+            const keys = [
+                'lastSupabaseLoadout',
+                'currentLoadout',
+                `loadout_overlay_${channelId}`,
+                'loadout_overlay_default'
+            ];
+
+            keys.forEach(key => {
+                localStorage.removeItem(key);
+                console.log(`🗑️ Removed ${key}`);
+            });
+
+            alert('✅ Cached loadout cleared! Refresh the page to see the change.');
         }
 
         // Send last loadout
