@@ -327,7 +327,7 @@
     </style>
 </head>
 <body>
-    <div id="overlayContainer" class="overlay-container theme-dark">
+    <div id="overlayContainer" class="overlay-container theme-dark" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
         <div class="no-loadout">
             <div class="class-header">
                 <div style="font-size: 16px; font-weight: bold; background: linear-gradient(90deg, #ff4796, #ff71b0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">WAITING FOR LOADOUT</div>
@@ -340,6 +340,19 @@
     </div>
 
     <script>
+        console.log('🚀 Overlay script starting...');
+
+        // Debug: Check if container exists
+        window.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('overlayContainer');
+            console.log('Container found:', !!container);
+            if (container) {
+                console.log('Container display:', window.getComputedStyle(container).display);
+                console.log('Container visibility:', window.getComputedStyle(container).visibility);
+                console.log('Container dimensions:', container.offsetWidth, 'x', container.offsetHeight);
+            }
+        });
+
         // Configuration from URL parameters
         const params = new URLSearchParams(window.location.search);
         const config = {
