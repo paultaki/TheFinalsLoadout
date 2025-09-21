@@ -803,6 +803,24 @@
                 // ALWAYS listen to obs_default channel for OBS
                 const obsChannel = supabaseOverlay.channel('obs_default');
 
+                // Also listen for config updates
+                const configChannel = supabaseOverlay.channel('obs_config');
+                configChannel
+                    .on('broadcast', { event: 'config_update' }, (payload) => {
+                        console.log('📨 Received config update:', payload.payload);
+                        const newConfig = payload.payload;
+                        const container = document.getElementById('overlayContainer');
+                        if (container && newConfig) {
+                            container.className = `overlay-container ${newConfig.position || 'top-right'} theme-${newConfig.theme || 'dark'}${newConfig.compact === 'true' ? ' compact' : ''}`;
+                            console.log('✅ Applied theme:', newConfig.theme);
+                        }
+                    })
+                    .subscribe((status) => {
+                        if (status === 'SUBSCRIBED') {
+                            console.log('✅ Listening for config updates on obs_config channel');
+                        }
+                    });
+
                 obsChannel
                     .on('broadcast', { event: 'loadout_update' }, (payload) => {
                         console.log(`✅ Received loadout from OBS channel`, payload);

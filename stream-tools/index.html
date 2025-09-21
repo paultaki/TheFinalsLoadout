@@ -651,6 +651,22 @@
             localStorage.setItem('overlayConfig', JSON.stringify(overlayConfig));
             console.log('Saved overlay config:', overlayConfig);
 
+            // Send config update via Supabase for OBS
+            if (supabase) {
+                const configChannel = supabase.channel('obs_config');
+                configChannel.subscribe((status) => {
+                    if (status === 'SUBSCRIBED') {
+                        configChannel.send({
+                            type: 'broadcast',
+                            event: 'config_update',
+                            payload: overlayConfig
+                        });
+                        console.log('📡 Sent config to OBS via Supabase');
+                        setTimeout(() => configChannel.unsubscribe(), 100);
+                    }
+                });
+            }
+
             const params = new URLSearchParams({
                 channel: channelId,
                 position: position,
