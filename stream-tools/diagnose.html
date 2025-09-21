@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBS Connection Diagnostics</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="obs-helper.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(90deg, #ff4796, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .test-card {
+            background: rgba(20, 20, 30, 0.8);
+            border: 1px solid rgba(255, 71, 150, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .test-title {
+            font-size: 18px;
+            color: #ff4796;
+            margin-bottom: 15px;
+        }
+        .status {
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .status-success {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid #0f0;
+            color: #0f0;
+        }
+        .status-error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #f00;
+            color: #f00;
+        }
+        .status-warning {
+            background: rgba(255, 255, 0, 0.2);
+            border: 1px solid #ff0;
+            color: #ff0;
+        }
+        .status-info {
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #0ff;
+            color: #0ff;
+        }
+        button {
+            background: linear-gradient(90deg, #ff4796, #9b59b6);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 71, 150, 0.3);
+        }
+        .log-container {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .log-entry {
+            margin: 2px 0;
+            padding: 2px 5px;
+        }
+        .spinner {
+            border: 2px solid rgba(255, 71, 150, 0.3);
+            border-top: 2px solid #ff4796;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="header">🔍 OBS Connection Diagnostics</h1>
+
+    <div class="test-grid">
+        <!-- Test 1: Browser Compatibility -->
+        <div class="test-card">
+            <h3 class="test-title">1️⃣ Browser Compatibility</h3>
+            <div id="browser-test"></div>
+        </div>
+
+        <!-- Test 2: LocalStorage Access -->
+        <div class="test-card">
+            <h3 class="test-title">2️⃣ LocalStorage Access</h3>
+            <div id="storage-test"></div>
+        </div>
+
+        <!-- Test 3: Supabase Library -->
+        <div class="test-card">
+            <h3 class="test-title">3️⃣ Supabase Library</h3>
+            <div id="library-test"></div>
+        </div>
+
+        <!-- Test 4: Supabase Connection -->
+        <div class="test-card">
+            <h3 class="test-title">4️⃣ Supabase Connection</h3>
+            <div id="connection-test"></div>
+            <button onclick="testSupabaseConnection()">Test Connection</button>
+        </div>
+
+        <!-- Test 5: Channel Subscription -->
+        <div class="test-card">
+            <h3 class="test-title">5️⃣ Channel Subscription</h3>
+            <div id="channel-test"></div>
+            <button onclick="testChannelSubscription()">Test Channel</button>
+        </div>
+
+        <!-- Test 6: Message Send/Receive -->
+        <div class="test-card">
+            <h3 class="test-title">6️⃣ Message Send/Receive</h3>
+            <div id="message-test"></div>
+            <button onclick="testMessageFlow()">Test Messages</button>
+        </div>
+    </div>
+
+    <!-- Live Testing Section -->
+    <div style="background: rgba(20, 20, 30, 0.8); border: 1px solid rgba(255, 71, 150, 0.3); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+        <h3 style="color: #ff4796; margin-bottom: 15px;">🎮 Live Testing</h3>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button onclick="startListening()">Start Listening</button>
+            <button onclick="sendTestLoadout()">Send Test Loadout</button>
+            <button onclick="stopListening()">Stop Listening</button>
+            <button onclick="clearLogs()">Clear Logs</button>
+        </div>
+    </div>
+
+    <!-- Log Output -->
+    <div style="background: rgba(20, 20, 30, 0.8); border: 1px solid rgba(255, 71, 150, 0.3); border-radius: 10px; padding: 20px;">
+        <h3 style="color: #ff4796; margin-bottom: 15px;">📝 Debug Logs</h3>
+        <div id="logs" class="log-container"></div>
+    </div>
+
+    <script>
+        let supabase = null;
+        let channel = null;
+        let isListening = false;
+
+        // Utility functions
+        function addStatus(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const status = document.createElement('div');
+            status.className = `status status-${type}`;
+            status.textContent = message;
+            element.appendChild(status);
+        }
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logs = document.getElementById('logs');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.style.color = type === 'error' ? '#f00' :
+                              type === 'success' ? '#0f0' :
+                              type === 'warning' ? '#ff0' : '#fff';
+            entry.textContent = `[${timestamp}] ${message}`;
+            logs.appendChild(entry);
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+            log('Logs cleared', 'info');
+        }
+
+        // Test 1: Browser Compatibility
+        function testBrowser() {
+            const tests = {
+                'WebSocket Support': typeof WebSocket !== 'undefined',
+                'LocalStorage Support': typeof localStorage !== 'undefined',
+                'BroadcastChannel Support': typeof BroadcastChannel !== 'undefined',
+                'Fetch API Support': typeof fetch !== 'undefined',
+                'ES6 Support': (() => { try { eval('const x = 1; let y = 2;'); return true; } catch { return false; } })()
+            };
+
+            for (const [test, result] of Object.entries(tests)) {
+                addStatus('browser-test', `${test}: ${result ? '✅' : '❌'}`, result ? 'success' : 'error');
+            }
+        }
+
+        // Test 2: LocalStorage Access
+        function testStorage() {
+            try {
+                const testKey = 'obs_test_' + Date.now();
+                localStorage.setItem(testKey, 'test');
+                const value = localStorage.getItem(testKey);
+                localStorage.removeItem(testKey);
+
+                if (value === 'test') {
+                    addStatus('storage-test', '✅ Read/Write working', 'success');
+
+                    // Check for existing loadout data
+                    const keys = Object.keys(localStorage).filter(k => k.includes('loadout'));
+                    if (keys.length > 0) {
+                        addStatus('storage-test', `Found ${keys.length} loadout keys`, 'info');
+                    }
+                } else {
+                    addStatus('storage-test', '❌ Read/Write failed', 'error');
+                }
+            } catch (error) {
+                addStatus('storage-test', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 3: Supabase Library
+        function testLibrary() {
+            if (typeof window.supabase !== 'undefined') {
+                addStatus('library-test', '✅ Supabase loaded', 'success');
+                addStatus('library-test', `Version: ${window.supabase.version || 'Unknown'}`, 'info');
+            } else {
+                addStatus('library-test', '❌ Supabase not loaded', 'error');
+            }
+        }
+
+        // Test 4: Supabase Connection
+        async function testSupabaseConnection() {
+            const container = document.getElementById('connection-test');
+            container.innerHTML = '<div class="spinner"></div> Testing...';
+
+            try {
+                const SUPABASE_URL = 'https://nabbbidjnmljaadmjjln.supabase.co';
+                const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hYmJiaWRqbm1samFhZG1qamxuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzcxNTI2MDAsImV4cCI6MjA1MjcyODYwMH0.C-apFqin1kBOOV8L3R8Y0cakcAU2A8KtFqQr2PwVHAc';
+
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+                container.innerHTML = '';
+                addStatus('connection-test', '✅ Client created', 'success');
+                log('Supabase client created', 'success');
+
+                // Try to check connection
+                const { data, error } = await supabase.auth.getSession();
+                if (!error) {
+                    addStatus('connection-test', '✅ API reachable', 'success');
+                } else {
+                    addStatus('connection-test', `⚠️ Auth error (expected): ${error.message}`, 'warning');
+                }
+            } catch (error) {
+                container.innerHTML = '';
+                addStatus('connection-test', `❌ ${error.message}`, 'error');
+                log(`Connection test failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 5: Channel Subscription
+        async function testChannelSubscription() {
+            if (!supabase) {
+                addStatus('channel-test', '❌ Create client first', 'error');
+                return;
+            }
+
+            const container = document.getElementById('channel-test');
+            container.innerHTML = '<div class="spinner"></div> Testing...';
+
+            try {
+                if (channel) {
+                    await channel.unsubscribe();
+                }
+
+                channel = supabase.channel('obs_default');
+
+                const timeout = setTimeout(() => {
+                    container.innerHTML = '';
+                    addStatus('channel-test', '❌ Subscription timeout', 'error');
+                    log('Channel subscription timed out', 'error');
+                }, 10000);
+
+                channel.subscribe((status, error) => {
+                    clearTimeout(timeout);
+                    container.innerHTML = '';
+
+                    if (error) {
+                        addStatus('channel-test', `❌ ${error.message}`, 'error');
+                        log(`Channel error: ${error.message}`, 'error');
+                    } else {
+                        addStatus('channel-test', `Status: ${status}`,
+                                 status === 'SUBSCRIBED' ? 'success' :
+                                 status === 'CHANNEL_ERROR' ? 'error' : 'warning');
+                        log(`Channel status: ${status}`,
+                            status === 'SUBSCRIBED' ? 'success' : 'warning');
+                    }
+                });
+            } catch (error) {
+                container.innerHTML = '';
+                addStatus('channel-test', `❌ ${error.message}`, 'error');
+                log(`Channel test failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 6: Message Flow
+        async function testMessageFlow() {
+            if (!channel) {
+                addStatus('message-test', '❌ Subscribe to channel first', 'error');
+                return;
+            }
+
+            const container = document.getElementById('message-test');
+            container.innerHTML = '<div class="spinner"></div> Testing...';
+
+            try {
+                // Set up listener
+                channel.on('broadcast', { event: 'test_message' }, (payload) => {
+                    container.innerHTML = '';
+                    addStatus('message-test', '✅ Message received!', 'success');
+                    log(`Received: ${JSON.stringify(payload)}`, 'success');
+                });
+
+                // Send test message
+                await channel.send({
+                    type: 'broadcast',
+                    event: 'test_message',
+                    payload: { test: true, timestamp: Date.now() }
+                });
+
+                setTimeout(() => {
+                    if (container.innerHTML.includes('spinner')) {
+                        container.innerHTML = '';
+                        addStatus('message-test', '⚠️ No response', 'warning');
+                    }
+                }, 3000);
+            } catch (error) {
+                container.innerHTML = '';
+                addStatus('message-test', `❌ ${error.message}`, 'error');
+                log(`Message test failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Live testing functions
+        async function startListening() {
+            if (isListening) {
+                log('Already listening', 'warning');
+                return;
+            }
+
+            log('Starting listener...', 'info');
+
+            if (!supabase) {
+                await testSupabaseConnection();
+            }
+
+            if (channel) {
+                await channel.unsubscribe();
+            }
+
+            channel = supabase.channel('obs_default');
+
+            channel
+                .on('broadcast', { event: 'loadout_update' }, (payload) => {
+                    log('✅ LOADOUT RECEIVED!', 'success');
+                    log(JSON.stringify(payload.payload, null, 2), 'success');
+                })
+                .subscribe((status, error) => {
+                    if (error) {
+                        log(`❌ Subscription error: ${error.message}`, 'error');
+                    } else {
+                        log(`Channel status: ${status}`,
+                            status === 'SUBSCRIBED' ? 'success' : 'warning');
+                        if (status === 'SUBSCRIBED') {
+                            isListening = true;
+                        }
+                    }
+                });
+        }
+
+        async function sendTestLoadout() {
+            if (!channel) {
+                log('❌ Not connected to channel', 'error');
+                return;
+            }
+
+            const testLoadout = {
+                class: 'Heavy',
+                name: 'Test from Diagnostics',
+                weapon: { name: 'SA1216', image: '../images/SA1216.webp' },
+                specialization: { name: 'Mesh Shield', image: '../images/Mesh_Shield.webp' },
+                gadgets: [
+                    { name: 'RPG-7', image: '../images/RPG-7.webp' },
+                    { name: 'C4', image: '../images/C4.webp' },
+                    { name: 'Barricade', image: '../images/Barricade.webp' }
+                ],
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                await channel.send({
+                    type: 'broadcast',
+                    event: 'loadout_update',
+                    payload: testLoadout
+                });
+                log('📤 Test loadout sent', 'success');
+            } catch (error) {
+                log(`❌ Failed to send: ${error.message}`, 'error');
+            }
+        }
+
+        async function stopListening() {
+            if (channel) {
+                await channel.unsubscribe();
+                channel = null;
+                isListening = false;
+                log('Stopped listening', 'info');
+            }
+        }
+
+        // Run initial tests
+        window.onload = () => {
+            testBrowser();
+            testStorage();
+            testLibrary();
+            log('Diagnostics loaded. Run tests to check OBS connection.', 'info');
+        };
+    </script>
+</body>
+</html>

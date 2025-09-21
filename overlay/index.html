@@ -737,31 +737,40 @@
         // Only try Supabase if it was successfully initialized
         if (supabaseOverlay) {
             try {
-                // Listen for loadout updates on the specific channel
-                channelOverlay = supabaseOverlay.channel(channelName);
+                // ALWAYS listen to obs_default channel for OBS
+                const obsChannel = supabaseOverlay.channel('obs_default');
 
-                channelOverlay
+                obsChannel
                     .on('broadcast', { event: 'loadout_update' }, (payload) => {
-                        console.log(`✅ Received loadout from Supabase on channel: ${channelName}`, payload);
+                        console.log(`✅ Received loadout from OBS channel`, payload);
                         renderLoadout(payload.payload);
                     })
-                    .subscribe((status) => {
-                        if (status === 'SUBSCRIBED') {
-                            console.log(`✅ Connected to Supabase channel: ${channelName}! Waiting for loadouts...`);
+                    .subscribe((status, error) => {
+                        if (error) {
+                            console.error('❌ Channel subscription error:', error);
+                            console.log('Channel error details:', error.message);
+                        } else if (status === 'SUBSCRIBED') {
+                            console.log(`✅ Connected to OBS channel: obs_default! Waiting for loadouts...`);
+                        } else if (status === 'CHANNEL_ERROR') {
+                            console.error('❌ Channel error - check Supabase configuration');
+                        } else if (status === 'TIMED_OUT') {
+                            console.error('❌ Connection timed out - retrying...');
+                        } else {
+                            console.log(`Channel status: ${status}`);
                         }
                     });
 
-                // ALSO listen to OBS default channel for compatibility
-                if (channelId === 'default' || params.get('obs') === 'true') {
-                    const obsChannel = supabaseOverlay.channel('obs_default');
-                    obsChannel
+                // Also listen on user's specific channel if provided
+                if (channelId && channelId !== 'default') {
+                    const userChannel = supabaseOverlay.channel(channelName);
+                    userChannel
                         .on('broadcast', { event: 'loadout_update' }, (payload) => {
-                            console.log(`✅ Received loadout from OBS Supabase channel`, payload);
+                            console.log(`✅ Received loadout from user channel: ${channelName}`, payload);
                             renderLoadout(payload.payload);
                         })
                         .subscribe((status) => {
                             if (status === 'SUBSCRIBED') {
-                                console.log(`✅ Also connected to OBS channel: obs_default`);
+                                console.log(`✅ Also connected to user channel: ${channelName}`);
                             }
                         });
                 }

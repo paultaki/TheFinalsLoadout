@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Connection Debugger</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: monospace;
+            background: #1a1a1a;
+            color: #0f0;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section {
+            background: #000;
+            border: 1px solid #0f0;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .error { color: #f00; }
+        .warning { color: #ff0; }
+        .success { color: #0f0; }
+        .info { color: #0ff; }
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        button:hover { background: #0a0; }
+        .log {
+            background: #111;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #0f0;
+            white-space: pre-wrap;
+            font-size: 12px;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .status-connected { background: #0f0; }
+        .status-error { background: #f00; }
+        .status-connecting { background: #ff0; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Supabase Connection Debugger</h1>
+
+    <div class="section">
+        <h2>📊 Connection Status</h2>
+        <div id="status">
+            <p><span class="status-indicator status-connecting"></span>Initializing...</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔧 Connection Details</h2>
+        <div id="details">
+            <p>Supabase URL: <span class="info">https://nabbbidjnmljaadmjjln.supabase.co</span></p>
+            <p>WebSocket URL: <span class="info">wss://nabbbidjnmljaadmjjln.supabase.co/realtime/v1/websocket</span></p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🧪 Test Actions</h2>
+        <button onclick="testDirectWebSocket()">Test Direct WebSocket</button>
+        <button onclick="testSupabaseClient()">Test Supabase Client</button>
+        <button onclick="testChannel()">Test Channel Subscribe</button>
+        <button onclick="sendTestMessage()">Send Test Message</button>
+        <button onclick="clearLogs()">Clear Logs</button>
+    </div>
+
+    <div class="section">
+        <h2>📝 Debug Logs</h2>
+        <div id="logs"></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://nabbbidjnmljaadmjjln.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hYmJiaWRqbm1samFhZG1qamxuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzcxNTI2MDAsImV4cCI6MjA1MjcyODYwMH0.C-apFqin1kBOOV8L3R8Y0cakcAU2A8KtFqQr2PwVHAc';
+
+        let supabase = null;
+        let channel = null;
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logDiv = document.getElementById('logs');
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log';
+            logEntry.innerHTML = `<span class="${type}">[${timestamp}]</span> ${message}`;
+            logDiv.insertBefore(logEntry, logDiv.firstChild);
+        }
+
+        function updateStatus(message, status = 'connecting') {
+            const statusDiv = document.getElementById('status');
+            const indicatorClass = status === 'connected' ? 'status-connected' :
+                                  status === 'error' ? 'status-error' : 'status-connecting';
+            statusDiv.innerHTML = `<p><span class="status-indicator ${indicatorClass}"></span>${message}</p>`;
+        }
+
+        // Test direct WebSocket connection
+        async function testDirectWebSocket() {
+            log('Testing direct WebSocket connection...', 'info');
+
+            const wsUrl = `wss://nabbbidjnmljaadmjjln.supabase.co/realtime/v1/websocket?apikey=${SUPABASE_ANON_KEY}&vsn=1.0.0`;
+
+            try {
+                const ws = new WebSocket(wsUrl);
+
+                ws.onopen = () => {
+                    log('✅ Direct WebSocket connected!', 'success');
+                    updateStatus('Direct WebSocket connected', 'connected');
+                    ws.close();
+                };
+
+                ws.onerror = (error) => {
+                    log(`❌ Direct WebSocket error: ${error}`, 'error');
+                    updateStatus('Direct WebSocket failed', 'error');
+                };
+
+                ws.onclose = (event) => {
+                    log(`WebSocket closed: Code ${event.code}, Reason: ${event.reason}`, 'info');
+                };
+            } catch (error) {
+                log(`❌ Failed to create WebSocket: ${error}`, 'error');
+            }
+        }
+
+        // Test Supabase client creation
+        async function testSupabaseClient() {
+            log('Testing Supabase client...', 'info');
+
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    realtime: {
+                        params: {
+                            eventsPerSecond: 10
+                        }
+                    }
+                });
+
+                log('✅ Supabase client created', 'success');
+
+                // Test if we can get the auth session
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (error) {
+                    log(`⚠️ Auth session error (expected for anon): ${error.message}`, 'warning');
+                } else {
+                    log(`Auth session: ${session ? 'Active' : 'Anonymous'}`, 'info');
+                }
+
+                updateStatus('Supabase client ready', 'connected');
+            } catch (error) {
+                log(`❌ Failed to create Supabase client: ${error}`, 'error');
+                updateStatus('Supabase client failed', 'error');
+            }
+        }
+
+        // Test channel subscription
+        async function testChannel() {
+            if (!supabase) {
+                log('⚠️ Create Supabase client first', 'warning');
+                return;
+            }
+
+            log('Testing channel subscription...', 'info');
+
+            try {
+                // Clean up existing channel
+                if (channel) {
+                    await channel.unsubscribe();
+                    log('Previous channel unsubscribed', 'info');
+                }
+
+                const channelName = 'test_channel_' + Date.now();
+                log(`Creating channel: ${channelName}`, 'info');
+
+                channel = supabase.channel(channelName, {
+                    config: {
+                        broadcast: { self: true }
+                    }
+                });
+
+                channel
+                    .on('broadcast', { event: '*' }, (payload) => {
+                        log(`📨 Received broadcast: ${JSON.stringify(payload)}`, 'success');
+                    })
+                    .on('presence', { event: 'sync' }, () => {
+                        log('Presence sync event', 'info');
+                    })
+                    .subscribe((status, error) => {
+                        if (error) {
+                            log(`❌ Channel error: ${error.message}`, 'error');
+                            updateStatus(`Channel error: ${error.message}`, 'error');
+                        } else {
+                            log(`Channel status: ${status}`, status === 'SUBSCRIBED' ? 'success' : 'warning');
+                            if (status === 'SUBSCRIBED') {
+                                updateStatus('Channel subscribed successfully', 'connected');
+                            }
+                        }
+                    });
+
+            } catch (error) {
+                log(`❌ Channel subscription failed: ${error}`, 'error');
+                updateStatus('Channel subscription failed', 'error');
+            }
+        }
+
+        // Send test message
+        async function sendTestMessage() {
+            if (!channel) {
+                log('⚠️ Subscribe to channel first', 'warning');
+                return;
+            }
+
+            try {
+                const message = {
+                    type: 'test',
+                    timestamp: new Date().toISOString(),
+                    data: 'Hello from debugger!'
+                };
+
+                await channel.send({
+                    type: 'broadcast',
+                    event: 'test_message',
+                    payload: message
+                });
+
+                log(`📤 Sent test message: ${JSON.stringify(message)}`, 'info');
+            } catch (error) {
+                log(`❌ Failed to send message: ${error}`, 'error');
+            }
+        }
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+            log('Logs cleared', 'info');
+        }
+
+        // Auto-initialize
+        window.onload = async () => {
+            log('Page loaded, initializing tests...', 'info');
+            await testSupabaseClient();
+        };
+
+        // Listen for errors
+        window.addEventListener('error', (e) => {
+            log(`❌ Global error: ${e.message}`, 'error');
+        });
+    </script>
+</body>
+</html>
