@@ -372,10 +372,16 @@
             console.log(`Item: ${name}, Image path: ${image}`); // Debug log
 
             if (image && image !== 'null' && image !== null) {
+                // Fix relative paths for images
+                let imageSrc = image;
+                if (image.startsWith('../images/')) {
+                    // Convert relative path from stream-tools context to overlay context
+                    imageSrc = image.replace('../images/', '/images/');
+                }
                 // Try to load the image with debugging
-                imageHTML = `<img class="item-image" src="${image}" alt="${name}"
+                imageHTML = `<img class="item-image" src="${imageSrc}" alt="${name}"
                             onload="console.log('✅ Loaded: ${name}')"
-                            onerror="console.error('❌ Failed to load: ${name} from ${image}'); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            onerror="console.error('❌ Failed to load: ${name} from ${imageSrc}'); this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div class="item-icon-fallback" style="display:none;">${itemIcons[type] || '📦'}</div>`;
             } else {
                 // Use fallback icon
@@ -519,6 +525,14 @@
         // Regular polling as backup
         setInterval(checkForUpdates, config.refresh);
 
+        // Listen for postMessage from parent window (for iframe preview)
+        window.addEventListener('message', (event) => {
+            console.log('Received postMessage:', event.data);
+            if (event.data && event.data.type === 'loadout_update' && event.data.payload) {
+                renderLoadout(event.data.payload);
+            }
+        });
+
         // Test function for development
         window.testLoadout = function() {
             const classes = ['Light', 'Medium', 'Heavy'];
@@ -563,14 +577,14 @@
     <!-- Supabase Integration -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Initialize Supabase
-        const SUPABASE_URL = 'https://vdwkgrgacwxjnofglbyn.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkd2tncmdhY3d4am5vZmdsYnluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMTU5MjcsImV4cCI6MjA3Mzg5MTkyN30.7EsHGeSQG2ueT_ydwjKMYoAHz9O_wIK5d79SsRBWmMc';
+        // Initialize Supabase - MUST match the stream-tools page credentials
+        const SUPABASE_URL = 'https://nabbbidjnmljaadmjjln.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hYmJiaWRqbm1samFhZG1qamxuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzcxNTI2MDAsImV4cCI6MjA1MjcyODYwMH0.C-apFqin1kBOOV8L3R8Y0cakcAU2A8KtFqQr2PwVHAc';
         const supabaseOverlay = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Get channel from URL parameters (use the config.channel we already parse)
+        // Get channel from URL parameters - use same channel name as sender
         const channelId = config.channel || 'default';
-        const channelName = 'overlay_' + channelId;
+        const channelName = channelId; // Use the channel ID directly, not 'overlay_' prefix
 
         // Listen for loadout updates on the specific channel
         const channelOverlay = supabaseOverlay.channel(channelName);

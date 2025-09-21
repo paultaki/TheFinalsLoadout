@@ -699,18 +699,19 @@
             const testData = {
                 class: 'Medium',
                 name: 'Test Loadout',
-                weapon: { name: 'FCAR', image: '/images/FCAR.webp' },
-                specialization: { name: 'Healing Beam', image: '/images/Healing_Beam.webp' },
+                weapon: { name: 'FCAR', image: '../images/FCAR.webp' },
+                specialization: { name: 'Healing Beam', image: '../images/Healing_Beam.webp' },
                 gadgets: [
-                    { name: 'Defibrillator', image: '/images/Defibrillator.webp' },
-                    { name: 'Jump Pad', image: '/images/Jump_Pad.webp' },
-                    { name: 'Gas Grenade', image: '/images/Gas_Grenade.webp' }
+                    { name: 'Defibrillator', image: '../images/Defibrillator.webp' },
+                    { name: 'Jump Pad', image: '../images/Jump_Pad.webp' },
+                    { name: 'Gas Grenade', image: '../images/Gas_Grenade.webp' }
                 ],
                 timestamp: new Date().toISOString()
             };
 
-            // Store to localStorage
-            localStorage.setItem('loadout_overlay_default', JSON.stringify(testData));
+            // Store to localStorage with the correct key format
+            const channelId = getMyChannelId();
+            localStorage.setItem(`loadout_overlay_${channelId}`, JSON.stringify(testData));
 
             // Send via BroadcastChannel for better cross-tab communication
             try {
@@ -772,8 +773,9 @@
 
             const lastLoadout = history[history.length - 1];
 
-            // Store to localStorage
-            localStorage.setItem('loadout_overlay_default', JSON.stringify(lastLoadout));
+            // Store to localStorage with the correct key format
+            const channelId = getMyChannelId();
+            localStorage.setItem(`loadout_overlay_${channelId}`, JSON.stringify(lastLoadout));
 
             // Send via BroadcastChannel for better cross-tab communication
             try {
