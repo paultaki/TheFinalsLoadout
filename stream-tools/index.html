@@ -644,6 +644,17 @@
         // Initialize on page load
         window.addEventListener('DOMContentLoaded', () => {
             updateOverlay();
+
+            // Wait for iframe to load before enabling buttons
+            const iframe = document.getElementById('overlayPreview');
+            iframe.addEventListener('load', () => {
+                console.log('✅ Overlay iframe loaded and ready');
+                // Send a test message to verify communication
+                iframe.contentWindow.postMessage({
+                    type: 'ping',
+                    message: 'Stream tools ready'
+                }, '*');
+            });
         });
 
         // Refresh preview
@@ -714,6 +725,10 @@
             const storageKey = `loadout_overlay_${channelId}`;
             localStorage.setItem(storageKey, JSON.stringify(testData));
             console.log(`📦 Stored loadout in localStorage key: ${storageKey}`);
+
+            // Also store in default key for OBS
+            localStorage.setItem('loadout_overlay_default', JSON.stringify(testData));
+            console.log('📦 Also stored in default key for OBS');
 
             // Send via BroadcastChannel for better cross-tab communication
             try {
@@ -791,6 +806,9 @@
             // Store to localStorage with the correct key format
             const channelId = getMyChannelId();
             localStorage.setItem(`loadout_overlay_${channelId}`, JSON.stringify(lastLoadout));
+
+            // Also store in default key for OBS
+            localStorage.setItem('loadout_overlay_default', JSON.stringify(lastLoadout));
 
             // Send via BroadcastChannel for better cross-tab communication
             try {

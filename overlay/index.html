@@ -527,25 +527,54 @@
             }
         });
 
-        // Initial check
-        checkForUpdates();
+        // Initial check - with delay to ensure everything is loaded
+        setTimeout(() => {
+            console.log('🔍 Running initial check for existing loadout');
+            checkForUpdates();
+
+            // Also check a default key for OBS compatibility
+            const defaultLoadout = localStorage.getItem('loadout_overlay_default');
+            if (defaultLoadout && !lastLoadout) {
+                console.log('📦 Found default loadout for OBS');
+                try {
+                    const loadout = JSON.parse(defaultLoadout);
+                    renderLoadout(loadout);
+                } catch (e) {
+                    console.error('Failed to parse default loadout:', e);
+                }
+            }
+        }, 500);
 
         // Regular polling as backup - more frequent for better responsiveness
         setInterval(checkForUpdates, 250); // Check every 250ms instead of 500ms
 
         // Listen for postMessage from parent window (for iframe preview)
         window.addEventListener('message', (event) => {
-            console.log('📨 Overlay received postMessage:', event.data);
+            console.log('📨 Overlay received postMessage from:', event.origin);
+            console.log('Message data:', event.data);
+
+            // Handle ping messages for testing
+            if (event.data && event.data.type === 'ping') {
+                console.log('🏓 Received ping:', event.data.message);
+                // Send pong back
+                if (event.source) {
+                    event.source.postMessage({ type: 'pong', message: 'Overlay ready' }, event.origin);
+                }
+            }
+
+            // Accept messages from any origin in production (be careful with this in real production)
             if (event.data && event.data.type === 'loadout_update' && event.data.payload) {
                 console.log('✅ Processing loadout from postMessage');
                 renderLoadout(event.data.payload);
             }
         });
 
-        // Log initial state
+        // Log initial state with more detail
         console.log('🎮 Stream overlay initialized');
         console.log('Channel ID:', channelId);
         console.log('Config:', config);
+        console.log('Window location:', window.location.href);
+        console.log('Parent location:', window.parent !== window ? 'Has parent frame' : 'No parent frame');
 
         // Direct method for parent window to send loadout
         window.receiveLoadout = function(loadout) {
