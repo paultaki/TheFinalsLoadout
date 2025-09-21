@@ -775,6 +775,9 @@
                 obsChannel
                     .on('broadcast', { event: 'loadout_update' }, (payload) => {
                         console.log(`✅ Received loadout from OBS channel`, payload);
+                        // Add visible debug message for OBS
+                        document.body.style.border = '3px solid lime';
+                        setTimeout(() => { document.body.style.border = 'none'; }, 1000);
                         renderLoadout(payload.payload);
                     })
                     .subscribe((status, error) => {
