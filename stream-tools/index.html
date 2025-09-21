@@ -653,8 +653,10 @@
 
             // Send config update via Supabase for OBS
             if (supabase) {
+                console.log('📤 Attempting to send config via Supabase...', overlayConfig);
                 const configChannel = supabase.channel('obs_config');
                 configChannel.subscribe((status) => {
+                    console.log('Config channel status:', status);
                     if (status === 'SUBSCRIBED') {
                         configChannel.send({
                             type: 'broadcast',
@@ -665,6 +667,8 @@
                         setTimeout(() => configChannel.unsubscribe(), 100);
                     }
                 });
+            } else {
+                console.error('❌ Supabase not available for sending config');
             }
 
             const params = new URLSearchParams({
@@ -756,13 +760,16 @@
             });
         }
 
-        // Initialize Supabase (if needed)
+        // Initialize Supabase globally
         let supabase = null;
         if (typeof window.supabase !== 'undefined') {
             supabase = window.supabase.createClient(
                 'https://vdwkgrgacwxjnofglbyn.supabase.co',
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkd2tncmdhY3d4am5vZmdsYnluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMTU5MjcsImV4cCI6MjA3Mzg5MTkyN30.7EsHGeSQG2ueT_ydwjKMYoAHz9O_wIK5d79SsRBWmMc'
             );
+            console.log('✅ Supabase initialized for stream-tools');
+        } else {
+            console.error('❌ Supabase library not loaded');
         }
 
         // Send test loadout
