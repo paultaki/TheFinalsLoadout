@@ -917,8 +917,14 @@
                     localStorage.setItem('lastSupabaseLoadout', JSON.stringify(lastReceivedLoadout));
                     localStorage.setItem('currentLoadout', JSON.stringify(lastReceivedLoadout));
 
+                    // Also update channel-specific key
+                    const channelId = getMyChannelId();
+                    localStorage.setItem(`loadout_overlay_${channelId}`, JSON.stringify(lastReceivedLoadout));
+
                     // Update the preview if we're on stream-tools page
                     sendLoadoutToPreview(lastReceivedLoadout);
+
+                    console.log('✅ Updated lastReceivedLoadout with new data from Supabase');
                 })
                 .subscribe((status) => {
                     console.log(`📡 OBS channel subscription status: ${status}`);
@@ -1053,34 +1059,43 @@
 
         // Send last loadout
         function sendLastLoadout(event) {
-            // Implementation same as main page
-            let historyStr = localStorage.getItem('slotMachineHistory') || localStorage.getItem('premiumSlotHistory');
-            if (!historyStr) {
-                alert('No loadout history found. Generate a loadout first!');
-                return;
+            // Use the last received loadout that's currently displayed
+            if (!lastReceivedLoadout) {
+                // Fallback to checking localStorage for current loadout
+                const channelId = getMyChannelId();
+                const currentData = localStorage.getItem('lastSupabaseLoadout') ||
+                                  localStorage.getItem('currentLoadout') ||
+                                  localStorage.getItem(`loadout_overlay_${channelId}`) ||
+                                  localStorage.getItem('loadout_overlay_default');
+
+                if (!currentData) {
+                    alert('No current loadout found. Generate a loadout from the main page first!');
+                    return;
+                }
+
+                try {
+                    lastReceivedLoadout = JSON.parse(currentData);
+                } catch (e) {
+                    alert('Error parsing loadout data');
+                    return;
+                }
             }
 
-            const history = JSON.parse(historyStr);
-            if (history.length === 0) {
-                alert('No loadouts in history.');
-                return;
-            }
-
-            const lastLoadout = history[history.length - 1];
+            console.log('📤 Sending current loadout:', lastReceivedLoadout);
 
             // Store to localStorage with the correct key format
             const channelId = getMyChannelId();
-            localStorage.setItem(`loadout_overlay_${channelId}`, JSON.stringify(lastLoadout));
+            localStorage.setItem(`loadout_overlay_${channelId}`, JSON.stringify(lastReceivedLoadout));
 
             // Also store in default key for OBS
-            localStorage.setItem('loadout_overlay_default', JSON.stringify(lastLoadout));
+            localStorage.setItem('loadout_overlay_default', JSON.stringify(lastReceivedLoadout));
 
             // Send via BroadcastChannel for better cross-tab communication
             try {
                 const bc = new BroadcastChannel('loadout_overlay_channel');
                 bc.postMessage({
                     type: 'loadout_update',
-                    loadout: lastLoadout
+                    loadout: lastReceivedLoadout
                 });
                 bc.close();
                 console.log('📡 Sent via BroadcastChannel');
@@ -1094,14 +1109,14 @@
                 // Try postMessage
                 iframe.contentWindow.postMessage({
                     type: 'loadout_update',
-                    payload: lastLoadout
+                    payload: lastReceivedLoadout
                 }, '*');
                 console.log('📡 Sent to preview iframe via postMessage');
 
                 // Also try direct method call if available
                 try {
                     if (iframe.contentWindow.receiveLoadout) {
-                        iframe.contentWindow.receiveLoadout(lastLoadout);
+                        iframe.contentWindow.receiveLoadout(lastReceivedLoadout);
                         console.log('📡 Sent to preview iframe via direct call');
                     }
                 } catch (e) {
@@ -1121,7 +1136,7 @@
                         obsChannel.send({
                             type: 'broadcast',
                             event: 'loadout_update',
-                            payload: lastLoadout
+                            payload: lastReceivedLoadout
                         });
                         setTimeout(() => obsChannel.unsubscribe(), 100);
                     }
@@ -1135,7 +1150,7 @@
                         userChannel.send({
                             type: 'broadcast',
                             event: 'loadout_update',
-                            payload: lastLoadout
+                            payload: lastReceivedLoadout
                         });
                         setTimeout(() => userChannel.unsubscribe(), 100);
                     }
