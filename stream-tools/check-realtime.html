@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Supabase Realtime Status</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: monospace;
+            background: #1a1a1a;
+            color: #0f0;
+            padding: 20px;
+        }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+        .info { color: #0ff; }
+    </style>
+</head>
+<body>
+    <h1>Supabase Realtime Check</h1>
+    <div id="output"></div>
+
+    <script>
+        const output = document.getElementById('output');
+
+        async function checkRealtime() {
+            const SUPABASE_URL = 'https://nabbbidjnmljaadmjjln.supabase.co';
+            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hYmJiaWRqbm1samFhZG1qamxuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzcxNTI2MDAsImV4cCI6MjA1MjcyODYwMH0.C-apFqin1kBOOV8L3R8Y0cakcAU2A8KtFqQr2PwVHAc';
+
+            output.innerHTML += '<p class="info">Testing Supabase connection...</p>';
+
+            // Test 1: Direct WebSocket
+            const wsUrl = `wss://nabbbidjnmljaadmjjln.supabase.co/realtime/v1/websocket?apikey=${SUPABASE_KEY}&vsn=1.0.0`;
+
+            try {
+                const ws = new WebSocket(wsUrl);
+
+                ws.onopen = () => {
+                    output.innerHTML += '<p class="success">✅ WebSocket connected directly!</p>';
+                    ws.close();
+                };
+
+                ws.onerror = (e) => {
+                    output.innerHTML += '<p class="error">❌ WebSocket error - Realtime may be disabled</p>';
+                };
+
+                ws.onclose = (e) => {
+                    output.innerHTML += `<p class="info">WebSocket closed: Code ${e.code}</p>`;
+                };
+            } catch (error) {
+                output.innerHTML += `<p class="error">❌ Failed to create WebSocket: ${error}</p>`;
+            }
+
+            // Test 2: REST API
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                if (response.ok) {
+                    output.innerHTML += '<p class="success">✅ REST API is accessible</p>';
+                } else {
+                    output.innerHTML += `<p class="error">❌ REST API returned: ${response.status}</p>`;
+                }
+            } catch (error) {
+                output.innerHTML += `<p class="error">❌ REST API error: ${error}</p>`;
+            }
+
+            output.innerHTML += '<br><p class="info">To fix CHANNEL_ERROR:</p>';
+            output.innerHTML += '<p>1. Go to <a href="https://supabase.com/dashboard/project/nabbbidjnmljaadmjjln/settings/api" target="_blank">Supabase Dashboard</a></p>';
+            output.innerHTML += '<p>2. Check Settings → API → Realtime is enabled</p>';
+            output.innerHTML += '<p>3. Or the project may need to be restarted</p>';
+        }
+
+        checkRealtime();
+    </script>
+</body>
+</html>
