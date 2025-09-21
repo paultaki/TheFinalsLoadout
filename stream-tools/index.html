@@ -511,7 +511,7 @@
                     <div class="step-content">
                         <h3 class="step-title">Copy Your Overlay URL</h3>
                         <p class="step-desc">Click the "Copy" button above to get your unique overlay link. This URL connects your stream to the loadout generator.</p>
-                        <img src="images/obs-1.webp" alt="Step 1: Copy URL" class="step-image">
+                        <img src="images/obs-1.webp" alt="Step 1: Copy URL" class="step-image" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div style=\'background: rgba(255, 71, 150, 0.1); border: 1px solid rgba(255, 71, 150, 0.3); border-radius: 8px; padding: 20px; text-align: center; color: #888;\'>Image placeholder - OBS screenshot</div>')">
                     </div>
                 </div>
 
@@ -521,7 +521,7 @@
                     <div class="step-content">
                         <h3 class="step-title">Add Browser Source in OBS</h3>
                         <p class="step-desc">In OBS, click the + button in Sources and select "Browser". Name it something like "Finals Loadout Overlay".</p>
-                        <img src="images/obs-2.webp" alt="Step 2: Add Browser Source" class="step-image">
+                        <img src="images/obs-2.webp" alt="Step 2: Add Browser Source" class="step-image" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div style=\'background: rgba(255, 71, 150, 0.1); border: 1px solid rgba(255, 71, 150, 0.3); border-radius: 8px; padding: 20px; text-align: center; color: #888;\'>Image placeholder - OBS screenshot</div>')">
                     </div>
                 </div>
 
@@ -531,7 +531,7 @@
                     <div class="step-content">
                         <h3 class="step-title">Configure Browser Source</h3>
                         <p class="step-desc">Paste your URL and set Width: 600px, Height: 200px. You can adjust these based on your stream layout.</p>
-                        <img src="images/obs-3.webp" alt="Step 3: Configure Source" class="step-image">
+                        <img src="images/obs-3.webp" alt="Step 3: Configure Source" class="step-image" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div style=\'background: rgba(255, 71, 150, 0.1); border: 1px solid rgba(255, 71, 150, 0.3); border-radius: 8px; padding: 20px; text-align: center; color: #888;\'>Image placeholder - OBS screenshot</div>')">
                     </div>
                 </div>
 
@@ -541,7 +541,7 @@
                     <div class="step-content">
                         <h3 class="step-title">Start Streaming!</h3>
                         <p class="step-desc">Position the overlay on your stream. When you generate loadouts on the main site, they'll appear live on stream!</p>
-                        <img src="images/obs-4.webp" alt="Step 4: Start Streaming" class="step-image">
+                        <img src="images/obs-4.webp" alt="Step 4: Start Streaming" class="step-image" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div style=\'background: rgba(255, 71, 150, 0.1); border: 1px solid rgba(255, 71, 150, 0.3); border-radius: 8px; padding: 20px; text-align: center; color: #888;\'>Image placeholder - OBS screenshot</div>')">
                     </div>
                 </div>
             </div>
@@ -761,25 +761,37 @@
 
             // Update the preview iframe directly
             const iframe = document.getElementById('overlayPreview');
+            console.log('🔍 Attempting to send to iframe...');
+            console.log('Iframe element exists:', !!iframe);
+            console.log('Iframe contentWindow exists:', !!(iframe && iframe.contentWindow));
+
             if (iframe && iframe.contentWindow) {
                 // Try postMessage
-                iframe.contentWindow.postMessage({
-                    type: 'loadout_update',
-                    payload: testData
-                }, '*');
-                console.log('📡 Sent to preview iframe via postMessage');
+                try {
+                    iframe.contentWindow.postMessage({
+                        type: 'loadout_update',
+                        payload: testData
+                    }, '*');
+                    console.log('📡 Sent to preview iframe via postMessage');
+                } catch (e) {
+                    console.error('❌ PostMessage failed:', e);
+                }
 
                 // Also try direct method call if available (with a small delay to ensure iframe is ready)
                 setTimeout(() => {
                     try {
-                        if (iframe.contentWindow.receiveLoadout) {
+                        if (iframe.contentWindow && iframe.contentWindow.receiveLoadout) {
                             iframe.contentWindow.receiveLoadout(testData);
                             console.log('📡 Sent to preview iframe via direct call');
+                        } else {
+                            console.log('⚠️ receiveLoadout method not available on iframe');
                         }
                     } catch (e) {
                         console.log('Could not call direct method:', e);
                     }
                 }, 100);
+            } else {
+                console.error('❌ Iframe or contentWindow not available');
             }
 
             // Also try Supabase if available

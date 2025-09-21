@@ -575,6 +575,13 @@
         console.log('Config:', config);
         console.log('Window location:', window.location.href);
         console.log('Parent location:', window.parent !== window ? 'Has parent frame' : 'No parent frame');
+        console.log('LocalStorage available:', typeof(Storage) !== "undefined");
+
+        // Check for existing data on load
+        const existingData = localStorage.getItem(`loadout_overlay_${channelId}`);
+        const defaultData = localStorage.getItem('loadout_overlay_default');
+        console.log('Existing channel data:', existingData ? 'Found' : 'Not found');
+        console.log('Default data:', defaultData ? 'Found' : 'Not found');
 
         // Direct method for parent window to send loadout
         window.receiveLoadout = function(loadout) {

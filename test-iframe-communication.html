@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Iframe Communication</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #1a1a1a;
+            color: #0f0;
+            padding: 20px;
+        }
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #log {
+            background: #000;
+            border: 1px solid #0f0;
+            padding: 10px;
+            margin: 20px 0;
+            height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        iframe {
+            width: 100%;
+            height: 250px;
+            border: 2px solid #0f0;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Iframe Communication Test</h1>
+
+    <div>
+        <button onclick="testPostMessage()">Test PostMessage</button>
+        <button onclick="testLocalStorage()">Test LocalStorage</button>
+        <button onclick="testBroadcastChannel()">Test BroadcastChannel</button>
+        <button onclick="testDirectCall()">Test Direct Call</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <div id="log"></div>
+
+    <h2>Iframe Preview:</h2>
+    <iframe id="testFrame" src="/overlay/"></iframe>
+
+    <script>
+        const log = document.getElementById('log');
+        const iframe = document.getElementById('testFrame');
+
+        function addLog(msg) {
+            const time = new Date().toLocaleTimeString();
+            log.textContent += `[${time}] ${msg}\n`;
+            log.scrollTop = log.scrollHeight;
+            console.log(msg);
+        }
+
+        function clearLog() {
+            log.textContent = '';
+        }
+
+        // Set up iframe with channel
+        const channelId = 'test_' + Math.random().toString(36).substr(2, 9);
+        iframe.src = `/overlay/?channel=${channelId}`;
+        addLog(`Iframe URL: ${iframe.src}`);
+
+        // Wait for iframe to load
+        iframe.addEventListener('load', () => {
+            addLog('✅ Iframe loaded');
+
+            // Send a ping
+            try {
+                iframe.contentWindow.postMessage({ type: 'ping', message: 'Test ready' }, '*');
+                addLog('📤 Sent ping to iframe');
+            } catch (e) {
+                addLog('❌ Error sending ping: ' + e.message);
+            }
+        });
+
+        // Listen for messages
+        window.addEventListener('message', (event) => {
+            addLog(`📨 Received message: ${JSON.stringify(event.data)}`);
+        });
+
+        function testPostMessage() {
+            const testData = {
+                type: 'loadout_update',
+                payload: {
+                    class: 'Medium',
+                    name: 'PostMessage Test',
+                    weapon: { name: 'FCAR', image: '/images/FCAR.webp' },
+                    specialization: { name: 'Healing Beam', image: '/images/Healing_Beam.webp' },
+                    gadgets: [
+                        { name: 'Defibrillator', image: '/images/Defibrillator.webp' },
+                        { name: 'Jump Pad', image: '/images/Jump_Pad.webp' },
+                        { name: 'Gas Grenade', image: '/images/Gas_Grenade.webp' }
+                    ],
+                    timestamp: new Date().toISOString()
+                }
+            };
+
+            try {
+                iframe.contentWindow.postMessage(testData, '*');
+                addLog('✅ Sent loadout via postMessage');
+            } catch (e) {
+                addLog('❌ PostMessage error: ' + e.message);
+            }
+        }
+
+        function testLocalStorage() {
+            const testData = {
+                class: 'Light',
+                name: 'LocalStorage Test',
+                weapon: { name: 'XP-54', image: '/images/XP-54.webp' },
+                specialization: { name: 'Grappling Hook', image: '/images/Grappling_Hook.webp' },
+                gadgets: [
+                    { name: 'Smoke Grenade', image: '/images/Smoke_Grenade.webp' },
+                    { name: 'Stun Gun', image: '/images/Stun_Gun.webp' },
+                    { name: 'Flashbang', image: '/images/Flashbang.webp' }
+                ],
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                localStorage.setItem(`loadout_overlay_${channelId}`, JSON.stringify(testData));
+                localStorage.setItem('loadout_overlay_default', JSON.stringify(testData));
+                addLog(`✅ Stored in localStorage (channel: ${channelId})`);
+
+                // Trigger storage event
+                window.dispatchEvent(new StorageEvent('storage', {
+                    key: `loadout_overlay_${channelId}`,
+                    newValue: JSON.stringify(testData),
+                    url: window.location.href
+                }));
+            } catch (e) {
+                addLog('❌ LocalStorage error: ' + e.message);
+            }
+        }
+
+        function testBroadcastChannel() {
+            const testData = {
+                type: 'loadout_update',
+                loadout: {
+                    class: 'Heavy',
+                    name: 'BroadcastChannel Test',
+                    weapon: { name: 'SA1216', image: '/images/SA1216.webp' },
+                    specialization: { name: 'Mesh Shield', image: '/images/Mesh_Shield.webp' },
+                    gadgets: [
+                        { name: 'RPG-7', image: '/images/RPG-7.webp' },
+                        { name: 'C4', image: '/images/C4.webp' },
+                        { name: 'Barricade', image: '/images/Barricade.webp' }
+                    ],
+                    timestamp: new Date().toISOString()
+                }
+            };
+
+            try {
+                const bc = new BroadcastChannel('loadout_overlay_channel');
+                bc.postMessage(testData);
+                bc.close();
+                addLog('✅ Sent via BroadcastChannel');
+            } catch (e) {
+                addLog('❌ BroadcastChannel error: ' + e.message);
+            }
+        }
+
+        function testDirectCall() {
+            const testData = {
+                class: 'Medium',
+                name: 'Direct Call Test',
+                weapon: { name: 'AKM', image: '/images/AKM.webp' },
+                specialization: { name: 'Guardian Turret', image: '/images/Guardian_Turret.webp' },
+                gadgets: [
+                    { name: 'Frag Grenade', image: '/images/Frag_Grenade.webp' },
+                    { name: 'Zipline', image: '/images/Zipline.webp' },
+                    { name: 'Gas Mine', image: '/images/Gas_Mine.webp' }
+                ],
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                if (iframe.contentWindow && iframe.contentWindow.receiveLoadout) {
+                    iframe.contentWindow.receiveLoadout(testData);
+                    addLog('✅ Called receiveLoadout directly');
+                } else {
+                    addLog('⚠️ receiveLoadout not available on iframe');
+                }
+            } catch (e) {
+                addLog('❌ Direct call error: ' + e.message);
+            }
+        }
+
+        // Initial log
+        addLog('Test page loaded - Channel ID: ' + channelId);
+    </script>
+</body>
+</html>
