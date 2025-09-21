@@ -693,6 +693,9 @@
         window.addEventListener('DOMContentLoaded', () => {
             updateOverlay();
 
+            // Check for existing loadout and send to preview
+            checkAndLoadExistingLoadout();
+
             // Wait for iframe to load before enabling buttons
             const iframe = document.getElementById('overlayPreview');
             iframe.addEventListener('load', () => {
@@ -882,6 +885,70 @@
 
             // Show feedback
             showFeedback('Loadout sent!');
+        }
+
+        // Check and load existing loadout when page opens
+        function checkAndLoadExistingLoadout() {
+            // Check multiple possible storage locations
+            const channelId = getMyChannelId();
+
+            // First check the overlay storage keys
+            let loadoutData = localStorage.getItem(`loadout_overlay_${channelId}`) ||
+                             localStorage.getItem('loadout_overlay_default') ||
+                             localStorage.getItem('currentLoadout');
+
+            // If no overlay data, check history
+            if (!loadoutData) {
+                const historyStr = localStorage.getItem('slotMachineHistory') || localStorage.getItem('premiumSlotHistory');
+                if (historyStr) {
+                    try {
+                        const history = JSON.parse(historyStr);
+                        if (history && history.length > 0) {
+                            loadoutData = JSON.stringify(history[0]);
+                        }
+                    } catch (e) {
+                        console.log('Could not parse history');
+                    }
+                }
+            }
+
+            if (loadoutData) {
+                try {
+                    const loadout = JSON.parse(loadoutData);
+                    console.log('📋 Found existing loadout:', loadout);
+
+                    // Send to preview iframe
+                    setTimeout(() => {
+                        const iframe = document.getElementById('overlayPreview');
+                        if (iframe && iframe.contentWindow) {
+                            iframe.contentWindow.postMessage({
+                                type: 'loadout_update',
+                                payload: loadout
+                            }, '*');
+                            console.log('📡 Sent existing loadout to preview');
+                        }
+
+                        // Also update via localStorage for local preview
+                        localStorage.setItem(`loadout_overlay_${channelId}`, JSON.stringify(loadout));
+
+                        // Send via BroadcastChannel
+                        try {
+                            const bc = new BroadcastChannel('loadout_overlay_channel');
+                            bc.postMessage({
+                                type: 'loadout_update',
+                                loadout: loadout
+                            });
+                            bc.close();
+                        } catch (e) {
+                            console.log('BroadcastChannel not supported');
+                        }
+                    }, 1000); // Wait for iframe to be ready
+                } catch (e) {
+                    console.log('Could not parse loadout data');
+                }
+            } else {
+                console.log('📭 No existing loadout found');
+            }
         }
 
         // Send last loadout
