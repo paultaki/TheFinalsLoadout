@@ -649,11 +649,27 @@
             const iframe = document.getElementById('overlayPreview');
             iframe.addEventListener('load', () => {
                 console.log('✅ Overlay iframe loaded and ready');
+                console.log('Iframe src:', iframe.src);
+                console.log('Iframe contentWindow available:', !!iframe.contentWindow);
+
                 // Send a test message to verify communication
-                iframe.contentWindow.postMessage({
-                    type: 'ping',
-                    message: 'Stream tools ready'
-                }, '*');
+                try {
+                    iframe.contentWindow.postMessage({
+                        type: 'ping',
+                        message: 'Stream tools ready'
+                    }, '*');
+                    console.log('📤 Sent ping to iframe');
+                } catch (e) {
+                    console.error('Failed to send ping:', e);
+                }
+            });
+
+            // Listen for messages from iframe
+            window.addEventListener('message', (event) => {
+                console.log('📨 Received message from iframe:', event.data);
+                if (event.data && event.data.type === 'pong') {
+                    console.log('✅ Iframe responded with pong - communication established!');
+                }
             });
         });
 
