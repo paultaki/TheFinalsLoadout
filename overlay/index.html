@@ -544,6 +544,23 @@
                         console.error('Failed to parse URL loadout:', e);
                     }
                 }
+
+                // Check for simple URL parameters (for OBS)
+                const urlClass = params.get('class');
+                const urlWeapon = params.get('weapon');
+                if (urlClass && urlWeapon && !lastLoadout) {
+                    const simpleLoadout = {
+                        class: urlClass,
+                        weapon: { name: decodeURIComponent(urlWeapon) },
+                        specialization: { name: decodeURIComponent(params.get('spec') || 'None') },
+                        gadgets: []
+                    };
+                    if (params.get('g1')) simpleLoadout.gadgets.push({ name: decodeURIComponent(params.get('g1')) });
+                    if (params.get('g2')) simpleLoadout.gadgets.push({ name: decodeURIComponent(params.get('g2')) });
+                    if (params.get('g3')) simpleLoadout.gadgets.push({ name: decodeURIComponent(params.get('g3')) });
+                    console.log('📦 Built loadout from URL params:', simpleLoadout);
+                    renderLoadout(simpleLoadout);
+                }
             } catch (e) {
                 console.error('Error checking for updates:', e);
             }
@@ -730,6 +747,21 @@
                             console.log(`✅ Connected to Supabase channel: ${channelName}! Waiting for loadouts...`);
                         }
                     });
+
+                // ALSO listen to OBS default channel for compatibility
+                if (channelId === 'default' || params.get('obs') === 'true') {
+                    const obsChannel = supabaseOverlay.channel('obs_default');
+                    obsChannel
+                        .on('broadcast', { event: 'loadout_update' }, (payload) => {
+                            console.log(`✅ Received loadout from OBS Supabase channel`, payload);
+                            renderLoadout(payload.payload);
+                        })
+                        .subscribe((status) => {
+                            if (status === 'SUBSCRIBED') {
+                                console.log(`✅ Also connected to OBS channel: obs_default`);
+                            }
+                        });
+                }
             } catch (e) {
                 console.log('Supabase connection failed, falling back to localStorage/BroadcastChannel', e);
             }
