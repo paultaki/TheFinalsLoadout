@@ -1598,6 +1598,21 @@ Gadget 3: ${loadout.gadget3}`;
                     payload: overlayData
                 });
                 console.log(`✅ Sent loadout via Supabase on channel: ${channelName}`);
+
+                // ALSO send to obs_default channel for OBS
+                const obsDefaultChannel = supabase.channel('obs_default');
+                obsDefaultChannel.subscribe((status) => {
+                    if (status === 'SUBSCRIBED') {
+                        obsDefaultChannel.send({
+                            type: 'broadcast',
+                            event: 'loadout_update',
+                            payload: overlayData
+                        });
+                        console.log(`✅ Also sent to OBS default channel`);
+                        setTimeout(() => obsDefaultChannel.unsubscribe(), 100);
+                    }
+                });
+
                 showQuickStatus('✅ Sent to OBS!', true);
             } else {
                 // Wait for subscription then send
@@ -1610,6 +1625,21 @@ Gadget 3: ${loadout.gadget3}`;
                             payload: overlayData
                         });
                         console.log(`✅ Sent loadout via Supabase on channel: ${channelName}`);
+
+                        // ALSO send to obs_default channel for OBS
+                        const obsDefaultChannel = supabase.channel('obs_default');
+                        obsDefaultChannel.subscribe((status) => {
+                            if (status === 'SUBSCRIBED') {
+                                obsDefaultChannel.send({
+                                    type: 'broadcast',
+                                    event: 'loadout_update',
+                                    payload: overlayData
+                                });
+                                console.log(`✅ Also sent to OBS default channel`);
+                                setTimeout(() => obsDefaultChannel.unsubscribe(), 100);
+                            }
+                        });
+
                         showQuickStatus('✅ Sent to OBS!', true);
                     }
                 }, 100);
