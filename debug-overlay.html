@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Overlay Communication</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #1a1a1a;
+            color: #0f0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section {
+            background: #000;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        h1, h2 {
+            color: #0f0;
+            text-shadow: 0 0 10px #0f0;
+        }
+        .log {
+            background: #111;
+            border: 1px solid #333;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #0a0;
+        }
+        iframe {
+            width: 100%;
+            height: 200px;
+            border: 2px solid #0f0;
+            background: #000;
+        }
+        .status {
+            padding: 5px 10px;
+            display: inline-block;
+            margin: 5px;
+            border-radius: 3px;
+        }
+        .success {
+            background: #0a0;
+            color: #fff;
+        }
+        .error {
+            background: #a00;
+            color: #fff;
+        }
+        .info {
+            background: #00a;
+            color: #fff;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Overlay Communication Debugger</h1>
+
+        <div class="section">
+            <h2>Channel Info</h2>
+            <div>Channel ID: <span id="channelId" class="status info"></span></div>
+            <div>Storage Key: <span id="storageKey" class="status info"></span></div>
+        </div>
+
+        <div class="section">
+            <h2>Test Controls</h2>
+            <button onclick="testLocalStorage()">Test localStorage</button>
+            <button onclick="testBroadcastChannel()">Test BroadcastChannel</button>
+            <button onclick="testPostMessage()">Test PostMessage</button>
+            <button onclick="clearAll()">Clear All</button>
+            <button onclick="showAllStorage()">Show All Storage</button>
+        </div>
+
+        <div class="section">
+            <h2>localStorage Status</h2>
+            <div id="localStorageLog" class="log"></div>
+        </div>
+
+        <div class="section">
+            <h2>BroadcastChannel Status</h2>
+            <div id="broadcastLog" class="log"></div>
+        </div>
+
+        <div class="section">
+            <h2>PostMessage Status</h2>
+            <div id="postMessageLog" class="log"></div>
+        </div>
+
+        <div class="section">
+            <h2>Overlay Preview</h2>
+            <iframe id="overlayFrame" src=""></iframe>
+        </div>
+
+        <div class="section">
+            <h2>All Communication Logs</h2>
+            <div id="allLogs" class="log" style="max-height: 400px;"></div>
+        </div>
+    </div>
+
+    <script>
+        const logs = {
+            localStorage: document.getElementById('localStorageLog'),
+            broadcast: document.getElementById('broadcastLog'),
+            postMessage: document.getElementById('postMessageLog'),
+            all: document.getElementById('allLogs')
+        };
+
+        function log(category, message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logMessage = `[${timestamp}] ${message}${data ? '\n' + JSON.stringify(data, null, 2) : ''}`;
+
+            if (logs[category]) {
+                logs[category].innerHTML += logMessage + '\n';
+                logs[category].scrollTop = logs[category].scrollHeight;
+            }
+
+            logs.all.innerHTML += `[${category.toUpperCase()}] ${logMessage}\n`;
+            logs.all.scrollTop = logs.all.scrollHeight;
+
+            console.log(`[${category}]`, message, data);
+        }
+
+        // Get or create channel ID
+        function getChannelId() {
+            let channelId = localStorage.getItem('myStreamChannelId');
+            if (!channelId) {
+                channelId = 'stream_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('myStreamChannelId', channelId);
+                log('localStorage', 'Created new channel ID: ' + channelId);
+            }
+            return channelId;
+        }
+
+        const channelId = getChannelId();
+        const storageKey = `loadout_overlay_${channelId}`;
+
+        document.getElementById('channelId').textContent = channelId;
+        document.getElementById('storageKey').textContent = storageKey;
+
+        // Set up iframe
+        const iframe = document.getElementById('overlayFrame');
+        iframe.src = `/overlay/?channel=${channelId}`;
+        log('all', `Iframe src set to: ${iframe.src}`);
+
+        // Test localStorage
+        function testLocalStorage() {
+            const testData = {
+                class: 'Light',
+                name: 'localStorage Test',
+                weapon: { name: 'XP-54', image: '/images/XP-54.webp' },
+                specialization: { name: 'Grappling Hook', image: '/images/Grappling_Hook.webp' },
+                gadgets: [
+                    { name: 'Smoke Grenade', image: '/images/Smoke_Grenade.webp' },
+                    { name: 'Stun Gun', image: '/images/Stun_Gun.webp' },
+                    { name: 'Flashbang', image: '/images/Flashbang.webp' }
+                ],
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(testData));
+                log('localStorage', `✅ Stored data in key: ${storageKey}`, testData);
+
+                // Verify it was stored
+                const retrieved = localStorage.getItem(storageKey);
+                if (retrieved) {
+                    log('localStorage', '✅ Verified data was stored successfully');
+                } else {
+                    log('localStorage', '❌ Failed to retrieve stored data');
+                }
+
+                // Trigger storage event manually for same-page testing
+                window.dispatchEvent(new StorageEvent('storage', {
+                    key: storageKey,
+                    newValue: JSON.stringify(testData),
+                    url: window.location.href
+                }));
+                log('localStorage', 'Dispatched storage event');
+
+            } catch (e) {
+                log('localStorage', '❌ Error: ' + e.message);
+            }
+        }
+
+        // Test BroadcastChannel
+        let bc = null;
+        function testBroadcastChannel() {
+            try {
+                if (bc) {
+                    bc.close();
+                }
+
+                bc = new BroadcastChannel('loadout_overlay_channel');
+
+                const testData = {
+                    type: 'loadout_update',
+                    loadout: {
+                        class: 'Medium',
+                        name: 'BroadcastChannel Test',
+                        weapon: { name: 'FCAR', image: '/images/FCAR.webp' },
+                        specialization: { name: 'Healing Beam', image: '/images/Healing_Beam.webp' },
+                        gadgets: [
+                            { name: 'Defibrillator', image: '/images/Defibrillator.webp' },
+                            { name: 'Jump Pad', image: '/images/Jump_Pad.webp' },
+                            { name: 'Gas Grenade', image: '/images/Gas_Grenade.webp' }
+                        ],
+                        timestamp: new Date().toISOString()
+                    }
+                };
+
+                bc.postMessage(testData);
+                log('broadcast', '✅ Sent message via BroadcastChannel', testData);
+
+                // Also listen for responses
+                bc.onmessage = (event) => {
+                    log('broadcast', '📨 Received response:', event.data);
+                };
+
+            } catch (e) {
+                log('broadcast', '❌ Error: ' + e.message);
+            }
+        }
+
+        // Test PostMessage
+        function testPostMessage() {
+            if (!iframe.contentWindow) {
+                log('postMessage', '❌ Iframe not loaded yet');
+                return;
+            }
+
+            const testData = {
+                type: 'loadout_update',
+                payload: {
+                    class: 'Heavy',
+                    name: 'PostMessage Test',
+                    weapon: { name: 'SA1216', image: '/images/SA1216.webp' },
+                    specialization: { name: 'Mesh Shield', image: '/images/Mesh_Shield.webp' },
+                    gadgets: [
+                        { name: 'RPG-7', image: '/images/RPG-7.webp' },
+                        { name: 'C4', image: '/images/C4.webp' },
+                        { name: 'Barricade', image: '/images/Barricade.webp' }
+                    ],
+                    timestamp: new Date().toISOString()
+                }
+            };
+
+            try {
+                iframe.contentWindow.postMessage(testData, '*');
+                log('postMessage', '✅ Sent message to iframe', testData);
+            } catch (e) {
+                log('postMessage', '❌ Error: ' + e.message);
+            }
+        }
+
+        // Clear all data
+        function clearAll() {
+            localStorage.removeItem(storageKey);
+            log('all', '🗑️ Cleared localStorage key: ' + storageKey);
+
+            // Reload iframe
+            iframe.src = iframe.src;
+            log('all', '🔄 Reloaded iframe');
+        }
+
+        // Show all localStorage keys
+        function showAllStorage() {
+            const allKeys = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.includes('loadout') || key.includes('stream')) {
+                    try {
+                        allKeys[key] = JSON.parse(localStorage.getItem(key));
+                    } catch {
+                        allKeys[key] = localStorage.getItem(key);
+                    }
+                }
+            }
+            log('localStorage', 'All relevant keys in localStorage:', allKeys);
+        }
+
+        // Listen for messages from iframe
+        window.addEventListener('message', (event) => {
+            log('postMessage', '📨 Received message from iframe:', event.data);
+        });
+
+        // Listen for storage events
+        window.addEventListener('storage', (event) => {
+            if (event.key === storageKey) {
+                log('localStorage', '📦 Storage event detected for our key', {
+                    key: event.key,
+                    newValue: event.newValue ? JSON.parse(event.newValue) : null
+                });
+            }
+        });
+
+        // Initial check
+        setTimeout(() => {
+            showAllStorage();
+            log('all', '🚀 Debug system ready. Iframe should be loaded.');
+        }, 1000);
+    </script>
+</body>
+</html>

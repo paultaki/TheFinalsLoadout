@@ -711,7 +711,9 @@
 
             // Store to localStorage with the correct key format
             const channelId = getMyChannelId();
-            localStorage.setItem(`loadout_overlay_${channelId}`, JSON.stringify(testData));
+            const storageKey = `loadout_overlay_${channelId}`;
+            localStorage.setItem(storageKey, JSON.stringify(testData));
+            console.log(`📦 Stored loadout in localStorage key: ${storageKey}`);
 
             // Send via BroadcastChannel for better cross-tab communication
             try {
@@ -729,11 +731,24 @@
             // Update the preview iframe directly
             const iframe = document.getElementById('overlayPreview');
             if (iframe && iframe.contentWindow) {
+                // Try postMessage
                 iframe.contentWindow.postMessage({
                     type: 'loadout_update',
                     payload: testData
                 }, '*');
-                console.log('📡 Sent to preview iframe');
+                console.log('📡 Sent to preview iframe via postMessage');
+
+                // Also try direct method call if available (with a small delay to ensure iframe is ready)
+                setTimeout(() => {
+                    try {
+                        if (iframe.contentWindow.receiveLoadout) {
+                            iframe.contentWindow.receiveLoadout(testData);
+                            console.log('📡 Sent to preview iframe via direct call');
+                        }
+                    } catch (e) {
+                        console.log('Could not call direct method:', e);
+                    }
+                }, 100);
             }
 
             // Also try Supabase if available
@@ -793,11 +808,22 @@
             // Update the preview iframe directly
             const iframe = document.getElementById('overlayPreview');
             if (iframe && iframe.contentWindow) {
+                // Try postMessage
                 iframe.contentWindow.postMessage({
                     type: 'loadout_update',
                     payload: lastLoadout
                 }, '*');
-                console.log('📡 Sent to preview iframe');
+                console.log('📡 Sent to preview iframe via postMessage');
+
+                // Also try direct method call if available
+                try {
+                    if (iframe.contentWindow.receiveLoadout) {
+                        iframe.contentWindow.receiveLoadout(lastLoadout);
+                        console.log('📡 Sent to preview iframe via direct call');
+                    }
+                } catch (e) {
+                    console.log('Could not call direct method:', e);
+                }
             }
 
             // Also try Supabase if available

@@ -530,8 +530,8 @@
         // Initial check
         checkForUpdates();
 
-        // Regular polling as backup
-        setInterval(checkForUpdates, config.refresh);
+        // Regular polling as backup - more frequent for better responsiveness
+        setInterval(checkForUpdates, 250); // Check every 250ms instead of 500ms
 
         // Listen for postMessage from parent window (for iframe preview)
         window.addEventListener('message', (event) => {
@@ -546,6 +546,12 @@
         console.log('🎮 Stream overlay initialized');
         console.log('Channel ID:', channelId);
         console.log('Config:', config);
+
+        // Direct method for parent window to send loadout
+        window.receiveLoadout = function(loadout) {
+            console.log('📦 Received loadout via direct call:', loadout);
+            renderLoadout(loadout);
+        };
 
         // Test function for development
         window.testLoadout = function() {
