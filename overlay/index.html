@@ -227,11 +227,53 @@
             animation: glow 1s ease-in-out;
         }
 
-        /* Compact mode */
+        /* Compact mode - text only */
         .compact {
-            width: 540px;
-            height: 160px;
-            padding: 8px 8px 12px 8px;
+            width: auto;
+            min-width: 300px;
+            max-width: 500px;
+            height: auto;
+            padding: 12px 16px;
+        }
+
+        .compact .slot-columns {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .compact .slot-column-compact {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .compact .compact-label {
+            font-weight: bold;
+            color: #ff4796;
+            min-width: 100px;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .compact .compact-name {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .compact .class-header {
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 71, 150, 0.3);
+        }
+
+        .compact .class-name {
+            font-size: 16px;
+        }
+
+        .compact .site-branding {
+            font-size: 10px;
         }
 
         .compact .class-header {
@@ -369,7 +411,6 @@
         }
 
         const config = {
-            position: params.get('position') || savedConfig.position || 'top-right',
             theme: params.get('theme') || savedConfig.theme || 'dark',
             compact: params.get('compact') === 'true' || savedConfig.compact === 'true',
             hideEmpty: params.get('hideEmpty') === 'true' || savedConfig.hideEmpty === 'true',
@@ -380,7 +421,7 @@
 
         // Apply configuration
         const container = document.getElementById('overlayContainer');
-        container.className = `overlay-container ${config.position} theme-${config.theme}${config.compact ? ' compact' : ''}`;
+        container.className = `overlay-container theme-${config.theme}${config.compact ? ' compact' : ''}`;
 
         // Make sure the container is visible initially
         console.log('🎮 Overlay initialized with config:', config);
@@ -406,38 +447,52 @@
             const name = typeof item === 'object' ? item.name : item;
             const image = typeof item === 'object' ? item.image : null;
 
-            let imageHTML;
-            console.log(`Item: ${name}, Image path: ${image}`); // Debug log
-
-            if (image && image !== 'null' && image !== null) {
-                // Fix relative paths for images
-                let imageSrc = image;
-                if (image.startsWith('../images/')) {
-                    // Convert relative path from stream-tools context to overlay context
-                    imageSrc = image.replace('../images/', '/images/');
-                }
-                // Try to load the image with debugging
-                imageHTML = `<img class="item-image" src="${imageSrc}" alt="${name}"
-                            onload="console.log('✅ Loaded: ${name}')"
-                            onerror="console.error('❌ Failed to load: ${name} from ${imageSrc}'); this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div class="item-icon-fallback" style="display:none;">${itemIcons[type] || '📦'}</div>`;
-            } else {
-                // Use fallback icon
-                console.log(`No image for ${name}, using fallback icon`);
-                imageHTML = `<div class="item-icon-fallback">${itemIcons[type] || '📦'}</div>`;
-            }
+            // Check if compact mode is enabled
+            const isCompact = config.compact === 'true' || config.compact === true;
 
             const headerText = type === 'gadget' ? `GADGET ${index + 1}` : type.toUpperCase();
 
-            return `
-                <div class="slot-column">
-                    <div class="column-header">${headerText}</div>
-                    <div class="item-display">
-                        ${imageHTML}
-                        <div class="item-name">${name || 'Empty'}</div>
+            if (isCompact) {
+                // Compact text-only version - inline format
+                return `
+                    <div class="slot-column-compact">
+                        <span class="compact-label">${headerText}:</span>
+                        <span class="compact-name">${name || 'None'}</span>
                     </div>
-                </div>
-            `;
+                `;
+            } else {
+                // Normal mode - show images
+                let imageHTML;
+                console.log(`Item: ${name}, Image path: ${image}`); // Debug log
+
+                if (image && image !== 'null' && image !== null) {
+                    // Fix relative paths for images
+                    let imageSrc = image;
+                    if (image.startsWith('../images/')) {
+                        // Convert relative path from stream-tools context to overlay context
+                        imageSrc = image.replace('../images/', '/images/');
+                    }
+                    // Try to load the image with debugging
+                    imageHTML = `<img class="item-image" src="${imageSrc}" alt="${name}"
+                                onload="console.log('✅ Loaded: ${name}')"
+                                onerror="console.error('❌ Failed to load: ${name} from ${imageSrc}'); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="item-icon-fallback" style="display:none;">${itemIcons[type] || '📦'}</div>`;
+                } else {
+                    // Use fallback icon
+                    console.log(`No image for ${name}, using fallback icon`);
+                    imageHTML = `<div class="item-icon-fallback">${itemIcons[type] || '📦'}</div>`;
+                }
+
+                return `
+                    <div class="slot-column">
+                        <div class="column-header">${headerText}</div>
+                        <div class="item-display">
+                            ${imageHTML}
+                            <div class="item-name">${name || 'Empty'}</div>
+                        </div>
+                    </div>
+                `;
+            }
         }
 
         // Function to render loadout in slot machine style
@@ -615,8 +670,9 @@
                     // Apply new theme/position immediately
                     const container = document.getElementById('overlayContainer');
                     if (container) {
-                        container.className = `overlay-container ${newConfig.position || 'top-right'} theme-${newConfig.theme || 'dark'}${newConfig.compact === 'true' ? ' compact' : ''}`;
+                        container.className = `overlay-container theme-${newConfig.theme || 'dark'}${newConfig.compact === 'true' ? ' compact' : ''}`;
                         console.log('Applied new theme:', newConfig.theme);
+                        console.log('Compact mode:', newConfig.compact === 'true');
                     }
                 } catch (err) {
                     console.error('Failed to parse config:', err);
@@ -812,7 +868,7 @@
                         const container = document.getElementById('overlayContainer');
                         if (container && newConfig) {
                             // Update the class
-                            container.className = `overlay-container ${newConfig.position || 'top-right'} theme-${newConfig.theme || 'dark'}${newConfig.compact === 'true' ? ' compact' : ''}`;
+                            container.className = `overlay-container theme-${newConfig.theme || 'dark'}${newConfig.compact === 'true' ? ' compact' : ''}`;
 
                             // Force style updates based on theme
                             if (newConfig.theme === 'light') {

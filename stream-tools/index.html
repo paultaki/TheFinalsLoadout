@@ -465,18 +465,7 @@
             </h2>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-                <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 71, 150, 0.1); border-radius: 10px; padding: 20px;">
-                    <div class="control-group">
-                        <label class="control-label">📍 Position</label>
-                        <select id="overlayPosition" onchange="updateOverlay()" class="control-select">
-                            <option value="top-left">Top Left</option>
-                            <option value="top-right">Top Right</option>
-                            <option value="bottom-left">Bottom Left</option>
-                            <option value="bottom-right">Bottom Right</option>
-                            <option value="center" selected>Center</option>
-                        </select>
-                    </div>
-                </div>
+                <!-- Position removed - use OBS positioning instead -->
 
                 <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 71, 150, 0.1); border-radius: 10px; padding: 20px;">
                     <div class="control-group">
@@ -638,7 +627,6 @@
 
         // Update overlay URL and preview
         function updateOverlay() {
-            const position = document.getElementById('overlayPosition').value;
             const theme = document.getElementById('overlayTheme').value;
             const compact = document.getElementById('overlayCompact').value;
             const hideEmpty = document.getElementById('overlayHideEmpty').value;
@@ -646,7 +634,6 @@
 
             // Save theme preferences to localStorage so overlay can read them
             const overlayConfig = {
-                position: position,
                 theme: theme,
                 compact: compact,
                 hideEmpty: hideEmpty
@@ -1069,7 +1056,38 @@
                 console.log(`🗑️ Removed ${key}`);
             });
 
-            alert('✅ Cached loadout cleared! Refresh the page to see the change.');
+            // Clear the current loadout variable
+            lastReceivedLoadout = null;
+
+            // Send empty loadout to clear the preview
+            const emptyLoadout = {
+                class: '',
+                name: 'No Loadout',
+                weapon: { name: '', image: null },
+                specialization: { name: '', image: null },
+                gadgets: [],
+                timestamp: new Date().toISOString()
+            };
+
+            // Clear preview iframe
+            sendLoadoutToPreview(emptyLoadout);
+
+            // Also send via localStorage and BroadcastChannel
+            localStorage.setItem(`loadout_overlay_${channelId}`, JSON.stringify(emptyLoadout));
+            localStorage.setItem('loadout_overlay_default', JSON.stringify(emptyLoadout));
+
+            try {
+                const bc = new BroadcastChannel('loadout_overlay_channel');
+                bc.postMessage({
+                    type: 'loadout_update',
+                    loadout: emptyLoadout
+                });
+                bc.close();
+            } catch (e) {
+                console.log('BroadcastChannel not supported');
+            }
+
+            alert('✅ Loadout cleared from preview!');
         }
 
         // Send last loadout
