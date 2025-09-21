@@ -435,22 +435,17 @@
                         </div>
                     </div>
 
-                    <!-- Test Controls -->
+                    <!-- How to Use -->
                     <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 71, 150, 0.2); border-radius: 12px; padding: 20px;">
-                        <h3 style="margin-bottom: 15px; color: #ff4796; font-size: 18px;">🎯 Test Your Overlay</h3>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <button onclick="sendTestLoadout()" class="btn btn-primary">
-                                🎲 Send Test Loadout
-                            </button>
-                            <button onclick="sendLastLoadout()" class="btn btn-secondary">
-                                📤 Send Current Loadout
-                            </button>
-                            <button onclick="clearLoadoutCache()" class="btn btn-warning" style="background: #ff6600; border-color: #ff6600;">
-                                🗑️ Clear Cached Loadout
-                            </button>
-                        </div>
-                        <p style="color: #888; font-size: 12px; margin-top: 10px; line-height: 1.5;">
-                            Test loadouts appear instantly in the preview above
+                        <h3 style="margin-bottom: 15px; color: #ff4796; font-size: 18px;">🎮 How to Send Loadouts</h3>
+                        <ol style="color: #fff; font-size: 14px; line-height: 1.8; margin-left: 20px;">
+                            <li>Customize your overlay appearance below</li>
+                            <li>Copy your overlay URL for OBS</li>
+                            <li>Go back to the <a href="/" style="color: #ff4796; text-decoration: underline;">main page</a></li>
+                            <li>Generate loadouts and click "Send to Overlay"</li>
+                        </ol>
+                        <p style="color: #888; font-size: 12px; margin-top: 15px; line-height: 1.5;">
+                            💡 The preview above will update automatically when you send loadouts from the main page
                         </p>
                     </div>
                 </div>
@@ -599,6 +594,41 @@
                     <div class="feature-icon">🚀</div>
                     <div class="feature-title">Zero Latency</div>
                     <div class="feature-desc">Updates happen in milliseconds, not seconds</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OBS Setup Instructions -->
+        <div class="section">
+            <h2 class="section-title">
+                <span>📺</span>
+                How to Use This Overlay
+            </h2>
+            <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 71, 150, 0.2); border-radius: 10px; padding: 20px;">
+                <h3 style="color: #ff4796; margin-bottom: 15px;">Step 1: Configure Your Overlay</h3>
+                <p style="color: #ccc; line-height: 1.6;">Use the customization options above to set your preferred theme and size.</p>
+
+                <h3 style="color: #ff4796; margin: 20px 0 15px;">Step 2: Add to OBS</h3>
+                <ol style="color: #ccc; line-height: 1.8; margin-left: 20px;">
+                    <li>Copy your Overlay URL from the top of this page</li>
+                    <li>In OBS, add a new <strong>Browser Source</strong></li>
+                    <li>Paste the URL and set dimensions:
+                        <ul style="margin: 5px 0;">
+                            <li><strong>Normal:</strong> 600px × 200px</li>
+                            <li><strong>Compact:</strong> 500px × 100px</li>
+                        </ul>
+                    </li>
+                    <li>Click OK and position the overlay on your stream</li>
+                </ol>
+
+                <h3 style="color: #ff4796; margin: 20px 0 15px;">Step 3: Send Loadouts</h3>
+                <div style="background: rgba(255, 71, 150, 0.1); border-left: 3px solid #ff4796; padding: 15px; margin-top: 10px;">
+                    <p style="color: #fff; margin: 0 0 10px;">To send loadouts to your overlay:</p>
+                    <ol style="color: #ccc; margin: 0 0 0 20px;">
+                        <li>Go to the <a href="/" style="color: #ff4796; text-decoration: underline;">main generator page</a></li>
+                        <li>Click "Generate Loadout" to create random builds</li>
+                        <li>Click "Send to Overlay" to update your stream</li>
+                    </ol>
                 </div>
             </div>
         </div>
@@ -768,7 +798,8 @@
             console.error('❌ Supabase library not loaded');
         }
 
-        // Send test loadout
+        // REMOVED: Test loadout functionality - users should send loadouts from main page
+        /*
         function sendTestLoadout(event) {
             const testData = {
                 class: 'Medium',
@@ -851,6 +882,7 @@
             // Show feedback
             showFeedback('Loadout sent!');
         }
+        */
 
         // Store the last received loadout globally
         let lastReceivedLoadout = null;
@@ -1041,7 +1073,8 @@
             }
         }
 
-        // Clear cached loadout data
+        // REMOVED: Clear cache functionality - users should manage loadouts from main page
+        /*
         function clearLoadoutCache() {
             const channelId = getMyChannelId();
             const keys = [
@@ -1089,8 +1122,10 @@
 
             alert('✅ Loadout cleared from preview!');
         }
+        */
 
-        // Send last loadout
+        // REMOVED: Send loadout functionality - users should send loadouts from main page
+        /*
         function sendLastLoadout(event) {
             // Use the last received loadout that's currently displayed
             if (!lastReceivedLoadout) {
@@ -1163,6 +1198,7 @@
             // Show feedback
             showFeedback('Loadout sent!');
         }
+        */
 
         // Open in new tab
         function openFullscreen() {
