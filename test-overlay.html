@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Overlay System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #ff4796;
+        }
+        .preview-box {
+            background: #000;
+            border: 2px solid #ff4796;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 20px 0;
+            height: 250px;
+        }
+        iframe {
+            width: 100%;
+            height: 200px;
+            border: none;
+            background: transparent;
+        }
+        button {
+            background: #ff4796;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #ff71b0;
+        }
+        .status {
+            padding: 10px;
+            background: rgba(0,255,0,0.1);
+            border: 1px solid green;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Test Overlay System</h1>
+
+        <div class="status" id="status">
+            Channel ID: <span id="channelId"></span>
+        </div>
+
+        <h2>Preview:</h2>
+        <div class="preview-box">
+            <iframe id="overlayFrame" src=""></iframe>
+        </div>
+
+        <h2>Test Controls:</h2>
+        <button onclick="sendTestLoadout()">Send Test Loadout</button>
+        <button onclick="sendLightLoadout()">Send Light Build</button>
+        <button onclick="sendMediumLoadout()">Send Medium Build</button>
+        <button onclick="sendHeavyLoadout()">Send Heavy Build</button>
+        <button onclick="clearLoadout()">Clear Overlay</button>
+    </div>
+
+    <script>
+        // Get or create channel ID
+        function getChannelId() {
+            let channelId = localStorage.getItem('myStreamChannelId');
+            if (!channelId) {
+                channelId = 'stream_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('myStreamChannelId', channelId);
+            }
+            return channelId;
+        }
+
+        const channelId = getChannelId();
+        document.getElementById('channelId').textContent = channelId;
+
+        // Set up iframe
+        const iframe = document.getElementById('overlayFrame');
+        iframe.src = `/overlay/?channel=${channelId}`;
+
+        function sendLoadout(loadout) {
+            // Save to localStorage
+            localStorage.setItem(`loadout_overlay_${channelId}`, JSON.stringify(loadout));
+
+            // Send via postMessage to iframe
+            if (iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    type: 'loadout_update',
+                    payload: loadout
+                }, '*');
+            }
+
+            // Try BroadcastChannel
+            try {
+                const bc = new BroadcastChannel('loadout_overlay_channel');
+                bc.postMessage({
+                    type: 'loadout_update',
+                    loadout: loadout
+                });
+                bc.close();
+            } catch (e) {
+                console.log('BroadcastChannel not available');
+            }
+
+            console.log('Sent loadout:', loadout);
+        }
+
+        function sendTestLoadout() {
+            sendLoadout({
+                class: 'Medium',
+                name: 'Test Build',
+                weapon: { name: 'FCAR', image: '/images/FCAR.webp' },
+                specialization: { name: 'Healing Beam', image: '/images/Healing_Beam.webp' },
+                gadgets: [
+                    { name: 'Defibrillator', image: '/images/Defibrillator.webp' },
+                    { name: 'Jump Pad', image: '/images/Jump_Pad.webp' },
+                    { name: 'Gas Grenade', image: '/images/Gas_Grenade.webp' }
+                ],
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        function sendLightLoadout() {
+            sendLoadout({
+                class: 'Light',
+                name: 'Speed Build',
+                weapon: { name: 'XP-54', image: '/images/XP-54.webp' },
+                specialization: { name: 'Grappling Hook', image: '/images/Grappling_Hook.webp' },
+                gadgets: [
+                    { name: 'Smoke Grenade', image: '/images/Smoke_Grenade.webp' },
+                    { name: 'Stun Gun', image: '/images/Stun_Gun.webp' },
+                    { name: 'Flashbang', image: '/images/Flashbang.webp' }
+                ],
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        function sendMediumLoadout() {
+            sendLoadout({
+                class: 'Medium',
+                name: 'Support Build',
+                weapon: { name: 'AKM', image: '/images/AKM.webp' },
+                specialization: { name: 'Guardian Turret', image: '/images/Guardian_Turret.webp' },
+                gadgets: [
+                    { name: 'Defibrillator', image: '/images/Defibrillator.webp' },
+                    { name: 'Frag Grenade', image: '/images/Frag_Grenade.webp' },
+                    { name: 'Zipline', image: '/images/Zipline.webp' }
+                ],
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        function sendHeavyLoadout() {
+            sendLoadout({
+                class: 'Heavy',
+                name: 'Tank Build',
+                weapon: { name: 'SA1216', image: '/images/SA1216.webp' },
+                specialization: { name: 'Mesh Shield', image: '/images/Mesh_Shield.webp' },
+                gadgets: [
+                    { name: 'RPG-7', image: '/images/RPG-7.webp' },
+                    { name: 'C4', image: '/images/C4.webp' },
+                    { name: 'Barricade', image: '/images/Barricade.webp' }
+                ],
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        function clearLoadout() {
+            localStorage.removeItem(`loadout_overlay_${channelId}`);
+            // Reload iframe to clear
+            iframe.src = iframe.src;
+        }
+    </script>
+</body>
+</html>
