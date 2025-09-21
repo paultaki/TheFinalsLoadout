@@ -447,7 +447,7 @@
         };
 
         // Function to create item HTML with image or fallback
-        function createItemHTML(item, type, index) {
+        function createItemHTML(item, type, index, isLast = false) {
             const name = typeof item === 'object' ? item.name : item;
             const image = typeof item === 'object' ? item.image : null;
 
@@ -457,11 +457,12 @@
             const headerText = type === 'gadget' ? `GADGET ${index + 1}` : type.toUpperCase();
 
             if (isCompact) {
-                // Compact text-only version - inline format
+                // Compact text-only version with inline styles for OBS
+                const borderStyle = isLast ? '' : 'border-right: 1px solid rgba(255, 71, 150, 0.2);';
                 return `
-                    <div class="slot-column-compact">
-                        <span class="compact-label">${headerText}:</span>
-                        <span class="compact-name">${name || 'None'}</span>
+                    <div class="slot-column-compact" style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 10px; ${borderStyle}">
+                        <span class="compact-label" style="font-weight: bold; color: #ff4796; text-transform: uppercase; font-size: 10px; letter-spacing: 1px;">${headerText}</span>
+                        <span class="compact-name" style="color: #fff; font-weight: 600; font-size: 14px; white-space: nowrap;">${name || 'None'}</span>
                     </div>
                 `;
             } else {
@@ -554,32 +555,52 @@
             // Build columns HTML
             let columnsHTML = '';
 
+            // Calculate total items for isLast parameter
+            const gadgetCount = loadout.gadgets && loadout.gadgets.length > 0 ? loadout.gadgets.length : 1;
+            const totalItems = 2 + gadgetCount; // weapon + spec + gadgets
+
             // Weapon column
-            columnsHTML += createItemHTML(loadout.weapon, 'weapon', 0);
+            columnsHTML += createItemHTML(loadout.weapon, 'weapon', 0, false);
 
             // Specialization column
-            columnsHTML += createItemHTML(loadout.specialization, 'specialization', 0);
+            columnsHTML += createItemHTML(loadout.specialization, 'specialization', 0, gadgetCount === 0);
 
             // Gadgets columns
             if (loadout.gadgets && loadout.gadgets.length > 0) {
                 loadout.gadgets.forEach((gadget, index) => {
-                    columnsHTML += createItemHTML(gadget, 'gadget', index);
+                    const isLastGadget = index === loadout.gadgets.length - 1;
+                    columnsHTML += createItemHTML(gadget, 'gadget', index, isLastGadget);
                 });
             } else {
-                columnsHTML += createItemHTML('None', 'gadget', 0);
+                columnsHTML += createItemHTML('None', 'gadget', 0, true);
             }
 
+            // Add inline styles for compact mode to ensure OBS renders correctly
+            const compactStyles = config.compact ? 'style="display: flex; flex-direction: row; gap: 20px; align-items: center;"' : '';
+
             const loadoutHTML = `
-                <div class="class-header">
-                    <div class="class-name class-${classLower}">${loadout.class} BUILD</div>
-                    <div class="site-branding">TheFinalsLoadout.com</div>
+                <div class="class-header" ${config.compact ? 'style="margin-bottom: 10px; padding: 4px 8px;"' : ''}>
+                    <div class="class-name class-${classLower}" ${config.compact ? 'style="font-size: 14px;"' : ''}>${loadout.class} BUILD</div>
+                    <div class="site-branding" ${config.compact ? 'style="font-size: 9px;"' : ''}>TheFinalsLoadout.com</div>
                 </div>
-                <div class="slot-columns">
+                <div class="slot-columns" ${compactStyles}>
                     ${columnsHTML}
                 </div>
             `;
 
             container.innerHTML = loadoutHTML;
+
+            // Apply compact container styles inline for OBS
+            if (config.compact) {
+                container.style.width = 'auto';
+                container.style.height = 'auto';
+                container.style.padding = '10px 15px';
+            } else {
+                // Reset to default styles
+                container.style.width = '';
+                container.style.height = '';
+                container.style.padding = '';
+            }
 
             if (config.animate) {
                 container.classList.add('animate-in', 'new-loadout');
@@ -890,6 +911,10 @@
                         if (newConfig.compact !== undefined) {
                             config.compact = newConfig.compact === 'true' || newConfig.compact === true;
                             console.log('Updated compact mode:', config.compact);
+
+                            // Visual debug indicator for OBS
+                            document.body.style.border = config.compact ? '3px solid yellow' : '3px solid green';
+                            setTimeout(() => { document.body.style.border = 'none'; }, 2000);
                         }
                         if (newConfig.theme !== undefined) {
                             config.theme = newConfig.theme;
@@ -926,10 +951,24 @@
                                 renderLoadout(lastLoadout);
                             }
 
-                            // Force a repaint in OBS
+                            // Force a more aggressive repaint in OBS
+                            // Add a timestamp to force cache invalidation
+                            container.setAttribute('data-refresh', Date.now());
+
+                            // Multiple reflow triggers for OBS
+                            container.style.opacity = '0.99';
+                            container.offsetHeight; // Trigger reflow
+                            container.style.opacity = '1';
+
                             container.style.display = 'none';
                             container.offsetHeight; // Trigger reflow
                             container.style.display = 'block';
+
+                            // Also toggle visibility
+                            container.style.visibility = 'hidden';
+                            setTimeout(() => {
+                                container.style.visibility = 'visible';
+                            }, 10);
 
                             console.log('✅ Applied config - Theme:', config.theme, 'Compact:', config.compact);
                         }
