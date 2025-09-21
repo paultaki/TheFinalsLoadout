@@ -811,7 +811,31 @@
                         const newConfig = payload.payload;
                         const container = document.getElementById('overlayContainer');
                         if (container && newConfig) {
+                            // Update the class
                             container.className = `overlay-container ${newConfig.position || 'top-right'} theme-${newConfig.theme || 'dark'}${newConfig.compact === 'true' ? ' compact' : ''}`;
+
+                            // Force style updates based on theme
+                            if (newConfig.theme === 'light') {
+                                container.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 240, 0.9) 100%)';
+                                container.style.color = '#000';
+                                container.style.borderColor = 'rgba(0, 0, 0, 0.2)';
+                            } else if (newConfig.theme === 'finals') {
+                                container.style.background = 'linear-gradient(135deg, rgba(228, 49, 79, 0.95) 0%, rgba(200, 30, 60, 0.9) 100%)';
+                                container.style.borderColor = 'rgba(228, 49, 79, 0.5)';
+                            } else if (newConfig.theme === 'transparent') {
+                                container.style.background = 'rgba(0, 0, 0, 0.6)';
+                                container.style.border = '2px solid rgba(255, 71, 150, 0.4)';
+                            } else { // dark theme (default)
+                                container.style.background = 'linear-gradient(135deg, rgba(20, 10, 25, 0.98) 0%, rgba(35, 20, 40, 0.95) 100%)';
+                                container.style.borderColor = 'rgba(255, 71, 150, 0.4)';
+                                container.style.color = '#fff';
+                            }
+
+                            // Force a repaint in OBS
+                            container.style.display = 'none';
+                            container.offsetHeight; // Trigger reflow
+                            container.style.display = 'block';
+
                             console.log('✅ Applied theme:', newConfig.theme);
                         }
                     })
