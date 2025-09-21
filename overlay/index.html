@@ -662,8 +662,7 @@
             }
         });
 
-        // Get channel from URL first
-        const params = new URLSearchParams(window.location.search);
+        // Get channel from URL first (using params already declared above)
         const channelId = params.get('channel') || 'default';
 
         // Log initial state with more detail
@@ -762,8 +761,10 @@
             console.log('Supabase library not loaded, using localStorage/BroadcastChannel fallback');
         }
 
-        // Use the channel ID we already got above
-        const channelName = channelId; // Use the channel ID directly, not 'overlay_' prefix
+        // Get channel ID for Supabase
+        const urlParams = new URLSearchParams(window.location.search);
+        const supabaseChannelId = urlParams.get('channel') || 'default';
+        const channelName = supabaseChannelId; // Use the channel ID directly, not 'overlay_' prefix
 
         // Only try Supabase if it was successfully initialized
         if (supabaseOverlay) {
@@ -792,7 +793,7 @@
                     });
 
                 // Also listen on user's specific channel if provided
-                if (channelId && channelId !== 'default') {
+                if (supabaseChannelId && supabaseChannelId !== 'default') {
                     const userChannel = supabaseOverlay.channel(channelName);
                     userChannel
                         .on('broadcast', { event: 'loadout_update' }, (payload) => {
