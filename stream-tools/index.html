@@ -373,6 +373,24 @@
             <p style="color: #ccc; margin-top: 15px; font-size: 18px;">
                 Professional overlay for OBS, Streamlabs, and all streaming software
             </p>
+
+            <!-- Temporary Notice -->
+            <div style="background: linear-gradient(90deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.2));
+                        border: 1px solid #ffc107;
+                        border-radius: 10px;
+                        padding: 12px 20px;
+                        margin-top: 20px;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;">
+                <span style="font-size: 20px;">🛠️</span>
+                <div style="flex: 1;">
+                    <strong style="color: #ffc107; font-size: 14px;">BETA NOTICE:</strong>
+                    <span style="color: #ffd54f; font-size: 13px;">
+                        We're currently working out some bugs with the OBS connection. Should be running smoothly later today! Preview works great, OBS integration coming soon.
+                    </span>
+                </div>
+            </div>
         </header>
 
         <!-- Live Preview and Controls Section -->
@@ -794,20 +812,39 @@
                 console.error('❌ Iframe or contentWindow not available');
             }
 
-            // Also try Supabase if available
+            // Also try Supabase if available - CRITICAL FOR OBS
             if (supabase) {
                 const channelId = getMyChannelId();
-                const channel = supabase.channel(channelId);
-                channel.subscribe((status) => {
+
+                // Send to default channel for OBS
+                const obsChannel = supabase.channel('obs_default');
+                obsChannel.subscribe((status) => {
                     if (status === 'SUBSCRIBED') {
-                        channel.send({
+                        console.log('📡 Sending to OBS via Supabase channel: obs_default');
+                        obsChannel.send({
                             type: 'broadcast',
                             event: 'loadout_update',
                             payload: testData
                         });
-                        setTimeout(() => channel.unsubscribe(), 100);
+                        setTimeout(() => obsChannel.unsubscribe(), 100);
                     }
                 });
+
+                // Also send to user's channel
+                const userChannel = supabase.channel(channelId);
+                userChannel.subscribe((status) => {
+                    if (status === 'SUBSCRIBED') {
+                        console.log(`📡 Sending to user channel: ${channelId}`);
+                        userChannel.send({
+                            type: 'broadcast',
+                            event: 'loadout_update',
+                            payload: testData
+                        });
+                        setTimeout(() => userChannel.unsubscribe(), 100);
+                    }
+                });
+            } else {
+                console.error('❌ Supabase not available - OBS won\'t receive updates');
             }
 
             // Show feedback
@@ -872,20 +909,39 @@
                 }
             }
 
-            // Also try Supabase if available
+            // Also try Supabase if available - CRITICAL FOR OBS
             if (supabase) {
                 const channelId = getMyChannelId();
-                const channel = supabase.channel(channelId);
-                channel.subscribe((status) => {
+
+                // Send to default channel for OBS
+                const obsChannel = supabase.channel('obs_default');
+                obsChannel.subscribe((status) => {
                     if (status === 'SUBSCRIBED') {
-                        channel.send({
+                        console.log('📡 Sending to OBS via Supabase channel: obs_default');
+                        obsChannel.send({
                             type: 'broadcast',
                             event: 'loadout_update',
                             payload: lastLoadout
                         });
-                        setTimeout(() => channel.unsubscribe(), 100);
+                        setTimeout(() => obsChannel.unsubscribe(), 100);
                     }
                 });
+
+                // Also send to user's channel
+                const userChannel = supabase.channel(channelId);
+                userChannel.subscribe((status) => {
+                    if (status === 'SUBSCRIBED') {
+                        console.log(`📡 Sending to user channel: ${channelId}`);
+                        userChannel.send({
+                            type: 'broadcast',
+                            event: 'loadout_update',
+                            payload: lastLoadout
+                        });
+                        setTimeout(() => userChannel.unsubscribe(), 100);
+                    }
+                });
+            } else {
+                console.error('❌ Supabase not available - OBS won\'t receive updates');
             }
 
             // Show feedback

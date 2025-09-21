@@ -637,6 +637,10 @@
             }
         });
 
+        // Get channel from URL first
+        const params = new URLSearchParams(window.location.search);
+        const channelId = params.get('channel') || 'default';
+
         // Log initial state with more detail
         console.log('🎮 Stream overlay initialized at', new Date().toISOString());
         console.log('Channel ID:', channelId);
@@ -727,8 +731,7 @@
             console.log('Supabase library not loaded, using localStorage/BroadcastChannel fallback');
         }
 
-        // Get channel from URL parameters - use same channel name as sender
-        const channelId = config.channel || 'default';
+        // Use the channel ID we already got above
         const channelName = channelId; // Use the channel ID directly, not 'overlay_' prefix
 
         // Only try Supabase if it was successfully initialized
