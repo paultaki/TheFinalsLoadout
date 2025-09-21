@@ -691,6 +691,8 @@
                 };
 
                 localStorage.setItem('loadout_overlay_default', JSON.stringify(overlayData));
+                // Also store as currentLoadout for stream-tools to pick up
+                localStorage.setItem('currentLoadout', JSON.stringify(overlayData));
                 console.log('Sent to overlay:', overlayData);
 
                 // Send via Supabase for real-time OBS updates
@@ -1589,6 +1591,9 @@ Gadget 3: ${loadout.gadget3}`;
         // Send loadout via Supabase
         function sendLoadoutSupabase(overlayData) {
             const channel = initChannel();
+
+            // Store as currentLoadout for stream-tools to pick up
+            localStorage.setItem('currentLoadout', JSON.stringify(overlayData));
 
             // Send immediately if already subscribed, or wait for subscription
             if (isSubscribed) {
