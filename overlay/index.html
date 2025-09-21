@@ -356,6 +356,18 @@
         const container = document.getElementById('overlayContainer');
         container.className = `overlay-container ${config.position} theme-${config.theme}${config.compact ? ' compact' : ''}`;
 
+        // Make sure the container is visible initially
+        console.log('🎮 Overlay initialized with config:', config);
+
+        // Show initial waiting state
+        if (!config.hideEmpty) {
+            // Keep the initial HTML content visible
+            container.style.display = 'block';
+            container.style.opacity = '1';
+            container.style.visibility = 'visible';
+            console.log('✅ Container made visible');
+        }
+
         // Icon fallbacks for different item types
         const itemIcons = {
             weapon: '🔫',
