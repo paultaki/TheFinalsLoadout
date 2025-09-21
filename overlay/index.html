@@ -414,14 +414,19 @@
             console.log('No saved config found');
         }
 
+        // Also check localStorage for compact mode
+        const storedCompact = localStorage.getItem('overlayCompactMode');
+
         const config = {
             theme: params.get('theme') || savedConfig.theme || 'dark',
-            compact: params.get('compact') === 'true' || savedConfig.compact === 'true',
+            compact: storedCompact !== null ? storedCompact === 'true' : (params.get('compact') === 'true' || savedConfig.compact === 'true'),
             hideEmpty: params.get('hideEmpty') === 'true' || savedConfig.hideEmpty === 'true',
             channel: params.get('channel') || 'default',
             refresh: parseInt(params.get('refresh')) || 500,
             animate: params.get('animate') !== 'false'
         };
+
+        console.log('Initial config loaded - Compact mode:', config.compact);
 
         // Apply configuration
         const container = document.getElementById('overlayContainer');
@@ -911,6 +916,9 @@
                         if (newConfig.compact !== undefined) {
                             config.compact = newConfig.compact === 'true' || newConfig.compact === true;
                             console.log('Updated compact mode:', config.compact);
+
+                            // Store in localStorage for persistence (as string)
+                            localStorage.setItem('overlayCompactMode', String(config.compact));
 
                             // Visual debug indicator for OBS
                             document.body.style.border = config.compact ? '3px solid yellow' : '3px solid green';

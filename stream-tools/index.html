@@ -662,6 +662,8 @@
             const hideEmpty = document.getElementById('overlayHideEmpty').value;
             const channelId = getMyChannelId();
 
+            console.log('🔧 updateOverlay called - theme:', theme, 'compact:', compact);
+
             // Save theme preferences to localStorage so overlay can read them
             const overlayConfig = {
                 theme: theme,
@@ -693,7 +695,6 @@
 
             const params = new URLSearchParams({
                 channel: channelId,
-                position: position,
                 theme: theme,
                 compact: compact,
                 hideEmpty: hideEmpty
@@ -702,7 +703,15 @@
             // Use current domain instead of hardcoded domain
             const baseUrl = window.location.origin;
             const url = `${baseUrl}/overlay/?${params.toString()}`;
-            document.getElementById('overlayUrl').value = url;
+
+            console.log('📋 Setting overlay URL to:', url);
+            const urlInput = document.getElementById('overlayUrl');
+            if (urlInput) {
+                urlInput.value = url;
+                console.log('✅ URL input element found and set');
+            } else {
+                console.error('❌ URL input element not found!');
+            }
 
             // Update preview
             const iframe = document.getElementById('overlayPreview');
@@ -711,7 +720,9 @@
 
         // Initialize on page load
         window.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Initializing stream-tools page...');
             updateOverlay();
+            console.log('✅ Overlay URL should be set now');
 
             // Initialize Supabase loadout listener
             initSupabaseLoadoutListener();
