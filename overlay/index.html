@@ -407,6 +407,7 @@
             console.log('🎰 Rendering loadout:', loadout); // Debug the entire loadout
 
             if (!loadout || !loadout.class) {
+                console.log('❌ Invalid loadout - missing class');
                 if (config.hideEmpty) {
                     container.classList.add('hidden');
                 } else {
@@ -420,6 +421,34 @@
                 }
                 return;
             }
+
+            // Normalize loadout format (handle both old and new formats)
+            const normalizedLoadout = {
+                class: loadout.class,
+                name: loadout.name || 'Generated Loadout',
+                weapon: typeof loadout.weapon === 'string'
+                    ? { name: loadout.weapon, image: `/images/${loadout.weapon.replace(/ /g, '_')}.webp` }
+                    : loadout.weapon,
+                specialization: typeof loadout.specialization === 'string'
+                    ? { name: loadout.specialization, image: `/images/${loadout.specialization.replace(/ /g, '_')}.webp` }
+                    : loadout.specialization,
+                gadgets: []
+            };
+
+            // Handle gadgets in various formats
+            if (loadout.gadgets && Array.isArray(loadout.gadgets)) {
+                normalizedLoadout.gadgets = loadout.gadgets.map(g =>
+                    typeof g === 'string' ? { name: g, image: `/images/${g.replace(/ /g, '_')}.webp` } : g
+                );
+            } else if (loadout.gadget1 || loadout.gadget2 || loadout.gadget3) {
+                // Handle old format with gadget1, gadget2, gadget3
+                if (loadout.gadget1) normalizedLoadout.gadgets.push({ name: loadout.gadget1, image: `/images/${loadout.gadget1.replace(/ /g, '_')}.webp` });
+                if (loadout.gadget2) normalizedLoadout.gadgets.push({ name: loadout.gadget2, image: `/images/${loadout.gadget2.replace(/ /g, '_')}.webp` });
+                if (loadout.gadget3) normalizedLoadout.gadgets.push({ name: loadout.gadget3, image: `/images/${loadout.gadget3.replace(/ /g, '_')}.webp` });
+            }
+
+            console.log('📦 Normalized loadout:', normalizedLoadout);
+            loadout = normalizedLoadout;
 
             container.classList.remove('hidden');
 
@@ -570,7 +599,7 @@
         });
 
         // Log initial state with more detail
-        console.log('🎮 Stream overlay initialized');
+        console.log('🎮 Stream overlay initialized at', new Date().toISOString());
         console.log('Channel ID:', channelId);
         console.log('Config:', config);
         console.log('Window location:', window.location.href);
@@ -582,6 +611,14 @@
         const defaultData = localStorage.getItem('loadout_overlay_default');
         console.log('Existing channel data:', existingData ? 'Found' : 'Not found');
         console.log('Default data:', defaultData ? 'Found' : 'Not found');
+
+        // Add a visible indicator that script is running
+        if (window.location.search.includes('debug=true')) {
+            const debugDiv = document.createElement('div');
+            debugDiv.style.cssText = 'position: fixed; top: 0; right: 0; background: lime; color: black; padding: 5px; z-index: 9999;';
+            debugDiv.textContent = 'Overlay Script Running';
+            document.body.appendChild(debugDiv);
+        }
 
         // Direct method for parent window to send loadout
         window.receiveLoadout = function(loadout) {

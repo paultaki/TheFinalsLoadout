@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Overlay Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #2a2a2a;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        button {
+            background: #ff4796;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #ff71b0;
+        }
+        .test-links {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        a {
+            color: #00ff00;
+            display: block;
+            margin: 10px 0;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .code {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            font-family: monospace;
+            border-radius: 5px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Direct Overlay Test</h1>
+
+        <p>This page tests the overlay directly without iframe complications.</p>
+
+        <div class="test-links">
+            <h2>Test Links (open in new tab):</h2>
+            <a href="/overlay/" target="_blank">1. Basic overlay (no parameters)</a>
+            <a href="/overlay/?channel=test" target="_blank">2. Overlay with test channel</a>
+            <a href="/overlay/?channel=test&debug=true" target="_blank">3. Overlay with debug mode</a>
+            <a href="/overlay/?channel=default" target="_blank">4. Overlay with default channel</a>
+        </div>
+
+        <h2>Set Test Data:</h2>
+        <button onclick="setTestData()">Set Test Loadout in LocalStorage</button>
+        <button onclick="clearData()">Clear All Data</button>
+        <button onclick="checkData()">Check Current Data</button>
+
+        <div id="status" class="code"></div>
+
+        <h2>Instructions:</h2>
+        <ol>
+            <li>Click "Set Test Loadout in LocalStorage"</li>
+            <li>Open one of the overlay links above in a new tab</li>
+            <li>You should see the loadout displayed</li>
+            <li>If not, check the browser console for errors</li>
+        </ol>
+
+        <h2>For OBS:</h2>
+        <div class="code">URL: https://thefinalsloadout.com/overlay/?channel=default
+Width: 600px
+Height: 200px</div>
+    </div>
+
+    <script>
+        function setTestData() {
+            const testData = {
+                class: 'Heavy',
+                name: 'Direct Test',
+                weapon: { name: 'SA1216', image: '/images/SA1216.webp' },
+                specialization: { name: 'Mesh Shield', image: '/images/Mesh_Shield.webp' },
+                gadgets: [
+                    { name: 'RPG-7', image: '/images/RPG-7.webp' },
+                    { name: 'C4', image: '/images/C4.webp' },
+                    { name: 'Barricade', image: '/images/Barricade.webp' }
+                ],
+                timestamp: new Date().toISOString()
+            };
+
+            // Set in multiple keys to ensure it works
+            localStorage.setItem('loadout_overlay_test', JSON.stringify(testData));
+            localStorage.setItem('loadout_overlay_default', JSON.stringify(testData));
+
+            // Also try broadcast
+            try {
+                const bc = new BroadcastChannel('loadout_overlay_channel');
+                bc.postMessage({
+                    type: 'loadout_update',
+                    loadout: testData
+                });
+                bc.close();
+            } catch (e) {
+                console.log('BroadcastChannel not available');
+            }
+
+            updateStatus('✅ Test data set in localStorage');
+        }
+
+        function clearData() {
+            const keys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.includes('loadout')) {
+                    keys.push(key);
+                }
+            }
+            keys.forEach(key => localStorage.removeItem(key));
+            updateStatus('🗑️ Cleared all loadout data');
+        }
+
+        function checkData() {
+            let status = 'Current localStorage keys:\n\n';
+            let found = false;
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.includes('loadout')) {
+                    const value = localStorage.getItem(key);
+                    try {
+                        const data = JSON.parse(value);
+                        status += `✅ ${key}:\n   Class: ${data.class}, Name: ${data.name}\n\n`;
+                        found = true;
+                    } catch (e) {
+                        status += `❌ ${key}: Invalid JSON\n\n`;
+                    }
+                }
+            }
+            if (!found) {
+                status += '❌ No loadout data found';
+            }
+            updateStatus(status);
+        }
+
+        function updateStatus(msg) {
+            document.getElementById('status').textContent = msg;
+            console.log(msg);
+        }
+
+        // Check on load
+        checkData();
+    </script>
+</body>
+</html>
