@@ -480,15 +480,23 @@
 
         // Function to check for loadout updates
         let lastLoadout = null;
+        let updateCount = 0;
         function checkForUpdates() {
             try {
                 // Check localStorage for current loadout
-                const storedLoadout = localStorage.getItem(`loadout_overlay_${config.channel}`);
+                const storageKey = `loadout_overlay_${config.channel}`;
+                const storedLoadout = localStorage.getItem(storageKey);
+
+                // Log every 10th check to avoid spam
+                if (updateCount++ % 10 === 0) {
+                    console.log(`Checking localStorage key: ${storageKey}, found:`, storedLoadout ? 'yes' : 'no');
+                }
 
                 if (storedLoadout) {
                     const loadout = JSON.parse(storedLoadout);
                     // Only update if loadout changed
                     if (JSON.stringify(loadout) !== JSON.stringify(lastLoadout)) {
+                        console.log('📦 New loadout detected in localStorage!');
                         lastLoadout = loadout;
                         renderLoadout(loadout);
                     }
@@ -527,11 +535,17 @@
 
         // Listen for postMessage from parent window (for iframe preview)
         window.addEventListener('message', (event) => {
-            console.log('Received postMessage:', event.data);
+            console.log('📨 Overlay received postMessage:', event.data);
             if (event.data && event.data.type === 'loadout_update' && event.data.payload) {
+                console.log('✅ Processing loadout from postMessage');
                 renderLoadout(event.data.payload);
             }
         });
+
+        // Log initial state
+        console.log('🎮 Stream overlay initialized');
+        console.log('Channel ID:', channelId);
+        console.log('Config:', config);
 
         // Test function for development
         window.testLoadout = function() {
@@ -574,38 +588,51 @@
         };
     </script>
 
-    <!-- Supabase Integration -->
+    <!-- Supabase Integration (Optional - will fallback to localStorage if not available) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Initialize Supabase - MUST match the stream-tools page credentials
-        const SUPABASE_URL = 'https://nabbbidjnmljaadmjjln.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hYmJiaWRqbm1samFhZG1qamxuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzcxNTI2MDAsImV4cCI6MjA1MjcyODYwMH0.C-apFqin1kBOOV8L3R8Y0cakcAU2A8KtFqQr2PwVHAc';
-        const supabaseOverlay = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Initialize Supabase if available
+        let supabaseOverlay = null;
+        let channelOverlay = null;
+
+        if (typeof window.supabase !== 'undefined') {
+            try {
+                // Initialize Supabase - MUST match the stream-tools page credentials
+                const SUPABASE_URL = 'https://nabbbidjnmljaadmjjln.supabase.co';
+                const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hYmJiaWRqbm1samFhZG1qamxuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzcxNTI2MDAsImV4cCI6MjA1MjcyODYwMH0.C-apFqin1kBOOV8L3R8Y0cakcAU2A8KtFqQr2PwVHAc';
+                supabaseOverlay = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('Supabase client created successfully');
+            } catch (e) {
+                console.log('Failed to initialize Supabase:', e);
+            }
+        } else {
+            console.log('Supabase library not loaded, using localStorage/BroadcastChannel fallback');
+        }
 
         // Get channel from URL parameters - use same channel name as sender
         const channelId = config.channel || 'default';
         const channelName = channelId; // Use the channel ID directly, not 'overlay_' prefix
 
-        // Listen for loadout updates on the specific channel
-        const channelOverlay = supabaseOverlay.channel(channelName);
+        // Only try Supabase if it was successfully initialized
+        if (supabaseOverlay) {
+            try {
+                // Listen for loadout updates on the specific channel
+                channelOverlay = supabaseOverlay.channel(channelName);
 
-        channelOverlay
-            .on('broadcast', { event: 'loadout_update' }, (payload) => {
-                console.log(`✅ Received loadout from Supabase on channel: ${channelName}`, payload);
-                renderLoadout(payload.payload);
-            })
-            .subscribe((status) => {
-                if (status === 'SUBSCRIBED') {
-                    console.log(`✅ Connected to Supabase channel: ${channelName}! Waiting for loadouts...`);
-                    // Show connection status briefly
-                    const container = document.getElementById('overlayContainer');
-                    const statusDiv = document.createElement('div');
-                    statusDiv.style.cssText = 'position: absolute; top: 40px; right: 10px; background: #4CAF50; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px;';
-                    statusDiv.textContent = `✅ Connected to channel: ${channelId}`;
-                    container.appendChild(statusDiv);
-                    setTimeout(() => statusDiv.remove(), 3000);
-                }
-            });
+                channelOverlay
+                    .on('broadcast', { event: 'loadout_update' }, (payload) => {
+                        console.log(`✅ Received loadout from Supabase on channel: ${channelName}`, payload);
+                        renderLoadout(payload.payload);
+                    })
+                    .subscribe((status) => {
+                        if (status === 'SUBSCRIBED') {
+                            console.log(`✅ Connected to Supabase channel: ${channelName}! Waiting for loadouts...`);
+                        }
+                    });
+            } catch (e) {
+                console.log('Supabase connection failed, falling back to localStorage/BroadcastChannel', e);
+            }
+        }
     </script>
 </body>
 </html>
