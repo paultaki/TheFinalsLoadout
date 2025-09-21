@@ -796,6 +796,10 @@
                 timestamp: new Date().toISOString()
             };
 
+            // Update the global current loadout
+            lastReceivedLoadout = testData;
+            console.log('✅ Updated lastReceivedLoadout with test data');
+
             // Store to localStorage with the correct key format
             const channelId = getMyChannelId();
             const storageKey = `loadout_overlay_${channelId}`;
@@ -854,40 +858,8 @@
                 console.error('❌ Iframe or contentWindow not available');
             }
 
-            // Also try Supabase if available - CRITICAL FOR OBS
-            if (supabase) {
-                const channelId = getMyChannelId();
-
-                // Send to default channel for OBS
-                const obsChannel = supabase.channel('obs_default');
-                obsChannel.subscribe((status) => {
-                    if (status === 'SUBSCRIBED') {
-                        console.log('📡 Sending to OBS via Supabase channel: obs_default');
-                        obsChannel.send({
-                            type: 'broadcast',
-                            event: 'loadout_update',
-                            payload: testData
-                        });
-                        setTimeout(() => obsChannel.unsubscribe(), 100);
-                    }
-                });
-
-                // Also send to user's channel
-                const userChannel = supabase.channel(channelId);
-                userChannel.subscribe((status) => {
-                    if (status === 'SUBSCRIBED') {
-                        console.log(`📡 Sending to user channel: ${channelId}`);
-                        userChannel.send({
-                            type: 'broadcast',
-                            event: 'loadout_update',
-                            payload: testData
-                        });
-                        setTimeout(() => userChannel.unsubscribe(), 100);
-                    }
-                });
-            } else {
-                console.error('❌ Supabase not available - OBS won\'t receive updates');
-            }
+            // Send via Supabase - CRITICAL FOR OBS
+            sendLoadoutViaSupabase(testData);
 
             // Show feedback
             showFeedback('Loadout sent!');
@@ -895,6 +867,9 @@
 
         // Store the last received loadout globally
         let lastReceivedLoadout = null;
+
+        // Persistent OBS channel for sending updates
+        let persistentOBSChannel = null;
 
         // Listen for loadouts on Supabase to capture and store them
         function initSupabaseLoadoutListener() {
@@ -928,7 +903,47 @@
                 })
                 .subscribe((status) => {
                     console.log(`📡 OBS channel subscription status: ${status}`);
+                    if (status === 'SUBSCRIBED') {
+                        // Keep this channel as our persistent channel for sending
+                        persistentOBSChannel = obsChannel;
+                        console.log('✅ Persistent OBS channel ready for sending');
+                    }
                 });
+        }
+
+        // Send loadout via persistent channel
+        function sendLoadoutViaSupabase(loadoutData) {
+            if (!supabase) {
+                console.error('❌ Supabase not initialized');
+                return;
+            }
+
+            // Use persistent channel if available, otherwise create new one
+            if (persistentOBSChannel) {
+                persistentOBSChannel.send({
+                    type: 'broadcast',
+                    event: 'loadout_update',
+                    payload: loadoutData
+                });
+                console.log('✅ Sent loadout via persistent OBS channel');
+                console.log('Payload:', loadoutData);
+            } else {
+                // Fallback: create temporary channel
+                const tempChannel = supabase.channel('obs_default');
+                tempChannel.subscribe((status) => {
+                    if (status === 'SUBSCRIBED') {
+                        tempChannel.send({
+                            type: 'broadcast',
+                            event: 'loadout_update',
+                            payload: loadoutData
+                        });
+                        console.log('✅ Sent loadout via temporary OBS channel');
+                        console.log('Payload:', loadoutData);
+                        // Don't unsubscribe immediately - keep as persistent
+                        persistentOBSChannel = tempChannel;
+                    }
+                });
+            }
         }
 
         // Helper function to send loadout to preview iframe
@@ -1124,40 +1139,8 @@
                 }
             }
 
-            // Also try Supabase if available - CRITICAL FOR OBS
-            if (supabase) {
-                const channelId = getMyChannelId();
-
-                // Send to default channel for OBS
-                const obsChannel = supabase.channel('obs_default');
-                obsChannel.subscribe((status) => {
-                    if (status === 'SUBSCRIBED') {
-                        console.log('📡 Sending to OBS via Supabase channel: obs_default');
-                        obsChannel.send({
-                            type: 'broadcast',
-                            event: 'loadout_update',
-                            payload: lastReceivedLoadout
-                        });
-                        setTimeout(() => obsChannel.unsubscribe(), 100);
-                    }
-                });
-
-                // Also send to user's channel
-                const userChannel = supabase.channel(channelId);
-                userChannel.subscribe((status) => {
-                    if (status === 'SUBSCRIBED') {
-                        console.log(`📡 Sending to user channel: ${channelId}`);
-                        userChannel.send({
-                            type: 'broadcast',
-                            event: 'loadout_update',
-                            payload: lastReceivedLoadout
-                        });
-                        setTimeout(() => userChannel.unsubscribe(), 100);
-                    }
-                });
-            } else {
-                console.error('❌ Supabase not available - OBS won\'t receive updates');
-            }
+            // Send via Supabase - CRITICAL FOR OBS
+            sendLoadoutViaSupabase(lastReceivedLoadout);
 
             // Show feedback
             showFeedback('Loadout sent!');
