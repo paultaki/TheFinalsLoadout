@@ -25,13 +25,13 @@
         const output = document.getElementById('output');
 
         async function checkRealtime() {
-            const SUPABASE_URL = 'https://nabbbidjnmljaadmjjln.supabase.co';
-            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hYmJiaWRqbm1samFhZG1qamxuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzcxNTI2MDAsImV4cCI6MjA1MjcyODYwMH0.C-apFqin1kBOOV8L3R8Y0cakcAU2A8KtFqQr2PwVHAc';
+            const SUPABASE_URL = 'https://vdwkgrgacwxjnofglbyn.supabase.co';
+            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkd2tncmdhY3d4am5vZmdsYnluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMTU5MjcsImV4cCI6MjA3Mzg5MTkyN30.7EsHGeSQG2ueT_ydwjKMYoAHz9O_wIK5d79SsRBWmMc';
 
             output.innerHTML += '<p class="info">Testing Supabase connection...</p>';
 
             // Test 1: Direct WebSocket
-            const wsUrl = `wss://nabbbidjnmljaadmjjln.supabase.co/realtime/v1/websocket?apikey=${SUPABASE_KEY}&vsn=1.0.0`;
+            const wsUrl = `wss://vdwkgrgacwxjnofglbyn.supabase.co/realtime/v1/websocket?apikey=${SUPABASE_KEY}&vsn=1.0.0`;
 
             try {
                 const ws = new WebSocket(wsUrl);
@@ -71,7 +71,7 @@
             }
 
             output.innerHTML += '<br><p class="info">To fix CHANNEL_ERROR:</p>';
-            output.innerHTML += '<p>1. Go to <a href="https://supabase.com/dashboard/project/nabbbidjnmljaadmjjln/settings/api" target="_blank">Supabase Dashboard</a></p>';
+            output.innerHTML += '<p>1. Go to <a href="https://supabase.com/dashboard/project/vdwkgrgacwxjnofglbyn/settings/api" target="_blank">Supabase Dashboard</a></p>';
             output.innerHTML += '<p>2. Check Settings → API → Realtime is enabled</p>';
             output.innerHTML += '<p>3. Or the project may need to be restarted</p>';
         }
