@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE FINALS Loadout - OBS Overlay (Simple)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: transparent;
+            color: #fff;
+            overflow: hidden;
+            width: 600px;
+            height: 180px;
+        }
+
+        .overlay-container {
+            background: linear-gradient(135deg, rgba(20, 10, 25, 0.98) 0%, rgba(35, 20, 40, 0.95) 100%);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 71, 150, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
+            width: 540px;
+            height: 160px;
+            padding: 8px 8px 12px 8px;
+            margin: 10px auto;
+        }
+
+        .class-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 6px 10px;
+            background: linear-gradient(90deg, rgba(255, 71, 150, 0.15) 0%, rgba(150, 71, 255, 0.1) 100%);
+            border-radius: 5px;
+        }
+
+        .class-name {
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .site-branding {
+            font-size: 16px;
+            background: linear-gradient(90deg, #ff4796, #ff71b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .class-light { color: #ff4796; }
+        .class-medium { color: #9b59b6; }
+        .class-heavy { color: #3498db; }
+
+        .slot-columns {
+            display: flex;
+            gap: 0;
+            justify-content: center;
+        }
+
+        .slot-column {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 71, 150, 0.2);
+            border-right: none;
+            padding: 6px;
+            min-width: 100px;
+            flex: 1;
+        }
+
+        .slot-column:first-child {
+            border-radius: 6px 0 0 6px;
+        }
+
+        .slot-column:last-child {
+            border-radius: 0 6px 6px 0;
+            border-right: 1px solid rgba(255, 71, 150, 0.2);
+        }
+
+        .column-header {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            margin-bottom: 6px;
+            color: #ff71b0;
+            font-weight: bold;
+        }
+
+        .item-display {
+            background: rgba(255, 71, 150, 0.06);
+            border: 1px solid rgba(255, 71, 150, 0.15);
+            border-radius: 4px;
+            padding: 4px;
+            text-align: center;
+            height: 72px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-name {
+            font-size: 10px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 4px;
+        }
+
+        .item-icon {
+            font-size: 32px;
+            margin: 4px 0;
+        }
+
+        .no-loadout {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .no-loadout h3 {
+            margin-bottom: 10px;
+            color: #ff4796;
+        }
+    </style>
+</head>
+<body>
+    <div id="overlayContainer" class="overlay-container">
+        <div class="no-loadout">
+            <h3>Waiting for Loadout...</h3>
+            <p>Generate a loadout to display here</p>
+        </div>
+    </div>
+
+    <script>
+        console.log('🎮 Simple overlay starting...');
+
+        // Function to render loadout
+        function renderLoadout(loadout) {
+            console.log('📦 Rendering loadout:', loadout);
+
+            if (!loadout || !loadout.class) {
+                console.log('No valid loadout to render');
+                return;
+            }
+
+            const container = document.getElementById('overlayContainer');
+            const classLower = loadout.class.toLowerCase();
+
+            // Simple emoji icons for items
+            const icons = {
+                weapon: '🔫',
+                specialization: '⚡',
+                gadget: '🎯'
+            };
+
+            let gadgetsHTML = '';
+            if (loadout.gadgets && loadout.gadgets.length > 0) {
+                loadout.gadgets.forEach((gadget, i) => {
+                    const name = typeof gadget === 'object' ? gadget.name : gadget;
+                    gadgetsHTML += `
+                        <div class="slot-column">
+                            <div class="column-header">GADGET ${i + 1}</div>
+                            <div class="item-display">
+                                <div class="item-icon">${icons.gadget}</div>
+                                <div class="item-name">${name || 'Empty'}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            const weaponName = typeof loadout.weapon === 'object' ? loadout.weapon.name : loadout.weapon;
+            const specName = typeof loadout.specialization === 'object' ? loadout.specialization.name : loadout.specialization;
+
+            container.innerHTML = `
+                <div class="class-header">
+                    <div class="class-name class-${classLower}">${loadout.class} BUILD</div>
+                    <div class="site-branding">TheFinalsLoadout.com</div>
+                </div>
+                <div class="slot-columns">
+                    <div class="slot-column">
+                        <div class="column-header">WEAPON</div>
+                        <div class="item-display">
+                            <div class="item-icon">${icons.weapon}</div>
+                            <div class="item-name">${weaponName || 'None'}</div>
+                        </div>
+                    </div>
+                    <div class="slot-column">
+                        <div class="column-header">SPECIALIZATION</div>
+                        <div class="item-display">
+                            <div class="item-icon">${icons.specialization}</div>
+                            <div class="item-name">${specName || 'None'}</div>
+                        </div>
+                    </div>
+                    ${gadgetsHTML}
+                </div>
+            `;
+        }
+
+        // Check for loadout data
+        function checkForLoadout() {
+            console.log('🔍 Checking for loadout...');
+
+            // Try default key first
+            let loadoutData = localStorage.getItem('loadout_overlay_default');
+
+            // Try channel-specific key
+            if (!loadoutData) {
+                const params = new URLSearchParams(window.location.search);
+                const channel = params.get('channel') || 'default';
+                loadoutData = localStorage.getItem(`loadout_overlay_${channel}`);
+            }
+
+            if (loadoutData) {
+                try {
+                    const loadout = JSON.parse(loadoutData);
+                    console.log('✅ Found loadout:', loadout);
+                    renderLoadout(loadout);
+                    return true;
+                } catch (e) {
+                    console.error('Failed to parse loadout:', e);
+                }
+            }
+
+            console.log('No loadout found');
+            return false;
+        }
+
+        // Listen for storage changes
+        window.addEventListener('storage', (e) => {
+            console.log('📦 Storage event:', e.key);
+            if (e.key && e.key.includes('loadout')) {
+                checkForLoadout();
+            }
+        });
+
+        // Listen for postMessage
+        window.addEventListener('message', (event) => {
+            console.log('📨 Received message:', event.data);
+            if (event.data && event.data.type === 'loadout_update' && event.data.payload) {
+                renderLoadout(event.data.payload);
+            }
+        });
+
+        // Check every second for updates
+        setInterval(checkForLoadout, 1000);
+
+        // Initial check
+        checkForLoadout();
+
+        console.log('✅ Simple overlay ready!');
+    </script>
+</body>
+</html>
