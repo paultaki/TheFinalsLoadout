@@ -572,6 +572,28 @@
                     console.error('Failed to parse default loadout:', e);
                 }
             }
+
+            // Fallback: Check ALL localStorage keys for any loadout
+            if (!lastLoadout) {
+                console.log('🔍 Checking all localStorage for any loadout...');
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.includes('loadout_overlay_')) {
+                        console.log(`Found key: ${key}`);
+                        try {
+                            const data = localStorage.getItem(key);
+                            const loadout = JSON.parse(data);
+                            if (loadout && loadout.class) {
+                                console.log(`✅ Using loadout from ${key}`);
+                                renderLoadout(loadout);
+                                break;
+                            }
+                        } catch (e) {
+                            console.log(`Failed to parse ${key}:`, e);
+                        }
+                    }
+                }
+            }
         }, 500);
 
         // Regular polling as backup - more frequent for better responsiveness
