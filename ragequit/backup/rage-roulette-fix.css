@@ -1,0 +1,38 @@
+/* Clean Rage Roulette Container Fix */
+.rage-roulette-container {
+  display: none;
+}
+
+.rage-roulette-container.active {
+  display: flex !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(95vw, 1200px) !important;
+  height: auto !important;
+  z-index: 10000 !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Ensure slot machine cards stay centered */
+.rage-roulette-container .slot-machine,
+.rage-roulette-container .slots-container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 15px !important;
+}
+
+/* Fix for locked-in headers */
+.itemCol.winner::after {
+  display: none !important;
+}
+
+/* Remove any duplicate LOCKED IN text */
+.locked-in-header {
+  display: none !important;
+}
