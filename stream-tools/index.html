@@ -493,16 +493,6 @@
                     </div>
                 </div>
 
-                <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 71, 150, 0.1); border-radius: 10px; padding: 20px;">
-                    <div class="control-group">
-                        <label class="control-label">👻 When Empty</label>
-                        <select id="overlayHideEmpty" onchange="updateOverlay()" class="control-select">
-                            <option value="waiting">Show Waiting Message</option>
-                            <option value="placeholder">Show Placeholder Images</option>
-                            <option value="hide">Hide Completely</option>
-                        </select>
-                    </div>
-                </div>
             </div>
 
             <div style="margin-top: 20px; padding: 15px; background: rgba(255, 71, 150, 0.1); border: 1px solid rgba(255, 71, 150, 0.3); border-radius: 8px;">
@@ -669,7 +659,6 @@
         function updateOverlay() {
             const theme = document.getElementById('overlayTheme').value;
             const compact = document.getElementById('overlayCompact').value;
-            const hideEmpty = document.getElementById('overlayHideEmpty').value;
             const channelId = getMyChannelId();
 
             console.log('🔧 updateOverlay called - theme:', theme, 'compact:', compact);
@@ -677,8 +666,7 @@
             // Save theme preferences to localStorage so overlay can read them
             const overlayConfig = {
                 theme: theme,
-                compact: compact,
-                hideEmpty: hideEmpty
+                compact: compact
             };
             localStorage.setItem('overlayConfig', JSON.stringify(overlayConfig));
             console.log('Saved overlay config:', overlayConfig);
@@ -794,8 +782,11 @@
             }, 100);
         }
 
-        // Reset loadout to empty/placeholder state
+        // Reset loadout to placeholder state
         function resetLoadout(event) {
+            console.log('🔄 Resetting loadout to placeholder state');
+
+            // Always send placeholder data
             const resetData = {
                 type: 'reset',
                 class: 'EMPTY',
@@ -823,8 +814,6 @@
                     }
                 ]
             };
-
-            console.log('🔄 Resetting loadout to placeholder state');
 
             // Send to preview iframe
             const iframe = document.getElementById('overlayPreview');

@@ -569,8 +569,11 @@
             // Check for null/empty loadout
             if (!loadout) {
                 console.log('❌ No loadout provided');
+                console.log('Current hideEmpty setting:', config.hideEmpty);
                 if (config.hideEmpty === 'hide') {
+                    console.log('🙈 Hiding overlay completely');
                     container.classList.add('hidden');
+                    container.style.display = 'none';
                 } else if (config.hideEmpty === 'placeholder') {
                     // Show placeholder state
                     container.classList.remove('hidden');
@@ -938,8 +941,9 @@
             }
 
             // Accept messages from any origin in production (be careful with this in real production)
-            if (event.data && event.data.type === 'loadout_update' && event.data.payload) {
+            if (event.data && event.data.type === 'loadout_update') {
                 console.log('✅ Processing loadout from postMessage');
+                // Payload can be null when resetting
                 renderLoadout(event.data.payload);
             }
         });
