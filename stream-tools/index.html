@@ -413,6 +413,9 @@
                                 Copy
                             </button>
                         </div>
+                        <p style="color: #888; font-size: 12px; margin-top: 10px;">
+                            <strong>Note:</strong> This simple URL is all you need! Theme settings update live when you change them above.
+                        </p>
                         <div style="color: #888; font-size: 12px;">
                             <strong>Dimensions:</strong> 600px × 200px
                         </div>
@@ -676,11 +679,9 @@
                 console.error('❌ Supabase not available for sending config');
             }
 
+            // Only include channel in URL - settings are handled via live updates
             const params = new URLSearchParams({
-                channel: channelId,
-                theme: theme,
-                compact: compact,
-                hideEmpty: hideEmpty
+                channel: channelId
             });
 
             // Use current domain instead of hardcoded domain
@@ -696,9 +697,15 @@
                 console.error('❌ URL input element not found!');
             }
 
-            // Update preview
+            // Update preview - still include all params for the preview iframe
+            const previewParams = new URLSearchParams({
+                channel: channelId,
+                theme: theme,
+                compact: compact,
+                hideEmpty: hideEmpty
+            });
             const iframe = document.getElementById('overlayPreview');
-            iframe.src = `/overlay/?${params.toString()}`;
+            iframe.src = `/overlay/?${previewParams.toString()}`;
         }
 
         // Initialize on page load
