@@ -663,6 +663,10 @@
 
             console.log('🔧 updateOverlay called - theme:', theme, 'compact:', compact);
 
+            // Save current loadout before updating iframe
+            const currentLoadout = lastReceivedLoadout;
+            console.log('📦 Preserving current loadout:', currentLoadout);
+
             // Save theme preferences to localStorage so overlay can read them
             const overlayConfig = {
                 theme: theme,
@@ -709,14 +713,19 @@
                 console.error('❌ URL input element not found!');
             }
 
-            // Update preview - still include all params for the preview iframe
+            // Update preview - include theme and compact for initial state
             const previewParams = new URLSearchParams({
                 channel: channelId,
                 theme: theme,
-                compact: compact,
-                hideEmpty: hideEmpty
+                compact: compact
             });
             const iframe = document.getElementById('overlayPreview');
+
+            // Store the current loadout to restore after iframe reloads
+            if (currentLoadout) {
+                iframe.dataset.pendingLoadout = JSON.stringify(currentLoadout);
+            }
+
             iframe.src = `/overlay/?${previewParams.toString()}`;
         }
 
@@ -739,16 +748,46 @@
                 console.log('Iframe src:', iframe.src);
                 console.log('Iframe contentWindow available:', !!iframe.contentWindow);
 
-                // Clear any cached loadout to show waiting state
-                try {
-                    // Send a clear message to ensure preview matches OBS state
-                    iframe.contentWindow.postMessage({
-                        type: 'loadout_update',
-                        payload: null  // Clear loadout to show waiting state
-                    }, '*');
-                    console.log('📤 Sent clear loadout to preview iframe');
-                } catch (e) {
-                    console.error('Failed to clear loadout:', e);
+                // Check if we have a pending loadout to restore (from settings change)
+                if (iframe.dataset.pendingLoadout) {
+                    try {
+                        const pendingLoadout = JSON.parse(iframe.dataset.pendingLoadout);
+                        console.log('🔄 Restoring pending loadout after settings change:', pendingLoadout);
+
+                        // Give iframe a moment to initialize
+                        setTimeout(() => {
+                            iframe.contentWindow.postMessage({
+                                type: 'loadout_update',
+                                payload: pendingLoadout
+                            }, '*');
+                            console.log('📤 Restored loadout to preview iframe');
+                        }, 100);
+
+                        // Clear the pending loadout
+                        delete iframe.dataset.pendingLoadout;
+                    } catch (e) {
+                        console.error('Failed to restore pending loadout:', e);
+                    }
+                } else if (lastReceivedLoadout) {
+                    // If we have a current loadout, send it
+                    console.log('📤 Sending current loadout to preview:', lastReceivedLoadout);
+                    setTimeout(() => {
+                        iframe.contentWindow.postMessage({
+                            type: 'loadout_update',
+                            payload: lastReceivedLoadout
+                        }, '*');
+                    }, 100);
+                } else {
+                    // Otherwise show waiting state
+                    try {
+                        iframe.contentWindow.postMessage({
+                            type: 'loadout_update',
+                            payload: null  // Clear loadout to show waiting state
+                        }, '*');
+                        console.log('📤 Sent clear loadout to preview iframe');
+                    } catch (e) {
+                        console.error('Failed to clear loadout:', e);
+                    }
                 }
 
                 // Send a test message to verify communication
@@ -834,14 +873,6 @@
             } else {
                 console.error('❌ Iframe not found or not ready');
             }
-
-            // Clear localStorage to prevent the overlay from reverting
-            const channelId = getMyChannelId();
-            localStorage.removeItem(`loadout_overlay_${channelId}`);
-            localStorage.removeItem('loadout_overlay_default');
-            localStorage.removeItem('lastSupabaseLoadout');
-            localStorage.removeItem('currentLoadout');
-            console.log('🗑️ Cleared localStorage loadout keys');
 
             // Send via Supabase for OBS
             sendLoadoutViaSupabase(resetData);

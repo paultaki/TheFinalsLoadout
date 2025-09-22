@@ -336,6 +336,55 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
+        .waiting-text {
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #ff4796, #ff71b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        /* Theme-specific waiting text */
+        .theme-light .waiting-text {
+            background: linear-gradient(90deg, #8B0038, #d4005f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .theme-finals .waiting-text {
+            background: none;
+            -webkit-text-fill-color: #ffffff;
+        }
+
+        .theme-transparent .waiting-text {
+            background: linear-gradient(90deg, rgba(255, 71, 150, 0.9), rgba(255, 113, 176, 0.9));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .theme-light .no-loadout {
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .theme-light .no-loadout p {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Light theme text contrast improvements */
+        .theme-light .class-name {
+            color: #000000 !important;
+        }
+
+        .theme-light .item-name {
+            color: rgba(0, 0, 0, 0.8) !important;
+        }
+
+        .theme-light .site-branding {
+            color: rgba(0, 0, 0, 0.6) !important;
+        }
+
         /* Loading dots animation */
         .loading-dots {
             display: inline-block;
@@ -378,17 +427,22 @@
     <div id="overlayContainer" class="overlay-container theme-dark" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
         <div class="no-loadout">
             <div class="class-header">
-                <div style="font-size: 16px; font-weight: bold; background: linear-gradient(90deg, #ff4796, #ff71b0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">WAITING FOR LOADOUT</div>
+                <div class="waiting-text">WAITING FOR LOADOUT</div>
                 <div class="site-branding">TheFinalsLoadout.com • Live</div>
             </div>
             <div style="padding: 20px; text-align: center;">
-                <p style="margin: 0; color: rgba(255, 255, 255, 0.7); font-size: 12px;">Generate a loadout to display here<span class="loading-dots"></span></p>
+                <p style="margin: 0; color: rgba(255, 255, 255, 0.7); font-size: 12px;">Generate a loadout to display here</p>
             </div>
         </div>
     </div>
 
     <script>
         console.log('🚀 Overlay script starting...');
+
+        // Detect context - are we in an iframe (preview) or OBS?
+        const isIframe = window.parent !== window;
+        const context = isIframe ? 'PREVIEW' : 'OBS';
+        console.log(`📍 Running in ${context} mode`);
 
         // Debug: Check if container exists
         window.addEventListener('DOMContentLoaded', () => {
@@ -420,22 +474,12 @@
         const storedCompact = localStorage.getItem('overlayCompactMode');
         console.log('Stored compact mode from localStorage:', storedCompact);
 
-        // Parse hideEmpty with backward compatibility
-        let hideEmptyValue = params.get('hideEmpty') || savedConfig.hideEmpty || 'waiting';
-        // Handle old boolean values for backward compatibility
-        if (hideEmptyValue === 'true' || hideEmptyValue === true) {
-            hideEmptyValue = 'hide';
-        } else if (hideEmptyValue === 'false' || hideEmptyValue === false) {
-            hideEmptyValue = 'waiting';
-        }
-
+        // Simplified config - only channel from URL, everything else from localStorage
         const config = {
-            theme: params.get('theme') || savedConfig.theme || 'dark',
-            compact: storedCompact !== null ? (storedCompact === 'true' || storedCompact === true) : (params.get('compact') === 'true' || savedConfig.compact === 'true'),
-            hideEmpty: hideEmptyValue,  // Now supports: 'waiting', 'placeholder', 'hide'
-            channel: params.get('channel') || 'default',
-            refresh: parseInt(params.get('refresh')) || 500,
-            animate: params.get('animate') !== 'false'
+            theme: savedConfig.theme || 'dark',
+            compact: storedCompact !== null ? (storedCompact === 'true' || storedCompact === true) : (savedConfig.compact === 'true' || savedConfig.compact === false),
+            channel: params.get('channel') || 'default',  // Only URL param we need
+            animate: true
         };
 
         console.log('Initial config loaded - Compact mode:', config.compact, 'Type:', typeof config.compact);
@@ -447,35 +491,11 @@
         // Make sure the container is visible initially
         console.log('🎮 Overlay initialized with config:', config);
 
-        // Show initial state based on hideEmpty setting
-        if (config.hideEmpty === 'hide') {
-            container.classList.add('hidden');
-            console.log('✅ Container hidden initially');
-        } else if (config.hideEmpty === 'placeholder') {
-            // Show placeholder state initially
-            container.style.display = 'block';
-            container.style.opacity = '1';
-            container.style.visibility = 'visible';
-            // Render placeholder loadout
-            renderLoadout({
-                type: 'reset',
-                class: 'EMPTY',
-                name: 'Placeholder',
-                weapon: { name: '???', image: '/images/placeholder-question.webp' },
-                specialization: { name: '???', image: '/images/placeholder-question.webp' },
-                gadgets: [
-                    { name: '???', image: '/images/placeholder-question.webp' },
-                    { name: '???', image: '/images/placeholder-question.webp' },
-                    { name: '???', image: '/images/placeholder-question.webp' }
-                ]
-            });
-        } else {
-            // Show waiting message (default)
-            container.style.display = 'block';
-            container.style.opacity = '1';
-            container.style.visibility = 'visible';
-            console.log('✅ Container made visible with waiting message');
-        }
+        // Show waiting message initially (default state)
+        container.style.display = 'block';
+        container.style.opacity = '1';
+        container.style.visibility = 'visible';
+        console.log('✅ Container made visible with waiting message');
 
         // Icon fallbacks for different item types
         const itemIcons = {
@@ -568,37 +588,19 @@
 
             // Check for null/empty loadout
             if (!loadout) {
-                console.log('❌ No loadout provided');
-                console.log('Current hideEmpty setting:', config.hideEmpty);
-                if (config.hideEmpty === 'hide') {
-                    console.log('🙈 Hiding overlay completely');
-                    container.classList.add('hidden');
-                    container.style.display = 'none';
-                } else if (config.hideEmpty === 'placeholder') {
-                    // Show placeholder state
-                    container.classList.remove('hidden');
-                    renderLoadout({
-                        type: 'reset',
-                        class: 'EMPTY',
-                        name: 'Placeholder',
-                        weapon: { name: '???', image: '/images/placeholder-question.webp' },
-                        specialization: { name: '???', image: '/images/placeholder-question.webp' },
-                        gadgets: [
-                            { name: '???', image: '/images/placeholder-question.webp' },
-                            { name: '???', image: '/images/placeholder-question.webp' },
-                            { name: '???', image: '/images/placeholder-question.webp' }
-                        ]
-                    });
-                } else {
-                    // Show waiting message (default)
-                    container.classList.remove('hidden');
-                    container.innerHTML = `
-                        <div class="no-loadout">
-                            <h3>Waiting for Loadout<span class="loading-dots"></span></h3>
-                            <p>Generate a loadout on THE FINALS Loadout website!</p>
+                console.log('❌ No loadout provided - showing waiting message');
+                container.classList.remove('hidden');
+                container.innerHTML = `
+                    <div class="no-loadout">
+                        <div class="class-header">
+                            <div class="waiting-text">WAITING FOR LOADOUT</div>
+                            <div class="site-branding">TheFinalsLoadout.com • Live</div>
                         </div>
-                    `;
-                }
+                        <div style="padding: 20px; text-align: center;">
+                            <p style="margin: 0; color: rgba(255, 255, 255, 0.7); font-size: 12px;">Generate a loadout to display here</p>
+                        </div>
+                    </div>
+                `;
                 return;
             }
 
@@ -611,32 +613,18 @@
             // Check for invalid loadout (but allow reset state)
             if (!isReset && !loadout.class) {
                 console.log('❌ Invalid loadout - missing class');
-                if (config.hideEmpty === 'hide') {
-                    container.classList.add('hidden');
-                } else if (config.hideEmpty === 'placeholder') {
-                    // Show placeholder state
-                    container.classList.remove('hidden');
-                    renderLoadout({
-                        type: 'reset',
-                        class: 'EMPTY',
-                        name: 'Placeholder',
-                        weapon: { name: '???', image: '/images/placeholder-question.webp' },
-                        specialization: { name: '???', image: '/images/placeholder-question.webp' },
-                        gadgets: [
-                            { name: '???', image: '/images/placeholder-question.webp' },
-                            { name: '???', image: '/images/placeholder-question.webp' },
-                            { name: '???', image: '/images/placeholder-question.webp' }
-                        ]
-                    });
-                } else {
-                    container.classList.remove('hidden');
-                    container.innerHTML = `
-                        <div class="no-loadout">
-                            <h3>Waiting for Loadout<span class="loading-dots"></span></h3>
-                            <p>Generate a loadout on THE FINALS Loadout website!</p>
+                container.classList.remove('hidden');
+                container.innerHTML = `
+                    <div class="no-loadout">
+                        <div class="class-header">
+                            <div class="waiting-text">WAITING FOR LOADOUT</div>
+                            <div class="site-branding">TheFinalsLoadout.com • Live</div>
                         </div>
-                    `;
-                }
+                        <div style="padding: 20px; text-align: center;">
+                            <p style="margin: 0; color: rgba(255, 255, 255, 0.7); font-size: 12px;">Generate a loadout to display here</p>
+                        </div>
+                    </div>
+                `;
                 return;
             }
 
@@ -760,24 +748,12 @@
             }
         }
 
-        // Try BroadcastChannel for cross-context communication
-        let broadcastChannel = null;
-        try {
-            broadcastChannel = new BroadcastChannel('loadout_overlay_channel');
-            broadcastChannel.onmessage = (event) => {
-                console.log('Received broadcast:', event.data);
-                if (event.data && event.data.type === 'loadout_update') {
-                    renderLoadout(event.data.loadout);
-                }
-            };
-            console.log('BroadcastChannel initialized');
-        } catch (e) {
-            console.log('BroadcastChannel not supported, falling back to localStorage polling');
-        }
+        // REMOVED: BroadcastChannel - using Supabase for OBS, postMessage for preview
 
-        // Function to check for loadout updates
+        // Track the last loadout for comparison
         let lastLoadout = null;
-        let updateCount = 0;
+
+        // REMOVED: checkForUpdates function - no longer polling localStorage
         function checkForUpdates() {
             try {
                 // Check localStorage for current loadout
@@ -849,16 +825,7 @@
                     if (newConfig.theme !== undefined) {
                         config.theme = newConfig.theme;
                     }
-                    if (newConfig.hideEmpty !== undefined) {
-                        // Handle new three-state system and backward compatibility
-                        let hideEmptyValue = newConfig.hideEmpty;
-                        if (hideEmptyValue === 'true' || hideEmptyValue === true) {
-                            hideEmptyValue = 'hide';
-                        } else if (hideEmptyValue === 'false' || hideEmptyValue === false) {
-                            hideEmptyValue = 'waiting';
-                        }
-                        config.hideEmpty = hideEmptyValue;
-                    }
+                    // hideEmpty feature removed - always shows waiting message when empty
 
                     // Apply new theme/position immediately
                     const container = document.getElementById('overlayContainer');
@@ -878,75 +845,37 @@
                 return;
             }
 
-            if (e.key === `loadout_overlay_${config.channel}`) {
-                checkForUpdates();
-            }
+            // REMOVED: No longer checking for loadout changes in localStorage
         });
 
-        // Initial check - with delay to ensure everything is loaded
-        setTimeout(() => {
-            console.log('🔍 Running initial check for existing loadout');
-            checkForUpdates();
+        // REMOVED: Initial localStorage check - no longer needed
 
-            // Also check a default key for OBS compatibility
-            const defaultLoadout = localStorage.getItem('loadout_overlay_default');
-            if (defaultLoadout && !lastLoadout) {
-                console.log('📦 Found default loadout for OBS');
-                try {
-                    const loadout = JSON.parse(defaultLoadout);
-                    renderLoadout(loadout);
-                } catch (e) {
-                    console.error('Failed to parse default loadout:', e);
-                }
-            }
+        // REMOVED: localStorage polling - using real-time updates only
 
-            // Fallback: Check ALL localStorage keys for any loadout
-            if (!lastLoadout) {
-                console.log('🔍 Checking all localStorage for any loadout...');
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key && key.includes('loadout_overlay_')) {
-                        console.log(`Found key: ${key}`);
-                        try {
-                            const data = localStorage.getItem(key);
-                            const loadout = JSON.parse(data);
-                            if (loadout && loadout.class) {
-                                console.log(`✅ Using loadout from ${key}`);
-                                renderLoadout(loadout);
-                                break;
-                            }
-                        } catch (e) {
-                            console.log(`Failed to parse ${key}:`, e);
-                        }
+        // Listen for postMessage from parent window (ONLY for iframe preview)
+        if (isIframe) {
+            window.addEventListener('message', (event) => {
+                console.log('📨 Preview received postMessage from:', event.origin);
+                console.log('Message data:', event.data);
+
+                // Handle ping messages for testing
+                if (event.data && event.data.type === 'ping') {
+                    console.log('🏓 Received ping:', event.data.message);
+                    // Send pong back
+                    if (event.source) {
+                        event.source.postMessage({ type: 'pong', message: 'Overlay ready' }, event.origin);
                     }
                 }
-            }
-        }, 500);
 
-        // Regular polling as backup - more frequent for better responsiveness
-        setInterval(checkForUpdates, 250); // Check every 250ms instead of 500ms
-
-        // Listen for postMessage from parent window (for iframe preview)
-        window.addEventListener('message', (event) => {
-            console.log('📨 Overlay received postMessage from:', event.origin);
-            console.log('Message data:', event.data);
-
-            // Handle ping messages for testing
-            if (event.data && event.data.type === 'ping') {
-                console.log('🏓 Received ping:', event.data.message);
-                // Send pong back
-                if (event.source) {
-                    event.source.postMessage({ type: 'pong', message: 'Overlay ready' }, event.origin);
+                // Accept loadout updates ONLY in iframe mode
+                if (event.data && event.data.type === 'loadout_update') {
+                    console.log('✅ Processing loadout from postMessage');
+                    // Payload can be null when resetting
+                    renderLoadout(event.data.payload);
                 }
-            }
-
-            // Accept messages from any origin in production (be careful with this in real production)
-            if (event.data && event.data.type === 'loadout_update') {
-                console.log('✅ Processing loadout from postMessage');
-                // Payload can be null when resetting
-                renderLoadout(event.data.payload);
-            }
-        });
+            });
+            console.log('✅ Preview mode: Listening to postMessage only');
+        }
 
         // Get channel from URL first (using params already declared above)
         const channelId = params.get('channel') || 'default';
@@ -1052,8 +981,9 @@
         const supabaseChannelId = urlParams.get('channel') || 'default';
         const channelName = supabaseChannelId; // Use the channel ID directly, not 'overlay_' prefix
 
-        // Only try Supabase if it was successfully initialized
-        if (supabaseOverlay) {
+        // Only use Supabase if in OBS mode (not iframe preview)
+        if (supabaseOverlay && !isIframe) {
+            console.log('🎬 OBS mode: Listening to Supabase only');
             try {
                 // ALWAYS listen to obs_default channel for OBS
                 const obsChannel = supabaseOverlay.channel('obs_default');
@@ -1080,16 +1010,7 @@
                         if (newConfig.theme !== undefined) {
                             config.theme = newConfig.theme;
                         }
-                        if (newConfig.hideEmpty !== undefined) {
-                            // Handle new three-state system and backward compatibility
-                            let hideEmptyValue = newConfig.hideEmpty;
-                            if (hideEmptyValue === 'true' || hideEmptyValue === true) {
-                                hideEmptyValue = 'hide';
-                            } else if (hideEmptyValue === 'false' || hideEmptyValue === false) {
-                                hideEmptyValue = 'waiting';
-                            }
-                            config.hideEmpty = hideEmptyValue;
-                        }
+                        // hideEmpty feature removed - always shows waiting message when empty
 
                         const container = document.getElementById('overlayContainer');
                         if (container && newConfig) {
