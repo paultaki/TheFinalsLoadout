@@ -31,56 +31,60 @@ const rageQuitLoadouts = {
   Light: {
     // weapons that struggle to secure TTK and have very low usage
     weapons: [
-      "Recurve Bow",
-      "M26 Matter",
-      "Dagger",
-      "Throwing Knives"
+      "93R",             // burst pistol, weak beyond 10 m
+      "Throwing Knives", // relies on flawless aim, tiny hit‑box
+      "Dagger",          // highest skill floor, lowest reward
+      "Recurve Bow",     // meme pick since S5 nerfs
+      "V9S"              // silenced pea‑shooter, poor DPS
     ],
     // only “bad” option left after Dash & Grapple
     specializations: ["Cloaking Device"],      // B‑tier but still the least effective of the three
     // all C‑, D‑ or E‑tier gadgets
     gadgets: [
-      "Gravity Vortex",
-      "Tracking Dart",
-      "Smoke Grenade",
-      "Flashbang",
-      "Nullifier",
-      "Breach Charge"
+      "Gravity Vortex",  // E‑tier: fun physics, zero lethality
+      "Tracking Dart",   // E‑tier: team rarely capitalises
+      "Thermal Bore",    // C‑tier: too slow, too loud
+      "Breach Charge",   // C‑tier: telegraphed entry, low damage
+      "Flashbang",       // un‑rated but generally unloved after nerfs
+      "Gas Grenade"      // minimal damage, easy to avoid
     ]
   },
 
   Medium: {
     weapons: [
-      "CL-40",
-      "Dual Blades",
-      "Riot Shield",
-      "R.357",
-      "Model 1887"
+      "CL-40",           // grenade arc random, long swap time
+      "R.357",           // four shots then a holiday‑length reload
+      "CB-01 Repeater",  // niche hip‑fire gimmick, poor range
+      "Dual Blades",     // melee + medium mobility = pain
+      "Riot Shield"      // perfect for tilting teammates, not enemies
     ],
     specializations: ["Guardian Turret"],       // least impact after Demat & Beam
     gadgets: [
-      "Glitch Trap",
-      "Proximity Sensor",
-      "Smoke Grenade",
-      "Data Reshaper",
-      "Breach Drill"
+      "APS Turret",      // E‑tier even after +1 projectile buff
+      "Data Reshaper",   // E‑tier RNG clown device
+      "Glitch Trap",     // E‑tier: rare, easily spotted
+      "Proximity Sensor",// E‑tier: constant false alarms
+      "Explosive Mine",  // D‑tier: bright red lights scream “shoot me”
+      "Gas Mine"         // C‑tier: small radius, low damage
     ]
   },
 
   Heavy: {
     weapons: [
-      "MGL32",
-      "KS-23",
-      "Lewis Gun",
-      "SA1216"
+      "Flamethrower",    // spectacular visuals, terrible reach
+      "KS-23",           // slug shotgun that whiffs past 8 m
+      "Spear",           // animation‑locked, easy to kite
+      "SA 1216",         // low per‑pellet damage, long reload
+      "M60"              // suppressed LMG look‑cool‑die‑slow
     ],
-    specializations: ["Goo Gun", "Mesh Shield"],
+    specializations: ["Goo Gun"],               // only B‑tier choice, recently nerfed
     gadgets: [
-      "Anti-Gravity Cube",
-      "Gas Grenade",
-      "Flashbang",
-      "Explosive Mine",
-      "Smoke Grenade"
+      "Anti-Gravity Cube", // E‑tier gimmick despite cooldown buff
+      "Proximity Sensor",  // E‑tier: still bad on Heavy
+      "Pyro Mine",         // C‑tier: easy to spot, low trigger rate
+      "Explosive Mine",    // D‑tier: see Medium remarks
+      "C4",                // C‑tier: blinking self‑own device
+      "Gas Grenade"        // low damage, large tell‑tale cloud
     ]
   }
 };
