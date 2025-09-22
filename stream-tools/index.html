@@ -717,8 +717,8 @@
             // Initialize Supabase loadout listener
             initSupabaseLoadoutListener();
 
-            // Check for existing loadout and send to preview
-            checkAndLoadExistingLoadout();
+            // Don't auto-load cached loadouts - preview should match OBS state
+            // checkAndLoadExistingLoadout();
 
             // Wait for iframe to load before enabling buttons
             const iframe = document.getElementById('overlayPreview');
@@ -726,6 +726,18 @@
                 console.log('✅ Overlay iframe loaded and ready');
                 console.log('Iframe src:', iframe.src);
                 console.log('Iframe contentWindow available:', !!iframe.contentWindow);
+
+                // Clear any cached loadout to show waiting state
+                try {
+                    // Send a clear message to ensure preview matches OBS state
+                    iframe.contentWindow.postMessage({
+                        type: 'loadout_update',
+                        payload: null  // Clear loadout to show waiting state
+                    }, '*');
+                    console.log('📤 Sent clear loadout to preview iframe');
+                } catch (e) {
+                    console.error('Failed to clear loadout:', e);
+                }
 
                 // Send a test message to verify communication
                 try {
