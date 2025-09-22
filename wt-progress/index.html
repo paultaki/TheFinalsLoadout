@@ -1917,7 +1917,7 @@
         <div class="entries-list" id="entriesList"></div>
 
         <!-- Performance Graph Section -->
-        <div class="graph-section" style="margin-top: 30px;">
+        <div class="graph-section" style="margin-top: 30px; max-width: 100%; overflow: hidden;">
           <button class="graph-toggle-btn" onclick="toggleGraph()" style="
             width: 100%;
             background: linear-gradient(135deg, rgba(80, 200, 120, 0.1), rgba(32, 178, 170, 0.1));
@@ -1946,6 +1946,8 @@
             background: rgba(255, 255, 255, 0.03);
             border-radius: 15px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
           ">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
               <h3 style="
@@ -1968,7 +1970,9 @@
                 <option value="all">All time</option>
               </select>
             </div>
-            <canvas id="performanceChart" width="400" height="200"></canvas>
+            <div style="position: relative; height: 300px; width: 100%;">
+              <canvas id="performanceChart"></canvas>
+            </div>
             <div id="graphStats" style="
               display: grid;
               grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -2411,7 +2415,8 @@
           },
           options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
+            aspectRatio: 2.5,
             interaction: {
               mode: 'index',
               intersect: false
