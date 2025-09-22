@@ -919,6 +919,88 @@
         transform: translateY(0);
       }
 
+      /* Handicap Description Section */
+      .handicap-description-section {
+        padding: 2rem 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+        animation: fadeIn 0.5s ease-in;
+      }
+
+      .handicap-description-box {
+        background: linear-gradient(135deg, rgba(139, 0, 0, 0.3), rgba(255, 0, 0, 0.2));
+        border: 2px solid rgba(255, 0, 0, 0.5);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.5);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .handicap-description-box::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 0, 0, 0.1) 0%, transparent 70%);
+        animation: pulse 3s ease-in-out infinite;
+      }
+
+      .handicap-title {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #ff4444;
+        text-align: center;
+        margin-bottom: 1rem;
+        text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .handicap-icon {
+        font-size: 1.5rem;
+        animation: wobble 2s ease-in-out infinite;
+      }
+
+      .handicap-description-text {
+        font-size: 1.2rem;
+        color: #ffffff;
+        text-align: center;
+        line-height: 1.6;
+        position: relative;
+        z-index: 1;
+        padding: 0.5rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        font-style: italic;
+      }
+
+      @keyframes wobble {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(-5deg); }
+        75% { transform: rotate(5deg); }
+      }
+
+      @media (max-width: 768px) {
+        .handicap-description-section {
+          padding: 1.5rem 1rem;
+        }
+
+        .handicap-title {
+          font-size: 1.4rem;
+        }
+
+        .handicap-description-text {
+          font-size: 1rem;
+        }
+      }
+
       /* History Section - Redesigned */
       .history-section {
         padding: 4rem 2rem;
@@ -1999,6 +2081,20 @@
       </div>
     </section>
 
+    <!-- Handicap Description Section -->
+    <section id="handicap-description-section" class="handicap-description-section" style="display: none;">
+      <div class="handicap-description-box">
+        <div class="handicap-title">
+          <span class="handicap-icon">💀</span>
+          <span id="handicap-name-display">HANDICAP</span>
+          <span class="handicap-icon">💀</span>
+        </div>
+        <div id="handicap-desc-display" class="handicap-description-text">
+          <!-- Description will be inserted here -->
+        </div>
+      </div>
+    </section>
+
     <!-- 4. AI Roast Container -->
     <section class="ai-roast-section">
       <div
@@ -2125,9 +2221,9 @@
     ></audio>
 
     <!-- Scripts -->
-    <script src="https://thefinalsloadout.com/ragequit/loadout-app.js"></script>
-    <script src="https://thefinalsloadout.com/ragequit/rage-roulette-animations.js"></script>
-    <script src="https://thefinalsloadout.com/ragequit/app.js"></script>
+    <script src="loadout-app.js"></script>
+    <script src="rage-roulette-animations.js"></script>
+    <script src="app.js"></script>
 
     <!-- Particles Creation -->
     <script>

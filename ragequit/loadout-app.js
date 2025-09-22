@@ -515,6 +515,42 @@ function finalizeSpin() {
   updateTotalRageQuits();
   displaySelectedHandicap();
 
+  // Display handicap description in the new section
+  const handicapDescSection = document.getElementById('handicap-description-section');
+  const handicapNameDisplay = document.getElementById('handicap-name-display');
+  const handicapDescDisplay = document.getElementById('handicap-desc-display');
+
+  if (handicapDescSection && handicapNameDisplay && handicapDescDisplay) {
+    const selectedHandicap = window.state?.selectedHandicap || rageState.selectedHandicap;
+    const selectedHandicapDesc = window.state?.selectedHandicapDesc || rageState.selectedHandicapDesc;
+
+    console.log('🎯 Handicap Display Debug:', {
+      selectedHandicap,
+      selectedHandicapDesc,
+      windowState: window.state,
+      rageState: rageState
+    });
+
+    if (selectedHandicap && selectedHandicap !== 'None') {
+      handicapNameDisplay.textContent = selectedHandicap.toUpperCase();
+      handicapDescDisplay.textContent = selectedHandicapDesc || 'No description available';
+      handicapDescSection.style.display = 'block';
+
+      // Ensure it's visible with smooth scroll
+      setTimeout(() => {
+        handicapDescSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 500);
+    } else {
+      handicapDescSection.style.display = 'none';
+    }
+  } else {
+    console.error('❌ Handicap display elements not found:', {
+      section: !!handicapDescSection,
+      nameDisplay: !!handicapNameDisplay,
+      descDisplay: !!handicapDescDisplay
+    });
+  }
+
   // Save to history if we have a valid loadout
   if (rageState.finalLoadout && window.addToHistory) {
     const { classType, weapon, specialization, gadgets } = rageState.finalLoadout;

@@ -1405,11 +1405,19 @@ function addToHistory(
           <div class="handicap-row stacked">
             <span class="item-label">HANDICAPS (${state.sufferingLevel}x):</span>
             <span class="item-value">${state.handicapStack.map(h => h.name).join(' + ')}</span>
+            <div class="handicap-description" style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; font-style: italic; margin-top: 0.5rem;">
+              ${state.handicapStack.map(h => `<span>${h.name}: ${h.description}</span>`).join(' | ')}
+            </div>
           </div>
         ` : `
           <div class="handicap-row">
             <span class="item-label">HANDICAP:</span>
             <span class="item-value">${handicapName || "None"}</span>
+            ${handicapDesc && handicapDesc !== "No handicap selected" ? `
+              <div class="handicap-description" style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; font-style: italic; margin-top: 0.5rem;">
+                ${handicapDesc}
+              </div>
+            ` : ''}
           </div>
         `}
       </div>
