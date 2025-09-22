@@ -467,10 +467,28 @@
             if (isCompact === true || isCompact === 'true') {
                 // Compact text-only version with inline styles for OBS
                 const borderStyle = isLast ? '' : 'border-right: 1px solid rgba(255, 71, 150, 0.2);';
+
+                // Adjust text colors based on theme
+                let labelColor = '#ff4796'; // Default pink
+                let nameColor = '#fff'; // Default white
+                let borderColor = 'rgba(255, 71, 150, 0.2)'; // Default pink border
+
+                if (config.theme === 'light') {
+                    labelColor = '#d1004b'; // Darker pink for light theme
+                    nameColor = '#000'; // Black text for light theme
+                    borderColor = 'rgba(0, 0, 0, 0.2)'; // Dark border
+                } else if (config.theme === 'finals') {
+                    labelColor = '#000'; // Black labels for red theme
+                    nameColor = '#fff'; // White text for contrast
+                    borderColor = 'rgba(0, 0, 0, 0.3)'; // Black border
+                }
+
+                const adjustedBorderStyle = isLast ? '' : `border-right: 1px solid ${borderColor};`;
+
                 return `
-                    <div class="slot-column-compact" style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 10px; ${borderStyle}">
-                        <span class="compact-label" style="font-weight: bold; color: #ff4796; text-transform: uppercase; font-size: 10px; letter-spacing: 1px;">${headerText}</span>
-                        <span class="compact-name" style="color: #fff; font-weight: 600; font-size: 14px; white-space: nowrap;">${name || 'None'}</span>
+                    <div class="slot-column-compact" style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 10px; ${adjustedBorderStyle}">
+                        <span class="compact-label" style="font-weight: bold; color: ${labelColor}; text-transform: uppercase; font-size: 10px; letter-spacing: 1px;">${headerText}</span>
+                        <span class="compact-name" style="color: ${nameColor}; font-weight: 600; font-size: 14px; white-space: nowrap;">${name || 'None'}</span>
                     </div>
                 `;
             } else {
@@ -594,10 +612,27 @@
             // Add inline styles for compact mode to ensure OBS renders correctly
             const compactStyles = compactMode ? 'style="display: flex; flex-direction: row; gap: 20px; align-items: center;"' : '';
 
+            // Adjust header text colors based on theme
+            let headerTextColor = '';
+            let brandingColor = '';
+
+            if (compactMode) {
+                if (config.theme === 'light') {
+                    headerTextColor = 'color: #000;'; // Black text for light theme
+                    brandingColor = 'color: #666;'; // Dark gray for branding
+                } else if (config.theme === 'finals') {
+                    headerTextColor = 'color: #000;'; // Black text for red theme
+                    brandingColor = 'color: rgba(0, 0, 0, 0.7);'; // Semi-black for branding
+                } else {
+                    headerTextColor = ''; // Default (white)
+                    brandingColor = ''; // Default
+                }
+            }
+
             const loadoutHTML = `
                 <div class="class-header" ${compactMode ? 'style="margin-bottom: 10px; padding: 4px 8px;"' : ''}>
-                    <div class="class-name class-${classLower}" ${compactMode ? 'style="font-size: 14px;"' : ''}>${loadout.class} BUILD</div>
-                    <div class="site-branding" ${compactMode ? 'style="font-size: 9px;"' : ''}>TheFinalsLoadout.com ${compactMode ? '[COMPACT]' : '[NORMAL]'}</div>
+                    <div class="class-name class-${classLower}" ${compactMode ? `style="font-size: 14px; ${headerTextColor}"` : ''}>${loadout.class} BUILD</div>
+                    <div class="site-branding" ${compactMode ? `style="font-size: 9px; ${brandingColor}"` : ''}>TheFinalsLoadout.com</div>
                 </div>
                 <div class="slot-columns" ${compactStyles}>
                     ${columnsHTML}
