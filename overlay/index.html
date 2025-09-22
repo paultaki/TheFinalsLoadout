@@ -416,17 +416,18 @@
 
         // Also check localStorage for compact mode
         const storedCompact = localStorage.getItem('overlayCompactMode');
+        console.log('Stored compact mode from localStorage:', storedCompact);
 
         const config = {
             theme: params.get('theme') || savedConfig.theme || 'dark',
-            compact: storedCompact !== null ? storedCompact === 'true' : (params.get('compact') === 'true' || savedConfig.compact === 'true'),
+            compact: storedCompact !== null ? (storedCompact === 'true' || storedCompact === true) : (params.get('compact') === 'true' || savedConfig.compact === 'true'),
             hideEmpty: params.get('hideEmpty') === 'true' || savedConfig.hideEmpty === 'true',
             channel: params.get('channel') || 'default',
             refresh: parseInt(params.get('refresh')) || 500,
             animate: params.get('animate') !== 'false'
         };
 
-        console.log('Initial config loaded - Compact mode:', config.compact);
+        console.log('Initial config loaded - Compact mode:', config.compact, 'Type:', typeof config.compact);
 
         // Apply configuration
         const container = document.getElementById('overlayContainer');
@@ -452,16 +453,18 @@
         };
 
         // Function to create item HTML with image or fallback
-        function createItemHTML(item, type, index, isLast = false) {
+        function createItemHTML(item, type, index, isLast = false, forceCompact = null) {
             const name = typeof item === 'object' ? item.name : item;
             const image = typeof item === 'object' ? item.image : null;
 
-            // Check if compact mode is enabled (config.compact is already a boolean)
-            const isCompact = config.compact;
+            // Use explicit compact parameter if provided, otherwise check global config
+            const isCompact = forceCompact !== null ? forceCompact : config.compact;
+
+            console.log(`Creating item HTML for ${name} - Compact: ${isCompact}`);
 
             const headerText = type === 'gadget' ? `GADGET ${index + 1}` : type.toUpperCase();
 
-            if (isCompact) {
+            if (isCompact === true || isCompact === 'true') {
                 // Compact text-only version with inline styles for OBS
                 const borderStyle = isLast ? '' : 'border-right: 1px solid rgba(255, 71, 150, 0.2);';
                 return `
@@ -508,6 +511,10 @@
         // Function to render loadout in slot machine style
         function renderLoadout(loadout) {
             console.log('🎰 Rendering loadout:', loadout); // Debug the entire loadout
+            console.log('🎮 Current compact mode:', config.compact, typeof config.compact);
+
+            // Save the loadout for re-rendering
+            lastLoadout = loadout;
 
             if (!loadout || !loadout.class) {
                 console.log('❌ Invalid loadout - missing class');
@@ -564,47 +571,56 @@
             const gadgetCount = loadout.gadgets && loadout.gadgets.length > 0 ? loadout.gadgets.length : 1;
             const totalItems = 2 + gadgetCount; // weapon + spec + gadgets
 
+            // Explicitly pass compact mode to ensure it's used
+            const compactMode = config.compact === true || config.compact === 'true';
+            console.log('🎯 Passing compact mode to createItemHTML:', compactMode);
+
             // Weapon column
-            columnsHTML += createItemHTML(loadout.weapon, 'weapon', 0, false);
+            columnsHTML += createItemHTML(loadout.weapon, 'weapon', 0, false, compactMode);
 
             // Specialization column
-            columnsHTML += createItemHTML(loadout.specialization, 'specialization', 0, gadgetCount === 0);
+            columnsHTML += createItemHTML(loadout.specialization, 'specialization', 0, gadgetCount === 0, compactMode);
 
             // Gadgets columns
             if (loadout.gadgets && loadout.gadgets.length > 0) {
                 loadout.gadgets.forEach((gadget, index) => {
                     const isLastGadget = index === loadout.gadgets.length - 1;
-                    columnsHTML += createItemHTML(gadget, 'gadget', index, isLastGadget);
+                    columnsHTML += createItemHTML(gadget, 'gadget', index, isLastGadget, compactMode);
                 });
             } else {
-                columnsHTML += createItemHTML('None', 'gadget', 0, true);
+                columnsHTML += createItemHTML('None', 'gadget', 0, true, compactMode);
             }
 
             // Add inline styles for compact mode to ensure OBS renders correctly
-            const compactStyles = config.compact ? 'style="display: flex; flex-direction: row; gap: 20px; align-items: center;"' : '';
+            const compactStyles = compactMode ? 'style="display: flex; flex-direction: row; gap: 20px; align-items: center;"' : '';
 
             const loadoutHTML = `
-                <div class="class-header" ${config.compact ? 'style="margin-bottom: 10px; padding: 4px 8px;"' : ''}>
-                    <div class="class-name class-${classLower}" ${config.compact ? 'style="font-size: 14px;"' : ''}>${loadout.class} BUILD</div>
-                    <div class="site-branding" ${config.compact ? 'style="font-size: 9px;"' : ''}>TheFinalsLoadout.com</div>
+                <div class="class-header" ${compactMode ? 'style="margin-bottom: 10px; padding: 4px 8px;"' : ''}>
+                    <div class="class-name class-${classLower}" ${compactMode ? 'style="font-size: 14px;"' : ''}>${loadout.class} BUILD</div>
+                    <div class="site-branding" ${compactMode ? 'style="font-size: 9px;"' : ''}>TheFinalsLoadout.com ${compactMode ? '[COMPACT]' : '[NORMAL]'}</div>
                 </div>
                 <div class="slot-columns" ${compactStyles}>
                     ${columnsHTML}
                 </div>
             `;
 
+            // Update container class based on actual compact mode
+            container.className = `overlay-container theme-${config.theme || 'dark'}${compactMode ? ' compact' : ''}`;
+
             container.innerHTML = loadoutHTML;
 
             // Apply compact container styles inline for OBS
-            if (config.compact) {
+            if (compactMode) {
                 container.style.width = 'auto';
                 container.style.height = 'auto';
                 container.style.padding = '10px 15px';
+                console.log('✅ Applied compact container styles');
             } else {
                 // Reset to default styles
                 container.style.width = '';
                 container.style.height = '';
                 container.style.padding = '';
+                console.log('✅ Applied normal container styles');
             }
 
             if (config.animate) {
