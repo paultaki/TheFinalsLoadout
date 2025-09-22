@@ -486,9 +486,9 @@
                 const adjustedBorderStyle = isLast ? '' : `border-right: 1px solid ${borderColor};`;
 
                 return `
-                    <div class="slot-column-compact" style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 10px; ${adjustedBorderStyle}">
-                        <span class="compact-label" style="font-weight: bold; color: ${labelColor}; text-transform: uppercase; font-size: 10px; letter-spacing: 1px;">${headerText}</span>
-                        <span class="compact-name" style="color: ${nameColor}; font-weight: 600; font-size: 14px; white-space: nowrap;">${name || 'None'}</span>
+                    <div class="slot-column-compact" style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 8px; min-width: 80px; ${adjustedBorderStyle}">
+                        <span class="compact-label" style="font-weight: bold; color: ${labelColor}; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; white-space: nowrap;">${headerText}</span>
+                        <span class="compact-name" style="color: ${nameColor}; font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;">${name || 'None'}</span>
                     </div>
                 `;
             } else {
@@ -610,7 +610,7 @@
             }
 
             // Add inline styles for compact mode to ensure OBS renders correctly
-            const compactStyles = compactMode ? 'style="display: flex; flex-direction: row; gap: 20px; align-items: center;"' : '';
+            const compactStyles = compactMode ? 'style="display: flex; flex-direction: row; gap: 12px; align-items: center; justify-content: center;"' : '';
 
             // Adjust header text colors based on theme
             let headerTextColor = '';
