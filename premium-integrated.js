@@ -423,9 +423,6 @@
         this.currentLoadout = this.app.uiController.createRandomLoadout(className);
         console.log('Generated loadout:', this.currentLoadout);
         
-        // Start the roulette sound once at the beginning
-        this.playSound('roulette');
-
         // Run the spin sequence
         for (let i = 1; i <= this.selectedSpins; i++) {
           console.log(`🎰 Starting spin ${i} of ${this.selectedSpins}`);
@@ -446,17 +443,17 @@
             this.populatePremiumColumnsRandom();
           }
 
-          // Don't restart roulette sound - it's already playing
-
           // Animate the premium columns
-          await this.animatePremiumSpin(i === this.selectedSpins);
+          const isFinalSpin = i === this.selectedSpins;
 
-          // Roulette sound is stopped in animatePremiumSpin for final spin only
-
-          if (i === this.selectedSpins) {
-            // Only play final win sound and show winners on last spin
-            this.playSound('finalWin');
-            await this.showWinnersSequentially();
+          if (isFinalSpin) {
+            // For final spin, start celebration immediately after sound stops (not after full animation)
+            // Sound is started inside this function with deceleration
+            await this.animatePremiumSpinWithCelebration();
+          } else {
+            // Normal animation for intermediate spins
+            this.playSound('roulette'); // Regular speed for intermediate spins
+            await this.animatePremiumSpin(false);
           }
           
           if (i < this.selectedSpins) {
@@ -930,30 +927,162 @@
       // Wait for all columns to finish (last column takes the longest)
       const totalDuration = baseDuration + (columns.length - 1) * staggerDelay;
 
-      // For final spin, stop roulette sound exactly when animation completes
-      if (isFinalSpin) {
-        // Stop immediately when the last column animation completes
-        const stopTimeoutId = setTimeout(() => {
-          console.log('🛑 Stopping roulette sound at exact animation end');
-          this.stopRouletteSound();
-          // Double-check it's stopped
-          if (this.currentRouletteSound && !this.currentRouletteSound.paused) {
-            console.log('⚠️ Force stopping roulette sound');
-            this.currentRouletteSound.pause();
-            this.currentRouletteSound.currentTime = 0;
-          }
-        }, totalDuration);
-        this.activeTimeouts.push(stopTimeoutId);
-      }
+      // Stop roulette sound EARLIER - 1 second earlier for intermediate, 3 seconds earlier for final
+      const soundStopOffset = isFinalSpin ? 3000 : 1000;  // Stop sound earlier
+      const soundStopDuration = Math.max(100, totalDuration - soundStopOffset);  // Ensure it's at least 100ms
+
+      const stopTimeoutId = setTimeout(() => {
+        console.log(`🛑 Stopping roulette sound early (${isFinalSpin ? 'final' : 'intermediate'} spin) - ${soundStopOffset}ms before animation end`);
+        this.stopRouletteSound();
+        // Double-check it's stopped
+        if (this.currentRouletteSound && !this.currentRouletteSound.paused) {
+          console.log('⚠️ Force stopping roulette sound');
+          this.currentRouletteSound.pause();
+          this.currentRouletteSound.currentTime = 0;
+        }
+      }, soundStopDuration);
+      this.activeTimeouts.push(stopTimeoutId);
 
       await this.sleep(totalDuration);
 
-      // Extra safety: ensure roulette is stopped after final spin
-      if (isFinalSpin) {
-        this.stopRouletteSound();
-      }
+      // Extra safety: ensure roulette is stopped after every spin
+      this.stopRouletteSound();
     }
     
+    async animatePremiumSpinWithCelebration() {
+      // We need to handle the final spin differently - start animation but don't wait for it
+      const spinId = this.currentSpinId;
+      const baseDuration = 2000;  // Final spin base duration
+      const staggerDelay = 500;   // Final spin stagger
+
+      // Get item dimensions
+      const isMobile = window.innerWidth <= 768;
+      const testItem = document.querySelector('.slot-item');
+      const itemHeight = testItem ? testItem.offsetHeight : (isMobile ? 60 : 80);
+
+      // Get actual viewport height
+      const slotWindow = document.querySelector('.slot-window');
+      const viewportHeight = slotWindow ? slotWindow.offsetHeight : 240;
+
+      // Calculate how many items are visible
+      const visibleItems = Math.ceil(viewportHeight / itemHeight);
+      const centerItemIndex = Math.floor(visibleItems / 2);
+
+      // Get columns
+      const columns = document.querySelectorAll('.slot-items');
+      const totalItems = isMobile ? 150 : 80;
+
+      // Use actual winner position for final spin
+      const winnerPosition = Math.floor(totalItems / 2);
+      const targetPosition = -(winnerPosition - centerItemIndex) * itemHeight;
+      const targetPositions = Array(columns.length).fill(targetPosition);
+
+      // Start the roulette sound with deceleration effect
+      this.playSound('roulette');
+      const rouletteSound = this.currentRouletteSound;
+
+      // Gradually decrease playback rate to simulate deceleration
+      if (rouletteSound) {
+        rouletteSound.playbackRate = 1.0; // Start at normal speed
+
+        // Create deceleration intervals
+        let currentRate = 1.0;
+        const decelerationSteps = 20; // Number of steps to decelerate
+        const decelerationDuration = baseDuration + 250; // Match when we stop the sound
+        const stepDuration = decelerationDuration / decelerationSteps;
+
+        // Gradually slow down the sound
+        let stepCount = 0;
+        const decelerationInterval = setInterval(() => {
+          stepCount++;
+          // Use exponential decay for more natural deceleration
+          currentRate = 1.0 * Math.pow(0.5, stepCount / decelerationSteps); // Slows to 50% speed
+
+          if (rouletteSound && !rouletteSound.paused) {
+            rouletteSound.playbackRate = Math.max(0.5, currentRate); // Don't go below 50% speed
+          }
+
+          if (stepCount >= decelerationSteps) {
+            clearInterval(decelerationInterval);
+          }
+        }, stepDuration);
+
+        // Store interval ID for cleanup
+        this.activeTimeouts.push(decelerationInterval);
+      }
+
+      // Start ALL columns spinning at the same time
+      columns.forEach((col, index) => {
+        // Reset first
+        col.style.transition = 'none';
+        col.style.transform = 'translateY(0)';
+
+        // Force reflow
+        void col.offsetHeight;
+
+        // Calculate individual duration for each column
+        const columnDuration = baseDuration + (index * staggerDelay);
+
+        // Use aggressive deceleration for final spin
+        let easing;
+        if (index === 0) {
+          easing = 'cubic-bezier(0.23, 1, 0.32, 1)';
+        } else if (index === 1) {
+          easing = 'cubic-bezier(0.22, 1, 0.36, 1)';
+        } else if (index === 2) {
+          easing = 'cubic-bezier(0.215, 0.61, 0.355, 1)';
+        } else if (index === 3) {
+          easing = 'cubic-bezier(0.19, 0.5, 0.32, 1)';
+        } else {
+          easing = 'cubic-bezier(0.17, 0.4, 0.3, 1)';
+        }
+
+        // Start spinning
+        col.style.transition = `transform ${columnDuration}ms ${easing}`;
+        col.style.transform = `translateY(${targetPositions[index]}px)`;
+
+        // Schedule stop sounds for each column
+        if (index < 5) {
+          const timeoutId = setTimeout(() => {
+            if (spinId !== this.currentSpinId) return;
+
+            const audio = new Audio('/sounds/ding.mp3');
+            audio.volume = 0.4;
+            audio.play().catch(e => console.log(`Failed to play ding ${index + 1}:`, e));
+
+            col.style.filter = 'brightness(1.2)';
+            setTimeout(() => {
+              col.style.filter = 'brightness(1)';
+            }, 200);
+          }, columnDuration);
+
+          this.activeTimeouts.push(timeoutId);
+        }
+      });
+
+      // Calculate when the last column will finish
+      const lastColumnDuration = baseDuration + (columns.length - 1) * staggerDelay;
+
+      // Stop roulette sound when spinning is visibly slowing - between first and second column
+      // This gives a natural feel - not too early, not too late
+      const soundStopTime = baseDuration + 250; // Stop shortly after first column (2250ms)
+      setTimeout(() => {
+        console.log('🔇 Stopping roulette sound on final spin at optimal time');
+        this.stopRouletteSound();
+      }, soundStopTime);
+
+      // Start celebration when last column visually appears to stop (accounting for easing)
+      // The easing makes it look stopped before the animation technically completes
+      const celebrationStartTime = lastColumnDuration - 200; // Start 200ms earlier to feel immediate
+      setTimeout(() => {
+        this.playSound('finalWin');
+        this.showWinnersSequentially(); // Don't await - let it run async
+      }, celebrationStartTime);
+
+      // Wait for everything to complete
+      await this.sleep(lastColumnDuration + 1000); // Add a small buffer for celebration to start
+    }
+
     async showWinnersSequentially() {
       const columns = document.querySelectorAll('.slot-column');
       const sparksContainer = document.getElementById('victorySparks');

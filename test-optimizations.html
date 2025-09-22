@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Optimizations - The Finals Loadout</title>
+    <link rel="stylesheet" href="/premium-styles.css">
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 40px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        .test-image {
+            width: 300px;
+            height: 200px;
+            margin: 10px;
+            display: inline-block;
+            background: #111;
+            border-radius: 4px;
+        }
+        .test-button {
+            padding: 10px 20px;
+            margin: 10px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .test-button:hover {
+            background: #2563eb;
+        }
+        .storage-info {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Optimization Tests</h1>
+
+    <!-- Test 1: Lazy Loading -->
+    <div class="test-section">
+        <h2>1. Image Lazy Loading</h2>
+        <p>Scroll down to see images load automatically</p>
+
+        <!-- Images that should lazy load -->
+        <img class="test-image" src="/images/placeholder.webp" alt="Test 1">
+        <img class="test-image" src="/images/AKM.webp" alt="Test 2">
+        <img class="test-image" src="/images/XM1014.webp" alt="Test 3">
+
+        <div style="height: 800px; background: linear-gradient(#111, #222); margin: 20px 0;">
+            <p style="padding: 20px;">↓ Scroll down to trigger lazy loading ↓</p>
+        </div>
+
+        <img class="test-image" src="/images/FCAR.webp" alt="Test 4 - Should lazy load">
+        <img class="test-image" src="/images/M11.webp" alt="Test 5 - Should lazy load">
+        <img class="test-image" src="/images/LH1.webp" alt="Test 6 - Should lazy load">
+    </div>
+
+    <!-- Test 2: Toast Notifications -->
+    <div class="test-section">
+        <h2>2. Toast Notifications</h2>
+        <button class="test-button" onclick="testToast('success')">Success Toast</button>
+        <button class="test-button" onclick="testToast('error')">Error Toast</button>
+        <button class="test-button" onclick="testToast('info')">Info Toast</button>
+        <button class="test-button" onclick="testCopy()">Test Copy with Toast</button>
+    </div>
+
+    <!-- Test 3: Focus States -->
+    <div class="test-section">
+        <h2>3. Focus States</h2>
+        <p>Tab through these elements to see enhanced focus rings:</p>
+        <button class="test-button">Button 1</button>
+        <button class="test-button">Button 2</button>
+        <input type="text" placeholder="Input field" style="padding: 10px; margin: 10px;">
+        <select style="padding: 10px; margin: 10px;">
+            <option>Option 1</option>
+            <option>Option 2</option>
+        </select>
+    </div>
+
+    <!-- Test 4: Storage Compression -->
+    <div class="test-section">
+        <h2>4. Storage Compression</h2>
+        <button class="test-button" onclick="testStorage()">Save Test Data (Compressed)</button>
+        <button class="test-button" onclick="loadStorage()">Load Test Data</button>
+        <button class="test-button" onclick="compareStorage()">Compare Storage Size</button>
+        <div id="storage-info" class="storage-info"></div>
+    </div>
+
+    <!-- Test 5: Debounced Filter -->
+    <div class="test-section">
+        <h2>5. Debounced Operations</h2>
+        <p>Click rapidly - function only executes after delay:</p>
+        <button class="test-button" onclick="testDebounce()">Click Me Rapidly</button>
+        <div id="debounce-counter">Executions: 0</div>
+    </div>
+
+    <!-- Load optimizations -->
+    <script src="/js/optimizations.js"></script>
+
+    <script>
+        // Test functions
+        let debounceCounter = 0;
+        let clickCounter = 0;
+
+        function testToast(type) {
+            if (window.toastManager) {
+                window.toastManager[type](`This is a ${type} toast message!`);
+            } else {
+                alert('Toast manager not initialized');
+            }
+        }
+
+        async function testCopy() {
+            const text = `🎮 THE FINALS LOADOUT TEST
+Weapon: AKM
+Class: Medium
+Generated at: ${new Date().toLocaleString()}`;
+
+            if (window.enhancedCopy) {
+                await window.FinalsOptimizations.enhancedCopy(text, 'Test loadout copied!');
+            } else {
+                alert('Copy function not available');
+            }
+        }
+
+        function testStorage() {
+            if (window.compressedStorage) {
+                const testData = {
+                    loadout: {
+                        weapon: 'AKM',
+                        class: 'Medium',
+                        gadgets: ['Smoke Grenade', 'Jump Pad', 'Defibrillator'],
+                        timestamp: Date.now(),
+                        longText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '.repeat(50)
+                    }
+                };
+
+                const success = window.compressedStorage.set('test_loadout', testData);
+
+                // Also save uncompressed for comparison
+                localStorage.setItem('test_loadout_uncompressed', JSON.stringify(testData));
+
+                if (success) {
+                    window.toastManager.success('Data saved with compression!');
+                    compareStorage();
+                }
+            }
+        }
+
+        function loadStorage() {
+            if (window.compressedStorage) {
+                const data = window.compressedStorage.get('test_loadout');
+                if (data) {
+                    document.getElementById('storage-info').innerHTML = `
+                        <strong>Loaded Data:</strong><br>
+                        Weapon: ${data.loadout.weapon}<br>
+                        Class: ${data.loadout.class}<br>
+                        Gadgets: ${data.loadout.gadgets.join(', ')}<br>
+                        Timestamp: ${new Date(data.loadout.timestamp).toLocaleString()}
+                    `;
+                    window.toastManager.success('Data loaded successfully!');
+                } else {
+                    window.toastManager.error('No saved data found');
+                }
+            }
+        }
+
+        function compareStorage() {
+            const compressed = localStorage.getItem('finals_test_loadout');
+            const uncompressed = localStorage.getItem('test_loadout_uncompressed');
+
+            if (compressed && uncompressed) {
+                const compressedSize = new Blob([compressed]).size;
+                const uncompressedSize = new Blob([uncompressed]).size;
+                const savings = Math.round((1 - compressedSize / uncompressedSize) * 100);
+
+                document.getElementById('storage-info').innerHTML = `
+                    <strong>Storage Comparison:</strong><br>
+                    Uncompressed: ${uncompressedSize} bytes<br>
+                    Compressed: ${compressedSize} bytes<br>
+                    <span style="color: #10b981;">Savings: ${savings}%</span>
+                `;
+            }
+        }
+
+        // Debounce test
+        const debouncedFunction = window.FinalsOptimizations?.debounce(() => {
+            debounceCounter++;
+            document.getElementById('debounce-counter').innerHTML = `
+                Clicks: ${clickCounter}<br>
+                Executions: ${debounceCounter}<br>
+                <span style="color: #10b981;">Saved ${clickCounter - debounceCounter} unnecessary executions!</span>
+            `;
+        }, 500);
+
+        function testDebounce() {
+            clickCounter++;
+            debouncedFunction();
+        }
+
+        // Check what's initialized
+        window.addEventListener('load', () => {
+            console.log('Optimization Status:');
+            console.log('- Lazy Loader:', !!window.lazyLoader);
+            console.log('- Toast Manager:', !!window.toastManager);
+            console.log('- Compressed Storage:', !!window.compressedStorage);
+            console.log('- Debounce:', !!window.FinalsOptimizations?.debounce);
+            console.log('- Enhanced Copy:', !!window.FinalsOptimizations?.enhancedCopy);
+
+            // Show initialization status
+            if (window.toastManager) {
+                window.toastManager.info('All optimizations loaded! Check console for details.');
+            }
+        });
+    </script>
+</body>
+</html>

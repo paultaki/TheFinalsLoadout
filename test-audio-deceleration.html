@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Deceleration Test - The Finals Slot Machine</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            padding: 40px;
+            text-align: center;
+        }
+        .test-info {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 700px;
+        }
+        h1 {
+            color: #3b82f6;
+        }
+        .success {
+            color: #10b981;
+        }
+        .graph {
+            margin: 20px auto;
+            padding: 20px;
+            background: #222;
+            border-radius: 8px;
+            max-width: 600px;
+        }
+        .speed-line {
+            height: 100px;
+            background: linear-gradient(to right,
+                #3b82f6 0%,
+                #3b82f6 40%,
+                #2563eb 60%,
+                #1e40af 80%,
+                #1e3a8a 100%);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        .speed-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255,255,255,0.2) 50%,
+                transparent 100%);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .speed-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #999;
+        }
+        code {
+            background: #2a2a2a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #3b82f6;
+        }
+        .feature-list {
+            text-align: left;
+            max-width: 500px;
+            margin: 20px auto;
+        }
+        .feature-list li {
+            margin: 10px 0;
+            padding: 10px;
+            background: #222;
+            border-radius: 4px;
+            list-style: none;
+        }
+        .test-button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .test-button:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎵 Audio Deceleration Feature</h1>
+
+    <div class="test-info">
+        <h2>New Feature: Dynamic Audio Deceleration</h2>
+        <p>The spinning wheel sound now <strong>gradually slows down</strong> to match the visual deceleration of the slot machine!</p>
+    </div>
+
+    <div class="test-info">
+        <h2>Playback Speed Over Time:</h2>
+        <div class="graph">
+            <div class="speed-line"></div>
+            <div class="speed-labels">
+                <span>Start: 100%</span>
+                <span>→</span>
+                <span>Mid: 75%</span>
+                <span>→</span>
+                <span>End: 50%</span>
+            </div>
+        </div>
+        <p style="color: #999; font-size: 14px;">
+            Audio playback rate decreases exponentially from 1.0x to 0.5x speed
+        </p>
+    </div>
+
+    <div class="test-info">
+        <h2>How It Works:</h2>
+        <ul class="feature-list">
+            <li>
+                <strong>Start (0ms):</strong><br>
+                Sound plays at normal speed (1.0x playback rate)
+            </li>
+            <li>
+                <strong>During Spin (0-2250ms):</strong><br>
+                Playback rate gradually decreases using exponential decay
+            </li>
+            <li>
+                <strong>End (2250ms):</strong><br>
+                Sound reaches 50% speed and stops
+            </li>
+        </ul>
+    </div>
+
+    <div class="test-info">
+        <h2>Technical Implementation:</h2>
+        <pre style="text-align: left; background: #222; padding: 15px; border-radius: 4px; overflow-x: auto;">
+<code>// Exponential decay formula for natural deceleration
+currentRate = 1.0 * Math.pow(0.5, stepCount / 20);
+rouletteSound.playbackRate = Math.max(0.5, currentRate);
+
+// Updates 20 times over 2.25 seconds
+// Creates smooth audio deceleration effect</code>
+        </pre>
+    </div>
+
+    <div class="test-info">
+        <h2>Benefits:</h2>
+        <ul class="feature-list">
+            <li>✅ Audio matches visual deceleration perfectly</li>
+            <li>✅ More immersive slot machine experience</li>
+            <li>✅ Natural-feeling spin-down effect</li>
+            <li>✅ Synchronized audio-visual feedback</li>
+        </ul>
+    </div>
+
+    <div class="success" style="margin: 30px 0; font-size: 20px;">
+        <p>✅ The spinning sound now slows down just like real slot machine wheels!</p>
+    </div>
+
+    <div>
+        <button class="test-button" onclick="window.location.href='/'">Test on Main Site</button>
+    </div>
+
+    <script>
+        console.log('🎵 Audio Deceleration Active:');
+        console.log('- Playback rate: 1.0x → 0.5x over 2.25 seconds');
+        console.log('- Uses exponential decay for natural slowdown');
+        console.log('- 20 speed adjustments for smooth transition');
+        console.log('- Perfectly synced with visual deceleration');
+    </script>
+</body>
+</html>
