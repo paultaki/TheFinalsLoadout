@@ -420,10 +420,19 @@
         const storedCompact = localStorage.getItem('overlayCompactMode');
         console.log('Stored compact mode from localStorage:', storedCompact);
 
+        // Parse hideEmpty with backward compatibility
+        let hideEmptyValue = params.get('hideEmpty') || savedConfig.hideEmpty || 'waiting';
+        // Handle old boolean values for backward compatibility
+        if (hideEmptyValue === 'true' || hideEmptyValue === true) {
+            hideEmptyValue = 'hide';
+        } else if (hideEmptyValue === 'false' || hideEmptyValue === false) {
+            hideEmptyValue = 'waiting';
+        }
+
         const config = {
             theme: params.get('theme') || savedConfig.theme || 'dark',
             compact: storedCompact !== null ? (storedCompact === 'true' || storedCompact === true) : (params.get('compact') === 'true' || savedConfig.compact === 'true'),
-            hideEmpty: params.get('hideEmpty') === 'true' || savedConfig.hideEmpty === 'true',
+            hideEmpty: hideEmptyValue,  // Now supports: 'waiting', 'placeholder', 'hide'
             channel: params.get('channel') || 'default',
             refresh: parseInt(params.get('refresh')) || 500,
             animate: params.get('animate') !== 'false'
@@ -438,13 +447,34 @@
         // Make sure the container is visible initially
         console.log('🎮 Overlay initialized with config:', config);
 
-        // Show initial waiting state
-        if (!config.hideEmpty) {
-            // Keep the initial HTML content visible
+        // Show initial state based on hideEmpty setting
+        if (config.hideEmpty === 'hide') {
+            container.classList.add('hidden');
+            console.log('✅ Container hidden initially');
+        } else if (config.hideEmpty === 'placeholder') {
+            // Show placeholder state initially
             container.style.display = 'block';
             container.style.opacity = '1';
             container.style.visibility = 'visible';
-            console.log('✅ Container made visible');
+            // Render placeholder loadout
+            renderLoadout({
+                type: 'reset',
+                class: 'EMPTY',
+                name: 'Placeholder',
+                weapon: { name: '???', image: '/images/placeholder-question.webp' },
+                specialization: { name: '???', image: '/images/placeholder-question.webp' },
+                gadgets: [
+                    { name: '???', image: '/images/placeholder-question.webp' },
+                    { name: '???', image: '/images/placeholder-question.webp' },
+                    { name: '???', image: '/images/placeholder-question.webp' }
+                ]
+            });
+        } else {
+            // Show waiting message (default)
+            container.style.display = 'block';
+            container.style.opacity = '1';
+            container.style.visibility = 'visible';
+            console.log('✅ Container made visible with waiting message');
         }
 
         // Icon fallbacks for different item types
@@ -536,10 +566,65 @@
             // Save the loadout for re-rendering
             lastLoadout = loadout;
 
-            if (!loadout || !loadout.class) {
-                console.log('❌ Invalid loadout - missing class');
-                if (config.hideEmpty) {
+            // Check for null/empty loadout
+            if (!loadout) {
+                console.log('❌ No loadout provided');
+                if (config.hideEmpty === 'hide') {
                     container.classList.add('hidden');
+                } else if (config.hideEmpty === 'placeholder') {
+                    // Show placeholder state
+                    container.classList.remove('hidden');
+                    renderLoadout({
+                        type: 'reset',
+                        class: 'EMPTY',
+                        name: 'Placeholder',
+                        weapon: { name: '???', image: '/images/placeholder-question.webp' },
+                        specialization: { name: '???', image: '/images/placeholder-question.webp' },
+                        gadgets: [
+                            { name: '???', image: '/images/placeholder-question.webp' },
+                            { name: '???', image: '/images/placeholder-question.webp' },
+                            { name: '???', image: '/images/placeholder-question.webp' }
+                        ]
+                    });
+                } else {
+                    // Show waiting message (default)
+                    container.classList.remove('hidden');
+                    container.innerHTML = `
+                        <div class="no-loadout">
+                            <h3>Waiting for Loadout<span class="loading-dots"></span></h3>
+                            <p>Generate a loadout on THE FINALS Loadout website!</p>
+                        </div>
+                    `;
+                }
+                return;
+            }
+
+            // Check for reset/placeholder state - allow it to pass through
+            const isReset = loadout.type === 'reset' || loadout.class === 'EMPTY';
+            if (isReset) {
+                console.log('🔄 Rendering reset/placeholder loadout');
+            }
+
+            // Check for invalid loadout (but allow reset state)
+            if (!isReset && !loadout.class) {
+                console.log('❌ Invalid loadout - missing class');
+                if (config.hideEmpty === 'hide') {
+                    container.classList.add('hidden');
+                } else if (config.hideEmpty === 'placeholder') {
+                    // Show placeholder state
+                    container.classList.remove('hidden');
+                    renderLoadout({
+                        type: 'reset',
+                        class: 'EMPTY',
+                        name: 'Placeholder',
+                        weapon: { name: '???', image: '/images/placeholder-question.webp' },
+                        specialization: { name: '???', image: '/images/placeholder-question.webp' },
+                        gadgets: [
+                            { name: '???', image: '/images/placeholder-question.webp' },
+                            { name: '???', image: '/images/placeholder-question.webp' },
+                            { name: '???', image: '/images/placeholder-question.webp' }
+                        ]
+                    });
                 } else {
                     container.classList.remove('hidden');
                     container.innerHTML = `
@@ -631,9 +716,13 @@
                 }
             }
 
+            // Handle header text for reset state
+            const headerText = isReset ? 'READY' : `${loadout.class} BUILD`;
+            const headerClass = isReset ? 'ready' : `class-${classLower}`;
+
             const loadoutHTML = `
                 <div class="class-header" ${compactMode ? 'style="margin-bottom: 10px; padding: 4px 8px;"' : ''}>
-                    <div class="class-name class-${classLower}" ${compactMode ? `style="font-size: 14px; ${headerTextColor}"` : ''}>${loadout.class} BUILD</div>
+                    <div class="class-name ${headerClass}" ${compactMode ? `style="font-size: 14px; ${headerTextColor}"` : ''}>${headerText}</div>
                     <div class="site-branding" ${compactMode ? `style="font-size: 9px; ${brandingColor}"` : ''}>TheFinalsLoadout.com</div>
                 </div>
                 <div class="slot-columns" ${compactStyles}>
@@ -758,7 +847,14 @@
                         config.theme = newConfig.theme;
                     }
                     if (newConfig.hideEmpty !== undefined) {
-                        config.hideEmpty = newConfig.hideEmpty === 'true' || newConfig.hideEmpty === true;
+                        // Handle new three-state system and backward compatibility
+                        let hideEmptyValue = newConfig.hideEmpty;
+                        if (hideEmptyValue === 'true' || hideEmptyValue === true) {
+                            hideEmptyValue = 'hide';
+                        } else if (hideEmptyValue === 'false' || hideEmptyValue === false) {
+                            hideEmptyValue = 'waiting';
+                        }
+                        config.hideEmpty = hideEmptyValue;
                     }
 
                     // Apply new theme/position immediately
@@ -981,7 +1077,14 @@
                             config.theme = newConfig.theme;
                         }
                         if (newConfig.hideEmpty !== undefined) {
-                            config.hideEmpty = newConfig.hideEmpty === 'true' || newConfig.hideEmpty === true;
+                            // Handle new three-state system and backward compatibility
+                            let hideEmptyValue = newConfig.hideEmpty;
+                            if (hideEmptyValue === 'true' || hideEmptyValue === true) {
+                                hideEmptyValue = 'hide';
+                            } else if (hideEmptyValue === 'false' || hideEmptyValue === false) {
+                                hideEmptyValue = 'waiting';
+                            }
+                            config.hideEmpty = hideEmptyValue;
                         }
 
                         const container = document.getElementById('overlayContainer');

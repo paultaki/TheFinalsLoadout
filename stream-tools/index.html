@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stream Tools - THE FINALS Loadout Generator</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
@@ -434,6 +435,28 @@
                             💡 The preview above will update automatically when you send loadouts from the main page
                         </p>
                     </div>
+
+                    <!-- Reset Loadout Button -->
+                    <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 71, 150, 0.2); border-radius: 12px; padding: 20px;">
+                        <h3 style="margin-bottom: 15px; color: #ff4796; font-size: 18px;">🔄 Reset Loadout</h3>
+                        <p style="color: #888; font-size: 14px; margin-bottom: 15px;">
+                            Clear the current loadout and show empty slots
+                        </p>
+                        <button onclick="resetLoadout(event)"
+                                style="background: linear-gradient(90deg, #666, #444);
+                                       color: white;
+                                       border: none;
+                                       padding: 10px 20px;
+                                       border-radius: 8px;
+                                       cursor: pointer;
+                                       font-size: 14px;
+                                       font-weight: 600;
+                                       transition: all 0.3s ease;"
+                                onmouseover="this.style.background='linear-gradient(90deg, #777, #555)'"
+                                onmouseout="this.style.background='linear-gradient(90deg, #666, #444)'">
+                            Reset to Empty
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -474,8 +497,9 @@
                     <div class="control-group">
                         <label class="control-label">👻 When Empty</label>
                         <select id="overlayHideEmpty" onchange="updateOverlay()" class="control-select">
-                            <option value="false">Show Waiting Message</option>
-                            <option value="true">Hide Completely</option>
+                            <option value="waiting">Show Waiting Message</option>
+                            <option value="placeholder">Show Placeholder Images</option>
+                            <option value="hide">Hide Completely</option>
                         </select>
                     </div>
                 </div>
@@ -768,6 +792,82 @@
             setTimeout(() => {
                 iframe.src = src;
             }, 100);
+        }
+
+        // Reset loadout to empty/placeholder state
+        function resetLoadout(event) {
+            const resetData = {
+                type: 'reset',
+                class: 'EMPTY',
+                name: 'Reset Loadout',
+                weapon: {
+                    name: '???',
+                    image: '/images/placeholder-question.webp'
+                },
+                specialization: {
+                    name: '???',
+                    image: '/images/placeholder-question.webp'
+                },
+                gadgets: [
+                    {
+                        name: '???',
+                        image: '/images/placeholder-question.webp'
+                    },
+                    {
+                        name: '???',
+                        image: '/images/placeholder-question.webp'
+                    },
+                    {
+                        name: '???',
+                        image: '/images/placeholder-question.webp'
+                    }
+                ]
+            };
+
+            console.log('🔄 Resetting loadout to placeholder state');
+
+            // Send to preview iframe
+            const iframe = document.getElementById('overlayPreview');
+            console.log('🔍 Looking for iframe:', iframe);
+            console.log('🔍 Iframe contentWindow:', iframe?.contentWindow);
+
+            if (iframe && iframe.contentWindow) {
+                try {
+                    iframe.contentWindow.postMessage({
+                        type: 'loadout_update',
+                        payload: resetData
+                    }, '*');
+                    console.log('📤 Sent reset to preview iframe successfully');
+                    console.log('📤 Reset data sent:', resetData);
+                } catch (e) {
+                    console.error('❌ Failed to send reset to iframe:', e);
+                }
+            } else {
+                console.error('❌ Iframe not found or not ready');
+            }
+
+            // Clear localStorage to prevent the overlay from reverting
+            const channelId = getMyChannelId();
+            localStorage.removeItem(`loadout_overlay_${channelId}`);
+            localStorage.removeItem('loadout_overlay_default');
+            localStorage.removeItem('lastSupabaseLoadout');
+            localStorage.removeItem('currentLoadout');
+            console.log('🗑️ Cleared localStorage loadout keys');
+
+            // Send via Supabase for OBS
+            sendLoadoutViaSupabase(resetData);
+
+            // Show feedback
+            const btn = event ? event.target : document.querySelector('button[onclick*="resetLoadout"]');
+            if (btn) {
+                const original = btn.innerHTML;
+                btn.innerHTML = '✅ Reset!';
+                btn.style.background = 'linear-gradient(90deg, #4CAF50, #45a049)';
+                setTimeout(() => {
+                    btn.innerHTML = original;
+                    btn.style.background = 'linear-gradient(90deg, #666, #444)';
+                }, 2000);
+            }
         }
 
         // Show feedback
