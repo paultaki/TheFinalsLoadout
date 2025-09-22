@@ -1071,9 +1071,14 @@
         this.stopRouletteSound();
       }, soundStopTime);
 
-      // Start celebration when last column visually appears to stop (accounting for easing)
-      // The easing makes it look stopped before the animation technically completes
-      const celebrationStartTime = lastColumnDuration - 200; // Start 200ms earlier to feel immediate
+      // The aggressive easing makes columns visually stop MUCH earlier than the animation duration
+      // With cubic-bezier easing, the visual motion is mostly complete at about 60% of the duration
+      // So for a 4000ms total duration, visual stop happens around 2400ms
+      const visualStopTime = baseDuration + (staggerDelay * 2); // Around when 3rd column stops (3000ms)
+      const celebrationStartTime = visualStopTime - 500; // Start celebration at 2500ms
+
+      console.log(`🎉 Celebration will start at ${celebrationStartTime}ms (visual stop appears around ${visualStopTime}ms)`);
+
       setTimeout(() => {
         this.playSound('finalWin');
         this.showWinnersSequentially(); // Don't await - let it run async
