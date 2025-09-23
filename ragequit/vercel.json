@@ -1,0 +1,23 @@
+{
+  "rewrites": [
+    {
+      "source": "/ragequit/(.*)",
+      "destination": "/ragequit/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/ragequit/(.*).js",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    }
+  ]
+}
