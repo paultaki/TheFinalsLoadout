@@ -584,10 +584,9 @@ class RageRouletteAnimationSystem {
     });
   }
 
-  // SIMPLIFIED: Animate handicap selection - just select and show briefly
+  // Animate handicap selection with rotating animation like class selection
   async animateHandicapSelection() {
-    console.log("🎯 Starting handicap selection");
-    console.log("🔍 animateHandicapSelection called, this:", this);
+    console.log("🎯 Starting handicap selection animation");
 
     // List of handicaps with descriptions
     const handicaps = [
@@ -612,51 +611,146 @@ class RageRouletteAnimationSystem {
       { name: "Panic Mode", desc: "Must constantly move - no standing still" }
     ];
 
-    // Select a random handicap
-    const selectedIndex = Math.floor(Math.random() * handicaps.length);
-    this.selectedHandicap = handicaps[selectedIndex].name;
-    this.selectedHandicapDesc = handicaps[selectedIndex].desc;
-
-    console.log("🎲 Selected handicap:", {
-      name: this.selectedHandicap,
-      desc: this.selectedHandicapDesc
-    });
-
-    // Create a simple display
-    const container = document.createElement("div");
-    container.style.cssText = `
+    // Create animation container
+    const animationContainer = document.createElement("div");
+    animationContainer.style.cssText = `
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(139, 0, 0, 0.98);
-      padding: 2rem;
-      border-radius: 12px;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(139, 0, 0, 0.95);
       z-index: 999999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    `;
+
+    // Create title
+    const title = document.createElement("h2");
+    title.textContent = "CHOOSING YOUR HANDICAP...";
+    title.style.cssText = `
+      font-size: clamp(28px, 8vw, 48px);
+      font-weight: 900;
+      letter-spacing: clamp(2px, 2vw, 8px);
+      margin-bottom: clamp(20px, 8vw, 50px);
+      color: #ff4444;
+      text-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
       text-align: center;
-      color: white;
-      font-family: 'Orbitron', monospace;
-      box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
+      padding: 0 20px;
+    `;
+
+    // Create handicap display
+    const handicapDisplay = document.createElement("div");
+    handicapDisplay.style.cssText = `
+      background: rgba(0, 0, 0, 0.5);
+      border: 3px solid #ff4444;
+      border-radius: 15px;
+      padding: 2rem 3rem;
       min-width: 300px;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+      transition: all 0.3s ease;
     `;
 
-    container.innerHTML = `
-      <h2 style="color: #ff4444; margin-bottom: 1rem; font-size: 1.8rem;">💀 HANDICAP SELECTED 💀</h2>
-      <h3 style="color: #ff6666; margin-bottom: 0.5rem; font-size: 1.4rem;">${this.selectedHandicap}</h3>
-      <p style="color: #ffaaaa; font-style: italic; font-size: 1rem;">${this.selectedHandicapDesc}</p>
+    const handicapName = document.createElement("h3");
+    handicapName.style.cssText = `
+      color: #ff6666;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(255, 102, 102, 0.8);
     `;
 
-    document.body.appendChild(container);
+    const handicapDesc = document.createElement("p");
+    handicapDesc.style.cssText = `
+      color: #ffaaaa;
+      font-size: 1.2rem;
+      font-style: italic;
+      opacity: 0.9;
+    `;
 
-    // Wait 2.5 seconds then remove and resolve
+    handicapDisplay.appendChild(handicapName);
+    handicapDisplay.appendChild(handicapDesc);
+
+    animationContainer.appendChild(title);
+    animationContainer.appendChild(handicapDisplay);
+
+    // Append to roulette container or body
+    const rouletteContainer = document.getElementById("rage-roulette-container");
+    if (rouletteContainer) {
+      rouletteContainer.appendChild(animationContainer);
+    } else {
+      document.body.appendChild(animationContainer);
+    }
+
+    // Animation logic
+    let currentIndex = 0;
+    const startTime = Date.now();
+    const winnerIndex = Math.floor(Math.random() * handicaps.length);
+    this.selectedHandicap = handicaps[winnerIndex].name;
+    this.selectedHandicapDesc = handicaps[winnerIndex].desc;
+
     return new Promise((resolve) => {
-      setTimeout(() => {
-        if (container && container.parentNode) {
-          container.parentNode.removeChild(container);
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+
+        if (elapsed >= this.handicapAnimationConfig.totalDuration) {
+          // Final selection
+          handicapName.textContent = "💀 " + this.selectedHandicap + " 💀";
+          handicapDesc.textContent = this.selectedHandicapDesc;
+          handicapDisplay.style.transform = "scale(1.1)";
+          handicapDisplay.style.boxShadow = "0 0 50px rgba(255, 68, 68, 0.8)";
+
+          this.playClassWinSound();
+
+          setTimeout(() => {
+            if (animationContainer.parentNode) {
+              animationContainer.parentNode.removeChild(animationContainer);
+            }
+            console.log("✅ Handicap selection complete");
+            resolve();
+          }, 1000);
+          return;
         }
-        console.log("✅ Handicap selection complete");
-        resolve();
-      }, 2500);
+
+        // Update current handicap
+        handicapName.textContent = handicaps[currentIndex].name;
+        handicapDesc.textContent = handicaps[currentIndex].desc;
+
+        // Play tick sound
+        this.playTickSound();
+
+        // Calculate speed with deceleration
+        const progress = elapsed / this.handicapAnimationConfig.totalDuration;
+        let speed = this.handicapAnimationConfig.initialSpeed;
+
+        if (progress > this.handicapAnimationConfig.decelerationStart) {
+          const decelerationProgress =
+            (progress - this.handicapAnimationConfig.decelerationStart) /
+            (1 - this.handicapAnimationConfig.decelerationStart);
+          speed =
+            this.handicapAnimationConfig.initialSpeed +
+            (this.handicapAnimationConfig.finalSpeed -
+              this.handicapAnimationConfig.initialSpeed) *
+              Math.pow(decelerationProgress, 2);
+        }
+
+        // Make sure we land on the winner in the last 500ms
+        if (elapsed >= this.handicapAnimationConfig.totalDuration - 500) {
+          currentIndex = winnerIndex;
+        } else {
+          currentIndex = (currentIndex + 1) % handicaps.length;
+        }
+
+        setTimeout(animate, speed);
+      };
+
+      // Start the animation
+      animate();
     });
   }
 
