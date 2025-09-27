@@ -185,15 +185,10 @@ function resolveItemImage(name, category = '') {
   const filename = nameToFilename(resolvedName);
   
   // Determine path based on environment
-  const basePath = window.location.protocol === 'file:' 
-    ? '../images' 
+  const basePath = window.location.protocol === 'file:'
+    ? '../images'
     : '/images';
-  
-  // For v3 directory, use relative path
-  if (window.location.pathname.includes('/v3/')) {
-    return `images/${filename}.webp`;
-  }
-  
+
   return `${basePath}/${filename}.webp`;
 }
 
