@@ -788,19 +788,29 @@
     }
 
     updateHistoryPanel() {
-      const historyContent = document.getElementById('history-content');
-      if (!historyContent) return;
-      
+      const historyList = document.getElementById('historyList');
+      const historyCount = document.getElementById('historyCount');
+
+      if (!historyList) return;
+
       const history = this.state.get('history');
-      
+
+      // Update count badge
+      if (historyCount) {
+        historyCount.textContent = `(${history.length})`;
+      }
+
       if (history.length === 0) {
-        historyContent.innerHTML = '<p class="history-empty">No loadouts generated yet</p>';
+        historyList.innerHTML = '<div class="empty-history">No loadouts generated yet. Spin the slots to get started!</div>';
         return;
       }
-      
-      historyContent.innerHTML = history.map((item, index) => `
+
+      historyList.innerHTML = history.map((item, index) => `
         <div class="history-item" data-index="${index}">
-          <div class="history-class">${item.class}</div>
+          <div class="history-header">
+            <div class="history-class-badge class-${item.class.toLowerCase()}">${item.class}</div>
+            <div class="history-time">${this.formatTime(item.timestamp)}</div>
+          </div>
           <div class="history-details">
             <div class="history-weapon">⚔️ ${item.weapon}</div>
             <div class="history-spec">⭐ ${item.specialization}</div>
@@ -808,7 +818,7 @@
               🎯 ${item.gadgets.join(', ')}
             </div>
           </div>
-          <div class="history-time">${this.formatTime(item.timestamp)}</div>
+          <button class="copy-btn" data-index="${index}">📋 Copy</button>
         </div>
       `).join('');
     }
@@ -841,8 +851,9 @@
       const historyToggle = document.getElementById('history-toggle');
       const historyPanel = document.getElementById('history-panel');
       const closeHistory = document.getElementById('close-history');
-      const clearHistory = document.getElementById('clear-history');
-      
+      const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+      const historyList = document.getElementById('historyList');
+
       if (historyToggle && historyPanel) {
         historyToggle.addEventListener('click', () => {
           const isOpen = historyPanel.classList.contains('open');
@@ -850,16 +861,17 @@
           historyToggle.setAttribute('aria-expanded', (!isOpen).toString());
         });
       }
-      
+
       if (closeHistory && historyPanel) {
         closeHistory.addEventListener('click', () => {
           historyPanel.classList.remove('open');
           historyToggle?.setAttribute('aria-expanded', 'false');
         });
       }
-      
-      if (clearHistory) {
-        clearHistory.addEventListener('click', () => {
+
+      // Clear history button
+      if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', () => {
           if (confirm('Clear all loadout history?')) {
             this.state.set('history', []);
             this.state.saveHistory([]);
@@ -867,6 +879,42 @@
           }
         });
       }
+
+      // Copy buttons - use event delegation
+      if (historyList) {
+        historyList.addEventListener('click', (e) => {
+          if (e.target.classList.contains('copy-btn')) {
+            const index = parseInt(e.target.dataset.index);
+            this.copyLoadout(index);
+          }
+        });
+      }
+    }
+
+    copyLoadout(index) {
+      const history = this.state.get('history');
+      const loadout = history[index];
+
+      if (!loadout) return;
+
+      const text = `${loadout.class} Loadout:\n` +
+                   `⚔️ ${loadout.weapon}\n` +
+                   `⭐ ${loadout.specialization}\n` +
+                   `🎯 ${loadout.gadgets.join(', ')}`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        // Visual feedback
+        const btn = document.querySelector(`.copy-btn[data-index="${index}"]`);
+        if (btn) {
+          const originalText = btn.textContent;
+          btn.textContent = '✅ Copied!';
+          setTimeout(() => {
+            btn.textContent = originalText;
+          }, 2000);
+        }
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+      });
     }
 
     bindKeyboardShortcuts() {

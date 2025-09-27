@@ -1308,25 +1308,9 @@ Gadget 3: ${loadout.gadget3}`;
         
         // Initialize history manager
         window.loadoutHistory = new LoadoutHistory();
-        
-        // Hook into the premium slot machine to capture loadouts
-        const originalStartSlotMachine = window.premiumIntegrated?.startSlotMachine;
-        if (window.premiumIntegrated && originalStartSlotMachine) {
-            window.premiumIntegrated.startSlotMachine = async function() {
-                const result = await originalStartSlotMachine.apply(this, arguments);
-                
-                // Add loadout to history after generation
-                if (this.currentLoadout) {
-                    const loadout = {
-                        ...this.currentLoadout,
-                        class: this.selectedClass ? this.selectedClass.charAt(0).toUpperCase() + this.selectedClass.slice(1) : 'Unknown'
-                    };
-                    window.loadoutHistory.addLoadout(loadout);
-                }
-                
-                return result;
-            }.bind(window.premiumIntegrated);
-        }
+
+        // The premium-integrated.js already handles adding to history in startSlotMachine
+        // No need for additional hooks here
     </script>
     
     <!-- Filter System Script -->
