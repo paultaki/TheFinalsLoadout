@@ -1517,7 +1517,7 @@
         .badge-main {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
@@ -1532,7 +1532,7 @@
         .badge-text {
             position: relative;
             height: 18px;
-            width: 130px;
+            width: 145px;
             display: flex;
             align-items: center;
             overflow: hidden;
@@ -1543,6 +1543,9 @@
             position: absolute;
             white-space: nowrap;
             transition: opacity 0.25s ease-out;
+            width: 100%;
+            text-align: center;
+            left: 0;
         }
 
         .text-default {
@@ -1553,16 +1556,13 @@
             opacity: 0;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 4px;
         }
 
         .hover-icon {
             font-size: 12px;
             animation: none;
-        }
-
-        a.credibility-badge:hover .badge-icon {
-            transform: rotate(15deg);
         }
 
         a.credibility-badge:hover .text-default {
@@ -1855,12 +1855,11 @@
         <img src="/wt-progress/images/wt-logo.webp" alt="World Tour" style="width: 40%; max-width: 280px; height: auto; margin: 0 auto 0.5rem; display: block;" class="wt-logo">
 
         <!-- Credibility Badge -->
-        <a href="https://ko-fi.com/nextroundonme" target="_blank" rel="noopener noreferrer" class="credibility-badge" aria-label="Ad-free, no login required, community powered tracker">
-            <div class="badge-top">AD FREE • NO LOGIN</div>
+        <a href="https://ko-fi.com/nextroundonme" target="_blank" rel="noopener noreferrer" class="credibility-badge" aria-label="No ads, no tracking, no login required tracker">
+            <div class="badge-top">NO ADS • NO TRACKING • NO LOGIN</div>
             <div class="badge-main">
-                <span class="badge-icon">⚡</span>
                 <span class="badge-text">
-                    <span class="text-default">Community Powered</span>
+                    <span class="text-default">Built solo, kept simple</span>
                     <span class="text-hover">
                         <span class="hover-icon">❤️</span>
                         Support Me
