@@ -990,17 +990,6 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            animation: subtlePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes subtlePulse {
-            0%, 100% {
-                box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
-            }
-            50% {
-                box-shadow: 0 0 40px rgba(138, 43, 226, 0.5),
-                            0 0 60px rgba(255, 51, 102, 0.3);
-            }
         }
 
         .secondary-filter-button:hover {
@@ -1020,11 +1009,6 @@
             height: 20px;
         }
 
-        /* Remove animation after first click */
-        .secondary-filter-button.clicked {
-            animation: none;
-        }
-        
         /* Filter Panel Styles */
         .filter-panel-overlay {
             position: fixed;

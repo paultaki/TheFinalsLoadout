@@ -236,61 +236,50 @@
         <p class="subtitle">Vegas-Style Loadout Generator</p>
         -->
         
-        <!-- Season 8 Badge -->
-        <div class="season-badge">
-            <span class="season-text">🎯 Season 8 Ready!</span>
-            <span class="season-subtext">BFR Titan & P90 Added</span>
-        </div>
-
-
         <!-- Credibility Badge -->
-        <div class="credibility-badge" aria-label="Open source, ad-free, community powered loadout generator">
-            <div class="badge-top">OPEN SOURCE • AD FREE</div>
+        <a href="https://ko-fi.com/nextroundonme" target="_blank" rel="noopener noreferrer" class="credibility-badge" aria-label="Ad-free, no login required, community powered loadout generator">
+            <div class="badge-top">AD FREE • NO LOGIN</div>
             <div class="badge-main">
                 <span class="badge-icon">⚡</span>
                 <span class="badge-text">
                     <span class="text-default">Community Powered</span>
                     <span class="text-hover">
                         <span class="hover-icon">❤️</span>
-                        Support Development
+                        Support Me
                     </span>
                 </span>
             </div>
-        </div>
+        </a>
 
         <style>
-            /* Ensure header has relative positioning for badge */
-            .header {
-                position: relative !important;
-            }
-
-            .credibility-badge {
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
+            a.credibility-badge {
+                display: inline-block;
+                margin: 15px auto 10px;
                 background: rgba(20, 20, 20, 0.1);
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
-                padding: 8px 16px;
+                padding: 8px 20px;
                 border-radius: 12px;
                 user-select: none;
                 animation: subtlePulse 2s ease-out;
                 transition: all 0.3s ease-out;
                 z-index: 10;
+                text-decoration: none;
+                color: inherit;
+                overflow: hidden;
             }
 
             @keyframes subtlePulse {
                 0% {
-                    transform: translate(-50%, -50%) scale(0.98);
+                    transform: scale(0.98);
                     opacity: 0;
                 }
                 50% {
                     opacity: 1;
                 }
                 100% {
-                    transform: translate(-50%, -50%) scale(1);
+                    transform: scale(1);
                     opacity: 1;
                 }
             }
@@ -322,8 +311,10 @@
             .badge-text {
                 position: relative;
                 height: 18px;
+                width: 130px;
                 display: flex;
                 align-items: center;
+                overflow: hidden;
             }
 
             .text-default,
@@ -349,19 +340,19 @@
                 animation: none;
             }
 
-            .credibility-badge:hover .badge-icon {
+            a.credibility-badge:hover .badge-icon {
                 transform: rotate(15deg);
             }
 
-            .credibility-badge:hover .text-default {
+            a.credibility-badge:hover .text-default {
                 opacity: 0;
             }
 
-            .credibility-badge:hover .text-hover {
+            a.credibility-badge:hover .text-hover {
                 opacity: 1;
             }
 
-            .credibility-badge:hover .hover-icon {
+            a.credibility-badge:hover .hover-icon {
                 animation: heartBeat 1s ease-out infinite;
             }
 
@@ -374,23 +365,20 @@
                 }
             }
 
-            .credibility-badge:hover {
+            a.credibility-badge:hover {
                 background: rgba(30, 30, 30, 0.15);
                 border-color: rgba(255, 255, 255, 0.15);
-                transform: translate(-50%, -50%) scale(1.02);
+                transform: scale(1.02);
             }
 
             /* Mobile adjustments */
             @media (max-width: 768px) {
-                .credibility-badge {
-                    position: static;
-                    transform: none;
+                a.credibility-badge {
                     margin: 10px auto;
-                    display: inline-block;
-                    width: auto;
+                    transform: none;
                 }
 
-                .credibility-badge:hover {
+                a.credibility-badge:hover {
                     transform: none;
                 }
 
@@ -419,7 +407,7 @@
 
             /* Very small mobile screens */
             @media (max-width: 480px) {
-                .credibility-badge {
+                a.credibility-badge {
                     padding: 6px 12px;
                 }
 
