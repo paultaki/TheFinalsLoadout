@@ -60,9 +60,14 @@ const StatsTracker = {
     // Update local display immediately
     this.updateLocalDisplay(type);
 
-    // Sync if we have 10+ pending or it's been 30+ seconds
-    if (this.getTotalPending() >= 10 || Date.now() - this.lastSync > 30000) {
+    // For ragequit, sync immediately to avoid counter reset issues
+    if (type === 'ragequit') {
       this.syncNow();
+    } else {
+      // Sync if we have 10+ pending or it's been 30+ seconds
+      if (this.getTotalPending() >= 10 || Date.now() - this.lastSync > 30000) {
+        this.syncNow();
+      }
     }
   },
 
@@ -117,17 +122,27 @@ const StatsTracker = {
         );
       }
 
-      await Promise.all(promises);
-      console.log('Stats synced:', toSync);
+      const results = await Promise.all(promises);
+      console.log('Stats synced:', toSync, 'Results:', results);
 
       // Update display with new totals
       this.updateDisplay();
     } catch (err) {
       console.error('Sync failed, will retry:', err);
+      console.error('Full error details:', err.message, err.stack);
       // Restore pending counts on failure
       this.pendingSpins.loadout += toSync.loadout;
       this.pendingSpins.ragequit += toSync.ragequit;
       this.savePendingSpins();
+
+      // Still update the local display even if sync failed
+      if (toSync.ragequit > 0) {
+        const legacyEl = document.getElementById('totalRageQuits');
+        if (legacyEl && legacyEl.textContent !== 'Loading...') {
+          const current = parseInt(legacyEl.textContent.replace(/,/g, '')) || 0;
+          legacyEl.textContent = current.toLocaleString();
+        }
+      }
     }
   },
 
@@ -139,7 +154,11 @@ const StatsTracker = {
 
     try {
       const { data } = await this.client.rpc('get_current_stats');
-      if (!data) return;
+      console.log('Fetched stats from Supabase:', data);
+      if (!data) {
+        console.log('No data returned from Supabase');
+        return;
+      }
 
       // Update elements if they exist
       data.forEach(stat => {
@@ -149,7 +168,9 @@ const StatsTracker = {
         // Total counter
         const totalEl = document.getElementById(`${type}Total`);
         if (totalEl) {
-          totalEl.textContent = (stat.total_count + this.pendingSpins[type]).toLocaleString();
+          const newValue = stat.total_count + this.pendingSpins[type];
+          console.log(`Updating ${type}Total: ${stat.total_count} + ${this.pendingSpins[type]} pending = ${newValue}`);
+          totalEl.textContent = newValue.toLocaleString();
         }
 
         // Daily counter if element exists
@@ -162,12 +183,14 @@ const StatsTracker = {
         if (type === 'ragequit') {
           const legacyEl = document.getElementById('totalRageQuits');
           if (legacyEl) {
-            legacyEl.textContent = (stat.total_count + this.pendingSpins.ragequit).toLocaleString();
+            const newValue = stat.total_count + this.pendingSpins.ragequit;
+            console.log(`Updating totalRageQuits: ${stat.total_count} + ${this.pendingSpins.ragequit} pending = ${newValue}`);
+            legacyEl.textContent = newValue.toLocaleString();
           }
         }
       });
     } catch (err) {
-      console.log('Failed to update display:', err);
+      console.error('Failed to update display:', err);
     }
   },
 
