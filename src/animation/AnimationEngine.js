@@ -251,6 +251,21 @@ class SlotColumn {
       : wrappedPosition + SLOT_PHYSICS.ITEM_HEIGHT;
   }
 
+  playTickSound() {
+    try {
+      // Use the clickSound element that should be in the HTML
+      const audio = document.getElementById("clickSound");
+      if (audio) {
+        audio.currentTime = 0;
+        audio.volume = 0.1; // Low volume like in rage quit
+        audio.playbackRate = 2.0; // Slightly faster for tick effect
+        audio.play().catch(() => {});
+      }
+    } catch (error) {
+      // Silently fail if sound can't play
+    }
+  }
+
   forceStop() {
     this.velocity = 0;
     this.position = this.targetPosition;
