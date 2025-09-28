@@ -23,3 +23,6 @@ Backup/
 
 # Ignore macOS system files
 .DS_Store
+
+# Ignore MCP configuration (contains sensitive tokens)
+.mcp.json
