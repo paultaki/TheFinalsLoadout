@@ -512,8 +512,14 @@ function finalizeSpin() {
   }
 
   updateSufferingStreak();
-  updateTotalRageQuits();
+  // Commented out local counter update - using Supabase instead
+  // updateTotalRageQuits();
   displaySelectedHandicap();
+
+  // Track the spin in Supabase FIRST (this also updates the display)
+  if (window.StatsTracker) {
+    window.StatsTracker.track('ragequit');
+  }
 
   // Record this spin in history after a short delay to ensure DOM is ready
   setTimeout(() => {
@@ -522,11 +528,6 @@ function finalizeSpin() {
       recordSpinInHistory();
     }
   }, 500);
-
-  // Track the spin in Supabase
-  if (window.StatsTracker) {
-    window.StatsTracker.track('ragequit');
-  }
 
   // Display handicap description in the new section
   const handicapDescSection = document.getElementById('handicap-description-section');
@@ -842,11 +843,12 @@ if (document.readyState !== 'loading') {
   const streakEl = document.getElementById('currentStreak');
   if (streakEl) streakEl.textContent = rageState.sufferingStreak.toLocaleString();
 
-  const totalEl = document.getElementById('totalRageQuits');
-  if (totalEl) {
-    const total = parseInt(localStorage.getItem('totalRageQuits')) || 3144;
-    totalEl.textContent = total.toLocaleString();
-  }
+  // Commented out - let Supabase handle the counter
+  // const totalEl = document.getElementById('totalRageQuits');
+  // if (totalEl) {
+  //   const total = parseInt(localStorage.getItem('totalRageQuits')) || 3144;
+  //   totalEl.textContent = total.toLocaleString();
+  // }
 }
 
 // When roulette system loads, set it globally
