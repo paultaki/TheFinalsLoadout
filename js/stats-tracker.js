@@ -102,7 +102,7 @@ const StatsTracker = {
       if (toSync.loadout > 0) {
         promises.push(
           this.client.rpc('increment_spin_count', {
-            p_spin_type: 'loadout',
+            p_spin_type: 'main',
             p_count: toSync.loadout
           })
         );
@@ -143,20 +143,23 @@ const StatsTracker = {
 
       // Update elements if they exist
       data.forEach(stat => {
+        // Map spin_type to our internal type names
+        const type = stat.spin_type === 'main' ? 'loadout' : stat.spin_type;
+
         // Total counter
-        const totalEl = document.getElementById(`${stat.counter_type}Total`);
+        const totalEl = document.getElementById(`${type}Total`);
         if (totalEl) {
-          totalEl.textContent = (stat.total_count + this.pendingSpins[stat.counter_type]).toLocaleString();
+          totalEl.textContent = (stat.total_count + this.pendingSpins[type]).toLocaleString();
         }
 
-        // Today counter
-        const todayEl = document.getElementById(`${stat.counter_type}Today`);
+        // Daily counter if element exists
+        const todayEl = document.getElementById(`${type}Today`);
         if (todayEl) {
-          todayEl.textContent = stat.today_count.toLocaleString();
+          todayEl.textContent = stat.daily_count.toLocaleString();
         }
 
         // Legacy element names for backward compatibility
-        if (stat.counter_type === 'ragequit') {
+        if (type === 'ragequit') {
           const legacyEl = document.getElementById('totalRageQuits');
           if (legacyEl) {
             legacyEl.textContent = (stat.total_count + this.pendingSpins.ragequit).toLocaleString();
