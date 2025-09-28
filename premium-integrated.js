@@ -303,18 +303,20 @@
       for (let i = 0; i < 15; i++) {
         spinBtns.forEach(b => b.classList.remove('active'));
         spinBtns[i % spinBtns.length].classList.add('active');
+        this.playSound('click'); // Add clicking sound for spin animation
         await this.sleep(50 + (i > 10 ? i * 10 : 0));
       }
       const finalSpin = Math.floor(Math.random() * 4) + 2; // 2-5
       this.selectSpins(finalSpin);
-      
+
       await this.sleep(300);
-      
+
       // Animate class selection
       const classBtns = document.querySelectorAll('.class-btn-premium');
       for (let i = 0; i < 12; i++) {
         classBtns.forEach(b => b.classList.remove('active'));
         classBtns[i % classBtns.length].classList.add('active');
+        this.playSound('click'); // Add clicking sound for class animation
         await this.sleep(60 + (i > 8 ? i * 15 : 0));
       }
       const classes = ['light', 'medium', 'heavy'];
