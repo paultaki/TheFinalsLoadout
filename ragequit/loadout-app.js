@@ -515,6 +515,11 @@ function finalizeSpin() {
   updateTotalRageQuits();
   displaySelectedHandicap();
 
+  // Record this spin in history
+  if (typeof recordSpinInHistory === 'function') {
+    recordSpinInHistory();
+  }
+
   // Display handicap description in the new section
   const handicapDescSection = document.getElementById('handicap-description-section');
   const handicapNameDisplay = document.getElementById('handicap-name-display');

@@ -2185,13 +2185,45 @@ function resetSpinState() {
 // Issue 7: Implement History Recording
 function recordSpinInHistory() {
   try {
-    // Get the selected items from the slot machine
-    const itemContainers = document.querySelectorAll('.item-container');
+    // Get the winning items from each column (the ones with class "winner")
+    const columns = document.querySelectorAll('.item-container');
     const selectedItems = [];
-    
-    itemContainers.forEach(container => {
-      const itemName = container.querySelector('.item-name')?.textContent || 'Unknown Item';
-      const itemType = container.querySelector('p')?.textContent || 'Unknown Type';
+
+    columns.forEach((container, index) => {
+      // Find the winner item in this column
+      const winnerItem = container.querySelector('.itemCol.winner');
+      let itemName = 'Unknown';
+
+      if (winnerItem) {
+        // First try to get from data-item-name attribute
+        itemName = winnerItem.dataset.itemName ||
+                   // Fallback to the p tag text
+                   winnerItem.querySelector('p')?.textContent ||
+                   'Unknown';
+      } else {
+        // If no winner class, try to find the visible item in the middle of the container
+        const allItems = container.querySelectorAll('.itemCol');
+        if (allItems.length > 0) {
+          // For weapon/spec (8 items), winner is at index 4
+          // For gadgets (single item), it's at index 0
+          const winnerIndex = allItems.length > 1 ? 4 : 0;
+          const middleItem = allItems[winnerIndex];
+          if (middleItem) {
+            itemName = middleItem.dataset.itemName ||
+                       middleItem.querySelector('p')?.textContent ||
+                       'Unknown';
+          }
+        }
+      }
+
+      // Determine item type based on index
+      let itemType = 'Unknown';
+      if (index === 0) itemType = 'Weapon';
+      else if (index === 1) itemType = 'Specialization';
+      else if (index === 2) itemType = 'Gadget 1';
+      else if (index === 3) itemType = 'Gadget 2';
+      else if (index === 4) itemType = 'Gadget 3';
+
       selectedItems.push({ name: itemName, type: itemType });
     });
     
