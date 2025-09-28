@@ -53,15 +53,19 @@ const StatsTracker = {
    * Track a spin (batched locally)
    */
   track(type) {
+    console.log(`🎯 Tracking ${type} spin`);
+
     // Always work locally first
     this.pendingSpins[type] = (this.pendingSpins[type] || 0) + 1;
     this.savePendingSpins();
+    console.log(`📝 Pending spins now:`, this.pendingSpins);
 
     // Update local display immediately
     this.updateLocalDisplay(type);
 
     // For ragequit, sync immediately to avoid counter reset issues
     if (type === 'ragequit') {
+      console.log('🚀 Triggering immediate sync for ragequit');
       this.syncNow();
     } else {
       // Sync if we have 10+ pending or it's been 30+ seconds
@@ -94,10 +98,11 @@ const StatsTracker = {
     if (!this.isReady || this.getTotalPending() === 0) return;
 
     const toSync = { ...this.pendingSpins };
+    console.log('🔄 Starting sync with pending counts:', toSync);
 
-    // Clear pending (optimistic - assume success)
-    this.pendingSpins = { loadout: 0, ragequit: 0 };
-    this.savePendingSpins();
+    // DON'T clear pending until we know sync succeeded
+    // this.pendingSpins = { loadout: 0, ragequit: 0 };
+    // this.savePendingSpins();
     this.lastSync = Date.now();
 
     try {
@@ -105,28 +110,97 @@ const StatsTracker = {
       const promises = [];
 
       if (toSync.loadout > 0) {
+        console.log('📤 Sending loadout increment:', toSync.loadout);
         promises.push(
           this.client.rpc('increment_spin_count', {
             p_spin_type: 'main',
             p_count: toSync.loadout
+          }).catch(async (err) => {
+            console.error('❌ RPC failed for loadout, trying direct update:', err);
+
+            // Fallback: Get current count and update directly
+            try {
+              const { data: current } = await this.client
+                .from('spin_stats')
+                .select('total_count')
+                .eq('spin_type', 'main')
+                .single();
+
+              if (current) {
+                const newCount = (current.total_count || 0) + toSync.loadout;
+                const { data: updated } = await this.client
+                  .from('spin_stats')
+                  .update({
+                    total_count: newCount,
+                    last_updated: new Date().toISOString()
+                  })
+                  .eq('spin_type', 'main');
+
+                console.log('✅ Direct loadout update succeeded:', newCount);
+                return updated;
+              }
+            } catch (fallbackErr) {
+              console.error('❌ Direct loadout update also failed:', fallbackErr);
+              throw fallbackErr;
+            }
           })
         );
       }
 
       if (toSync.ragequit > 0) {
+        console.log('📤 Sending ragequit increment:', toSync.ragequit);
+        // Try RPC first, fallback to direct update if it fails
         promises.push(
           this.client.rpc('increment_spin_count', {
             p_spin_type: 'ragequit',
             p_count: toSync.ragequit
+          }).then(result => {
+            console.log('✅ Ragequit increment response:', result);
+            return result;
+          }).catch(async (err) => {
+            console.error('❌ RPC failed, trying direct update:', err);
+
+            // Fallback: Get current count and update directly
+            try {
+              const { data: current } = await this.client
+                .from('spin_stats')
+                .select('total_count')
+                .eq('spin_type', 'ragequit')
+                .single();
+
+              if (current) {
+                const newCount = (current.total_count || 0) + toSync.ragequit;
+                const { data: updated } = await this.client
+                  .from('spin_stats')
+                  .update({
+                    total_count: newCount,
+                    last_updated: new Date().toISOString()
+                  })
+                  .eq('spin_type', 'ragequit');
+
+                console.log('✅ Direct update succeeded:', newCount);
+                return updated;
+              }
+            } catch (fallbackErr) {
+              console.error('❌ Direct update also failed:', fallbackErr);
+              throw fallbackErr;
+            }
           })
         );
       }
 
       const results = await Promise.all(promises);
-      console.log('Stats synced:', toSync, 'Results:', results);
+      console.log('✅ All syncs completed. Results:', results);
 
-      // Update display with new totals
-      this.updateDisplay();
+      // Only clear pending after successful sync
+      this.pendingSpins = { loadout: 0, ragequit: 0 };
+      this.savePendingSpins();
+
+      // Wait a bit before updating display to ensure database has processed the increment
+      setTimeout(() => {
+        console.log('📊 Updating display after sync...');
+        this.updateDisplay();
+      }, 100);
     } catch (err) {
       console.error('Sync failed, will retry:', err);
       console.error('Full error details:', err.message, err.stack);
