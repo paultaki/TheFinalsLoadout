@@ -564,14 +564,44 @@ function finalizeSpin() {
     });
   }
 
-  // Save to history if we have a valid loadout
-  if (rageState.finalLoadout && window.addToHistory) {
-    const { classType, weapon, specialization, gadgets } = rageState.finalLoadout;
+  // Save to history with the ACTUAL displayed items (not the intended ones)
+  if (window.addToHistory) {
+    // Get what's actually displayed in the output div
+    const outputDiv = document.getElementById('output');
+
+    // Get the actual visible items from the DOM (first item in each container)
+    const weaponContainer = outputDiv?.querySelector('.item-container:nth-child(1)');
+    const weaponItem = weaponContainer?.querySelector('.itemCol:first-child');
+    const actualWeapon = weaponItem?.dataset.itemName ||
+                        weaponItem?.querySelector('p')?.textContent?.trim() ||
+                        rageState.finalLoadout?.weapon || 'Unknown';
+
+    const specContainer = outputDiv?.querySelector('.item-container:nth-child(2)');
+    const specItem = specContainer?.querySelector('.itemCol:first-child');
+    const actualSpec = specItem?.dataset.itemName ||
+                      specItem?.querySelector('p')?.textContent?.trim() ||
+                      rageState.finalLoadout?.specialization || 'Unknown';
+
+    // Gadgets are correctly displayed (no animation issues)
+    const gadget1 = outputDiv?.querySelector('.item-container:nth-child(3) .itemCol:first-child')?.dataset.itemName ||
+                    outputDiv?.querySelector('.item-container:nth-child(3) .itemCol:first-child p')?.textContent?.trim();
+    const gadget2 = outputDiv?.querySelector('.item-container:nth-child(4) .itemCol:first-child')?.dataset.itemName ||
+                    outputDiv?.querySelector('.item-container:nth-child(4) .itemCol:first-child p')?.textContent?.trim();
+    const gadget3 = outputDiv?.querySelector('.item-container:nth-child(5) .itemCol:first-child')?.dataset.itemName ||
+                    outputDiv?.querySelector('.item-container:nth-child(5) .itemCol:first-child p')?.textContent?.trim();
+    const actualGadgets = [gadget1, gadget2, gadget3].filter(g => g);
+
+    console.log('🎨 Adding to visual history:', {
+      weapon: actualWeapon,
+      spec: actualSpec,
+      gadgets: actualGadgets
+    });
+
     window.addToHistory(
-      classType,
-      weapon,
-      specialization,
-      gadgets,
+      rageState.finalLoadout?.classType || rageState.selectedClass || 'Unknown',
+      actualWeapon,
+      actualSpec,
+      actualGadgets.length > 0 ? actualGadgets : (rageState.finalLoadout?.gadgets || []),
       rageState.selectedHandicap || "None",
       rageState.selectedHandicapDesc || "No handicap selected"
     );

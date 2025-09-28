@@ -2194,17 +2194,38 @@ function recordSpinInHistory() {
     const weaponContainer = outputDiv?.querySelector('.item-container:nth-child(1)');
     const weaponItems = weaponContainer?.querySelectorAll('.itemCol');
 
-    // Debug: Log all weapon items to see which one should be visible
+    // Debug: Log all weapon items and check container position
     console.log('🔫 Weapon items in container:');
+    const weaponScrollContainer = weaponContainer?.querySelector('.scroll-container');
+    const containerHeight = weaponContainer?.offsetHeight || 180;
+    const scrollTop = weaponScrollContainer?.scrollTop || 0;
+    const columnElement = weaponScrollContainer?.querySelector('.column');
+    const transform = columnElement?.style.transform || '';
+
+    console.log(`  Container height: ${containerHeight}px`);
+    console.log(`  ScrollTop: ${scrollTop}px`);
+    console.log(`  Transform: ${transform}`);
+
     weaponItems?.forEach((item, index) => {
       const name = item.dataset.itemName || item.querySelector('p')?.textContent?.trim();
-      console.log(`  [${index}] ${name}`);
+      const itemTop = index * 180; // Assuming each item is 180px tall
+      const isVisible = itemTop >= scrollTop && itemTop < (scrollTop + containerHeight);
+      console.log(`  [${index}] ${name} ${isVisible ? '👁️ VISIBLE' : ''}`);
     });
 
-    // The visible item is at index 0 (the first item in the container)
-    // After the animation stops, the first item is what's displayed
-    const actualWeapon = weaponItems?.[0]?.dataset.itemName ||
+    // Calculate which item is visible based on scroll position
+    // Each item is approximately 180px tall
+    const itemHeight = 180;
+    const visibleIndex = Math.round(scrollTop / itemHeight);
+
+    // Try different indices to find the correct one
+    // Start with calculated index, then try neighbors
+    const actualWeapon = weaponItems?.[visibleIndex]?.dataset.itemName ||
+                         weaponItems?.[visibleIndex]?.querySelector('p')?.textContent?.trim() ||
+                         weaponItems?.[0]?.dataset.itemName ||
                          weaponItems?.[0]?.querySelector('p')?.textContent?.trim();
+
+    console.log(`  Calculated visible index: ${visibleIndex}, weapon: ${actualWeapon}`);
 
     const specContainer = outputDiv?.querySelector('.item-container:nth-child(2)');
     const specItems = specContainer?.querySelectorAll('.itemCol');
