@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Click Sound</title>
+</head>
+<body>
+    <h1>Sound Test Page</h1>
+    <button onclick="testSound()">Test Click Sound</button>
+    <br><br>
+    <button onclick="testTickSound()">Test Tick Sound (from page)</button>
+    <br><br>
+    <div id="status"></div>
+
+    <audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="tickSound" src="sounds/click.mp3" preload="auto"></audio>
+
+    <script>
+        function testSound() {
+            const audio = document.getElementById('clickSound');
+            const status = document.getElementById('status');
+
+            if (audio) {
+                audio.currentTime = 0;
+                audio.volume = 0.7;
+                audio.play()
+                    .then(() => {
+                        status.innerHTML += '<p style="color:green">✓ Click sound played successfully</p>';
+                    })
+                    .catch(err => {
+                        status.innerHTML += '<p style="color:red">✗ Error playing click sound: ' + err + '</p>';
+                    });
+            } else {
+                status.innerHTML += '<p style="color:red">✗ Click sound element not found</p>';
+            }
+        }
+
+        function testTickSound() {
+            const audio = document.getElementById('tickSound');
+            const status = document.getElementById('status');
+
+            if (audio) {
+                audio.currentTime = 0;
+                audio.volume = 0.7;
+                audio.playbackRate = 1.5;
+                audio.play()
+                    .then(() => {
+                        status.innerHTML += '<p style="color:green">✓ Tick sound played successfully</p>';
+                    })
+                    .catch(err => {
+                        status.innerHTML += '<p style="color:red">✗ Error playing tick sound: ' + err + '</p>';
+                    });
+            } else {
+                status.innerHTML += '<p style="color:red">✗ Tick sound element not found</p>';
+            }
+        }
+
+        // Check if audio elements exist on load
+        window.onload = function() {
+            const status = document.getElementById('status');
+            const clickSound = document.getElementById('clickSound');
+            const tickSound = document.getElementById('tickSound');
+
+            status.innerHTML = '<h3>Audio Elements Status:</h3>';
+            status.innerHTML += '<p>Click sound element: ' + (clickSound ? '✓ Found' : '✗ Not found') + '</p>';
+            status.innerHTML += '<p>Tick sound element: ' + (tickSound ? '✓ Found' : '✗ Not found') + '</p>';
+
+            if (clickSound) {
+                status.innerHTML += '<p>Click sound src: ' + clickSound.src + '</p>';
+            }
+            if (tickSound) {
+                status.innerHTML += '<p>Tick sound src: ' + tickSound.src + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

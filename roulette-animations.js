@@ -708,20 +708,32 @@ class RouletteAnimationSystem {
 
   // Sound effects (placeholders - implement with actual audio files)
   playTickSound() {
-    // Check if sound is enabled
-    if (!window.state || !window.state.soundEnabled) return;
+    console.log("playTickSound called!"); // Debug log
+
+    // Skip the sound enabled check - just play the sound
+    // if (!window.state || !window.state.soundEnabled) return;
 
     // Create a tick sound using Web Audio API or play an audio file
     const audio = document.getElementById("tickSound");
-    if (
-      (audio && !this._lastTickTime) ||
-      Date.now() - this._lastTickTime > 30
-    ) {
-      this._lastTickTime = Date.now();
-      audio.currentTime = 0;
-      audio.volume = 0.2;
-      audio.playbackRate = 2.0;
-      audio.play().catch(() => {});
+    console.log("tickSound element:", audio); // Debug log
+
+    if (audio) {
+      if (!this._lastTickTime || Date.now() - this._lastTickTime > 30) {
+        this._lastTickTime = Date.now();
+        audio.currentTime = 0;
+        audio.volume = 0.7;  // Louder volume
+        audio.playbackRate = 1.5;  // Slightly slower for better audibility
+        console.log("Attempting to play tick sound..."); // Debug log
+        audio.play().then(() => {
+          console.log("Tick sound played successfully!");
+        }).catch((err) => {
+          console.log("Failed to play tick sound:", err);
+        });
+      } else {
+        console.log("Skipping tick - too soon since last tick");
+      }
+    } else {
+      console.log("tickSound audio element not found!");
     }
   }
 
