@@ -520,6 +520,11 @@ function finalizeSpin() {
     recordSpinInHistory();
   }
 
+  // Track the spin in Supabase
+  if (window.StatsTracker) {
+    window.StatsTracker.track('ragequit');
+  }
+
   // Display handicap description in the new section
   const handicapDescSection = document.getElementById('handicap-description-section');
   const handicapNameDisplay = document.getElementById('handicap-name-display');

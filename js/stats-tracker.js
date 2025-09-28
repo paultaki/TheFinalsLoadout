@@ -5,8 +5,8 @@
 
 const StatsTracker = {
   // Config - Replace with your Supabase credentials
-  SUPABASE_URL: 'YOUR_PROJECT_URL',
-  SUPABASE_KEY: 'YOUR_ANON_KEY',
+  SUPABASE_URL: 'https://lalgvijlctrxbqtsctum.supabase.co',
+  SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxhbGd2aWpsY3RyeGJxdHNjdHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwMzM4NzAsImV4cCI6MjA3NDYwOTg3MH0.GexJt5wtdif5H-QTFExzuukOVZToa9_tRpbl9RrEiQ4',
 
   // Internal state
   client: null,
@@ -101,18 +101,18 @@ const StatsTracker = {
 
       if (toSync.loadout > 0) {
         promises.push(
-          this.client.rpc('increment_counter', {
-            p_type: 'loadout',
-            p_amount: toSync.loadout
+          this.client.rpc('increment_spin_count', {
+            p_spin_type: 'loadout',
+            p_count: toSync.loadout
           })
         );
       }
 
       if (toSync.ragequit > 0) {
         promises.push(
-          this.client.rpc('increment_counter', {
-            p_type: 'ragequit',
-            p_amount: toSync.ragequit
+          this.client.rpc('increment_spin_count', {
+            p_spin_type: 'ragequit',
+            p_count: toSync.ragequit
           })
         );
       }
@@ -138,7 +138,7 @@ const StatsTracker = {
     if (!this.isReady) return;
 
     try {
-      const { data } = await this.client.rpc('get_stats');
+      const { data } = await this.client.rpc('get_current_stats');
       if (!data) return;
 
       // Update elements if they exist

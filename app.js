@@ -1969,7 +1969,12 @@ async function finalizeSpin(columns) {
 
   state.isSpinning = false;
   state.spinSequenceActive = false;
-  
+
+  // Track the spin completion in Supabase
+  if (window.StatsTracker) {
+    window.StatsTracker.track('loadout');
+  }
+
   // Clear cached filter loadouts at end of spin sequence
   // ONLY clear if we're really at the end
   if (state.currentSpin === 1) {
