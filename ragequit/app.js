@@ -2185,82 +2185,38 @@ function resetSpinState() {
 // Issue 7: Implement History Recording
 function recordSpinInHistory() {
   try {
-    // Debug logging to see what's happening
     console.log('🎯 Recording spin in history...');
 
-    // Get the winning items from each column
-    const columns = document.querySelectorAll('.item-container');
-    const selectedItems = [];
+    // Use the actual selected items from rageState.finalLoadout
+    // This is the source of truth for what was actually selected
+    const finalLoadout = window.rageState?.finalLoadout;
 
-    columns.forEach((container, index) => {
-      let itemName = 'Unknown';
+    if (!finalLoadout) {
+      console.error('❌ No finalLoadout found in rageState');
+      return;
+    }
 
-      // Debug: Show all items in this container
-      const allItems = container.querySelectorAll('.itemCol');
-      console.log(`📊 Column ${index} has ${allItems.length} items:`);
-      allItems.forEach((item, i) => {
-        const name = item.dataset.itemName || item.querySelector('p')?.textContent?.trim();
-        const hasWinner = item.classList.contains('winner');
-        console.log(`  [${i}] ${name} ${hasWinner ? '🏆 WINNER' : ''}`);
-      });
+    console.log('📦 Using finalLoadout from rageState:', finalLoadout);
 
-      // Try multiple methods to find the winner
-      // Method 1: Look for .itemCol.winner
-      let winnerItem = container.querySelector('.itemCol.winner');
+    const selectedItems = [
+      { name: finalLoadout.weapon || 'Unknown', type: 'Weapon' },
+      { name: finalLoadout.specialization || 'Unknown', type: 'Specialization' },
+      { name: finalLoadout.gadgets?.[0] || 'Unknown', type: 'Gadget 1' },
+      { name: finalLoadout.gadgets?.[1] || 'Unknown', type: 'Gadget 2' },
+      { name: finalLoadout.gadgets?.[2] || 'Unknown', type: 'Gadget 3' }
+    ];
 
-      if (winnerItem) {
-        console.log(`✅ Found winner with class for column ${index}`);
-        itemName = winnerItem.dataset.itemName ||
-                   winnerItem.querySelector('p')?.textContent?.trim() ||
-                   'Unknown';
-      } else {
-        // Method 2: Get by position
-        console.log(`⚠️ No .winner class found in column ${index}, using position...`);
-
-        if (allItems.length === 1) {
-          // Single item (gadget)
-          winnerItem = allItems[0];
-          console.log(`📦 Single item gadget in column ${index}`);
-        } else if (allItems.length === 8) {
-          // Multi-item column - winner should be at index 4
-          winnerItem = allItems[4];
-          console.log(`🎰 Multi-item column ${index}, taking item at position 4`);
-        } else if (allItems.length > 0) {
-          // Unexpected number, take the middle one
-          const middleIndex = Math.floor(allItems.length / 2);
-          winnerItem = allItems[middleIndex];
-          console.log(`❓ Unexpected ${allItems.length} items in column ${index}, taking middle at ${middleIndex}`);
-        }
-
-        if (winnerItem) {
-          itemName = winnerItem.dataset.itemName ||
-                     winnerItem.querySelector('p')?.textContent?.trim() ||
-                     'Unknown';
-        }
-      }
-
-      console.log(`✨ Column ${index} final winner: ${itemName}`);
-
-      // Determine item type based on index
-      let itemType = 'Unknown';
-      if (index === 0) itemType = 'Weapon';
-      else if (index === 1) itemType = 'Specialization';
-      else if (index === 2) itemType = 'Gadget 1';
-      else if (index === 3) itemType = 'Gadget 2';
-      else if (index === 4) itemType = 'Gadget 3';
-
-      selectedItems.push({ name: itemName, type: itemType });
-    });
+    console.log('✅ Selected items from finalLoadout:', selectedItems);
     
     // Create history entry
     const historyEntry = {
       id: Date.now(),
       timestamp: new Date().toLocaleString(),
-      selectedClass: state.selectedClass || 'Unknown',
+      selectedClass: finalLoadout.classType || window.rageState?.selectedClass || 'Unknown',
       items: selectedItems,
-      handicap: state.selectedHandicap || 'None',
-      handicapDescription: state.selectedHandicapDesc || '',
-      sufferingLevel: state.sufferingLevel || 1
+      handicap: window.rageState?.selectedHandicap || window.state?.selectedHandicap || 'None',
+      handicapDescription: window.rageState?.selectedHandicapDesc || window.state?.selectedHandicapDesc || '',
+      sufferingLevel: window.rageState?.sufferingLevel || window.state?.sufferingLevel || 1
     };
     
     // Save to localStorage
