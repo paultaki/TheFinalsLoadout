@@ -2201,17 +2201,16 @@ function recordSpinInHistory() {
       console.log(`  [${index}] ${name}`);
     });
 
-    // The visible item is typically at index 3 (the 4th item, 0-based)
-    // This is based on the slot machine stopping position
-    const actualWeapon = weaponItems?.[3]?.dataset.itemName ||
-                         weaponItems?.[3]?.querySelector('p')?.textContent?.trim();
+    // The visible item is at index 0 (the first item in the container)
+    // After the animation stops, the first item is what's displayed
+    const actualWeapon = weaponItems?.[0]?.dataset.itemName ||
+                         weaponItems?.[0]?.querySelector('p')?.textContent?.trim();
 
     const specContainer = outputDiv?.querySelector('.item-container:nth-child(2)');
     const specItems = specContainer?.querySelectorAll('.itemCol');
-    const actualSpec = specItems?.[3]?.dataset.itemName ||
-                       specItems?.[3]?.querySelector('p')?.textContent?.trim() ||
-                       specItems?.[4]?.dataset.itemName ||
-                       specItems?.[4]?.querySelector('p')?.textContent?.trim();
+    // Specialization is also at index 0 after animation
+    const actualSpec = specItems?.[0]?.dataset.itemName ||
+                       specItems?.[0]?.querySelector('p')?.textContent?.trim();
 
     // For gadgets, they don't have the slot animation, so use the first item
     const gadget1 = outputDiv?.querySelector('.item-container:nth-child(3) .itemCol:first-child')?.dataset.itemName ||
