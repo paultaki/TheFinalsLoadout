@@ -724,7 +724,7 @@ function attachButtonHandler() {
   console.log("🎯 RAGE QUIT: Attaching click handler to button");
   btn.setAttribute("data-handler-attached", "true");
 
-  btn.onclick = function(e) {
+  btn.onclick = async function(e) {
     e.preventDefault();
     console.log("🔥 RAGE QUIT: Button clicked!");
 
@@ -733,13 +733,29 @@ function attachButtonHandler() {
       return;
     }
 
+    // Ensure animation system is loaded
+    if (!window.rageRouletteSystem) {
+      console.log("⏳ Initializing animation system...");
+      if (window.RageRouletteAnimationSystem) {
+        try {
+          window.rageRouletteSystem = new window.RageRouletteAnimationSystem();
+          console.log("✅ Animation system initialized");
+        } catch (err) {
+          console.error("❌ Failed to initialize animation system:", err);
+        }
+      }
+    }
+
     // Check if roulette system exists and use it, otherwise direct spin
     if (window.rageRouletteSystem && typeof window.rageRouletteSystem.startFullSequence === 'function') {
       console.log("🎬 Using RageRouletteAnimationSystem");
-      window.rageRouletteSystem.startFullSequence().catch(err => {
+      try {
+        await window.rageRouletteSystem.startFullSequence();
+        console.log("✅ Animation sequence completed");
+      } catch(err) {
         console.error("❌ Roulette error, falling back:", err);
         spinRageQuitLoadout();
-      });
+      }
     } else {
       console.log("🎰 Using direct spin");
       spinRageQuitLoadout();

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Rage Quit Animation</title>
+</head>
+<body>
+    <h1>Rage Quit Animation Test</h1>
+    <button onclick="testAnimation()">Test Animation System</button>
+    <div id="results"></div>
+
+    <script src="loadout-app.js"></script>
+    <script src="rage-roulette-animations.js"></script>
+    <script>
+        function testAnimation() {
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+
+            // Check if RageRouletteAnimationSystem class exists
+            if (window.RageRouletteAnimationSystem) {
+                results.innerHTML += '<p style="color:green">✅ RageRouletteAnimationSystem class found</p>';
+
+                // Try to create instance
+                try {
+                    const testSystem = new window.RageRouletteAnimationSystem();
+                    results.innerHTML += '<p style="color:green">✅ Animation system instance created successfully</p>';
+
+                    // Check if startFullSequence method exists
+                    if (typeof testSystem.startFullSequence === 'function') {
+                        results.innerHTML += '<p style="color:green">✅ startFullSequence method exists</p>';
+                    } else {
+                        results.innerHTML += '<p style="color:red">❌ startFullSequence method not found</p>';
+                    }
+
+                    // Check global instance
+                    if (window.rageRouletteSystem) {
+                        results.innerHTML += '<p style="color:green">✅ Global rageRouletteSystem exists</p>';
+                    } else {
+                        results.innerHTML += '<p style="color:orange">⚠️ Global rageRouletteSystem not initialized</p>';
+                        window.rageRouletteSystem = testSystem;
+                        results.innerHTML += '<p style="color:green">✅ Global rageRouletteSystem now initialized</p>';
+                    }
+
+                    // Check for container
+                    const container = document.getElementById('rage-roulette-container');
+                    if (container) {
+                        results.innerHTML += '<p style="color:green">✅ rage-roulette-container found</p>';
+                        const styles = window.getComputedStyle(container);
+                        results.innerHTML += '<p>Container display: ' + styles.display + '</p>';
+                        results.innerHTML += '<p>Container visibility: ' + styles.visibility + '</p>';
+                    } else {
+                        results.innerHTML += '<p style="color:red">❌ rage-roulette-container not found</p>';
+                    }
+
+                } catch (e) {
+                    results.innerHTML += '<p style="color:red">❌ Error creating animation system: ' + e.message + '</p>';
+                }
+            } else {
+                results.innerHTML += '<p style="color:red">❌ RageRouletteAnimationSystem class not found</p>';
+            }
+
+            // Check for spinRageQuitLoadout function
+            if (window.spinRageQuitLoadout) {
+                results.innerHTML += '<p style="color:green">✅ spinRageQuitLoadout function exists (fallback)</p>';
+            } else {
+                results.innerHTML += '<p style="color:red">❌ spinRageQuitLoadout function not found</p>';
+            }
+        }
+    </script>
+</body>
+</html>

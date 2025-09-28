@@ -1107,3 +1107,27 @@ class RageRouletteAnimationSystem {
 
 // Export for use in main app.js
 window.RageRouletteAnimationSystem = RageRouletteAnimationSystem;
+
+// Auto-initialize if not already done
+document.addEventListener('DOMContentLoaded', () => {
+  if (!window.rageRouletteSystem && window.RageRouletteAnimationSystem) {
+    try {
+      window.rageRouletteSystem = new RageRouletteAnimationSystem();
+      console.log('✅ RageRouletteAnimationSystem auto-initialized on DOMContentLoaded');
+    } catch (e) {
+      console.error('❌ Failed to auto-initialize RageRouletteAnimationSystem:', e);
+    }
+  }
+});
+
+// Fallback initialization if DOM is already loaded
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  if (!window.rageRouletteSystem && window.RageRouletteAnimationSystem) {
+    try {
+      window.rageRouletteSystem = new RageRouletteAnimationSystem();
+      console.log('✅ RageRouletteAnimationSystem auto-initialized (DOM already ready)');
+    } catch (e) {
+      console.error('❌ Failed to auto-initialize RageRouletteAnimationSystem:', e);
+    }
+  }
+}

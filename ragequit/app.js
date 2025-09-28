@@ -91,17 +91,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize sound toggle
   initializeRageSoundToggle();
   
-  // Remove the existing click handler from loadout-app.js first
-  const rageBtn = document.getElementById("rage-quit-btn");
-  if (rageBtn) {
-    rageBtn.onclick = null;
-    rageBtn.removeAttribute("data-handler-attached");
-  }
-  
-  // Rage Quit Button Click Event
-  document
-    .getElementById("rage-quit-btn")
-    ?.addEventListener("click", async function () {
+  // Skip adding duplicate handler since loadout-app.js already handles the button
+  // The loadout-app.js file has the primary handler with proper initialization
+
+  // Just ensure animation system is available globally
+  if (false) { // Disabled to prevent duplicate handlers
+    // Original handler code kept for reference
+    document
+      .getElementById("rage-quit-btn")
+      ?.addEventListener("click", async function () {
       if (state.isSpinning || (rageRouletteSystem && rageRouletteSystem.animating)) return;
 
       // Play click sound (if file is valid)
@@ -146,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Remove spinning animation when done
       this.classList.remove('spinning');
     });
+  } // End of disabled handler
 
   // 🔥 Copy Loadout Button
   document
