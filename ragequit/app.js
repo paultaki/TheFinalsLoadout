@@ -2185,36 +2185,48 @@ function resetSpinState() {
 // Issue 7: Implement History Recording
 function recordSpinInHistory() {
   try {
-    // Get the winning items from each column (the ones with class "winner")
+    // Debug logging to see what's happening
+    console.log('🎯 Recording spin in history...');
+
+    // Get the winning items from each column
     const columns = document.querySelectorAll('.item-container');
     const selectedItems = [];
 
     columns.forEach((container, index) => {
-      // Find the winner item in this column
-      const winnerItem = container.querySelector('.itemCol.winner');
       let itemName = 'Unknown';
 
+      // Try multiple methods to find the winner
+      // Method 1: Look for .itemCol.winner
+      let winnerItem = container.querySelector('.itemCol.winner');
+
       if (winnerItem) {
-        // First try to get from data-item-name attribute
+        console.log(`✅ Found winner with class for column ${index}`);
         itemName = winnerItem.dataset.itemName ||
-                   // Fallback to the p tag text
-                   winnerItem.querySelector('p')?.textContent ||
+                   winnerItem.querySelector('p')?.textContent?.trim() ||
                    'Unknown';
       } else {
-        // If no winner class, try to find the visible item in the middle of the container
+        // Method 2: Get by position
         const allItems = container.querySelectorAll('.itemCol');
-        if (allItems.length > 0) {
-          // For weapon/spec (8 items), winner is at index 4
-          // For gadgets (single item), it's at index 0
-          const winnerIndex = allItems.length > 1 ? 4 : 0;
-          const middleItem = allItems[winnerIndex];
-          if (middleItem) {
-            itemName = middleItem.dataset.itemName ||
-                       middleItem.querySelector('p')?.textContent ||
-                       'Unknown';
-          }
+        console.log(`📊 Column ${index} has ${allItems.length} items`);
+
+        if (allItems.length === 1) {
+          // Single item (gadget)
+          winnerItem = allItems[0];
+          console.log(`📦 Single item gadget in column ${index}`);
+        } else if (allItems.length === 8) {
+          // Multi-item column - winner should be at index 4
+          winnerItem = allItems[4];
+          console.log(`🎰 Multi-item column ${index}, taking item at position 4`);
+        }
+
+        if (winnerItem) {
+          itemName = winnerItem.dataset.itemName ||
+                     winnerItem.querySelector('p')?.textContent?.trim() ||
+                     'Unknown';
         }
       }
+
+      console.log(`Column ${index} winner: ${itemName}`);
 
       // Determine item type based on index
       let itemType = 'Unknown';
