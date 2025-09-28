@@ -14,6 +14,7 @@ const StatsTracker = {
   pendingSpins: { loadout: 0, ragequit: 0 },
   lastSync: Date.now(),
   syncInterval: null,
+  syncTimeout: null,
 
   /**
    * Initialize the tracker
@@ -61,12 +62,25 @@ const StatsTracker = {
     console.log(`📝 Pending spins now:`, this.pendingSpins);
 
     // Update local display immediately
+    console.log(`🔢 Updating local display for ${type}`);
     this.updateLocalDisplay(type);
 
-    // For ragequit, sync immediately to avoid counter reset issues
-    if (type === 'ragequit') {
-      console.log('🚀 Triggering immediate sync for ragequit');
-      this.syncNow();
+    // Sync immediately for both types to ensure real-time updates
+    if (type === 'ragequit' || type === 'loadout') {
+      console.log(`🚀 Triggering immediate sync for ${type}`);
+      // Add a small delay for loadout to batch rapid clicks
+      if (type === 'loadout') {
+        // Clear any existing timeout
+        if (this.syncTimeout) {
+          clearTimeout(this.syncTimeout);
+        }
+        // Set new timeout to batch rapid spins
+        this.syncTimeout = setTimeout(() => {
+          this.syncNow();
+        }, 500);
+      } else {
+        this.syncNow();
+      }
     } else {
       // Sync if we have 10+ pending or it's been 30+ seconds
       if (this.getTotalPending() >= 10 || Date.now() - this.lastSync > 30000) {
@@ -274,9 +288,25 @@ const StatsTracker = {
   updateLocalDisplay(type) {
     // Increment the displayed number immediately for responsiveness
     const totalEl = document.getElementById(`${type}Total`);
+    console.log(`🔍 Looking for element: ${type}Total`);
+
     if (totalEl) {
-      const current = parseInt(totalEl.textContent.replace(/,/g, '')) || 0;
-      totalEl.textContent = (current + 1).toLocaleString();
+      // Handle "Loading..." or other non-numeric text
+      const text = totalEl.textContent.replace(/,/g, '');
+      const current = parseInt(text) || 0;
+      console.log(`📈 Current value: "${text}" -> ${current}`);
+
+      // Only increment if we have a valid number (not "Loading...")
+      if (!isNaN(parseInt(text)) || text === '0') {
+        const newValue = current + 1;
+        totalEl.textContent = newValue.toLocaleString();
+        console.log(`✅ Updated ${type}Total to ${newValue}`);
+      } else {
+        console.log(`⏸️ Skipping increment - non-numeric value: "${text}"`);
+      }
+      // If it says "Loading...", we'll let the updateDisplay() handle it
+    } else {
+      console.log(`❌ Element ${type}Total not found`);
     }
 
     // Legacy element update

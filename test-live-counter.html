@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Live Counter Updates</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .counter { font-size: 48px; font-weight: bold; color: #00ff88; margin: 20px 0; }
+        button { padding: 15px 30px; font-size: 18px; margin: 10px; cursor: pointer; }
+        .log { background: #f0f0f0; padding: 10px; margin-top: 20px; height: 200px; overflow-y: auto; }
+        .status { margin: 10px 0; padding: 10px; background: #e0f0ff; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Live Counter Test - Main Page</h1>
+
+    <div class="status">
+        <strong>Instructions:</strong> Click "Generate Loadout" to simulate a spin. The counter should update immediately.
+    </div>
+
+    <div>
+        <h2>Loadout Counter</h2>
+        <div id="loadoutTotal" class="counter">0</div>
+    </div>
+
+    <div>
+        <button onclick="simulateSpin()">🎰 Generate Loadout</button>
+        <button onclick="refreshDisplay()">🔄 Refresh Display</button>
+        <button onclick="forceSync()">📤 Force Sync</button>
+        <button onclick="clearLog()">🗑️ Clear Log</button>
+    </div>
+
+    <div class="status">
+        <strong>Stats Tracker Status:</strong> <span id="trackerStatus">Checking...</span><br>
+        <strong>Pending Spins:</strong> <span id="pendingCount">0</span><br>
+        <strong>Last Sync:</strong> <span id="lastSync">Never</span>
+    </div>
+
+    <div class="log" id="log">
+        <strong>Activity Log:</strong><br>
+    </div>
+
+    <!-- Supabase Stats Tracking -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/stats-tracker.js"></script>
+
+    <script>
+        const logEl = document.getElementById('log');
+
+        function addLog(message) {
+            const time = new Date().toLocaleTimeString();
+            logEl.innerHTML += `[${time}] ${message}<br>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function clearLog() {
+            logEl.innerHTML = '<strong>Activity Log:</strong><br>';
+        }
+
+        function updateStatus() {
+            if (window.StatsTracker) {
+                document.getElementById('trackerStatus').textContent =
+                    window.StatsTracker.isReady ? '✅ Ready' : '⏳ Initializing';
+
+                const pending = window.StatsTracker.pendingSpins.loadout || 0;
+                document.getElementById('pendingCount').textContent = pending;
+
+                const lastSyncTime = window.StatsTracker.lastSync ?
+                    new Date(window.StatsTracker.lastSync).toLocaleTimeString() : 'Never';
+                document.getElementById('lastSync').textContent = lastSyncTime;
+            }
+        }
+
+        function simulateSpin() {
+            addLog('🎰 Generating loadout...');
+
+            // This simulates what happens when the main page completes a spin
+            if (window.StatsTracker) {
+                const beforeValue = document.getElementById('loadoutTotal').textContent;
+                window.StatsTracker.track('loadout');
+                const afterValue = document.getElementById('loadoutTotal').textContent;
+
+                addLog(`✅ Tracked spin - Counter: ${beforeValue} → ${afterValue}`);
+                updateStatus();
+            } else {
+                addLog('❌ StatsTracker not available');
+            }
+        }
+
+        function refreshDisplay() {
+            addLog('🔄 Refreshing display from database...');
+            if (window.StatsTracker && window.StatsTracker.updateDisplay) {
+                window.StatsTracker.updateDisplay();
+                addLog('✅ Display refreshed');
+                updateStatus();
+            } else {
+                addLog('❌ updateDisplay not available');
+            }
+        }
+
+        async function forceSync() {
+            addLog('📤 Forcing sync to Supabase...');
+            if (window.StatsTracker) {
+                await window.StatsTracker.syncNow();
+                addLog('✅ Sync completed');
+                updateStatus();
+            } else {
+                addLog('❌ StatsTracker not available');
+            }
+        }
+
+        // Initialize display when ready
+        function initializeDisplay() {
+            if (window.StatsTracker && window.StatsTracker.isReady) {
+                addLog('📊 Initializing display from Supabase...');
+                window.StatsTracker.updateDisplay();
+                updateStatus();
+                addLog('✅ Display initialized');
+            } else {
+                setTimeout(initializeDisplay, 100);
+            }
+        }
+
+        // Start initialization
+        initializeDisplay();
+
+        // Update status every second
+        setInterval(updateStatus, 1000);
+
+        // Override console.log to capture debug output
+        const originalLog = console.log;
+        console.log = function() {
+            originalLog.apply(console, arguments);
+            const message = Array.from(arguments).join(' ');
+            if (message.includes('Tracking') || message.includes('Updated') || message.includes('Sync')) {
+                addLog('📝 ' + message);
+            }
+        };
+    </script>
+</body>
+</html>

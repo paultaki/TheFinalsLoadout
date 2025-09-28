@@ -1840,19 +1840,30 @@ Gadget 3: ${loadout.gadget3}`;
     <!-- Initialize Stats Display on Page Load -->
     <script>
         // Initialize the stats counter display when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎯 Initializing main page stats display...');
+        function initializeStatsDisplay() {
+            if (window.StatsTracker && window.StatsTracker.isReady) {
+                console.log('📊 Updating main page stats display from Supabase...');
+                window.StatsTracker.updateDisplay();
 
-            // Give StatsTracker a moment to initialize, then update display
-            setTimeout(() => {
-                if (window.StatsTracker && window.StatsTracker.updateDisplay) {
-                    console.log('📊 Updating stats display from Supabase...');
-                    window.StatsTracker.updateDisplay();
-                } else {
-                    console.warn('⚠️ StatsTracker not available for initial display update');
+                // Also set initial value to show it's loading
+                const loadoutTotal = document.getElementById('loadoutTotal');
+                if (loadoutTotal && loadoutTotal.textContent === '0') {
+                    loadoutTotal.textContent = 'Loading...';
                 }
-            }, 500);
-        });
+            } else {
+                // Retry if not ready yet
+                console.log('⏳ Waiting for StatsTracker to be ready...');
+                setTimeout(initializeStatsDisplay, 100);
+            }
+        }
+
+        // Start initialization when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeStatsDisplay);
+        } else {
+            // DOM already loaded
+            initializeStatsDisplay();
+        }
     </script>
 </body>
 </html>

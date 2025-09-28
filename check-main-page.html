@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Check Main Page Counter</title>
+</head>
+<body>
+    <h1>Main Page Counter Check</h1>
+    <p>Open the browser console to see the diagnostic output.</p>
+
+    <iframe id="mainPage" src="/index.html" style="width: 100%; height: 400px; border: 1px solid #ccc;"></iframe>
+
+    <div style="margin-top: 20px; padding: 20px; background: #f0f0f0;">
+        <h3>Counter Value from Main Page:</h3>
+        <div id="counterValue" style="font-size: 24px; font-weight: bold; color: #00ff88;">Checking...</div>
+        <button onclick="checkCounter()">Check Counter Value</button>
+        <button onclick="simulateClick()">Simulate Spin Button Click</button>
+    </div>
+
+    <script>
+        function checkCounter() {
+            const iframe = document.getElementById('mainPage');
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            const counterEl = iframeDoc.getElementById('loadoutTotal');
+
+            if (counterEl) {
+                const value = counterEl.textContent;
+                document.getElementById('counterValue').textContent = value;
+                console.log('Main page counter value:', value);
+
+                // Also check if StatsTracker is available in iframe
+                if (iframe.contentWindow.StatsTracker) {
+                    console.log('StatsTracker is available in main page');
+                    console.log('StatsTracker.isReady:', iframe.contentWindow.StatsTracker.isReady);
+                    console.log('Pending spins:', iframe.contentWindow.StatsTracker.pendingSpins);
+                } else {
+                    console.log('StatsTracker NOT found in main page');
+                }
+            } else {
+                console.log('Counter element not found');
+                document.getElementById('counterValue').textContent = 'Element not found';
+            }
+        }
+
+        function simulateClick() {
+            const iframe = document.getElementById('mainPage');
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+            // Find and click the spin button
+            const spinButton = iframeDoc.querySelector('.spin-btn') ||
+                              iframeDoc.querySelector('button[onclick*="spin"]') ||
+                              iframeDoc.querySelector('#spinButton');
+
+            if (spinButton) {
+                console.log('Found spin button, clicking...');
+                spinButton.click();
+
+                // Check counter after a delay
+                setTimeout(() => {
+                    checkCounter();
+                }, 3000);
+            } else {
+                console.log('Spin button not found');
+            }
+        }
+
+        // Check after iframe loads
+        document.getElementById('mainPage').onload = function() {
+            console.log('Main page loaded in iframe');
+            setTimeout(() => {
+                checkCounter();
+            }, 2000);
+        };
+    </script>
+</body>
+</html>
