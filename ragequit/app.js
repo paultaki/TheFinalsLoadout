@@ -2195,6 +2195,15 @@ function recordSpinInHistory() {
     columns.forEach((container, index) => {
       let itemName = 'Unknown';
 
+      // Debug: Show all items in this container
+      const allItems = container.querySelectorAll('.itemCol');
+      console.log(`📊 Column ${index} has ${allItems.length} items:`);
+      allItems.forEach((item, i) => {
+        const name = item.dataset.itemName || item.querySelector('p')?.textContent?.trim();
+        const hasWinner = item.classList.contains('winner');
+        console.log(`  [${i}] ${name} ${hasWinner ? '🏆 WINNER' : ''}`);
+      });
+
       // Try multiple methods to find the winner
       // Method 1: Look for .itemCol.winner
       let winnerItem = container.querySelector('.itemCol.winner');
@@ -2206,8 +2215,7 @@ function recordSpinInHistory() {
                    'Unknown';
       } else {
         // Method 2: Get by position
-        const allItems = container.querySelectorAll('.itemCol');
-        console.log(`📊 Column ${index} has ${allItems.length} items`);
+        console.log(`⚠️ No .winner class found in column ${index}, using position...`);
 
         if (allItems.length === 1) {
           // Single item (gadget)
@@ -2217,6 +2225,11 @@ function recordSpinInHistory() {
           // Multi-item column - winner should be at index 4
           winnerItem = allItems[4];
           console.log(`🎰 Multi-item column ${index}, taking item at position 4`);
+        } else if (allItems.length > 0) {
+          // Unexpected number, take the middle one
+          const middleIndex = Math.floor(allItems.length / 2);
+          winnerItem = allItems[middleIndex];
+          console.log(`❓ Unexpected ${allItems.length} items in column ${index}, taking middle at ${middleIndex}`);
         }
 
         if (winnerItem) {
@@ -2226,7 +2239,7 @@ function recordSpinInHistory() {
         }
       }
 
-      console.log(`Column ${index} winner: ${itemName}`);
+      console.log(`✨ Column ${index} final winner: ${itemName}`);
 
       // Determine item type based on index
       let itemType = 'Unknown';

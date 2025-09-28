@@ -515,10 +515,13 @@ function finalizeSpin() {
   updateTotalRageQuits();
   displaySelectedHandicap();
 
-  // Record this spin in history
-  if (typeof recordSpinInHistory === 'function') {
-    recordSpinInHistory();
-  }
+  // Record this spin in history after a short delay to ensure DOM is ready
+  setTimeout(() => {
+    console.log('⏰ Recording history after delay...');
+    if (typeof recordSpinInHistory === 'function') {
+      recordSpinInHistory();
+    }
+  }, 500);
 
   // Track the spin in Supabase
   if (window.StatsTracker) {
