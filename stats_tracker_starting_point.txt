@@ -1,0 +1,11 @@
+Stats Tracker Starting Point
+============================
+Initial values set on 2025-09-27
+
+Main Loadout Generator: 52,847
+Rage Quit Simulator: 9,183
+
+These values were chosen based on:
+- Main site: ~35,388 page views with estimated 1.5+ spins per visit
+- Rage quit: ~3,000 page views with estimated 3 spins per visit
+- Numbers adjusted to look organic rather than round values
