@@ -1836,5 +1836,23 @@ Gadget 3: ${loadout.gadget3}`;
     <!-- Supabase Stats Tracking -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/js/stats-tracker.js"></script>
+
+    <!-- Initialize Stats Display on Page Load -->
+    <script>
+        // Initialize the stats counter display when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🎯 Initializing main page stats display...');
+
+            // Give StatsTracker a moment to initialize, then update display
+            setTimeout(() => {
+                if (window.StatsTracker && window.StatsTracker.updateDisplay) {
+                    console.log('📊 Updating stats display from Supabase...');
+                    window.StatsTracker.updateDisplay();
+                } else {
+                    console.warn('⚠️ StatsTracker not available for initial display update');
+                }
+            }, 500);
+        });
+    </script>
 </body>
 </html>

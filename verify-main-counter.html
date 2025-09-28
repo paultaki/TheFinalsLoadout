@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Main Page Counter</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { border: 1px solid #ccc; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Main Page Counter Verification</h1>
+
+    <div class="section">
+        <h2>Current Counter Values</h2>
+        <p><strong>Main Page Counter:</strong> <span id="loadoutTotal" style="font-weight: bold; color: #00ff88;">Loading...</span></p>
+        <p><strong>Database Value:</strong> <span id="dbValue" style="font-weight: bold;">Loading...</span></p>
+        <p><strong>Pending Spins:</strong> <span id="pendingValue" style="font-weight: bold;">Loading...</span></p>
+    </div>
+
+    <div class="section">
+        <h2>Test Actions</h2>
+        <button onclick="simulateSpin()">Simulate Main Page Spin</button>
+        <button onclick="checkDatabase()">Check Database Values</button>
+        <button onclick="forceSync()">Force Sync to Supabase</button>
+        <button onclick="refreshDisplay()">Refresh Display</button>
+    </div>
+
+    <div class="section">
+        <h2>Diagnostic Log</h2>
+        <pre id="log"></pre>
+    </div>
+
+    <!-- Supabase and Stats Tracker -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/stats-tracker.js"></script>
+
+    <script>
+        const logEl = document.getElementById('log');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type;
+            logEl.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            console.log(message);
+        }
+
+        // Wait for StatsTracker to initialize
+        setTimeout(() => {
+            log('🚀 Page loaded, checking StatsTracker initialization...');
+            if (window.StatsTracker) {
+                log('✅ StatsTracker is available', 'success');
+                if (window.StatsTracker.isReady) {
+                    log('✅ StatsTracker is ready', 'success');
+                } else {
+                    log('⚠️ StatsTracker not ready yet', 'error');
+                }
+                refreshDisplay();
+                checkDatabase();
+            } else {
+                log('❌ StatsTracker not found', 'error');
+            }
+        }, 1000);
+
+        async function simulateSpin() {
+            log('🎰 Simulating main page spin...');
+            if (window.StatsTracker) {
+                window.StatsTracker.track('loadout');
+                log('✅ Tracked loadout spin', 'success');
+
+                // Update display after a short delay
+                setTimeout(() => {
+                    refreshDisplay();
+                }, 100);
+            } else {
+                log('❌ StatsTracker not available', 'error');
+            }
+        }
+
+        async function checkDatabase() {
+            log('🔍 Checking database directly...');
+            if (!window.StatsTracker || !window.StatsTracker.client) {
+                log('❌ StatsTracker client not available', 'error');
+                return;
+            }
+
+            try {
+                // Get stats from database
+                const { data, error } = await window.StatsTracker.client
+                    .from('spin_stats')
+                    .select('*')
+                    .eq('spin_type', 'main')
+                    .single();
+
+                if (error) {
+                    log(`❌ Database error: ${error.message}`, 'error');
+                } else if (data) {
+                    log(`✅ Database 'main' record found:`, 'success');
+                    log(`   Total Count: ${data.total_count}`);
+                    log(`   Daily Count: ${data.daily_count}`);
+                    log(`   Last Updated: ${data.last_updated}`);
+
+                    document.getElementById('dbValue').textContent = data.total_count.toLocaleString();
+                } else {
+                    log('⚠️ No main record found in database', 'error');
+                }
+
+                // Check pending spins
+                const pending = window.StatsTracker.pendingSpins || { loadout: 0, ragequit: 0 };
+                log(`📝 Pending spins: loadout=${pending.loadout}, ragequit=${pending.ragequit}`);
+                document.getElementById('pendingValue').textContent = pending.loadout;
+
+            } catch (err) {
+                log(`❌ Error checking database: ${err.message}`, 'error');
+            }
+        }
+
+        async function forceSync() {
+            log('🔄 Forcing sync to Supabase...');
+            if (window.StatsTracker) {
+                await window.StatsTracker.syncNow();
+                log('✅ Sync completed', 'success');
+
+                // Refresh display after sync
+                setTimeout(() => {
+                    refreshDisplay();
+                    checkDatabase();
+                }, 500);
+            } else {
+                log('❌ StatsTracker not available', 'error');
+            }
+        }
+
+        function refreshDisplay() {
+            log('📊 Refreshing display...');
+            if (window.StatsTracker && window.StatsTracker.updateDisplay) {
+                window.StatsTracker.updateDisplay();
+                log('✅ Display updated', 'success');
+            } else {
+                log('❌ updateDisplay not available', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
