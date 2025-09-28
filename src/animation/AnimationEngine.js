@@ -43,6 +43,8 @@ class SlotColumn {
     this.maxAnimationDuration = SLOT_TIMING.ANIMATION_SAFETY_TIMEOUT; // 10 second safety timeout
     this.overshootAmount = 0;
     this.snapbackComplete = false;
+    this.lastTickPosition = 0; // Track position for tick sound
+    this.tickThreshold = 100; // Pixels between tick sounds
 
     // Use mobile-optimized physics if on mobile
     const physics = getOptimizedPhysics() || SLOT_PHYSICS;
@@ -360,6 +362,15 @@ class SlotColumn {
         } catch (shakeError) {
           console.warn("Shake calculation error:", shakeError);
           shakeX = 0;
+        }
+      }
+
+      // Play tick sound when position changes significantly
+      if (this.state === "accelerating" || this.state === "decelerating") {
+        const positionDelta = Math.abs(this.position - this.lastTickPosition);
+        if (positionDelta >= this.tickThreshold) {
+          this.playTickSound();
+          this.lastTickPosition = this.position;
         }
       }
 
