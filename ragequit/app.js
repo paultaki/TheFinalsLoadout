@@ -2187,26 +2187,58 @@ function recordSpinInHistory() {
   try {
     console.log('🎯 Recording spin in history...');
 
-    // Use the actual selected items from rageState.finalLoadout
-    // This is the source of truth for what was actually selected
-    const finalLoadout = window.rageState?.finalLoadout;
+    // Get what's actually visually displayed (not the winner class, but what's in view)
+    const outputDiv = document.getElementById('output');
 
-    if (!finalLoadout) {
-      console.error('❌ No finalLoadout found in rageState');
-      return;
-    }
+    // For weapons and specs, we need to find what's actually visible in the viewport
+    const weaponContainer = outputDiv?.querySelector('.item-container:nth-child(1)');
+    const weaponItems = weaponContainer?.querySelectorAll('.itemCol');
 
-    console.log('📦 Using finalLoadout from rageState:', finalLoadout);
+    // Debug: Log all weapon items to see which one should be visible
+    console.log('🔫 Weapon items in container:');
+    weaponItems?.forEach((item, index) => {
+      const name = item.dataset.itemName || item.querySelector('p')?.textContent?.trim();
+      console.log(`  [${index}] ${name}`);
+    });
+
+    // The visible item is typically at index 3 (the 4th item, 0-based)
+    // This is based on the slot machine stopping position
+    const actualWeapon = weaponItems?.[3]?.dataset.itemName ||
+                         weaponItems?.[3]?.querySelector('p')?.textContent?.trim();
+
+    const specContainer = outputDiv?.querySelector('.item-container:nth-child(2)');
+    const specItems = specContainer?.querySelectorAll('.itemCol');
+    const actualSpec = specItems?.[3]?.dataset.itemName ||
+                       specItems?.[3]?.querySelector('p')?.textContent?.trim() ||
+                       specItems?.[4]?.dataset.itemName ||
+                       specItems?.[4]?.querySelector('p')?.textContent?.trim();
+
+    // For gadgets, they don't have the slot animation, so use the first item
+    const gadget1 = outputDiv?.querySelector('.item-container:nth-child(3) .itemCol:first-child')?.dataset.itemName ||
+                    outputDiv?.querySelector('.item-container:nth-child(3) .itemCol:first-child p')?.textContent?.trim();
+    const gadget2 = outputDiv?.querySelector('.item-container:nth-child(4) .itemCol:first-child')?.dataset.itemName ||
+                    outputDiv?.querySelector('.item-container:nth-child(4) .itemCol:first-child p')?.textContent?.trim();
+    const gadget3 = outputDiv?.querySelector('.item-container:nth-child(5) .itemCol:first-child')?.dataset.itemName ||
+                    outputDiv?.querySelector('.item-container:nth-child(5) .itemCol:first-child p')?.textContent?.trim();
+
+    console.log('🔍 Actual displayed items:', {
+      weapon: actualWeapon,
+      spec: actualSpec,
+      gadgets: [gadget1, gadget2, gadget3]
+    });
+
+    // Fallback to finalLoadout if we can't read from DOM
+    const finalLoadout = window.rageState?.finalLoadout || {};
 
     const selectedItems = [
-      { name: finalLoadout.weapon || 'Unknown', type: 'Weapon' },
-      { name: finalLoadout.specialization || 'Unknown', type: 'Specialization' },
-      { name: finalLoadout.gadgets?.[0] || 'Unknown', type: 'Gadget 1' },
-      { name: finalLoadout.gadgets?.[1] || 'Unknown', type: 'Gadget 2' },
-      { name: finalLoadout.gadgets?.[2] || 'Unknown', type: 'Gadget 3' }
+      { name: actualWeapon || finalLoadout.weapon || 'Unknown', type: 'Weapon' },
+      { name: actualSpec || finalLoadout.specialization || 'Unknown', type: 'Specialization' },
+      { name: gadget1 || finalLoadout.gadgets?.[0] || 'Unknown', type: 'Gadget 1' },
+      { name: gadget2 || finalLoadout.gadgets?.[1] || 'Unknown', type: 'Gadget 2' },
+      { name: gadget3 || finalLoadout.gadgets?.[2] || 'Unknown', type: 'Gadget 3' }
     ];
 
-    console.log('✅ Selected items from finalLoadout:', selectedItems);
+    console.log('✅ Final selected items:', selectedItems);
     
     // Create history entry
     const historyEntry = {
