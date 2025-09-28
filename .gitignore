@@ -20,3 +20,6 @@ Backup/
 # Ignore Windows Zone.Identifier files
 *Zone.Identifier
 *:Zone.Identifier
+
+# Ignore macOS system files
+.DS_Store
