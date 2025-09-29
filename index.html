@@ -1839,6 +1839,29 @@ Gadget 3: ${loadout.gadget3}`;
 
     <!-- Initialize Stats Display on Page Load -->
     <script>
+        // EMERGENCY FIX: Clear corrupted pending spins from localStorage
+        // This prevents exponential counter growth from accumulated failed syncs
+        (function() {
+            const pendingSpins = localStorage.getItem('pendingSpins');
+            if (pendingSpins) {
+                try {
+                    const parsed = JSON.parse(pendingSpins);
+                    const total = (parsed.loadout || 0) + (parsed.ragequit || 0);
+
+                    // If there are more than 100 pending spins, it's likely corrupted
+                    if (total > 100) {
+                        console.warn('⚠️ Clearing corrupted pending spins:', total);
+                        localStorage.removeItem('pendingSpins');
+                        localStorage.removeItem('pendingSpinsTimestamp');
+                    }
+                } catch (e) {
+                    // Invalid JSON, clear it
+                    localStorage.removeItem('pendingSpins');
+                    localStorage.removeItem('pendingSpinsTimestamp');
+                }
+            }
+        })();
+
         // Initialize the stats counter display when page loads
         function initializeStatsDisplay() {
             if (window.StatsTracker && window.StatsTracker.isReady) {

@@ -463,6 +463,11 @@
           }
         }
         
+        // Track the spin completion in Supabase
+        if (window.StatsTracker) {
+          window.StatsTracker.track('loadout');
+        }
+
         // Add to history
         if (window.loadoutHistory) {
           const loadout = {

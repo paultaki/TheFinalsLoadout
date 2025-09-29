@@ -136,14 +136,23 @@ const StatsTracker = {
       if (toSync.loadout > 0) {
         console.log('📤 Sending loadout increment:', toSync.loadout);
         promises.push(
-          this.client.rpc('increment_spin_count', {
-            p_spin_type: 'main',
-            p_count: toSync.loadout
-          }).catch(async (err) => {
-            console.error('❌ RPC failed for loadout, trying direct update:', err);
-
-            // Fallback: Get current count and update directly
+          (async () => {
             try {
+              const result = await this.client.rpc('increment_spin_count', {
+                p_spin_type: 'main',
+                p_count: toSync.loadout
+              });
+
+              if (result.error) {
+                throw result.error;
+              }
+
+              console.log('✅ Loadout increment succeeded:', result);
+              return result;
+            } catch (err) {
+              console.error('❌ RPC failed for loadout, trying direct update:', err);
+
+              // Fallback: Get current count and update directly
               const { data: current } = await this.client
                 .from('spin_stats')
                 .select('total_count')
@@ -163,11 +172,8 @@ const StatsTracker = {
                 console.log('✅ Direct loadout update succeeded:', newCount);
                 return updated;
               }
-            } catch (fallbackErr) {
-              console.error('❌ Direct loadout update also failed:', fallbackErr);
-              throw fallbackErr;
             }
-          })
+          })()
         );
       }
 
