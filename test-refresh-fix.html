@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Refresh Fix</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { border: 2px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .counter-display { font-size: 48px; font-weight: bold; color: #00ff88; margin: 20px 0; }
+        button { padding: 12px 24px; margin: 10px; font-size: 16px; cursor: pointer; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .warning { background: #fff3cd; color: #856404; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .log { background: #f8f9fa; padding: 10px; margin-top: 20px; height: 150px; overflow-y: auto; border: 1px solid #dee2e6; }
+    </style>
+</head>
+<body>
+    <h1>✅ Test: Counter Should NOT Increment on Refresh</h1>
+
+    <div class="test-section">
+        <h2>Current Counter Value</h2>
+        <div id="loadoutTotal" class="counter-display">Loading...</div>
+
+        <div class="status info">
+            <strong>Test Instructions:</strong>
+            <ol>
+                <li>Note the current counter value above</li>
+                <li>Refresh this page (F5 or Cmd+R)</li>
+                <li>The counter should remain the same (NOT increment)</li>
+                <li>Click "Generate Loadout" - the counter SHOULD increment by 1</li>
+            </ol>
+        </div>
+
+        <div>
+            <button onclick="generateLoadout()" style="background: #28a745; color: white; border: none;">
+                🎰 Generate Loadout (Should +1)
+            </button>
+            <button onclick="location.reload()" style="background: #ffc107; color: dark; border: none;">
+                🔄 Refresh Page (Should NOT +1)
+            </button>
+            <button onclick="checkPending()" style="background: #17a2b8; color: white; border: none;">
+                🔍 Check Pending Status
+            </button>
+        </div>
+
+        <div id="pendingStatus" class="status warning" style="display: none;">
+            Pending spins will show here...
+        </div>
+
+        <div class="log" id="log">
+            <strong>Activity Log:</strong><br>
+        </div>
+    </div>
+
+    <!-- Supabase Stats Tracking -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/stats-tracker.js"></script>
+
+    <script>
+        let initialValue = null;
+        const logEl = document.getElementById('log');
+
+        function log(message, isError = false) {
+            const time = new Date().toLocaleTimeString();
+            const color = isError ? 'color: red;' : '';
+            logEl.innerHTML += `<div style="${color}">[${time}] ${message}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function checkPending() {
+            const pendingStatus = document.getElementById('pendingStatus');
+            const pending = localStorage.getItem('pendingSpins');
+            const timestamp = localStorage.getItem('pendingSpinsTimestamp');
+
+            if (pending) {
+                const spins = JSON.parse(pending);
+                const age = timestamp ? Math.round((Date.now() - parseInt(timestamp)) / 1000) : 'Unknown';
+
+                pendingStatus.style.display = 'block';
+                pendingStatus.className = 'status warning';
+                pendingStatus.innerHTML = `
+                    <strong>⚠️ Pending Spins Found:</strong>
+                    Loadout: ${spins.loadout || 0},
+                    Ragequit: ${spins.ragequit || 0},
+                    Age: ${age}s
+                `;
+                log(`Found pending spins: ${JSON.stringify(spins)}, Age: ${age}s`);
+            } else {
+                pendingStatus.style.display = 'block';
+                pendingStatus.className = 'status success';
+                pendingStatus.innerHTML = '✅ No pending spins in localStorage';
+                log('No pending spins found');
+            }
+        }
+
+        function generateLoadout() {
+            const beforeValue = document.getElementById('loadoutTotal').textContent;
+
+            if (window.StatsTracker) {
+                log('Tracking loadout spin...');
+                window.StatsTracker.track('loadout');
+
+                setTimeout(() => {
+                    const afterValue = document.getElementById('loadoutTotal').textContent;
+                    log(`Counter updated: ${beforeValue} → ${afterValue}`);
+                    checkPending();
+                }, 100);
+            } else {
+                log('StatsTracker not available', true);
+            }
+        }
+
+        // Initialize display when ready
+        function initializeDisplay() {
+            if (window.StatsTracker && window.StatsTracker.isReady) {
+                log('Initializing display from Supabase...');
+                window.StatsTracker.updateDisplay();
+
+                setTimeout(() => {
+                    const counter = document.getElementById('loadoutTotal');
+                    if (counter) {
+                        const value = counter.textContent;
+                        if (initialValue === null) {
+                            initialValue = value;
+                            log(`Initial counter value: ${value}`);
+                        } else {
+                            // This is after a refresh
+                            if (value !== initialValue) {
+                                log(`❌ PROBLEM: Counter changed from ${initialValue} to ${value} on refresh!`, true);
+                            } else {
+                                log(`✅ Good: Counter stayed at ${value} after refresh`);
+                            }
+                        }
+                    }
+                }, 500);
+            } else {
+                setTimeout(initializeDisplay, 100);
+            }
+        }
+
+        // Check if we just refreshed
+        if (sessionStorage.getItem('refreshTest')) {
+            log('Page was refreshed - checking if counter incremented...');
+            const lastValue = sessionStorage.getItem('lastCounterValue');
+            if (lastValue) {
+                log(`Counter value before refresh: ${lastValue}`);
+            }
+        } else {
+            sessionStorage.setItem('refreshTest', 'true');
+            log('First page load - ready to test');
+        }
+
+        // Save counter value before unload
+        window.addEventListener('beforeunload', () => {
+            const counter = document.getElementById('loadoutTotal');
+            if (counter) {
+                sessionStorage.setItem('lastCounterValue', counter.textContent);
+            }
+        });
+
+        // Start
+        initializeDisplay();
+        checkPending();
+    </script>
+</body>
+</html>
