@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Pending Spins</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+        .status { padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .warning { background: #fff3cd; color: #856404; }
+        .error { background: #f8d7da; color: #721c24; }
+        button { padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer; }
+        pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Fix Stuck Counter - Clear Pending Spins</h1>
+
+    <div class="status warning">
+        <strong>⚠️ Issue Detected:</strong> The counter was incrementing on page refresh due to stuck pending spins in localStorage.
+    </div>
+
+    <div id="currentStatus" class="status">
+        Checking current status...
+    </div>
+
+    <div>
+        <button onclick="clearPendingSpins()" style="background: #dc3545; color: white; border: none;">
+            🗑️ Clear All Pending Spins
+        </button>
+        <button onclick="checkStatus()" style="background: #007bff; color: white; border: none;">
+            🔍 Check Current Status
+        </button>
+    </div>
+
+    <h3>Current LocalStorage Data:</h3>
+    <pre id="storageData"></pre>
+
+    <script>
+        function checkStatus() {
+            const pendingSpins = localStorage.getItem('pendingSpins');
+            const pendingTimestamp = localStorage.getItem('pendingSpinsTimestamp');
+            const statusEl = document.getElementById('currentStatus');
+            const dataEl = document.getElementById('storageData');
+
+            if (pendingSpins) {
+                const spins = JSON.parse(pendingSpins);
+                const total = (spins.loadout || 0) + (spins.ragequit || 0);
+
+                let age = 'Unknown';
+                if (pendingTimestamp) {
+                    const ageMs = Date.now() - parseInt(pendingTimestamp);
+                    age = Math.round(ageMs / 1000) + ' seconds';
+                }
+
+                statusEl.className = 'status error';
+                statusEl.innerHTML = `
+                    <strong>❌ Found Pending Spins:</strong><br>
+                    Loadout: ${spins.loadout || 0}<br>
+                    Ragequit: ${spins.ragequit || 0}<br>
+                    Total: ${total}<br>
+                    Age: ${age}<br>
+                    <em>These will be added to the counter on next page load!</em>
+                `;
+
+                dataEl.textContent = JSON.stringify({
+                    pendingSpins: spins,
+                    pendingSpinsTimestamp: pendingTimestamp,
+                    age: age
+                }, null, 2);
+            } else {
+                statusEl.className = 'status success';
+                statusEl.innerHTML = '<strong>✅ No pending spins found!</strong> The counter should work normally.';
+                dataEl.textContent = 'No pending spins in localStorage';
+            }
+        }
+
+        function clearPendingSpins() {
+            // Clear all pending spin related data
+            localStorage.removeItem('pendingSpins');
+            localStorage.removeItem('pendingSpinsTimestamp');
+
+            // Also clear any other potentially stuck data
+            const keysToCheck = Object.keys(localStorage);
+            let cleared = ['pendingSpins', 'pendingSpinsTimestamp'];
+
+            keysToCheck.forEach(key => {
+                if (key.includes('pending') || key.includes('spin')) {
+                    if (!key.includes('Stats')) { // Don't clear actual stats
+                        localStorage.removeItem(key);
+                        cleared.push(key);
+                    }
+                }
+            });
+
+            const statusEl = document.getElementById('currentStatus');
+            statusEl.className = 'status success';
+            statusEl.innerHTML = `
+                <strong>✅ Cleared!</strong><br>
+                Removed keys: ${cleared.join(', ')}<br>
+                The counter should now work normally without incrementing on refresh.
+            `;
+
+            // Recheck status
+            setTimeout(checkStatus, 500);
+        }
+
+        // Check on load
+        checkStatus();
+    </script>
+</body>
+</html>

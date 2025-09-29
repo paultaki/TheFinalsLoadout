@@ -1,79 +1,96 @@
 # The Finals Loadout - Development Notes
 
-## Recent Updates (2025-09-04)
+## Latest Updates (2025-09-28)
 
-### Mobile Navigation Improvements ✅
-- **Hamburger Menu**: Clean slide-out navigation for mobile devices
-  - Fixed position hamburger button (top-left)
-  - Smooth slide-in animation from left
-  - Dark overlay when menu is open
-  - Tap outside or on links to close
-- **Responsive Design**: Automatic switching between desktop nav bar and mobile hamburger menu at 768px breakpoint
-- **Touch-Optimized**: Larger touch targets (48px minimum) for better mobile usability
+### Supabase Counter Integration ✅
+- **Main Page Counter Fixed**: Synchronized loadout counter with Supabase database
+  - Shows real-time count across all users
+  - Immediate local updates for responsive feedback
+  - Background sync within 500ms to database
+  - Displays "Loading..." on initial page load
 
-### User Experience Enhancements ✅
-- **Filter Count Badge**: Visual indicator showing number of active filters on the filter button
-- **Reset All Filters Button**: One-click button to clear all filter selections
-- **Keyboard Shortcuts**: 
+- **Implementation Details**:
+  - Uses `stats-tracker.js` for both main and ragequit pages
+  - Database tracks 'main' (loadout) and 'ragequit' spin types
+  - Auto-initializes and fetches current count on page load
+  - Batches rapid clicks with 500ms debounce
+
+- **Test Pages Created**:
+  - `test-live-counter.html` - Live counter testing with visual feedback
+  - `verify-main-counter.html` - Database verification tool
+  - `test-main-counter.html` - Basic counter functionality test
+
+## Key Features
+
+### Mobile Navigation
+- Responsive hamburger menu for mobile devices (< 768px)
+- Touch-optimized with 48px minimum touch targets
+- Smooth slide-out animation with overlay
+
+### User Experience
+- **Keyboard Shortcuts**:
   - `Space` - Trigger spin (when not in input field)
   - `F` - Open filter panel
-- **Social Share Button**: Share loadouts with formatted text
-  - Uses Web Share API on mobile
-  - Falls back to clipboard on desktop
-  - Includes emoji formatting and site URL
+- **Filter System**: Visual badge showing active filter count
+- **Social Sharing**: Web Share API on mobile, clipboard fallback on desktop
 
-### Performance Optimizations ⚡
-- **Extracted CSS**: Moved 1400+ lines of inline CSS to external `premium-styles.css` file
-- **Faster Initial Load**: Reduced HTML size for quicker first contentful paint
-- **Optimized Assets**: External stylesheets are cached by browser
+### Performance
+- External CSS file (`premium-styles.css`) for better caching
+- Optimized initial page load
+- Efficient state management in `app.js`
 
-### Technical Implementation Details
+## Project Structure
 
-#### Mobile Menu Solution
-After extensive troubleshooting with CSS conflicts, implemented a simple, working solution:
-```html
-<!-- Dedicated mobile menu with inline styles to avoid conflicts -->
-<div id="simpleMenu"> <!-- navigation links --> </div>
-<button id="menuBtn">☰</button>
 ```
-- Uses ID selectors to avoid class conflicts
-- Inline critical styles ensure consistent behavior
-- Simple class toggle mechanism (`classList.toggle('show')`)
+/GitHub/TheFinalsLoadout/
+├── index.html          # Main loadout generator
+├── app.js              # Core application logic
+├── premium-styles.css  # Extracted styles (42KB)
+├── js/
+│   └── stats-tracker.js  # Supabase counter integration
+├── ragequit/           # Rage quit simulator
+│   ├── index.html
+│   ├── app.js
+│   └── loadout-app.js
+└── data/               # Game data files
+```
 
-#### File Structure
-- `index.html` - Main application with mobile navigation
-- `premium-styles.css` - Extracted styles (42KB)
-- `backup-2025-09-04-222845/` - Pre-update backup
+## Development Commands
 
-### Known Issues Fixed
-- ✅ Mobile menu not appearing (CSS conflicts resolved)
-- ✅ Desktop navigation disappearing (media query fix)
-- ✅ Filter button duplication (removed from top nav)
-- ✅ Touch targets too small on mobile (increased to 48px+)
-
-### Testing Notes
-- Mobile breakpoint: 768px
-- Tested on Chrome mobile emulator
-- Hamburger menu working on all mobile viewport sizes
-- Desktop navigation intact above 768px
-
-## Commands for Development
-
-### Local Development Server
+### Local Server
 ```bash
 python3 -m http.server 8000
 # Access at http://localhost:8000
 ```
 
-### Create Backup
+### Quick Backup
 ```bash
 timestamp=$(date +%Y-%m-%d-%H%M%S)
 mkdir -p "backup-$timestamp"
-cp index.html style.css app.js "backup-$timestamp/"
+cp index.html app.js style.css "backup-$timestamp/"
 ```
 
-## Future Improvements (Pending)
+## Database Schema (Supabase)
+
+The app uses a simple stats tracking system:
+
+```sql
+-- Main stats table
+CREATE TABLE spin_stats (
+  spin_type VARCHAR(50) PRIMARY KEY,  -- 'main' or 'ragequit'
+  total_count BIGINT DEFAULT 0,
+  daily_count BIGINT DEFAULT 0,
+  last_updated TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+## Testing Notes
+- Mobile breakpoint: 768px
+- Supabase stats update in real-time
+- Counter persists across sessions
+- Works offline (shows last cached value)
+
+## Future Improvements
 - Add tooltips for weapons/gadgets descriptions
-- Extract inline JavaScript to external file
-- Consider Progressive Web App (PWA) features
-- Add animation to filter count badge when it changes
+- Progressive Web App (PWA) features
+- Analytics dashboard for spin statistics

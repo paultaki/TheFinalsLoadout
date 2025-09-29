@@ -34,11 +34,21 @@ const StatsTracker = {
       // Load pending spins from localStorage
       this.loadPendingSpins();
 
+      // Only sync pending spins if they exist and are recent (not on every page load!)
+      if (this.getTotalPending() > 0) {
+        console.log('📦 Found pending spins, will sync in 2 seconds...');
+        setTimeout(() => this.syncIfNeeded(), 2000);
+      }
+
       // Sync every 30 seconds if there are pending spins
       this.syncInterval = setInterval(() => this.syncIfNeeded(), 30000);
 
-      // Sync on page unload
-      window.addEventListener('beforeunload', () => this.syncNow());
+      // Sync on page unload (but don't create new pending spins)
+      window.addEventListener('beforeunload', () => {
+        if (this.getTotalPending() > 0) {
+          this.syncNow();
+        }
+      });
 
       // Initial stats display
       this.updateDisplay();
@@ -208,7 +218,8 @@ const StatsTracker = {
 
       // Only clear pending after successful sync
       this.pendingSpins = { loadout: 0, ragequit: 0 };
-      this.savePendingSpins();
+      localStorage.removeItem('pendingSpins');
+      localStorage.removeItem('pendingSpinsTimestamp');
 
       // Wait a bit before updating display to ensure database has processed the increment
       setTimeout(() => {
@@ -324,6 +335,7 @@ const StatsTracker = {
    */
   savePendingSpins() {
     localStorage.setItem('pendingSpins', JSON.stringify(this.pendingSpins));
+    localStorage.setItem('pendingSpinsTimestamp', Date.now().toString());
   },
 
   /**
@@ -332,8 +344,20 @@ const StatsTracker = {
   loadPendingSpins() {
     try {
       const saved = localStorage.getItem('pendingSpins');
-      if (saved) {
-        this.pendingSpins = JSON.parse(saved);
+      const savedTimestamp = localStorage.getItem('pendingSpinsTimestamp');
+
+      if (saved && savedTimestamp) {
+        const age = Date.now() - parseInt(savedTimestamp);
+        // If pending spins are older than 5 minutes, they're probably stale
+        if (age > 5 * 60 * 1000) {
+          console.log('⚠️ Clearing stale pending spins (older than 5 minutes)');
+          this.pendingSpins = { loadout: 0, ragequit: 0 };
+          localStorage.removeItem('pendingSpins');
+          localStorage.removeItem('pendingSpinsTimestamp');
+        } else {
+          this.pendingSpins = JSON.parse(saved);
+          console.log(`📦 Loaded pending spins (${Math.round(age / 1000)}s old):`, this.pendingSpins);
+        }
       }
     } catch (err) {
       this.pendingSpins = { loadout: 0, ragequit: 0 };
