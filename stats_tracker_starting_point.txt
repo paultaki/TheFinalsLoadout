@@ -2,7 +2,7 @@ Stats Tracker Starting Point
 ============================
 Initial values set on 2025-09-27
 
-Main Loadout Generator: 52,847
+Main Loadout Generator: 98,493
 Rage Quit Simulator: 9,183
 
 These values were chosen based on:
