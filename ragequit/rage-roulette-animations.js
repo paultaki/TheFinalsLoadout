@@ -920,6 +920,7 @@ class RageRouletteAnimationSystem {
   playClassWinSound() {
     if (!this.isSoundEnabled()) return;
 
+    // Use the existing glitch sound for class win
     const audio = document.getElementById("rageAlarmSound");
     if (audio) {
       audio.currentTime = 0;
@@ -942,6 +943,7 @@ class RageRouletteAnimationSystem {
   playHandicapWinSound() {
     if (!this.isSoundEnabled()) return;
 
+    // Use the existing whisper sound for handicap win
     const audio = document.getElementById("rageLaughSound");
     if (audio) {
       audio.currentTime = 0;
@@ -951,8 +953,9 @@ class RageRouletteAnimationSystem {
   }
 
   isSoundEnabled() {
-    const soundToggle = document.getElementById('rage-sound-toggle');
-    return !soundToggle?.classList.contains('muted');
+    // Always return true for now since there's no sound toggle in the HTML
+    // In the future, we can add a sound toggle if needed
+    return true;
   }
 
   // Show selection display (adapted for rage theme)
