@@ -101,14 +101,96 @@
             console.debug = function() {};
         }
     </script>
-    
+
     <!-- Premium Styles - Extracted for Performance -->
     <link rel="stylesheet" href="/premium-styles.css">
-    
+
     <style>
         /* Critical inline styles for immediate render - rest in premium-styles.css */
         body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; }
     </style>
+
+<style>
+  /* === 100K Celebration Overlay (root index.html) === */
+  #celebration-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, rgba(0,0,0,0.80), rgba(0,0,0,0.95));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    z-index: 9999;
+    transition: opacity 1s ease;
+  }
+  #celebration-overlay.show {
+    opacity: 1;
+    animation: flashIn 1s ease, glowPulse 3s ease-in-out infinite alternate;
+  }
+  .celebration-content {
+    text-align: center;
+    color: #ffd700;
+    font-family: 'Bebas Neue', sans-serif;
+    animation: floatUp 2s ease;
+    max-width: 720px;
+    padding: 0 16px;
+  }
+  .celebration-title {
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    text-shadow: 0 0 25px rgba(255, 215, 0, 0.9);
+    letter-spacing: .04em;
+    margin-bottom: .5rem;
+  }
+  .celebration-text { color: #f7f1d0; opacity: .9; }
+  .promo-code-box {
+    margin-top: 1rem;
+    padding: 10px 20px;
+    border: 2px solid gold;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    background: rgba(255, 255, 255, 0.08);
+    display: inline-block;
+  }
+
+  .celebration-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: .75rem;
+    flex-wrap: wrap;
+  }
+  .celebration-btn {
+    appearance: none;
+    border: 2px solid gold;
+    background: rgba(255, 215, 0, 0.12);
+    color: #0a0a0a;
+    font-weight: 700;
+    letter-spacing: .02em;
+    padding: .6rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .celebration-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(255, 215, 0, .25);
+    background: rgba(255, 215, 0, 0.18);
+  }
+  .celebration-btn:active { transform: translateY(0); }
+
+  @keyframes flashIn {
+    0% { opacity: 0; transform: scale(0.92); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes glowPulse {
+    0% { box-shadow: 0 0 10px gold; }
+    100% { box-shadow: 0 0 30px gold; }
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(14px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+</style>
 </head>
 <body>
     <!-- Scroll Progress Bar -->
@@ -1888,5 +1970,65 @@ Gadget 3: ${loadout.gadget3}`;
             initializeStatsDisplay();
         }
     </script>
+
+<script>
+  // --- 100,000th loadout celebration (root index.html only) ---
+  (function() {
+    // Set this to your actual feedback/contact path or anchor
+    // Examples: '/feedback/', '/contact/', '#feedback', or a full https:// URL
+    const FEEDBACK_URL = '/feedback/';
+
+    const FORCE_100K = new URLSearchParams(location.search).has('force100k');
+    const STORAGE_KEY = 'totalSpins';
+
+    function openFeedback() {
+      try { window.open(FEEDBACK_URL, '_blank', 'noopener'); }
+      catch { location.href = FEEDBACK_URL; }
+    }
+
+    function showHundredThousandAnimation() {
+      if (document.getElementById('celebration-overlay')) return;
+
+      const overlay = document.createElement("div");
+      overlay.id = "celebration-overlay";
+      overlay.innerHTML = `
+        <div class="celebration-content">
+          <h1 class="celebration-title">🎉 100,000th LOADOUT! 🎉</h1>
+          <p class="celebration-text">
+            You hit a massive milestone. Email this promo code via the Feedback form to claim a free Finals shirt or hat.
+          </p>
+          <div class="promo-code-box">PROMO CODE: <strong>LOADOUT100K</strong></div>
+          <div class="celebration-actions">
+            <button class="celebration-btn" id="open-feedback-btn" type="button" aria-label="Open Feedback Form">
+              Open Feedback Form
+            </button>
+          </div>
+          <p class="celebration-text" style="margin-top:.75rem;opacity:.8;">
+            Tip: include a screenshot of this banner for faster verification.
+          </p>
+        </div>`;
+
+      document.body.appendChild(overlay);
+      overlay.querySelector('#open-feedback-btn')?.addEventListener('click', openFeedback);
+
+      setTimeout(() => overlay.classList.add("show"), 20);
+      setTimeout(() => overlay.remove(), 12000);
+    }
+
+    function incrementTotalSpinsAndMaybeCelebrate() {
+      const current = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
+      if (current === 99999 || FORCE_100K) {
+        showHundredThousandAnimation();
+      }
+      localStorage.setItem(STORAGE_KEY, String(current + 1));
+    }
+
+    // Count only *completed* spins (slot machine already dispatches this)
+    document.addEventListener("slotSpinComplete", function onSpinComplete() {
+      try { incrementTotalSpinsAndMaybeCelebrate(); }
+      catch (err) { console.warn('Spin counter failed', err); }
+    });
+  })();
+</script>
 </body>
 </html>
