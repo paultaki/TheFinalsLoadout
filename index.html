@@ -2017,17 +2017,47 @@ Gadget 3: ${loadout.gadget3}`;
 
     function incrementTotalSpinsAndMaybeCelebrate() {
       const current = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
+      console.log(`🎰 Spin counter: ${current} -> ${current + 1}, FORCE_100K: ${FORCE_100K}`);
+
       if (current === 99999 || FORCE_100K) {
+        console.log('🎉 TRIGGERING 100K CELEBRATION!');
         showHundredThousandAnimation();
       }
       localStorage.setItem(STORAGE_KEY, String(current + 1));
     }
 
-    // Count only *completed* spins (slot machine already dispatches this)
-    document.addEventListener("slotSpinComplete", function onSpinComplete() {
-      try { incrementTotalSpinsAndMaybeCelebrate(); }
-      catch (err) { console.warn('Spin counter failed', err); }
-    });
+    // Hook into the premiumIntegrated slot machine completion
+    // We'll override the startSlotMachine method to dispatch our event
+    const originalLoadoutHistory = window.loadoutHistory;
+
+    // Watch for when loadout is added to history (happens after spin completes)
+    const checkForHistoryHook = setInterval(() => {
+      if (window.loadoutHistory && window.loadoutHistory.addLoadout) {
+        clearInterval(checkForHistoryHook);
+
+        const originalAddLoadout = window.loadoutHistory.addLoadout;
+        window.loadoutHistory.addLoadout = function(...args) {
+          // Call original first
+          const result = originalAddLoadout.apply(this, args);
+
+          // Then trigger our celebration check
+          try {
+            incrementTotalSpinsAndMaybeCelebrate();
+          } catch (err) {
+            console.warn('Spin counter failed', err);
+          }
+
+          return result;
+        };
+
+        console.log('✅ 100K celebration hook installed on loadout history');
+      }
+    }, 100);
+
+    // Test mode: if ?force100k=1, trigger immediately on any spin
+    if (FORCE_100K) {
+      console.log('🧪 TEST MODE: 100K celebration will trigger on next spin');
+    }
   })();
 </script>
 </body>
