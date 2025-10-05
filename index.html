@@ -162,8 +162,8 @@
   .celebration-btn {
     appearance: none;
     border: 2px solid gold;
-    background: rgba(255, 215, 0, 0.12);
-    color: #0a0a0a;
+    background: rgba(255, 215, 0, 0.2);
+    color: #ffd700;
     font-weight: 700;
     letter-spacing: .02em;
     padding: .6rem 1rem;
@@ -173,10 +173,33 @@
   }
   .celebration-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(255, 215, 0, .25);
-    background: rgba(255, 215, 0, 0.18);
+    box-shadow: 0 6px 18px rgba(255, 215, 0, .4);
+    background: rgba(255, 215, 0, 0.3);
   }
   .celebration-btn:active { transform: translateY(0); }
+
+  .celebration-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    color: #ffd700;
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  .celebration-close-btn:hover {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: gold;
+    transform: rotate(90deg);
+  }
 
   @keyframes flashIn {
     0% { opacity: 0; transform: scale(0.92); }
@@ -189,6 +212,28 @@
   @keyframes floatUp {
     0% { transform: translateY(14px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
+  }
+
+  /* Gold confetti animation */
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: #ffd700;
+    pointer-events: none;
+    z-index: 10000;
+    opacity: 0;
+  }
+
+  @keyframes confetti-fall {
+    0% {
+      opacity: 1;
+      transform: translateY(-100vh) rotateZ(0deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(100vh) rotateZ(720deg);
+    }
   }
 </style>
 </head>
@@ -1986,13 +2031,54 @@ Gadget 3: ${loadout.gadget3}`;
       catch { location.href = FEEDBACK_URL; }
     }
 
+    function createConfetti() {
+      const colors = ['#ffd700', '#ffed4e', '#ffc107', '#ffb300', '#ff9800'];
+      const confettiCount = 100;
+
+      for (let i = 0; i < confettiCount; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+
+          // Random position across screen width
+          confetti.style.left = Math.random() * 100 + 'vw';
+
+          // Random color from gold palette
+          confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+          // Random size
+          const size = Math.random() * 8 + 6;
+          confetti.style.width = size + 'px';
+          confetti.style.height = size + 'px';
+
+          // Random shape (some square, some rectangular)
+          if (Math.random() > 0.5) {
+            confetti.style.borderRadius = '50%';
+          }
+
+          // Random animation duration and delay
+          const duration = Math.random() * 3 + 2;
+          confetti.style.animation = `confetti-fall ${duration}s linear forwards`;
+
+          document.body.appendChild(confetti);
+
+          // Remove after animation
+          setTimeout(() => confetti.remove(), duration * 1000);
+        }, i * 30); // Stagger the confetti
+      }
+    }
+
     function showHundredThousandAnimation() {
       if (document.getElementById('celebration-overlay')) return;
+
+      // Create confetti
+      createConfetti();
 
       const overlay = document.createElement("div");
       overlay.id = "celebration-overlay";
       overlay.innerHTML = `
         <div class="celebration-content">
+          <button class="celebration-close-btn" id="close-celebration-btn" type="button" aria-label="Close">×</button>
           <h1 class="celebration-title">🎉 100,000th LOADOUT! 🎉</h1>
           <p class="celebration-text">
             You hit a massive milestone. Email this promo code via the Feedback form to claim a free Finals shirt or hat.
@@ -2002,6 +2088,9 @@ Gadget 3: ${loadout.gadget3}`;
             <button class="celebration-btn" id="open-feedback-btn" type="button" aria-label="Open Feedback Form">
               Open Feedback Form
             </button>
+            <button class="celebration-btn" id="dismiss-celebration-btn" type="button" aria-label="Dismiss">
+              Dismiss
+            </button>
           </div>
           <p class="celebration-text" style="margin-top:.75rem;opacity:.8;">
             Tip: include a screenshot of this banner for faster verification.
@@ -2009,10 +2098,20 @@ Gadget 3: ${loadout.gadget3}`;
         </div>`;
 
       document.body.appendChild(overlay);
+
+      // Add event listeners
       overlay.querySelector('#open-feedback-btn')?.addEventListener('click', openFeedback);
 
+      const closeOverlay = () => {
+        overlay.classList.remove("show");
+        setTimeout(() => overlay.remove(), 1000);
+      };
+
+      overlay.querySelector('#close-celebration-btn')?.addEventListener('click', closeOverlay);
+      overlay.querySelector('#dismiss-celebration-btn')?.addEventListener('click', closeOverlay);
+
+      // Show overlay
       setTimeout(() => overlay.classList.add("show"), 20);
-      setTimeout(() => overlay.remove(), 12000);
     }
 
     function incrementTotalSpinsAndMaybeCelebrate() {
