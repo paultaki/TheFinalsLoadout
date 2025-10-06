@@ -1,0 +1,112 @@
+[
+  {
+    "weapon": "BFR Titan",
+    "class": "Heavy",
+    "tier": "S-",
+    "metaScore": 92,
+    "confidence": "high",
+    "note": "8.3.0 body 98→90; 8.3.1 hitscan fixed. Monster on lanes; slow reload; weak point-blank.",
+    "season": 8,
+    "patch": "8.3.1",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "M11",
+    "class": "Light",
+    "tier": "S",
+    "metaScore": 91,
+    "confidence": "high",
+    "note": "Best Light hip-fire pressure; high tempo pick potential.",
+    "season": 8,
+    "patch": "8.3.1",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "FCAR",
+    "class": "Medium",
+    "tier": "A+",
+    "metaScore": 90,
+    "confidence": "high",
+    "note": "Baseline Medium; consistent and forgiving once recoil learned.",
+    "season": 8,
+    "patch": "8.3.1",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "FAMAS",
+    "class": "Medium",
+    "tier": "A+",
+    "metaScore": 88,
+    "confidence": "high",
+    "note": "Burst lanes bully; demands timing; weaker in wide spray brawls.",
+    "season": 8,
+    "patch": "8.3.1",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "P90",
+    "class": "Medium",
+    "tier": "A",
+    "metaScore": 86,
+    "confidence": "medium",
+    "note": "Treat as hip-fire SMG; don't AR-peak. Shines at aggressive entry.",
+    "season": 8,
+    "patch": "8.3.1",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "ShAK-50",
+    "class": "Heavy",
+    "tier": "A",
+    "metaScore": 85,
+    "confidence": "medium",
+    "note": "Stable long-lane control alternative to BFR; cadence suits anchors.",
+    "season": 8,
+    "patch": "8.3.1",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "V9S",
+    "class": "Light",
+    "tier": "A+",
+    "metaScore": 85,
+    "confidence": "medium",
+    "note": "CQB assassin; quiet and precise ADS; thrives with flanks.",
+    "season": 8,
+    "patch": "8.3.1",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "Pike-556",
+    "class": "Medium",
+    "tier": "A",
+    "metaScore": 84,
+    "confidence": "high",
+    "note": "S8 reduced close damage/hip-fire; still excellent mid–long.",
+    "season": 8,
+    "patch": "8.3.1",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "CB-01 Repeater",
+    "class": "Medium",
+    "tier": "A-",
+    "metaScore": 81,
+    "confidence": "medium",
+    "note": "S8 84→88 dmg; better heavy breakpoints; more viable now.",
+    "season": 8,
+    "patch": "8.3.1",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "KS-23",
+    "class": "Heavy",
+    "tier": "A",
+    "metaScore": 80,
+    "confidence": "medium",
+    "note": "Close-range check; pairs with breach plays; map-dependent.",
+    "season": 8,
+    "patch": "8.3.1",
+    "updated": "2025-10-05"
+  }
+]

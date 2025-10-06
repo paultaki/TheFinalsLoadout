@@ -1,0 +1,82 @@
+[
+  {
+    "weapon": "BFR Titan",
+    "class": "Heavy",
+    "tier": "S-",
+    "metaScore": 92,
+    "confidence": "high",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "M11",
+    "class": "Light",
+    "tier": "S",
+    "metaScore": 91,
+    "confidence": "high",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "FCAR",
+    "class": "Medium",
+    "tier": "A+",
+    "metaScore": 90,
+    "confidence": "high",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "FAMAS",
+    "class": "Medium",
+    "tier": "A+",
+    "metaScore": 88,
+    "confidence": "high",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "P90",
+    "class": "Medium",
+    "tier": "A",
+    "metaScore": 86,
+    "confidence": "medium",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "ShAK-50",
+    "class": "Heavy",
+    "tier": "A",
+    "metaScore": 85,
+    "confidence": "medium",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "V9S",
+    "class": "Light",
+    "tier": "A+",
+    "metaScore": 85,
+    "confidence": "medium",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "Pike-556",
+    "class": "Medium",
+    "tier": "A",
+    "metaScore": 84,
+    "confidence": "high",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "CB-01 Repeater",
+    "class": "Medium",
+    "tier": "A-",
+    "metaScore": 81,
+    "confidence": "medium",
+    "updated": "2025-10-05"
+  },
+  {
+    "weapon": "KS-23",
+    "class": "Heavy",
+    "tier": "A",
+    "metaScore": 80,
+    "confidence": "medium",
+    "updated": "2025-10-05"
+  }
+]
