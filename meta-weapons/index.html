@@ -18,7 +18,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles/hotfix.css">
-  
+  <link rel="stylesheet" href="styles/meta-s8.css">
+
   <style>
     :root {
       --bg: #0a0f14;
@@ -691,29 +692,55 @@
     <header class="header">
       <h1>The Finals Meta <span class="badge">SEASON 8</span></h1>
       <p class="subtitle">Community sentiment and meta analysis • Data from Reddit, Discord, and tournament play</p>
-      <p class="subtitle" style="font-size: 0.75rem; color: #00f0c0; margin-top: 0.5rem;">Season 8: GAME TIME • Updated 9/11/25</p>
+      <div class="meta-version">
+        <span class="pill">Meta 8.3</span>
+        <span class="updated">Updated Oct 5, 2025</span>
+        <span class="tooltip" title="Mid-season patches applied (8.1–8.3.1): BFR −8 body dmg; long-range hitscan fixed; Smoke nerfed; minor P90 audio tweak.">ⓘ</span>
+      </div>
     </header>
     
-    <!-- Season 8 Update Alert -->
-    <div class="alert alert-new" style="background: linear-gradient(135deg, rgba(255, 51, 102, 0.1), rgba(255, 102, 153, 0.05)); border: 2px solid rgba(255, 51, 102, 0.3); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; animation: pulse 2s ease-in-out infinite;">
-      <h2 style="color: #ff3366; margin-bottom: 1rem; font-size: 1.5rem;">🎮 SEASON 8: GAME TIME - NEW META CHANGES</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-        <div>
-          <h3 style="color: #ff6699; font-size: 1.1rem; margin-bottom: 0.5rem;">🆕 New Weapons</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="padding: 0.25rem 0;">• <strong>P90 (Medium)</strong> - High capacity SMG dominance</li>
-            <li style="padding: 0.25rem 0;">• <strong>BFR Titan (Heavy)</strong> - Devastating revolver power</li>
-          </ul>
-        </div>
-        <div>
-          <h3 style="color: #ff6699; font-size: 1.1rem; margin-bottom: 0.5rem;">🔄 Major Changes</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="padding: 0.25rem 0;">• Thermal Vision gadget removed</li>
-            <li style="padding: 0.25rem 0;">• New sight attachments system</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <!-- Season 8 Mid-Season Changes -->
+    <details class="meta-callout" open>
+      <summary>Season 8 mid-season changes</summary>
+      <ul>
+        <li><strong>BFR Titan:</strong> body damage 98→90 (8.3.0); hitscan bug fixed at range (8.3.1).</li>
+        <li><strong>Smoke Grenade:</strong> duration 15s→9s, ammo 3→2.</li>
+        <li><strong>Breach Drill:</strong> faster activation.</li>
+        <li><strong>P90:</strong> minor audio tweak.</li>
+      </ul>
+    </details>
+
+    <!-- Overall Top 10 -->
+    <section class="meta-top10-section" id="overall-top10">
+      <h2>Overall Top 10</h2>
+      <table class="meta">
+        <thead>
+          <tr>
+            <th>Weapon</th>
+            <th>Class</th>
+            <th>Tier</th>
+            <th>Confidence</th>
+          </tr>
+        </thead>
+        <tbody id="top10Body"></tbody>
+      </table>
+    </section>
+
+    <!-- Top 3 by Class -->
+    <section class="top3-section" id="top3-by-class">
+      <h2>Top 3 by class</h2>
+      <div class="grid-3" id="top3Grid"></div>
+    </section>
+
+    <!-- System Notes -->
+    <section class="system-notes">
+      <h3>S8 ecosystem notes</h3>
+      <ul>
+        <li>Thermal Vision: still disabled in S8.</li>
+        <li>Smoke Grenade toned down reduces free cashout steals.</li>
+        <li>Breach Drill QoL makes set plays snappier.</li>
+      </ul>
+    </section>
     
     <!-- Quick Stats -->
     <section class="quick-stats scroll-reveal scroll-reveal-delay-1">
@@ -900,6 +927,57 @@
   </footer>
   
   <script>
+// Load S8 meta data
+(async function loadS8Meta() {
+  try {
+    // Load Overall Top 10
+    const resMin = await fetch('data/meta/s8/weapons_meta_min.json').catch(() => null);
+    const minData = resMin ? await resMin.json() : [];
+
+    const top10Body = document.getElementById('top10Body');
+    if (top10Body && minData.length > 0) {
+      top10Body.innerHTML = minData.map(w => `
+        <tr>
+          <td>${w.weapon} <span class="note-s8">[S8]</span></td>
+          <td>${w.class}</td>
+          <td><span class="tier tier-${w.tier.toLowerCase().replace('+', '').replace('-', '')}">${w.tier}</span></td>
+          <td><span class="pill conf-${w.confidence}">${w.confidence.charAt(0).toUpperCase() + w.confidence.slice(1)}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    // Load Top 3 by Class
+    const resTop3 = await fetch('data/meta/s8/top3_by_class.json').catch(() => null);
+    const top3Data = resTop3 ? await resTop3.json() : {};
+
+    const top3Grid = document.getElementById('top3Grid');
+    if (top3Grid && Object.keys(top3Data).length > 0) {
+      top3Grid.innerHTML = Object.keys(top3Data).map(cls => `
+        <div>
+          <h3>${cls}</h3>
+          <ol>${top3Data[cls].map(w => `<li>${w}</li>`).join('')}</ol>
+        </div>
+      `).join('');
+    }
+
+    // Load full data for per-weapon notes
+    const resFull = await fetch('data/meta/s8/weapons_meta_full.json').catch(() => null);
+    const fullData = resFull ? await resFull.json() : [];
+    window.s8WeaponNotes = {};
+    fullData.forEach(w => {
+      window.s8WeaponNotes[w.weapon] = {
+        tier: w.tier,
+        note: w.note,
+        confidence: w.confidence
+      };
+    });
+  } catch (err) {
+    console.error('Failed to load S8 meta data:', err);
+  }
+})();
+  </script>
+
+  <script>
 // Updated weapon data from verified JSON - accurate to Season 7 patch 7.6.0
 const weaponData = {
   light: [
@@ -960,17 +1038,24 @@ function getSentimentColor(sentiment) {
 
 function renderWeaponRow(weapon) {
   const ttkDisplay = typeof weapon.ttk === 'number' ? weapon.ttk.toFixed(2) + 's' : weapon.ttk;
-  
+
+  // Check for S8 meta notes
+  const s8Note = window.s8WeaponNotes && window.s8WeaponNotes[weapon.name];
+  const s8Badge = s8Note ? '<span class="note-s8">[S8]</span>' : '';
+  const tierDisplay = s8Note ? s8Note.tier : (weapon.tier === 'Not_Ranked' ? 'NR' : weapon.tier);
+  const tierClass = tierDisplay.toLowerCase().replace('+', '').replace('-', '').replace('_', '-');
+
   return `
     <tr>
       <td data-label="Weapon">
         <span class="weapon-name">
           ${weapon.name}
           ${weapon.hot ? '<span class="hot-tag">HOT</span>' : ''}
+          ${s8Badge}
         </span>
       </td>
       <td data-label="Tier">
-        <span class="tier tier-${weapon.tier.toLowerCase().replace('_', '-')}">${weapon.tier === 'Not_Ranked' ? 'NR' : weapon.tier}</span>
+        <span class="tier tier-${tierClass}">${tierDisplay}</span>
       </td>
       <td data-label="TTK">${ttkDisplay}</td>
       <td data-label="Mag">

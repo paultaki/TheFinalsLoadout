@@ -1,0 +1,17 @@
+{
+  "Light": [
+    "M11",
+    "V9S",
+    "XP-54"
+  ],
+  "Medium": [
+    "FCAR",
+    "FAMAS",
+    "P90"
+  ],
+  "Heavy": [
+    "BFR Titan",
+    "ShAK-50",
+    "KS-23"
+  ]
+}
