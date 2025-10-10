@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>S8 Meta Review</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #eee; }
+    .check { color: #22c55e; }
+    .warn { color: #f59e0b; }
+    pre { background: #2a2a2a; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    h2 { color: #00e0ff; }
+    li { margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Season 8 Meta Update Review</h1>
+  
+  <h2>Data Integrity Check</h2>
+  <div id="dataCheck"></div>
+  
+  <h2>UI Component Check</h2>
+  <div id="uiCheck"></div>
+  
+  <script>
+    async function review() {
+      const dataCheck = document.getElementById('dataCheck');
+      const uiCheck = document.getElementById('uiCheck');
+      
+      // Test JSON loading
+      const checks = [];
+      
+      try {
+        const min = await fetch('data/meta/s8/weapons_meta_min.json').then(r => r.json());
+        checks.push(`<span class="check">✓</span> weapons_meta_min.json loaded (${min.length} weapons)`);
+        
+        const full = await fetch('data/meta/s8/weapons_meta_full.json').then(r => r.json());
+        checks.push(`<span class="check">✓</span> weapons_meta_full.json loaded (${full.length} weapons)`);
+        
+        const top3 = await fetch('data/meta/s8/top3_by_class.json').then(r => r.json());
+        checks.push(`<span class="check">✓</span> top3_by_class.json loaded (${Object.keys(top3).length} classes)`);
+        
+        // Validate data
+        const hasAllFields = min.every(w => w.weapon && w.class && w.tier && w.metaScore && w.confidence);
+        checks.push(hasAllFields ? 
+          `<span class="check">✓</span> All weapons have required fields` :
+          `<span class="warn">⚠</span> Missing fields in weapons_meta_min.json`
+        );
+        
+        // Check tier formats
+        const tiers = [...new Set(min.map(w => w.tier))];
+        checks.push(`<span class="check">✓</span> Tiers used: ${tiers.join(', ')}`);
+        
+        // Check confidence levels
+        const confs = [...new Set(min.map(w => w.confidence))];
+        checks.push(`<span class="check">✓</span> Confidence levels: ${confs.join(', ')}`);
+        
+        // Top 10 breakdown
+        const byClass = min.reduce((acc, w) => {
+          acc[w.class] = (acc[w.class] || 0) + 1;
+          return acc;
+        }, {});
+        checks.push(`<span class="check">✓</span> Top 10 breakdown: ${Object.entries(byClass).map(([c,n]) => `${c}:${n}`).join(', ')}`);
+        
+        dataCheck.innerHTML = '<ul>' + checks.map(c => `<li>${c}</li>`).join('') + '</ul>';
+        
+        // UI checks
+        const uiChecks = [];
+        uiChecks.push(`<li><span class="check">✓</span> Server running at <a href="http://localhost:8001/index.html" target="_blank" style="color:#00e0ff;">http://localhost:8001/index.html</a></li>`);
+        uiChecks.push(`<li>Manual checks needed:</li>`);
+        uiChecks.push(`<li style="margin-left:20px;">- Version pill shows "Meta 8.3" and "Updated Oct 5, 2025"</li>`);
+        uiChecks.push(`<li style="margin-left:20px;">- Tooltip on ⓘ icon shows patch details</li>`);
+        uiChecks.push(`<li style="margin-left:20px;">- "Season 8 mid-season changes" callout present</li>`);
+        uiChecks.push(`<li style="margin-left:20px;">- "Overall Top 10" table renders</li>`);
+        uiChecks.push(`<li style="margin-left:20px;">- Confidence badges are color-coded</li>`);
+        uiChecks.push(`<li style="margin-left:20px;">- "Top 3 by class" grid renders</li>`);
+        uiChecks.push(`<li style="margin-left:20px;">- [S8] badges appear on meta weapons</li>`);
+        uiChecks.push(`<li style="margin-left:20px;">- Check browser console for errors</li>`);
+        
+        uiCheck.innerHTML = '<ul>' + uiChecks.join('') + '</ul>';
+        
+        // Show sample data
+        const sample = document.createElement('div');
+        sample.innerHTML = `
+          <h2>Sample Data Preview</h2>
+          <h3>Top 3 Weapons</h3>
+          <pre>${JSON.stringify(min.slice(0, 3), null, 2)}</pre>
+          <h3>Top 3 by Class</h3>
+          <pre>${JSON.stringify(top3, null, 2)}</pre>
+        `;
+        document.body.appendChild(sample);
+        
+      } catch (err) {
+        dataCheck.innerHTML = `<span class="warn">⚠</span> Error: ${err.message}`;
+      }
+    }
+    
+    review();
+  </script>
+</body>
+</html>
