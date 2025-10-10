@@ -256,8 +256,8 @@
 
     <!-- ========== STICKY FILTER BAR ========== -->
     <div id="filterBar" class="sticky top-0 z-50 bg-bg-primary/95 backdrop-blur-md border-b border-border-primary transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 py-4">
-            <!-- Change Type Filters -->
+        <div class="max-w-7xl mx-auto px-4 py-3 lg:py-4">
+            <!-- Change Type Filters (Row 1) -->
             <div class="flex gap-2 flex-wrap justify-center mb-3">
                 <button onclick="filterByType('all')" class="type-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-gray-700 text-white">
                     All
@@ -279,62 +279,83 @@
                 </button>
             </div>
 
-            <div class="flex flex-col lg:flex-row gap-3 items-center justify-between">
-                <!-- Class Filters -->
-                <div class="flex gap-2 flex-wrap justify-center">
-                    <button onclick="filterByClass('all')" class="class-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-indigo-500/20 text-indigo-400">
-                        All Classes
-                    </button>
-                    <button onclick="filterByClass('light')" class="class-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                        Light
-                    </button>
-                    <button onclick="filterByClass('medium')" class="class-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                        Medium
-                    </button>
-                    <button onclick="filterByClass('heavy')" class="class-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                        Heavy
-                    </button>
+            <!-- Category Tabs (Row 2) -->
+            <div class="flex gap-2 flex-wrap justify-center mb-3">
+                <button onclick="filterByCategory('all')" class="category-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-indigo-500/20 text-indigo-400">
+                    All
+                </button>
+                <button onclick="filterByCategory('weapons')" class="category-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
+                    Weapons
+                </button>
+                <button onclick="filterByCategory('gadgets')" class="category-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
+                    Gadgets
+                </button>
+                <button onclick="filterByCategory('specializations')" class="category-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
+                    Specializations
+                </button>
+            </div>
+
+            <!-- Class, Patch & Search (Row 3 - Desktop buttons, Mobile dropdowns) -->
+            <div class="flex flex-col md:flex-row gap-3 items-center justify-center">
+                <!-- Class Filter - Desktop buttons / Mobile dropdown -->
+                <div class="w-full md:w-auto">
+                    <!-- Mobile Dropdown -->
+                    <select id="classSelect" onchange="filterByClass(this.value)" class="md:hidden w-full px-4 py-2 bg-bg-card border border-border-primary rounded-lg text-white focus:outline-none focus:border-indigo-500 transition-colors">
+                        <option value="all">All Classes</option>
+                        <option value="light">Light</option>
+                        <option value="medium">Medium</option>
+                        <option value="heavy">Heavy</option>
+                    </select>
+                    <!-- Desktop Buttons -->
+                    <div class="hidden md:flex gap-2 flex-wrap justify-center">
+                        <button onclick="filterByClass('all')" class="class-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-indigo-500/20 text-indigo-400">
+                            All Classes
+                        </button>
+                        <button onclick="filterByClass('light')" class="class-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
+                            Light
+                        </button>
+                        <button onclick="filterByClass('medium')" class="class-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
+                            Medium
+                        </button>
+                        <button onclick="filterByClass('heavy')" class="class-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
+                            Heavy
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Patch Version Filter -->
-                <div class="flex gap-2 flex-wrap justify-center">
-                    <button onclick="filterByPatch('all')" class="patch-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-indigo-500/20 text-indigo-400">
-                        All Patches
-                    </button>
-                    <button onclick="filterByPatch('8.4.0')" class="patch-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                        8.4.0
-                    </button>
-                    <button onclick="filterByPatch('8.3.0')" class="patch-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                        8.3.0
-                    </button>
-                    <button onclick="filterByPatch('8.0.0')" class="patch-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                        8.0.0
-                    </button>
-                </div>
-
-                <!-- Category Tabs -->
-                <div class="flex gap-2 flex-wrap justify-center">
-                    <button onclick="filterByCategory('all')" class="category-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-indigo-500/20 text-indigo-400">
-                        All
-                    </button>
-                    <button onclick="filterByCategory('weapons')" class="category-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                        Weapons
-                    </button>
-                    <button onclick="filterByCategory('gadgets')" class="category-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                        Gadgets
-                    </button>
-                    <button onclick="filterByCategory('specializations')" class="category-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                        Specializations
-                    </button>
+                <!-- Patch Filter - Desktop buttons / Mobile dropdown -->
+                <div class="w-full md:w-auto">
+                    <!-- Mobile Dropdown -->
+                    <select id="patchSelect" onchange="filterByPatch(this.value)" class="md:hidden w-full px-4 py-2 bg-bg-card border border-border-primary rounded-lg text-white focus:outline-none focus:border-indigo-500 transition-colors">
+                        <option value="all">All Patches</option>
+                        <option value="8.4.0">v8.4.0</option>
+                        <option value="8.3.0">v8.3.0</option>
+                        <option value="8.0.0">v8.0.0</option>
+                    </select>
+                    <!-- Desktop Buttons -->
+                    <div class="hidden md:flex gap-2 flex-wrap justify-center">
+                        <button onclick="filterByPatch('all')" class="patch-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-indigo-500/20 text-indigo-400">
+                            All Patches
+                        </button>
+                        <button onclick="filterByPatch('8.4.0')" class="patch-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
+                            8.4.0
+                        </button>
+                        <button onclick="filterByPatch('8.3.0')" class="patch-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
+                            8.3.0
+                        </button>
+                        <button onclick="filterByPatch('8.0.0')" class="patch-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
+                            8.0.0
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Search Input -->
-                <div class="relative w-full lg:w-auto">
+                <div class="relative w-full md:w-64">
                     <input
                         type="text"
                         id="searchInput"
                         placeholder="Search..."
-                        class="w-full lg:w-64 px-4 py-2 bg-bg-card border border-border-primary rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                        class="w-full px-4 py-2 bg-bg-card border border-border-primary rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
                     />
                     <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
