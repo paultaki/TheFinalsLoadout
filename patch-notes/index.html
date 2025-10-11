@@ -138,6 +138,149 @@
 
 <body class="bg-bg-primary text-white min-h-screen">
 
+    <!-- ========== NAVIGATION ========== -->
+    <!-- Simple Mobile Menu -->
+    <style>
+        /* Hide mobile menu button on desktop */
+        @media (min-width: 769px) {
+            #menuBtn, #simpleMenu, #menuOverlay {
+                display: none !important;
+            }
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            /* Hide desktop nav on mobile */
+            .desktop-nav {
+                display: none !important;
+            }
+            #simpleMenu {
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100vh;
+                background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+                z-index: 99999;
+                transition: left 0.3s ease;
+                padding-top: 60px;
+                box-shadow: 5px 0 20px rgba(0,0,0,0.7);
+                border-right: 2px solid rgba(255, 51, 102, 0.3);
+            }
+            #simpleMenu.show {
+                left: 0;
+            }
+            #simpleMenu a:hover {
+                background: rgba(255, 51, 102, 0.1);
+                padding-left: 25px;
+            }
+            #menuBtn {
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 100000;
+                background: rgba(26, 26, 26, 0.95);
+                color: #ff3366;
+                border: 1px solid rgba(255, 51, 102, 0.3);
+                border-radius: 8px;
+                padding: 10px 12px;
+                cursor: pointer;
+                font-size: 20px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                transition: all 0.3s;
+            }
+            #menuBtn:hover {
+                background: rgba(255, 51, 102, 0.1);
+                transform: scale(1.1);
+            }
+
+            /* Dark overlay */
+            #menuOverlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 99998;
+                display: none;
+            }
+            #menuOverlay.show {
+                display: block;
+            }
+        }
+
+        /* Desktop Navigation */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            padding: 0 1rem;
+        }
+
+        .nav-link {
+            color: #888;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .nav-link.active {
+            color: #6366f1;
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        /* Add padding to body to account for fixed nav */
+        body {
+            padding-top: 60px;
+        }
+    </style>
+
+    <button id="menuBtn" onclick="document.getElementById('simpleMenu').classList.toggle('show'); document.getElementById('menuOverlay').classList.toggle('show')">☰</button>
+
+    <div id="menuOverlay" onclick="document.getElementById('simpleMenu').classList.remove('show'); this.classList.remove('show')"></div>
+
+    <div id="simpleMenu">
+        <a href="/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">LOADOUT GENERATOR</a>
+        <a href="/ragequit/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">RAGE QUIT</a>
+        <a href="/patch-notes/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">PATCH NOTES</a>
+        <a href="/meta-weapons/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">META WEAPONS</a>
+        <a href="/wt-progress/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">WORLD TOUR</a>
+    </div>
+
+    <!-- Navigation Bar (Desktop) -->
+    <nav class="main-nav desktop-nav">
+        <div class="nav-links desktop-nav-links">
+            <a href="/" class="nav-link">LOADOUT GENERATOR</a>
+            <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
+            <a href="/patch-notes/" class="nav-link active">PATCH NOTES</a>
+            <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
+            <a href="/wt-progress/" class="nav-link">WORLD TOUR</a>
+        </div>
+    </nav>
+
     <!-- ========== HERO SECTION ========== -->
     <section class="relative min-h-screen max-h-screen flex flex-col justify-start items-center px-4 pt-12 pb-12">
         <!-- Animated Background Grid -->
@@ -148,7 +291,7 @@
         <div class="relative z-10 max-w-7xl w-full mx-auto">
             <!-- Logo with Animation -->
             <div class="flex justify-center mb-8 animate-fade-in-up">
-                <img src="images/logo patch notes.png" alt="Patch Notes" class="max-w-xs w-full h-auto logo-glow">
+                <img src="/patch-notes/images/logo-patch-notes.png" alt="Patch Notes" class="max-w-xs w-full h-auto logo-glow">
             </div>
 
             <!-- Latest Patch Banner -->
@@ -1117,13 +1260,33 @@
     <!-- ========== FOOTER ========== -->
     <footer class="border-t border-border-primary bg-bg-card py-8 mt-12">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-gray-400 text-sm mb-4">© 2025 The Finals Loadout | Not affiliated with Embark Studios</p>
-            <div class="flex justify-center gap-6 flex-wrap text-sm">
+            <!-- Support Section -->
+            <div style="margin-bottom: 2rem; padding: 1.5rem; background: rgba(80, 200, 120, 0.05); border: 1px solid rgba(80, 200, 120, 0.2); border-radius: 12px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+                    <span style="font-size:1.5rem;">☕</span>
+                    <div>
+                        <p style="margin:0;color:#50c878;font-weight:600;font-size:0.9rem;">Enjoying the patch notes tracker?</p>
+                        <p style="margin:0.25rem 0 0 0;color:#b8bfc6;font-size:0.8rem;">Help keep it running with a coffee!</p>
+                    </div>
+                </div>
+                <a href="https://ko-fi.com/nextroundonme" target="_blank" rel="noopener" style="display: inline-block; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #50c878, #2e8b57); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(80, 200, 120, 0.3);">
+                    <span>💚 Support Me</span>
+                </a>
+            </div>
+
+            <p style="margin:0 0 0.5rem 0;" class="text-gray-400 text-sm">
+                © 2025 TheFinalsLoadout.com | Created by
+                <a href="https://www.paultakisaki.com/" rel="author" style="color:#6366f1;text-decoration:none;">Paul Takisaki</a>
+            </p>
+            <p class="text-gray-500 text-xs mb-4">Not affiliated with Embark Studios</p>
+            <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;font-size:0.75rem;margin-top:0.5rem;">
                 <a href="/" class="text-indigo-400 hover:text-white transition-colors">Loadout Generator</a>
                 <a href="/ragequit/" class="text-indigo-400 hover:text-white transition-colors">Rage Quit</a>
+                <a href="/patch-notes/" class="text-indigo-400 hover:text-white transition-colors">Patch Notes</a>
                 <a href="/meta-weapons/" class="text-indigo-400 hover:text-white transition-colors">Meta Weapons</a>
-                <a href="https://twitter.com/takipaul" target="_blank" class="text-indigo-400 hover:text-white transition-colors">Twitter</a>
-                <a href="https://ko-fi.com/takipaul" target="_blank" class="text-indigo-400 hover:text-white transition-colors">Support via Ko-fi</a>
+                <a href="/wt-progress/" class="text-indigo-400 hover:text-white transition-colors">World Tour</a>
+                <a href="/legal/" class="text-indigo-400 hover:text-white transition-colors">Legal</a>
+                <a href="https://thefinalsloadout.com/feedback" class="text-yellow-400 hover:text-white transition-colors">📝 Feedback</a>
             </div>
         </div>
     </footer>
@@ -1266,17 +1429,6 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             console.log('✅ Patch Notes page loaded');
-        });
-    </script>
-
-    <!-- Ko-fi Widget -->
-    <script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
-    <script>
-        kofiWidgetOverlay.draw('takipaul', {
-            'type': 'floating-chat',
-            'floating-chat.donateButton.text': 'Support',
-            'floating-chat.donateButton.background-color': '#6366f1',
-            'floating-chat.donateButton.text-color': '#fff'
         });
     </script>
 
