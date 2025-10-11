@@ -1,7 +1,7 @@
 // Supabase Helper with retry logic
 const SupabaseHelper = {
-    SUPABASE_URL: 'https://vdwkgrgacwxjnofglbyn.supabase.co',
-    SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkd2tncmdhY3d4am5vZmdsYnluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMTU5MjcsImV4cCI6MjA3Mzg5MTkyN30.7EsHGeSQG2ueT_ydwjKMYoAHz9O_wIK5d79SsRBWmMc',
+    SUPABASE_URL: 'https://lalgvijlctrxbqtsctum.supabase.co',
+    SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxhbGd2aWpsY3RyeGJxdHNjdHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwMzM4NzAsImV4cCI6MjA3NDYwOTg3MH0.GexJt5wtdif5H-QTFExzuukOVZToa9_tRpbl9RrEiQ4',
 
     maxRetries: 5,
     retryDelay: 1000,
