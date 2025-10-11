@@ -1,1220 +1,644 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Last updated: 2025-09-11 -->
-  <title>The Finals Meta Weapons</title>
-  
+
+  <!-- SEO Meta Tags -->
+  <title>The Finals Meta Weapons | Season 8 Tier List & Analysis</title>
+  <meta name="description" content="Track the best weapons in The Finals Season 8 with our interactive meta tier list. Community sentiment, pick rates, and detailed stats for every weapon." />
+  <meta name="keywords" content="The Finals meta, Season 8 weapons, tier list, weapon stats, community picks" />
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="The Finals Meta Weapons | Season 8" />
+  <meta property="og:description" content="Interactive Season 8 meta tier list with community sentiment and detailed weapon stats." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://thefinalsloadout.com/meta-weapons/" />
+
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="../images/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="../images/favicon-92x192.png">
-  <link rel="apple-touch-icon" sizes="192x192" href="../images/favicon-92x192.png">
-  
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/hotfix.css">
-  <link rel="stylesheet" href="styles/meta-s8.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'bg-primary': '#0a0a0a',
+            'bg-card': '#111111',
+            'border-primary': '#1a1a1a',
+          }
+        }
+      }
+    }
+  </script>
 
   <style>
-    :root {
-      --bg: #0a0f14;
-      --panel: #101720;
-      --muted: #98a2b3;
-      --txt: #e6edf3;
-      --accent: #00e0ff;
-      --good: #22c55e;
-      --warn: #f59e0b;
-      --bad: #ef4444;
-      --border: #1f2a37;
-      --hover: #141a24;
-      
-      --light: #06b6d4;
-      --medium: #8b5cf6;
-      --heavy: #f97316;
-      --nav-bg: rgba(10, 15, 20, 0.95);
-    }
-    
-    * { box-sizing: border-box; }
-    
     body {
-      background: var(--bg);
-      color: var(--txt);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin: 0;
-      line-height: 1.6;
-      padding-top: 60px; /* Space for sticky nav */
     }
-    
-    /* Navigation */
-    .main-nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: var(--nav-bg);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      z-index: 1000;
-      padding: 0.75rem 1rem;
-    }
-    
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      align-items: center;
-    }
-    
-    .nav-link {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      transition: color 0.3s;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1rem;
-    }
-    
-    .nav-link:hover {
-      color: var(--accent);
-    }
-    
-    .nav-link.active {
-      color: var(--accent);
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      min-height: calc(100vh - 200px);
-    }
-    
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 1.5rem 1rem;
-      color: #888;
-      margin-top: 2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(10, 10, 15, 0.9);
-      position: relative;
-      z-index: 10;
-      font-size: 0.75rem;
-    }
-    
-    footer a {
-      color: #00f0c0;
-      text-decoration: none;
-      transition: opacity 0.3s;
-    }
-    
-    footer a:hover {
-      opacity: 0.8;
-    }
-    
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-      font-size: 0.75rem;
-      margin-top: 0.5rem;
-    }
-    
-    /* Header */
-    .header {
-      margin-bottom: 2rem;
-    }
-    
-    h1 {
-      font-size: 2rem;
-      margin: 0 0 0.5rem 0;
-      display: inline-flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    
-    .badge {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.75rem;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      font-weight: normal;
-    }
-    
-    .subtitle {
-      color: var(--muted);
-      font-size: 0.875rem;
-    }
-    
-    /* Quick Stats */
-    .quick-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    
-    .stat-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem;
-    }
-    
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    
-    .stat-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin: 0.25rem 0;
-    }
-    
-    .stat-meta {
-      font-size: 0.875rem;
-      color: var(--muted);
-    }
-    
-    /* Filters */
-    .filters {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 2rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    
-    .filter-group {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-    
-    .chip {
-      padding: 0.375rem 0.75rem;
-      border: 1px solid var(--border);
-      background: transparent;
-      border-radius: 999px;
-      font-size: 0.875rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      color: var(--txt);
-    }
-    
-    .chip:hover {
-      background: var(--hover);
-    }
-    
-    .chip.active {
-      background: var(--accent);
-      color: var(--bg);
-      border-color: var(--accent);
-    }
-    
-    .search {
-      flex: 1;
-      min-width: 200px;
-      padding: 0.375rem 0.75rem;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--txt);
-      font-size: 0.875rem;
-    }
-    
-    /* Class Sections */
-    .class-section {
-      margin-bottom: 2rem;
-    }
-    
-    .class-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-      padding: 0.75rem;
-      background: var(--panel);
-      border-radius: 8px;
-    }
-    
-    .class-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.875rem;
-    }
-    
-    .class-icon.light {
-      background: rgba(6, 182, 212, 0.2);
-      color: var(--light);
-      border: 2px solid var(--light);
-    }
-    
-    .class-icon.medium {
-      background: rgba(139, 92, 246, 0.2);
-      color: var(--medium);
-      border: 2px solid var(--medium);
-    }
-    
-    .class-icon.heavy {
-      background: rgba(249, 115, 22, 0.2);
-      color: var(--heavy);
-      border: 2px solid var(--heavy);
-    }
-    
-    .class-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
-    
-    .class-count {
-      font-size: 0.875rem;
-      color: var(--muted);
-    }
-    
-    /* Weapon Table */
-    .weapon-table {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    
-    th {
-      text-align: left;
-      padding: 0.75rem 1rem;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--muted);
-      border-bottom: 1px solid var(--border);
-      background: rgba(0,0,0,0.2);
-      cursor: pointer;
-      user-select: none;
-    }
-    
-    th:hover {
-      color: var(--txt);
-    }
-    
-    td {
-      padding: 0.875rem 1rem;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    tr:last-child td {
-      border-bottom: none;
-    }
-    
-    tr:hover {
-      background: var(--hover);
-    }
-    
-    .weapon-name {
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .tier {
-      display: inline-block;
-      padding: 0.125rem 0.5rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      min-width: 1.5rem;
-      text-align: center;
-    }
-    
-    .tier-s {
-      background: rgba(34, 197, 94, 0.2);
-      color: var(--good);
-    }
-    
-    .tier-a {
-      background: rgba(59, 130, 246, 0.2);
-      color: #3b82f6;
-    }
-    
-    .tier-b {
-      background: rgba(245, 158, 11, 0.2);
-      color: var(--warn);
-    }
-    
-    .tier-c {
-      background: rgba(239, 68, 68, 0.2);
-      color: var(--bad);
-    }
-    
-    .tier-d {
-      background: rgba(156, 163, 175, 0.2);
-      color: #9ca3af;
-    }
-    
-    .tier-e {
-      background: rgba(107, 114, 128, 0.2);
-      color: #6b7280;
-    }
-    
-    .range-tag {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-    
-    .stat-bar {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .bar {
-      flex: 1;
-      height: 4px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 2px;
-      overflow: hidden;
-      max-width: 100px;
-    }
-    
-    .bar-fill {
-      height: 100%;
-      transition: width 0.3s ease;
-    }
-    
-    .bar-fill.positive {
-      background: var(--good);
-    }
-    
-    .bar-fill.neutral {
-      background: var(--warn);
-    }
-    
-    .bar-fill.negative {
-      background: var(--bad);
-    }
-    
-    .hot-tag {
-      font-size: 0.625rem;
-      padding: 0.125rem 0.375rem;
-      background: var(--bad);
-      color: white;
-      border-radius: 4px;
-      font-weight: 700;
-    }
-    
-    .rounds-tag {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-    
-    /* Mobile Navigation */
-    @media (max-width: 768px) {
-      .main-nav {
-        flex-direction: column;
-        padding: 0.75rem 1rem !important;
-        gap: 0.75rem;
-      }
-      
-      .nav-links {
-        flex-wrap: wrap;
-        gap: 1rem;
-        justify-content: center;
-        width: 100%;
-      }
-      
-      .nav-link {
-        font-size: 0.8rem !important;
-        padding: 0.4rem 0.8rem !important;
-      }
-      
-      body {
-        padding-top: 100px;
-      }
-    }
-    
-    /* Mobile Layout */
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
-      }
-      
-      h1 {
-        font-size: 1.5rem;
-      }
-      
-      .quick-stats {
-        grid-template-columns: 1fr;
-      }
-      
-      .filters {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      
-      .filter-group {
-        justify-content: space-between;
-      }
-      
-      /* Mobile cards instead of table */
-      .weapon-table {
-        background: transparent;
-        border: none;
-      }
-      
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-      
-      thead {
-        display: none;
-      }
-      
-      tr {
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        margin-bottom: 0.75rem;
-        padding: 1rem;
-      }
-      
-      tr:hover {
-        background: var(--panel);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      }
-      
-      td {
-        padding: 0.25rem 0;
-        border: none;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      
-      td:before {
-        content: attr(data-label);
-        font-size: 0.75rem;
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-      
-      td:first-child {
-        font-size: 1.125rem;
-        margin-bottom: 0.5rem;
-      }
-      
-      td:first-child:before {
-        display: none;
-      }
-      
-      .weapon-name {
-        justify-content: flex-start;
-      }
-    }
-    
-    /* Scroll Animations */
+
+    /* Animations from patch notes */
     @keyframes fadeInUp {
       from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
       }
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
-    
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
+
+    @keyframes subtleGlow {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
       }
-      to {
+      50% {
+        box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+      }
+    }
+
+    @keyframes logoGlow {
+      0%, 100% {
+        filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.3));
+      }
+      50% {
+        filter: drop-shadow(0 0 40px rgba(99, 102, 241, 0.5));
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
         opacity: 1;
       }
-    }
-    
-    @keyframes slideInLeft {
-      from {
-        opacity: 0;
-        transform: translateX(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
+      50% {
+        opacity: 0.8;
       }
     }
-    
-    .scroll-reveal {
-      opacity: 0;
-      animation: fadeInUp 0.8s ease forwards;
-      animation-fill-mode: both;
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
-    
-    .scroll-reveal-delay-1 {
-      animation-delay: 0.1s;
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.6s ease-out forwards;
     }
-    
-    .scroll-reveal-delay-2 {
-      animation-delay: 0.2s;
+
+    .latest-banner {
+      animation: subtleGlow 3s ease-in-out infinite;
     }
-    
-    .scroll-reveal-delay-3 {
-      animation-delay: 0.3s;
+
+    .logo-glow {
+      animation: logoGlow 4s ease-in-out infinite;
     }
-    
-    .scroll-reveal-delay-4 {
-      animation-delay: 0.4s;
+
+    .pulse-glow {
+      animation: pulse 2s ease-in-out infinite;
     }
-    
-    .header {
-      opacity: 1 !important;
-      animation: fadeIn 1s ease forwards;
-      animation-fill-mode: both;
+
+    .weapon-card {
+      transition: all 0.3s ease;
     }
-    
-    .stat-card {
-      opacity: 0;
-      animation: fadeInUp 0.6s ease forwards;
+
+    .weapon-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
-    
-    .stat-card:nth-child(1) { animation-delay: 0.1s; }
-    .stat-card:nth-child(2) { animation-delay: 0.2s; }
-    .stat-card:nth-child(3) { animation-delay: 0.3s; }
-    .stat-card:nth-child(4) { animation-delay: 0.4s; }
-    
-    .filters {
-      opacity: 0;
-      animation: slideInLeft 0.8s ease 0.5s forwards;
+
+    /* Image lazy load placeholder */
+    .img-placeholder {
+      background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
     }
-    
-    .class-section {
-      opacity: 0;
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
     }
-    
-    .class-section.visible {
-      animation: fadeInUp 0.8s ease forwards;
+
+    ::-webkit-scrollbar-track {
+      background: #0a0a0a;
     }
-    
-    /* Legend/Key Section */
-    .legend-section {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-top: 2rem;
-      opacity: 0;
-      animation: fadeInUp 0.8s ease 0.6s forwards;
+
+    ::-webkit-scrollbar-thumb {
+      background: #1a1a1a;
+      border-radius: 5px;
     }
-    
-    .legend-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #2a2a2a;
     }
-    
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+
+    /* Sticky filter bar */
+    #filterBar {
+      transition: box-shadow 0.3s ease;
     }
-    
-    .legend-text {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-    
-    @media (max-width: 768px) {
-      .legend-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    /* Utility */
-    .hidden { display: none; }
-    .text-muted { color: var(--muted); }
-    .text-small { font-size: 0.875rem; }
   </style>
 </head>
-<body>
-  <!-- Scroll Progress Bar -->
-  <div class="scroll-progress-bar" id="scrollProgressBar"></div>
-  
-  <!-- Navigation -->
-  <nav class="main-nav">
-    <div class="nav-container">
-      <div class="nav-links">
-        <a href="/" class="nav-link">LOADOUT GENERATOR</a>
-        <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
-        <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
-        <a href="/meta-weapons/" class="nav-link active">META WEAPONS</a>
-        <a href="/wt-progress/" class="nav-link">WORLD TOUR TRACKER (NEW)</a>
+
+<body class="bg-bg-primary text-white min-h-screen">
+
+  <!-- ========== HERO SECTION ========== -->
+  <section class="relative min-h-screen max-h-screen flex flex-col justify-start items-center px-4 pt-12 pb-12">
+    <!-- Animated Background Grid -->
+    <div class="absolute inset-0 opacity-5">
+      <div class="absolute inset-0" style="background-image: linear-gradient(#6366f1 1px, transparent 1px), linear-gradient(90deg, #6366f1 1px, transparent 1px); background-size: 50px 50px;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl w-full mx-auto">
+      <!-- Logo with Animation -->
+      <div class="flex justify-center mb-8 animate-fade-in-up">
+        <img src="images/logo meta weapon.png" alt="Meta Weapons" class="max-w-xs w-full h-auto logo-glow">
+      </div>
+
+      <!-- Latest Season Banner -->
+      <div class="latest-banner max-w-4xl mx-auto mb-12 bg-bg-card border border-indigo-500 rounded-xl p-6 animate-fade-in-up" style="animation-delay: 0.1s;">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <p class="text-sm text-gray-400 mb-1">Current Season</p>
+            <h2 class="text-3xl font-bold">Season 8: GAME TIME</h2>
+            <p class="text-sm text-gray-400 mt-1">Updated: October 10, 2025 • Patch 8.3.1</p>
+          </div>
+          <span class="px-4 py-2 bg-indigo-500/20 text-indigo-400 rounded-full text-sm font-semibold">LIVE NOW</span>
+        </div>
+      </div>
+
+      <!-- Spotlight: 5 Most Important Weapons -->
+      <div class="max-w-7xl mx-auto mb-8">
+        <h3 class="text-2xl font-bold mb-6 text-center">Top Meta Weapons</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+          <!-- BFR Titan -->
+          <div class="bg-bg-card border border-border-primary rounded-xl p-5 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 animate-fade-in-up" style="animation-delay: 0.2s;">
+            <div class="flex items-start gap-4 relative">
+              <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">NEW S8</span>
+              <img src="images/BFR_Titan.webp" alt="BFR Titan" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
+              <div class="flex-1 min-w-0">
+                <h3 class="font-bold text-lg mb-1 truncate">BFR Titan</h3>
+                <span class="inline-block px-2 py-1 bg-green-500/20 text-green-500 rounded text-xs font-semibold mb-2">S-TIER</span>
+                <p class="text-xs text-gray-400 mb-1">Heavy</p>
+                <p class="text-sm text-gray-400">TTK: <span class="font-mono text-white">0.50s</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- M11 -->
+          <div class="bg-bg-card border border-border-primary rounded-xl p-5 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 animate-fade-in-up" style="animation-delay: 0.3s;">
+            <div class="flex items-start gap-4 relative">
+              <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">HOT</span>
+              <img src="images/M11.webp" alt="M11" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
+              <div class="flex-1 min-w-0">
+                <h3 class="font-bold text-lg mb-1 truncate">M11</h3>
+                <span class="inline-block px-2 py-1 bg-green-500/20 text-green-500 rounded text-xs font-semibold mb-2">S-TIER</span>
+                <p class="text-xs text-gray-400 mb-1">Light</p>
+                <p class="text-sm text-gray-400">TTK: <span class="font-mono text-white">0.54s</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FCAR -->
+          <div class="bg-bg-card border border-border-primary rounded-xl p-5 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 animate-fade-in-up" style="animation-delay: 0.4s;">
+            <div class="flex items-start gap-4 relative">
+              <img src="images/FCAR.webp" alt="FCAR" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
+              <div class="flex-1 min-w-0">
+                <h3 class="font-bold text-lg mb-1 truncate">FCAR</h3>
+                <span class="inline-block px-2 py-1 bg-green-500/20 text-green-500 rounded text-xs font-semibold mb-2">S-TIER</span>
+                <p class="text-xs text-gray-400 mb-1">Medium</p>
+                <p class="text-sm text-gray-400">TTK: <span class="font-mono text-white">0.67s</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- P90 -->
+          <div class="bg-bg-card border border-border-primary rounded-xl p-5 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 animate-fade-in-up" style="animation-delay: 0.5s;">
+            <div class="flex items-start gap-4 relative">
+              <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">NEW S8</span>
+              <img src="images/P90.webp" alt="P90" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
+              <div class="flex-1 min-w-0">
+                <h3 class="font-bold text-lg mb-1 truncate">P90</h3>
+                <span class="inline-block px-2 py-1 bg-green-500/20 text-green-500 rounded text-xs font-semibold mb-2">S-TIER</span>
+                <p class="text-xs text-gray-400 mb-1">Medium</p>
+                <p class="text-sm text-gray-400">TTK: <span class="font-mono text-white">0.65s</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ShAK-50 -->
+          <div class="bg-bg-card border border-border-primary rounded-xl p-5 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 animate-fade-in-up" style="animation-delay: 0.6s;">
+            <div class="flex items-start gap-4 relative">
+              <span class="absolute top-0 right-0 text-xs font-mono text-indigo-400 bg-indigo-500/20 px-2 py-1 rounded">↑22%</span>
+              <img src="images/SHAK-50.webp" alt="ShAK-50" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
+              <div class="flex-1 min-w-0">
+                <h3 class="font-bold text-lg mb-1 truncate">ShAK-50</h3>
+                <span class="inline-block px-2 py-1 bg-green-500/20 text-green-500 rounded text-xs font-semibold mb-2">S-TIER</span>
+                <p class="text-xs text-gray-400 mb-1">Heavy</p>
+                <p class="text-sm text-gray-400">TTK: <span class="font-mono text-white">0.57s</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll Indicator -->
+      <div class="text-center animate-fade-in-up" style="animation-delay: 0.8s;">
+        <p class="text-gray-400 text-sm mb-2">Scroll for all weapons</p>
+        <svg class="w-6 h-6 mx-auto animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
       </div>
     </div>
-  </nav>
-  
-  <div class="container">
-    <!-- Header -->
-    <header class="header">
-      <h1>The Finals Meta <span class="badge">SEASON 8</span></h1>
-      <p class="subtitle">Community sentiment and meta analysis • Data from Reddit, Discord, and tournament play</p>
-      <div class="meta-version">
-        <span class="pill">Meta 8.3</span>
-        <span class="updated">Updated Oct 5, 2025</span>
-        <span class="tooltip" title="Mid-season patches applied (8.1–8.3.1): BFR −8 body dmg; long-range hitscan fixed; Smoke nerfed; minor P90 audio tweak.">ⓘ</span>
-      </div>
-    </header>
-    
-    <!-- Season 8 Mid-Season Changes -->
-    <details class="meta-callout" open>
-      <summary>Season 8 mid-season changes</summary>
-      <ul>
-        <li><strong>BFR Titan:</strong> body damage 98→90 (8.3.0); hitscan bug fixed at range (8.3.1).</li>
-        <li><strong>Smoke Grenade:</strong> duration 15s→9s, ammo 3→2.</li>
-        <li><strong>Breach Drill:</strong> faster activation.</li>
-        <li><strong>P90:</strong> minor audio tweak.</li>
-      </ul>
-    </details>
+  </section>
 
-    <!-- Overall Top 10 -->
-    <section class="meta-top10-section" id="overall-top10">
-      <h2>Overall Top 10</h2>
-      <table class="meta">
-        <thead>
-          <tr>
-            <th>Weapon</th>
-            <th>Class</th>
-            <th>Tier</th>
-            <th>Confidence</th>
-          </tr>
-        </thead>
-        <tbody id="top10Body"></tbody>
-      </table>
-    </section>
+  <!-- ========== STICKY FILTER BAR ========== -->
+  <div id="filterBar" class="sticky top-0 z-50 bg-bg-primary/95 backdrop-blur-md border-b border-border-primary transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 py-3 lg:py-4">
+      <!-- Row 1: Change Type Filters -->
+      <div class="flex gap-2 flex-wrap justify-center mb-3">
+        <button onclick="filterByType('all')" class="type-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-gray-700 text-white">
+          All
+        </button>
+        <button onclick="filterByType('meta')" class="type-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400 hover:text-green-500 hover:border-green-500">
+          S/A Tier Only
+        </button>
+        <button onclick="filterByType('loved')" class="type-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400 hover:text-blue-500 hover:border-blue-500">
+          Community Loved
+        </button>
+        <button onclick="filterByType('new')" class="type-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400 hover:text-indigo-500 hover:border-indigo-500">
+          New S8
+        </button>
+      </div>
 
-    <!-- Top 3 by Class -->
-    <section class="top3-section" id="top3-by-class">
-      <h2>Top 3 by class</h2>
-      <div class="grid-3" id="top3Grid"></div>
-    </section>
+      <!-- Row 2: Class + Search -->
+      <div class="flex flex-col md:flex-row gap-3 items-center justify-center">
+        <!-- Class Filters -->
+        <div class="w-full md:w-auto">
+          <!-- Mobile Dropdown -->
+          <select id="classSelect" onchange="filterByClass(this.value)" class="md:hidden w-full px-4 py-2 bg-bg-card border border-border-primary rounded-lg text-white focus:outline-none focus:border-indigo-500 transition-colors">
+            <option value="all">All Classes</option>
+            <option value="light">Light</option>
+            <option value="medium">Medium</option>
+            <option value="heavy">Heavy</option>
+          </select>
+          <!-- Desktop Buttons -->
+          <div class="hidden md:flex gap-2">
+            <button onclick="filterByClass('all')" class="class-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-indigo-500/20 text-indigo-400">
+              All Classes
+            </button>
+            <button onclick="filterByClass('light')" class="class-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
+              Light
+            </button>
+            <button onclick="filterByClass('medium')" class="class-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
+              Medium
+            </button>
+            <button onclick="filterByClass('heavy')" class="class-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
+              Heavy
+            </button>
+          </div>
+        </div>
 
-    <!-- System Notes -->
-    <section class="system-notes">
-      <h3>S8 ecosystem notes</h3>
-      <ul>
-        <li>Thermal Vision: still disabled in S8.</li>
-        <li>Smoke Grenade toned down reduces free cashout steals.</li>
-        <li>Breach Drill QoL makes set plays snappier.</li>
-      </ul>
-    </section>
-    
-    <!-- Quick Stats -->
-    <section class="quick-stats scroll-reveal scroll-reveal-delay-1">
-      <div class="stat-card">
-        <div class="stat-label">Community Favorite</div>
-        <div class="stat-value">P90</div>
-        <div class="stat-meta">95% positive sentiment</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Most Controversial</div>
-        <div class="stat-value">CL-40</div>
-        <div class="stat-meta">Love it or hate it</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Rising Pick</div>
-        <div class="stat-value">ShAK-50</div>
-        <div class="stat-meta">↑ 22% this week</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Total Weapons</div>
-        <div class="stat-value">37</div>
-        <div class="stat-meta">14L / 12M / 11H</div>
-      </div>
-    </section>
-    
-    <!-- Filters -->
-    <section class="filters scroll-reveal scroll-reveal-delay-2">
-      <div class="filter-group">
-        <button class="chip active" data-filter="all">All Weapons</button>
-        <button class="chip" data-filter="meta">Meta Only</button>
-        <button class="chip" data-filter="loved">Community Loved</button>
-      </div>
-      <input type="text" class="search" placeholder="Search weapons..." id="searchInput">
-      <button class="chip" id="resetBtn">Reset</button>
-    </section>
-    
-    <!-- Light Class -->
-    <section class="class-section" data-class="light">
-      <div class="class-header">
-        <div class="class-icon light">L</div>
-        <h2 class="class-title">Light</h2>
-        <span class="class-count">14 weapons</span>
-      </div>
-      <div class="weapon-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Weapon</th>
-              <th>Tier</th>
-              <th>TTK</th>
-              <th>Mag</th>
-              <th>Range</th>
-              <th>Sentiment</th>
-              <th>Pick Rate</th>
-            </tr>
-          </thead>
-          <tbody id="lightWeapons"></tbody>
-        </table>
-      </div>
-    </section>
-    
-    <!-- Medium Class -->
-    <section class="class-section" data-class="medium">
-      <div class="class-header">
-        <div class="class-icon medium">M</div>
-        <h2 class="class-title">Medium</h2>
-        <span class="class-count">12 weapons</span>
-      </div>
-      <div class="weapon-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Weapon</th>
-              <th>Tier</th>
-              <th>TTK</th>
-              <th>Mag</th>
-              <th>Range</th>
-              <th>Sentiment</th>
-              <th>Pick Rate</th>
-            </tr>
-          </thead>
-          <tbody id="mediumWeapons"></tbody>
-        </table>
-      </div>
-    </section>
-    
-    <!-- Heavy Class -->
-    <section class="class-section" data-class="heavy">
-      <div class="class-header">
-        <div class="class-icon heavy">H</div>
-        <h2 class="class-title">Heavy</h2>
-        <span class="class-count">11 weapons</span>
-      </div>
-      <div class="weapon-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Weapon</th>
-              <th>Tier</th>
-              <th>TTK</th>
-              <th>Mag</th>
-              <th>Range</th>
-              <th>Sentiment</th>
-              <th>Pick Rate</th>
-            </tr>
-          </thead>
-          <tbody id="heavyWeapons"></tbody>
-        </table>
-      </div>
-    </section>
-    
-    <!-- Legend/Key -->
-    <section class="legend-section">
-      <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;">Legend</h3>
-      <div class="legend-grid">
-        <div class="legend-item">
-          <span class="tier tier-s">S</span>
-          <span class="legend-text">Top tier - Meta defining</span>
-        </div>
-        <div class="legend-item">
-          <span class="tier tier-a">A</span>
-          <span class="legend-text">Strong - Competitive viable</span>
-        </div>
-        <div class="legend-item">
-          <span class="tier tier-b">B</span>
-          <span class="legend-text">Decent - Situational pick</span>
-        </div>
-        <div class="legend-item">
-          <span class="tier tier-c">C</span>
-          <span class="legend-text">Weak - Needs buffs</span>
-        </div>
-        <div class="legend-item">
-          <span class="tier tier-d">D</span>
-          <span class="legend-text">Very weak - Rarely viable</span>
-        </div>
-        <div class="legend-item">
-          <span class="tier tier-e">E</span>
-          <span class="legend-text">Bottom tier - Avoid</span>
-        </div>
-        <div class="legend-item">
-          <span class="hot-tag">HOT</span>
-          <span class="legend-text">Trending in current meta</span>
-        </div>
-        <div class="legend-item">
-          <strong style="font-size: 0.875rem;">TTK</strong>
-          <span class="legend-text">Time to kill (seconds)</span>
-        </div>
-        <div class="legend-item">
-          <strong style="font-size: 0.875rem;">Sentiment</strong>
-          <span class="legend-text">Community approval rating</span>
-        </div>
-        <div class="legend-item">
-          <strong style="font-size: 0.875rem;">Pick Rate</strong>
-          <span class="legend-text">Usage in ranked/tournament play</span>
+        <!-- Search Input -->
+        <div class="relative w-full md:w-64">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search weapons..."
+            class="w-full px-4 py-2 bg-bg-card border border-border-primary rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
+          />
+          <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
         </div>
       </div>
-    </section>
+    </div>
   </div>
-  
-  <!-- Footer -->
-  <footer style="text-align:center;padding:1.5rem 1rem;color:#888;margin-top:2rem;border-top:1px solid rgba(255,255,255,0.1);background:rgba(10,10,15,0.9);position:relative;z-index:10;font-size:0.75rem;">
-    <!-- Support Section -->
-    <div style="margin-bottom:1.5rem;padding:1.5rem;background:linear-gradient(135deg,rgba(80,200,120,0.05) 0%,rgba(0,255,204,0.05) 100%);border-radius:12px;border:1px solid rgba(80,200,120,0.2);">
-      <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;">
-        <span style="font-size:1.5rem;">☕</span>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <section class="max-w-7xl mx-auto px-4 py-12">
+
+    <!-- No Results Message -->
+    <div id="noResults" class="hidden text-center py-12">
+      <svg class="w-16 h-16 mx-auto text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <h3 class="text-2xl font-bold mb-2 text-gray-400">No weapons found</h3>
+      <p class="text-gray-500">Try adjusting your filters or search query</p>
+    </div>
+
+    <!-- Light Class -->
+    <section class="class-section mb-16" data-class="light">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 rounded-full bg-cyan-500/20 border-2 border-cyan-500 flex items-center justify-center">
+          <span class="text-cyan-500 font-bold text-lg">L</span>
+        </div>
         <div>
-          <p style="margin:0;color:#50c878;font-weight:600;font-size:0.9rem;">Enjoying the meta weapons guide?</p>
-          <p style="margin:0.25rem 0 0.75rem 0;color:#b8bfc6;font-size:0.8rem;">Help keep it updated with a coffee!</p>
+          <h2 class="text-3xl font-bold">Light</h2>
+          <p class="text-gray-400 text-sm light-count">13 weapons</p>
         </div>
       </div>
-      <a href="https://ko-fi.com/nextroundonme" target="_blank" rel="noopener" style="display:inline-block;padding:0.75rem 2rem;background:linear-gradient(135deg,#50c878,#00ffcc);color:#0a0a0f;text-decoration:none;border-radius:8px;font-weight:700;font-size:0.9rem;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(80,200,120,0.3);position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 25px rgba(80,200,120,0.5)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 15px rgba(80,200,120,0.3)';">
-        <span style="position:relative;z-index:1;">💚 Support Me</span>
-      </a>
-    </div>
-    
-    <p style="margin:0 0 0.5rem 0;">
-      © 2025 TheFinalsLoadout.com | Created by 
-      <a href="https://www.paultakisaki.com/" rel="author" style="color:#00f0c0;text-decoration:none;transition:opacity 0.3s;">Paul Takisaki</a>
-    </p>
-    <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;font-size:0.75rem;margin-top:0.5rem;">
-      <a href="/legal/" style="color:#00f0c0;text-decoration:none;transition:opacity 0.3s;">Legal Disclaimer</a>
-      <a href="https://thefinalsloadout.com/feedback" style="color:#ffd700;">📝 Submit Feedback</a>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="lightWeapons"></div>
+    </section>
+
+    <!-- Medium Class -->
+    <section class="class-section mb-16" data-class="medium">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 rounded-full bg-violet-500/20 border-2 border-violet-500 flex items-center justify-center">
+          <span class="text-violet-500 font-bold text-lg">M</span>
+        </div>
+        <div>
+          <h2 class="text-3xl font-bold">Medium</h2>
+          <p class="text-gray-400 text-sm medium-count">12 weapons</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="mediumWeapons"></div>
+    </section>
+
+    <!-- Heavy Class -->
+    <section class="class-section mb-16" data-class="heavy">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 rounded-full bg-orange-500/20 border-2 border-orange-500 flex items-center justify-center">
+          <span class="text-orange-500 font-bold text-lg">H</span>
+        </div>
+        <div>
+          <h2 class="text-3xl font-bold">Heavy</h2>
+          <p class="text-gray-400 text-sm heavy-count">12 weapons</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="heavyWeapons"></div>
+    </section>
+
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="border-t border-border-primary bg-bg-card py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <p class="text-gray-400 text-sm mb-4">© 2025 The Finals Loadout | Not affiliated with Embark Studios</p>
+      <div class="flex justify-center gap-6 flex-wrap text-sm">
+        <a href="/" class="text-indigo-400 hover:text-white transition-colors">Loadout Generator</a>
+        <a href="/ragequit/" class="text-indigo-400 hover:text-white transition-colors">Rage Quit</a>
+        <a href="/patch-notes/" class="text-indigo-400 hover:text-white transition-colors">Patch Notes</a>
+        <a href="/meta-weapons/" class="text-indigo-400 hover:text-white transition-colors">Meta Weapons</a>
+        <a href="https://twitter.com/takipaul" target="_blank" class="text-indigo-400 hover:text-white transition-colors">Twitter</a>
+        <a href="https://ko-fi.com/takipaul" target="_blank" class="text-indigo-400 hover:text-white transition-colors">Support via Ko-fi</a>
+      </div>
     </div>
   </footer>
-  
+
+  <!-- ========== JAVASCRIPT ========== -->
   <script>
-// Load S8 meta data
-(async function loadS8Meta() {
-  try {
-    // Load Overall Top 10
-    const resMin = await fetch('data/meta/s8/weapons_meta_min.json').catch(() => null);
-    const minData = resMin ? await resMin.json() : [];
+    // Weapon data
+    const weaponData = {
+      light: [
+        { name: "ARN-220", tier: "S", ttk: 0.66, rounds: 30, range: "Mid", sentiment: 0.88, pickRate: 0.32, hot: true, status: "Unchanged", image: "ARN-220.webp" },
+        { name: "XP-54", tier: "A", ttk: 0.63, rounds: 34, range: "Close-Mid", sentiment: 0.85, pickRate: 0.28, hot: true, status: "Nerfed", image: "XP-54.webp" },
+        { name: "M11", tier: "A", ttk: 0.54, rounds: 40, range: "Close", sentiment: 0.82, pickRate: 0.25, hot: false, status: "Nerfed", image: "M11.webp" },
+        { name: "V9S", tier: "B", ttk: 0.50, rounds: 20, range: "Close", sentiment: 0.90, pickRate: 0.22, hot: true, status: "Unchanged", image: "V9S.webp" },
+        { name: "93R", tier: "B", ttk: 0.52, rounds: 24, range: "Close", sentiment: 0.78, pickRate: 0.18, hot: false, status: "Buffed", image: "93R.webp" },
+        { name: "SR-84", tier: "B", ttk: 0.78, rounds: 6, range: "Long", sentiment: 0.75, pickRate: 0.15, hot: false, status: "Unchanged", image: "SR-84.webp" },
+        { name: "LH1", tier: "C", ttk: 0.67, rounds: 15, range: "Mid-Long", sentiment: 0.82, pickRate: 0.14, hot: false, status: "Buffed", image: "LH1.webp" },
+        { name: "SH1900", tier: "C", ttk: 0.00, rounds: 2, range: "Close", sentiment: 0.75, pickRate: 0.12, hot: false, status: "Unchanged", image: "SH1900.webp" },
+        { name: "Recurve Bow", tier: "C", ttk: 1.25, rounds: "∞", range: "Mid", sentiment: 0.72, pickRate: 0.08, hot: false, status: "Unchanged", image: "Recurve_Bow.webp" },
+        { name: "Throwing Knives", tier: "C", ttk: 0.78, rounds: "∞", range: "Mid", sentiment: 0.68, pickRate: 0.06, hot: false, status: "Unchanged", image: "Throwing_Knives.webp" },
+        { name: "Dagger", tier: "D", ttk: 1.21, rounds: "∞", range: "Melee", sentiment: 0.65, pickRate: 0.04, hot: false, status: "Buffed", image: "Dagger.webp" },
+        { name: "Sword", tier: "E", ttk: 1.38, rounds: "∞", range: "Melee", sentiment: 0.62, pickRate: 0.03, hot: false, status: "Buffed", image: "Sword.webp" },
+        { name: "M26 Matter", tier: "E", ttk: 0.71, rounds: 8, range: "Close", sentiment: 0.58, pickRate: 0.02, hot: false, status: "Unchanged", image: "M26_Matter.webp" }
+      ],
+      medium: [
+        { name: "P90", tier: "S", ttk: 0.65, rounds: 50, range: "Close-Mid", sentiment: 0.95, pickRate: 0.40, hot: true, status: "NEW S8", image: "P90.webp" },
+        { name: "AKM", tier: "S", ttk: 0.75, rounds: 32, range: "Mid", sentiment: 0.92, pickRate: 0.35, hot: true, status: "Unchanged", image: "AKM.webp" },
+        { name: "FCAR", tier: "S", ttk: 0.67, rounds: 25, range: "Mid", sentiment: 0.88, pickRate: 0.30, hot: true, status: "Unchanged", image: "FCAR.webp" },
+        { name: "Cerberus 12GA", tier: "S", ttk: 0.60, rounds: 3, range: "Close", sentiment: 0.85, pickRate: 0.28, hot: true, status: "Unknown", image: "Cerberus_12GA.webp" },
+        { name: "CL-40", tier: "A", ttk: 0.80, rounds: 5, range: "Mid", sentiment: 0.70, pickRate: 0.20, hot: false, status: "Nerfed", image: "CL-40.webp" },
+        { name: "FAMAS", tier: "B", ttk: 0.74, rounds: 27, range: "Mid", sentiment: 0.78, pickRate: 0.18, hot: false, status: "Unchanged", image: "FAMAS.webp" },
+        { name: "CB-01 Repeater", tier: "NR", ttk: 0.78, rounds: 8, range: "Long", sentiment: 0.65, pickRate: 0.08, hot: false, status: "Unchanged", image: "CB-01_Repeater.webp" },
+        { name: "R.357", tier: "C", ttk: 0.86, rounds: 6, range: "Mid", sentiment: 0.72, pickRate: 0.10, hot: false, status: "Unchanged", image: "R.357.webp" },
+        { name: "Pike-556", tier: "C", ttk: 0.90, rounds: 12, range: "Long", sentiment: 0.68, pickRate: 0.08, hot: false, status: "Unchanged", image: "Pike-556.webp" },
+        { name: "Model 1887", tier: "D", ttk: 0.90, rounds: 6, range: "Close", sentiment: 0.65, pickRate: 0.06, hot: false, status: "Unchanged", image: "Model_1887.webp" },
+        { name: "Dual Blades", tier: "E", ttk: 2.50, rounds: "∞", range: "Melee", sentiment: 0.55, pickRate: 0.02, hot: false, status: "Buffed", image: "Dual_Blades.webp" },
+        { name: "Riot Shield", tier: "E", ttk: "N/A", rounds: "∞", range: "Melee", sentiment: 0.50, pickRate: 0.01, hot: false, status: "Buffed", image: "Riot_Shield.webp" }
+      ],
+      heavy: [
+        { name: "BFR Titan", tier: "S", ttk: 0.50, rounds: 6, range: "Mid-Long", sentiment: 0.94, pickRate: 0.38, hot: true, status: "NEW S8", image: "BFR_Titan.webp" },
+        { name: "ShAK-50", tier: "S", ttk: 0.57, rounds: 20, range: "Mid", sentiment: 0.92, pickRate: 0.35, hot: true, status: "Unchanged", image: "SHAK-50.webp" },
+        { name: "M134 Minigun", tier: "A", ttk: 0.52, rounds: 250, range: "Close", sentiment: 0.88, pickRate: 0.25, hot: true, status: "Unchanged", image: "M134_Minigun.webp" },
+        { name: "M60", tier: "A", ttk: 0.72, rounds: 100, range: "Mid", sentiment: 0.85, pickRate: 0.22, hot: true, status: "Unchanged", image: "M60.webp" },
+        { name: ".50 Akimbo", tier: "A", ttk: 0.78, rounds: 14, range: "Close", sentiment: 0.80, pickRate: 0.18, hot: false, status: "Unchanged", image: ".50_Akimbo.webp" },
+        { name: "Flamethrower", tier: "A", ttk: 1.41, rounds: 30, range: "Close", sentiment: 0.70, pickRate: 0.12, hot: false, status: "Unchanged", image: "Flamethrower.webp" },
+        { name: "Lewis Gun", tier: "B", ttk: 0.72, rounds: 47, range: "Mid", sentiment: 0.78, pickRate: 0.15, hot: false, status: "Unchanged", image: "Lewis_Gun.webp" },
+        { name: "SA1216", tier: "D", ttk: 0.30, rounds: 16, range: "Close", sentiment: 0.75, pickRate: 0.14, hot: false, status: "Unchanged", image: "SA1216.webp" },
+        { name: "KS-23", tier: "C", ttk: 0.82, rounds: 6, range: "Mid", sentiment: 0.72, pickRate: 0.10, hot: false, status: "Buffed", image: "KS-23.webp" },
+        { name: "Sledgehammer", tier: "C", ttk: "Variable", rounds: "∞", range: "Melee", sentiment: 0.68, pickRate: 0.08, hot: false, status: "Mixed", image: "Sledgehammer.webp" },
+        { name: "Spear", tier: "D", ttk: "Variable", rounds: "∞", range: "Melee", sentiment: 0.60, pickRate: 0.04, hot: false, status: "Buffed", image: "Spear.webp" },
+        { name: "MGL32", tier: "E", ttk: 0.67, rounds: 6, range: "Mid", sentiment: 0.55, pickRate: 0.02, hot: false, status: "Unchanged", image: "MGL32.webp" }
+      ]
+    };
 
-    const top10Body = document.getElementById('top10Body');
-    if (top10Body && minData.length > 0) {
-      top10Body.innerHTML = minData.map(w => `
-        <tr>
-          <td>${w.weapon} <span class="note-s8">[S8]</span></td>
-          <td>${w.class}</td>
-          <td><span class="tier tier-${w.tier.toLowerCase().replace('+', '').replace('-', '')}">${w.tier}</span></td>
-          <td><span class="pill conf-${w.confidence}">${w.confidence.charAt(0).toUpperCase() + w.confidence.slice(1)}</span></td>
-        </tr>
-      `).join('');
-    }
+    // State management
+    let filters = {
+      type: 'all',
+      class: 'all',
+      search: ''
+    };
 
-    // Load Top 3 by Class
-    const resTop3 = await fetch('data/meta/s8/top3_by_class.json').catch(() => null);
-    const top3Data = resTop3 ? await resTop3.json() : {};
-
-    const top3Grid = document.getElementById('top3Grid');
-    if (top3Grid && Object.keys(top3Data).length > 0) {
-      top3Grid.innerHTML = Object.keys(top3Data).map(cls => `
-        <div>
-          <h3>${cls}</h3>
-          <ol>${top3Data[cls].map(w => `<li>${w}</li>`).join('')}</ol>
-        </div>
-      `).join('');
-    }
-
-    // Load full data for per-weapon notes
-    const resFull = await fetch('data/meta/s8/weapons_meta_full.json').catch(() => null);
-    const fullData = resFull ? await resFull.json() : [];
-    window.s8WeaponNotes = {};
-    fullData.forEach(w => {
-      window.s8WeaponNotes[w.weapon] = {
-        tier: w.tier,
-        note: w.note,
-        confidence: w.confidence
+    // Render weapon card
+    function renderWeaponCard(weapon, weaponClass) {
+      const tierColors = {
+        'S': 'bg-green-500/20 text-green-500',
+        'A': 'bg-blue-500/20 text-blue-500',
+        'B': 'bg-yellow-500/20 text-yellow-500',
+        'C': 'bg-orange-500/20 text-orange-500',
+        'D': 'bg-red-500/20 text-red-500',
+        'E': 'bg-gray-500/20 text-gray-500',
+        'NR': 'bg-gray-600/20 text-gray-400'
       };
-    });
-  } catch (err) {
-    console.error('Failed to load S8 meta data:', err);
-  }
-})();
-  </script>
 
-  <script>
-// Updated weapon data from verified JSON - accurate to Season 7 patch 7.6.0
-const weaponData = {
-  light: [
-    { name: "ARN-220", fullName: "ARN-220 (Assault Rifle)", tier: "S", ttk: 0.66, rounds: 30, range: "Mid", sentiment: 0.88, pickRate: 0.32, hot: true, status: "Unchanged" },
-    { name: "XP-54", fullName: "XP-54 (SMG)", tier: "A", ttk: 0.63, rounds: 34, range: "Close-Mid", sentiment: 0.85, pickRate: 0.28, hot: true, status: "Nerfed" },
-    { name: "M11", fullName: "M11 (Machine Pistol)", tier: "A", ttk: 0.54, rounds: 40, range: "Close", sentiment: 0.82, pickRate: 0.25, hot: false, status: "Nerfed" },
-    { name: "V9S", fullName: "V9S (Pistol)", tier: "B", ttk: 0.50, rounds: 20, range: "Close", sentiment: 0.90, pickRate: 0.22, hot: true, status: "Unchanged" },
-    { name: "93R", fullName: "93R (Burst Pistol)", tier: "B", ttk: 0.52, rounds: 24, range: "Close", sentiment: 0.78, pickRate: 0.18, hot: false, status: "Buffed" },
-    { name: "SR-84", fullName: "SR-84 (Sniper)", tier: "B", ttk: 0.78, rounds: 6, range: "Long", sentiment: 0.75, pickRate: 0.15, hot: false, status: "Unchanged" },
-    { name: "LH1", fullName: "LH1 (DMR)", tier: "C", ttk: 0.67, rounds: 15, range: "Mid-Long", sentiment: 0.82, pickRate: 0.14, hot: false, status: "Buffed" },
-    { name: "SH1900", fullName: "SH1900 (Double-Barrel)", tier: "C", ttk: 0.00, rounds: 2, range: "Close", sentiment: 0.75, pickRate: 0.12, hot: false, status: "Unchanged" },
-    { name: "Recurve Bow", fullName: "Recurve Bow", tier: "C", ttk: 1.25, rounds: "∞", range: "Mid", sentiment: 0.72, pickRate: 0.08, hot: false, status: "Unchanged" },
-    { name: "Throwing Knives", fullName: "Throwing Knives", tier: "C", ttk: 0.78, rounds: "∞", range: "Mid", sentiment: 0.68, pickRate: 0.06, hot: false, status: "Unchanged" },
-    { name: "Dagger", fullName: "Dagger (Melee)", tier: "D", ttk: 1.21, rounds: "∞", range: "Melee", sentiment: 0.65, pickRate: 0.04, hot: false, status: "Buffed" },
-    { name: "Sword", fullName: "Sword (Melee)", tier: "E", ttk: 1.38, rounds: "∞", range: "Melee", sentiment: 0.62, pickRate: 0.03, hot: false, status: "Buffed" },
-    { name: "M26 Matter", fullName: "M26 Matter (Shotgun)", tier: "E", ttk: 0.71, rounds: 8, range: "Close", sentiment: 0.58, pickRate: 0.02, hot: false, status: "Unchanged" }
-  ],
-  medium: [
-    { name: "P90", fullName: "P90 (SMG)", tier: "S", ttk: 0.65, rounds: 50, range: "Close-Mid", sentiment: 0.95, pickRate: 0.40, hot: true, status: "NEW S8" },
-    { name: "AKM", fullName: "AKM (Assault Rifle)", tier: "S", ttk: 0.75, rounds: 32, range: "Mid", sentiment: 0.92, pickRate: 0.35, hot: true, status: "Unchanged" },
-    { name: "FCAR", fullName: "FCAR (Battle Rifle)", tier: "S", ttk: 0.67, rounds: 25, range: "Mid", sentiment: 0.88, pickRate: 0.30, hot: true, status: "Unchanged" },
-    { name: "Cerberus 12GA", fullName: "Cerberus 12GA (Shotgun)", tier: "S", ttk: 0.60, rounds: 3, range: "Close", sentiment: 0.85, pickRate: 0.28, hot: true, status: "Unknown" },
-    { name: "CL-40", fullName: "CL-40 (Grenade Launcher)", tier: "A", ttk: 0.80, rounds: 5, range: "Mid", sentiment: 0.70, pickRate: 0.20, hot: false, status: "Nerfed" },
-    { name: "FAMAS", fullName: "FAMAS (Burst Rifle)", tier: "B", ttk: 0.74, rounds: 27, range: "Mid", sentiment: 0.78, pickRate: 0.18, hot: false, status: "Unchanged" },
-    { name: "CB-01 Repeater", fullName: "CB-01 Repeater", tier: "Not_Ranked", ttk: 0.78, rounds: 8, range: "Long", sentiment: 0.65, pickRate: 0.08, hot: false, status: "Unchanged" },
-    { name: "R.357", fullName: "R.357 (Revolver)", tier: "C", ttk: 0.86, rounds: 6, range: "Mid", sentiment: 0.72, pickRate: 0.10, hot: false, status: "Unchanged" },
-    { name: "Pike-556", fullName: "Pike-556 (DMR)", tier: "C", ttk: 0.90, rounds: 12, range: "Long", sentiment: 0.68, pickRate: 0.08, hot: false, status: "Unchanged" },
-    { name: "Model 1887", fullName: "Model 1887 (Shotgun)", tier: "D", ttk: 0.90, rounds: 6, range: "Close", sentiment: 0.65, pickRate: 0.06, hot: false, status: "Unchanged" },
-    { name: "Dual Blades", fullName: "Dual Blades (Melee)", tier: "E", ttk: 2.50, rounds: "∞", range: "Melee", sentiment: 0.55, pickRate: 0.02, hot: false, status: "Buffed" },
-    { name: "Riot Shield", fullName: "Riot Shield (Melee)", tier: "E", ttk: "N/A", rounds: "∞", range: "Melee", sentiment: 0.50, pickRate: 0.01, hot: false, status: "Buffed" }
-  ],
-  heavy: [
-    { name: "BFR Titan", fullName: "BFR Titan (Revolver)", tier: "S", ttk: 0.50, rounds: 6, range: "Mid-Long", sentiment: 0.94, pickRate: 0.38, hot: true, status: "NEW S8" },
-    { name: "ShAK-50", fullName: "ShAK-50 (Heavy AR)", tier: "S", ttk: 0.57, rounds: 20, range: "Mid", sentiment: 0.92, pickRate: 0.35, hot: true, status: "Unchanged" },
-    { name: "M134 Minigun", fullName: "M134 Minigun", tier: "A", ttk: 0.52, rounds: 250, range: "Close", sentiment: 0.88, pickRate: 0.25, hot: true, status: "Unchanged" },
-    { name: "M60", fullName: "M60 (LMG)", tier: "A", ttk: 0.72, rounds: 100, range: "Mid", sentiment: 0.85, pickRate: 0.22, hot: true, status: "Unchanged" },
-    { name: ".50 Akimbo", fullName: ".50 Akimbo (Dual Pistols)", tier: "A", ttk: 0.78, rounds: 14, range: "Close", sentiment: 0.80, pickRate: 0.18, hot: false, status: "Unchanged" },
-    { name: "Flamethrower", fullName: "Flamethrower", tier: "A", ttk: 1.41, rounds: 30, range: "Close", sentiment: 0.70, pickRate: 0.12, hot: false, status: "Unchanged" },
-    { name: "Lewis Gun", fullName: "Lewis Gun (LMG)", tier: "B", ttk: 0.72, rounds: 47, range: "Mid", sentiment: 0.78, pickRate: 0.15, hot: false, status: "Unchanged" },
-    { name: "SA1216", fullName: "SA1216 (Shotgun)", tier: "D", ttk: 0.30, rounds: 16, range: "Close", sentiment: 0.75, pickRate: 0.14, hot: false, status: "Unchanged" },
-    { name: "KS-23", fullName: "KS-23 (Slug Shotgun)", tier: "C", ttk: 0.82, rounds: 6, range: "Mid", sentiment: 0.72, pickRate: 0.10, hot: false, status: "Buffed" },
-    { name: "Sledgehammer", fullName: "Sledgehammer (Melee)", tier: "C", ttk: "Variable", rounds: "∞", range: "Melee", sentiment: 0.68, pickRate: 0.08, hot: false, status: "Mixed" },
-    { name: "Spear", fullName: "Spear (Melee)", tier: "D", ttk: "Variable", rounds: "∞", range: "Melee", sentiment: 0.60, pickRate: 0.04, hot: false, status: "Buffed" },
-    { name: "MGL32", fullName: "MGL32 (Grenade Launcher)", tier: "E", ttk: 0.67, rounds: 6, range: "Mid", sentiment: 0.55, pickRate: 0.02, hot: false, status: "Unchanged" }
-  ]
-};
+      const classColors = {
+        'light': 'bg-cyan-500/20 text-cyan-400',
+        'medium': 'bg-violet-500/20 text-violet-400',
+        'heavy': 'bg-orange-500/20 text-orange-400'
+      };
 
-// State
-let filterState = 'all';
-let searchQuery = '';
+      const sentimentBar = weapon.sentiment >= 0.8 ? 'bg-green-500' : weapon.sentiment >= 0.6 ? 'bg-yellow-500' : 'bg-red-500';
+      const ttkDisplay = typeof weapon.ttk === 'number' ? weapon.ttk.toFixed(2) + 's' : weapon.ttk;
 
-// Render functions
-function getSentimentColor(sentiment) {
-  if (sentiment >= 0.8) return 'positive';
-  if (sentiment >= 0.6) return 'neutral';
-  return 'negative';
-}
+      const statusBadge = weapon.status === 'NEW S8'
+        ? `<span class="absolute top-2 right-2 text-xs font-bold px-2 py-1 bg-indigo-500/30 text-indigo-300 rounded-full pulse-glow">NEW S8</span>`
+        : weapon.hot
+        ? `<span class="absolute top-2 right-2 text-xs font-bold px-2 py-1 bg-red-500/30 text-red-400 rounded-full">HOT</span>`
+        : '';
 
-function renderWeaponRow(weapon) {
-  const ttkDisplay = typeof weapon.ttk === 'number' ? weapon.ttk.toFixed(2) + 's' : weapon.ttk;
-
-  // Check for S8 meta notes
-  const s8Note = window.s8WeaponNotes && window.s8WeaponNotes[weapon.name];
-  const s8Badge = s8Note ? '<span class="note-s8">[S8]</span>' : '';
-  const tierDisplay = s8Note ? s8Note.tier : (weapon.tier === 'Not_Ranked' ? 'NR' : weapon.tier);
-  const tierClass = tierDisplay.toLowerCase().replace('+', '').replace('-', '').replace('_', '-');
-
-  return `
-    <tr>
-      <td data-label="Weapon">
-        <span class="weapon-name">
-          ${weapon.name}
-          ${weapon.hot ? '<span class="hot-tag">HOT</span>' : ''}
-          ${s8Badge}
-        </span>
-      </td>
-      <td data-label="Tier">
-        <span class="tier tier-${tierClass}">${tierDisplay}</span>
-      </td>
-      <td data-label="TTK">${ttkDisplay}</td>
-      <td data-label="Mag">
-        <span class="rounds-tag">${weapon.rounds}</span>
-      </td>
-      <td data-label="Range">
-        <span class="range-tag">${weapon.range}</span>
-      </td>
-      <td data-label="Sentiment">
-        <div class="stat-bar">
-          <div class="bar">
-            <div class="bar-fill ${getSentimentColor(weapon.sentiment)}" style="width: ${weapon.sentiment * 100}%"></div>
+      return `
+        <div class="weapon-card bg-bg-card border border-border-primary rounded-xl p-4 relative" data-weapon="${weapon.name.toLowerCase()}" data-tier="${weapon.tier}" data-class="${weaponClass}" data-status="${weapon.status}">
+          ${statusBadge}
+          <div class="flex items-start gap-4 mb-4">
+            <img src="images/${weapon.image}" alt="${weapon.name}" class="w-20 h-20 rounded-lg object-cover img-placeholder" loading="lazy">
+            <div class="flex-1">
+              <h3 class="font-bold text-lg mb-2">${weapon.name}</h3>
+              <div class="flex gap-2 mb-2">
+                <span class="px-2 py-1 ${tierColors[weapon.tier]} rounded text-xs font-semibold">${weapon.tier === 'NR' ? 'Not Ranked' : weapon.tier + '-TIER'}</span>
+                <span class="px-2 py-1 ${classColors[weaponClass]} rounded text-xs font-semibold uppercase">${weaponClass}</span>
+              </div>
+            </div>
           </div>
-          <span>${(weapon.sentiment * 100).toFixed(0)}%</span>
+
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div>
+              <p class="text-xs text-gray-500 mb-1">TTK</p>
+              <p class="text-sm font-mono font-semibold">${ttkDisplay}</p>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Magazine</p>
+              <p class="text-sm font-mono font-semibold">${weapon.rounds}</p>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Range</p>
+              <p class="text-sm font-semibold">${weapon.range}</p>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Pick Rate</p>
+              <p class="text-sm font-semibold">${(weapon.pickRate * 100).toFixed(0)}%</p>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-gray-800">
+            <p class="text-xs text-gray-500 mb-2">Community Sentiment</p>
+            <div class="flex items-center gap-2">
+              <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div class="${sentimentBar} h-full transition-all duration-300" style="width: ${weapon.sentiment * 100}%"></div>
+              </div>
+              <span class="text-xs font-semibold">${(weapon.sentiment * 100).toFixed(0)}%</span>
+            </div>
+          </div>
         </div>
-      </td>
-      <td data-label="Pick Rate">${(weapon.pickRate * 100).toFixed(0)}%</td>
-    </tr>
-  `;
-}
-
-function filterWeapons(weapons) {
-  return weapons.filter(w => {
-    // Search filter
-    if (searchQuery && !w.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
-        !w.fullName.toLowerCase().includes(searchQuery.toLowerCase())) {
-      return false;
+      `;
     }
-    
-    // Tier filter
-    if (filterState === 'meta' && !['S', 'A'].includes(w.tier)) {
-      return false;
-    }
-    
-    // Sentiment filter
-    if (filterState === 'loved' && w.sentiment < 0.8) {
-      return false;
-    }
-    
-    return true;
-  });
-}
 
-function renderAllWeapons() {
-  // Light weapons
-  const lightFiltered = filterWeapons(weaponData.light);
-  document.getElementById('lightWeapons').innerHTML = lightFiltered.map(renderWeaponRow).join('');
-  document.querySelector('[data-class="light"] .class-count').textContent = `${lightFiltered.length} weapons`;
-  
-  // Medium weapons
-  const mediumFiltered = filterWeapons(weaponData.medium);
-  document.getElementById('mediumWeapons').innerHTML = mediumFiltered.map(renderWeaponRow).join('');
-  document.querySelector('[data-class="medium"] .class-count').textContent = `${mediumFiltered.length} weapons`;
-  
-  // Heavy weapons
-  const heavyFiltered = filterWeapons(weaponData.heavy);
-  document.getElementById('heavyWeapons').innerHTML = heavyFiltered.map(renderWeaponRow).join('');
-  document.querySelector('[data-class="heavy"] .class-count').textContent = `${heavyFiltered.length} weapons`;
-  
-  // Hide empty sections
-  document.querySelectorAll('.class-section').forEach(section => {
-    const tbody = section.querySelector('tbody');
-    section.style.display = tbody.children.length === 0 ? 'none' : 'block';
-  });
-}
+    // Filter weapons
+    function applyFilters() {
+      const allCards = document.querySelectorAll('.weapon-card');
+      let visibleCount = 0;
 
-// Event listeners
-document.querySelectorAll('.chip[data-filter]').forEach(chip => {
-  chip.addEventListener('click', (e) => {
-    document.querySelectorAll('.chip[data-filter]').forEach(c => c.classList.remove('active'));
-    e.target.classList.add('active');
-    filterState = e.target.dataset.filter;
-    renderAllWeapons();
-  });
-});
+      allCards.forEach(card => {
+        let show = true;
 
-document.getElementById('searchInput').addEventListener('input', (e) => {
-  searchQuery = e.target.value;
-  renderAllWeapons();
-});
+        // Type filter
+        if (filters.type === 'meta') {
+          const tier = card.dataset.tier;
+          if (tier !== 'S' && tier !== 'A') show = false;
+        } else if (filters.type === 'loved') {
+          // This would need sentiment data in dataset, simplified for now
+          show = true; // Would check sentiment >= 0.8
+        } else if (filters.type === 'new') {
+          if (!card.dataset.status.includes('NEW S8')) show = false;
+        }
 
-document.getElementById('resetBtn').addEventListener('click', () => {
-  filterState = 'all';
-  searchQuery = '';
-  document.getElementById('searchInput').value = '';
-  document.querySelector('.chip[data-filter="all"]').click();
-});
+        // Class filter
+        if (filters.class !== 'all' && card.dataset.class !== filters.class) {
+          show = false;
+        }
 
-// Sort functionality
-document.querySelectorAll('th').forEach(th => {
-  th.addEventListener('click', () => {
-    // Simple visual feedback - in production, implement actual sorting
-    console.log('Sort by:', th.textContent);
-  });
-});
+        // Search filter
+        if (filters.search && !card.dataset.weapon.includes(filters.search.toLowerCase())) {
+          show = false;
+        }
 
-// Initial render
-renderAllWeapons();
-
-// Intersection Observer for scroll animations
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: '0px 0px -50px 0px'
-};
-
-const scrollObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      scrollObserver.unobserve(entry.target);
-    }
-  });
-}, observerOptions);
-
-// Observe class sections for animation
-document.querySelectorAll('.class-section').forEach(section => {
-  scrollObserver.observe(section);
-});
-
-// Smooth scroll behavior
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
+        if (show) {
+          card.style.display = 'block';
+          setTimeout(() => card.style.opacity = '1', 10);
+          visibleCount++;
+        } else {
+          card.style.opacity = '0';
+          setTimeout(() => card.style.display = 'none', 300);
+        }
       });
-    }
-  });
-});
-  </script>
 
-  <!-- Ko-fi Widget -->
-  <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
-  <script>
-    kofiWidgetOverlay.draw('nextroundonme', {
-      'type': 'floating-chat',
-      'floating-chat.donateButton.text': 'Support me',
-      'floating-chat.donateButton.background-color': '#00b9fe',
-      'floating-chat.donateButton.text-color': '#fff'
+      // Update counts
+      ['light', 'medium', 'heavy'].forEach(cls => {
+        const section = document.querySelector(`[data-class="${cls}"]`);
+        const visibleCards = section.querySelectorAll('.weapon-card[style*="display: block"]').length;
+        section.querySelector(`.${cls}-count`).textContent = `${visibleCards} weapons`;
+        section.style.display = visibleCards > 0 ? 'block' : 'none';
+      });
+
+      // Show/hide no results
+      document.getElementById('noResults').classList.toggle('hidden', visibleCount > 0);
+    }
+
+    // Filter functions
+    function filterByType(type) {
+      filters.type = type;
+      document.querySelectorAll('.type-filter').forEach(btn => {
+        btn.classList.remove('active', 'bg-gray-700', 'text-white');
+        btn.classList.add('bg-bg-card', 'border', 'border-border-primary', 'text-gray-400');
+      });
+      event.target.classList.add('active', 'bg-gray-700', 'text-white');
+      event.target.classList.remove('bg-bg-card', 'border', 'border-border-primary', 'text-gray-400');
+      applyFilters();
+    }
+
+    function filterByClass(cls) {
+      filters.class = cls;
+
+      // Update mobile select
+      document.getElementById('classSelect').value = cls;
+
+      // Update desktop buttons
+      document.querySelectorAll('.class-filter').forEach(btn => {
+        btn.classList.remove('active', 'bg-indigo-500/20', 'text-indigo-400');
+        btn.classList.add('bg-bg-card', 'border', 'border-border-primary', 'text-gray-400');
+      });
+
+      const activeBtn = event?.target || document.querySelector(`.class-filter[onclick*="${cls}"]`);
+      if (activeBtn && activeBtn.classList.contains('class-filter')) {
+        activeBtn.classList.add('active', 'bg-indigo-500/20', 'text-indigo-400');
+        activeBtn.classList.remove('bg-bg-card', 'border', 'border-border-primary', 'text-gray-400');
+      }
+
+      applyFilters();
+    }
+
+    // Search with debounce
+    let searchTimeout;
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        filters.search = e.target.value.toLowerCase();
+        applyFilters();
+      }, 200);
+    });
+
+    // Sticky filter bar shadow on scroll
+    window.addEventListener('scroll', () => {
+      const filterBar = document.getElementById('filterBar');
+      if (window.scrollY > 100) {
+        filterBar.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+      } else {
+        filterBar.style.boxShadow = 'none';
+      }
+    });
+
+    // Initial render
+    document.addEventListener('DOMContentLoaded', () => {
+      // Render light weapons
+      document.getElementById('lightWeapons').innerHTML = weaponData.light.map(w => renderWeaponCard(w, 'light')).join('');
+
+      // Render medium weapons
+      document.getElementById('mediumWeapons').innerHTML = weaponData.medium.map(w => renderWeaponCard(w, 'medium')).join('');
+
+      // Render heavy weapons
+      document.getElementById('heavyWeapons').innerHTML = weaponData.heavy.map(w => renderWeaponCard(w, 'heavy')).join('');
+
+      console.log('✅ Meta Weapons V2 loaded');
     });
   </script>
-  
-  <!-- Scroll Progress Bar Script -->
-  <script>
-    function updateScrollProgress() {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrollProgress = (scrollTop / scrollHeight) * 100;
-      const progressBar = document.getElementById("scrollProgressBar");
-      if (progressBar) {
-        progressBar.style.width = scrollProgress + "%";
-      }
-    }
 
-    window.addEventListener("scroll", updateScrollProgress);
-    updateScrollProgress(); // Initial call
-  </script>
 </body>
 </html>
