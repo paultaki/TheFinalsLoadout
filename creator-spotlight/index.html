@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="canonical" href="https://www.thefinalsloadout.com/creator-spotlight" />
+
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://tally.so" />
+
+    <!-- SEO Meta Tags -->
+    <title>Creator Spotlight Submission | TheFinalsLoadout.com</title>
+    <meta name="description" content="Submit your channel to be featured on TheFinalsLoadout. Fast form and streamer friendly." />
+    <meta name="author" content="Paul Takisaki" />
+    <link rel="author" href="https://www.paultakisaki.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Creator Spotlight Submission | TheFinalsLoadout" />
+    <meta property="og:description" content="Submit your channel to be featured on TheFinalsLoadout. Fast form and streamer friendly." />
+    <meta property="og:image" content="https://www.thefinalsloadout.com/images/TFL social 1200x630.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://www.thefinalsloadout.com/creator-spotlight" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Finals Loadout" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Creator Spotlight Submission" />
+    <meta name="twitter:description" content="Submit your channel to be featured on TheFinalsLoadout. Fast form and streamer friendly." />
+    <meta name="twitter:image" content="https://www.thefinalsloadout.com/images/TFL social 1200x630.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;900&display=swap" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;900&display=swap">
+    </noscript>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+
+    <!-- Google Analytics (GA4) - Lazy Loading -->
+    <script>
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const script = document.createElement('script');
+                script.async = true;
+                script.src = 'https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z';
+
+                script.onload = function() {
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag() {
+                        dataLayer.push(arguments);
+                    }
+                    window.gtag = gtag;
+                    gtag("js", new Date());
+                    gtag("config", "G-GVGKYFGZ1Z");
+
+                    // Track creator spotlight page view
+                    gtag("event", "creator_spotlight_view", {
+                        page_title: "Creator Spotlight Submission",
+                        page_location: window.location.href
+                    });
+                };
+
+                document.head.appendChild(script);
+            }, 1000);
+        });
+    </script>
+
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 10001;
+        }
+
+        .scroll-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff3366, #ff6699);
+            width: 0%;
+            transition: width 0.1s ease-out;
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+        }
+
+        /* Navigation */
+        .main-nav {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 51, 102, 0.2);
+            position: sticky;
+            top: 4px;
+            z-index: 1000;
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: #888;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-link:hover {
+            color: #ff3366;
+        }
+
+        .nav-link.active {
+            color: #ff3366;
+            border-bottom: 2px solid #ff3366;
+        }
+
+        /* Mobile Menu Styles */
+        @media (max-width: 768px) {
+            #menuBtn {
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 100000;
+                background: rgba(26, 26, 26, 0.95);
+                color: #ff3366;
+                border: 1px solid rgba(255, 51, 102, 0.3);
+                border-radius: 8px;
+                padding: 10px 12px;
+                cursor: pointer;
+                font-size: 20px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            }
+
+            #simpleMenu {
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100vh;
+                background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+                z-index: 99999;
+                transition: left 0.3s ease;
+                padding-top: 60px;
+                box-shadow: 5px 0 20px rgba(0,0,0,0.7);
+                border-right: 2px solid rgba(255, 51, 102, 0.3);
+            }
+
+            #simpleMenu.show {
+                left: 0;
+            }
+
+            #simpleMenu a {
+                display: block;
+                color: white;
+                padding: 15px;
+                border-bottom: 1px solid #333;
+                text-decoration: none;
+                transition: all 0.3s;
+            }
+
+            #simpleMenu a:hover {
+                background: rgba(255, 51, 102, 0.1);
+                padding-left: 25px;
+            }
+
+            #menuOverlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 99998;
+                display: none;
+            }
+
+            #menuOverlay.show {
+                display: block;
+            }
+
+            .desktop-nav {
+                display: none !important;
+            }
+        }
+
+        @media (min-width: 769px) {
+            #menuBtn, #simpleMenu, #menuOverlay {
+                display: none !important;
+            }
+        }
+
+        /* Header */
+        .header {
+            width: 100%;
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .header-logo {
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 1rem;
+            filter: drop-shadow(0 0 30px rgba(255, 51, 102, 0.3));
+            animation: logoGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            from {
+                filter: drop-shadow(0 0 20px rgba(255, 51, 102, 0.3));
+            }
+            to {
+                filter: drop-shadow(0 0 40px rgba(255, 51, 102, 0.5));
+            }
+        }
+
+        /* Main Container */
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(180deg, #1a1a1a 0%, #111 100%);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow:
+                0 0 100px rgba(255, 51, 102, 0.2),
+                inset 0 2px 10px rgba(0, 0, 0, 0.5),
+                inset 0 -2px 10px rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 51, 102, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3rem;
+            background: linear-gradient(135deg, #ff3366, #ff6699);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .hero-subtitle {
+            color: #ccc;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff3366, #ff6699);
+            color: white;
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 51, 102, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ff3366;
+            transform: translateY(-2px);
+        }
+
+        /* Form Section */
+        .form-section {
+            background: linear-gradient(180deg, #1a1a1a 0%, #111 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow:
+                0 0 50px rgba(255, 51, 102, 0.15),
+                inset 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-section h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2rem;
+            color: #ff3366;
+            margin-bottom: 1rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Tally Embed Container */
+        .tally-embed-container {
+            position: relative;
+            width: 100%;
+            min-height: 800px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .tally-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #888;
+        }
+
+        .tally-loading::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 40px;
+            margin: 1rem auto 0;
+            border: 4px solid rgba(255, 51, 102, 0.2);
+            border-top-color: #ff3366;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .tally-embed-container iframe {
+            width: 100%;
+            border: none;
+            background: transparent;
+        }
+
+        .tally-fallback {
+            text-align: center;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tally-fallback a {
+            color: #00f0c0;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .tally-fallback a:hover {
+            text-decoration: underline;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background: linear-gradient(180deg, #1a1a1a 0%, #111 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow:
+                0 0 50px rgba(255, 51, 102, 0.15),
+                inset 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .faq-section h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2rem;
+            color: #ff3366;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .faq-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 51, 102, 0.2);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: #ff3366;
+        }
+
+        .faq-question {
+            padding: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #fff;
+            user-select: none;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 51, 102, 0.05);
+        }
+
+        .faq-icon {
+            color: #ff3366;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding: 0 1.25rem 1.25rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(255, 51, 102, 0.2));
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .cta-section h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            color: #888;
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(10, 10, 15, 0.9);
+            font-size: 0.75rem;
+        }
+
+        .support-section {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(80, 200, 120, 0.05) 0%, rgba(0, 255, 204, 0.05) 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(80, 200, 120, 0.2);
+        }
+
+        .support-btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, #50c878, #00ffcc);
+            color: #0a0a0f;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(80, 200, 120, 0.3);
+        }
+
+        .support-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(80, 200, 120, 0.5);
+        }
+
+        footer a {
+            color: #00f0c0;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-logo {
+                max-width: 175px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .container {
+                width: 95%;
+            }
+
+            .hero-section,
+            .form-section,
+            .faq-section,
+            .cta-section {
+                padding: 1.5rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.5rem;
+            }
+
+            .hero-section,
+            .form-section,
+            .faq-section,
+            .cta-section {
+                padding: 1rem;
+                border-radius: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-container">
+        <div class="scroll-progress-bar" id="scrollProgress"></div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <button id="menuBtn" onclick="document.getElementById('simpleMenu').classList.toggle('show'); document.getElementById('menuOverlay').classList.toggle('show')">☰</button>
+
+    <div id="menuOverlay" onclick="document.getElementById('simpleMenu').classList.remove('show'); this.classList.remove('show')"></div>
+
+    <div id="simpleMenu">
+        <a href="/index.html">LOADOUT GENERATOR</a>
+        <a href="/ragequit/">RAGE QUIT</a>
+        <a href="/patch-notes/">PATCH NOTES</a>
+        <a href="/meta-weapons/">META WEAPONS</a>
+        <a href="/wt-progress/">WORLD TOUR</a>
+        <a href="/creator-spotlight/">CREATOR SPOTLIGHT</a>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <nav class="main-nav desktop-nav">
+        <div class="nav-links">
+            <a href="/index.html" class="nav-link">LOADOUT GENERATOR</a>
+            <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
+            <a href="/patch-notes/" class="nav-link">PATCH NOTES</a>
+            <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
+            <a href="/wt-progress/" class="nav-link">WORLD TOUR</a>
+            <a href="/creator-spotlight/" class="nav-link active">CREATOR SPOTLIGHT</a>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="/index.html">
+            <img src="/images/logo final.webp" alt="The Finals Loadout" class="header-logo">
+        </a>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Creator Spotlight Submission</h1>
+                <p class="hero-subtitle">Featured on TheFinalsLoadout streamer spotlight. Takes two minutes.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="scrollToForm()">Scroll to Form</button>
+                    <a href="https://tally.so/r/wzPPx0" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" onclick="trackOpenNewTab()">Open Form in New Tab</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Form Section -->
+        <section class="form-section" id="form-section">
+            <h2>Submit Your Channel</h2>
+            <div class="tally-embed-container">
+                <div class="tally-loading" id="tallyLoading">Loading form...</div>
+                <iframe
+                    id="tallyIframe"
+                    src="https://tally.so/r/wzPPx0"
+                    width="100%"
+                    height="800"
+                    frameborder="0"
+                    marginheight="0"
+                    marginwidth="0"
+                    title="Creator Spotlight Submission Form"
+                    onload="handleIframeLoad()"
+                    style="display: none;">
+                </iframe>
+            </div>
+            <div class="tally-fallback">
+                <p>Having trouble with the form? <a href="https://tally.so/r/wzPPx0" target="_blank" rel="noopener noreferrer" onclick="trackOpenNewTab()">Open it in a new tab</a></p>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How will I be featured?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    We add your card to the creator spotlight and may share on socials.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>What links do you accept?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    Twitch, YouTube, Kick, Facebook Gaming, TikTok, and Trovo.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Can I edit later?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    Reply to the confirmation email and we will update your card.
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2>Ready to Game?</h2>
+            <div class="cta-buttons">
+                <a href="/index.html" class="btn btn-primary">Visit TheFinalsLoadout</a>
+                <a href="https://discord.gg/thefinals" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Join 1-800-FAT-CAMP Discord</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="support-section">
+            <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;">
+                <span style="font-size:1.5rem;">☕</span>
+                <div>
+                    <p style="margin:0;color:#50c878;font-weight:600;font-size:0.9rem;">Enjoying TheFinalsLoadout?</p>
+                    <p style="margin:0.25rem 0 0.75rem 0;color:#b8bfc6;font-size:0.8rem;">Help keep it running with a coffee!</p>
+                </div>
+            </div>
+            <a href="https://ko-fi.com/nextroundonme" target="_blank" rel="noopener" class="support-btn">
+                <span>💚 Support Me</span>
+            </a>
+        </div>
+
+        <p style="margin:0 0 0.5rem 0;">
+            © 2025 TheFinalsLoadout.com | Created by
+            <a href="https://www.paultakisaki.com/" rel="author">Paul Takisaki</a>
+        </p>
+        <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;font-size:0.75rem;margin-top:0.5rem;">
+            <a href="/legal/">Legal Disclaimer</a>
+            <a href="https://thefinalsloadout.com/feedback" style="color:#ffd700;">📝 Submit Feedback</a>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Scroll Progress Bar
+        function updateScrollProgress() {
+            const scrollTop = window.scrollY;
+            const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercentage = documentHeight > 0 ? (scrollTop / documentHeight) * 100 : 0;
+            const progressBar = document.getElementById('scrollProgress');
+            if (progressBar) {
+                progressBar.style.width = Math.min(scrollPercentage, 100) + '%';
+            }
+        }
+
+        window.addEventListener('scroll', updateScrollProgress);
+        window.addEventListener('resize', updateScrollProgress);
+        document.addEventListener('DOMContentLoaded', updateScrollProgress);
+
+        // Smooth scroll to form
+        function scrollToForm() {
+            const formSection = document.getElementById('form-section');
+            if (formSection) {
+                formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Track open in new tab
+        function trackOpenNewTab() {
+            if (window.gtag) {
+                gtag("event", "creator_spotlight_open_new_tab", {
+                    event_category: "engagement",
+                    event_label: "Open form in new tab"
+                });
+            }
+        }
+
+        // FAQ Accordion
+        function toggleFaq(element) {
+            const faqItem = element.parentElement;
+            const wasActive = faqItem.classList.contains('active');
+
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Open clicked item if it wasn't active
+            if (!wasActive) {
+                faqItem.classList.add('active');
+            }
+        }
+
+        // Tally Iframe Auto-Resize
+        function handleIframeLoad() {
+            const iframe = document.getElementById('tallyIframe');
+            const loading = document.getElementById('tallyLoading');
+
+            if (loading) {
+                loading.style.display = 'none';
+            }
+
+            if (iframe) {
+                iframe.style.display = 'block';
+            }
+        }
+
+        // Listen for Tally postMessage for height adjustments and submission tracking
+        window.addEventListener('message', function(event) {
+            // Only accept messages from Tally
+            if (event.origin.endsWith('tally.so')) {
+                const data = event.data;
+
+                // Handle height adjustment
+                if (data && data.height) {
+                    const iframe = document.getElementById('tallyIframe');
+                    if (iframe) {
+                        iframe.style.height = data.height + 'px';
+                    }
+                }
+
+                // Handle form submission
+                if (data && data.event === 'Tally.FormSubmitted') {
+                    if (window.gtag) {
+                        gtag("event", "creator_spotlight_submit", {
+                            event_category: "conversion",
+                            event_label: "Creator spotlight form submitted"
+                        });
+                    }
+                }
+            }
+        });
+
+        // Set active nav link
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === currentPath ||
+                    (currentPath.includes('creator-spotlight') && link.getAttribute('href').includes('creator-spotlight'))) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -9,7 +9,8 @@
     { "source": "/meta-weapons", "destination": "/meta-weapons/index.html" },
     { "source": "/patch-notes", "destination": "/patch-notes/index.html" },
     { "source": "/rage-quit", "destination": "/ragequit/index.html" },
-    { "source": "/v3", "destination": "/v3/index.html" }
+    { "source": "/v3", "destination": "/v3/index.html" },
+    { "source": "/creator-spotlight", "destination": "/creator-spotlight/index.html" }
   ],
   "cleanUrls": true,
   "trailingSlash": false,
