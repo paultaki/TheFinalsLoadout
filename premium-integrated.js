@@ -1181,67 +1181,19 @@
       // Get the winner element position within the column
       const winner = column.querySelector('[data-winner="true"]');
       if (!winner) return;
-      
+
       const rect = winner.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      
-      console.log(`🎆 Creating ${15} sparks at position: ${centerX}, ${centerY}`);
-      
-      // Create sparks directly in the container
-      const sparkCount = 15;
-      
-      for (let i = 0; i < sparkCount; i++) {
-        const spark = document.createElement('div');
-        spark.className = 'spark';
-        
-        // Position spark directly at winner center
-        spark.style.position = 'fixed';
-        spark.style.left = `${centerX}px`;
-        spark.style.top = `${centerY}px`;
-        spark.style.width = '8px';
-        spark.style.height = '8px';
-        spark.style.background = `radial-gradient(circle, #fff 0%, #ff66aa 30%, #ff3366 60%, transparent 100%)`;
-        spark.style.borderRadius = '50%';
-        spark.style.boxShadow = '0 0 10px #ff66aa, 0 0 20px rgba(255, 102, 170, 0.6)';
-        spark.style.zIndex = '999999';
-        spark.style.pointerEvents = 'none';
-        
-        // Random burst direction
-        const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5) * 0.3;
-        const distance = 100 + Math.random() * 100;
-        const x = Math.cos(angle) * distance;
-        const y = Math.sin(angle) * distance;
-        
-        // Apply animation directly
-        spark.style.animation = `sparkMove_${i} 0.8s ease-out forwards`;
-        
-        // Create unique keyframe for this spark
-        const style = document.createElement('style');
-        style.textContent = `
-          @keyframes sparkMove_${i} {
-            0% {
-              transform: translate(-5px, -5px) scale(1);
-              opacity: 1;
-            }
-            100% {
-              transform: translate(${x - 5}px, ${y - 5}px) scale(0.2);
-              opacity: 0;
-            }
-          }
-        `;
-        document.head.appendChild(style);
-        
-        document.body.appendChild(spark);
-        
-        // Clean up this spark after animation
-        setTimeout(() => {
-          spark.remove();
-          style.remove();
-        }, 850);
+
+      console.log(`🎊 Triggering confetti at position: ${centerX}, ${centerY}`);
+
+      // Trigger confetti burst from the winner position
+      if (window.confettiSystem) {
+        window.confettiSystem.burst(centerX, centerY, 20, 10);
+      } else {
+        console.warn('⚠️ Confetti system not loaded yet');
       }
-      
-      console.log(`✅ Sparks created and added to document.body`);
     }
     
     sleep(ms) {

@@ -1,0 +1,489 @@
+<html>
+
+<head></head>
+
+<body class="">
+  <style>
+    ` tag and the JS in a `<script>` tag. Your CSS was written with SCSS-style nesting,
+    so I’ve flattened it to plain CSS so it runs anywhere. Copy–paste this as-is into Aura.build (or any single-file HTML panel): ```html < !doctype html><html lang="en"><head><meta charset="utf-8" /><title>Submit Button+Confetti</title><meta name="viewport" content="width=device-width, initial-scale=1" />< !-- Fonts --><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Quicksand:wght@500&display=swap" rel="stylesheet"><style>@keyframes loading {
+      0% {
+        cy: 10;
+      }
+
+      25% {
+        cy: 3;
+      }
+
+      50% {
+        cy: 10;
+      }
+    }
+
+    :root {
+      --blue: #5c86ff;
+      --blue-dark: #324b77;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      -webkit-font-smoothing: antialiased;
+      background-color: #f4f7ff;
+      margin: 0;
+    }
+
+    canvas {
+      height: 100vh;
+      pointer-events: none;
+      position: fixed;
+      width: 100%;
+      z-index: 2;
+      inset: 0;
+    }
+
+    /* Button base */
+    button {
+      background: none;
+      border: none;
+      color: #f4f7ff;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      height: 40px;
+      left: 50%;
+      outline: none;
+      overflow: hidden;
+      padding: 0 10px;
+      position: fixed;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 190px;
+      -webkit-tap-highlight-color: transparent;
+      z-index: 1;
+    }
+
+    button::before {
+      background: #1f2335;
+      border-radius: 50px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, .4) inset;
+      content: '';
+      display: block;
+      height: 100%;
+      margin: 0 auto;
+      position: relative;
+      transition: width .2s cubic-bezier(.39, 1.86, .64, 1) .3s;
+      width: 100%;
+    }
+
+    /* Messages layout */
+    .message {
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .message svg {
+      display: inline-block;
+      fill: none;
+      margin-right: 5px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2;
+      vertical-align: -2px;
+    }
+
+    .button-text span {
+      opacity: 0;
+      position: relative;
+    }
+
+    /* Submit (ready) visuals */
+    .submitMessage .button-text span {
+      top: 8px;
+      transition: all .2s ease var(--d);
+    }
+
+    .submitMessage svg {
+      color: var(--blue);
+      margin-left: -1px;
+      opacity: 0;
+      position: relative;
+      top: 30px;
+      transition: top .4s ease, opacity .3s linear;
+      width: 14px;
+    }
+
+    /* Loading visuals */
+    .loadingMessage {
+      opacity: 0;
+      transition: opacity .3s linear .3s, top .4s cubic-bezier(.22, 0, .41, -0.57);
+    }
+
+    .loadingMessage svg {
+      fill: var(--blue);
+      margin: 0;
+      width: 22px;
+    }
+
+    .loadingCircle:nth-child(2) {
+      animation-delay: .1s
+    }
+
+    .loadingCircle:nth-child(3) {
+      animation-delay: .2s
+    }
+
+    /* Success visuals */
+    .successMessage .button-text span {
+      left: 5px;
+      transition: all .2s ease var(--dr);
+    }
+
+    .successMessage svg {
+      color: #5cffa1;
+      stroke-dasharray: 20;
+      stroke-dashoffset: 20;
+      transition: stroke-dashoffset .3s ease-in-out;
+      width: 14px;
+    }
+
+    /* Button states */
+    /* READY */
+    button.ready .submitMessage svg {
+      opacity: 1;
+      top: 1px;
+      transition: top .4s ease 600ms, opacity .3s linear 600ms;
+    }
+
+    button.ready .submitMessage .button-text span {
+      top: 0;
+      opacity: 1;
+      transition: all .2s ease calc(var(--dr) + 600ms);
+    }
+
+    /* LOADING */
+    button.loading::before {
+      transition: width .3s ease;
+      width: 80%;
+    }
+
+    button.loading .loadingMessage {
+      opacity: 1;
+    }
+
+    button.loading .loadingCircle {
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+      animation-name: loading;
+      cy: 10;
+    }
+
+    /* COMPLETE */
+    button.complete .submitMessage svg {
+      top: -30px;
+      transition: none;
+    }
+
+    button.complete .submitMessage .button-text span {
+      top: -8px;
+      transition: none;
+    }
+
+    button.complete .loadingMessage {
+      top: 80px;
+    }
+
+    button.complete .successMessage .button-text span {
+      left: 0;
+      opacity: 1;
+      transition: all .2s ease calc(var(--d) + 1000ms);
+    }
+
+    button.complete .successMessage svg {
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset .3s ease-in-out 1.4s;
+    }
+
+    /* Website Link (corner) */
+    .website-link {
+      background: #f8faff;
+      border-radius: 50px 0 0 50px;
+      bottom: 30px;
+      color: var(--blue-dark);
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      height: 34px;
+      filter: drop-shadow(2px 3px 4px rgba(0, 0, 0, .1));
+      padding: 0 20px 0 40px;
+      position: fixed;
+      right: 0;
+      text-align: left;
+      text-decoration: none;
+    }
+
+    .website-link__icon {
+      left: -10px;
+      position: absolute;
+      top: -12px;
+      width: 44px;
+    }
+
+    .website-link__name {
+      display: block;
+      font-size: 14px;
+      line-height: 14px;
+      margin: 5px 0 3px;
+    }
+
+    .website-link__last-name {
+      color: #55bada;
+    }
+
+    .website-link__message {
+      color: #8aa8c5;
+      display: block;
+      font-size: 7px;
+      line-height: 7px;
+    }
+  </style>
+
+
+
+
+  <!-- Button -->
+  <button id="button" class="loading" onclick="clickButton();">
+    <div class="message submitMessage">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 12.2" aria-hidden="true">
+        <polyline stroke="currentColor" points="2,7.1 6.5,11.1 11,7.1"></polyline>
+        <line stroke="currentColor" x1="6.5" y1="1.2" x2="6.5" y2="10.3"></line>
+      </svg>
+      <span class="button-text"><span class="char0" style="--d:0ms; --dr:150ms;">S</span><span class="char1" style="--d:30ms; --dr:120ms;">u</span><span class="char2" style="--d:60ms; --dr:90ms;">b</span><span class="char3" style="--d:90ms; --dr:60ms;">m</span><span class="char4" style="--d:120ms; --dr:30ms;">i</span><span class="char5" style="--d:150ms; --dr:0ms;">t</span></span>
+    </div>
+
+    <div class="message loadingMessage" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 17">
+        <circle class="loadingCircle" cx="2.2" cy="10" r="1.6"></circle>
+        <circle class="loadingCircle" cx="9.5" cy="10" r="1.6"></circle>
+        <circle class="loadingCircle" cx="16.8" cy="10" r="1.6"></circle>
+      </svg>
+    </div>
+
+    <div class="message successMessage" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 11">
+        <polyline stroke="currentColor" points="1.4,5.8 5.1,9.5 11.6,2.1"></polyline>
+      </svg>
+      <span class="button-text"><span class="char0" style="--d:0ms; --dr:180ms;">S</span><span class="char1" style="--d:30ms; --dr:150ms;">u</span><span class="char2" style="--d:60ms; --dr:120ms;">c</span><span class="char3" style="--d:90ms; --dr:90ms;">c</span><span class="char4" style="--d:120ms; --dr:60ms;">e</span><span class="char5" style="--d:150ms; --dr:30ms;">s</span><span class="char6" style="--d:180ms; --dr:0ms;">s</span></span>
+    </div>
+  </button>
+
+  <!-- Confetti Canvas -->
+  <canvas id="canvas" width="1072" height="902"></canvas>
+
+
+  <script>
+    // amount to add on each button press
+    const confettiCount = 20;
+    const sequinCount = 10;
+
+    // "physics" variables
+    const gravityConfetti = 0.3;
+    const gravitySequins = 0.55;
+    const dragConfetti = 0.075;
+    const dragSequins = 0.02;
+    const terminalVelocity = 3;
+
+    // init other global elements
+    const button = document.getElementById('button');
+    let disabled = false;
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let cx = ctx.canvas.width / 2;
+    let cy = ctx.canvas.height / 2;
+
+    // add Confetto/Sequin objects to arrays to draw them
+    let confetti = [];
+    let sequins = [];
+
+    // colors, back side is darker for confetti flipping
+    const colors = [
+      { front : '#7b5cff', back: '#6245e0' }, // Purple
+      { front : '#b3c7ff', back: '#8fa5e5' }, // Light Blue
+      { front : '#5c86ff', back: '#345dd1' }  // Darker Blue
+    ];
+
+    // helper function to pick a random number within a range
+    const randomRange = (min, max) => Math.random() * (max - min) + min;
+
+    // helper function to get initial velocities for confetti
+    // this weighted spread helps the confetti look more realistic
+    const initConfettoVelocity = (xRange, yRange) => {
+      const x = randomRange(xRange[0], xRange[1]);
+      const range = yRange[1] - yRange[0] + 1;
+      let y = yRange[1] - Math.abs(randomRange(0, range) + randomRange(0, range) - range);
+      if (y >= yRange[1] - 1) {
+        // Occasional confetto goes higher than the max
+        y += (Math.random() < .25) ? randomRange(1, 3) : 0;
+      }
+      return {x: x, y: -y};
+    };
+
+    // Confetto Class
+    function Confetto() {
+      this.randomModifier = randomRange(0, 99);
+      this.color = colors[Math.floor(randomRange(0, colors.length))];
+      this.dimensions = {
+        x: randomRange(5, 9),
+        y: randomRange(8, 15),
+      };
+      this.position = {
+        x: randomRange(canvas.width/2 - button.offsetWidth/4, canvas.width/2 + button.offsetWidth/4),
+        y: randomRange(canvas.height/2 + button.offsetHeight/2 + 8, canvas.height/2 + (1.5 * button.offsetHeight) - 8),
+      };
+      this.rotation = randomRange(0, 2 * Math.PI);
+      this.scale = { x: 1, y: 1 };
+      this.velocity = initConfettoVelocity([-9, 9], [6, 11]);
+    }
+    Confetto.prototype.update = function() {
+      this.velocity.x -= this.velocity.x * dragConfetti;
+      this.velocity.y = Math.min(this.velocity.y + gravityConfetti, terminalVelocity);
+      this.velocity.x += Math.random() > 0.5 ? Math.random() : -Math.random();
+      this.position.x += this.velocity.x;
+      this.position.y += this.velocity.y;
+      this.scale.y = Math.cos((this.position.y + this.randomModifier) * 0.09);
+    };
+
+    // Sequin Class
+    function Sequin() {
+      this.color = colors[Math.floor(randomRange(0, colors.length))].back;
+      this.radius = randomRange(1, 2);
+      this.position = {
+        x: randomRange(canvas.width/2 - button.offsetWidth/3, canvas.width/2 + button.offsetWidth/3),
+        y: randomRange(canvas.height/2 + button.offsetHeight/2 + 8, canvas.height/2 + (1.5 * button.offsetHeight) - 8),
+      };
+      this.velocity = { x: randomRange(-6, 6), y: randomRange(-8, -12) };
+    }
+    Sequin.prototype.update = function() {
+      this.velocity.x -= this.velocity.x * dragSequins;
+      this.velocity.y = this.velocity.y + gravitySequins;
+      this.position.x += this.velocity.x;
+      this.position.y += this.velocity.y;
+    };
+
+    // add elements to arrays to be drawn
+    function initBurst() {
+      for (let i = 0; i < confettiCount; i++) confetti.push(new Confetto());
+      for (let i = 0; i < sequinCount; i++)  sequins.push(new Sequin());
+    }
+
+    // draws the elements on the canvas
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      confetti.forEach((confetto, index) => {
+        const width  = confetto.dimensions.x * confetto.scale.x;
+        const height = confetto.dimensions.y * confetto.scale.y;
+
+        ctx.translate(confetto.position.x, confetto.position.y);
+        ctx.rotate(confetto.rotation);
+        confetto.update();
+        ctx.fillStyle = confetto.scale.y > 0 ? confetto.color.front : confetto.color.back;
+        ctx.fillRect(-width / 2, -height / 2, width, height);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        // clear rectangle where button cuts off
+        if (confetto.velocity.y < 0) {
+          ctx.clearRect(canvas.width/2 - button.offsetWidth/2, canvas.height/2 + button.offsetHeight/2, button.offsetWidth, button.offsetHeight);
+        }
+      });
+
+      sequins.forEach((sequin, index) => {
+        ctx.translate(sequin.position.x, sequin.position.y);
+        sequin.update();
+        ctx.fillStyle = sequin.color;
+        ctx.beginPath();
+        ctx.arc(0, 0, sequin.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        if (sequin.velocity.y < 0) {
+          ctx.clearRect(canvas.width/2 - button.offsetWidth/2, canvas.height/2 + button.offsetHeight/2, button.offsetWidth, button.offsetHeight);
+        }
+      });
+
+      // prune offscreen
+      confetti = confetti.filter(c => c.position.y < canvas.height);
+      sequins  = sequins.filter(s => s.position.y < canvas.height);
+
+      requestAnimationFrame(render);
+    }
+
+    // cycle through button states when clicked
+    function clickButton() {
+      if (!disabled) {
+        disabled = true;
+        // Loading stage
+        button.classList.add('loading');
+        button.classList.remove('ready');
+        setTimeout(() => {
+          // Completed stage
+          button.classList.add('complete');
+          button.classList.remove('loading');
+          setTimeout(() => {
+            initBurst();
+            setTimeout(() => {
+              // Reset button so user can select it again
+              disabled = false;
+              button.classList.add('ready');
+              button.classList.remove('complete');
+            }, 4000);
+          }, 320);
+        }, 1800);
+      }
+    }
+    window.clickButton = clickButton; // keep onclick inline working
+
+    // re-init canvas if the window size changes
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      cx = ctx.canvas.width / 2;
+      cy = ctx.canvas.height / 2;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // click button on spacebar or return keypress
+    document.body.onkeyup = (e) => {
+      if (e.keyCode === 13 || e.keyCode === 32) clickButton();
+    };
+
+    // Set up button text transition timings on page load
+    const textElements = button.querySelectorAll('.button-text');
+    textElements.forEach((element) => {
+      const characters = element.innerText.split('');
+      let characterHTML = '';
+      characters.forEach((letter, index) => {
+        characterHTML += `<span class="char${index}" style="--d:${index * 30}ms; --dr:${(characters.length - index - 1) * 30}ms;">${letter}</span>`;
+      });
+      element.innerHTML = characterHTML;
+    });
+
+    // kick off the render loop
+    initBurst();
+    render();
+  </script>
+
+
+
+</body>
+
+</html>
