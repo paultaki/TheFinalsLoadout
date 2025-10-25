@@ -38,11 +38,11 @@ class ConfettiSystem {
     ];
 
     // Physics
-    this.gravityConfetti = 0.3;
-    this.gravitySequins = 0.55;
+    this.gravityConfetti = 0.05;  // Ultra floaty!
+    this.gravitySequins = 0.10;   // Ultra floaty!
     this.dragConfetti = 0.075;
     this.dragSequins = 0.02;
-    this.terminalVelocity = 3;
+    this.terminalVelocity = 2.5;  // Lower max fall speed
 
     // Handle window resize
     window.addEventListener('resize', () => this.resizeCanvas());
@@ -63,9 +63,19 @@ class ConfettiSystem {
     return Math.random() * (max - min) + min;
   }
 
-  // Get initial velocity for confetti
-  initConfettoVelocity(xRange, yRange) {
-    const x = this.randomRange(xRange[0], xRange[1]);
+  // Get initial velocity for confetti with directional bias
+  initConfettoVelocity(xRange, yRange, direction = 'up') {
+    let x = this.randomRange(xRange[0], xRange[1]);
+
+    // Apply directional bias (gentler bias so confetti doesn't shoot off too fast)
+    if (direction === 'left') {
+      x = this.randomRange(-11, -3); // Gentle leftward bias
+    } else if (direction === 'right') {
+      x = this.randomRange(3, 11); // Gentle rightward bias
+    } else {
+      x = this.randomRange(xRange[0], xRange[1]); // Default spread
+    }
+
     const range = yRange[1] - yRange[0] + 1;
     let y = yRange[1] - Math.abs(this.randomRange(0, range) + this.randomRange(0, range) - range);
     if (y >= yRange[1] - 1) {
@@ -75,7 +85,7 @@ class ConfettiSystem {
   }
 
   // Confetto class
-  createConfetto(x, y) {
+  createConfetto(x, y, direction = 'up') {
     return {
       randomModifier: this.randomRange(0, 99),
       color: this.colors[Math.floor(this.randomRange(0, this.colors.length))],
@@ -86,7 +96,7 @@ class ConfettiSystem {
       position: { x, y },
       rotation: this.randomRange(0, 2 * Math.PI),
       scale: { x: 1, y: 1 },
-      velocity: this.initConfettoVelocity([-9, 9], [6, 11]),
+      velocity: this.initConfettoVelocity([-9, 9], [6, 11], direction),
       update: function(system) {
         this.velocity.x -= this.velocity.x * system.dragConfetti;
         this.velocity.y = Math.min(this.velocity.y + system.gravityConfetti, system.terminalVelocity);
@@ -99,13 +109,22 @@ class ConfettiSystem {
   }
 
   // Sequin class (sparkly circles)
-  createSequin(x, y) {
+  createSequin(x, y, direction = 'up') {
+    let velocityX = this.randomRange(-6, 6);
+
+    // Apply directional bias (gentler so sequins don't leave screen too fast)
+    if (direction === 'left') {
+      velocityX = this.randomRange(-8, -2);
+    } else if (direction === 'right') {
+      velocityX = this.randomRange(2, 8);
+    }
+
     return {
       color: this.colors[Math.floor(this.randomRange(0, this.colors.length))].back,
       radius: this.randomRange(1, 2),
       position: { x, y },
       velocity: {
-        x: this.randomRange(-6, 6),
+        x: velocityX,
         y: this.randomRange(-8, -12)
       },
       update: function(system) {
@@ -117,15 +136,15 @@ class ConfettiSystem {
     };
   }
 
-  // Burst confetti from a specific position
-  burst(x, y, confettiCount = 20, sequinCount = 10) {
-    console.log(`🎊 Bursting confetti at (${x}, ${y})`);
+  // Burst confetti from a specific position with direction
+  burst(x, y, confettiCount = 20, sequinCount = 10, direction = 'up') {
+    console.log(`🎊 Bursting confetti at (${x}, ${y}) direction: ${direction}`);
 
     for (let i = 0; i < confettiCount; i++) {
-      this.confetti.push(this.createConfetto(x, y));
+      this.confetti.push(this.createConfetto(x, y, direction));
     }
     for (let i = 0; i < sequinCount; i++) {
-      this.sequins.push(this.createSequin(x, y));
+      this.sequins.push(this.createSequin(x, y, direction));
     }
   }
 

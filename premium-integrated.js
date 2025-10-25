@@ -1087,7 +1087,7 @@
       console.log(`🎉 Celebration will start at ${celebrationStartTime}ms (visual stop appears around ${visualStopTime}ms)`);
 
       setTimeout(() => {
-        this.playSound('finalWin');
+        // Don't play finalWin here - it will be played in showWinnersSequentially
         this.showWinnersSequentially(); // Don't await - let it run async
       }, celebrationStartTime);
 
@@ -1098,31 +1098,38 @@
     async showWinnersSequentially() {
       const columns = document.querySelectorAll('.slot-column');
       const sparksContainer = document.getElementById('victorySparks');
-      
+
+      // Wait 1 second after all boxes have stopped spinning
+      await this.sleep(1000);
+
+      // NOW play the pop pour perform sound right before celebration starts!
+      this.playSound('finalWin');
+
+      // Highlight all winners sequentially with confetti
       for (let i = 0; i < columns.length; i++) {
         const column = columns[i];
         const winner = column.querySelector('[data-winner="true"]');
-        
+
         if (winner) {
           // Create pulse ripple effect first (no sound here - already played finalWin)
           this.createPulseRipple(winner);
-          
+
           // Small delay for ripple to start
           await this.sleep(50);
-          
+
           // Highlight the winner with initial flash
           winner.classList.add('winner');
-          
+
           // After flash animation completes, add persistent glow
           setTimeout(() => {
             winner.classList.add('winner-glow');
           }, 700); // 700ms matches the winnerFlash animation duration
-          
-          // Create sparks for this column
+
+          // Trigger confetti for this column as it highlights
           if (sparksContainer) {
             this.createColumnSparks(column, sparksContainer);
           }
-          
+
           // Wait before highlighting next column
           await this.sleep(150);
         }
@@ -1186,11 +1193,23 @@
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
-      console.log(`🎊 Triggering confetti at position: ${centerX}, ${centerY}`);
+      // Determine column index to set confetti direction
+      const columns = Array.from(document.querySelectorAll('.slot-column'));
+      const columnIndex = columns.indexOf(column);
 
-      // Trigger confetti burst from the winner position
+      let direction = 'up'; // default
+      if (columnIndex <= 1) {
+        direction = 'left'; // First 2 columns shoot left
+      } else if (columnIndex >= 3) {
+        direction = 'right'; // Last 2 columns shoot right
+      }
+      // columnIndex === 2 (middle) stays 'up'
+
+      console.log(`🎊 Triggering confetti at position: ${centerX}, ${centerY}, column: ${columnIndex}, direction: ${direction}`);
+
+      // Trigger confetti burst from the winner position with direction
       if (window.confettiSystem) {
-        window.confettiSystem.burst(centerX, centerY, 20, 10);
+        window.confettiSystem.burst(centerX, centerY, 20, 10, direction);
       } else {
         console.warn('⚠️ Confetti system not loaded yet');
       }
