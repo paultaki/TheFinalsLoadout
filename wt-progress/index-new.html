@@ -405,7 +405,7 @@
 
       .step-number {
         position: absolute;
-        top: -22px;
+        top: 13px;
         left: 25px;
         background: #34d399;
         color: #0a0a0a;
@@ -426,6 +426,7 @@
         margin-top: 10px;
         color: #fff;
         font-weight: 600;
+        text-align: center;
       }
 
       /* Goal Selector */
@@ -1180,8 +1181,9 @@
 
       .entry-item {
         display: grid;
-        grid-template-columns: 100px 80px 1fr auto;
+        grid-template-columns: 110px 1fr 1fr 150px;
         align-items: center;
+        gap: 15px;
         padding: 12px;
         margin-bottom: 8px;
         background: rgba(255, 255, 255, 0.02);
@@ -1198,6 +1200,7 @@
       .entry-points {
         color: #34d399;
         font-weight: 600;
+        white-space: nowrap;
       }
 
       /* Notification */
@@ -2634,6 +2637,7 @@
       let undoHistory = [];
       let daysRemaining = 0;
       let isUpdating = false;
+      let isProgrammaticUpdate = false;
 
       // Debounce function
       function debounce(func, wait) {
@@ -2996,13 +3000,17 @@
       function initializePointsInput() {
         const input = document.getElementById('currentPoints');
         input.value = currentPoints;
-        
+
         // Debounced update
         const debouncedUpdate = debounce((value) => {
           updateCurrentPoints(parseInt(value) || 0);
         }, 500);
-        
+
         input.addEventListener('input', (e) => {
+          // Skip debounced update if this is a programmatic change
+          if (isProgrammaticUpdate) {
+            return;
+          }
           debouncedUpdate(e.target.value);
         });
 
@@ -3050,16 +3058,20 @@
         const oldPoints = currentPoints;
         const goalRank = ranks.find(r => r.name === selectedGoal);
         const maxPoints = goalRank ? goalRank.points : 2400;
-        
+
         newPoints = Math.max(0, Math.min(maxPoints, newPoints));
         currentPoints = newPoints;
 
-        // Update the input field
+        // Update the input field without triggering input event
         const pointsInput = document.getElementById('currentPoints');
         if (pointsInput) {
+          isProgrammaticUpdate = true;
           pointsInput.value = currentPoints;
+          setTimeout(() => {
+            isProgrammaticUpdate = false;
+          }, 0);
         }
-        
+
         storage.set('currentPoints', currentPoints);
 
         // Check for rank achievements
@@ -3067,7 +3079,7 @@
 
         updateDashboard();
         renderRankLadder();
-        
+
         isUpdating = false;
       }
 
@@ -3530,24 +3542,33 @@
       }
 
       function quickAddPoints(points) {
-        const oldPoints = currentPoints;
-        
+        // First sync currentPoints with input field to avoid debounce issues
+        const pointsInput = document.getElementById('currentPoints');
+        const inputValue = parseInt(pointsInput.value);
+
+        // Use the input value if it's valid, otherwise use currentPoints variable
+        const actualCurrentPoints = !isNaN(inputValue) ? inputValue : currentPoints;
+        const oldPoints = actualCurrentPoints;
+
         // Add to undo history (max 5 items)
         undoHistory.push({
           points: points,
           timestamp: Date.now(),
           oldTotal: oldPoints
         });
-        
+
         if (undoHistory.length > 5) {
           undoHistory.shift();
         }
-        
+
         storage.set('undoHistory', undoHistory);
         updateUndoButton();
 
         // Calculate new total before updating currentPoints
-        const newTotal = currentPoints + points;
+        const newTotal = actualCurrentPoints + points;
+
+        // Update the global variable immediately
+        currentPoints = newTotal;
 
         // Add to daily entries
         const today = new Date().toISOString().split('T')[0];
@@ -3556,6 +3577,7 @@
         if (existingEntry) {
           existingEntry.points += points;
           existingEntry.total = newTotal;
+          existingEntry.notes = `Quick add: +${points}`;
         } else {
           dailyEntries.push({
             date: today,
@@ -3565,13 +3587,25 @@
           });
         }
 
-        // Update currentPoints AFTER setting the entry totals
-        updateCurrentPoints(newTotal);
-        
+        // Update the input field directly without triggering input event
+        isProgrammaticUpdate = true;
+        pointsInput.value = newTotal;
+        // Reset flag after a brief delay to ensure event has been skipped
+        setTimeout(() => {
+          isProgrammaticUpdate = false;
+        }, 0);
+
+        // Save to storage
+        storage.set('currentPoints', currentPoints);
         storage.set('dailyEntries', dailyEntries);
+
+        // Update UI
+        updateDashboard();
+        renderRankLadder();
         renderDailyEntries();
-        
-        showNotification(`+${points} points added! Total: ${currentPoints}`, 'success');
+        updateGraph();
+
+        showNotification(`+${points} points added! Total: ${newTotal}`, 'success');
       }
 
       function undoLastAdd() {
@@ -3598,7 +3632,8 @@
         
         storage.set('dailyEntries', dailyEntries);
         renderDailyEntries();
-        
+        updateGraph();
+
         showNotification(`Undid +${lastAction.points} points`, 'success');
       }
 
@@ -3649,12 +3684,13 @@
 
         storage.set('dailyEntries', dailyEntries);
         updateCurrentPoints(newTotal);
-        
+
         // Clear form
         document.getElementById('pointsInput').value = '';
         document.getElementById('notesInput').value = '';
-        
+
         renderDailyEntries();
+        updateGraph();
         showNotification(`Entry added: +${points} points`, 'success');
       }
 
