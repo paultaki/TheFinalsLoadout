@@ -2638,6 +2638,7 @@
       let daysRemaining = 0;
       let isUpdating = false;
       let isProgrammaticUpdate = false;
+      let pendingDebounceTimeout = null;
 
       // Debounce function
       function debounce(func, wait) {
@@ -3001,17 +3002,44 @@
         const input = document.getElementById('currentPoints');
         input.value = currentPoints;
 
-        // Debounced update
-        const debouncedUpdate = debounce((value) => {
-          updateCurrentPoints(parseInt(value) || 0);
-        }, 500);
-
         input.addEventListener('input', (e) => {
           // Skip debounced update if this is a programmatic change
           if (isProgrammaticUpdate) {
             return;
           }
-          debouncedUpdate(e.target.value);
+
+          // Clear any existing timeout
+          if (pendingDebounceTimeout) {
+            clearTimeout(pendingDebounceTimeout);
+          }
+
+          // Set new timeout
+          pendingDebounceTimeout = setTimeout(() => {
+            const parsedValue = parseInt(e.target.value) || 0;
+            // Only update if value has actually changed
+            if (parsedValue !== currentPoints) {
+              updateCurrentPoints(parsedValue);
+            }
+            pendingDebounceTimeout = null;
+          }, 500);
+        });
+
+        // Also update immediately on blur to catch quick changes
+        input.addEventListener('blur', (e) => {
+          if (isProgrammaticUpdate) {
+            return;
+          }
+
+          // Cancel pending debounce
+          if (pendingDebounceTimeout) {
+            clearTimeout(pendingDebounceTimeout);
+            pendingDebounceTimeout = null;
+          }
+
+          const parsedValue = parseInt(e.target.value) || 0;
+          if (parsedValue !== currentPoints) {
+            updateCurrentPoints(parsedValue);
+          }
         });
 
         input.addEventListener('focus', () => {
@@ -3092,6 +3120,7 @@
       }
 
       function updateDashboard() {
+        console.log('[updateDashboard] START - currentPoints:', currentPoints);
         const goalRank = ranks.find(r => r.name === selectedGoal);
         const goalPoints = goalRank ? goalRank.points : 2400;
         const pointsNeeded = Math.max(0, goalPoints - currentPoints);
@@ -3542,13 +3571,32 @@
       }
 
       function quickAddPoints(points) {
-        // First sync currentPoints with input field to avoid debounce issues
+        console.log('=== QUICK ADD DEBUG START ===');
+
+        // CRITICAL: Cancel any pending debounced updates from typing
+        if (pendingDebounceTimeout) {
+          console.log('Step 0 - Canceling pending debounce timeout');
+          clearTimeout(pendingDebounceTimeout);
+          pendingDebounceTimeout = null;
+        }
+
+        // CRITICAL: Always sync currentPoints with input field first
+        // This ensures we use what the user just typed, not the debounced value
         const pointsInput = document.getElementById('currentPoints');
         const inputValue = parseInt(pointsInput.value);
 
-        // Use the input value if it's valid, otherwise use currentPoints variable
-        const actualCurrentPoints = !isNaN(inputValue) ? inputValue : currentPoints;
-        const oldPoints = actualCurrentPoints;
+        console.log('Step 1 - Read input field:', inputValue);
+        console.log('Step 2 - currentPoints BEFORE sync:', currentPoints);
+
+        // Force immediate sync of currentPoints variable with input field
+        if (!isNaN(inputValue)) {
+          currentPoints = inputValue;
+          storage.set('currentPoints', currentPoints);
+        }
+
+        console.log('Step 3 - currentPoints AFTER sync:', currentPoints);
+
+        const oldPoints = currentPoints;
 
         // Add to undo history (max 5 items)
         undoHistory.push({
@@ -3564,20 +3612,28 @@
         storage.set('undoHistory', undoHistory);
         updateUndoButton();
 
-        // Calculate new total before updating currentPoints
-        const newTotal = actualCurrentPoints + points;
+        // Calculate new total
+        const newTotal = currentPoints + points;
 
-        // Update the global variable immediately
+        console.log('Step 4 - Points to add:', points);
+        console.log('Step 5 - Calculation:', currentPoints, '+', points, '=', newTotal);
+
+        // Update the global variable
         currentPoints = newTotal;
+
+        console.log('Step 6 - currentPoints set to:', currentPoints);
 
         // Add to daily entries
         const today = new Date().toISOString().split('T')[0];
         const existingEntry = dailyEntries.find(e => e.date === today);
 
+        console.log('Step 7 - Existing entry for today:', existingEntry);
+
         if (existingEntry) {
           existingEntry.points += points;
           existingEntry.total = newTotal;
           existingEntry.notes = `Quick add: +${points}`;
+          console.log('Step 8 - Updated existing entry:', existingEntry);
         } else {
           dailyEntries.push({
             date: today,
@@ -3585,11 +3641,14 @@
             total: newTotal,
             notes: `Quick add: +${points}`
           });
+          console.log('Step 8 - Created new entry');
         }
 
         // Update the input field directly without triggering input event
         isProgrammaticUpdate = true;
         pointsInput.value = newTotal;
+        console.log('Step 9 - Set input field to:', newTotal);
+
         // Reset flag after a brief delay to ensure event has been skipped
         setTimeout(() => {
           isProgrammaticUpdate = false;
@@ -3599,11 +3658,18 @@
         storage.set('currentPoints', currentPoints);
         storage.set('dailyEntries', dailyEntries);
 
+        console.log('Step 10 - Saved to storage, currentPoints:', currentPoints);
+        console.log('Step 11 - About to call updateDashboard()');
+
         // Update UI
         updateDashboard();
         renderRankLadder();
         renderDailyEntries();
         updateGraph();
+
+        console.log('Step 12 - FINAL input field value:', pointsInput.value);
+        console.log('Step 13 - FINAL currentPoints variable:', currentPoints);
+        console.log('=== QUICK ADD DEBUG END ===');
 
         showNotification(`+${points} points added! Total: ${newTotal}`, 'success');
       }
