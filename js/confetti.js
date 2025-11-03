@@ -67,21 +67,21 @@ class ConfettiSystem {
   initConfettoVelocity(xRange, yRange, direction = 'up') {
     let x = this.randomRange(xRange[0], xRange[1]);
 
-    // Apply directional bias with 2x more force
+    // Apply directional bias with 2x more horizontal force
     if (direction === 'left') {
-      x = this.randomRange(-22, -6); // 2x stronger leftward bias
+      x = this.randomRange(-22, -6); // 2x faster horizontal spread
     } else if (direction === 'right') {
-      x = this.randomRange(6, 22); // 2x stronger rightward bias
+      x = this.randomRange(6, 22); // 2x faster horizontal spread
     } else {
-      x = this.randomRange(xRange[0] * 2, xRange[1] * 2); // 2x default spread
+      x = this.randomRange(xRange[0] * 2, xRange[1] * 2); // 2x faster horizontal spread
     }
 
     const range = yRange[1] - yRange[0] + 1;
     let y = yRange[1] - Math.abs(this.randomRange(0, range) + this.randomRange(0, range) - range);
     if (y >= yRange[1] - 1) {
-      y += (Math.random() < 0.25) ? this.randomRange(2, 6) : 0; // 2x extra boost
+      y += (Math.random() < 0.25) ? this.randomRange(1, 3) : 0; // Keep original vertical
     }
-    return { x: x, y: -y * 2 }; // 2x upward velocity
+    return { x: x, y: -y }; // Keep original vertical velocity
   }
 
   // Confetto class
@@ -112,11 +112,11 @@ class ConfettiSystem {
   createSequin(x, y, direction = 'up') {
     let velocityX = this.randomRange(-12, 12); // 2x horizontal spread
 
-    // Apply directional bias with 2x force
+    // Apply directional bias with 2x horizontal force
     if (direction === 'left') {
-      velocityX = this.randomRange(-16, -4); // 2x stronger
+      velocityX = this.randomRange(-16, -4); // 2x faster horizontal
     } else if (direction === 'right') {
-      velocityX = this.randomRange(4, 16); // 2x stronger
+      velocityX = this.randomRange(4, 16); // 2x faster horizontal
     }
 
     return {
@@ -125,7 +125,7 @@ class ConfettiSystem {
       position: { x, y },
       velocity: {
         x: velocityX,
-        y: this.randomRange(-16, -24) // 2x upward velocity
+        y: this.randomRange(-8, -12) // Keep original vertical velocity
       },
       update: function(system) {
         this.velocity.x -= this.velocity.x * system.dragSequins;
