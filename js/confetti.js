@@ -38,11 +38,11 @@ class ConfettiSystem {
     ];
 
     // Physics
-    this.gravityConfetti = 0.05;  // Ultra floaty!
-    this.gravitySequins = 0.10;   // Ultra floaty!
+    this.gravityConfetti = 0.15;  // Faster fall with stronger gravity
+    this.gravitySequins = 0.25;   // Faster fall with stronger gravity
     this.dragConfetti = 0.075;
     this.dragSequins = 0.02;
-    this.terminalVelocity = 2.5;  // Lower max fall speed
+    this.terminalVelocity = 5.0;  // Higher max fall speed
 
     // Handle window resize
     window.addEventListener('resize', () => this.resizeCanvas());
