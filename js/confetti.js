@@ -38,8 +38,8 @@ class ConfettiSystem {
     ];
 
     // Physics
-    this.gravityConfetti = 0.15;  // Faster fall with stronger gravity
-    this.gravitySequins = 0.25;   // Faster fall with stronger gravity
+    this.gravityConfetti = 0.18;  // Faster fall with stronger gravity (+20%)
+    this.gravitySequins = 0.30;   // Faster fall with stronger gravity (+20%)
     this.dragConfetti = 0.075;
     this.dragSequins = 0.02;
     this.terminalVelocity = 5.0;  // Higher max fall speed
