@@ -14,14 +14,21 @@ function notify(message, type) {
 
 // Default Configuration
 const DEFAULT_SETTINGS = {
-  seasonName: 'Season 8',
-  seasonStartDate: '2025-09-11',
-  seasonEndDate: '2025-12-11',
+  seasonName: 'Season 9',
+  seasonStartDate: '2025-12-10',
+  seasonEndDate: '2026-03-18',
+  // Cashout & Ranked points (default mode)
   matchPoints: {
     win: 25,
     loseFinal: 14,
     round2: 6,
     round1: 2
+  },
+  // NEW: Quickplay points
+  quickplayPoints: {
+    first: 4,
+    second: 3,
+    third: 2
   },
   ranks: [
     { name: "Bronze IV", points: 25, icon: "B4", color: "#CD7F32", tier: "bronze" },
@@ -44,10 +51,10 @@ const DEFAULT_SETTINGS = {
     { name: "Diamond III", points: 1300, icon: "D3", color: "#B9F2FF", tier: "diamond" },
     { name: "Diamond II", points: 1450, icon: "D2", color: "#B9F2FF", tier: "diamond" },
     { name: "Diamond I", points: 1600, icon: "D1", color: "#B9F2FF", tier: "diamond" },
-    { name: "Emerald IV", points: 1800, icon: "E4", color: "#50C878", tier: "emerald" },
-    { name: "Emerald III", points: 2000, icon: "E3", color: "#50C878", tier: "emerald" },
-    { name: "Emerald II", points: 2200, icon: "E2", color: "#50C878", tier: "emerald" },
-    { name: "Emerald I", points: 2400, icon: "E1", color: "#50C878", tier: "emerald" }
+    { name: "Emerald IV", points: 1800, icon: "E4", color: "#ff3366", tier: "emerald" },
+    { name: "Emerald III", points: 2000, icon: "E3", color: "#ff3366", tier: "emerald" },
+    { name: "Emerald II", points: 2200, icon: "E2", color: "#ff3366", tier: "emerald" },
+    { name: "Emerald I", points: 2400, icon: "E1", color: "#ff3366", tier: "emerald" }
   ]
 };
 
@@ -111,7 +118,7 @@ function switchSettingsTab(tab) {
 
   const activeBtn = document.querySelector(`[data-tab="${tab}"]`);
   if (activeBtn) {
-    activeBtn.style.color = '#50c878';
+    activeBtn.style.color = '#ff3366';
     activeBtn.classList.add('active');
   }
 }
@@ -119,11 +126,19 @@ function switchSettingsTab(tab) {
 function populateSettingsModal() {
   const settings = loadSettings();
 
-  // Populate match points
+  // Populate match points (Cashout/Ranked)
   document.getElementById('winPoints').value = settings.matchPoints.win;
   document.getElementById('loseFinalPoints').value = settings.matchPoints.loseFinal;
   document.getElementById('round2Points').value = settings.matchPoints.round2;
   document.getElementById('round1Points').value = settings.matchPoints.round1;
+
+  // Populate quickplay points (if inputs exist)
+  const qpFirst = document.getElementById('qpFirstPoints');
+  const qpSecond = document.getElementById('qpSecondPoints');
+  const qpThird = document.getElementById('qpThirdPoints');
+  if (qpFirst) qpFirst.value = settings.quickplayPoints?.first || 4;
+  if (qpSecond) qpSecond.value = settings.quickplayPoints?.second || 3;
+  if (qpThird) qpThird.value = settings.quickplayPoints?.third || 2;
 
   // Populate season info
   document.getElementById('seasonName').value = settings.seasonName;
@@ -165,6 +180,11 @@ function saveSettings() {
       loseFinal: parseInt(document.getElementById('loseFinalPoints').value),
       round2: parseInt(document.getElementById('round2Points').value),
       round1: parseInt(document.getElementById('round1Points').value)
+    },
+    quickplayPoints: {
+      first: parseInt(document.getElementById('qpFirstPoints')?.value || 4),
+      second: parseInt(document.getElementById('qpSecondPoints')?.value || 3),
+      third: parseInt(document.getElementById('qpThirdPoints')?.value || 2)
     },
     ranks: []
   };
@@ -258,12 +278,18 @@ function importSettings(event) {
 
 function shareSettings() {
   const settings = loadSettings();
+  const qp = settings.quickplayPoints || { first: 4, second: 3, third: 2 };
   const text = `🎮 THE FINALS ${settings.seasonName} Configuration\n` +
-              `📅 ${settings.seasonStartDate} to ${settings.seasonEndDate}\n` +
+              `📅 ${settings.seasonStartDate} to ${settings.seasonEndDate}\n\n` +
+              `📋 CASHOUT/RANKED:\n` +
               `🏆 Win: ${settings.matchPoints.win} pts\n` +
               `🥉 Lose Final: ${settings.matchPoints.loseFinal} pts\n` +
               `✅ Round 2: ${settings.matchPoints.round2} pts\n` +
-              `❌ Round 1: ${settings.matchPoints.round1} pts`;
+              `❌ Round 1: ${settings.matchPoints.round1} pts\n\n` +
+              `⚡ QUICKPLAY:\n` +
+              `🥇 1st Place: ${qp.first} pts\n` +
+              `🥈 2nd Place: ${qp.second} pts\n` +
+              `🥉 3rd Place: ${qp.third} pts`;
 
   if (navigator.share) {
     navigator.share({
@@ -279,24 +305,20 @@ function shareSettings() {
 // Migration function for existing data
 function migrateExistingData() {
   const version = localStorage.getItem('cacheVersion');
-  if (version && version !== 'v9.0') {
-    // Migrate from v8.0 to v9.0
-    const existingSettings = {
-      seasonName: 'Season 8',
-      seasonStartDate: localStorage.getItem('seasonStartDate') || '2025-09-11',
-      seasonEndDate: localStorage.getItem('seasonEndDate') || '2025-12-11',
-      matchPoints: {
-        win: 25,
-        loseFinal: 14,
-        round2: 6,
-        round1: 2
-      },
-      ranks: DEFAULT_SETTINGS.ranks
-    };
-
+  // Migrate to v9.1 (Season 9 with Quickplay support)
+  if (!version || (version !== 'v9.1')) {
+    const existingSettings = loadSettings();
+    // Ensure quickplayPoints exists
+    if (!existingSettings.quickplayPoints) {
+      existingSettings.quickplayPoints = {
+        first: 4,
+        second: 3,
+        third: 2
+      };
+    }
     saveSettingsToStorage(existingSettings);
-    localStorage.setItem('cacheVersion', 'v9.0');
-    console.log('Migrated settings to v9.0');
+    localStorage.setItem('cacheVersion', 'v9.1');
+    console.log('Migrated settings to v9.1 (Season 9 with Quickplay)');
   }
 }
 
@@ -317,6 +339,7 @@ window.wtSettings = {
   load: loadSettings,
   save: saveSettingsToStorage,
   getMatchPoints: () => loadSettings().matchPoints,
+  getQuickplayPoints: () => loadSettings().quickplayPoints || { first: 4, second: 3, third: 2 },
   getRanks: () => loadSettings().ranks,
   getSeasonDates: () => {
     const s = loadSettings();
