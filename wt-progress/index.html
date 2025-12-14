@@ -495,44 +495,52 @@
       }
 
       .goal-select {
-        background: linear-gradient(135deg, rgba(255, 51, 102, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%);
-        border: 3px solid #ff3366;
+        background: linear-gradient(135deg, rgba(106, 27, 154, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
+        border: 2px solid #6a1b9a;
         color: #fff;
         padding: 1rem 1.5rem;
         border-radius: 12px;
-        font-size: 1.15rem;
+        font-size: 16px; /* Prevents iOS zoom */
         font-weight: 700;
         cursor: pointer;
         transition: all 0.3s;
         min-width: 280px;
-        box-shadow: 0 4px 15px rgba(255, 51, 102, 0.3);
+        box-shadow: 0 4px 15px rgba(106, 27, 154, 0.3);
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        /* Allow native picker on mobile */
+        -webkit-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ff3366' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
       }
 
       .goal-select:hover {
-        background: linear-gradient(135deg, rgba(255, 51, 102, 0.2) 0%, rgba(0, 0, 0, 0.7) 100%);
+        background-color: rgba(106, 27, 154, 0.4);
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(255, 51, 102, 0.4);
-        border-color: #ff6699;
+        box-shadow: 0 6px 20px rgba(106, 27, 154, 0.4);
+        border-color: #ff3366;
+      }
+
+      .goal-select:focus {
+        outline: none;
+        border-color: #ff3366;
+        box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.3);
       }
 
       /* Fix dropdown option styling */
       .goal-select option {
         background: #1a1a1a;
         color: #ffffff;
-        padding: 0.5rem;
-      }
-
-      .goal-select option:hover,
-      .goal-select option:focus {
-        background: #2a2a2a;
-        color: #ff3366;
+        padding: 12px;
+        font-size: 16px;
       }
 
       .goal-select option:checked {
-        background: linear-gradient(135deg, rgba(255, 51, 102, 0.2) 0%, rgba(0, 0, 0, 0.9) 100%);
-        color: #ff3366;
+        background: #6a1b9a;
+        color: #fff;
       }
 
       .goal-display {
@@ -609,7 +617,7 @@
       }
 
       .stat-label {
-        font-size: 0.9em;
+        font-size: 1rem;
         color: #b0b0b0;
         margin-bottom: 10px;
         text-transform: uppercase;
@@ -617,7 +625,7 @@
       }
 
       .stat-value {
-        font-size: 2.5em;
+        font-size: 3rem;
         font-weight: 700;
         background: linear-gradient(135deg, #ff3366, #ff6699);
         -webkit-background-clip: text;
@@ -651,7 +659,7 @@
       }
 
       .setup-step .input-hint {
-        font-size: 0.9rem;
+        font-size: 1rem;
         color: #888;
         background: none;
         padding: 0;
@@ -846,8 +854,8 @@
         top: 50%;
         right: 20px;
         transform: translateY(-50%);
-        font-weight: 600;
-        font-size: 1.1em;
+        font-weight: 700;
+        font-size: 1.3rem;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         z-index: 2;
       }
@@ -903,9 +911,10 @@
 
       .pace-indicator {
         text-align: center;
-        padding: 12px 15px;
+        padding: 14px 18px;
         border-radius: 10px;
         font-weight: 600;
+        font-size: 1.1rem;
         transition: all 0.3s;
         border: 1px solid rgba(106, 27, 154, 0.3);
       }
@@ -971,19 +980,33 @@
       }
 
       .quick-action-icon {
-        font-size: 2.5em;
-        margin-bottom: 5px;
+        font-size: 2rem;
+        margin-bottom: 8px;
+      }
+      
+      .quick-action-icon.icon-text {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+        border: 2px solid currentColor;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.3rem;
+        letter-spacing: -1px;
       }
 
       .quick-action-label {
-        font-size: 1.1em;
+        font-size: 1.15rem;
         font-weight: 600;
         margin-bottom: 5px;
       }
 
       .quick-action-points {
         font-weight: 800;
-        font-size: 1.3em;
+        font-size: 1.5rem;
         color: #ff3366;
       }
 
@@ -1058,7 +1081,7 @@
       .rank-item {
         display: flex;
         align-items: center;
-        padding: 12px 15px;
+        padding: 14px 18px;
         background: rgba(255, 255, 255, 0.02);
         border-radius: 10px;
         border: 1px solid rgba(255, 255, 255, 0.05);
@@ -1066,6 +1089,7 @@
         opacity: 0;
         animation: fadeInUp 0.5s forwards;
         position: relative;
+        font-size: 1.1rem;
       }
 
       .rank-item-content {
@@ -1396,9 +1420,15 @@
 
         .goal-select {
           width: 100%;
-          font-size: 1.1rem;
-          padding: 1rem;
+          font-size: 16px !important; /* Prevents iOS zoom on focus */
+          padding: 16px;
           touch-action: manipulation;
+          min-height: 56px;
+          /* Reset to native on mobile for better UX */
+          -webkit-appearance: menulist-button !important;
+          appearance: menulist-button !important;
+          background-image: none !important;
+          padding-right: 1rem;
         }
 
         .entry-form {
@@ -1416,15 +1446,21 @@
         }
 
         .quick-action-icon {
-          font-size: 2em;
+          font-size: 1.8rem;
+        }
+        
+        .quick-action-icon.icon-text {
+          width: 44px;
+          height: 44px;
+          font-size: 1.2rem;
         }
 
         .quick-action-label {
-          font-size: 0.95em;
+          font-size: 1.1rem;
         }
 
         .quick-action-points {
-          font-size: 1.1em;
+          font-size: 1.4rem;
         }
 
         #rankLadder {
@@ -1432,7 +1468,49 @@
         }
 
         .rank-item {
-          font-size: 0.9rem;
+          font-size: 1.15rem;
+          padding: 16px 18px;
+        }
+        
+        .rank-icon {
+          width: 50px;
+          height: 50px;
+          font-size: 1.3rem;
+        }
+        
+        .rank-name {
+          font-size: 1.15rem;
+          font-weight: 600;
+        }
+        
+        .rank-points {
+          font-size: 1rem;
+        }
+        
+        .stat-value {
+          font-size: 2.8rem !important;
+        }
+        
+        .stat-label {
+          font-size: 1rem;
+        }
+        
+        .stat-subtitle {
+          font-size: 1.05rem !important;
+        }
+        
+        .pace-indicator {
+          font-size: 1.15rem;
+          padding: 16px 20px;
+        }
+        
+        .progress-text {
+          font-size: 1.2rem;
+        }
+        
+        .setup-step .points-input,
+        .points-input {
+          font-size: 2.8rem;
         }
 
         /* Touch-friendly scrolling */
@@ -1983,24 +2061,24 @@
           <div class="stat-card half-height">
             <div class="stat-icon" style="font-size: 2em; margin-bottom: 10px;">📅</div>
             <div class="stat-label">Days Remaining in Season 9</div>
-            <div class="stat-value" id="daysRemaining" style="font-size: 2.7em;">--</div>
-            <div class="stat-subtitle" id="seasonEndDate" style="font-size: 0.9em; color: #888; margin-top: 5px;">--</div>
+            <div class="stat-value" id="daysRemaining" style="font-size: 3.2rem;">--</div>
+            <div class="stat-subtitle" id="seasonEndDate" style="font-size: 1.1rem; color: #888; margin-top: 5px;">--</div>
           </div>
           <div class="stat-card half-height">
             <div class="stat-icon" style="font-size: 2em; margin-bottom: 10px;">🎯</div>
             <div class="stat-label">Points to Next Rank</div>
-            <div class="stat-value" id="pointsToNext" style="font-size: 2.7em;">
+            <div class="stat-value" id="pointsToNext" style="font-size: 3.2rem;">
               <span class="next-rank-points">--</span>
             </div>
-            <div class="stat-subtitle next-rank-name" style="font-size: 0.9em; color: #888; margin-top: 5px;">--</div>
+            <div class="stat-subtitle next-rank-name" style="font-size: 1.1rem; color: #888; margin-top: 5px;">--</div>
           </div>
         </div>
 
         <div class="stat-card primary">
           <div class="stat-icon" style="font-size: 2em; margin-bottom: 10px;">⬇️</div>
           <div class="stat-label">Daily Points Needed</div>
-          <div class="stat-value" id="pointsPerDay" style="font-size: 3em;">--</div>
-          <div class="stat-subtitle" id="dailyGoalStatus" style="font-size: 0.9em; color: #ff3366; margin-top: 10px;"></div>
+          <div class="stat-value" id="pointsPerDay" style="font-size: 3.5rem;">--</div>
+          <div class="stat-subtitle" id="dailyGoalStatus" style="font-size: 1.1rem; color: #ff3366; margin-top: 10px;"></div>
           <div class="goal-breakdown" id="goalBreakdown"></div>
         </div>
 
@@ -2050,8 +2128,8 @@
                 </div>
               </div>
             </div>
-            <div class="stat-value" id="completion" style="font-size: 2.7em;">--</div>
-            <div class="stat-subtitle" id="completionStatus" style="font-size: 0.9em; color: #ff3366; margin-top: 5px;"></div>
+            <div class="stat-value" id="completion" style="font-size: 3.2rem;">--</div>
+            <div class="stat-subtitle" id="completionStatus" style="font-size: 1.1rem; color: #ff3366; margin-top: 5px;"></div>
           </div>
           <div class="stat-card half-height" style="position: relative;">
             <div class="stat-icon" style="font-size: 2em; margin-bottom: 10px;">📆</div>
@@ -2101,7 +2179,7 @@
                 </div>
               </div>
             </div>
-            <div class="stat-value" id="completionDate" style="font-size: 2.7em;">--</div>
+            <div class="stat-value" id="completionDate" style="font-size: 3.2rem;">--</div>
           </div>
         </div>
       </div>
@@ -2146,27 +2224,27 @@
         <!-- Cashout/Ranked Buttons -->
         <div id="cashoutButtons" class="quick-actions">
           <button class="quick-action-btn win" onclick="quickAddPoints(25, 'win')">
-            <span class="quick-action-icon">🏆</span>
+            <span class="quick-action-icon icon-text">W</span>
             <span class="quick-action-label">Win</span>
             <span class="quick-action-points">+25</span>
           </button>
           <button class="quick-action-btn third" onclick="quickAddPoints(14, 'loseFinal')">
-            <span class="quick-action-icon">🥉</span>
+            <span class="quick-action-icon icon-text">2</span>
             <span class="quick-action-label">Lose Final</span>
             <span class="quick-action-points">+14</span>
           </button>
           <button class="quick-action-btn qualified" onclick="quickAddPoints(6, 'round2')">
-            <span class="quick-action-icon">✅</span>
+            <span class="quick-action-icon icon-text">R2</span>
             <span class="quick-action-label">Round 2 KO</span>
             <span class="quick-action-points">+6</span>
           </button>
           <button class="quick-action-btn eliminated" onclick="quickAddPoints(2, 'round1')">
-            <span class="quick-action-icon">❌</span>
+            <span class="quick-action-icon icon-text">R1</span>
             <span class="quick-action-label">Round 1 KO</span>
             <span class="quick-action-points">+2</span>
           </button>
           <button id="undoButton" class="quick-action-btn undo" onclick="undoLastAdd()">
-            <span class="quick-action-icon">↩️</span>
+            <span class="quick-action-icon">←</span>
             <span class="quick-action-label">Undo</span>
             <span class="quick-action-points" id="undoPoints">-0</span>
           </button>
@@ -2175,22 +2253,22 @@
         <!-- Quickplay Buttons (hidden by default) -->
         <div id="quickplayButtons" class="quick-actions" style="display: none;">
           <button class="quick-action-btn win" onclick="quickAddPoints(4, 'qp1st')">
-            <span class="quick-action-icon">🥇</span>
+            <span class="quick-action-icon icon-text">1</span>
             <span class="quick-action-label">1st Place</span>
             <span class="quick-action-points">+4</span>
           </button>
           <button class="quick-action-btn second" onclick="quickAddPoints(3, 'qp2nd')">
-            <span class="quick-action-icon">🥈</span>
+            <span class="quick-action-icon icon-text">2</span>
             <span class="quick-action-label">2nd Place</span>
             <span class="quick-action-points">+3</span>
           </button>
           <button class="quick-action-btn third" onclick="quickAddPoints(2, 'qp3rd')">
-            <span class="quick-action-icon">🥉</span>
+            <span class="quick-action-icon icon-text">3</span>
             <span class="quick-action-label">3rd Place</span>
             <span class="quick-action-points">+2</span>
           </button>
           <button id="undoButtonQP" class="quick-action-btn undo" onclick="undoLastAdd()">
-            <span class="quick-action-icon">↩️</span>
+            <span class="quick-action-icon">←</span>
             <span class="quick-action-label">Undo</span>
             <span class="quick-action-points" id="undoPointsQP">-0</span>
           </button>
@@ -3185,9 +3263,9 @@
             const icon = document.createElement('div');
             icon.className = `rank-icon rank-${rank.tier}`;
             icon.textContent = rank.icon;
-            icon.style.fontSize = '1.5em';
-            icon.style.width = '40px';
-            icon.style.height = '40px';
+            icon.style.fontSize = '1.4rem';
+            icon.style.width = '48px';
+            icon.style.height = '48px';
             icon.style.display = 'flex';
             icon.style.alignItems = 'center';
             icon.style.justifyContent = 'center';
@@ -3203,10 +3281,10 @@
             const details = document.createElement('div');
             details.style.flex = '1';
             details.innerHTML = `
-              <div style="font-weight: 600; color: ${isCompleted ? '#ff3366' : isCurrent ? '#fff' : '#b0b0b0'};">
+              <div class="rank-name" style="font-weight: 700; font-size: 1.1rem; color: ${isCompleted ? '#ff3366' : isCurrent ? '#fff' : '#b0b0b0'};">
                 ${rank.name}
               </div>
-              <div style="font-size: 0.85em; color: #666;">
+              <div class="rank-points" style="font-size: 1rem; color: #888; margin-top: 2px;">
                 ${rank.points} pts
               </div>
             `;
