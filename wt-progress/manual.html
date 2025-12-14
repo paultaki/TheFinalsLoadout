@@ -2697,16 +2697,13 @@
           pointValues.cashout = { ...settings.cashout };
           pointValues.quickplay = { ...settings.quickplay };
           
-          // Update UI - recalculate everything with new dates
-          updateQuickAddButtons();
-          updateSeasonDisplay();
-          calculateDaysRemaining(); // Recalculate days with new dates
-          initializeGoalSelector();
-          updateDashboard();
-          renderRankLadder();
-          updatePaceIndicator(); // Update pace with new dates
+          // Show notification and refresh page to apply all changes
+          showNotification('✅ Settings saved! Refreshing...', 'success');
           
-          showNotification('✅ Settings saved! Your custom configuration is now active.', 'success');
+          // Refresh after a short delay so user sees the notification
+          setTimeout(() => {
+            window.location.reload();
+          }, 800);
         } catch (e) {
           console.error('Error saving settings:', e);
           showNotification('❌ Error saving settings', 'error');
