@@ -918,6 +918,59 @@
         transition: all 0.3s;
         border: 1px solid rgba(106, 27, 154, 0.3);
       }
+      
+      /* Tooltip Icon Styles */
+      .tooltip-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        background: rgba(255, 51, 102, 0.2);
+        border: 1px solid rgba(255, 51, 102, 0.4);
+        border-radius: 50%;
+        font-size: 0.75rem !important;
+        color: #ff6699 !important;
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      
+      .tooltip-icon:hover {
+        background: rgba(255, 51, 102, 0.4);
+        border-color: #ff3366;
+        transform: scale(1.1);
+      }
+      
+      .tooltip-icon:active {
+        transform: scale(0.95);
+      }
+      
+      /* Tooltip Content Styles */
+      .tooltip-content {
+        display: none;
+        position: fixed !important;
+        background: rgb(0, 0, 0) !important;
+        border: 2px solid #ff3366 !important;
+        border-radius: 12px !important;
+        padding: 20px !important;
+        width: 280px !important;
+        max-width: 90vw !important;
+        z-index: 999999 !important;
+        text-align: left !important;
+        font-size: 1rem !important;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.8) !important;
+        color: white !important;
+        text-transform: none !important;
+        letter-spacing: normal !important;
+        font-family: inherit !important;
+        line-height: 1.6 !important;
+      }
+      
+      .tooltip-content.active {
+        display: block !important;
+      }
 
       .pace-indicator.ahead {
         background: linear-gradient(135deg, rgba(106, 27, 154, 0.2), rgba(255, 51, 102, 0.15));
@@ -2060,7 +2113,7 @@
         <div class="stats-column scroll-reveal">
           <div class="stat-card half-height">
             <div class="stat-icon" style="font-size: 2em; margin-bottom: 10px;">📅</div>
-            <div class="stat-label">Days Remaining in Season 9</div>
+            <div class="stat-label">Days Remaining in S9</div>
             <div class="stat-value" id="daysRemaining" style="font-size: 3.2rem;">--</div>
             <div class="stat-subtitle" id="seasonEndDate" style="font-size: 1.1rem; color: #888; margin-top: 5px;">--</div>
           </div>
@@ -2074,9 +2127,29 @@
           </div>
         </div>
 
-        <div class="stat-card primary">
+        <div class="stat-card primary" style="position: relative;">
           <div class="stat-icon" style="font-size: 2em; margin-bottom: 10px;">⬇️</div>
-          <div class="stat-label">Daily Points Needed</div>
+          <div class="stat-label">Daily Points Needed
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-content" data-tooltip-type="daily">
+              <div style="color: #ff3366; font-weight: 700; margin-bottom: 12px; font-size: 1.1rem;">🎯 Your Daily Target</div>
+              <div style="color: #e0e0e0;">
+                <strong style="color: #ff6699;">What it shows:</strong><br>
+                How many points you need to earn each day (on average) to reach your goal by the end of the season.
+                <br><br>
+                <strong style="color: #ff6699;">The math:</strong><br>
+                (Goal Points − Your Points) ÷ Days Left
+                <br><br>
+                <strong style="color: #ff6699;">Example:</strong><br>
+                Goal: <span style="color: #fff;">2,400 points</span><br>
+                You have: <span style="color: #fff;">600 points</span><br>
+                Days left: <span style="color: #fff;">60 days</span><br>
+                (2,400 − 600) ÷ 60 = <span style="color: #ff3366; font-weight: 700;">30 pts/day</span>
+                <br><br>
+                <em style="color: #888;">Hit this daily, and you'll reach your goal!</em>
+              </div>
+            </div>
+          </div>
           <div class="stat-value" id="pointsPerDay" style="font-size: 3.5rem;">--</div>
           <div class="stat-subtitle" id="dailyGoalStatus" style="font-size: 1.1rem; color: #ff3366; margin-top: 10px;"></div>
           <div class="goal-breakdown" id="goalBreakdown"></div>
@@ -2086,45 +2159,25 @@
           <div class="stat-card half-height" style="position: relative; z-index: 1000 !important;">
             <div class="stat-icon" style="font-size: 2em; margin-bottom: 10px;">📈</div>
             <div class="stat-label">Projected Completion
-              <span class="tooltip-icon" style="cursor: help; color: #888; font-size: 0.9em;">ⓘ</span>
-              <div class="tooltip-content" data-tooltip-type="projected" style="
-                display: none;
-                position: absolute;
-                background: rgb(0, 0, 0) !important;
-                background-color: rgb(0, 0, 0) !important;
-                opacity: 1 !important;
-                border: 1px solid #ff3366;
-                border-radius: 8px;
-                padding: 15px;
-                width: 280px;
-                left: 50%;
-                transform: translateX(-50%);
-                top: calc(100% + 10px);
-                z-index: 999999 !important;
-                text-align: left;
-                font-size: 0.85rem;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-                pointer-events: none;
-                backdrop-filter: none;
-                color: white !important;
-                text-transform: none !important;
-                letter-spacing: normal !important;
-                font-family: inherit !important;
-              ">
-                <div style="color: #ff3366; font-weight: 600; margin-bottom: 10px;">How Projected Completion Works:</div>
-                <div style="color: #b0b0b0; line-height: 1.6;">
-                  <strong>Formula:</strong><br>
-                  <span style="color: white;">Daily Avg = Current Points ÷ Days Passed</span><br>
-                  <span style="color: white;">Projected = (Daily Avg × Total Days) ÷ Goal Points × 100%</span>
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-content" data-tooltip-type="projected">
+                <div style="color: #ff3366; font-weight: 700; margin-bottom: 12px; font-size: 1.1rem;">📈 Will You Reach Your Goal?</div>
+                <div style="color: #e0e0e0;">
+                  <strong style="color: #ff6699;">What it shows:</strong><br>
+                  If you keep playing at your current pace, will you hit your goal by the end of the season?
                   <br><br>
-                  <strong style="color: white;">Example:</strong><br>
-                  Current: 300 points in 10 days<br>
-                  Goal: 2400 points<br>
-                  Daily Avg: 300 ÷ 10 = 30 pts/day<br>
-                  Projected total: 30 × 98 days = 2940 pts<br>
-                  <span style="color: #ff3366;">Completion: 2700 ÷ 2400 = 113%</span>
+                  <strong style="color: #ff6699;">How we calculate it:</strong><br>
+                  1. We look at how many points you earn per day on average<br>
+                  2. We multiply that by the total season days<br>
+                  3. We compare that to your goal
                   <br><br>
-                  <em>Shows if you'll reach your goal at current pace.</em>
+                  <strong style="color: #ff6699;">Example:</strong><br>
+                  You average <span style="color: #fff;">30 points/day</span><br>
+                  Season is <span style="color: #fff;">98 days</span> = 2,940 total points<br>
+                  Goal is <span style="color: #fff;">2,400 points</span><br>
+                  <span style="color: #ff3366; font-weight: 700;">2,940 ÷ 2,400 = 122%</span> 🎉
+                  <br><br>
+                  <em style="color: #888;">Over 100% = You're on track!</em>
                 </div>
               </div>
             </div>
@@ -2134,48 +2187,25 @@
           <div class="stat-card half-height" style="position: relative;">
             <div class="stat-icon" style="font-size: 2em; margin-bottom: 10px;">📆</div>
             <div class="stat-label">Est. Completion Date
-              <span class="tooltip-icon" style="cursor: help; color: #888; font-size: 0.9em;">ⓘ</span>
-              <div class="tooltip-content" data-tooltip-type="completion" style="
-                display: none;
-                position: absolute;
-                background: rgb(0, 0, 0) !important;
-                background-color: rgb(0, 0, 0) !important;
-                opacity: 1 !important;
-                border: 1px solid #ff3366;
-                border-radius: 8px;
-                padding: 0;
-                width: 280px;
-                left: 50%;
-                transform: translateX(-50%);
-                bottom: 100%;
-                margin-bottom: 10px;
-                z-index: 999999 !important;
-                text-align: left;
-                font-size: 0.85rem;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-                pointer-events: none;
-                backdrop-filter: none;
-                color: white !important;
-                text-transform: none !important;
-                letter-spacing: normal !important;
-                font-family: inherit !important;
-                overflow: hidden;
-              ">
-                <div style="background: #000000; padding: 15px; position: relative;">
-                  <div style="color: #ff3366; font-weight: 600; margin-bottom: 10px;">How Completion Date Works:</div>
-                <div style="color: #b0b0b0; line-height: 1.6;">
-                  <strong>Formula:</strong><br>
-                  <span style="color: white;">Days to Goal = Points Needed ÷ Daily Average</span><br>
-                  <span style="color: white;">Completion Date = Today + Days to Goal</span>
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-content" data-tooltip-type="completion">
+                <div style="color: #ff3366; font-weight: 700; margin-bottom: 12px; font-size: 1.1rem;">📆 When Will You Reach Your Goal?</div>
+                <div style="color: #e0e0e0;">
+                  <strong style="color: #ff6699;">What it shows:</strong><br>
+                  The date you'll hit your goal if you keep playing at your current pace.
                   <br><br>
-                  <strong style="color: white;">Example:</strong><br>
-                  Need: 2100 points<br>
-                  Daily Avg: 30 pts/day<br>
-                  Days to Goal: 2100 ÷ 30 = 70 days<br>
-                  <span style="color: #ff3366;">Completion: Today + 70 days</span>
+                  <strong style="color: #ff6699;">How we calculate it:</strong><br>
+                  1. Points still needed ÷ your daily average<br>
+                  2. = Days until you reach your goal<br>
+                  3. Add those days to today's date
                   <br><br>
-                  <em>Shows when you'll reach your goal at current pace.</em>
-                </div>
+                  <strong style="color: #ff6699;">Example:</strong><br>
+                  You need <span style="color: #fff;">1,800 more points</span><br>
+                  You average <span style="color: #fff;">30 points/day</span><br>
+                  1,800 ÷ 30 = <span style="color: #fff;">60 days</span><br>
+                  <span style="color: #ff3366; font-weight: 700;">Goal date: 60 days from now!</span>
+                  <br><br>
+                  <em style="color: #888;">Green = Before season ends ✓</em>
                 </div>
               </div>
             </div>
@@ -2313,8 +2343,25 @@
         </script>
 
         <!-- Progress Section -->
-        <div class="progress-section scroll-reveal">
-        <h2 id="progressTitle">Progress to Goal</h2>
+        <div class="progress-section scroll-reveal" style="position: relative;">
+        <h2 id="progressTitle" style="display: inline-flex; align-items: center; gap: 8px;">
+          Progress to Goal
+          <span class="tooltip-icon">?</span>
+          <div class="tooltip-content" data-tooltip-type="progress">
+            <div style="color: #ff3366; font-weight: 700; margin-bottom: 12px; font-size: 1.1rem;">📊 How This Progress Bar Works</div>
+            <div style="color: #e0e0e0;">
+              <strong style="color: #ff6699;">What it shows:</strong><br>
+              How close you are to your goal rank right now.
+              <br><br>
+              <strong style="color: #ff6699;">The math:</strong><br>
+              Your Points ÷ Goal Points × 100
+              <br><br>
+              <strong style="color: #ff6699;">Example:</strong><br>
+              If you have <span style="color: #fff;">600 points</span> and your goal is <span style="color: #fff;">2400 points</span>:<br>
+              600 ÷ 2400 = <span style="color: #ff3366; font-weight: 700;">25%</span> complete!
+            </div>
+          </div>
+        </h2>
         <div class="progress-container">
           <div id="progressBar" class="progress-bar" style="width: 0%"></div>
           <div id="progressText" class="progress-text">0%</div>
@@ -2636,98 +2683,72 @@
         checkFirstTimeUser();
         addInteractiveHighlights();
 
-        // Add tooltip hover functionality for all tooltips
-        const tooltipIcons = document.querySelectorAll('.tooltip-icon');
-
-        tooltipIcons.forEach(icon => {
-          const tooltipContent = icon.nextElementSibling;
-
-          if (tooltipContent && tooltipContent.classList.contains('tooltip-content')) {
-            // Store original parent for restoration
-            const originalParent = tooltipContent.parentElement;
-
-            icon.addEventListener('mouseenter', () => {
-              // Hide all other tooltips first
-              document.querySelectorAll('.tooltip-content').forEach(t => {
-                if (t !== tooltipContent) t.style.display = 'none';
-              });
-
-              // Special handling for tooltips - move to body to escape parent stacking contexts
-              if (tooltipContent.dataset.tooltipType === 'completion' || tooltipContent.dataset.tooltipType === 'projected') {
-                // Move tooltip to body to escape all parent stacking contexts
-                document.body.appendChild(tooltipContent);
-
-                // Position it near the icon with responsive positioning
-                const rect = icon.getBoundingClientRect();
-                const viewportWidth = window.innerWidth;
-                const tooltipWidth = 280;
-
-                tooltipContent.style.position = 'fixed';
-
-                // Horizontal positioning - keep on screen
-                let leftPos = rect.left + rect.width/2 - tooltipWidth/2;
-                if (leftPos < 10) leftPos = 10;
-                if (leftPos + tooltipWidth > viewportWidth - 10) {
-                  leftPos = viewportWidth - tooltipWidth - 10;
-                }
-                tooltipContent.style.left = leftPos + 'px';
-
-                // Always show below the icon for both tooltips
-                tooltipContent.style.top = (rect.bottom + 10) + 'px';
-                tooltipContent.style.bottom = 'auto';
-
-                // Check if tooltip would go off bottom of screen
-                const spaceBelow = window.innerHeight - rect.bottom;
-                if (spaceBelow < 350) {
+        // Simple tooltip system - click to toggle
+        function initTooltips() {
+          const icons = document.querySelectorAll('.tooltip-icon');
+          console.log('Found tooltip icons:', icons.length);
+          
+          icons.forEach((icon, index) => {
+            const tooltip = icon.nextElementSibling;
+            console.log('Icon', index, 'tooltip:', tooltip?.classList?.contains('tooltip-content'));
+            
+            if (tooltip && tooltip.classList.contains('tooltip-content')) {
+              // Click handler
+              icon.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Close all other tooltips
+                document.querySelectorAll('.tooltip-content.active').forEach(t => {
+                  if (t !== tooltip) t.classList.remove('active');
+                });
+                
+                // Toggle this tooltip
+                const isActive = tooltip.classList.contains('active');
+                
+                if (!isActive) {
+                  // Position tooltip
+                  const iconRect = icon.getBoundingClientRect();
+                  const vw = window.innerWidth;
+                  const vh = window.innerHeight;
+                  
+                  // Move to body for proper positioning
+                  document.body.appendChild(tooltip);
+                  
+                  // Calculate position - center horizontally
+                  let left = Math.max(10, Math.min(vw - 290, iconRect.left + iconRect.width/2 - 140));
+                  let top = iconRect.bottom + 10;
+                  
                   // If not enough space below, show above
-                  tooltipContent.style.top = 'auto';
-                  tooltipContent.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
+                  if (top + 300 > vh) {
+                    top = iconRect.top - 310;
+                    if (top < 10) top = 10;
+                  }
+                  
+                  tooltip.style.left = left + 'px';
+                  tooltip.style.top = top + 'px';
+                  tooltip.classList.add('active');
+                  
+                  console.log('Showing tooltip at:', left, top);
+                } else {
+                  tooltip.classList.remove('active');
                 }
-
-                tooltipContent.style.transform = 'none';
-              }
-
-              tooltipContent.style.display = 'block';
-              tooltipContent.style.pointerEvents = 'none';
-
-              // Force solid background
-              tooltipContent.style.background = 'rgb(0, 0, 0)';
-              tooltipContent.style.backgroundColor = 'rgb(0, 0, 0)';
-              tooltipContent.style.opacity = '1';
-              tooltipContent.style.zIndex = '999999';
-
-              // Remove any filters
-              tooltipContent.style.backdropFilter = 'none';
-              tooltipContent.style.filter = 'none';
-              tooltipContent.style.mixBlendMode = 'normal';
-              tooltipContent.style.isolation = 'isolate';
-            });
-
-            icon.addEventListener('mouseleave', () => {
-              tooltipContent.style.display = 'none';
-
-              // Move tooltip back to original parent when hidden
-              if ((tooltipContent.dataset.tooltipType === 'completion' || tooltipContent.dataset.tooltipType === 'projected') && originalParent) {
-                originalParent.appendChild(tooltipContent);
-                // Reset positioning styles
-                tooltipContent.style.position = '';
-                tooltipContent.style.left = '';
-                tooltipContent.style.top = '';
-                tooltipContent.style.bottom = '';
-                tooltipContent.style.transform = '';
-              }
-            });
-          }
-        });
-
-        // Hide tooltips on click outside
-        document.addEventListener('click', (e) => {
-          if (!e.target.classList.contains('tooltip-icon')) {
-            document.querySelectorAll('.tooltip-content').forEach(t => {
-              t.style.display = 'none';
-            });
-          }
-        });
+              });
+            }
+          });
+          
+          // Close on click outside
+          document.addEventListener('click', function(e) {
+            if (!e.target.closest('.tooltip-icon') && !e.target.closest('.tooltip-content')) {
+              document.querySelectorAll('.tooltip-content.active').forEach(t => {
+                t.classList.remove('active');
+              });
+            }
+          });
+        }
+        
+        // Run after DOM is ready
+        initTooltips();
       });
 
       function initializeApp() {
