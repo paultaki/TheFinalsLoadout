@@ -882,11 +882,25 @@
                     category: "Gadget",
                     class: "All",
                     impact: "Low",
-                    details: "Outer damage radius increased from 5m to 5.5m.",
+                    details: "Outer damage radius increased from 5m to 5.5m. Max damage radius increased from 2.5m to 2.75m.",
                     values: [
-                        { stat: "Outer Radius", before: "5m", after: "5.5m" }
+                        { stat: "Outer Radius", before: "5m", after: "5.5m" },
+                        { stat: "Max Damage Radius", before: "2.5m", after: "2.75m" }
                     ],
-                    reasoning: "Slightly more forgiving for chip damage."
+                    reasoning: "Slightly more forgiving for chip damage and improved consistency."
+                },
+                {
+                    id: "gas-grenade",
+                    title: "Gas Grenade",
+                    type: "Buff",
+                    category: "Gadget",
+                    class: "All",
+                    impact: "Low",
+                    details: "Cooldown reduced from 30s to 24s.",
+                    values: [
+                        { stat: "Cooldown", before: "30s", after: "24s" }
+                    ],
+                    reasoning: "More frequent area denial and vision control."
                 },
                 {
                     id: "pyro-grenade",
@@ -900,6 +914,19 @@
                         { stat: "Cooldown", before: "30s", after: "24s" }
                     ],
                     reasoning: "Increases area denial frequency."
+                },
+                {
+                    id: "pyro-mine",
+                    title: "Pyro Mine",
+                    type: "Nerf",
+                    category: "Gadget",
+                    class: "Heavy",
+                    impact: "Medium",
+                    details: "Explosive damage reduced from 80 to 55.",
+                    values: [
+                        { stat: "Explosive Damage", before: "80", after: "55" }
+                    ],
+                    reasoning: "Reduces burst damage potential while maintaining area denial capabilities."
                 },
 
                 // New Content
