@@ -116,6 +116,32 @@
             letter-spacing: 0.5px;
         }
 
+        .header-nav {
+            display: flex;
+            gap: 24px;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-nav .nav-link {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        .header-nav .nav-link:hover {
+            color: var(--color-text);
+        }
+
+        .header-nav .nav-link.active {
+            color: var(--color-accent);
+        }
+
         /* Meta TLDR Card */
         .meta-tldr-card {
             background: linear-gradient(135deg, var(--color-accent) 0%, #c41e2e 100%);
@@ -1301,6 +1327,12 @@ Full notes: ${window.location.href}`;
                     <div className="site-header">
                         <div className="site-header-content">
                             <div className="site-title">THE FINALS LOADOUT</div>
+                            <nav className="header-nav">
+                                <a href="/" className="nav-link">LOADOUT GENERATOR</a>
+                                <a href="/ragequit/" className="nav-link">RAGE QUIT</a>
+                                <a href="/wt-progress/" className="nav-link">WORLD TOUR S9</a>
+                                <a href="/patch-notes/" className="nav-link active">PATCH NOTES</a>
+                            </nav>
                             <div className="version-selector">
                                 <div className="current-version">
                                     <div className="version-label">Latest Patch</div>
@@ -1335,6 +1367,26 @@ Full notes: ${window.location.href}`;
                             })}
                         </div>
                     </div>
+
+                    <footer style={{
+                        textAlign: 'center',
+                        padding: '3rem 1rem 2rem',
+                        marginTop: '4rem',
+                        borderTop: '1px solid var(--color-border)',
+                        color: 'var(--color-text-muted)',
+                        fontSize: '14px'
+                    }}>
+                        <p style={{margin: '0 0 0.5rem 0'}}>
+                            © 2025 TheFinalsLoadout.com | Created by{' '}
+                            <a href="https://www.paultakisaki.com/" rel="author" style={{color: '#00f0c0', textDecoration: 'none'}}>
+                                Paul Takisaki
+                            </a>
+                        </p>
+                        <div style={{display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', fontSize: '12px', marginTop: '0.5rem'}}>
+                            <a href="/legal/" style={{color: '#00f0c0', textDecoration: 'none'}}>Legal Disclaimer</a>
+                            <a href="https://thefinalsloadout.com/feedback" style={{color: '#ffd700', textDecoration: 'none'}}>📝 Submit Feedback</a>
+                        </div>
+                    </footer>
                 </>
             );
         }
