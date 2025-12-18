@@ -1,1623 +1,1314 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE FINALS Season 9: Dragon Rising - Patch Notes | The Finals Loadout</title>
+    <meta name="description" content="Season 9 Dragon Rising meta changes, weapon balancing, and gameplay updates for THE FINALS. Quick reference for competitive players.">
 
-    <!-- SEO Meta Tags -->
-    <title>The Finals Patch Notes | Latest Updates & Balance Changes</title>
-    <meta name="description" content="Stay updated with the latest patch notes, weapon balance changes, and game updates for The Finals. Track buffs, nerfs, and new content." />
-    <meta name="keywords" content="The Finals patch notes, weapon balance, game updates, buffs, nerfs" />
-    <meta name="author" content="Paul Takisaki" />
-    <meta name="robots" content="index, follow" />
-
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="The Finals Patch Notes | Latest Updates" />
-    <meta property="og:description" content="Stay updated with the latest patch notes and balance changes for The Finals." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://thefinalsloadout.com/patch-notes/" />
-    <meta property="og:image" content="https://thefinalsloadout.com/patch-notes/images/TFL social 1200x630.png" />
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://thefinalsloadout.com/patch-notes/" />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
-
-    <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVGKYFGZ1Z"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-GVGKYFGZ1Z');
-    </script>
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'bg-primary': '#0a0a0a',
-                        'bg-card': '#111111',
-                        'border-primary': '#1a1a1a',
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Custom Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <!-- React from CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        @keyframes fadeInUp {
+        :root {
+            --color-bg: #0a0e17;
+            --color-bg-secondary: #131926;
+            --color-bg-tertiary: #1a2332;
+            --color-accent: #ff4655;
+            --color-accent-dim: #ff465520;
+            --color-text: #e4e7eb;
+            --color-text-muted: #94a3b8;
+            --color-border: #2d3748;
+
+            --color-buff: #22c55e;
+            --color-buff-bg: #22c55e20;
+            --color-nerf: #ef4444;
+            --color-nerf-bg: #ef444420;
+            --color-rework: #f59e0b;
+            --color-rework-bg: #f59e0b20;
+            --color-new: #3b82f6;
+            --color-new-bg: #3b82f620;
+            --color-rule: #8b5cf6;
+            --color-rule-bg: #8b5cf620;
+            --color-fix: #64748b;
+            --color-fix-bg: #64748b20;
+
+            --impact-high: #ef4444;
+            --impact-medium: #f59e0b;
+            --impact-low: #6b7280;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            padding-bottom: 100px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .site-header {
+            background: var(--color-bg-secondary);
+            border-bottom: 2px solid var(--color-accent);
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .site-header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .site-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .version-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .current-version {
+            text-align: right;
+        }
+
+        .version-label {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .version-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .status-badge {
+            background: var(--color-new);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Meta TLDR Card */
+        .meta-tldr-card {
+            background: linear-gradient(135deg, var(--color-accent) 0%, #c41e2e 100%);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meta-tldr-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .tldr-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .season-badge {
+            background: rgba(0,0,0,0.3);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .tldr-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            flex: 1;
+        }
+
+        .tldr-content {
+            margin-bottom: 24px;
+        }
+
+        .impact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .impact-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .tldr-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--color-accent);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(0,0,0,0.3);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0,0,0,0.4);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: var(--color-bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-toggle {
+            padding: 8px 16px;
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .filter-toggle:hover {
+            background: var(--color-bg);
+            color: var(--color-text);
+        }
+
+        .filter-toggle.active {
+            background: var(--color-accent);
+            color: white;
+            border-color: var(--color-accent);
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px 16px;
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            color: var(--color-text);
+            font-size: 14px;
+        }
+
+        .search-input::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        /* Change Card */
+        .change-card {
+            background: var(--color-bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--color-border);
+            transition: all 0.2s;
+        }
+
+        .change-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .change-card.impact-high {
+            border-left-color: var(--impact-high);
+        }
+
+        .change-card.impact-medium {
+            border-left-color: var(--impact-medium);
+        }
+
+        .change-card.impact-low {
+            border-left-color: var(--impact-low);
+        }
+
+        .change-card.highlight-flash {
+            animation: highlight 2s ease-out;
+        }
+
+        @keyframes highlight {
+            0%, 100% { background: var(--color-bg-secondary); }
+            50% { background: var(--color-accent-dim); }
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .tag-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag-buff { background: var(--color-buff-bg); color: var(--color-buff); }
+        .tag-nerf { background: var(--color-nerf-bg); color: var(--color-nerf); }
+        .tag-rework { background: var(--color-rework-bg); color: var(--color-rework); }
+        .tag-new { background: var(--color-new-bg); color: var(--color-new); }
+        .tag-rule { background: var(--color-rule-bg); color: var(--color-rule); }
+        .tag-fix { background: var(--color-fix-bg); color: var(--color-fix); }
+
+        .copy-link-btn {
+            padding: 6px 12px;
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .copy-link-btn:hover {
+            background: var(--color-bg);
+            color: var(--color-text);
+        }
+
+        .change-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 12px;
+        }
+
+        .value-change {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            flex-wrap: wrap;
+        }
+
+        .value-before {
+            color: var(--color-text-muted);
+            text-decoration: line-through;
+        }
+
+        .value-arrow {
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        .value-after {
+            color: var(--color-accent);
+        }
+
+        .change-details {
+            color: var(--color-text-muted);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .developer-note {
+            background: var(--color-bg-tertiary);
+            border-left: 3px solid var(--color-accent);
+            padding: 12px 16px;
+            border-radius: 6px;
+            color: var(--color-text-muted);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* Collapsible Section */
+        .collapsible-section {
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            background: var(--color-bg-secondary);
+            padding: 20px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .section-header:hover {
+            background: var(--color-bg-tertiary);
+        }
+
+        .section-icon {
+            font-size: 24px;
+        }
+
+        .section-info {
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-top: 4px;
+        }
+
+        .section-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .change-count {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        .impact-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .impact-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .impact-dot.high { background: var(--impact-high); }
+        .impact-dot.medium { background: var(--impact-medium); }
+        .impact-dot.low { background: var(--impact-low); }
+
+        .section-chevron {
+            color: var(--color-text-muted);
+            transition: transform 0.3s;
+        }
+
+        .section-header.expanded .section-chevron {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .section-content.expanded {
+            max-height: 10000px;
+            padding-top: 16px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-accent);
+            border-radius: 8px;
+            padding: 16px 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
             from {
+                transform: translateY(100px);
                 opacity: 0;
-                transform: translateY(20px);
             }
             to {
-                opacity: 1;
                 transform: translateY(0);
+                opacity: 1;
             }
         }
 
-        .animate-fade-in-up {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-
-        @keyframes subtleGlow {
-            0%, 100% {
-                box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+        /* Responsive */
+        @media (max-width: 768px) {
+            .tldr-title {
+                font-size: 22px;
             }
-            50% {
-                box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
             }
-        }
 
-        .latest-banner {
-            animation: subtleGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes logoGlow {
-            0%, 100% {
-                filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.3));
+            .filter-group {
+                flex-wrap: wrap;
             }
-            50% {
-                filter: drop-shadow(0 0 40px rgba(99, 102, 241, 0.5));
+
+            .search-input {
+                min-width: 100%;
             }
-        }
 
-        .logo-glow {
-            animation: logoGlow 4s ease-in-out infinite;
-        }
-
-        .weapon-card {
-            transition: opacity 0.3s ease;
-        }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #1a1a1a;
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #2a2a2a;
-        }
-
-        /* Image lazy load placeholder */
-        .img-placeholder {
-            background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+            .section-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
         }
     </style>
 </head>
-
-<body class="bg-bg-primary text-white min-h-screen">
-
-    <!-- ========== NAVIGATION ========== -->
-    <!-- Simple Mobile Menu -->
-    <style>
-        /* Hide mobile menu button on desktop */
-        @media (min-width: 769px) {
-            #menuBtn, #simpleMenu, #menuOverlay {
-                display: none !important;
-            }
-        }
-
-        /* Mobile styles */
-        @media (max-width: 768px) {
-            /* Hide desktop nav on mobile */
-            .desktop-nav {
-                display: none !important;
-            }
-            #simpleMenu {
-                position: fixed;
-                top: 0;
-                left: -280px;
-                width: 280px;
-                height: 100vh;
-                background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
-                z-index: 99999;
-                transition: left 0.3s ease;
-                padding-top: 60px;
-                box-shadow: 5px 0 20px rgba(0,0,0,0.7);
-                border-right: 2px solid rgba(255, 51, 102, 0.3);
-            }
-            #simpleMenu.show {
-                left: 0;
-            }
-            #simpleMenu a:hover {
-                background: rgba(255, 51, 102, 0.1);
-                padding-left: 25px;
-            }
-            #menuBtn {
-                position: fixed;
-                top: 10px;
-                left: 10px;
-                z-index: 100000;
-                background: rgba(26, 26, 26, 0.95);
-                color: #ff3366;
-                border: 1px solid rgba(255, 51, 102, 0.3);
-                border-radius: 8px;
-                padding: 10px 12px;
-                cursor: pointer;
-                font-size: 20px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-                transition: all 0.3s;
-            }
-            #menuBtn:hover {
-                background: rgba(255, 51, 102, 0.1);
-                transform: scale(1.1);
-            }
-
-            /* Dark overlay */
-            #menuOverlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0,0,0,0.5);
-                z-index: 99998;
-                display: none;
-            }
-            #menuOverlay.show {
-                display: block;
-            }
-        }
-
-        /* Desktop Navigation */
-        .main-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem 0;
-        }
-
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            padding: 0 1rem;
-        }
-
-        .nav-link {
-            color: #888;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.875rem;
-            letter-spacing: 0.05em;
-            transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-        }
-
-        .nav-link:hover {
-            color: #fff;
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        .nav-link.active {
-            color: #6366f1;
-            background: rgba(99, 102, 241, 0.2);
-        }
-
-        /* Add padding to body to account for fixed nav */
-        body {
-            padding-top: 60px;
-        }
-    </style>
-
-    <button id="menuBtn" onclick="document.getElementById('simpleMenu').classList.toggle('show'); document.getElementById('menuOverlay').classList.toggle('show')">☰</button>
-
-    <div id="menuOverlay" onclick="document.getElementById('simpleMenu').classList.remove('show'); this.classList.remove('show')"></div>
-
-    <div id="simpleMenu">
-        <a href="/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">LOADOUT GENERATOR</a>
-        <a href="/ragequit/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">RAGE QUIT</a>
-        <a href="/patch-notes/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">PATCH NOTES</a>
-        <a href="/meta-weapons/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">META WEAPONS</a>
-        <a href="/wt-progress/" style="display:block;color:white;padding:15px;border-bottom:1px solid #333;text-decoration:none;transition:all 0.3s;">WORLD TOUR</a>
-    </div>
-
-    <!-- Navigation Bar (Desktop) -->
-    <nav class="main-nav desktop-nav">
-        <div class="nav-links desktop-nav-links">
-            <a href="/" class="nav-link">LOADOUT GENERATOR</a>
-            <a href="/ragequit/" class="nav-link">RAGE QUIT</a>
-            <a href="/patch-notes/" class="nav-link active">PATCH NOTES</a>
-            <a href="/meta-weapons/" class="nav-link">META WEAPONS</a>
-            <a href="/wt-progress/" class="nav-link">WORLD TOUR</a>
-        </div>
-    </nav>
-
-    <!-- ========== HERO SECTION ========== -->
-    <section class="relative min-h-screen max-h-screen flex flex-col justify-start items-center px-4 pt-12 pb-12">
-        <!-- Animated Background Grid -->
-        <div class="absolute inset-0 opacity-5">
-            <div class="absolute inset-0" style="background-image: linear-gradient(#6366f1 1px, transparent 1px), linear-gradient(90deg, #6366f1 1px, transparent 1px); background-size: 50px 50px;"></div>
-        </div>
-
-        <div class="relative z-10 max-w-7xl w-full mx-auto">
-            <!-- Logo with Animation -->
-            <div class="flex justify-center mb-8 animate-fade-in-up">
-                <img src="/patch-notes/images/logo-patch-notes.png" alt="Patch Notes" class="max-w-xs w-full h-auto logo-glow">
-            </div>
-
-            <!-- Latest Patch Banner -->
-            <div class="latest-banner max-w-4xl mx-auto mb-12 bg-bg-card border border-indigo-500 rounded-xl p-6 animate-fade-in-up" style="animation-delay: 0.1s;">
-                <div class="flex items-center justify-between flex-wrap gap-4">
-                    <div>
-                        <p class="text-sm text-gray-400 mb-1">Latest Update</p>
-                        <h2 class="text-3xl font-bold">v8.4.0 - October 9, 2025</h2>
-                    </div>
-                    <span class="px-4 py-2 bg-indigo-500/20 text-indigo-400 rounded-full text-sm font-semibold">LIVE NOW</span>
-                </div>
-            </div>
-
-            <!-- Quick Summary Cards: 6 Most Impactful Changes -->
-            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-
-                <!-- BFR Titan Nerf (8.3.0) -->
-                <div class="bg-bg-card border border-border-primary rounded-xl p-5 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 animate-fade-in-up" style="animation-delay: 0.2s;">
-                    <div class="flex items-start gap-4 relative">
-                        <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 2</span>
-                        <img src="images/BFR_Titan.webp" alt="BFR Titan" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-bold text-lg mb-1 truncate">BFR Titan</h3>
-                            <span class="inline-block px-2 py-1 bg-red-500/20 text-red-500 rounded text-xs font-semibold mb-2">NERF</span>
-                            <p class="text-sm text-gray-400">Damage: <span class="font-mono">98 → 90</span></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pike-556 Nerf (8.0.0) -->
-                <div class="bg-bg-card border border-border-primary rounded-xl p-5 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 animate-fade-in-up" style="animation-delay: 0.3s;">
-                    <div class="flex items-start gap-4 relative">
-                        <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                        <img src="images/Pike-556.webp" alt="Pike-556" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-bold text-lg mb-1 truncate">Pike-556</h3>
-                            <span class="inline-block px-2 py-1 bg-red-500/20 text-red-500 rounded text-xs font-semibold mb-2">NERF</span>
-                            <p class="text-sm text-gray-400">Damage: <span class="font-mono">50 → 48</span></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Smoke Grenade Nerf (8.3.0) -->
-                <div class="bg-bg-card border border-border-primary rounded-xl p-5 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 animate-fade-in-up" style="animation-delay: 0.4s;">
-                    <div class="flex items-start gap-4 relative">
-                        <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 2</span>
-                        <img src="images/Smoke_Grenade.webp" alt="Smoke Grenade" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-bold text-lg mb-1 truncate">Smoke Grenade</h3>
-                            <span class="inline-block px-2 py-1 bg-red-500/20 text-red-500 rounded text-xs font-semibold mb-2">NERF</span>
-                            <p class="text-sm text-gray-400">Duration: <span class="font-mono">15s → 9s</span></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Healing Beam Buff (8.0.0) -->
-                <div class="bg-bg-card border border-border-primary rounded-xl p-5 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 animate-fade-in-up" style="animation-delay: 0.5s;">
-                    <div class="flex items-start gap-4 relative">
-                        <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                        <img src="images/Healing_Beam.webp" alt="Healing Beam" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-bold text-lg mb-1 truncate">Healing Beam</h3>
-                            <span class="inline-block px-2 py-1 bg-green-500/20 text-green-500 rounded text-xs font-semibold mb-2">BUFF</span>
-                            <p class="text-sm text-gray-400">Rate: <span class="font-mono">40 → 46/s</span></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Thermal Vision Disabled (8.0.0) -->
-                <div class="bg-bg-card border border-border-primary rounded-xl p-5 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 animate-fade-in-up" style="animation-delay: 0.6s;">
-                    <div class="flex items-start gap-4 relative">
-                        <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                        <img src="images/Thermal_Vision.webp" alt="Thermal Vision" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-bold text-lg mb-1 truncate">Thermal Vision</h3>
-                            <span class="inline-block px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs font-semibold mb-2">DISABLED</span>
-                            <p class="text-sm text-gray-400">Removed for rework</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dematerializer Rework (8.0.0) -->
-                <div class="bg-bg-card border border-border-primary rounded-xl p-5 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 animate-fade-in-up" style="animation-delay: 0.7s;">
-                    <div class="flex items-start gap-4 relative">
-                        <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                        <img src="images/Dematerializer.webp" alt="Dematerializer" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-bold text-lg mb-1 truncate">Dematerializer</h3>
-                            <span class="inline-block px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs font-semibold mb-2">REWORK</span>
-                            <p class="text-sm text-gray-400">Charges: <span class="font-mono">3 → 2</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Scroll Indicator -->
-            <div class="text-center animate-fade-in-up" style="animation-delay: 0.8s;">
-                <p class="text-gray-400 text-sm mb-2">Scroll for full details</p>
-                <svg class="w-6 h-6 mx-auto animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                </svg>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== STICKY FILTER BAR ========== -->
-    <div id="filterBar" class="sticky top-0 z-50 bg-bg-primary/95 backdrop-blur-md border-b border-border-primary transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 py-3 lg:py-4">
-            <!-- Change Type Filters (Row 1) -->
-            <div class="flex gap-2 flex-wrap justify-center mb-3">
-                <button onclick="filterByType('all')" class="type-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-gray-700 text-white">
-                    All
-                </button>
-                <button onclick="filterByType('buff')" class="type-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400 hover:text-green-500 hover:border-green-500">
-                    Buffs
-                </button>
-                <button onclick="filterByType('nerf')" class="type-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400 hover:text-red-500 hover:border-red-500">
-                    Nerfs
-                </button>
-                <button onclick="filterByType('adjustment')" class="type-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400 hover:text-blue-500 hover:border-blue-500">
-                    Adjustments
-                </button>
-                <button onclick="filterByType('disabled')" class="type-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400 hover:text-gray-500 hover:border-gray-500">
-                    Disabled
-                </button>
-                <button onclick="filterByType('rework')" class="type-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400 hover:text-purple-500 hover:border-purple-500">
-                    Rework
-                </button>
-            </div>
-
-            <!-- Category Tabs (Row 2) -->
-            <div class="flex gap-2 flex-wrap justify-center mb-3">
-                <button onclick="filterByCategory('all')" class="category-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-indigo-500/20 text-indigo-400">
-                    All
-                </button>
-                <button onclick="filterByCategory('weapons')" class="category-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                    Weapons
-                </button>
-                <button onclick="filterByCategory('gadgets')" class="category-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                    Gadgets
-                </button>
-                <button onclick="filterByCategory('specializations')" class="category-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                    Specializations
-                </button>
-            </div>
-
-            <!-- Class, Patch & Search (Row 3 - Desktop buttons, Mobile dropdowns) -->
-            <div class="flex flex-col md:flex-row gap-3 items-center justify-center">
-                <!-- Class Filter - Desktop buttons / Mobile dropdown -->
-                <div class="w-full md:w-auto">
-                    <!-- Mobile Dropdown -->
-                    <select id="classSelect" onchange="filterByClass(this.value)" class="md:hidden w-full px-4 py-2 bg-bg-card border border-border-primary rounded-lg text-white focus:outline-none focus:border-indigo-500 transition-colors">
-                        <option value="all">All Classes</option>
-                        <option value="light">Light</option>
-                        <option value="medium">Medium</option>
-                        <option value="heavy">Heavy</option>
-                    </select>
-                    <!-- Desktop Buttons -->
-                    <div class="hidden md:flex gap-2 flex-wrap justify-center">
-                        <button onclick="filterByClass('all')" class="class-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-indigo-500/20 text-indigo-400">
-                            All Classes
-                        </button>
-                        <button onclick="filterByClass('light')" class="class-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                            Light
-                        </button>
-                        <button onclick="filterByClass('medium')" class="class-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                            Medium
-                        </button>
-                        <button onclick="filterByClass('heavy')" class="class-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                            Heavy
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Patch Filter - Desktop buttons / Mobile dropdown -->
-                <div class="w-full md:w-auto">
-                    <!-- Mobile Dropdown -->
-                    <select id="patchSelect" onchange="filterByPatch(this.value)" class="md:hidden w-full px-4 py-2 bg-bg-card border border-border-primary rounded-lg text-white focus:outline-none focus:border-indigo-500 transition-colors">
-                        <option value="all">All Patches</option>
-                        <option value="8.4.0">v8.4.0</option>
-                        <option value="8.3.0">v8.3.0</option>
-                        <option value="8.0.0">v8.0.0</option>
-                    </select>
-                    <!-- Desktop Buttons -->
-                    <div class="hidden md:flex gap-2 flex-wrap justify-center">
-                        <button onclick="filterByPatch('all')" class="patch-filter active px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-indigo-500/20 text-indigo-400">
-                            All Patches
-                        </button>
-                        <button onclick="filterByPatch('8.4.0')" class="patch-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                            8.4.0
-                        </button>
-                        <button onclick="filterByPatch('8.3.0')" class="patch-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                            8.3.0
-                        </button>
-                        <button onclick="filterByPatch('8.0.0')" class="patch-filter px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-bg-card border border-border-primary text-gray-400">
-                            8.0.0
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Search Input -->
-                <div class="relative w-full md:w-64">
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Search..."
-                        class="w-full px-4 py-2 bg-bg-card border border-border-primary rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
-                    />
-                    <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== MAIN CONTENT ========== -->
-    <section class="max-w-7xl mx-auto px-4 py-12">
-
-        <!-- No Results Message -->
-        <div id="noResults" class="hidden text-center py-12">
-            <svg class="w-16 h-16 mx-auto text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <h3 class="text-2xl font-bold mb-2 text-gray-400">No changes found</h3>
-            <p class="text-gray-500">Try adjusting your filters or search query</p>
-        </div>
-
-
-
-<!-- ====== START: NEW PATCH CONTENT (8.6.1 + 8.6.0) ====== -->
-
-<!-- 8.6.1 HOTFIX -->
-<section class="patch-section mb-16" data-patch="8.6.1">
-      <h2 class="text-4xl font-black mb-2 tracking-tight">Hotfix v8.6.1 - October 24, 2025</h2>
-  <p class="text-gray-400 mb-6">Targeted fixes for Mid-Season update</p>
-
-  <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-       data-type="adjustment"
-       data-class="all"
-       data-patch="8.6.1"
-       data-category="bugfix"
-       data-name="hotfix 8.6.1">
-    <div class="flex items-start gap-4 mb-4 relative">
-      <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 24</span>
-      <img src="/images/patch-logo.webp" alt="Hotfix 8.6.1" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-      <div class="flex-1">
-        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-          <h4 class="text-xl font-bold">Crash & Social Toggle Fix</h4>
-          <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-sm font-semibold">ADJUSTMENT</span>
-        </div>
-        <span class="inline-block px-2 py-1 bg-indigo-500/20 text-indigo-400 rounded text-xs font-semibold">ALL</span>
-      </div>
-    </div>
-
-    <div class="space-y-3">
-      <div class="p-4 bg-bg-primary rounded-lg">
-        <p class="text-sm text-gray-400 mb-2 font-semibold">Stability</p>
-        <p class="text-sm leading-relaxed">Fixed a crash introduced in the Mid-Season update.</p>
-      </div>
-      <div class="p-4 bg-bg-primary rounded-lg">
-        <p class="text-sm text-gray-400 mb-2 font-semibold">Social Setting</p>
-        <p class="text-sm leading-relaxed">Fixed “Open to Friends” state not persisting correctly between sessions.</p>
-      </div>
-      <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-        <p class="text-sm text-gray-400">Official: Hotfix 8.6.1 (Oct 24, 2025).</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 8.6.0 MID-SEASON -->
-<div class="patch-section mb-16" data-patch="8.6.0"> 
-          <h2 class="text-4xl font-black mb-2 tracking-tight">v8.6.0 (Mid-Season) - October 23, 2025</h2>
-  <p class="text-gray-400 mb-8">Ghoul Rush event • Haunted Harvest collection • Discord parties • Instant Replays upgrade</p>
-
-  <!-- New Mode: Ghoul Rush -->
-  <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-       data-type="adjustment"
-       data-class="all"
-       data-patch="8.6.0"
-       data-category="modes"
-       data-name="ghoul rush">
-    <div class="flex items-start gap-4 mb-4 relative">
-      <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 23</span>
-      <img src="/images/roulette.webp" alt="Ghoul Rush" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-      <div class="flex-1">
-        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-          <h4 class="text-xl font-bold">New LTM • Ghoul Rush (Free-For-All)</h4>
-          <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-sm font-semibold">MODE</span>
-        </div>
-        <span class="inline-block px-2 py-1 bg-indigo-500/20 text-indigo-400 rounded text-xs font-semibold">ALL</span>
-      </div>
-    </div>
-    <div class="space-y-3">
-      <div class="p-4 bg-bg-primary rounded-lg">
-        <p class="text-sm text-gray-400 mb-2 font-semibold">Rules</p>
-        <p class="text-sm leading-relaxed">
-          Start as a Survivor; when eliminated, respawn as a <b>Ghoul</b> for the rest of the round. Fixed loadouts; three rounds per match.
-        </p>
-      </div>
-      <div class="p-4 bg-bg-primary rounded-lg">
-        <p class="text-sm text-gray-400 mb-2 font-semibold">Map & Scoring</p>
-        <p class="text-sm leading-relaxed">
-          Played on ALFA-ACTA P.E.A.C.E. Center. Survivors earn by surviving/elims; Ghouls earn by eliminating Survivors.
-        </p>
-      </div>
-      <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500"><p class="text-sm text-gray-400">Mid-Season mode details.</p></div>
-    </div>
-  </div>
-
-  <!-- Event: Haunted Harvest -->
-  <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-       data-type="adjustment"
-       data-class="all"
-       data-patch="8.6.0"
-       data-category="modes"
-       data-name="haunted harvest">
-    <div class="flex items-start gap-4 mb-4 relative">
-      <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 23</span>
-      <img src="/images/patch-logo.webp" alt="Haunted Harvest" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-      <div class="flex-1">
-        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-          <h4 class="text-xl font-bold">Event • The Haunted Harvest (14 days)</h4>
-          <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-sm font-semibold">EVENT</span>
-        </div>
-        <span class="inline-block px-2 py-1 bg-indigo-500/20 text-indigo-400 rounded text-xs font-semibold">ALL</span>
-      </div>
-    </div>
-    <div class="space-y-3">
-      <div class="p-4 bg-bg-primary rounded-lg">
-        <p class="text-sm text-gray-400 mb-2 font-semibold">Pumpkins & Rewards</p>
-        <p class="text-sm leading-relaxed">Extra daily contract unlocks a pumpkin reward. Miss a day and one pumpkin <b>rots</b> (purchase-only). Unlock all to get <b>Legendary Swamp Formal</b>.</p>
-      </div>
-      <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500"><p class="text-sm text-gray-400">Mid-Season event details.</p></div>
-    </div>
-  </div>
-
-  <!-- Modes: TDM & Power Shift -->
-  <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-       data-type="adjustment"
-       data-class="all"
-       data-patch="8.6.0"
-       data-category="modes"
-       data-name="tdm power shift">
-    <div class="flex items-start gap-4 mb-4 relative">
-      <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 23</span>
-      <img src="/images/random_active.webp" alt="TDM / Power Shift" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-      <div class="flex-1">
-        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-          <h4 class="text-xl font-bold">Mode Updates • Team Deathmatch & Power Shift</h4>
-          <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-sm font-semibold">MODES</span>
-        </div>
-      </div>
-    </div>
-    <div class="space-y-3">
-      <div class="p-4 bg-bg-primary rounded-lg">
-        <p class="text-sm text-gray-400 mb-2 font-semibold">Team Deathmatch</p>
-        <p class="text-sm leading-relaxed"><b>Defibrillators</b> and friendly revive statues disabled for faster pacing.</p>
-      </div>
-      <div class="p-4 bg-bg-primary rounded-lg">
-        <p class="text-sm text-gray-400 mb-2 font-semibold">Power Shift</p>
-        <p class="text-sm leading-relaxed"><b>Nozomi/Citadel</b> added to the map pool; Alien Invasion event disabled for this mode.</p>
-      </div>
-      <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500"><p class="text-sm text-gray-400">Mid-Season mode adjustments.</p></div>
-    </div>
-  </div>
-
-  <!-- Social: Discord parties & Embark ID -->
-  <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-       data-type="adjustment"
-       data-class="all"
-       data-patch="8.6.0"
-       data-category="social"
-       data-name="discord parties embark id">
-    <div class="flex items-start gap-4 mb-4 relative">
-      <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 23</span>
-      <img src="/images/social1080x1080.png" alt="Discord Parties" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-      <div class="flex-1">
-        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-          <h4 class="text-xl font-bold">Social • Discord Integration & Parties</h4>
-          <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-sm font-semibold">SOCIAL</span>
-        </div>
-      </div>
-    </div>
-    <div class="space-y-3">
-      <div class="p-4 bg-bg-primary rounded-lg">
-        <p class="text-sm text-gray-400 mb-2 font-semibold">Connect Discord</p>
-        <p class="text-sm leading-relaxed">Settings → Social → Account. Works on Steam & Xbox (incl. Xbox on PC). <b>Not on PlayStation.</b></p>
-      </div>
-      <div class="p-4 bg-bg-primary rounded-lg">
-        <p class="text-sm text-gray-400 mb-2 font-semibold">Parties & Presence</p>
-        <p class="text-sm leading-relaxed">Invite/join from Discord DMs; unified friends list; updated invite icon; change Embark ID in-game (30-day cooldown).</p>
-      </div>
-      <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500"><p class="text-sm text-gray-400">Mid-Season social features.</p></div>
-    </div>
-  </div>
-
-  <!-- Replays: POV + slow-mo -->
-  <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-       data-type="adjustment"
-       data-class="all"
-       data-patch="8.6.0"
-       data-category="modes"
-       data-name="instant replays pov slowmo">
-    <div class="flex items-start gap-4 mb-4 relative">
-      <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 23</span>
-      <img src="/images/the-finals-logo.webp" alt="Instant Replays" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-      <div class="flex-1">
-        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-          <h4 class="text-xl font-bold">Instant Replays • Projectile/Turret POV + Slow-Mo</h4>
-          <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-sm font-semibold">REPLAY</span>
-        </div>
-      </div>
-    </div>
-    <div class="space-y-3">
-      <div class="p-4 bg-bg-primary rounded-lg">
-        <p class="text-sm text-gray-400 mb-2 font-semibold">What’s New</p>
-        <p class="text-sm leading-relaxed">New POV options (projectiles/turrets) and a smooth slow-motion finish to the replay.</p>
-      </div>
-      <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500"><p class="text-sm text-gray-400">Replay improvements for Mid-Season.</p></div>
-    </div>
-  </div>
-</div>
-
-<!-- ====== END: NEW PATCH CONTENT ====== -->
-
-
-        
-        <!-- Patch 8.4.0 -->
-        <div class="patch-section mb-16" data-patch="8.4.0">
-            <h2 class="text-4xl font-black mb-8 tracking-tight">v8.4.0 - October 9, 2025</h2>
-
-            <!-- Riot Shield -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="adjustment"
-                 data-class="heavy"
-                 data-patch="8.4.0"
-                 data-category="weapons"
-                 data-name="riot shield">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 9</span>
-                    <img src="images/Riot_Shield.webp" alt="Riot Shield" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Riot Shield</h4>
-                            <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-sm font-semibold">ADJUSTMENT</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs font-semibold">HEAVY</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Collision</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">Reverted to previous</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Collision reverted due to issues with blocking steals</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Patch 8.3.0 -->
-        <div class="patch-section mb-16" data-patch="8.3.0">
-            <h2 class="text-4xl font-black mb-8 tracking-tight">v8.3.0 - October 2, 2025</h2>
-            <p class="text-gray-400 mb-8">Major balance update + HEAVEN OR ELSE mode</p>
-
-            <!-- BFR Titan -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="nerf"
-                 data-class="medium"
-                 data-patch="8.3.0"
-                 data-category="weapons"
-                 data-name="bfr titan">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 2</span>
-                    <img src="images/BFR_Titan.webp" alt="BFR Titan" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">BFR Titan</h4>
-                            <span class="px-3 py-1 bg-red-500/20 text-red-500 rounded-lg text-sm font-semibold">NERF</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-violet-500/20 text-violet-400 rounded text-xs font-semibold">MEDIUM</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Damage</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">98</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">90</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Prevents Winch Claw + headshot instant kill combo on Lights</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- .50 Akimbo -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="adjustment"
-                 data-class="light"
-                 data-patch="8.3.0"
-                 data-category="weapons"
-                 data-name="50 akimbo">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 2</span>
-                    <img src="images/.50_Akimbo.webp" alt=".50 Akimbo" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">.50 Akimbo</h4>
-                            <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-sm font-semibold">ADJUSTMENT</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded text-xs font-semibold">LIGHT</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Dispersion</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">Growth rate fixed</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Fixed bullet dispersion growing faster than intended</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Breach Drill -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="buff"
-                 data-class="all"
-                 data-patch="8.3.0"
-                 data-category="gadgets"
-                 data-name="breach drill">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 2</span>
-                    <img src="images/Breach_Drill.webp" alt="Breach Drill" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Breach Drill</h4>
-                            <span class="px-3 py-1 bg-green-500/20 text-green-500 rounded-lg text-sm font-semibold">BUFF</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Activation Time</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">3s</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-green-500/20 text-green-500 px-2 py-1 rounded">2.5s</span>
-                        </p>
-                    </div>
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Cooldown</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">25s</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-green-500/20 text-green-500 px-2 py-1 rounded">20s</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Faster deployment and reduced cooldown</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Smoke Grenade -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="nerf"
-                 data-class="all"
-                 data-patch="8.3.0"
-                 data-category="gadgets"
-                 data-name="smoke grenade">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 2</span>
-                    <img src="images/Smoke_Grenade.webp" alt="Smoke Grenade" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Smoke Grenade</h4>
-                            <span class="px-3 py-1 bg-red-500/20 text-red-500 rounded-lg text-sm font-semibold">NERF</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Duration</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">15s</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">9s</span>
-                        </p>
-                    </div>
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Ammo</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">3</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">2</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Reduced to counter cashout steal frustration</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Winch Claw -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="nerf"
-                 data-class="medium"
-                 data-patch="8.3.0"
-                 data-category="specializations"
-                 data-name="winch claw">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Oct 2</span>
-                    <img src="images/Winch_Claw.webp" alt="Winch Claw" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Winch Claw</h4>
-                            <span class="px-3 py-1 bg-red-500/20 text-red-500 rounded-lg text-sm font-semibold">NERF</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-violet-500/20 text-violet-400 rounded text-xs font-semibold">MEDIUM</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Visibility Required</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">Increased</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Harder to hook enemies behind partial cover</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Patch 8.0.0 -->
-        <div class="patch-section mb-16" data-patch="8.0.0">
-            <h2 class="text-4xl font-black mb-8 tracking-tight">v8.0.0 - September 20, 2025</h2>
-            <p class="text-gray-400 mb-8">Season 8: GAME TIME Launch</p>
-
-            <!-- .50 Akimbo (8.0.0) -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="nerf"
-                 data-class="light"
-                 data-patch="8.0.0"
-                 data-category="weapons"
-                 data-name="50 akimbo">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/.50_Akimbo.webp" alt=".50 Akimbo" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">.50 Akimbo</h4>
-                            <span class="px-3 py-1 bg-red-500/20 text-red-500 rounded-lg text-sm font-semibold">NERF</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded text-xs font-semibold">LIGHT</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Min Range</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">35m</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">32m</span>
-                        </p>
-                    </div>
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Max Range</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">42.5m</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">39m</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Effective range reduced</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CB-01 Repeater -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="buff"
-                 data-class="light"
-                 data-patch="8.0.0"
-                 data-category="weapons"
-                 data-name="cb-01 repeater cb01">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/CB-01_Repeater.webp" alt="CB-01 Repeater" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">CB-01 Repeater</h4>
-                            <span class="px-3 py-1 bg-green-500/20 text-green-500 rounded-lg text-sm font-semibold">BUFF</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded text-xs font-semibold">LIGHT</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Damage</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">84</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-green-500/20 text-green-500 px-2 py-1 rounded">88</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Damage increased by 4 points</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- LH1 -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="buff"
-                 data-class="light"
-                 data-patch="8.0.0"
-                 data-category="weapons"
-                 data-name="lh1">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/LH1.webp" alt="LH1" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">LH1</h4>
-                            <span class="px-3 py-1 bg-green-500/20 text-green-500 rounded-lg text-sm font-semibold">BUFF</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded text-xs font-semibold">LIGHT</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Damage</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">42</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-green-500/20 text-green-500 px-2 py-1 rounded">44</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Slight damage buff</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Pike-556 -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="nerf"
-                 data-class="medium"
-                 data-patch="8.0.0"
-                 data-category="weapons"
-                 data-name="pike-556 pike">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/Pike-556.webp" alt="Pike-556" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Pike-556</h4>
-                            <span class="px-3 py-1 bg-red-500/20 text-red-500 rounded-lg text-sm font-semibold">NERF</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-violet-500/20 text-violet-400 rounded text-xs font-semibold">MEDIUM</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Base Damage</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">50</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">48</span>
-                        </p>
-                    </div>
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Min Range</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">45m</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">40m</span>
-                        </p>
-                    </div>
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Hip-fire</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">Dispersion increased</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Multiple nerfs to overall effectiveness</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Riot Shield (8.0.0) -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="nerf"
-                 data-class="heavy"
-                 data-patch="8.0.0"
-                 data-category="weapons"
-                 data-name="riot shield">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/Riot_Shield.webp" alt="Riot Shield" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Riot Shield</h4>
-                            <span class="px-3 py-1 bg-red-500/20 text-red-500 rounded-lg text-sm font-semibold">NERF</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs font-semibold">HEAVY</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Max Speed</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">10m/s</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">7m/s</span>
-                        </p>
-                    </div>
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Min Speed</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">7m/s</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">5.5m/s</span>
-                        </p>
-                    </div>
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Trigger Range</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">4m</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">2.5m</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Lunge speed and range significantly reduced</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Frag Grenade -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="buff"
-                 data-class="all"
-                 data-patch="8.0.0"
-                 data-category="gadgets"
-                 data-name="frag grenade">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/Frag_Grenade.webp" alt="Frag Grenade" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Frag Grenade</h4>
-                            <span class="px-3 py-1 bg-green-500/20 text-green-500 rounded-lg text-sm font-semibold">BUFF</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Indicator</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-green-500/20 text-green-500 px-2 py-1 rounded">Added in-world</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Visual indicator added for better awareness</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Smoke Grenade (8.0.0) -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="buff"
-                 data-class="all"
-                 data-patch="8.0.0"
-                 data-category="gadgets"
-                 data-name="smoke grenade">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/Smoke_Grenade.webp" alt="Smoke Grenade" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Smoke Grenade</h4>
-                            <span class="px-3 py-1 bg-green-500/20 text-green-500 rounded-lg text-sm font-semibold">BUFF</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Occlusion</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-green-500/20 text-green-500 px-2 py-1 rounded">Updated</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Hide effect better matches smoke visuals</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sonar Grenade -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="buff"
-                 data-class="all"
-                 data-patch="8.0.0"
-                 data-category="gadgets"
-                 data-name="sonar grenade">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/Sonar_Grenade.webp" alt="Sonar Grenade" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Sonar Grenade</h4>
-                            <span class="px-3 py-1 bg-green-500/20 text-green-500 rounded-lg text-sm font-semibold">BUFF</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Hitbox</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-green-500/20 text-green-500 px-2 py-1 rounded">Enlarged</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Easier to destroy by shooting</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Proximity Sensor -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="buff"
-                 data-class="all"
-                 data-patch="8.0.0"
-                 data-category="gadgets"
-                 data-name="proximity sensor">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/Proximity_Sensor.webp" alt="Proximity Sensor" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Proximity Sensor</h4>
-                            <span class="px-3 py-1 bg-green-500/20 text-green-500 rounded-lg text-sm font-semibold">BUFF</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Hitbox</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-green-500/20 text-green-500 px-2 py-1 rounded">Enlarged</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Easier to destroy by shooting</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Thermal Vision -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="disabled"
-                 data-class="all"
-                 data-patch="8.0.0"
-                 data-category="gadgets"
-                 data-name="thermal vision">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/Thermal_Vision.webp" alt="Thermal Vision" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Thermal Vision</h4>
-                            <span class="px-3 py-1 bg-gray-500/20 text-gray-400 rounded-lg text-sm font-semibold">DISABLED</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Status</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-400 px-2 py-1 rounded">Temporarily disabled</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Disabled for complete rework</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- H+ Infuser -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="nerf"
-                 data-class="all"
-                 data-patch="8.0.0"
-                 data-category="gadgets"
-                 data-name="h+ infuser h-infuser">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/H+_Infuser.webp" alt="H+ Infuser" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">H+ Infuser</h4>
-                            <span class="px-3 py-1 bg-red-500/20 text-red-500 rounded-lg text-sm font-semibold">NERF</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Healing</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">15</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">14</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Healing per shot reduced by 1</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dematerializer -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="rework"
-                 data-class="medium"
-                 data-patch="8.0.0"
-                 data-category="specializations"
-                 data-name="dematerializer">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/Dematerializer.webp" alt="Dematerializer" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Dematerializer</h4>
-                            <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-lg text-sm font-semibold">REWORK</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-violet-500/20 text-violet-400 rounded text-xs font-semibold">MEDIUM</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Charges</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">3</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-purple-500/20 text-purple-400 px-2 py-1 rounded">2</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Reworked with reduced charges</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Guardian Turret -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="buff"
-                 data-class="heavy"
-                 data-patch="8.0.0"
-                 data-category="specializations"
-                 data-name="guardian turret">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/Guardian_Turret.webp" alt="Guardian Turret" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Guardian Turret</h4>
-                            <span class="px-3 py-1 bg-green-500/20 text-green-500 rounded-lg text-sm font-semibold">BUFF</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs font-semibold">HEAVY</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Cooldown</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-green-500/20 text-green-500 px-2 py-1 rounded">Reduced</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Faster deployment between uses</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Healing Beam -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="buff"
-                 data-class="medium"
-                 data-patch="8.0.0"
-                 data-category="specializations"
-                 data-name="healing beam">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/Healing_Beam.webp" alt="Healing Beam" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Healing Beam</h4>
-                            <span class="px-3 py-1 bg-green-500/20 text-green-500 rounded-lg text-sm font-semibold">BUFF</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-violet-500/20 text-violet-400 rounded text-xs font-semibold">MEDIUM</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Heal Rate</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-gray-700 text-gray-300 px-2 py-1 rounded">40 HP/s</span>
-                            <span class="mx-2">→</span>
-                            <span class="font-mono bg-green-500/20 text-green-500 px-2 py-1 rounded">46 HP/s</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">15% healing increase</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Winch Claw (8.0.0) -->
-            <div class="weapon-card mb-4 p-6 bg-bg-card border border-border-primary rounded-xl hover:shadow-xl transition-all"
-                 data-type="nerf"
-                 data-class="medium"
-                 data-patch="8.0.0"
-                 data-category="specializations"
-                 data-name="winch claw">
-                <div class="flex items-start gap-4 mb-4 relative">
-                    <span class="absolute top-0 right-0 text-xs font-mono text-gray-500 bg-gray-800 px-2 py-1 rounded">Sep 20</span>
-                    <img src="images/Winch_Claw.webp" alt="Winch Claw" class="w-20 h-20 rounded-lg flex-shrink-0 object-cover img-placeholder" loading="lazy">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                            <h4 class="text-xl font-bold">Winch Claw</h4>
-                            <span class="px-3 py-1 bg-red-500/20 text-red-500 rounded-lg text-sm font-semibold">NERF</span>
-                        </div>
-                        <span class="inline-block px-2 py-1 bg-violet-500/20 text-violet-400 rounded text-xs font-semibold">MEDIUM</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="p-4 bg-bg-primary rounded-lg">
-                        <p class="text-sm text-gray-400 mb-2 font-semibold">Cooldown</p>
-                        <p class="text-sm leading-relaxed">
-                            <span class="font-mono bg-red-500/20 text-red-500 px-2 py-1 rounded">Increased</span>
-                        </p>
-                    </div>
-                    <div class="p-3 bg-indigo-500/5 border-l-4 border-indigo-500">
-                        <p class="text-sm text-gray-400">Longer wait between uses</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== FOOTER ========== -->
-    <footer class="border-t border-border-primary bg-bg-card py-8 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p style="margin:0 0 0.5rem 0;" class="text-gray-400 text-sm">
-                © 2025 TheFinalsLoadout.com | Created by
-                <a href="https://www.paultakisaki.com/" rel="author" style="color:#6366f1;text-decoration:none;">Paul Takisaki</a>
-            </p>
-            <p class="text-gray-500 text-xs mb-4">Not affiliated with Embark Studios</p>
-            <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;font-size:0.75rem;margin-top:0.5rem;">
-                <a href="/" class="text-indigo-400 hover:text-white transition-colors">Loadout Generator</a>
-                <a href="/ragequit/" class="text-indigo-400 hover:text-white transition-colors">Rage Quit</a>
-                <a href="/patch-notes/" class="text-indigo-400 hover:text-white transition-colors">Patch Notes</a>
-                <a href="/meta-weapons/" class="text-indigo-400 hover:text-white transition-colors">Meta Weapons</a>
-                <a href="/wt-progress/" class="text-indigo-400 hover:text-white transition-colors">World Tour</a>
-                <a href="/legal/" class="text-indigo-400 hover:text-white transition-colors">Legal</a>
-                <a href="https://thefinalsloadout.com/feedback" class="text-yellow-400 hover:text-white transition-colors">📝 Feedback</a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- ========== JAVASCRIPT ========== -->
-    <script>
-        // State management
-        let filters = {
-            type: 'all',
-            class: 'all',
-            patch: 'all',
-            category: 'all',
-            search: ''
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // ===== DATA =====
+        const PATCH_DATA = {
+            version: "9.0.0",
+            season: 9,
+            name: "Dragon Rising",
+            releaseDate: "December 12, 2024",
+            metaTLDR: [
+                {
+                    text: "Winch Claw meta nerfed: Dome + Mesh Shield block Winch, shorter stun windows",
+                    impact: "high",
+                    icon: "🎯"
+                },
+                {
+                    text: "Goo gets real counters: 2.25x explosive damage, RPG +10 damage, faster Thermal Bore",
+                    impact: "high",
+                    icon: "🧱"
+                },
+                {
+                    text: "Rotations slowed: Gateway range 70m → 50m",
+                    impact: "high",
+                    icon: "🌀"
+                },
+                {
+                    text: "Double Jeopardy: Fail a double cashbox = lose 50% cash",
+                    impact: "high",
+                    icon: "💰"
+                },
+                {
+                    text: "93R nerfed (26→24 dmg), Model 1887 faster reload, V9S range buff",
+                    impact: "medium",
+                    icon: "🔫"
+                }
+            ],
+            changes: [
+                // Rules & Ranked
+                {
+                    id: "double-jeopardy",
+                    title: "Double Jeopardy (New Cashout Rule)",
+                    type: "New",
+                    category: "System",
+                    class: "All",
+                    impact: "High",
+                    details: "Teams can insert a second cashbox into an active station. If they don't control it when it completes, they lose 50% of their current cash.",
+                    reasoning: "Adds high-risk, high-reward decision-making to Cashout endgames."
+                },
+                {
+                    id: "ranked-overtime",
+                    title: "Ranked Overtime Cashboxes",
+                    type: "Rule",
+                    category: "System",
+                    class: "All",
+                    impact: "High",
+                    details: "Cashboxes no longer despawn during overtime in Ranked tournaments.",
+                    reasoning: "Prevents unsatisfying sudden endings and ensures decisive final fights."
+                },
+                {
+                    id: "ranked-scoring",
+                    title: "Ranked Score Tuning",
+                    type: "Rework",
+                    category: "System",
+                    class: "All",
+                    impact: "Medium",
+                    details: "Reduced extreme RS losses, especially for high-seeded players eliminated early.",
+                    reasoning: "Makes ranking system feel fairer and less punishing for unlucky early exits."
+                },
+                {
+                    id: "sponsor-swap",
+                    title: "Sponsor Flexibility",
+                    type: "New",
+                    category: "System",
+                    class: "All",
+                    impact: "Low",
+                    details: "Players can now swap sponsors freely at any time; no more seasonal locks.",
+                    reasoning: "Quality of life improvement for loadout experimentation."
+                },
+
+                // Meta Drivers
+                {
+                    id: "winch-claw-stun",
+                    title: "Winch Claw",
+                    type: "Nerf",
+                    category: "Specialization",
+                    class: "Heavy",
+                    impact: "High",
+                    details: "Maximum stun reduced from 0.65s to 0.5s. Minimum stun reduced from 0.35s to 0.2s. Now breaks if target moves too far from collision point.",
+                    values: [
+                        { stat: "Max Stun", before: "0.65s", after: "0.5s" },
+                        { stat: "Min Stun", before: "0.35s", after: "0.2s" }
+                    ],
+                    reasoning: "Winch was too oppressive with limited counterplay. These changes add defensive options and skill expression."
+                },
+                {
+                    id: "dome-shield-winch",
+                    title: "Dome Shield",
+                    type: "Buff",
+                    category: "Gadget",
+                    class: "Heavy",
+                    impact: "High",
+                    details: "Dome Shield now blocks Winch Claw pulls.",
+                    reasoning: "Provides a reliable defensive tool against Winch Claw dominance."
+                },
+                {
+                    id: "mesh-shield-winch",
+                    title: "Mesh Shield",
+                    type: "Buff",
+                    category: "Specialization",
+                    class: "Heavy",
+                    impact: "High",
+                    details: "Health increased from 750 to 850. Now blocks Winch Claw pulls.",
+                    values: [
+                        { stat: "Health", before: "750", after: "850" }
+                    ],
+                    reasoning: "Reinforces anti-Winch counterplay and improves shield durability."
+                },
+                {
+                    id: "gateway-range",
+                    title: "Gateway",
+                    type: "Nerf",
+                    category: "Gadget",
+                    class: "Light",
+                    impact: "High",
+                    details: "Maximum range reduced from 70m to 50m.",
+                    values: [
+                        { stat: "Max Range", before: "70m", after: "50m" }
+                    ],
+                    reasoning: "Slows down rotations and makes positional play more meaningful."
+                },
+                {
+                    id: "goo-explosive",
+                    title: "Goo Vulnerability",
+                    type: "Nerf",
+                    category: "Gadget",
+                    class: "All",
+                    impact: "High",
+                    details: "Explosive damage multiplier vs Goo increased from 2.0 to 2.25.",
+                    values: [
+                        { stat: "Explosive Multiplier", before: "2.0x", after: "2.25x" }
+                    ],
+                    reasoning: "Makes Goo setups more vulnerable to explosive counterplay."
+                },
+                {
+                    id: "thermal-bore",
+                    title: "Thermal Bore",
+                    type: "Buff",
+                    category: "Gadget",
+                    class: "Light",
+                    impact: "High",
+                    details: "Fuse time reduced from 2.5s to 1.75s. Cooldown reduced from 45s to 35s. Less lingering smoke.",
+                    values: [
+                        { stat: "Fuse Time", before: "2.5s", after: "1.75s" },
+                        { stat: "Cooldown", before: "45s", after: "35s" }
+                    ],
+                    reasoning: "Primary Goo counter tool is now faster and more reliable."
+                },
+                {
+                    id: "rpg-damage",
+                    title: "RPG-7",
+                    type: "Buff",
+                    category: "Weapon",
+                    class: "Heavy",
+                    impact: "High",
+                    details: "Damage increased from 100 to 110.",
+                    values: [
+                        { stat: "Damage", before: "100", after: "110" }
+                    ],
+                    reasoning: "Improves Goo-clearing efficiency and general explosive viability."
+                },
+
+                // Weapons - Light
+                {
+                    id: "93r-nerf",
+                    title: "93R",
+                    type: "Nerf",
+                    category: "Weapon",
+                    class: "Light",
+                    impact: "High",
+                    details: "Damage reduced from 26 to 24. Falloff start reduced from 32m to 30m. Falloff end reduced from 40m to 37.5m. Max range multiplier increased from 40% to 50%.",
+                    values: [
+                        { stat: "Damage", before: "26", after: "24" },
+                        { stat: "Falloff Start", before: "32m", after: "30m" },
+                        { stat: "Falloff End", before: "40m", after: "37.5m" },
+                        { stat: "Max Range Mult", before: "40%", after: "50%" }
+                    ],
+                    reasoning: "93R was overperforming at all ranges. Slight compensation at max range."
+                },
+                {
+                    id: "v9s-range",
+                    title: "V9S",
+                    type: "Buff",
+                    category: "Weapon",
+                    class: "Light",
+                    impact: "Medium",
+                    details: "Falloff start extended from 10m to 15m. Falloff end extended from 15m to 25m.",
+                    values: [
+                        { stat: "Falloff Start", before: "10m", after: "15m" },
+                        { stat: "Falloff End", before: "15m", after: "25m" }
+                    ],
+                    reasoning: "Improves viability at medium range without affecting close-quarters balance."
+                },
+                {
+                    id: "dual-blades",
+                    title: "Dual Blades",
+                    type: "Buff",
+                    category: "Weapon",
+                    class: "Medium",
+                    impact: "Medium",
+                    details: "Third hit damage increased from 65 to 100.",
+                    values: [
+                        { stat: "3rd Hit Damage", before: "65", after: "100" }
+                    ],
+                    reasoning: "Rewards completing the full combo sequence."
+                },
+
+                // Weapons - Heavy
+                {
+                    id: "lewis-gun",
+                    title: "Lewis Gun",
+                    type: "Buff",
+                    category: "Weapon",
+                    class: "Heavy",
+                    impact: "Medium",
+                    details: "Damage increased from 22 to 23.",
+                    values: [
+                        { stat: "Damage", before: "22", after: "23" }
+                    ],
+                    reasoning: "Slight TTK improvement to compete with other Heavy options."
+                },
+                {
+                    id: "m60-recoil",
+                    title: "M60",
+                    type: "Rework",
+                    category: "Weapon",
+                    class: "Heavy",
+                    impact: "Medium",
+                    details: "Easier recoil for first 8 bullets, harder after 30 bullets.",
+                    reasoning: "Rewards burst control, punishes spray-and-pray."
+                },
+                {
+                    id: "model-1887-reload",
+                    title: "Model 1887",
+                    type: "Buff",
+                    category: "Weapon",
+                    class: "Medium",
+                    impact: "Medium",
+                    details: "Tactical reload intro time reduced from 2.2s to 1.5s.",
+                    values: [
+                        { stat: "Tactical Reload", before: "2.2s", after: "1.5s" }
+                    ],
+                    reasoning: "Reduces downtime in fights, improves flow."
+                },
+                {
+                    id: "ks23-ads",
+                    title: "KS-23",
+                    type: "Buff",
+                    category: "Weapon",
+                    class: "Heavy",
+                    impact: "Medium",
+                    details: "ADS dispersion reduced by approximately 30%.",
+                    reasoning: "Makes ADS more effective at medium shotgun range."
+                },
+                {
+                    id: "bfr-titan",
+                    title: "BFR Titan",
+                    type: "Nerf",
+                    category: "Weapon",
+                    class: "Heavy",
+                    impact: "Medium",
+                    details: "Environmental damage reduced from 130 to 95. Rate of fire reduced from 85 RPM to 82 RPM.",
+                    values: [
+                        { stat: "Environmental Damage", before: "130", after: "95" },
+                        { stat: "Rate of Fire", before: "85 RPM", after: "82 RPM" }
+                    ],
+                    reasoning: "Reduces environmental destruction power without killing player damage."
+                },
+
+                // Gadgets
+                {
+                    id: "glitch-grenade",
+                    title: "Glitch Grenade",
+                    type: "Rework",
+                    category: "Gadget",
+                    class: "Light",
+                    impact: "Medium",
+                    details: "Ammo reduced from 2 to 1. Cooldown reduced from 20s to 12s.",
+                    values: [
+                        { stat: "Ammo", before: "2", after: "1" },
+                        { stat: "Cooldown", before: "20s", after: "12s" }
+                    ],
+                    reasoning: "Shifts from burst usage to sustained tempo tool."
+                },
+                {
+                    id: "breach-charge",
+                    title: "Breach Charge",
+                    type: "Buff",
+                    category: "Gadget",
+                    class: "Light",
+                    impact: "Low",
+                    details: "Cooldown reduced from 30s to 20s.",
+                    values: [
+                        { stat: "Cooldown", before: "30s", after: "20s" }
+                    ],
+                    reasoning: "More frequent access to breaching opportunities."
+                },
+                {
+                    id: "frag-grenade",
+                    title: "Frag Grenade",
+                    type: "Buff",
+                    category: "Gadget",
+                    class: "All",
+                    impact: "Low",
+                    details: "Outer damage radius increased from 5m to 5.5m.",
+                    values: [
+                        { stat: "Outer Radius", before: "5m", after: "5.5m" }
+                    ],
+                    reasoning: "Slightly more forgiving for chip damage."
+                },
+                {
+                    id: "pyro-grenade",
+                    title: "Pyro Grenade",
+                    type: "Buff",
+                    category: "Gadget",
+                    class: "All",
+                    impact: "Low",
+                    details: "Cooldown reduced from 30s to 24s.",
+                    values: [
+                        { stat: "Cooldown", before: "30s", after: "24s" }
+                    ],
+                    reasoning: "Increases area denial frequency."
+                },
+
+                // New Content
+                {
+                    id: "fangwai-city",
+                    title: "Fangwai City (New Map)",
+                    type: "New",
+                    category: "Mode",
+                    class: "All",
+                    impact: "High",
+                    details: "Chinese-inspired megacity with elevated walkways, dense apartment blocks, and riverfront views. Features smooth destruction mechanics. Added to Cashout, Ranked, Quick Cash, Head 2 Head, and Team Deathmatch.",
+                    reasoning: "Adds vertical gameplay and dense urban combat arenas."
+                },
+                {
+                    id: "point-break",
+                    title: "Point Break (New Mode)",
+                    type: "New",
+                    category: "Mode",
+                    class: "All",
+                    impact: "High",
+                    details: "8v8 attackers vs defenders. Attackers destroy 9 Grand Vaults, defenders drain attacker respawn tokens. Not available on PS4.",
+                    reasoning: "Objective-focused large-scale combat."
+                },
+                {
+                    id: "world-tour-2",
+                    title: "World Tour 2.0",
+                    type: "Rework",
+                    category: "System",
+                    class: "All",
+                    impact: "Medium",
+                    details: "Now tracks progress across all game modes universally. Rewards include Stickers, Charms, Multibucks, and Emerald currencies.",
+                    reasoning: "More flexible progression system that doesn't lock players into one mode."
+                },
+                {
+                    id: "reward-coins",
+                    title: "Reward Coins",
+                    type: "New",
+                    category: "System",
+                    class: "All",
+                    impact: "Low",
+                    details: "Choose weapon skins based on ranked/World Tour progress (Gold, Platinum, Diamond, Ruby, Emerald tiers).",
+                    reasoning: "Player choice in cosmetic rewards."
+                },
+                {
+                    id: "kyoto-powershift",
+                    title: "Kyoto Temporarily Removed",
+                    type: "Fix",
+                    category: "Mode",
+                    class: "All",
+                    impact: "Low",
+                    details: "Kyoto map temporarily removed from Powershift rotation. Returns in patch 9.4.",
+                    reasoning: "Performance optimization work in progress."
+                }
+            ]
         };
 
-        // Filter by change type
-        function filterByType(type) {
-            filters.type = type;
-            updateActiveButton('.type-filter', event.target);
-            applyFilters();
+        // ===== COMPONENTS =====
+
+        function Toast({ message, onClose }) {
+            useEffect(() => {
+                const timer = setTimeout(onClose, 3000);
+                return () => clearTimeout(timer);
+            }, [onClose]);
+
+            return (
+                <div className="toast">
+                    {message}
+                </div>
+            );
         }
 
-        // Filter by class
-        function filterByClass(classType) {
-            filters.class = classType;
-            updateActiveButton('.class-filter', event.target);
-            applyFilters();
+        function MetaTLDRCard({ data }) {
+            const [toast, setToast] = useState(null);
+
+            const copyDiscordTLDR = () => {
+                const tldr = `**THE FINALS Season ${data.season}: ${data.name} - Meta TLDR**
+
+${data.metaTLDR.map(item => `${item.icon} ${item.text}`).join('\n')}
+
+Full notes: ${window.location.href}`;
+
+                navigator.clipboard.writeText(tldr);
+                setToast('✅ Copied to clipboard! Ready to paste in Discord');
+            };
+
+            const scrollToChanges = (e) => {
+                e.preventDefault();
+                document.getElementById('full-changes').scrollIntoView({ behavior: 'smooth' });
+            };
+
+            return (
+                <>
+                    <div className="meta-tldr-card">
+                        <div className="tldr-header">
+                            <span className="season-badge">Season {data.season}</span>
+                            <h1 className="tldr-title">{data.name} Meta TLDR</h1>
+                        </div>
+
+                        <div className="tldr-content">
+                            {data.metaTLDR.map((item, idx) => (
+                                <div key={idx} className="impact-item">
+                                    <span className="impact-icon">{item.icon}</span>
+                                    <span>{item.text}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="tldr-actions">
+                            <button className="btn btn-primary" onClick={copyDiscordTLDR}>
+                                📋 Copy Discord TLDR
+                            </button>
+                            <a href="#full-changes" className="btn btn-secondary" onClick={scrollToChanges}>
+                                View Full Changes ↓
+                            </a>
+                        </div>
+                    </div>
+
+                    {toast && <Toast message={toast} onClose={() => setToast(null)} />}
+                </>
+            );
         }
 
-        // Filter by patch version
-        function filterByPatch(patch) {
-            filters.patch = patch;
-            updateActiveButton('.patch-filter', event.target);
-            applyFilters();
+        function ChangeCard({ change }) {
+            const [toast, setToast] = useState(null);
+
+            const copyLink = () => {
+                const url = `${window.location.origin}${window.location.pathname}#change-${change.id}`;
+                navigator.clipboard.writeText(url);
+                setToast('🔗 Link copied to clipboard!');
+            };
+
+            return (
+                <>
+                    <div
+                        id={`change-${change.id}`}
+                        className={`change-card impact-${change.impact.toLowerCase()}`}
+                    >
+                        <div className="card-header">
+                            <div className="tag-group">
+                                <span className={`tag tag-${change.type.toLowerCase()}`}>{change.type}</span>
+                                <span className="tag">{change.category}</span>
+                                <span className="tag">{change.class}</span>
+                                <span className={`tag impact-${change.impact.toLowerCase()}`}>{change.impact}</span>
+                            </div>
+                            {change.impact === 'High' && (
+                                <button className="copy-link-btn" onClick={copyLink}>
+                                    🔗 Copy Link
+                                </button>
+                            )}
+                        </div>
+
+                        <h3 className="change-title">{change.title}</h3>
+
+                        {change.values && (
+                            <div style={{ marginBottom: '12px' }}>
+                                {change.values.map((val, idx) => (
+                                    <div key={idx} className="value-change">
+                                        <span style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>
+                                            {val.stat}:
+                                        </span>
+                                        <span className="value-before">{val.before}</span>
+                                        <span className="value-arrow">→</span>
+                                        <span className="value-after">{val.after}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        <p className="change-details">{change.details}</p>
+
+                        {change.reasoning && (
+                            <div className="developer-note">
+                                💬 {change.reasoning}
+                            </div>
+                        )}
+                    </div>
+
+                    {toast && <Toast message={toast} onClose={() => setToast(null)} />}
+                </>
+            );
         }
 
-        // Filter by category
-        function filterByCategory(category) {
-            filters.category = category;
-            updateActiveButton('.category-filter', event.target);
-            applyFilters();
+        function FilterBar({ filters, onFilterChange }) {
+            return (
+                <div className="filter-bar">
+                    <div className="filter-group">
+                        <span className="filter-label">Impact</span>
+                        {['High', 'Medium', 'Low'].map(impact => (
+                            <button
+                                key={impact}
+                                className={`filter-toggle ${filters.impact.includes(impact) ? 'active' : ''}`}
+                                onClick={() => onFilterChange('impact', impact)}
+                            >
+                                {impact}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="filter-group">
+                        <span className="filter-label">Class</span>
+                        {['All', 'Light', 'Medium', 'Heavy'].map(cls => (
+                            <button
+                                key={cls}
+                                className={`filter-toggle ${filters.class.includes(cls) ? 'active' : ''}`}
+                                onClick={() => onFilterChange('class', cls)}
+                            >
+                                {cls}
+                            </button>
+                        ))}
+                    </div>
+
+                    <input
+                        type="text"
+                        className="search-input"
+                        placeholder="Search changes..."
+                        value={filters.search}
+                        onChange={(e) => onFilterChange('search', e.target.value)}
+                    />
+                </div>
+            );
         }
 
-        // Update active button state
-        function updateActiveButton(selector, activeBtn) {
-            document.querySelectorAll(selector).forEach(btn => {
-                btn.classList.remove('active', 'bg-gray-700', 'bg-indigo-500/20', 'text-white', 'text-indigo-400');
-                btn.classList.add('bg-bg-card', 'border', 'border-border-primary', 'text-gray-400');
+        function CollapsibleSection({ id, icon, title, subtitle, changes, defaultOpen = false }) {
+            const [isExpanded, setIsExpanded] = useState(defaultOpen);
+
+            const impactCounts = {
+                high: changes.filter(c => c.impact === 'High').length,
+                medium: changes.filter(c => c.impact === 'Medium').length,
+                low: changes.filter(c => c.impact === 'Low').length
+            };
+
+            const renderImpactDots = () => {
+                const dots = [];
+                for (let i = 0; i < impactCounts.high; i++) dots.push(<span key={`h${i}`} className="impact-dot high" />);
+                for (let i = 0; i < impactCounts.medium; i++) dots.push(<span key={`m${i}`} className="impact-dot medium" />);
+                for (let i = 0; i < impactCounts.low; i++) dots.push(<span key={`l${i}`} className="impact-dot low" />);
+                return dots;
+            };
+
+            return (
+                <div className="collapsible-section" id={id}>
+                    <div
+                        className={`section-header ${isExpanded ? 'expanded' : ''}`}
+                        onClick={() => setIsExpanded(!isExpanded)}
+                    >
+                        <span className="section-icon">{icon}</span>
+                        <div className="section-info">
+                            <div className="section-title">{title}</div>
+                            {subtitle && <div className="section-subtitle">{subtitle}</div>}
+                        </div>
+                        <div className="section-meta">
+                            <span className="change-count">{changes.length} changes</span>
+                            <div className="impact-dots">
+                                {renderImpactDots()}
+                            </div>
+                        </div>
+                        <span className="section-chevron">▼</span>
+                    </div>
+
+                    <div className={`section-content ${isExpanded ? 'expanded' : ''}`}>
+                        {changes.map(change => (
+                            <ChangeCard key={change.id} change={change} />
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        function App() {
+            const [filters, setFilters] = useState({
+                impact: ['High', 'Medium', 'Low'],
+                class: ['All', 'Light', 'Medium', 'Heavy'],
+                search: ''
             });
 
-            activeBtn.classList.add('active');
-            activeBtn.classList.remove('bg-bg-card', 'border', 'border-border-primary', 'text-gray-400');
-
-            if (selector === '.type-filter') {
-                activeBtn.classList.add('bg-gray-700', 'text-white');
-            } else {
-                activeBtn.classList.add('bg-indigo-500/20', 'text-indigo-400');
-            }
-        }
-
-        // Search with debounce
-        let searchTimeout;
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                filters.search = e.target.value.toLowerCase();
-                applyFilters();
-            }, 200);
-        });
-
-        // Apply all filters
-        function applyFilters() {
-            const cards = document.querySelectorAll('.weapon-card');
-            let visibleCount = 0;
-
-            cards.forEach(card => {
-                const cardType = card.dataset.type;
-                const cardClass = card.dataset.class;
-                const cardPatch = card.dataset.patch;
-                const cardCategory = card.dataset.category;
-                const cardName = card.dataset.name;
-
-                let show = true;
-
-                // Type filter
-                if (filters.type !== 'all' && cardType !== filters.type) {
-                    show = false;
-                }
-
-                // Class filter
-                if (filters.class !== 'all' && cardClass !== filters.class && cardClass !== 'all') {
-                    show = false;
-                }
-
-                // Patch filter
-                if (filters.patch !== 'all' && cardPatch !== filters.patch) {
-                    show = false;
-                }
-
-                // Category filter
-                if (filters.category !== 'all' && cardCategory !== filters.category) {
-                    show = false;
-                }
-
-                // Search filter
-                if (filters.search && !cardName.includes(filters.search)) {
-                    show = false;
-                }
-
-                if (show) {
-                    card.style.display = 'block';
-                    setTimeout(() => card.style.opacity = '1', 10);
-                    visibleCount++;
+            const handleFilterChange = (type, value) => {
+                if (type === 'search') {
+                    setFilters(prev => ({ ...prev, search: value }));
                 } else {
-                    card.style.opacity = '0';
-                    setTimeout(() => card.style.display = 'none', 300);
+                    setFilters(prev => {
+                        const current = prev[type];
+                        const updated = current.includes(value)
+                            ? current.filter(v => v !== value)
+                            : [...current, value];
+                        return { ...prev, [type]: updated };
+                    });
                 }
-            });
+            };
 
-            // Show/hide patch sections
-            document.querySelectorAll('.patch-section').forEach(section => {
-                const visibleCards = section.querySelectorAll('.weapon-card[style*="display: block"]').length;
-                section.style.display = visibleCards > 0 ? 'block' : 'none';
-            });
+            const filterChanges = (changes) => {
+                return changes.filter(change => {
+                    const matchesImpact = filters.impact.includes(change.impact);
+                    const matchesClass = filters.class.includes('All') || filters.class.includes(change.class);
+                    const matchesSearch = filters.search === '' ||
+                        change.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+                        change.details.toLowerCase().includes(filters.search.toLowerCase());
 
-            // Show/hide no results message
-            document.getElementById('noResults').classList.toggle('hidden', visibleCount > 0);
+                    return matchesImpact && matchesClass && matchesSearch;
+                });
+            };
+
+            // Handle deep linking
+            useEffect(() => {
+                const hash = window.location.hash.slice(1);
+                if (hash.startsWith('change-')) {
+                    setTimeout(() => {
+                        const element = document.getElementById(hash);
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            element.classList.add('highlight-flash');
+                            setTimeout(() => element.classList.remove('highlight-flash'), 2000);
+                        }
+                    }, 500);
+                }
+            }, []);
+
+            const sections = [
+                {
+                    id: 'rules-ranked',
+                    icon: '⚖️',
+                    title: 'Rules and Ranked',
+                    filter: (c) => c.category === 'System' && (c.id.includes('ranked') || c.id.includes('jeopardy') || c.id.includes('sponsor'))
+                },
+                {
+                    id: 'meta-drivers',
+                    icon: '🎯',
+                    title: 'Meta Drivers',
+                    subtitle: 'Winch, Goo, Rotations',
+                    filter: (c) => ['winch-claw-stun', 'dome-shield-winch', 'mesh-shield-winch', 'gateway-range', 'goo-explosive', 'thermal-bore', 'rpg-damage'].includes(c.id)
+                },
+                {
+                    id: 'weapons-light',
+                    icon: '⚡',
+                    title: 'Weapons: Light',
+                    filter: (c) => c.category === 'Weapon' && c.class === 'Light'
+                },
+                {
+                    id: 'weapons-heavy',
+                    icon: '💪',
+                    title: 'Weapons: Heavy',
+                    filter: (c) => c.category === 'Weapon' && c.class === 'Heavy'
+                },
+                {
+                    id: 'gadgets',
+                    icon: '🔧',
+                    title: 'Gadgets',
+                    filter: (c) => c.category === 'Gadget'
+                },
+                {
+                    id: 'specializations',
+                    icon: '✨',
+                    title: 'Specializations',
+                    filter: (c) => c.category === 'Specialization'
+                },
+                {
+                    id: 'new-content',
+                    icon: '🎮',
+                    title: 'New Content',
+                    subtitle: 'Maps, Modes, Progression',
+                    filter: (c) => ['fangwai-city', 'point-break', 'world-tour-2', 'reward-coins', 'kyoto-powershift'].includes(c.id)
+                }
+            ];
+
+            return (
+                <>
+                    <div className="site-header">
+                        <div className="site-header-content">
+                            <div className="site-title">THE FINALS LOADOUT</div>
+                            <div className="version-selector">
+                                <div className="current-version">
+                                    <div className="version-label">Latest Patch</div>
+                                    <div className="version-number">Season {PATCH_DATA.season}.0.0</div>
+                                </div>
+                                <span className="status-badge">LIVE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="container">
+                        <MetaTLDRCard data={PATCH_DATA} />
+
+                        <div id="full-changes">
+                            <FilterBar filters={filters} onFilterChange={handleFilterChange} />
+
+                            {sections.map(section => {
+                                const sectionChanges = filterChanges(PATCH_DATA.changes.filter(section.filter));
+                                if (sectionChanges.length === 0) return null;
+
+                                return (
+                                    <CollapsibleSection
+                                        key={section.id}
+                                        id={section.id}
+                                        icon={section.icon}
+                                        title={section.title}
+                                        subtitle={section.subtitle}
+                                        changes={sectionChanges}
+                                        defaultOpen={section.id === 'rules-ranked'}
+                                    />
+                                );
+                            })}
+                        </div>
+                    </div>
+                </>
+            );
         }
 
-        // Sticky filter bar shadow on scroll
-        window.addEventListener('scroll', () => {
-            const filterBar = document.getElementById('filterBar');
-            if (window.scrollY > 100) {
-                filterBar.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
-            } else {
-                filterBar.style.boxShadow = 'none';
-            }
-        });
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('✅ Patch Notes page loaded');
-        });
+        // Render app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
-
 </body>
 </html>
